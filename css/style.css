@@ -585,6 +585,47 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 16px;
 }
 
+.current-focus-block {
+  margin-top: 25px;
+  padding: 16px 20px;
+  background: rgba(0, 229, 255, 0.03);
+  border-left: 3px solid var(--accent-cyan);
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+.focus-title {
+  font-family: var(--font-terminal);
+  font-size: 0.9rem;
+  color: var(--accent-cyan);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.focus-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.focus-list li {
+  font-family: var(--font-terminal);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.focus-list li:last-child {
+  margin-bottom: 0;
+}
+
+.focus-bullet {
+  color: var(--accent-green);
+  margin-right: 10px;
+  font-weight: bold;
+}
+
 .terminal-card {
   background: var(--bg-secondary);
   border: 1px solid var(--border-glass);
@@ -981,9 +1022,45 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 12px;
 }
 
+.cert-progress-wrapper {
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.cert-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-terminal);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.cert-progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.cert-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s ease-in-out;
+}
+
 .cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 0.8rem;
   color: var(--text-secondary);
+}
+
+.cert-date {
+  font-family: var(--font-terminal);
+  font-size: 0.72rem;
+  color: var(--text-muted);
 }
 
 /* ── Console UI Section ───────────────────────────────────────── */
@@ -1044,6 +1121,66 @@ h1, h2, h3, h4, h5, h6 {
 .contact-info p {
   color: var(--text-secondary);
   margin-bottom: 30px;
+}
+
+.email-direct-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0, 229, 255, 0.03);
+  border: 1px solid rgba(0, 229, 255, 0.15);
+  padding: 14px 20px;
+  border-radius: var(--border-radius);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.email-icon {
+  font-size: 1.3rem;
+}
+
+.email-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.email-label {
+  font-family: var(--font-terminal);
+  font-size: 0.65rem;
+  color: var(--accent-cyan);
+  margin-bottom: 2px;
+  letter-spacing: 0.5px;
+}
+
+.email-address {
+  font-family: var(--font-terminal);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.email-address:hover {
+  color: var(--accent-cyan);
+}
+
+.btn-copy-email {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: var(--font-terminal);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-copy-email:hover {
+  background: rgba(0, 255, 102, 0.1);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
 }
 
 .social-links-vertical {
