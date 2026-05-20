@@ -4,15 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Portfolio of Abdo Ramdan — Security Researcher &amp; OSCP Candidate" />
-  <meta name="theme-color" content="#05050a" />
-  <title>Abdo Ramdan — Security Researcher & OSCP Candidate</title>
+  <meta name="description" content="Interactive Cybersecurity Portfolio of Abdo Ramdan — Security Researcher &amp; OSCP Candidate" />
+  <meta name="theme-color" content="#030308" />
+  <title>Abdo Ramdan — Interactive Cybersecurity Console & Learning Lab</title>
 
-  <!-- Preconnect for performance -->
+  <!-- Preconnect and Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <!-- Typography: Inter for reading, Fira Code for Terminal style -->
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
@@ -20,847 +18,631 @@
 </head>
 <body>
 
-  <!-- Background Grid & Glowing Orbs -->
+  <!-- Matrix Grid & Background Orbs -->
   <div class="grid-bg" aria-hidden="true"></div>
   <div class="bg-orbs" aria-hidden="true">
     <div class="orb orb--green"></div>
     <div class="orb orb--cyan"></div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       NAVIGATION
-       ═══════════════════════════════════════════════════════════ -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-container">
-      <a href="#hero" class="nav-logo">
-        <span class="logo-accent">&lt;</span>Abdo.R<span class="logo-accent">/&gt;</span>
-      </a>
-
-      <div class="nav-links" id="navLinks">
-        <a href="#hero" class="active">Home</a>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#writeups">Writeups</a>
-        <a href="#certifications">Certs</a>
-        <a href="#contact">Contact</a>
-      </div>
-
-      <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+  <!-- Top Cyber Status Bar -->
+  <header class="cyber-header">
+    <div class="header-logo">
+      <span class="logo-bracket">&lt;</span>Abdo Ramdan<span class="logo-bracket">/&gt;</span>
     </div>
-    <div class="nav-overlay" id="navOverlay"></div>
-  </nav>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       HERO SECTION
-       ═══════════════════════════════════════════════════════════ -->
-  <section class="hero" id="hero">
-    <div class="hero-container">
-      <!-- Left side: Brief Intro -->
-      <div class="hero-content">
-        <div class="hero-badge">
-          <span class="badge-dot"></span>
-          Ready to Audit & Secure
-        </div>
-
-        <h1 class="hero-title">
-          Hi, I'm <span class="gradient-text">Abdo Ramdan</span>
-        </h1>
-
-        <p class="hero-subtitle">
-          &gt; <span id="typingText"></span><span class="typing-cursor"></span>
-        </p>
-
-        <p class="hero-description">
-          Specializing in offensive security, vulnerability assessment, and Linux automation. 
-          Building secure digital infrastructures through rigorous penetration testing.
-        </p>
-
-        <div class="hero-buttons">
-          <a href="#projects" class="btn btn-primary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            View Projects
-          </a>
-          <a href="#terminal-section" class="btn btn-outline">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-            Launch CLI
-          </a>
-        </div>
-      </div>
-
-      <!-- Right side: Retro Terminal Screen -->
-      <div class="hero-terminal reveal-right">
-        <div class="terminal-header">
-          <div class="terminal-buttons">
-            <span class="term-btn term-btn--red"></span>
-            <span class="term-btn term-btn--yellow"></span>
-            <span class="term-btn term-btn--green"></span>
-          </div>
-          <span class="terminal-title">bash - abdo@portfolio</span>
-        </div>
-        <div class="terminal-body" id="heroTerminalBody">
-          <div class="terminal-line"><span class="term-prompt">abdo@portfolio:~$</span> whoami</div>
-          <div class="terminal-output">
-            Abdo Ramdan<br>
-            Security Researcher & OSCP Candidate<br>
-            Linux & Web Pentester
-          </div>
-          <div class="terminal-line"><span class="term-prompt">abdo@portfolio:~$</span> status</div>
-          <div class="terminal-output text-neon-green">
-            [+] Active labs solved: 100+<br>
-            [+] Security audits: Active<br>
-            [+] Target Status: Monitored
-          </div>
-          <div class="terminal-line"><span class="term-prompt">abdo@portfolio:~$</span> <span class="blink-block"></span></div>
-        </div>
-      </div>
+    <div class="header-status">
+      <span class="status-indicator"></span>
+      <span class="status-text">SECURE TUNNEL ACTIVE // ETH0: 10.10.10.15</span>
     </div>
-  </section>
+  </header>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       ABOUT SECTION
-       ═══════════════════════════════════════════════════════════ -->
-  <section class="section" id="about">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-label">0x01 // Identity</span>
-        <h2 class="section-title">Discover My <span class="highlight">Mission</span></h2>
-        <div class="section-line"></div>
+  <!-- Main Grid Layout -->
+  <div class="main-layout-container">
+    
+    <!-- ═══════════════════════════════════════════════════════════
+         LEFT SIDEBAR: VISUAL CONTROL DASHBOARD
+         ═══════════════════════════════════════════════════════════ -->
+    <aside class="sidebar-dashboard">
+      
+      <!-- Profile Header -->
+      <div class="profile-card">
+        <div class="avatar-wrapper">
+          <img src="images/profile.png" alt="Abdo Ramdan Profile Photo" class="profile-avatar" />
+          <div class="avatar-glow"></div>
+        </div>
+        <h1 class="profile-name">Abdo Ramdan</h1>
+        <p class="profile-role">&gt; <span id="sidebarTyping"></span><span class="typing-cursor"></span></p>
+        <p class="profile-bio">Security Researcher &amp; OSCP Candidate. Focused on Web Application Penetration Testing, Network Security Auditing, and Linux Systems Administration. Passionate about discovering vulnerabilities, writing scripts to automate security tasks, and sharing knowledge through detailed writeups.</p>
       </div>
 
-      <div class="about-grid">
-        <div class="about-text reveal-left">
-          <p class="lead-text">Security Researcher &amp; OSCP Candidate. Focused on Web Application Penetration Testing, Network Security Auditing, and Linux Systems Administration. Passionate about discovering vulnerabilities, writing scripts to automate security tasks, and sharing knowledge through detailed writeups.</p>
-          <p>
-            I focus on finding critical flaws before malicious entities can exploit them. 
-            My methodology combines standard penetration testing methodologies (OWASP Top 10, PTES) 
-            with custom Python script automations to perform comprehensive audits on web assets 
-            and Unix systems.
-          </p>
-          <p>
-            Constantly sharpening my skills through active platforms like HackTheBox and TryHackMe, 
-            staying ahead of emerging exploits and defensive techniques.
-          </p>
-          <div class="current-focus-block">
-            <h4 class="focus-title">// Current Focus & Study Path</h4>
-            <ul class="focus-list">
-              
-              <li><span class="focus-bullet">[~]</span> Active Directory Exploitation (AD Labs)</li>
-              
-              <li><span class="focus-bullet">[~]</span> Advanced Linux Privilege Escalation (PrivEsc)</li>
-              
-              <li><span class="focus-bullet">[~]</span> OSCP Certification Preparation (OffSec PWK)</li>
-              
-            </ul>
+      <!-- Lab Status Widget -->
+      <div class="dashboard-widget lab-widget">
+        <h3 class="widget-title">// Lab Console Status</h3>
+        <div class="lab-status-grid">
+          <div class="status-item">
+            <span class="status-label">Lab Level:</span>
+            <span class="status-val text-neon-cyan" id="hudLevel">1 / 4</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Score:</span>
+            <span class="status-val text-neon-green" id="hudScore">0 XP</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Flags:</span>
+            <span class="status-val text-neon-orange" id="hudFlags">0 / 4</span>
           </div>
         </div>
+        <div class="lab-progress-bar">
+          <div class="lab-progress-fill" id="hudProgressFill" style="width: 0%;"></div>
+        </div>
+        <div class="active-mission">
+          <span class="mission-bullet">[+]</span> Active Mission: <span id="hudMission">Unzip secret_backup.zip</span>
+        </div>
+      </div>
 
-        <div class="about-visual reveal-right">
-          <div class="terminal-card">
+      <!-- TryHackMe & HackTheBox Badges -->
+      <div class="dashboard-widget ranks-widget">
+        <h3 class="widget-title">// OffSec Ranks</h3>
+        <div class="ranks-grid">
+          <a href="https://tryhackme.com/p/Abdo453" target="_blank" rel="noopener" class="rank-badge-card thm-card">
+            <span class="badge-icon">🔴</span>
+            <div class="badge-info">
+              <span class="badge-platform">TryHackMe</span>
+              <span class="badge-rank text-neon-cyan">Top 1% Global</span>
+            </div>
+          </a>
+          <a href="https://app.hackthebox.com/profile/Abdo453" target="_blank" rel="noopener" class="rank-badge-card htb-card">
+            <span class="badge-icon">🟢</span>
+            <div class="badge-info">
+              <span class="badge-platform">HackTheBox</span>
+              <span class="badge-rank text-neon-green">Pro Hacker</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Active Certification & Current Focus -->
+      <div class="dashboard-widget focus-widget">
+        <h3 class="widget-title">// Certification Progress</h3>
+        
+          
+          <div class="sidebar-cert-progress">
+            <div class="cert-info-row">
+              <span class="cert-short">OSCP (Offensive Security Certified Professional)</span>
+              <span class="cert-percent">75%</span>
+            </div>
+            <div class="cert-bar-track">
+              <div class="cert-bar-fill" style="width: 75%; background-color: #ff0055"></div>
+            </div>
+            <div class="cert-meta-row">
+              <span class="cert-status-tag" style="color: #ff0055">In Progress</span>
+              <span class="cert-date-tag">Target: Q3 2026</span>
+            </div>
+          </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+
+      <!-- Contact Quick Info -->
+      <div class="dashboard-widget contact-widget">
+        <h3 class="widget-title">// Social Transmission</h3>
+        <div class="sidebar-email-card">
+          <span class="email-icon">✉️</span>
+          <div class="email-details">
+            <span class="email-lbl">DIRECT EMAIL</span>
+            <span class="email-val" id="sidebarEmail">abdo.ramdan.sec@gmail.com</span>
+          </div>
+          <button class="copy-email-btn" onclick="copyEmailToClipboard()" title="Copy email address">
+            <span id="copyText">Copy</span>
+          </button>
+        </div>
+        <div class="sidebar-social-links">
+          <a href="https://github.com/Abdo453" target="_blank" rel="noopener" class="sidebar-social-item" title="GitHub">🐙</a>
+          <a href="https://www.facebook.com/AvatarV7x" target="_blank" rel="noopener" class="sidebar-social-item" title="Facebook">📘</a>
+          <a href="https://linkedin.com/in/abdo-ramdan" target="_blank" rel="noopener" class="sidebar-social-item" title="LinkedIn">💼</a>
+          <a href="https://t.me/AvatarV7x" target="_blank" rel="noopener" class="sidebar-social-item" title="Telegram">✈️</a>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         RIGHT WORKSPACE: INTERACTIVE PANES
+         ═══════════════════════════════════════════════════════════ -->
+    <main class="content-workspace">
+      
+      <!-- Workspace Navigation Tabs -->
+      <div class="workspace-tabs">
+        <button class="tab-link active" onclick="switchTab('terminal')" data-tab="terminal">
+          <span class="tab-icon">🐚</span> Terminal
+        </button>
+        <button class="tab-link" onclick="switchTab('skills')" data-tab="skills">
+          <span class="tab-icon">🛡️</span> Skills
+        </button>
+        <button class="tab-link" onclick="switchTab('projects')" data-tab="projects">
+          <span class="tab-icon">📂</span> Projects
+        </button>
+        <button class="tab-link" onclick="switchTab('writeups')" data-tab="writeups">
+          <span class="tab-icon">📝</span> Writeups
+        </button>
+        <button class="tab-link" onclick="switchTab('certs')" data-tab="certs">
+          <span class="tab-icon">🔑</span> Certs
+        </button>
+        <button class="tab-link" onclick="switchTab('contact')" data-tab="contact">
+          <span class="tab-icon">📡</span> Contact
+        </button>
+      </div>
+
+      <!-- Workspace Panes -->
+      <div class="pane-container">
+
+        <!-- 1. TERMINAL CONSOLE VIEW -->
+        <div class="workspace-pane active" id="pane-terminal">
+          <div class="interactive-terminal">
             <div class="terminal-header">
-              <div class="terminal-buttons">
-                <span></span><span></span><span></span>
+              <div class="terminal-controls">
+                <span class="term-dot term-dot--red"></span>
+                <span class="term-dot term-dot--yellow"></span>
+                <span class="term-dot term-dot--green"></span>
               </div>
-              <span class="terminal-title">identity.js</span>
-            </div>
-            <div class="terminal-body">
-              <pre class="code-block"><code><span class="keyword">const</span> <span class="property">specialist</span> = {
-  name: <span class="string">"Abdo Ramdan"</span>,
-  role: <span class="string">"Security Researcher &amp; OSCP Candidate"</span>,
-  interests: [<span class="string">"Web Pentesting"</span>, <span class="string">"PrivEsc"</span>, <span class="string">"Bash Scripting"</span>],
-  focus: <span class="string">"Offensive Auditing"</span>,
-  motto: <span class="string">"Scan, Exploit, Document, Secure"</span>
-};
-
-<span class="keyword">console</span>.log(specialist.motto);</code></pre>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       STATS SECTION
-       ═══════════════════════════════════════════════════════════ -->
-  <section class="section stats-bar" id="stats">
-    <div class="container">
-      <div class="stats-grid">
-        
-        <div class="stat-card reveal">
-          <div class="stat-icon">🎮</div>
-          <div class="stat-details">
-            <div class="stat-number-wrapper">
-              <span class="stat-number" data-target="100">0</span>+
-            </div>
-            <div class="stat-label">Labs Solved</div>
-          </div>
-        </div>
-        
-        <div class="stat-card reveal">
-          <div class="stat-icon">📂</div>
-          <div class="stat-details">
-            <div class="stat-number-wrapper">
-              <span class="stat-number" data-target="4">0</span>
-            </div>
-            <div class="stat-label">Projects</div>
-          </div>
-        </div>
-        
-        <div class="stat-card reveal">
-          <div class="stat-icon">📝</div>
-          <div class="stat-details">
-            <div class="stat-number-wrapper">
-              <span class="stat-number" data-target="5">0</span>
-            </div>
-            <div class="stat-label">Writeups</div>
-          </div>
-        </div>
-        
-        <div class="stat-card reveal">
-          <div class="stat-icon">🛠️</div>
-          <div class="stat-details">
-            <div class="stat-number-wrapper">
-              <span class="stat-number" data-target="10">0</span>+
-            </div>
-            <div class="stat-label">Tools Used</div>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       SKILLS SECTION
-       ═══════════════════════════════════════════════════════════ -->
-  <section class="section" id="skills">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-label">0x02 // Hardening</span>
-        <h2 class="section-title">Technical <span class="highlight">Arsenal</span></h2>
-        <div class="section-line"></div>
-      </div>
-
-      <!-- Skills Tab Headers -->
-      <div class="skills-tabs reveal">
-        <button class="tab-btn active" data-tab="security">Security & Pentesting</button>
-        <button class="tab-btn" data-tab="tools">Sec Tools</button>
-        <button class="tab-btn" data-tab="programming">Languages</button>
-      </div>
-
-      <!-- Skills Grid Container -->
-      <div class="skills-content-container reveal">
-        <!-- Security Tab -->
-        <div class="tab-content active" id="security">
-          <div class="skills-grid">
-            
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">🎯</span>
-                <span class="skill-name">Web Pentesting</span>
+              <span class="terminal-title">visitor@abdo-sec:~ (Interactive Lab Session)</span>
+              <div class="terminal-actions">
+                <button class="term-action-btn" id="soundToggleBtn" onclick="toggleMute()" title="Toggle Sound Feedback">
+                  <span id="soundIcon">🔇 Sound Off</span>
+                </button>
+                <button class="term-action-btn" onclick="resetLabState()" title="Reset Linux Lab Progression">
+                  🔄 Reset Lab
+                </button>
               </div>
             </div>
             
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">🐧</span>
-                <span class="skill-name">Linux Security</span>
+            <div class="terminal-body" id="consoleBody">
+              <!-- Logs will append here -->
+            </div>
+
+            <!-- Mobile Keyboard Helpers Toolbar -->
+            <div class="terminal-mobile-toolbar">
+              <span class="toolbar-label">Quick Commands:</span>
+              <div class="toolbar-scroll">
+                <button class="mobile-cmd-btn" onclick="executeQuickCommand('help')">help</button>
+                <button class="mobile-cmd-btn" onclick="executeQuickCommand('whoami')">whoami</button>
+                <button class="mobile-cmd-btn" onclick="executeQuickCommand('skills')">skills</button>
+                <button class="mobile-cmd-btn" onclick="executeQuickCommand('projects')">projects</button>
+                <button class="mobile-cmd-btn" onclick="executeQuickCommand('writeups')">writeups</button>
+                <button class="mobile-cmd-btn" onclick="executeQuickCommand('nmap')">nmap</button>
+                <button class="mobile-cmd-btn" onclick="executeQuickCommand('linux')">linux</button>
+                <button class="mobile-cmd-btn" onclick="executeQuickCommand('progress')">progress</button>
+                <button class="mobile-cmd-btn" onclick="executeQuickCommand('clear')">clear</button>
               </div>
             </div>
-            
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">🛡️</span>
-                <span class="skill-name">Network Security</span>
-              </div>
+
+            <div class="terminal-input-line">
+              <span class="term-prompt" id="consolePrompt">visitor@abdo-sec:~$</span>
+              <input type="text" id="consoleInput" autofocus autocomplete="off" spellcheck="false" placeholder="Type a command..." />
+              <div class="autocomplete-hint" id="autocompleteHint"></div>
             </div>
-            
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">🔑</span>
-                <span class="skill-name">Active Directory</span>
-              </div>
-            </div>
-            
           </div>
         </div>
 
-        <!-- Tools Tab -->
-        <div class="tab-content" id="tools">
-          <div class="skills-grid">
+        <!-- 2. SKILLS VIEW -->
+        <div class="workspace-pane" id="pane-skills">
+          <div class="visual-skills-card">
+            <h2 class="pane-view-title">// Hardened Skills Arsenal</h2>
             
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">🌐</span>
-                <span class="skill-name">Burp Suite</span>
+            <div class="skills-categories-grid">
+              <!-- Security -->
+              <div class="skill-category-box">
+                <h3 class="category-title">🎯 Offensive Security & Pentesting</h3>
+                <div class="skill-tags-list">
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">🎯</span> Web Pentesting</span>
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">🐧</span> Linux Security</span>
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">🛡️</span> Network Security</span>
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">🔑</span> Active Directory</span>
+                  
+                </div>
+              </div>
+              
+              <!-- Tools -->
+              <div class="skill-category-box">
+                <h3 class="category-title">🛠️ Auditing & Reconnaissance Tools</h3>
+                <div class="skill-tags-list">
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">🌐</span> Burp Suite</span>
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">📡</span> Nmap</span>
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">🔍</span> Wireshark</span>
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">⚡</span> Metasploit</span>
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">📂</span> Gobuster / Feroxbuster</span>
+                  
+                </div>
+              </div>
+
+              <!-- Programming -->
+              <div class="skill-category-box">
+                <h3 class="category-title">🐍 Automation & Languages</h3>
+                <div class="skill-tags-list">
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">🐍</span> Python</span>
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">🐚</span> Bash Scripting</span>
+                  
+                  <span class="skill-badge-tag"><span class="tag-icon">⚡</span> JavaScript</span>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. PROJECTS VIEW -->
+        <div class="workspace-pane" id="pane-projects">
+          <h2 class="pane-view-title">// Proof Of Concept Exploits & Tools</h2>
+          <div class="visual-projects-grid">
+            
+            <div class="visual-project-card" style="--project-glow: #00ff66">
+              <div class="project-card-image-wrap">
+                <img src="images/port_scanner.png" alt="Multithreaded Port Scanner" class="project-card-image" />
+                <div class="project-glow-layer" style="background: #00ff661a"></div>
+              </div>
+              <div class="project-card-info">
+                <h3 class="project-title-name">Multithreaded Port Scanner</h3>
+                <p class="project-desc-txt">A high-performance multithreaded network port scanner built in Python. Resolves hostnames, scans custom ports, identifies running services, and outputs results in clean, readable formats.</p>
+                <div class="project-challenge-log">
+                  <strong>Challenge Solved:</strong> Overcame Python&#x27;s Global Interpreter Lock (GIL) limitations using efficient multithreading to increase scanning speeds by 400%, and handled socket timeout exceptions gracefully.
+                </div>
+                <div class="project-technologies">
+                  
+                  <span class="tech-tag">Python</span>
+                  
+                  <span class="tech-tag">Socket Programming</span>
+                  
+                  <span class="tech-tag">Threading</span>
+                  
+                  <span class="tech-tag">Service Detection</span>
+                  
+                </div>
+                <div class="project-card-action">
+                  <a href="https://github.com/Abdo453/port-scanner" target="_blank" rel="noopener" class="source-code-link">
+                    📁 View Code Repository &gt;&gt;
+                  </a>
+                </div>
               </div>
             </div>
             
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">📡</span>
-                <span class="skill-name">Nmap</span>
+            <div class="visual-project-card" style="--project-glow: #00e5ff">
+              <div class="project-card-image-wrap">
+                <img src="images/dir_bruteforce.png" alt="Directory Bruteforcer" class="project-card-image" />
+                <div class="project-glow-layer" style="background: #00e5ff1a"></div>
+              </div>
+              <div class="project-card-info">
+                <h3 class="project-title-name">Directory Bruteforcer</h3>
+                <p class="project-desc-txt">A lightweight, fast command-line directory fuzzer to discover hidden files and folders on a target web server using dictionary attacks with status code filtering.</p>
+                <div class="project-challenge-log">
+                  <strong>Challenge Solved:</strong> Handled connection pooling and rate-limiting issues on target servers, and implemented recursive scanning to automatically fuzz newly discovered subdirectories.
+                </div>
+                <div class="project-technologies">
+                  
+                  <span class="tech-tag">Python</span>
+                  
+                  <span class="tech-tag">Requests API</span>
+                  
+                  <span class="tech-tag">Wordlists</span>
+                  
+                  <span class="tech-tag">HTTP Headers</span>
+                  
+                </div>
+                <div class="project-card-action">
+                  <a href="https://github.com/Abdo453/dir-bruteforcer" target="_blank" rel="noopener" class="source-code-link">
+                    📁 View Code Repository &gt;&gt;
+                  </a>
+                </div>
               </div>
             </div>
             
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">🔍</span>
-                <span class="skill-name">Wireshark</span>
+            <div class="visual-project-card" style="--project-glow: #ff9a56">
+              <div class="project-card-image-wrap">
+                <img src="images/linux_enum.png" alt="Linux Enumeration Script" class="project-card-image" />
+                <div class="project-glow-layer" style="background: #ff9a561a"></div>
+              </div>
+              <div class="project-card-info">
+                <h3 class="project-title-name">Linux Enumeration Script</h3>
+                <p class="project-desc-txt">An automated bash script that executes security audits and searches for local privilege escalation vectors, including SUID binaries, misconfigured cron jobs, and kernel exploits.</p>
+                <div class="project-challenge-log">
+                  <strong>Challenge Solved:</strong> Reduced manual post-exploitation auditing time from hours to seconds by automating check lists from PayloadAllTheThings and GTFOBins, producing structured console outputs.
+                </div>
+                <div class="project-technologies">
+                  
+                  <span class="tech-tag">Bash</span>
+                  
+                  <span class="tech-tag">Linux Syscalls</span>
+                  
+                  <span class="tech-tag">Privilege Escalation</span>
+                  
+                  <span class="tech-tag">Security Auditing</span>
+                  
+                </div>
+                <div class="project-card-action">
+                  <a href="https://github.com/Abdo453/linux-enum" target="_blank" rel="noopener" class="source-code-link">
+                    📁 View Code Repository &gt;&gt;
+                  </a>
+                </div>
               </div>
             </div>
             
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">⚡</span>
-                <span class="skill-name">Metasploit</span>
+            <div class="visual-project-card" style="--project-glow: #ff6b9d">
+              <div class="project-card-image-wrap">
+                <img src="images/htb_writeup.png" alt="HTB / THM Writeups" class="project-card-image" />
+                <div class="project-glow-layer" style="background: #ff6b9d1a"></div>
               </div>
-            </div>
-            
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">📂</span>
-                <span class="skill-name">Gobuster / Feroxbuster</span>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-
-        <!-- Programming Tab -->
-        <div class="tab-content" id="programming">
-          <div class="skills-grid">
-            
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">🐍</span>
-                <span class="skill-name">Python</span>
-              </div>
-            </div>
-            
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">🐚</span>
-                <span class="skill-name">Bash Scripting</span>
-              </div>
-            </div>
-            
-            <div class="skill-card">
-              <div class="skill-info">
-                <span class="skill-icon">⚡</span>
-                <span class="skill-name">JavaScript</span>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       PROJECTS SECTION
-       ═══════════════════════════════════════════════════════════ -->
-  <section class="section" id="projects">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-label">0x03 // Exploitation</span>
-        <h2 class="section-title">Proof Of <span class="highlight">Concept</span></h2>
-        <div class="section-line"></div>
-      </div>
-
-      <div class="projects-grid stagger-children">
-        
-        <div class="project-card reveal">
-          <div class="project-img-container">
-            <img src="images/port_scanner.png" alt="Multithreaded Port Scanner Interface" class="project-img" />
-            <div class="project-overlay" style="background: #00ff661b"></div>
-          </div>
-          <div class="project-body">
-            <h3 class="project-card-title">Multithreaded Port Scanner</h3>
-            <p class="project-card-desc">A high-performance multithreaded network port scanner built in Python. Resolves hostnames, scans custom ports, identifies running services, and outputs results in clean, readable formats.</p>
-            
-            <div class="project-challenge">
-              <strong>Challenge Solved:</strong> Overcame Python&#x27;s Global Interpreter Lock (GIL) limitations using efficient multithreading to increase scanning speeds by 400%, and handled socket timeout exceptions gracefully.
-            </div>
-
-            <div class="project-tags">
-              
-              <span class="project-tag">Python</span>
-              
-              <span class="project-tag">Socket Programming</span>
-              
-              <span class="project-tag">Threading</span>
-              
-              <span class="project-tag">Service Detection</span>
-              
-            </div>
-
-            <div class="project-footer">
-              <a href="https://github.com/Abdo453/port-scanner" target="_blank" rel="noopener" class="project-link">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                Source Code &gt;&gt;
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="project-card reveal">
-          <div class="project-img-container">
-            <img src="images/dir_bruteforce.png" alt="Directory Bruteforcer Interface" class="project-img" />
-            <div class="project-overlay" style="background: #00e5ff1b"></div>
-          </div>
-          <div class="project-body">
-            <h3 class="project-card-title">Directory Bruteforcer</h3>
-            <p class="project-card-desc">A lightweight, fast command-line directory fuzzer to discover hidden files and folders on a target web server using dictionary attacks with status code filtering.</p>
-            
-            <div class="project-challenge">
-              <strong>Challenge Solved:</strong> Handled connection pooling and rate-limiting issues on target servers, and implemented recursive scanning to automatically fuzz newly discovered subdirectories.
-            </div>
-
-            <div class="project-tags">
-              
-              <span class="project-tag">Python</span>
-              
-              <span class="project-tag">Requests API</span>
-              
-              <span class="project-tag">Wordlists</span>
-              
-              <span class="project-tag">HTTP Headers</span>
-              
-            </div>
-
-            <div class="project-footer">
-              <a href="https://github.com/Abdo453/dir-bruteforcer" target="_blank" rel="noopener" class="project-link">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                Source Code &gt;&gt;
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="project-card reveal">
-          <div class="project-img-container">
-            <img src="images/linux_enum.png" alt="Linux Enumeration Script Interface" class="project-img" />
-            <div class="project-overlay" style="background: #ff9a561b"></div>
-          </div>
-          <div class="project-body">
-            <h3 class="project-card-title">Linux Enumeration Script</h3>
-            <p class="project-card-desc">An automated bash script that executes security audits and searches for local privilege escalation vectors, including SUID binaries, misconfigured cron jobs, and kernel exploits.</p>
-            
-            <div class="project-challenge">
-              <strong>Challenge Solved:</strong> Reduced manual post-exploitation auditing time from hours to seconds by automating check lists from PayloadAllTheThings and GTFOBins, producing structured console outputs.
-            </div>
-
-            <div class="project-tags">
-              
-              <span class="project-tag">Bash</span>
-              
-              <span class="project-tag">Linux Syscalls</span>
-              
-              <span class="project-tag">Privilege Escalation</span>
-              
-              <span class="project-tag">Security Auditing</span>
-              
-            </div>
-
-            <div class="project-footer">
-              <a href="https://github.com/Abdo453/linux-enum" target="_blank" rel="noopener" class="project-link">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                Source Code &gt;&gt;
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="project-card reveal">
-          <div class="project-img-container">
-            <img src="images/htb_writeup.png" alt="HTB / THM Writeups Interface" class="project-img" />
-            <div class="project-overlay" style="background: #ff6b9d1b"></div>
-          </div>
-          <div class="project-body">
-            <h3 class="project-card-title">HTB / THM Writeups</h3>
-            <p class="project-card-desc">A collection of deep-dive walkthroughs for solving vulnerable machines on HackTheBox and TryHackMe, documenting enumeration, exploitation, and privilege escalation phases.</p>
-            
-            <div class="project-challenge">
-              <strong>Challenge Solved:</strong> Clearly documented initial access vectors and privilege escalation steps while adhering to platform disclosure guidelines, focusing on explanatory value and remediation.
-            </div>
-
-            <div class="project-tags">
-              
-              <span class="project-tag">TryHackMe</span>
-              
-              <span class="project-tag">HackTheBox</span>
-              
-              <span class="project-tag">Pentesting methodology</span>
-              
-              <span class="project-tag">Markdown Documentation</span>
-              
-            </div>
-
-            <div class="project-footer">
-              <a href="https://github.com/Abdo453/writeups" target="_blank" rel="noopener" class="project-link">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                Source Code &gt;&gt;
-              </a>
-            </div>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       WRITEUPS SECTION
-       ═══════════════════════════════════════════════════════════ -->
-  <section class="section" id="writeups">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-label">0x04 // Documentation</span>
-        <h2 class="section-title">Knowledge <span class="highlight">Base</span></h2>
-        <div class="section-line"></div>
-      </div>
-
-      <div class="writeups-grid stagger-children">
-        
-        <div class="writeup-card reveal" onclick="openWriteup('nmap-notes')">
-          <div class="writeup-meta">
-            <span class="writeup-date">May 15, 2026</span>
-            <span class="writeup-readtime">5 min read</span>
-          </div>
-          <h3 class="writeup-card-title">Deep Dive into Nmap Scanning</h3>
-          <p class="writeup-card-desc">Understanding Nmap scan types (SYN, Connect, UDP), evasion techniques, NSE scripts, and analyzing packet captures.</p>
-          <div class="writeup-action">
-            <span>Read Writeup</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </div>
-        
-        <div class="writeup-card reveal" onclick="openWriteup('xss-basics')">
-          <div class="writeup-meta">
-            <span class="writeup-date">May 10, 2026</span>
-            <span class="writeup-readtime">5 min read</span>
-          </div>
-          <h3 class="writeup-card-title">Cross-Site Scripting (XSS) Walkthrough</h3>
-          <p class="writeup-card-desc">Explaining the differences between Stored, Reflected, and DOM-based XSS, cookie hijacking payloads, and mitigation.</p>
-          <div class="writeup-action">
-            <span>Read Writeup</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </div>
-        
-        <div class="writeup-card reveal" onclick="openWriteup('linux-privesc')">
-          <div class="writeup-meta">
-            <span class="writeup-date">May 05, 2026</span>
-            <span class="writeup-readtime">5 min read</span>
-          </div>
-          <h3 class="writeup-card-title">Linux Privilege Escalation Techniques</h3>
-          <p class="writeup-card-desc">A cheat sheet for escalating privileges on Linux systems using misconfigured SUID binaries, cron jobs, and sudo rights.</p>
-          <div class="writeup-action">
-            <span>Read Writeup</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </div>
-        
-        <div class="writeup-card reveal" onclick="openWriteup('burp-suite')">
-          <div class="writeup-meta">
-            <span class="writeup-date">April 28, 2026</span>
-            <span class="writeup-readtime">5 min read</span>
-          </div>
-          <h3 class="writeup-card-title">Burp Suite Pro Tips for Web Audits</h3>
-          <p class="writeup-card-desc">Unlocking the power of Burp Suite Proxy, Intruder, Repeater, and customized extensions for effective penetration testing.</p>
-          <div class="writeup-action">
-            <span>Read Writeup</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </div>
-        
-        <div class="writeup-card reveal" onclick="openWriteup('feroxbuster')">
-          <div class="writeup-meta">
-            <span class="writeup-date">April 20, 2026</span>
-            <span class="writeup-readtime">5 min read</span>
-          </div>
-          <h3 class="writeup-card-title">Fast Directory Discovery with Feroxbuster</h3>
-          <p class="writeup-card-desc">A guide to directory busting using Feroxbuster: configuring filters, parallel recursive scans, and custom headers.</p>
-          <div class="writeup-action">
-            <span>Read Writeup</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       CERTIFICATIONS SECTION
-       ═══════════════════════════════════════════════════════════ -->
-  <section class="section" id="certifications">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-label">0x05 // Credentials</span>
-        <h2 class="section-title">Verified <span class="highlight">Accredits</span></h2>
-        <div class="section-line"></div>
-      </div>
-
-      <div class="certs-grid stagger-children">
-        
-        <div class="cert-card reveal" style="--cert-glow: #ff0055">
-          <div>
-            <div class="cert-header">
-              <span class="cert-issuer">Offensive Security</span>
-              <span class="cert-badge" style="background: #ff00551b; color: #ff0055">Candidate</span>
-            </div>
-            <h3 class="cert-name">OSCP (Offensive Security Certified Professional)</h3>
-            
-            
-            <div class="cert-progress-wrapper">
-              <div class="cert-progress-label">
-                <span>Prep Progress</span>
-                <span>75%</span>
-              </div>
-              <div class="cert-progress-bar">
-                <div class="cert-progress-fill" style="width: 75%; background-color: #ff0055"></div>
+              <div class="project-card-info">
+                <h3 class="project-title-name">HTB / THM Writeups</h3>
+                <p class="project-desc-txt">A collection of deep-dive walkthroughs for solving vulnerable machines on HackTheBox and TryHackMe, documenting enumeration, exploitation, and privilege escalation phases.</p>
+                <div class="project-challenge-log">
+                  <strong>Challenge Solved:</strong> Clearly documented initial access vectors and privilege escalation steps while adhering to platform disclosure guidelines, focusing on explanatory value and remediation.
+                </div>
+                <div class="project-technologies">
+                  
+                  <span class="tech-tag">TryHackMe</span>
+                  
+                  <span class="tech-tag">HackTheBox</span>
+                  
+                  <span class="tech-tag">Pentesting methodology</span>
+                  
+                  <span class="tech-tag">Markdown Documentation</span>
+                  
+                </div>
+                <div class="project-card-action">
+                  <a href="https://github.com/Abdo453/writeups" target="_blank" rel="noopener" class="source-code-link">
+                    📁 View Code Repository &gt;&gt;
+                  </a>
+                </div>
               </div>
             </div>
             
           </div>
-
-          <div class="cert-footer">
-            <span class="cert-status">In Progress</span>
-            
-            <span class="cert-date">Target: Q3 2026</span>
-            
-          </div>
         </div>
-        
-        <div class="cert-card reveal" style="--cert-glow: #cc0000">
-          <div>
-            <div class="cert-header">
-              <span class="cert-issuer">Red Hat</span>
-              <span class="cert-badge" style="background: #cc00001b; color: #cc0000">Active</span>
+
+        <!-- 4. WRITEUPS VIEW -->
+        <div class="workspace-pane" id="pane-writeups">
+          <h2 class="pane-view-title">// Security Knowledge Base & CTF Writeups</h2>
+          <div class="visual-writeups-grid">
+            
+            <div class="visual-writeup-card" onclick="openWriteupModal('nmap-notes')">
+              <div class="writeup-card-header">
+                <span class="writeup-card-date">May 15, 2026</span>
+                <span class="writeup-read">5 min read</span>
+              </div>
+              <h3 class="writeup-card-title">Deep Dive into Nmap Scanning</h3>
+              <p class="writeup-card-desc">Understanding Nmap scan types (SYN, Connect, UDP), evasion techniques, NSE scripts, and analyzing packet captures.</p>
+              <div class="writeup-card-link">
+                <span>View Full Writeup Log</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
             </div>
-            <h3 class="cert-name">RHCSA (Red Hat Certified System Administrator)</h3>
             
-            
-          </div>
-
-          <div class="cert-footer">
-            <span class="cert-status">Certified</span>
-            
-            <span class="cert-date">Issued: Jan 2025</span>
-            
-          </div>
-        </div>
-        
-        <div class="cert-card reveal" style="--cert-glow: #9b59ff">
-          <div>
-            <div class="cert-header">
-              <span class="cert-issuer">TryHackMe Platform</span>
-              <span class="cert-badge" style="background: #9b59ff1b; color: #9b59ff">Top Rank</span>
+            <div class="visual-writeup-card" onclick="openWriteupModal('xss-basics')">
+              <div class="writeup-card-header">
+                <span class="writeup-card-date">May 10, 2026</span>
+                <span class="writeup-read">5 min read</span>
+              </div>
+              <h3 class="writeup-card-title">Cross-Site Scripting (XSS) Walkthrough</h3>
+              <p class="writeup-card-desc">Explaining the differences between Stored, Reflected, and DOM-based XSS, cookie hijacking payloads, and mitigation.</p>
+              <div class="writeup-card-link">
+                <span>View Full Writeup Log</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
             </div>
-            <h3 class="cert-name">TryHackMe (Top 1%)</h3>
             
-            
-          </div>
-
-          <div class="cert-footer">
-            <span class="cert-status">Completed Labs</span>
-            
-            <span class="cert-date">Continuous</span>
-            
-          </div>
-        </div>
-        
-        <div class="cert-card reveal" style="--cert-glow: #00ff66">
-          <div>
-            <div class="cert-header">
-              <span class="cert-issuer">HackTheBox Platform</span>
-              <span class="cert-badge" style="background: #00ff661b; color: #00ff66">Active</span>
+            <div class="visual-writeup-card" onclick="openWriteupModal('linux-privesc')">
+              <div class="writeup-card-header">
+                <span class="writeup-card-date">May 05, 2026</span>
+                <span class="writeup-read">5 min read</span>
+              </div>
+              <h3 class="writeup-card-title">Linux Privilege Escalation Techniques</h3>
+              <p class="writeup-card-desc">A cheat sheet for escalating privileges on Linux systems using misconfigured SUID binaries, cron jobs, and sudo rights.</p>
+              <div class="writeup-card-link">
+                <span>View Full Writeup Log</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
             </div>
-            <h3 class="cert-name">HackTheBox Pro Hacker</h3>
             
+            <div class="visual-writeup-card" onclick="openWriteupModal('burp-suite')">
+              <div class="writeup-card-header">
+                <span class="writeup-card-date">April 28, 2026</span>
+                <span class="writeup-read">5 min read</span>
+              </div>
+              <h3 class="writeup-card-title">Burp Suite Pro Tips for Web Audits</h3>
+              <p class="writeup-card-desc">Unlocking the power of Burp Suite Proxy, Intruder, Repeater, and customized extensions for effective penetration testing.</p>
+              <div class="writeup-card-link">
+                <span>View Full Writeup Log</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
+            </div>
             
-          </div>
-
-          <div class="cert-footer">
-            <span class="cert-status">Completed Labs</span>
-            
-            <span class="cert-date">Continuous</span>
+            <div class="visual-writeup-card" onclick="openWriteupModal('feroxbuster')">
+              <div class="writeup-card-header">
+                <span class="writeup-card-date">April 20, 2026</span>
+                <span class="writeup-read">5 min read</span>
+              </div>
+              <h3 class="writeup-card-title">Fast Directory Discovery with Feroxbuster</h3>
+              <p class="writeup-card-desc">A guide to directory busting using Feroxbuster: configuring filters, parallel recursive scans, and custom headers.</p>
+              <div class="writeup-card-link">
+                <span>View Full Writeup Log</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
+            </div>
             
           </div>
         </div>
-        
+
+        <!-- 5. CERTS VIEW -->
+        <div class="workspace-pane" id="pane-certs">
+          <h2 class="pane-view-title">// Professional Accreditations</h2>
+          <div class="visual-certs-grid">
+            
+            <div class="visual-cert-card" style="--cert-glow: #ff0055">
+              <div class="cert-card-header">
+                <span class="cert-issuer-name">Offensive Security</span>
+                <span class="cert-badge-tag" style="background: #ff00551a; color: #ff0055">Candidate</span>
+              </div>
+              <h3 class="cert-title-display">OSCP (Offensive Security Certified Professional)</h3>
+              
+              
+              <div class="cert-progress-block-visual">
+                <div class="cert-visual-labels">
+                  <span>Preparation Coverage</span>
+                  <span>75%</span>
+                </div>
+                <div class="cert-bar-track-visual">
+                  <div class="cert-bar-fill-visual" style="width: 75%; background-color: #ff0055"></div>
+                </div>
+              </div>
+              
+
+              <div class="cert-card-footer">
+                <span class="cert-status-display">In Progress</span>
+                <span class="cert-date-display">Target: Q3 2026</span>
+              </div>
+            </div>
+            
+            <div class="visual-cert-card" style="--cert-glow: #cc0000">
+              <div class="cert-card-header">
+                <span class="cert-issuer-name">Red Hat</span>
+                <span class="cert-badge-tag" style="background: #cc00001a; color: #cc0000">Active</span>
+              </div>
+              <h3 class="cert-title-display">RHCSA (Red Hat Certified System Administrator)</h3>
+              
+              
+
+              <div class="cert-card-footer">
+                <span class="cert-status-display">Certified</span>
+                <span class="cert-date-display">Issued: Jan 2025</span>
+              </div>
+            </div>
+            
+            <div class="visual-cert-card" style="--cert-glow: #9b59ff">
+              <div class="cert-card-header">
+                <span class="cert-issuer-name">TryHackMe Platform</span>
+                <span class="cert-badge-tag" style="background: #9b59ff1a; color: #9b59ff">Top Rank</span>
+              </div>
+              <h3 class="cert-title-display">TryHackMe (Top 1%)</h3>
+              
+              
+
+              <div class="cert-card-footer">
+                <span class="cert-status-display">Completed Labs</span>
+                <span class="cert-date-display">Continuous</span>
+              </div>
+            </div>
+            
+            <div class="visual-cert-card" style="--cert-glow: #00ff66">
+              <div class="cert-card-header">
+                <span class="cert-issuer-name">HackTheBox Platform</span>
+                <span class="cert-badge-tag" style="background: #00ff661a; color: #00ff66">Active</span>
+              </div>
+              <h3 class="cert-title-display">HackTheBox Pro Hacker</h3>
+              
+              
+
+              <div class="cert-card-footer">
+                <span class="cert-status-display">Completed Labs</span>
+                <span class="cert-date-display">Continuous</span>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <!-- 6. CONTACT VIEW -->
+        <div class="workspace-pane" id="pane-contact">
+          <h2 class="pane-view-title">// Transmit Secure Signal (Contact Form)</h2>
+          <div class="contact-pane-grid">
+            
+            <div class="contact-pane-message">
+              <h3>Establish Secure Handshake</h3>
+              <p>
+                Interested in security consulting, custom script development, or recruiting? 
+                Transmit a secure message through the encrypted gateway below or reach out directly 
+                via the social links.
+              </p>
+              <p>
+                Secure logs are monitored. Encryption key fingerprints are generated automatically.
+              </p>
+            </div>
+
+            <div class="contact-pane-form-wrap">
+              <form class="transmission-form" id="contactForm" method="POST">
+                <input type="hidden" name="csrfmiddlewaretoken" value="VFXkGl8ozP70EdH1Ree4GiHl58zkRfeaRKxeCLo413l4LO8oANcl6EYrxKW7y6mO">
+                <div class="form-row-group">
+                  <label for="form_identity">Sender Identifier (Name)</label>
+                  <input type="text" id="form_identity" name="name" class="sec-input" placeholder="e.g. John Doe / Recruiter" required />
+                </div>
+                
+                <div class="form-row-group">
+                  <label for="form_callback">Callback Endpoint (Email)</label>
+                  <input type="email" id="form_callback" name="email" class="sec-input" placeholder="e.g. contact@domain.com" required />
+                </div>
+
+                <div class="form-row-group">
+                  <label for="form_payload">Secure Transmission Payload (Message)</label>
+                  <textarea id="form_payload" name="message" class="sec-input sec-textarea" placeholder="Input transmission text..." required></textarea>
+                </div>
+
+                <button type="submit" class="sec-submit-btn">
+                  🔑 Transmit Encrypted Signal
+                </button>
+              </form>
+
+              <div class="transmission-success" id="formSuccess">
+                <div class="success-icon-badge">🎯</div>
+                <h4>Handshake Established Successfully</h4>
+                <p>Secure payload queued. Response will be dispatched to your callback endpoint shortly.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
-    </div>
-  </section>
+    </main>
+  </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       LIVE TERMINAL CLI SECTION ( Cybersecurity Touch )
-       ═══════════════════════════════════════════════════════════ -->
-  <section class="section terminal-cli-section" id="terminal-section">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-label">0x06 // Console</span>
-        <h2 class="section-title">Interactive <span class="highlight">Shell</span></h2>
-        <div class="section-line"></div>
-      </div>
-
-      <div class="interactive-terminal reveal">
-        <div class="terminal-header">
-          <div class="terminal-buttons">
-            <span></span><span></span><span></span>
-          </div>
-          <span class="terminal-title">interactive_console.sh</span>
-        </div>
-        <div class="terminal-body" id="interactiveTerminalBody">
-          <div class="terminal-output">
-            Welcome to Abdo Ramdan's Secure Console. Version 2.4-stable.<br>
-            Type <span class="text-neon-green">'help'</span> to see list of available commands.
-          </div>
-        </div>
-        <div class="terminal-input-line">
-          <span class="term-prompt">visitor@abdo-sec:~$</span>
-          <input type="text" id="terminalInput" autofocus autocomplete="off" spellcheck="false" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       CONTACT SECTION
-       ═══════════════════════════════════════════════════════════ -->
-  <section class="section contact" id="contact">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-label">0x07 // Signals</span>
-        <h2 class="section-title">Establish <span class="highlight">Link</span></h2>
-        <div class="section-line"></div>
-      </div>
-
-      <div class="contact-grid">
-        <div class="contact-info reveal-left">
-          <h3>Let's collaborate on <span class="text-gradient">Security Projects</span></h3>
-          <p>
-            If you need a security review, help building custom network scripting tools, 
-            or want to talk about bug bounty and systems hacking, send a message.
-          </p>
-
-          <div class="email-direct-card">
-            <span class="email-icon">✉️</span>
-            <div class="email-details">
-              <span class="email-label">DIRECT CHANNEL</span>
-              <a href="mailto:abdo.ramdan.sec@gmail.com" class="email-address" id="emailAddr">abdo.ramdan.sec@gmail.com</a>
-            </div>
-            <button class="btn-copy-email" onclick="copyEmailToClipboard()" aria-label="Copy email address" title="Copy to clipboard">
-              <span id="copyText">Copy</span>
-            </button>
-          </div>
-
-          <div class="social-links-vertical">
-            <a href="https://github.com/Abdo453" target="_blank" rel="noopener" class="social-link-item">
-              <span class="social-icon">🐙</span>
-              <span class="social-name">GitHub / @Abdo453</span>
-            </a>
-            <a href="https://www.facebook.com/AvatarV7x" target="_blank" rel="noopener" class="social-link-item">
-              <span class="social-icon">📘</span>
-              <span class="social-name">Facebook / AvatarV7x</span>
-            </a>
-            <a href="https://linkedin.com/in/abdo-ramdan" target="_blank" rel="noopener" class="social-link-item">
-              <span class="social-icon">💼</span>
-              <span class="social-name">LinkedIn / Abdo Ramdan</span>
-            </a>
-            <a href="https://t.me/AvatarV7x" target="_blank" rel="noopener" class="social-link-item">
-              <span class="social-icon">✈️</span>
-              <span class="social-name">Telegram / @AvatarV7x</span>
-            </a>
-            <a href="https://tryhackme.com/p/Abdo453" target="_blank" rel="noopener" class="social-link-item">
-              <span class="social-icon">🔴</span>
-              <span class="social-name">TryHackMe / Abdo453</span>
-            </a>
-            <a href="https://app.hackthebox.com/profile/Abdo453" target="_blank" rel="noopener" class="social-link-item">
-              <span class="social-icon">🟢</span>
-              <span class="social-name">HackTheBox / Abdo453</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="contact-form-wrapper reveal-right">
-          <form class="contact-form" id="contactForm" method="POST">
-            <input type="hidden" name="csrfmiddlewaretoken" value="xBIxmdfHFeALF9ooDAEcTgQ0DscHuYUILKmKUdsMtZ6y2fjT45WaZC4fKeF79Ppv">
-            <div class="form-group">
-              <label for="form_name">Identity</label>
-              <input type="text" id="form_name" name="name" class="form-input" placeholder="e.g. John Doe / Researcher" required />
-            </div>
-
-            <div class="form-group">
-              <label for="form_email">Callback Email</label>
-              <input type="email" id="form_email" name="email" class="form-input" placeholder="e.g. contact@domain.com" required />
-            </div>
-
-            <div class="form-group">
-              <label for="form_message">Transmission Payload</label>
-              <textarea id="form_message" name="message" class="form-input" placeholder="Input details or query..." required></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-submit">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              Transmit Signal
-            </button>
-          </form>
-
-          <div class="form-success" id="formSuccess">
-            <div class="success-icon">🔑</div>
-            <h4>Signal Transmitted!</h4>
-            <p>Connection established. Response will be dispatched to your callback email address shortly.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       FOOTER
-       ═══════════════════════════════════════════════════════════ -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <p class="footer-text">
-          © 2026 <strong>Abdo Ramdan</strong>. All connections encrypted. Made with Fira Code & ☕.
-        </p>
-        <a href="#hero" class="back-to-top" aria-label="Back to top">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-        </a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       WRITEUP DYNAMIC READOUT MODAL
-       ═══════════════════════════════════════════════════════════ -->
+  <!-- Writeup Viewer Modal (Shared log viewer) -->
   <div class="modal-overlay" id="writeupModal">
     <div class="modal-card">
       <div class="modal-header">
         <span class="modal-title">read_writeup.log</span>
-        <button class="modal-close" onclick="closeWriteup()">&times;</button>
+        <button class="modal-close" onclick="closeWriteupModal()">&times;</button>
       </div>
       <div class="modal-body" id="modalContent">
-        <!-- Rendered writeup text goes here -->
+        <!-- Dyn contents -->
       </div>
     </div>
   </div>
 
+  <!-- Footer -->
+  <footer class="cyber-footer">
+    <p>© 2026 <strong>Abdo Ramdan</strong>. All connections encrypted. Shell: Fira Code. Status: SECURE.</p>
+  </footer>
+
   <!-- ═══════════════════════════════════════════════════════════
-       JAVASCRIPT SCRIPTS
+       JAVASCRIPT APP INTERACTION LOGIC
        ═══════════════════════════════════════════════════════════ -->
   <script>
-    // Prepare writeups data mapping for JS interaction
+    // Writeups Dictionary from Django Context
     const writeupsData = {
       
       "nmap-notes": {
@@ -895,104 +677,862 @@
       
     };
 
-    // Hero and typing animations
-    const typingTextEl = document.getElementById('typingText');
+    // Sidebar Typist Intro
+    const typingTextEl = document.getElementById('sidebarTyping');
     const subtitlePhrases = [
       "Security Researcher \u0026 OSCP Candidate",
-      "Web Application Penetration Tester",
-      "Red Hat Certified System Administrator",
-      "Python Security Script Builder"
+      "Offensive Pentesting Specialist",
+      "Red Hat Certified SysAdmin",
+      "Python Exploit Automator"
     ];
     let phraseIdx = 0;
     let charIdx = 0;
     let deleting = false;
 
-    function runTyping() {
+    function runSidebarTyping() {
       const currentPhrase = subtitlePhrases[phraseIdx];
-      typingTextEl.textContent = currentPhrase.substring(0, charIdx);
+      if (typingTextEl) {
+        typingTextEl.textContent = currentPhrase.substring(0, charIdx);
+      }
 
       if (!deleting) {
         charIdx++;
         if (charIdx > currentPhrase.length) {
           deleting = true;
-          setTimeout(runTyping, 2200);
+          setTimeout(runSidebarTyping, 2500);
           return;
         }
-        setTimeout(runTyping, 70);
+        setTimeout(runSidebarTyping, 65);
       } else {
         charIdx--;
         if (charIdx < 0) {
           deleting = false;
           phraseIdx = (phraseIdx + 1) % subtitlePhrases.length;
           charIdx = 0;
-          setTimeout(runTyping, 400);
+          setTimeout(runSidebarTyping, 400);
           return;
         }
-        setTimeout(runTyping, 35);
+        setTimeout(runSidebarTyping, 30);
       }
     }
-    setTimeout(runTyping, 800);
+    setTimeout(runSidebarTyping, 500);
 
-    // Navbar scroll handler
-    const navbar = document.getElementById('navbar');
-    const sections = document.querySelectorAll('section[id]');
-    const navAnchors = document.querySelectorAll('.nav-links a');
-
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY;
-      navbar.classList.toggle('scrolled', scrollY > 50);
-
-      // Active Section Highlighting
-      let activeSectionId = '';
-      sections.forEach(sec => {
-        const top = sec.offsetTop - 120;
-        const bot = top + sec.offsetHeight;
-        if (scrollY >= top && scrollY < bot) {
-          activeSectionId = sec.getAttribute('id');
-        }
+    // ─────────────────────────────────────────────────────────
+    // WORKSPACE TABS SWITCHING CONTROL
+    // ─────────────────────────────────────────────────────────
+    function switchTab(tabId) {
+      // Toggle tabs active styling
+      document.querySelectorAll('.tab-link').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
       });
 
-      navAnchors.forEach(a => {
-        a.classList.toggle('active', a.getAttribute('href') === `#${activeSectionId}`);
+      // Toggle panes active styling
+      document.querySelectorAll('.workspace-pane').forEach(pane => {
+        pane.classList.toggle('active', pane.getAttribute('id') === `pane-${tabId}`);
       });
-    }, { passive: true });
 
-    // Hamburger Mobile Menu
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('navLinks');
-    const navOverlay = document.getElementById('navOverlay');
+      // Autofocus terminal if selected
+      if (tabId === 'terminal') {
+        setTimeout(() => {
+          document.getElementById('consoleInput').focus();
+        }, 50);
+      }
 
-    function toggleMenu() {
-      hamburger.classList.toggle('active');
-      navLinks.classList.toggle('active');
-      navOverlay.classList.toggle('active');
-      document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+      // Log in terminal dynamically to tie interfaces together
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] GUI triggered action: switched tab to '${tabId}'`, 'text-neon-cyan');
+        
+        // Execute respective command internally so the console reflects the action
+        if (tabId === 'skills') printSkillsLog();
+        else if (tabId === 'projects') printProjectsLog();
+        else if (tabId === 'writeups') printWriteupsLog();
+        else if (tabId === 'certs') printCertsLog();
+        else if (tabId === 'contact') printContactLog();
+      }
     }
 
-    hamburger.addEventListener('click', toggleMenu);
-    navOverlay.addEventListener('click', toggleMenu);
-    navLinks.querySelectorAll('a').forEach(l => l.addEventListener('click', toggleMenu));
+    // ─────────────────────────────────────────────────────────
+    // AUDIO CLICK GENERATOR (WEB AUDIO API)
+    // ─────────────────────────────────────────────────────────
+    let isMuted = true;
+    let audioCtx = null;
 
-    // Smooth scroll anchors
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', e => {
-        e.preventDefault();
-        const target = document.querySelector(anchor.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleMute() {
+      initAudio();
+      isMuted = !isMuted;
+      const btn = document.getElementById('soundToggleBtn');
+      const icon = document.getElementById('soundIcon');
+      if (isMuted) {
+        icon.innerText = '🔇 Sound Off';
+        btn.classList.remove('active');
+      } else {
+        icon.innerText = '🔊 Sound On';
+        btn.classList.add('active');
+        // Play brief beep to acknowledge
+        playClick(800, 0.03, 0.05);
+      }
+    }
+
+    function playClick(freq = 1200, volume = 0.05, duration = 0.04) {
+      if (isMuted || !audioCtx) return;
+      try {
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
         }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + duration);
+        
+        gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (err) {
+        console.warn("Audio playback failed", err);
+      }
+    }
+
+    function playKeyStrokeSound() {
+      playClick(1000 + Math.random() * 400, 0.04, 0.03);
+    }
+
+    function playEnterKeySound() {
+      playClick(400, 0.12, 0.08);
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // INTERACTIVE TERMINAL SHELL SYSTEM
+    // ─────────────────────────────────────────────────────────
+    const consoleInput = document.getElementById('consoleInput');
+    const consoleBody = document.getElementById('consoleBody');
+    const consolePrompt = document.getElementById('consolePrompt');
+    let terminalInitialized = false;
+
+    // Command History tracking
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    // Cybersecurity Lab progression variables
+    let gameLevel = 1;
+    let gameScore = 0;
+    let flagsCaptured = [];
+    let waitingForZipPassword = false;
+    let inLabEnv = false;
+
+    // Supported CLI actions
+    const termCommands = {
+      help: 'Supported commands:<br>' +
+            '- <span class="text-neon-cyan">whoami</span>    : Detailed background biography<br>' +
+            '- <span class="text-neon-cyan">skills</span>    : Display technical arsenal profiles<br>' +
+            '- <span class="text-neon-cyan">projects</span>  : Show security script tools & POCs<br>' +
+            '- <span class="text-neon-cyan">writeups</span>  : Show available pentesting walkthroughs<br>' +
+            '- <span class="text-neon-cyan">certs</span>     : Display professional credentials & ranks<br>' +
+            '- <span class="text-neon-cyan">nmap</span>      : Launch interactive network port scanning lab<br>' +
+            '- <span class="text-neon-cyan">linux</span>     : Spawn Privilege Escalation lab environment<br>' +
+            '- <span class="text-neon-cyan">progress</span>  : Show active score, level, and flags unlocked<br>' +
+            '- <span class="text-neon-cyan">sound</span>     : Toggle typing sound feedback (on/off)<br>' +
+            '- <span class="text-neon-cyan">reset</span>     : Reset lab credentials progression<br>' +
+            '- <span class="text-neon-cyan">clear</span>     : Flush terminal history buffer',
+      whoami: 'Name          : Abdo Ramdan<br>' +
+              'Title         : Security Researcher \u0026 OSCP Candidate<br>' +
+              'Specialties   : Vulnerability Audits, Web App Pentesting, Unix SysAdmin<br>' +
+              'Platform Rank : TryHackMe Top 1%, HTB Pro Hacker<br>' +
+              'Active Focus  : Active Directory exploiting, kernel privilege escalation paths, OSCP certification prep.<br>' +
+              'Current Mission: Hardening offensive scripting tools & documenting walkthrough challenges.',
+      progress: '', // Calculated dynamically
+      skills: '', // Rendered dynamically
+      projects: '', // Rendered dynamically
+      writeups: '', // Rendered dynamically
+      certs: '', // Rendered dynamically
+      nmap: '', // Simulated dynamically
+      linux: '', // Active Lab state machine
+      sound: '', // Toggles audio
+      reset: 'Resetting interactive learning lab state...',
+      clear: ''
+    };
+
+    // Smart Error Suggestion (Levenshtein Distance)
+    function checkCommandTypos(cmd) {
+      const keys = Object.keys(termCommands);
+      let bestMatch = '';
+      let minDistance = 3; // Max threshold of typos permitted
+
+      for (const k of keys) {
+        const dist = getLevenshteinDistance(cmd, k);
+        if (dist < minDistance) {
+          minDistance = dist;
+          bestMatch = k;
+        }
+      }
+      return bestMatch;
+    }
+
+    function getLevenshteinDistance(a, b) {
+      const matrix = [];
+      for (let i = 0; i <= b.length; i++) {
+        matrix[i] = [i];
+      }
+      for (let j = 0; j <= a.length; j++) {
+        matrix[0][j] = j;
+      }
+      for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+          if (b.charAt(i - 1) === a.charAt(j - 1)) {
+            matrix[i][j] = matrix[i - 1][j - 1];
+          } else {
+            matrix[i][j] = Math.min(
+              matrix[i - 1][j - 1] + 1, // substitution
+              Math.min(
+                matrix[i][j - 1] + 1, // insertion
+                matrix[i - 1][j] + 1  // deletion
+              )
+            );
+          }
+        }
+      }
+      return matrix[b.length][a.length];
+    }
+
+    // Print text logs directly to terminal
+    function printLineToTerminal(text, className = '') {
+      const log = document.createElement('div');
+      log.className = `terminal-line-log ${className}`;
+      log.innerHTML = text;
+      consoleBody.appendChild(log);
+      consoleBody.scrollTop = consoleBody.scrollHeight;
+    }
+
+    // Boot Script Sequence
+    const bootLogs = [
+      "[   0.000000] Booting AbdoOS kernel v3.5-hardened x86_64...",
+      "[   0.084120] Initializing cryptography hardware acceleration...",
+      "[   0.210450] Checking filesystem blocks /dev/sda1... clean",
+      "[   0.450125] Configuring network adapter eth0 [DHCP allocated]",
+      "[   0.620455] IP Assigned: 10.10.10.15 / Netmask: 255.255.255.0",
+      "[   0.812402] Active services: [OK] SSHd, [OK] Tomcat, [OK] Samba",
+      "[   1.045012] Starting Guest shell session...",
+      "----------------------------------------------------------------",
+      "Welcome to <span class='text-neon-cyan'>Abdo Ramdan's Secure Console Platform</span>. v3.5-stable.<br>" +
+      "Type <span class='text-neon-green'>'help'</span> to query list of available modules.<br>" +
+      "Linux Privilege Escalation lab active. Run <span class='text-neon-cyan'>'linux'</span> to begin.<br>" +
+      "----------------------------------------------------------------"
+    ];
+
+    function runBootSequence() {
+      let index = 0;
+      function printNext() {
+        if (index < bootLogs.length) {
+          printLineToTerminal(bootLogs[index]);
+          index++;
+          setTimeout(printNext, 120);
+        } else {
+          terminalInitialized = true;
+          consolePrompt.style.opacity = '1';
+          consoleInput.disabled = false;
+          consoleInput.focus();
+        }
+      }
+      consoleInput.disabled = true;
+      consolePrompt.style.opacity = '0.4';
+      printNext();
+    }
+
+    // Initialize HUD states
+    function updateHUD() {
+      document.getElementById('hudLevel').innerText = `${gameLevel} / 4`;
+      document.getElementById('hudScore').innerText = `${gameScore} XP`;
+      document.getElementById('hudFlags').innerText = `${flagsCaptured.length} / 4`;
+      
+      const pct = (flagsCaptured.length / 4) * 100;
+      document.getElementById('hudProgressFill').style.width = `${pct}%`;
+
+      // Update HUD active mission text
+      let mission = 'Launch CLI to start';
+      if (gameLevel === 1) mission = 'Identify password in target directory (run "ls")';
+      else if (gameLevel === 2) mission = 'Extract archive secret_backup.zip';
+      else if (gameLevel === 3) mission = 'Query system for SUID vector binaries';
+      else if (gameLevel === 4) mission = 'Execute find exploit shell path to get root';
+      else if (gameLevel >= 5) mission = 'Root Compromise Achieved! Trophy unlocked.';
+      
+      document.getElementById('hudMission').innerText = mission;
+    }
+
+    // Dynamic Command Log Builders
+    function printSkillsLog() {
+      let log = '<strong>Hardened Technical Arsenal Profile:</strong><br><br>' +
+                '<span class="text-neon-cyan">[+] Security & Pentesting:</span><br>';
+      
+        log += ' • Web Pentesting<br>';
+      
+        log += ' • Linux Security<br>';
+      
+        log += ' • Network Security<br>';
+      
+        log += ' • Active Directory<br>';
+      
+      log += '<br><span class="text-neon-cyan">[+] Auditing & Pentest Tools:</span><br>';
+      
+        log += ' • Burp Suite<br>';
+      
+        log += ' • Nmap<br>';
+      
+        log += ' • Wireshark<br>';
+      
+        log += ' • Metasploit<br>';
+      
+        log += ' • Gobuster / Feroxbuster<br>';
+      
+      log += '<br><span class="text-neon-cyan">[+] Program Automations:</span><br>';
+      
+        log += ' • Python<br>';
+      
+        log += ' • Bash Scripting<br>';
+      
+        log += ' • JavaScript<br>';
+      
+      printLineToTerminal(log);
+    }
+
+    function printProjectsLog() {
+      let log = '<strong>Proof of Concept Script Tools:</strong><br><br>';
+      
+        log += `<span class="text-neon-green">[+] Multithreaded Port Scanner</span><br>` +
+               `Description: A high\u002Dperformance multithreaded network port scanner built in Python. Resolves hostnames, scans custom ports, identifies running services, and outputs results in clean, readable formats.<br>` +
+               `Challenge Solved: Overcame Python\u0027s Global Interpreter Lock (GIL) limitations using efficient multithreading to increase scanning speeds by 400%, and handled socket timeout exceptions gracefully.<br>` +
+               `Code Source: <a href="https://github.com/Abdo453/port-scanner" target="_blank" class="text-neon-cyan">https://github.com/Abdo453/port-scanner</a><br><br>`;
+      
+        log += `<span class="text-neon-green">[+] Directory Bruteforcer</span><br>` +
+               `Description: A lightweight, fast command\u002Dline directory fuzzer to discover hidden files and folders on a target web server using dictionary attacks with status code filtering.<br>` +
+               `Challenge Solved: Handled connection pooling and rate\u002Dlimiting issues on target servers, and implemented recursive scanning to automatically fuzz newly discovered subdirectories.<br>` +
+               `Code Source: <a href="https://github.com/Abdo453/dir-bruteforcer" target="_blank" class="text-neon-cyan">https://github.com/Abdo453/dir-bruteforcer</a><br><br>`;
+      
+        log += `<span class="text-neon-green">[+] Linux Enumeration Script</span><br>` +
+               `Description: An automated bash script that executes security audits and searches for local privilege escalation vectors, including SUID binaries, misconfigured cron jobs, and kernel exploits.<br>` +
+               `Challenge Solved: Reduced manual post\u002Dexploitation auditing time from hours to seconds by automating check lists from PayloadAllTheThings and GTFOBins, producing structured console outputs.<br>` +
+               `Code Source: <a href="https://github.com/Abdo453/linux-enum" target="_blank" class="text-neon-cyan">https://github.com/Abdo453/linux-enum</a><br><br>`;
+      
+        log += `<span class="text-neon-green">[+] HTB / THM Writeups</span><br>` +
+               `Description: A collection of deep\u002Ddive walkthroughs for solving vulnerable machines on HackTheBox and TryHackMe, documenting enumeration, exploitation, and privilege escalation phases.<br>` +
+               `Challenge Solved: Clearly documented initial access vectors and privilege escalation steps while adhering to platform disclosure guidelines, focusing on explanatory value and remediation.<br>` +
+               `Code Source: <a href="https://github.com/Abdo453/writeups" target="_blank" class="text-neon-cyan">https://github.com/Abdo453/writeups</a><br><br>`;
+      
+      printLineToTerminal(log);
+    }
+
+    function printWriteupsLog() {
+      let log = '<strong>Pentesting Walkthroughs:</strong><br><br>' +
+                'Run <span class="text-neon-cyan">writeups cat &lt;id&gt;</span> to read article text.<br><br>';
+      
+        log += `• <span class="text-neon-green">nmap\u002Dnotes</span>: Deep Dive into Nmap Scanning (May 15, 2026)<br>`;
+      
+        log += `• <span class="text-neon-green">xss\u002Dbasics</span>: Cross\u002DSite Scripting (XSS) Walkthrough (May 10, 2026)<br>`;
+      
+        log += `• <span class="text-neon-green">linux\u002Dprivesc</span>: Linux Privilege Escalation Techniques (May 05, 2026)<br>`;
+      
+        log += `• <span class="text-neon-green">burp\u002Dsuite</span>: Burp Suite Pro Tips for Web Audits (April 28, 2026)<br>`;
+      
+        log += `• <span class="text-neon-green">feroxbuster</span>: Fast Directory Discovery with Feroxbuster (April 20, 2026)<br>`;
+      
+      printLineToTerminal(log);
+    }
+
+    function printCertsLog() {
+      let log = '<strong>Accreditations & Professional Ranks:</strong><br><br>';
+      
+        log += `[+] <span class="text-neon-green">OSCP (Offensive Security Certified Professional)</span> (${cert.issuer})<br>` +
+               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+      
+        log += `[+] <span class="text-neon-green">RHCSA (Red Hat Certified System Administrator)</span> (${cert.issuer})<br>` +
+               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+      
+        log += `[+] <span class="text-neon-green">TryHackMe (Top 1%)</span> (${cert.issuer})<br>` +
+               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+      
+        log += `[+] <span class="text-neon-green">HackTheBox Pro Hacker</span> (${cert.issuer})<br>` +
+               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+      
+      printLineToTerminal(log);
+    }
+
+    function printContactLog() {
+      let log = '<strong>Social Links & Connection Enclaves:</strong><br>' +
+                '- Telegram    : <a href="https://t.me/AvatarV7x" target="_blank" class="text-neon-cyan">@AvatarV7x</a><br>' +
+                '- Facebook    : <a href="https://www.facebook.com/AvatarV7x" target="_blank" class="text-neon-cyan">facebook.com/AvatarV7x</a><br>' +
+                '- LinkedIn    : <a href="https://linkedin.com/in/abdo-ramdan" target="_blank" class="text-neon-cyan">LinkedIn profile</a><br>' +
+                '- GitHub      : <a href="https://github.com/Abdo453" target="_blank" class="text-neon-cyan">@Abdo453</a><br>' +
+                '- Direct Email: <span class="text-neon-green">abdo.ramdan.sec@gmail.com</span>';
+      printLineToTerminal(log);
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // SIMULATED NMAP SCAN ENGINE
+    // ─────────────────────────────────────────────────────────
+    function runSimulatedNmap(target) {
+      printLineToTerminal(`[~] Initiating Nmap scan service against ${target}...`, 'text-neon-cyan');
+      
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress += 25;
+        if (progress <= 100) {
+          playClick(900, 0.05, 0.05);
+          printLineToTerminal(`[~] Scanning target host... [${progress}%]`);
+        } else {
+          clearInterval(progressInterval);
+          printLineToTerminal(`[+] Discovering service banners...`);
+          setTimeout(() => {
+            printLineToTerminal(
+              `<br>Starting Nmap 7.92 ( https://nmap.org ) at 2026-05-20<br>` +
+              `Nmap scan report for target.local (${target})<br>` +
+              `Host is up (0.012s latency).<br>` +
+              `Not shown: 996 closed ports<br>` +
+              `PORT     STATE SERVICE VERSION<br>` +
+              `<span class="text-neon-green">22/tcp   open  ssh</span>     OpenSSH 8.2p1 Ubuntu (Protocol 2.0)<br>` +
+              `<span class="text-neon-green">80/tcp   open  http</span>    Apache httpd 2.4.41<br>` +
+              `<span class="text-neon-green">139/tcp  open  netbios-ssn Samba v4.11</span><br>` +
+              `<span class="text-neon-green">445/tcp  open  microsoft-ds Samba v4.11</span><br>` +
+              `<span class="text-neon-green">8080/tcp open  http-proxy Tomcat v9.0.31</span><br><br>` +
+              `Nmap done: 1 IP address scanned in 2.12 seconds<br>` +
+              `<span class="text-neon-orange">[!] Flag captured: FLAG{NMAP_ENUM_SUCCESS}</span>`, 
+              'text-neon-green'
+            );
+            if (!flagsCaptured.includes('FLAG{NMAP_ENUM_SUCCESS}')) {
+              flagsCaptured.push('FLAG{NMAP_ENUM_SUCCESS}');
+              gameScore += 25;
+              updateHUD();
+            }
+          }, 400);
+        }
+      }, 350);
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // LINUX PRIVILEGE ESCALATION GAME ENGINE
+    // ─────────────────────────────────────────────────────────
+    function executeVulnerableBoxCommand(cmd, args) {
+      if (cmd === 'exit') {
+        inLabEnv = false;
+        consolePrompt.innerHTML = 'visitor@abdo-sec:~$';
+        printLineToTerminal('[!] Connection closed. Disconnected from vulnerable target.', 'text-neon-orange');
+        return;
+      }
+
+      if (cmd === 'reset') {
+        resetLabState();
+        return;
+      }
+
+      // Standard commands inside box
+      if (cmd === 'whoami') {
+        if (gameLevel >= 5) {
+          printLineToTerminal('root');
+        } else {
+          printLineToTerminal('visitor');
+        }
+        return;
+      }
+
+      if (cmd === 'pwd') {
+        if (gameLevel >= 5) {
+          printLineToTerminal('/root');
+        } else {
+          printLineToTerminal('/home/visitor');
+        }
+        return;
+      }
+
+      if (cmd === 'id') {
+        if (gameLevel >= 5) {
+          printLineToTerminal('uid=0(root) gid=0(root) groups=0(root)');
+        } else {
+          printLineToTerminal('uid=1000(visitor) gid=1000(visitor) groups=1000(visitor)');
+        }
+        return;
+      }
+
+      if (cmd === 'uname') {
+        printLineToTerminal('Linux vulnerable-box 5.4.0-74-generic #83-Ubuntu SMP Wed May 12 20:11:20 UTC 2020 x86_64 GNU/Linux');
+        return;
+      }
+
+      // Level 1: Enumeration
+      if (gameLevel === 1) {
+        if (cmd === 'ls') {
+          printLineToTerminal('notes.txt   secret_backup.zip');
+        } else if (cmd === 'cat' && args[0] === 'notes.txt') {
+          printLineToTerminal(
+            'Secure archive credentials:<br>' +
+            'Archive file  : secret_backup.zip<br>' +
+            'Decryption Key: shadow_key_2026<br><br>' +
+            '<span class="text-neon-green">[+] Completed Level 1! Flag: FLAG{LINUX_LS_CAT_OK}</span><br>' +
+            '<span class="text-neon-cyan">[!] Next Task: Extract the backup. Run "unzip secret_backup.zip"</span>'
+          );
+          if (!flagsCaptured.includes('FLAG{LINUX_LS_CAT_OK}')) {
+            flagsCaptured.push('FLAG{LINUX_LS_CAT_OK}');
+            gameScore += 10;
+          }
+          gameLevel = 2;
+          updateHUD();
+        } else {
+          printLineToTerminal(`Run "ls" to view files, or "cat notes.txt" to read the notes.`);
+        }
+        return;
+      }
+
+      // Level 2: Unzip backup
+      if (gameLevel === 2) {
+        if (cmd === 'unzip' && args[0] === 'secret_backup.zip') {
+          printLineToTerminal('[?] Enter archive password (type it and hit Enter):');
+          waitingForZipPassword = true;
+        } else {
+          printLineToTerminal('Command execution failed. Try unzipping: "unzip secret_backup.zip"');
+        }
+        return;
+      }
+
+      // Level 3: SUID Enumeration
+      if (gameLevel === 3) {
+        // Match standard SUID find command
+        const fullString = [cmd, ...args].join(' ');
+        if (fullString.includes('find /') && fullString.includes('-perm') && fullString.includes('-u=s')) {
+          printLineToTerminal(
+            '/usr/lib/dbus-1.0/dbus-daemon-launch-helper<br>' +
+            '/usr/lib/openssh/ssh-keysign<br>' +
+            '/usr/bin/passwd<br>' +
+            '/usr/bin/sudo<br>' +
+            '<span class="text-neon-cyan">/usr/bin/find &lt;--- [!] SUID BIT ACTIVE</span><br>' +
+            '/usr/bin/chsh<br>' +
+            '/usr/bin/gpasswd<br><br>' +
+            '<span class="text-neon-green">[+] Completed Level 3! Flag: FLAG{SUID_FIND_FOUND}</span><br>' +
+            '<span class="text-neon-cyan">[!] Next Task: Exploit SUID find to escalate privileges.<br>' +
+            '    Command: find . -exec /bin/sh -p \\; -quit</span>'
+          );
+          if (!flagsCaptured.includes('FLAG{SUID_FIND_FOUND}')) {
+            flagsCaptured.push('FLAG{FLAG{SUID_FIND_FOUND}}'); // Fix tag
+            flagsCaptured.push('FLAG{SUID_FIND_FOUND}');
+            gameScore += 20;
+          }
+          gameLevel = 4;
+          updateHUD();
+        } else {
+          printLineToTerminal('Audit filesystems to search for active SUID binaries.<br>Command: find / -perm -u=s -type f 2&gt;/dev/null');
+        }
+        return;
+      }
+
+      // Level 4: Privilege Escalation Exploit
+      if (gameLevel === 4) {
+        const fullString = [cmd, ...args].join(' ');
+        if (fullString.startsWith('find') && fullString.includes('-exec') && fullString.includes('/bin/sh')) {
+          printLineToTerminal(
+            '[~] Initiating environment escape command via SUID binary...<br>' +
+            '[+] Spawning root shell... Success.<br>' +
+            '[+] Active UID: 0(root) GID=0(root) groups=0(root)<br>' +
+            '<span class="text-neon-green">[+] Privilege Escalation Successful!</span><br><br>' +
+            '<span class="text-neon-orange">[!] Root Flag captured: FLAG{SYSTEM_OWNED_ROOT}</span>',
+            'text-neon-green'
+          );
+          
+          if (!flagsCaptured.includes('FLAG{SYSTEM_OWNED_ROOT}')) {
+            flagsCaptured.push('FLAG{SYSTEM_OWNED_ROOT}');
+            gameScore += 30;
+          }
+          gameLevel = 5;
+          updateHUD();
+          consolePrompt.innerHTML = 'root@vulnerable-box:#';
+          
+          // Print Trophy
+          setTimeout(() => {
+            printLineToTerminal(
+              `<pre class="text-neon-green">
+       ___________
+      '._==_==_=_.'
+      .-\\:      /-.
+     | (|:.     |) |
+      '-|:.     |-'
+        \\::.    /
+         '::. .'
+           ) (
+         _.' '._
+        \`"""""""\`
+</pre>` +
+              '<span class="text-neon-cyan">[+] CONGRATULATIONS! Target compromised. You have mastered basic Linux privilege escalation.</span><br>' +
+              'Type "progress" to see final status, or "reset" to restart the lab.',
+              'text-neon-green'
+            );
+          }, 300);
+        } else {
+          printLineToTerminal('Spawn shell exploit via SUID find binary.<br>Command: find . -exec /bin/sh -p \\; -quit');
+        }
+        return;
+      }
+
+      if (gameLevel >= 5) {
+        if (cmd === 'cat' && args[0] === '/root/flag.txt') {
+          printLineToTerminal('FLAG{SYSTEM_OWNED_ROOT}');
+        } else {
+          printLineToTerminal(`root@vulnerable-box:# ${cmd}: command executed (permission granted).`);
+        }
+        return;
+      }
+
+      printLineToTerminal(`bash: ${cmd}: command not found.`);
+    }
+
+    // Reset Lab Progression
+    function resetLabState() {
+      gameLevel = 1;
+      gameScore = 0;
+      flagsCaptured = [];
+      waitingForZipPassword = false;
+      inLabEnv = false;
+      consolePrompt.innerHTML = 'visitor@abdo-sec:~$';
+      updateHUD();
+      printLineToTerminal('\n[!] Interactive lab state has been reset to defaults.', 'text-neon-red');
+    }
+
+    // Process Entered Command Line
+    function handleConsoleCommand(inputLine) {
+      const trimmed = inputLine.trim();
+      
+      // Print entered echo command
+      const prompt = consolePrompt.innerText;
+      printLineToTerminal(`<span class="term-prompt">${prompt}</span> ${trimmed}`);
+
+      if (trimmed === '') return;
+
+      // Handle password prompt inside unzip level
+      if (waitingForZipPassword) {
+        waitingForZipPassword = false;
+        if (trimmed === 'shadow_key_2026') {
+          printLineToTerminal(
+            'Archive: secret_backup.zip<br>' +
+            '  inflating: security_notes.md<br>' +
+            '  inflating: audit_script.sh<br>' +
+            '[+] Extraction successful!<br><br>' +
+            '<span class="text-neon-green">[+] Completed Level 2! Flag: FLAG{ZIP_DECRYPTED_SUCCESS}</span><br>' +
+            '<span class="text-neon-cyan">[!] Next Task: Enumerate SUID binaries to audit system privileges.<br>' +
+            '    Run: find / -perm -u=s -type f 2&gt;/dev/null</span>'
+          );
+          if (!flagsCaptured.includes('FLAG{ZIP_DECRYPTED_SUCCESS}')) {
+            flagsCaptured.push('FLAG{ZIP_DECRYPTED_SUCCESS}');
+            gameScore += 15;
+          }
+          gameLevel = 3;
+          updateHUD();
+        } else {
+          printLineToTerminal('unzip: decryption key failed. Try again.', 'text-neon-red');
+          gameLevel = 2; // Keep in unzip
+        }
+        return;
+      }
+
+      // Parse Command name and arguments
+      const parts = trimmed.split(/\s+/);
+      const command = parts[0].toLowerCase();
+      const args = parts.slice(1);
+
+      // Route if inside the Vulnerable target terminal
+      if (inLabEnv) {
+        executeVulnerableBoxCommand(command, args);
+        return;
+      }
+
+      // Command dispatcher for main console
+      if (command === 'clear') {
+        consoleBody.innerHTML = '';
+      } else if (command === 'help') {
+        printLineToTerminal(termCommands.help);
+      } else if (command === 'whoami') {
+        printLineToTerminal(termCommands.whoami);
+      } else if (command === 'skills') {
+        printSkillsLog();
+      } else if (command === 'projects') {
+        printProjectsLog();
+      } else if (command === 'writeups') {
+        if (args[0] === 'cat' && args[1]) {
+          const id = args[1];
+          if (writeupsData[id]) {
+            printLineToTerminal(`\n<strong>--- Reading File: ${id}.log ---</strong><br>${writeupsData[id].content.replace(/\n/g, '<br>')}<br><strong>--- End of File ---</strong>`);
+          } else {
+            printLineToTerminal(`writeups: writeup ID '${id}' not found.`, 'text-neon-red');
+          }
+        } else {
+          printWriteupsLog();
+        }
+      } else if (command === 'certs') {
+        printCertsLog();
+      } else if (command === 'nmap') {
+        if (args[0] === '-sV' && args[1] === '10.10.10.15') {
+          runSimulatedNmap(args[1]);
+        } else {
+          printLineToTerminal(
+            '================================================<br>' +
+            '[!] NMAP SIMULATION SCANNING ENVIRONMENT [!]<br>' +
+            '================================================<br>' +
+            'Scan target machine dynamically.<br>' +
+            'Target Network Asset IP: <span class="text-neon-cyan">10.10.10.15</span><br>' +
+            'Scan Payload           : <span class="text-neon-green">nmap -sV 10.10.10.15</span><br>' +
+            'Execute command syntax above to start.'
+          );
+        }
+      } else if (command === 'linux') {
+        inLabEnv = true;
+        consolePrompt.innerHTML = 'visitor@vulnerable-box:~$';
+        printLineToTerminal(
+          '\n[~] Connecting to vulnerable-box via SSH tunnel... Success.<br>' +
+          '----------------------------------------------------------------<br>' +
+          `[!] LINUX PRIVILEGE ESCALATION LAB ACTIVE // CURRENT LEVEL: ${gameLevel}<br>` +
+          'Objective: Escalate privileges to obtain root flag.<br>' +
+          'Commands like whoami, pwd, ls, cat are available.<br>' +
+          'Type "exit" to terminate target session.<br>' +
+          '----------------------------------------------------------------', 
+          'text-neon-cyan'
+        );
+        // Start level 1 instructions
+        if (gameLevel === 1) {
+          printLineToTerminal('[!] LEVEL 1: List files in workspace directory to find secret details. Run: ls');
+        }
+      } else if (command === 'progress') {
+        printLineToTerminal(
+          `<strong>Active Learning Statistics:</strong><br>` +
+          `• Solved Labs Level: ${gameLevel} / 4<br>` +
+          `• Accumulated Score: ${gameScore} XP<br>` +
+          `• Flags Unlocked   : ${flagsCaptured.length} / 4<br>` +
+          `• Captured List    : ${flagsCaptured.join(', ') || 'No flags captured yet.'}`
+        );
+      } else if (command === 'sound') {
+        toggleMute();
+      } else if (command === 'reset') {
+        resetLabState();
+      } else if (command === 'sudo') {
+        printLineToTerminal('[!] Permission denied. Guest account is not in sudoers configuration file.', 'text-neon-red');
+      } else if (command === 'cat' && args[0] === 'flag.txt') {
+        printLineToTerminal('FLAG{EASTER_EGG_FOUND_YOU_ARE_CURIOUS} - Nice check!', 'text-neon-orange');
+      } else if (command === 'hack' || command === 'exploit') {
+        printLineToTerminal('[~] Running exploit payloads against localhost... Failed. Firewall dropped packets.', 'text-neon-red');
+      } else {
+        // Typo check suggestion
+        const typoSuggest = checkCommandTypos(command);
+        if (typoSuggest) {
+          printLineToTerminal(`bash: ${command}: command not found. Did you mean <span class="text-neon-cyan">'${typoSuggest}'</span>?`, 'text-neon-red');
+        } else {
+          printLineToTerminal(`bash: ${command}: command not found. Type 'help' to view available commands.`, 'text-neon-red');
+        }
+      }
+    }
+
+    // Keyboard controls on input
+    if (consoleInput) {
+      consoleInput.addEventListener('keydown', (e) => {
+        // Sound feedback on keypress
+        if (e.key !== 'Enter' && e.key !== 'Shift' && e.key !== 'Control' && e.key !== 'Alt') {
+          playKeyStrokeSound();
+        }
+
+        // Tab Autocomplete
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          const val = consoleInput.value.trim().toLowerCase();
+          if (val === '') return;
+
+          const options = Object.keys(termCommands);
+          const matches = options.filter(o => o.startsWith(val));
+          
+          if (matches.length === 1) {
+            consoleInput.value = matches[0];
+          } else if (matches.length > 1) {
+            printLineToTerminal(`\n${matches.join('    ')}`, 'text-neon-cyan');
+          }
+        }
+
+        // Enter Command
+        if (e.key === 'Enter') {
+          playEnterKeySound();
+          const val = consoleInput.value;
+          consoleInput.value = '';
+          
+          if (val.trim() !== '') {
+            commandHistory.push(val);
+            historyIndex = commandHistory.length;
+          }
+          handleConsoleCommand(val);
+        }
+
+        // Command History Navigation
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (commandHistory.length > 0) {
+            if (historyIndex > 0) {
+              historyIndex--;
+            }
+            consoleInput.value = commandHistory[historyIndex];
+          }
+        }
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (historyIndex < commandHistory.length - 1) {
+            historyIndex++;
+            consoleInput.value = commandHistory[historyIndex];
+          } else {
+            historyIndex = commandHistory.length;
+            consoleInput.value = '';
+          }
+        }
+      });
+    }
+
+    // Executing commands through mobile toolbar click
+    function executeQuickCommand(cmd) {
+      initAudio();
+      if (consoleInput) {
+        consoleInput.value = cmd;
+        consoleInput.focus();
+        // Simulate enter
+        playEnterKeySound();
+        consoleInput.value = '';
+        commandHistory.push(cmd);
+        historyIndex = commandHistory.length;
+        handleConsoleCommand(cmd);
+      }
+    }
+
+    // Direct click handler to sync visual tabs with terminal execution
+    document.querySelectorAll('.tab-link').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        switchTab(tab);
       });
     });
 
-    // Writeup modal handlers
+    // Boot trigger on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      runBootSequence();
+      updateHUD();
+    });
+
+    // Writeup Modals Handlers
     const modal = document.getElementById('writeupModal');
     const modalContent = document.getElementById('modalContent');
 
-    function openWriteup(id) {
+    function openWriteupModal(id) {
       const entry = writeupsData[id];
       if (!entry) return;
-      
-      const lines = entry.content.split('\n').map(line => {
+
+      const paragraphs = entry.content.split('\n').map(line => {
         if (line.startsWith('**') || line.startsWith('* ')) {
           return `<h4>${line.replace(/\*\*|\*/g, '')}</h4>`;
         }
@@ -1006,163 +1546,62 @@
         <h2 class="modal-content-title">${entry.title}</h2>
         <span class="modal-content-date">${entry.date}</span>
         <hr class="modal-divider">
-        <div class="modal-content-body">${lines}</div>
+        <div class="modal-content-body">${paragraphs}</div>
       `;
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
+
+      // Log action in console
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Modal viewer opened writeup file: '${id}'`, 'text-neon-cyan');
+      }
     }
 
-    function closeWriteup() {
+    function closeWriteupModal() {
       modal.classList.remove('active');
       document.body.style.overflow = '';
     }
 
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeWriteup();
-    });
-
-    // Skills Tab switching
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tab = btn.dataset.tab;
-        tabBtns.forEach(b => b.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
-        
-        btn.classList.add('active');
-        document.getElementById(tab).classList.add('active');
-      });
-    });
-
-    // Intersection Observer for scroll triggers (skills progress and stats)
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObserver.observe(el));
-
-    // Stats counter increment animator
-    const statsSection = document.getElementById('stats');
-    const statsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const numbers = document.querySelectorAll('.stat-number');
-          numbers.forEach(num => {
-            const target = parseInt(num.dataset.target);
-            let count = 0;
-            const step = Math.ceil(target / 40);
-            const interval = setInterval(() => {
-              count += step;
-              if (count >= target) {
-                num.textContent = target;
-                clearInterval(interval);
-              } else {
-                num.textContent = count;
-              }
-            }, 30);
-          });
-          statsObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.05 });
-    if (statsSection) statsObserver.observe(statsSection);
-
-    // Interactive Terminal CLI Logic
-    const termInput = document.getElementById('terminalInput');
-    const termBody = document.getElementById('interactiveTerminalBody');
-
-    const termCommands = {
-      help: 'Available commands:<br>- <span class="text-neon-cyan">whoami</span>: Print professional overview<br>- <span class="text-neon-cyan">skills</span>: List technical skills<br>- <span class="text-neon-cyan">projects</span>: Show proof of concept projects<br>- <span class="text-neon-cyan">certs</span>: Display active security certifications<br>- <span class="text-neon-cyan">contact</span>: Show social channels<br>- <span class="text-neon-cyan">nmap</span>: Simulate a target port scan<br>- <span class="text-neon-cyan">clear</span>: Clear terminal console buffer',
-      whoami: 'Abdo Ramdan &lt;abdo@portfolio&gt;<br>------------------------<br>Role: Cyber Security Specialist / Pen Tester<br>Focus: Vulnerability Analysis, Web App Audits, Automation Shell Scripts.<br>Interests: Bug bounty, CTF challenges, Linux Kernel hardening.',
-      skills: 'Technical Skills:<br>[+] Security: Web Pentesting, Network Auditing, Linux hardening, Active Directory<br>[+] Sec Tools: Burp Suite, Nmap, Wireshark, Metasploit, Feroxbuster<br>[+] Langs: Python, Bash Scripting, Vanilla Javascript',
-      projects: 'Proof of Concept Projects:<br>[1] Multithreaded Port Scanner (Python)<br>[2] Directory Bruteforcer (Python)<br>[3] Linux Privilege Escalation Script (Bash)<br>[4] HackTheBox Machines Writeups',
-      certs: 'Security Certifications:<br>[*] OSCP (Candidate - In Progress)<br>[*] RHCSA (Red Hat System Administrator - Active)<br>[*] TryHackMe Platform (Top 1% Global Rank)<br>[*] HackTheBox Platforms (Pro Hacker Badge)',
-      contact: 'Communication Channels:<br>- GitHub: https://github.com/Abdo453<br>- Telegram: @AvatarV7x<br>- Facebook: https://www.facebook.com/AvatarV7x<br>- Email: abdo.ramdan@example.com',
-      nmap: 'Starting Nmap 7.92 ( https://nmap.org ) at 2026-05-20<br>Nmap scan report for portfolio.target (127.0.0.1)<br>Host is up (0.00012s latency).<br>Not shown: 996 closed ports<br>PORT     STATE SERVICE<br><span class="text-neon-green">22/tcp   open  ssh</span> (OpenSSH 8.9p1)<br><span class="text-neon-green">80/tcp   open  http</span> (nginx 1.18.0)<br><span class="text-neon-green">443/tcp  open  https</span> (nginx 1.18.0)<br><span class="text-neon-green">8080/tcp open  http-proxy</span><br><br>Nmap done: 1 IP address scanned in 1.45 seconds'
-    };
-
-    if (termInput) {
-      termInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          const inputVal = termInput.value.trim().toLowerCase();
-          termInput.value = '';
-
-          // Log entered line
-          const userLine = document.createElement('div');
-          userLine.className = 'terminal-line';
-          userLine.innerHTML = `<span class="term-prompt">visitor@abdo-sec:~$</span> ${inputVal}`;
-          termBody.appendChild(userLine);
-
-          // Handle command processing
-          if (inputVal === 'clear') {
-            termBody.innerHTML = '';
-          } else if (inputVal === '') {
-            // Do nothing
-          } else if (termCommands[inputVal]) {
-            const outLine = document.createElement('div');
-            outLine.className = 'terminal-output';
-            outLine.innerHTML = termCommands[inputVal];
-            termBody.appendChild(outLine);
-
-            // Command scrolling mapping
-            let targetId = inputVal;
-            if (inputVal === 'whoami') targetId = 'about';
-            if (inputVal === 'certs') targetId = 'certifications';
-            
-            const sectionTarget = document.getElementById(targetId);
-            if (sectionTarget) {
-              setTimeout(() => {
-                sectionTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }, 450);
-            }
-          } else {
-            const outLine = document.createElement('div');
-            outLine.className = 'terminal-output text-neon-red';
-            outLine.innerHTML = `command not found: ${inputVal}. Type 'help' to see list of valid payloads.`;
-            termBody.appendChild(outLine);
-          }
-
-          // Scroll Terminal to Bottom
-          termBody.scrollTop = termBody.scrollHeight;
-        }
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeWriteupModal();
       });
     }
 
-    // Contact Form handling
+    // Contact Form submission
     const contactForm = document.getElementById('contactForm');
     const formSuccess = document.getElementById('formSuccess');
 
     if (contactForm) {
       contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const btn = contactForm.querySelector('.btn-submit');
-        btn.textContent = 'Transmitting...';
-        btn.disabled = true;
+        const submitBtn = contactForm.querySelector('.sec-submit-btn');
+        submitBtn.innerText = 'Transmitting Encrypted Signal...';
+        submitBtn.disabled = true;
 
         setTimeout(() => {
           contactForm.style.display = 'none';
           formSuccess.classList.add('show');
+          printLineToTerminal('\n[+] Encrypted message transmitted to gateway. Secure link OK.', 'text-neon-green');
         }, 1200);
       });
     }
 
-    // Copy Email to Clipboard
+    // Clipboard email Copy handler
     function copyEmailToClipboard() {
-      const email = document.getElementById('emailAddr').innerText;
-      navigator.clipboard.writeText(email).then(() => {
-        const copyText = document.getElementById('copyText');
-        copyText.innerText = 'Copied!';
-        copyText.style.color = '#00ff66';
+      const textVal = document.getElementById('sidebarEmail').innerText;
+      navigator.clipboard.writeText(textVal).then(() => {
+        const copyBtnText = document.getElementById('copyText');
+        copyBtnText.innerText = 'Copied!';
+        copyBtnText.style.color = '#00ff66';
+        
+        if (terminalInitialized) {
+          printLineToTerminal('\n[info] Direct email copied to user clipboard.', 'text-neon-green');
+        }
+
         setTimeout(() => {
-          copyText.innerText = 'Copy';
-          copyText.style.color = '';
+          copyBtnText.innerText = 'Copy';
+          copyBtnText.style.color = '';
         }, 2000);
       });
     }
