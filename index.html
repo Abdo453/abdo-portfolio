@@ -252,10 +252,6 @@
               <div class="skill-info">
                 <span class="skill-icon">🎯</span>
                 <span class="skill-name">Web Pentesting</span>
-                <span class="skill-val">90%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="90"></div>
               </div>
             </div>
             
@@ -263,10 +259,6 @@
               <div class="skill-info">
                 <span class="skill-icon">🐧</span>
                 <span class="skill-name">Linux Security</span>
-                <span class="skill-val">88%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="88"></div>
               </div>
             </div>
             
@@ -274,10 +266,6 @@
               <div class="skill-info">
                 <span class="skill-icon">🛡️</span>
                 <span class="skill-name">Network Security</span>
-                <span class="skill-val">85%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="85"></div>
               </div>
             </div>
             
@@ -285,10 +273,6 @@
               <div class="skill-info">
                 <span class="skill-icon">🔑</span>
                 <span class="skill-name">Active Directory</span>
-                <span class="skill-val">75%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="75"></div>
               </div>
             </div>
             
@@ -303,10 +287,6 @@
               <div class="skill-info">
                 <span class="skill-icon">🌐</span>
                 <span class="skill-name">Burp Suite</span>
-                <span class="skill-val">85%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="85"></div>
               </div>
             </div>
             
@@ -314,10 +294,6 @@
               <div class="skill-info">
                 <span class="skill-icon">📡</span>
                 <span class="skill-name">Nmap</span>
-                <span class="skill-val">92%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="92"></div>
               </div>
             </div>
             
@@ -325,10 +301,6 @@
               <div class="skill-info">
                 <span class="skill-icon">🔍</span>
                 <span class="skill-name">Wireshark</span>
-                <span class="skill-val">80%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="80"></div>
               </div>
             </div>
             
@@ -336,10 +308,6 @@
               <div class="skill-info">
                 <span class="skill-icon">⚡</span>
                 <span class="skill-name">Metasploit</span>
-                <span class="skill-val">78%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="78"></div>
               </div>
             </div>
             
@@ -347,10 +315,6 @@
               <div class="skill-info">
                 <span class="skill-icon">📂</span>
                 <span class="skill-name">Gobuster / Feroxbuster</span>
-                <span class="skill-val">88%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="88"></div>
               </div>
             </div>
             
@@ -365,10 +329,6 @@
               <div class="skill-info">
                 <span class="skill-icon">🐍</span>
                 <span class="skill-name">Python</span>
-                <span class="skill-val">90%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="90"></div>
               </div>
             </div>
             
@@ -376,10 +336,6 @@
               <div class="skill-info">
                 <span class="skill-icon">🐚</span>
                 <span class="skill-name">Bash Scripting</span>
-                <span class="skill-val">85%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="85"></div>
               </div>
             </div>
             
@@ -387,10 +343,6 @@
               <div class="skill-info">
                 <span class="skill-icon">⚡</span>
                 <span class="skill-name">JavaScript</span>
-                <span class="skill-val">75%</span>
-              </div>
-              <div class="skill-bar">
-                <div class="skill-progress" data-width="75"></div>
               </div>
             </div>
             
@@ -777,7 +729,7 @@
 
         <div class="contact-form-wrapper reveal-right">
           <form class="contact-form" id="contactForm" method="POST">
-            <input type="hidden" name="csrfmiddlewaretoken" value="ZFmJJR7GsvaKxw3GRn72YoeWXNLGj8EBG0Fwles9DMQ40380usyFsOIqKQOtk0rK">
+            <input type="hidden" name="csrfmiddlewaretoken" value="f4IfmZqMyaccqLXp61oU38p9M2RDYJzJpT2k6C77lhnomRGvmNfJF3kjjBDEisMr">
             <div class="form-group">
               <label for="form_name">Identity</label>
               <input type="text" id="form_name" name="name" class="form-input" placeholder="e.g. John Doe / Researcher" required />
@@ -1037,21 +989,6 @@
     }, { threshold: 0.15 });
 
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObserver.observe(el));
-
-    // Skill bar loader observer
-    const skillsSection = document.getElementById('skills');
-    const skillsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const progresses = document.querySelectorAll('.tab-content.active .skill-progress');
-          progresses.forEach(p => {
-            p.style.width = p.dataset.width + '%';
-          });
-          skillsObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-    if (skillsSection) skillsObserver.observe(skillsSection);
 
     // Stats counter increment animator
     const statsSection = document.getElementById('stats');
