@@ -31,7 +31,10 @@ import re
 html = re.sub(r'<input[^>]*csrfmiddlewaretoken[^>]*/>', '', html)
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
-output_path = os.path.join(project_dir, 'index.html')
+build_dir = os.path.join(project_dir, 'build')
+os.makedirs(build_dir, exist_ok=True)
+
+output_path = os.path.join(build_dir, 'index.html')
 with open(output_path, 'w', encoding='utf-8') as f:
     f.write(html)
 
@@ -43,15 +46,16 @@ import shutil
 
 # Copy CSS
 css_src = os.path.join(project_dir, 'main', 'static', 'main', 'css', 'style.css')
-css_dest_dir = os.path.join(project_dir, 'css')
+css_dest_dir = os.path.join(build_dir, 'css')
 os.makedirs(css_dest_dir, exist_ok=True)
 shutil.copy(css_src, os.path.join(css_dest_dir, 'style.css'))
 print(f"Copied CSS to {css_dest_dir}")
 
 # Copy Images
 images_src = os.path.join(project_dir, 'main', 'static', 'main', 'images')
-images_dest = os.path.join(project_dir, 'images')
+images_dest = os.path.join(build_dir, 'images')
 if os.path.exists(images_src):
     shutil.copytree(images_src, images_dest, dirs_exist_ok=True)
     print(f"Copied Images to {images_dest}")
+
 
