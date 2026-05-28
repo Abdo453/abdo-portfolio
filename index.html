@@ -588,7 +588,7 @@
 
             <div class="contact-pane-form-wrap">
               <form class="transmission-form" id="contactForm" method="POST">
-                <input type="hidden" name="csrfmiddlewaretoken" value="9hac5MRUMzzZ1vryEkq2nXx3jpWJxvUf4NrJZmw8dBha7TpyNKhlxXwVGltttwYa">
+                <input type="hidden" name="csrfmiddlewaretoken" value="TouX5TUU9xLoPPKSIodAfeXO4ncl7S1wlJPSIbpvcXqxxRTdxFjekdLKnqE1nn1F">
                 <div class="form-row-group">
                   <label for="form_identity">Sender Identifier (Name)</label>
                   <input type="text" id="form_identity" name="name" class="sec-input" placeholder="e.g. John Doe / Recruiter" required />
@@ -621,596 +621,587 @@
 
         </div>
 
-        <!-- 7. ACADEMY VIEW -->
+        <!-- 7. ACADEMY VIEW (3-Pane Explorer) -->
         <div class="workspace-pane" id="pane-academy">
-          
-          <!-- Academy Folders Grid View -->
-          <div id="academyFoldersView">
-            <h2 class="pane-view-title">// Interactive Bug Bounty Academy</h2>
-            <div class="visual-folders-grid">
-              
-              <div class="academy-folder-card" onclick="openAcademyFolder('recon', 'Recon \u0026 Enumeration')">
-                <div class="folder-icon-wrap">
-                  <span class="folder-emoji">🌍</span>
-                  <div class="folder-glow"></div>
+          <div class="explorer-layout">
+            
+            <!-- Pane 1: Sidebar (Folders) -->
+            <div class="explorer-sidebar">
+              <h3 class="explorer-title">EXPLORER</h3>
+              <div class="explorer-folders">
+                
+                <div class="explorer-folder" id="ef-recon" onclick="openExplorerFolder('recon')">
+                  <span class="f-icon">🌍</span>
+                  <span class="f-title">Reconnaissance</span>
                 </div>
-                <div class="folder-info">
-                  <h3 class="folder-title">Recon &amp; Enumeration</h3>
-                  <p class="folder-meta">4 Articles | Beginner → Intermediate</p>
-                  <div class="folder-progress-wrap">
-                    <div class="folder-progress-bar">
-                      <div class="folder-progress-fill" style="width: 45%"></div>
-                    </div>
-                    <span class="folder-progress-text">45%</span>
-                  </div>
-                  <p class="folder-last-opened">Last Opened: Subdomain Enumeration</p>
+                
+                <div class="explorer-folder" id="ef-crawling" onclick="openExplorerFolder('crawling')">
+                  <span class="f-icon">🕷️</span>
+                  <span class="f-title">JS Recon &amp; Crawling</span>
                 </div>
+                
+                <div class="explorer-folder" id="ef-fuzzing" onclick="openExplorerFolder('fuzzing')">
+                  <span class="f-icon">🔍</span>
+                  <span class="f-title">Directory Fuzzing</span>
+                </div>
+                
               </div>
-              
-              <div class="academy-folder-card" onclick="openAcademyFolder('fuzzing', 'Directory Discovery \u0026 Fuzzing')">
-                <div class="folder-icon-wrap">
-                  <span class="folder-emoji">🔍</span>
-                  <div class="folder-glow"></div>
-                </div>
-                <div class="folder-info">
-                  <h3 class="folder-title">Directory Discovery &amp; Fuzzing</h3>
-                  <p class="folder-meta">5 Articles | Intermediate</p>
-                  <div class="folder-progress-wrap">
-                    <div class="folder-progress-bar">
-                      <div class="folder-progress-fill" style="width: 20%"></div>
-                    </div>
-                    <span class="folder-progress-text">20%</span>
-                  </div>
-                  <p class="folder-last-opened">Last Opened: Parameter Discovery</p>
-                </div>
-              </div>
-              
-              <div class="academy-folder-card" onclick="openAcademyFolder('xss', 'XSS \u0026 Client\u002DSide Attacks')">
-                <div class="folder-icon-wrap">
-                  <span class="folder-emoji">💉</span>
-                  <div class="folder-glow"></div>
-                </div>
-                <div class="folder-info">
-                  <h3 class="folder-title">XSS &amp; Client-Side Attacks</h3>
-                  <p class="folder-meta">8 Articles | Intermediate → Pro</p>
-                  <div class="folder-progress-wrap">
-                    <div class="folder-progress-bar">
-                      <div class="folder-progress-fill" style="width: 0%"></div>
-                    </div>
-                    <span class="folder-progress-text">0%</span>
-                  </div>
-                  <p class="folder-last-opened">Last Opened: Stored XSS</p>
-                </div>
-              </div>
-              
-              <div class="academy-folder-card" onclick="openAcademyFolder('api', 'API \u0026 Web Services Testing')">
-                <div class="folder-icon-wrap">
-                  <span class="folder-emoji">⚙️</span>
-                  <div class="folder-glow"></div>
-                </div>
-                <div class="folder-info">
-                  <h3 class="folder-title">API &amp; Web Services Testing</h3>
-                  <p class="folder-meta">6 Articles | Advanced</p>
-                  <div class="folder-progress-wrap">
-                    <div class="folder-progress-bar">
-                      <div class="folder-progress-fill" style="width: 0%"></div>
-                    </div>
-                    <span class="folder-progress-text">0%</span>
-                  </div>
-                  <p class="folder-last-opened">Last Opened: -</p>
-                </div>
-              </div>
-              
             </div>
-          </div>
 
-          <!-- Academy Timeline Views (Hidden by Default) -->
-          <div id="academyTimelinesWrap" style="display: none;">
-            <div class="timeline-header">
-              <button class="back-to-folders-btn" onclick="closeAcademyFolder()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-                Back to Folders
-              </button>
-              <h2 class="pane-view-title" id="activeTimelineTitle">// Path</h2>
-            </div>
-            
-            
-            <div class="timeline-container" id="timeline-recon" style="display: none;">
+            <!-- Pane 2: Tools Panel -->
+            <div class="explorer-tools-panel">
+              <h3 class="explorer-title">// Tools List</h3>
               
-              <div class="timeline-step" onclick="openAcademyArticle('recon-1', 'Understanding Recon')">
-                <div class="timeline-marker">1</div>
-                <div class="timeline-content">
-                  <h3 class="timeline-step-title">Understanding Recon</h3>
-                  <p class="timeline-step-desc">Click to view methodology, tools, and workflow.</p>
-                </div>
+              <div id="emptyToolsState" class="empty-state">
+                <span class="empty-icon">📁</span>
+                <p>Select a folder to view tools.</p>
               </div>
-              
-              <div class="timeline-step" onclick="openAcademyArticle('recon-2', 'Subdomain Enumeration')">
-                <div class="timeline-marker">2</div>
-                <div class="timeline-content">
-                  <h3 class="timeline-step-title">Subdomain Enumeration</h3>
-                  <p class="timeline-step-desc">Click to view methodology, tools, and workflow.</p>
-                </div>
-              </div>
-              
-              <div class="timeline-step" onclick="openAcademyArticle('recon-3', 'Live Hosts \u0026 Tech Stack')">
-                <div class="timeline-marker">3</div>
-                <div class="timeline-content">
-                  <h3 class="timeline-step-title">Live Hosts &amp; Tech Stack</h3>
-                  <p class="timeline-step-desc">Click to view methodology, tools, and workflow.</p>
-                </div>
-              </div>
-              
-              <div class="timeline-step" onclick="openAcademyArticle('recon-4', 'JS Recon \u0026 Content Discovery')">
-                <div class="timeline-marker">4</div>
-                <div class="timeline-content">
-                  <h3 class="timeline-step-title">JS Recon &amp; Content Discovery</h3>
-                  <p class="timeline-step-desc">Click to view methodology, tools, and workflow.</p>
-                </div>
-              </div>
-              
-            </div>
-            
-            <div class="timeline-container" id="timeline-fuzzing" style="display: none;">
-              
-            </div>
-            
-            <div class="timeline-container" id="timeline-xss" style="display: none;">
-              
-            </div>
-            
-            <div class="timeline-container" id="timeline-api" style="display: none;">
-              
-            </div>
-            
-          </div>
 
+              
+              <div class="tools-list" id="tools-recon" style="display: none;">
+                
+                <div class="tool-list-item" id="ti-subfinder" onclick="openExplorerTool('subfinder')">
+                  <span class="t-icon">🛠️</span>
+                  <div class="t-info">
+                    <span class="t-name">subfinder</span>
+                    <span class="t-meta">Fast | Beginner</span>
+                  </div>
+                </div>
+                
+                <div class="tool-list-item" id="ti-amass" onclick="openExplorerTool('amass')">
+                  <span class="t-icon">🛡️</span>
+                  <div class="t-info">
+                    <span class="t-name">amass</span>
+                    <span class="t-meta">Slow | Intermediate</span>
+                  </div>
+                </div>
+                
+              </div>
+              
+              <div class="tools-list" id="tools-crawling" style="display: none;">
+                
+                <div class="tool-list-item" id="ti-katana" onclick="openExplorerTool('katana')">
+                  <span class="t-icon">⚔️</span>
+                  <div class="t-info">
+                    <span class="t-name">katana</span>
+                    <span class="t-meta">Fast | Intermediate</span>
+                  </div>
+                </div>
+                
+              </div>
+              
+              <div class="tools-list" id="tools-fuzzing" style="display: none;">
+                
+                <div class="tool-list-item" id="ti-ffuf" onclick="openExplorerTool('ffuf')">
+                  <span class="t-icon">⚡</span>
+                  <div class="t-info">
+                    <span class="t-name">ffuf</span>
+                    <span class="t-meta">Very Fast | Beginner</span>
+                  </div>
+                </div>
+                
+              </div>
+              
+            </div>
+
+            <!-- Pane 3: Dynamic Content (Viewer) -->
+            <div class="explorer-content-panel">
+              <div id="emptyContentState" class="empty-state">
+                <span class="empty-icon">🛠️</span>
+                <p>Select a tool to view its deep analysis.</p>
+              </div>
+
+              
+                
+                <div class="tool-content-view" id="content-subfinder" style="display: none;">
+                  
+                  <div class="tool-content-header">
+                    <h2 class="tool-content-title">subfinder</h2>
+                    <p class="tool-content-tagline">Passive Subdomain Enumeration Tool</p>
+                  </div>
+
+                  <div class="tool-content-body">
+                    
+                    <div class="t-section">
+                      <h4>⚫ ما هي الأداة؟</h4>
+                      <p>أداة لجمع Subdomains من مصادر OSINT بشكل سريع جداً دون التفاعل المباشر مع الهدف (Passive).</p>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🟣 لماذا نستخدمها؟</h4>
+                      <ul class="t-check-list">
+                        <li>✔ توسعة مساحة الهجوم (Attack Surface)</li><li>✔ اكتشاف Domains منسية</li><li>✔ بداية مرحلة الـ Recon</li>
+                      </ul>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🔵 كيف تعمل؟ (Visual Flow)</h4>
+                      <div class="t-flow-box">
+                        <pre>Target Domain ➔ OSINT Sources ➔ Subdomains Collection ➔ Filtering</pre>
+                      </div>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🟠 أشهر الأوامر</h4>
+                      <div class="tool-cmd-box">
+                        <code>subfinder -d target.com -all -silent</code>
+                        <button class="copy-cmd-btn" onclick="copyText('subfinder \u002Dd target.com \u002Dall \u002Dsilent', this)">📋 Copy</button>
+                      </div>
+                    </div>
+
+                    
+                    <div class="t-section">
+                      <h4>🔴 شرح الـ Flags</h4>
+                      <ul class="t-flags-list">
+                        
+                        <li><strong>-d</strong> ➔ تحديد الدومين المستهدف</li>
+                        
+                        <li><strong>-all</strong> ➔ استخدام جميع المصادر المتاحة</li>
+                        
+                        <li><strong>-silent</strong> ➔ إخفاء الـ Banner وعرض النطاقات فقط</li>
+                        
+                      </ul>
+                    </div>
+                    
+
+                    <div class="t-split-section">
+                      <div class="t-when-use">
+                        <h4>🟤 متى تستخدمها؟</h4>
+                        <ul class="t-check-list">
+                          <li>✔ بداية أي Bug Bounty</li><li>✔ أثناء الاستطلاع السلبي (Passive Recon)</li>
+                        </ul>
+                      </div>
+                      <div class="t-when-not">
+                        <h4>⚪ متى لا تستخدمها؟</h4>
+                        <ul class="t-cross-list">
+                          <li>❌ ليست الأفضل للـ Deep Enumeration</li><li>❌ لا تعتمد عليها وحدها (يجب دمجها مع أدوات أخرى)</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    
+                    <div class="t-section">
+                      <h4>🟢 مقارنة مع أدوات أخرى</h4>
+                      <div class="table-responsive">
+                        <table class="cyber-table">
+                          <thead>
+                            <tr>
+                              <th>Tool</th>
+                              <th>Speed</th>
+                              <th>Accuracy</th>
+                              <th>Passive</th>
+                              <th>Active</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            
+                            <tr>
+                              <td class="text-neon-cyan">subfinder</td>
+                              <td>Fast</td>
+                              <td>High</td>
+                              <td>Yes</td>
+                              <td>No</td>
+                            </tr>
+                            
+                            <tr>
+                              <td class="text-neon-cyan">amass</td>
+                              <td>Medium</td>
+                              <td>Very High</td>
+                              <td>Yes</td>
+                              <td>Yes</td>
+                            </tr>
+                            
+                            <tr>
+                              <td class="text-neon-cyan">assetfinder</td>
+                              <td>Very Fast</td>
+                              <td>Medium</td>
+                              <td>Yes</td>
+                              <td>No</td>
+                            </tr>
+                            
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    
+
+                    <div class="t-section">
+                      <h4>🟡 الـ Workflow الحقيقي</h4>
+                      <div class="article-workflow-box">
+                        <code>subfinder ➔ httpx ➔ nuclei</code>
+                      </div>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🔥 Tool Relationship Map</h4>
+                      <div class="t-flow-box">
+                        <pre>Recon (subfinder) ➔ Live Hosts (httpx) ➔ Crawling (katana)</pre>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                
+                <div class="tool-content-view" id="content-amass" style="display: none;">
+                  
+                  <div class="tool-content-header">
+                    <h2 class="tool-content-title">amass</h2>
+                    <p class="tool-content-tagline">In-depth Attack Surface Mapping</p>
+                  </div>
+
+                  <div class="tool-content-body">
+                    
+                    <div class="t-section">
+                      <h4>⚫ ما هي الأداة؟</h4>
+                      <p>أداة قوية جداً لجمع النطاقات، تعتمد على تقنيات متعددة مثل APIs, Scraping, DNS bruteforcing.</p>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🟣 لماذا نستخدمها؟</h4>
+                      <ul class="t-check-list">
+                        <li>✔ للحصول على نتائج عميقة جداً</li><li>✔ لاكتشاف النطاقات التي تخفيها الـ OSINT العادية</li>
+                      </ul>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🔵 كيف تعمل؟ (Visual Flow)</h4>
+                      <div class="t-flow-box">
+                        <pre>Target ➔ DNS/APIs/Scraping ➔ Deep Mapping ➔ Graph Database</pre>
+                      </div>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🟠 أشهر الأوامر</h4>
+                      <div class="tool-cmd-box">
+                        <code>amass enum -passive -d target.com</code>
+                        <button class="copy-cmd-btn" onclick="copyText('amass enum \u002Dpassive \u002Dd target.com', this)">📋 Copy</button>
+                      </div>
+                    </div>
+
+                    
+                    <div class="t-section">
+                      <h4>🔴 شرح الـ Flags</h4>
+                      <ul class="t-flags-list">
+                        
+                        <li><strong>-passive</strong> ➔ استطلاع سلبي فقط لتجنب الحظر</li>
+                        
+                        <li><strong>-active</strong> ➔ إرسال طلبات نشطة للخوادم</li>
+                        
+                      </ul>
+                    </div>
+                    
+
+                    <div class="t-split-section">
+                      <div class="t-when-use">
+                        <h4>🟤 متى تستخدمها؟</h4>
+                        <ul class="t-check-list">
+                          <li>✔ عندما تريد بحثاً عميقاً جداً وشاملاً</li><li>✔ عند استهداف شركات كبيرة بـ Scope واسع</li>
+                        </ul>
+                      </div>
+                      <div class="t-when-not">
+                        <h4>⚪ متى لا تستخدمها؟</h4>
+                        <ul class="t-cross-list">
+                          <li>❌ لا تستخدمها للبحث السريع أو في الأهداف الصغيرة</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    
+                    <div class="t-section">
+                      <h4>🟢 مقارنة مع أدوات أخرى</h4>
+                      <div class="table-responsive">
+                        <table class="cyber-table">
+                          <thead>
+                            <tr>
+                              <th>Tool</th>
+                              <th>Speed</th>
+                              <th>Accuracy</th>
+                              <th>Passive</th>
+                              <th>Active</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            
+                            <tr>
+                              <td class="text-neon-cyan">amass</td>
+                              <td>Slow</td>
+                              <td>Very High</td>
+                              <td>Yes</td>
+                              <td>Yes</td>
+                            </tr>
+                            
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    
+
+                    <div class="t-section">
+                      <h4>🟡 الـ Workflow الحقيقي</h4>
+                      <div class="article-workflow-box">
+                        <code>amass ➔ dnsx ➔ httpx</code>
+                      </div>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🔥 Tool Relationship Map</h4>
+                      <div class="t-flow-box">
+                        <pre>Recon (amass) ➔ DNS Resolution (dnsx) ➔ Live Hosts (httpx)</pre>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                
+              
+                
+                <div class="tool-content-view" id="content-katana" style="display: none;">
+                  
+                  <div class="tool-content-header">
+                    <h2 class="tool-content-title">katana</h2>
+                    <p class="tool-content-tagline">Next-Generation Crawling Framework</p>
+                  </div>
+
+                  <div class="tool-content-body">
+                    
+                    <div class="t-section">
+                      <h4>⚫ ما هي الأداة؟</h4>
+                      <p>أداة للزحف على الروابط والـ JS Endpoints تعتمد على Headless Browser لضمان اصطياد الروابط في تطبيقات SPA الحديثة.</p>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🟣 لماذا نستخدمها؟</h4>
+                      <ul class="t-check-list">
+                        <li>✔ للعثور على روابط مخفية (Hidden Endpoints)</li><li>✔ استخراج روابط الـ APIs</li><li>✔ الزحف داخل الـ JS</li>
+                      </ul>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🔵 كيف تعمل؟ (Visual Flow)</h4>
+                      <div class="t-flow-box">
+                        <pre>Target URL ➔ Headless Browser ➔ JS Parsing ➔ Endpoints Output</pre>
+                      </div>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🟠 أشهر الأوامر</h4>
+                      <div class="tool-cmd-box">
+                        <code>katana -u https://target.com -jc -d 3</code>
+                        <button class="copy-cmd-btn" onclick="copyText('katana \u002Du https://target.com \u002Djc \u002Dd 3', this)">📋 Copy</button>
+                      </div>
+                    </div>
+
+                    
+                    <div class="t-section">
+                      <h4>🔴 شرح الـ Flags</h4>
+                      <ul class="t-flags-list">
+                        
+                        <li><strong>-jc</strong> ➔ تفعيل تحليل الـ JavaScript</li>
+                        
+                        <li><strong>-d 3</strong> ➔ عمق الزحف (Depth = 3)</li>
+                        
+                      </ul>
+                    </div>
+                    
+
+                    <div class="t-split-section">
+                      <div class="t-when-use">
+                        <h4>🟤 متى تستخدمها؟</h4>
+                        <ul class="t-check-list">
+                          <li>✔ في تطبيقات الـ React و Vue.js</li><li>✔ عندما تفشل الأدوات القديمة في استخراج الروابط</li>
+                        </ul>
+                      </div>
+                      <div class="t-when-not">
+                        <h4>⚪ متى لا تستخدمها؟</h4>
+                        <ul class="t-cross-list">
+                          <li>❌ عندما يكون السيرفر ضعيفاً ولا يحتمل ضغط الزحف</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    
+                    <div class="t-section">
+                      <h4>🟢 مقارنة مع أدوات أخرى</h4>
+                      <div class="table-responsive">
+                        <table class="cyber-table">
+                          <thead>
+                            <tr>
+                              <th>Tool</th>
+                              <th>Speed</th>
+                              <th>Accuracy</th>
+                              <th>Passive</th>
+                              <th>Active</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            
+                            <tr>
+                              <td class="text-neon-cyan">katana</td>
+                              <td>Medium</td>
+                              <td>High</td>
+                              <td>No</td>
+                              <td>Yes</td>
+                            </tr>
+                            
+                            <tr>
+                              <td class="text-neon-cyan">hakrawler</td>
+                              <td>Fast</td>
+                              <td>Medium</td>
+                              <td>No</td>
+                              <td>Yes</td>
+                            </tr>
+                            
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    
+
+                    <div class="t-section">
+                      <h4>🟡 الـ Workflow الحقيقي</h4>
+                      <div class="article-workflow-box">
+                        <code>httpx ➔ katana ➔ nuclei</code>
+                      </div>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🔥 Tool Relationship Map</h4>
+                      <div class="t-flow-box">
+                        <pre>Live Hosts (httpx) ➔ Crawling (katana) ➔ Vulnerability Scan (nuclei)</pre>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                
+              
+                
+                <div class="tool-content-view" id="content-ffuf" style="display: none;">
+                  
+                  <div class="tool-content-header">
+                    <h2 class="tool-content-title">ffuf</h2>
+                    <p class="tool-content-tagline">Fast Web Fuzzer</p>
+                  </div>
+
+                  <div class="tool-content-body">
+                    
+                    <div class="t-section">
+                      <h4>⚫ ما هي الأداة؟</h4>
+                      <p>أداة سريعة جداً مكتوبة بـ Go لاكتشاف الملفات والمجلدات المخفية (Directory Bruteforcing).</p>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🟣 لماذا نستخدمها؟</h4>
+                      <ul class="t-check-list">
+                        <li>✔ للعثور على لوحات تحكم (Admin Panels)</li><li>✔ اكتشاف ملفات حساسة (.env, backups)</li>
+                      </ul>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🔵 كيف تعمل؟ (Visual Flow)</h4>
+                      <div class="t-flow-box">
+                        <pre>URL + FUZZ ➔ Wordlist ➔ HTTP Requests ➔ Status Code Filtering</pre>
+                      </div>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🟠 أشهر الأوامر</h4>
+                      <div class="tool-cmd-box">
+                        <code>ffuf -u https://target.com/FUZZ -w words.txt -mc 200,301</code>
+                        <button class="copy-cmd-btn" onclick="copyText('ffuf \u002Du https://target.com/FUZZ \u002Dw words.txt \u002Dmc 200,301', this)">📋 Copy</button>
+                      </div>
+                    </div>
+
+                    
+                    <div class="t-section">
+                      <h4>🔴 شرح الـ Flags</h4>
+                      <ul class="t-flags-list">
+                        
+                        <li><strong>-u</strong> ➔ الرابط مع كلمة FUZZ</li>
+                        
+                        <li><strong>-w</strong> ➔ مسار الـ Wordlist</li>
+                        
+                        <li><strong>-mc</strong> ➔ تصفية النتائج بناءً على Status Code</li>
+                        
+                      </ul>
+                    </div>
+                    
+
+                    <div class="t-split-section">
+                      <div class="t-when-use">
+                        <h4>🟤 متى تستخدمها؟</h4>
+                        <ul class="t-check-list">
+                          <li>✔ للبحث السريع والمخصص (Custom Fuzzing)</li><li>✔ عند اختبار الـ APIs</li>
+                        </ul>
+                      </div>
+                      <div class="t-when-not">
+                        <h4>⚪ متى لا تستخدمها؟</h4>
+                        <ul class="t-cross-list">
+                          <li>❌ لا تستخدمها بدون فلترة (Filtering) وإلا ستغرق في الـ False Positives</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    
+                    <div class="t-section">
+                      <h4>🟢 مقارنة مع أدوات أخرى</h4>
+                      <div class="table-responsive">
+                        <table class="cyber-table">
+                          <thead>
+                            <tr>
+                              <th>Tool</th>
+                              <th>Speed</th>
+                              <th>Accuracy</th>
+                              <th>Passive</th>
+                              <th>Active</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            
+                            <tr>
+                              <td class="text-neon-cyan">ffuf</td>
+                              <td>Very Fast</td>
+                              <td>High</td>
+                              <td>No</td>
+                              <td>Yes</td>
+                            </tr>
+                            
+                            <tr>
+                              <td class="text-neon-cyan">gobuster</td>
+                              <td>Fast</td>
+                              <td>Medium</td>
+                              <td>No</td>
+                              <td>Yes</td>
+                            </tr>
+                            
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    
+
+                    <div class="t-section">
+                      <h4>🟡 الـ Workflow الحقيقي</h4>
+                      <div class="article-workflow-box">
+                        <code>katana ➔ ffuf ➔ burp suite</code>
+                      </div>
+                    </div>
+
+                    <div class="t-section">
+                      <h4>🔥 Tool Relationship Map</h4>
+                      <div class="t-flow-box">
+                        <pre>EndPoints (katana) ➔ Fuzzing (ffuf) ➔ Exploitation (Burp)</pre>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                
+              
+            </div>
+
+          </div>
         </div>
-
-      </div>
-    </main>
-  </div>
-
-  <!-- Writeup Viewer Modal (Shared log viewer) -->
-  <div class="modal-overlay" id="writeupModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <span class="modal-title">read_writeup.log</span>
-        <button class="modal-close" onclick="closeWriteupModal()">&times;</button>
-      </div>
-      <div class="modal-body" id="modalContent">
-        <!-- Dyn contents -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Academy Rich Article Modal -->
-  <div class="modal-overlay academy-modal-overlay" id="academyModal">
-    <div class="modal-card academy-card">
-      <div class="modal-header">
-        <span class="modal-title" id="academyModalLabel">Interactive Module</span>
-        <button class="modal-close" onclick="closeAcademyModal()">&times;</button>
-      </div>
-      <div class="modal-body academy-modal-body">
-        
-          
-          <div class="academy-article-content" id="article-recon-1" style="display: none;">
-            
-            <div class="article-goal-box">
-              <h4>🎯 الهدف (The Goal)</h4>
-              <p>الهدف من مرحلة الاستطلاع (Reconnaissance) هو جمع أكبر قدر ممكن من المعلومات عن الهدف (الشركة، النطاقات، التقنيات، الموظفين). هذا يوسع مساحة الهجوم (Attack Surface) ويكشف عن الأصول المنسية أو غير المحمية جيداً.</p>
-            </div>
-
-            
-
-            <h4 class="article-section-title">🧭 Workflow الحقيقي (Pipeline)</h4>
-            <div class="article-workflow-box">
-              <code>Define Scope → Passive Recon → Active Recon → Content Discovery</code>
-            </div>
-
-            <div class="article-why-box">
-              <h4>💡 متى ولماذا نستخدم هذه الخطوة؟</h4>
-              <p>نستخدم هذه المرحلة دائماً كأول خطوة. بدون استطلاع جيد، لن تجد الثغرات الخفية لأنك ستختبر فقط ما يراه الجميع.</p>
-            </div>
-
-            <div class="article-mistakes-box">
-              <h4>❌ أخطاء شائعة</h4>
-              <ul>
-                
-                <li>تخطي هذه المرحلة والبدء بالهجوم فوراً.</li>
-                
-                <li>الاعتماد على أداة استطلاع واحدة فقط.</li>
-                
-              </ul>
-            </div>
-
-            <div class="article-result-box">
-              <h4>🎯 النتيجة النهائية (Output)</h4>
-              <pre>✔ خريطة واضحة للأصول (Assets Map).</pre>
-            </div>
-
-          </div>
-          
-          <div class="academy-article-content" id="article-recon-2" style="display: none;">
-            
-            <div class="article-goal-box">
-              <h4>🎯 الهدف (The Goal)</h4>
-              <p>الهدف من جمع النطاقات الفرعية (Subdomains) هو توسيع الـ Attack Surface لأن الشركات غالباً تنسى النطاقات القديمة (Dev/Test Servers) والتي قد تحتوي على ثغرات خطيرة.</p>
-            </div>
-
-            
-            <h4 class="article-section-title">🛠️ الأدوات المستخدمة (Tools)</h4>
-            <div class="article-tools-grid">
-              
-              <div class="tool-card">
-                <div class="tool-header">
-                  <span class="tool-name">subfinder</span>
-                </div>
-                <p class="tool-usage">جمع Subdomains بسرعة من مصادر مفتوحة (OSINT).</p>
-                <div class="tool-pros-cons">
-                  <div class="pros"><strong>المميزات:</strong>
-                    <ul><li>سريع جداً</li><li>خفيف</li><li>ممتاز للبداية</li></ul>
-                  </div>
-                  <div class="cons"><strong>العيوب:</strong>
-                    <ul><li>أحياناً يفوت بعض النطاقات إذا لم تقم بإعداد الـ API Keys</li></ul>
-                  </div>
-                </div>
-                <div class="tool-cmd-box">
-                  <code>subfinder -d target.com -all</code>
-                  <button class="copy-cmd-btn" onclick="copyText('subfinder \u002Dd target.com \u002Dall', this)">Copy</button>
-                </div>
-              </div>
-              
-              <div class="tool-card">
-                <div class="tool-header">
-                  <span class="tool-name">amass</span>
-                </div>
-                <p class="tool-usage">Deep Enumeration and Mapping (جمع عميق).</p>
-                <div class="tool-pros-cons">
-                  <div class="pros"><strong>المميزات:</strong>
-                    <ul><li>يجمع من ASN + APIs + Web Scraping</li></ul>
-                  </div>
-                  <div class="cons"><strong>العيوب:</strong>
-                    <ul><li>بطيء جداً</li><li>يستهلك موارد عالية</li></ul>
-                  </div>
-                </div>
-                <div class="tool-cmd-box">
-                  <code>amass enum -passive -d target.com</code>
-                  <button class="copy-cmd-btn" onclick="copyText('amass enum \u002Dpassive \u002Dd target.com', this)">Copy</button>
-                </div>
-              </div>
-              
-              <div class="tool-card">
-                <div class="tool-header">
-                  <span class="tool-name">assetfinder</span>
-                </div>
-                <p class="tool-usage">أداة خفيفة لاستخراج النطاقات المرتبطة بالهدف.</p>
-                <div class="tool-pros-cons">
-                  <div class="pros"><strong>المميزات:</strong>
-                    <ul><li>سريع</li><li>يسهل دمجه في السكربتات</li></ul>
-                  </div>
-                  <div class="cons"><strong>العيوب:</strong>
-                    <ul><li>نتائج محدودة مقارنة بـ Amass</li></ul>
-                  </div>
-                </div>
-                <div class="tool-cmd-box">
-                  <code>assetfinder --subs-only target.com</code>
-                  <button class="copy-cmd-btn" onclick="copyText('assetfinder \u002D\u002Dsubs\u002Donly target.com', this)">Copy</button>
-                </div>
-              </div>
-              
-            </div>
-            
-            
-            <h4 class="article-section-title">📊 جدول المقارنة</h4>
-            <div class="table-responsive">
-              <table class="cyber-table">
-                <thead>
-                  <tr>
-                    <th>Tool</th>
-                    <th>Speed</th>
-                    <th>Accuracy</th>
-                    <th>Deep Scan</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  
-                  <tr>
-                    <td class="text-neon-cyan">subfinder</td>
-                    <td>Fast</td>
-                    <td>Good</td>
-                    <td>Medium</td>
-                  </tr>
-                  
-                  <tr>
-                    <td class="text-neon-cyan">amass</td>
-                    <td>Slow</td>
-                    <td>Excellent</td>
-                    <td>High</td>
-                  </tr>
-                  
-                  <tr>
-                    <td class="text-neon-cyan">assetfinder</td>
-                    <td>Very Fast</td>
-                    <td>Medium</td>
-                    <td>Low</td>
-                  </tr>
-                  
-                </tbody>
-              </table>
-            </div>
-            
-            
-
-            <h4 class="article-section-title">🧭 Workflow الحقيقي (Pipeline)</h4>
-            <div class="article-workflow-box">
-              <code>subfinder -d target.com &gt; subs.txt ➔ amass enum -passive -d target.com &gt;&gt; subs.txt ➔ sort -u subs.txt</code>
-            </div>
-
-            <div class="article-why-box">
-              <h4>💡 متى ولماذا نستخدم هذه الخطوة؟</h4>
-              <p>نستخدم Subfinder للسرعة، و Amass للعمق. دمج الأدوات يضمن تغطية 100% للنطاقات.</p>
-            </div>
-
-            <div class="article-mistakes-box">
-              <h4>❌ أخطاء شائعة</h4>
-              <ul>
-                
-                <li>تشغيل Amass على نطاقات ضخمة جداً بدون Rate Limit.</li>
-                
-                <li>عدم فلترة النطاقات الميتة (Dead Domains) لاحقاً.</li>
-                
-                <li>الاعتماد على Subfinder بدون إعداد ملف الـ config للـ API Keys.</li>
-                
-              </ul>
-            </div>
-
-            <div class="article-result-box">
-              <h4>🎯 النتيجة النهائية (Output)</h4>
-              <pre>✔ قائمة ضخمة وشاملة بجميع النطاقات الفرعية (Subdomains List).</pre>
-            </div>
-
-          </div>
-          
-          <div class="academy-article-content" id="article-recon-3" style="display: none;">
-            
-            <div class="article-goal-box">
-              <h4>🎯 الهدف (The Goal)</h4>
-              <p>تصفية النطاقات الفرعية لمعرفة الأهداف الحية (Live Targets)، ثم فحص التقنيات (Tech Stack) العاملة عليها لتحديد نوع الثغرات.</p>
-            </div>
-
-            
-            <h4 class="article-section-title">🛠️ الأدوات المستخدمة (Tools)</h4>
-            <div class="article-tools-grid">
-              
-              <div class="tool-card">
-                <div class="tool-header">
-                  <span class="tool-name">httpx</span>
-                </div>
-                <p class="tool-usage">التحقق السريع من حالة الردود وعناوين الصفحات.</p>
-                <div class="tool-pros-cons">
-                  <div class="pros"><strong>المميزات:</strong>
-                    <ul><li>سريع جداً</li><li>يدعم الفلترة (Title, Status, Tech)</li></ul>
-                  </div>
-                  <div class="cons"><strong>العيوب:</strong>
-                    <ul><li>قد يُحظر الـ IP بسبب كثرة الطلبات (Rate Limiting)</li></ul>
-                  </div>
-                </div>
-                <div class="tool-cmd-box">
-                  <code>cat subs.txt | httpx -sc -title -tech</code>
-                  <button class="copy-cmd-btn" onclick="copyText('cat subs.txt | httpx \u002Dsc \u002Dtitle \u002Dtech', this)">Copy</button>
-                </div>
-              </div>
-              
-              <div class="tool-card">
-                <div class="tool-header">
-                  <span class="tool-name">whatweb</span>
-                </div>
-                <p class="tool-usage">جمع تفاصيل عميقة حول التقنيات العاملة على الخادم.</p>
-                <div class="tool-pros-cons">
-                  <div class="pros"><strong>المميزات:</strong>
-                    <ul><li>بصمات دقيقة (Accurate Signatures)</li></ul>
-                  </div>
-                  <div class="cons"><strong>العيوب:</strong>
-                    <ul><li>بطيء نسبياً مقارنة بـ httpx</li></ul>
-                  </div>
-                </div>
-                <div class="tool-cmd-box">
-                  <code>whatweb -i live_targets.txt</code>
-                  <button class="copy-cmd-btn" onclick="copyText('whatweb \u002Di live_targets.txt', this)">Copy</button>
-                </div>
-              </div>
-              
-            </div>
-            
-            
-            <h4 class="article-section-title">📊 جدول المقارنة</h4>
-            <div class="table-responsive">
-              <table class="cyber-table">
-                <thead>
-                  <tr>
-                    <th>Tool</th>
-                    <th>Speed</th>
-                    <th>Accuracy</th>
-                    <th>Deep Scan</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  
-                  <tr>
-                    <td class="text-neon-cyan">httpx</td>
-                    <td>Very Fast</td>
-                    <td>Medium</td>
-                    <td>Medium</td>
-                  </tr>
-                  
-                  <tr>
-                    <td class="text-neon-cyan">whatweb</td>
-                    <td>Slow</td>
-                    <td>High</td>
-                    <td>High</td>
-                  </tr>
-                  
-                </tbody>
-              </table>
-            </div>
-            
-            
-
-            <h4 class="article-section-title">🧭 Workflow الحقيقي (Pipeline)</h4>
-            <div class="article-workflow-box">
-              <code>cat subs.txt | httpx -silent &gt; live_hosts.txt ➔ httpx -l live_hosts.txt -tech</code>
-            </div>
-
-            <div class="article-why-box">
-              <h4>💡 متى ولماذا نستخدم هذه الخطوة؟</h4>
-              <p>بدون هذه الخطوة، ستضيع وقتاً طويلاً في فحص نطاقات لا تعمل (Dead).</p>
-            </div>
-
-            <div class="article-mistakes-box">
-              <h4>❌ أخطاء شائعة</h4>
-              <ul>
-                
-                <li>تجاهل النطاقات التي تعود بـ 403 Forbidden (قد تحتوي على مسارات مخفية).</li>
-                
-                <li>إرسال طلبات كثيرة دفعة واحدة مما يؤدي للحظر (WAF Block).</li>
-                
-              </ul>
-            </div>
-
-            <div class="article-result-box">
-              <h4>🎯 النتيجة النهائية (Output)</h4>
-              <pre>✔ قائمة النطاقات الحية (Live Hosts).
-✔ معرفة التقنيات العاملة (Tech Stack).</pre>
-            </div>
-
-          </div>
-          
-          <div class="academy-article-content" id="article-recon-4" style="display: none;">
-            
-            <div class="article-goal-box">
-              <h4>🎯 الهدف (The Goal)</h4>
-              <p>الزحف (Crawling) واستخراج الروابط والـ API Endpoints من ملفات الجافاسكربت لتوسيع نطاق الهجوم.</p>
-            </div>
-
-            
-            <h4 class="article-section-title">🛠️ الأدوات المستخدمة (Tools)</h4>
-            <div class="article-tools-grid">
-              
-              <div class="tool-card">
-                <div class="tool-header">
-                  <span class="tool-name">katana</span>
-                </div>
-                <p class="tool-usage">الزحف العميق واستخراج المسارات.</p>
-                <div class="tool-pros-cons">
-                  <div class="pros"><strong>المميزات:</strong>
-                    <ul><li>يدعم Headless Browser</li><li>يكتشف JS endpoints الحديثة</li></ul>
-                  </div>
-                  <div class="cons"><strong>العيوب:</strong>
-                    <ul><li>يستهلك موارد الجهاز</li></ul>
-                  </div>
-                </div>
-                <div class="tool-cmd-box">
-                  <code>katana -u target.com -jc</code>
-                  <button class="copy-cmd-btn" onclick="copyText('katana \u002Du target.com \u002Djc', this)">Copy</button>
-                </div>
-              </div>
-              
-              <div class="tool-card">
-                <div class="tool-header">
-                  <span class="tool-name">feroxbuster</span>
-                </div>
-                <p class="tool-usage">التخمين على المسارات (Directory Fuzzing) بسرعة عالية.</p>
-                <div class="tool-pros-cons">
-                  <div class="pros"><strong>المميزات:</strong>
-                    <ul><li>مبني بـ Rust (سريع جداً)</li><li>يدعم Recursion</li></ul>
-                  </div>
-                  <div class="cons"><strong>العيوب:</strong>
-                    <ul><li>قد يسبب إزعاج للهدف (Noisy)</li></ul>
-                  </div>
-                </div>
-                <div class="tool-cmd-box">
-                  <code>feroxbuster -u http://target.com -w words.txt</code>
-                  <button class="copy-cmd-btn" onclick="copyText('feroxbuster \u002Du http://target.com \u002Dw words.txt', this)">Copy</button>
-                </div>
-              </div>
-              
-            </div>
-            
-            
-            <h4 class="article-section-title">📊 جدول المقارنة</h4>
-            <div class="table-responsive">
-              <table class="cyber-table">
-                <thead>
-                  <tr>
-                    <th>Tool</th>
-                    <th>Speed</th>
-                    <th>Accuracy</th>
-                    <th>Deep Scan</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  
-                  <tr>
-                    <td class="text-neon-cyan">katana</td>
-                    <td>Medium</td>
-                    <td>High</td>
-                    <td>Very High</td>
-                  </tr>
-                  
-                  <tr>
-                    <td class="text-neon-cyan">feroxbuster</td>
-                    <td>Very Fast</td>
-                    <td>High</td>
-                    <td>Medium</td>
-                  </tr>
-                  
-                </tbody>
-              </table>
-            </div>
-            
-            
-
-            <h4 class="article-section-title">🧭 Workflow الحقيقي (Pipeline)</h4>
-            <div class="article-workflow-box">
-              <code>katana -u target.com -jc -d 3 &gt; endpoints.txt ➔ grep &quot;.js&quot; endpoints.txt &gt; js_files.txt</code>
-            </div>
-
-            <div class="article-why-box">
-              <h4>💡 متى ولماذا نستخدم هذه الخطوة؟</h4>
-              <p>أداة Katana ممتازة في Crawling لأنها تكتشف الـ Endpoints في تطبيقات SPA (React/Vue) بشكل أفضل من الأدوات التقليدية.</p>
-            </div>
-
-            <div class="article-mistakes-box">
-              <h4>❌ أخطاء شائعة</h4>
-              <ul>
-                
-                <li>نسيان قراءة وفحص ملفات الـ JS يدوياً لاستخراج مفاتيح API.</li>
-                
-                <li>تشغيل التخمين بدون ضبط الـ Threads مما يؤدي لانهيار السيرفر.</li>
-                
-              </ul>
-            </div>
-
-            <div class="article-result-box">
-              <h4>🎯 النتيجة النهائية (Output)</h4>
-              <pre>✔ روابط سرية (Hidden Endpoints).
-✔ ملفات الجافاسكربت (JS Files).
-✔ ثغرات محتملة وتسريب بيانات.</pre>
-            </div>
-
-          </div>
-          
-        
-          
-        
-          
-        
-          
-        
-      </div>
-    </div>
-  </div>
 
   <!-- Footer -->
   <footer class="cyber-footer">
@@ -2186,51 +2177,49 @@
     }
 
     // ─────────────────────────────────────────────────────────
-    // ACADEMY MODULES LOGIC
+    // EXPLORER (3-PANE) LOGIC
     // ─────────────────────────────────────────────────────────
-    function openAcademyFolder(folderId, title) {
-      document.getElementById('academyFoldersView').style.display = 'none';
-      document.getElementById('academyTimelinesWrap').style.display = 'block';
-      document.getElementById('activeTimelineTitle').innerText = '// ' + title + ' Path';
-      
-      document.querySelectorAll('.timeline-container').forEach(el => el.style.display = 'none');
-      const activeTimeline = document.getElementById('timeline-' + folderId);
-      if (activeTimeline) activeTimeline.style.display = 'block';
+    function openExplorerFolder(folderId) {
+      // 1. Highlight folder in sidebar
+      document.querySelectorAll('.explorer-folder').forEach(el => el.classList.remove('active'));
+      const activeFolder = document.getElementById('ef-' + folderId);
+      if (activeFolder) activeFolder.classList.add('active');
+
+      // 2. Hide Empty State in Tools Panel
+      document.getElementById('emptyToolsState').style.display = 'none';
+
+      // 3. Show correct tools list
+      document.querySelectorAll('.tools-list').forEach(el => el.style.display = 'none');
+      const activeTools = document.getElementById('tools-' + folderId);
+      if (activeTools) activeTools.style.display = 'flex';
+
+      // 4. Reset Content View
+      document.querySelectorAll('.tool-content-view').forEach(el => el.style.display = 'none');
+      document.getElementById('emptyContentState').style.display = 'flex';
+      document.querySelectorAll('.tool-list-item').forEach(el => el.classList.remove('active'));
 
       if (terminalInitialized) {
-        printLineToTerminal(`\n[info] Academy Folder Opened: ${title}`, 'text-neon-cyan');
+        printLineToTerminal(`\n[info] Explorer navigated to: /usr/share/${folderId}`, 'text-neon-cyan');
       }
     }
 
-    function closeAcademyFolder() {
-      document.getElementById('academyTimelinesWrap').style.display = 'none';
-      document.getElementById('academyFoldersView').style.display = 'block';
-    }
+    function openExplorerTool(toolId) {
+      // 1. Highlight tool in list
+      document.querySelectorAll('.tool-list-item').forEach(el => el.classList.remove('active'));
+      const activeTool = document.getElementById('ti-' + toolId);
+      if (activeTool) activeTool.classList.add('active');
 
-    function openAcademyArticle(articleId, title) {
-      document.querySelectorAll('.academy-article-content').forEach(el => el.style.display = 'none');
-      const activeArticle = document.getElementById('article-' + articleId);
-      if (activeArticle) activeArticle.style.display = 'block';
-      
-      document.getElementById('academyModalLabel').innerText = title;
-      document.getElementById('academyModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
+      // 2. Hide Empty Content State
+      document.getElementById('emptyContentState').style.display = 'none';
+
+      // 3. Show tool detailed content
+      document.querySelectorAll('.tool-content-view').forEach(el => el.style.display = 'none');
+      const activeContent = document.getElementById('content-' + toolId);
+      if (activeContent) activeContent.style.display = 'block';
 
       if (terminalInitialized) {
-        printLineToTerminal(`\n[info] Loaded Academy Module: ${title}`, 'text-neon-cyan');
+        printLineToTerminal(`\n[info] Displaying manual page for: ${toolId}`, 'text-neon-cyan');
       }
-    }
-
-    function closeAcademyModal() {
-      document.getElementById('academyModal').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    const academyModal = document.getElementById('academyModal');
-    if (academyModal) {
-      academyModal.addEventListener('click', (e) => {
-        if (e.target === academyModal) closeAcademyModal();
-      });
     }
 
     function copyText(text, btn) {
