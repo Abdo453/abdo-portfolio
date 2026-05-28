@@ -162,6 +162,9 @@
         <button class="tab-link active" onclick="switchTab('terminal')" data-tab="terminal">
           <span class="tab-icon">🐚</span> Terminal
         </button>
+        <button class="tab-link" onclick="switchTab('academy')" data-tab="academy">
+          <span class="tab-icon">🗂️</span> Academy
+        </button>
         <button class="tab-link" onclick="switchTab('skills')" data-tab="skills">
           <span class="tab-icon">🛡️</span> Skills
         </button>
@@ -585,7 +588,7 @@
 
             <div class="contact-pane-form-wrap">
               <form class="transmission-form" id="contactForm" method="POST">
-                <input type="hidden" name="csrfmiddlewaretoken" value="VFXkGl8ozP70EdH1Ree4GiHl58zkRfeaRKxeCLo413l4LO8oANcl6EYrxKW7y6mO">
+                <input type="hidden" name="csrfmiddlewaretoken" value="9hac5MRUMzzZ1vryEkq2nXx3jpWJxvUf4NrJZmw8dBha7TpyNKhlxXwVGltttwYa">
                 <div class="form-row-group">
                   <label for="form_identity">Sender Identifier (Name)</label>
                   <input type="text" id="form_identity" name="name" class="sec-input" placeholder="e.g. John Doe / Recruiter" required />
@@ -616,6 +619,154 @@
           </div>
         </div>
 
+        </div>
+
+        <!-- 7. ACADEMY VIEW -->
+        <div class="workspace-pane" id="pane-academy">
+          
+          <!-- Academy Folders Grid View -->
+          <div id="academyFoldersView">
+            <h2 class="pane-view-title">// Interactive Bug Bounty Academy</h2>
+            <div class="visual-folders-grid">
+              
+              <div class="academy-folder-card" onclick="openAcademyFolder('recon', 'Recon \u0026 Enumeration')">
+                <div class="folder-icon-wrap">
+                  <span class="folder-emoji">🌍</span>
+                  <div class="folder-glow"></div>
+                </div>
+                <div class="folder-info">
+                  <h3 class="folder-title">Recon &amp; Enumeration</h3>
+                  <p class="folder-meta">4 Articles | Beginner → Intermediate</p>
+                  <div class="folder-progress-wrap">
+                    <div class="folder-progress-bar">
+                      <div class="folder-progress-fill" style="width: 45%"></div>
+                    </div>
+                    <span class="folder-progress-text">45%</span>
+                  </div>
+                  <p class="folder-last-opened">Last Opened: Subdomain Enumeration</p>
+                </div>
+              </div>
+              
+              <div class="academy-folder-card" onclick="openAcademyFolder('fuzzing', 'Directory Discovery \u0026 Fuzzing')">
+                <div class="folder-icon-wrap">
+                  <span class="folder-emoji">🔍</span>
+                  <div class="folder-glow"></div>
+                </div>
+                <div class="folder-info">
+                  <h3 class="folder-title">Directory Discovery &amp; Fuzzing</h3>
+                  <p class="folder-meta">5 Articles | Intermediate</p>
+                  <div class="folder-progress-wrap">
+                    <div class="folder-progress-bar">
+                      <div class="folder-progress-fill" style="width: 20%"></div>
+                    </div>
+                    <span class="folder-progress-text">20%</span>
+                  </div>
+                  <p class="folder-last-opened">Last Opened: Parameter Discovery</p>
+                </div>
+              </div>
+              
+              <div class="academy-folder-card" onclick="openAcademyFolder('xss', 'XSS \u0026 Client\u002DSide Attacks')">
+                <div class="folder-icon-wrap">
+                  <span class="folder-emoji">💉</span>
+                  <div class="folder-glow"></div>
+                </div>
+                <div class="folder-info">
+                  <h3 class="folder-title">XSS &amp; Client-Side Attacks</h3>
+                  <p class="folder-meta">8 Articles | Intermediate → Pro</p>
+                  <div class="folder-progress-wrap">
+                    <div class="folder-progress-bar">
+                      <div class="folder-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="folder-progress-text">0%</span>
+                  </div>
+                  <p class="folder-last-opened">Last Opened: Stored XSS</p>
+                </div>
+              </div>
+              
+              <div class="academy-folder-card" onclick="openAcademyFolder('api', 'API \u0026 Web Services Testing')">
+                <div class="folder-icon-wrap">
+                  <span class="folder-emoji">⚙️</span>
+                  <div class="folder-glow"></div>
+                </div>
+                <div class="folder-info">
+                  <h3 class="folder-title">API &amp; Web Services Testing</h3>
+                  <p class="folder-meta">6 Articles | Advanced</p>
+                  <div class="folder-progress-wrap">
+                    <div class="folder-progress-bar">
+                      <div class="folder-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="folder-progress-text">0%</span>
+                  </div>
+                  <p class="folder-last-opened">Last Opened: -</p>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+
+          <!-- Academy Timeline Views (Hidden by Default) -->
+          <div id="academyTimelinesWrap" style="display: none;">
+            <div class="timeline-header">
+              <button class="back-to-folders-btn" onclick="closeAcademyFolder()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                Back to Folders
+              </button>
+              <h2 class="pane-view-title" id="activeTimelineTitle">// Path</h2>
+            </div>
+            
+            
+            <div class="timeline-container" id="timeline-recon" style="display: none;">
+              
+              <div class="timeline-step" onclick="openAcademyArticle('recon-1', 'Understanding Recon')">
+                <div class="timeline-marker">1</div>
+                <div class="timeline-content">
+                  <h3 class="timeline-step-title">Understanding Recon</h3>
+                  <p class="timeline-step-desc">Click to view methodology, tools, and workflow.</p>
+                </div>
+              </div>
+              
+              <div class="timeline-step" onclick="openAcademyArticle('recon-2', 'Subdomain Enumeration')">
+                <div class="timeline-marker">2</div>
+                <div class="timeline-content">
+                  <h3 class="timeline-step-title">Subdomain Enumeration</h3>
+                  <p class="timeline-step-desc">Click to view methodology, tools, and workflow.</p>
+                </div>
+              </div>
+              
+              <div class="timeline-step" onclick="openAcademyArticle('recon-3', 'Live Hosts \u0026 Tech Stack')">
+                <div class="timeline-marker">3</div>
+                <div class="timeline-content">
+                  <h3 class="timeline-step-title">Live Hosts &amp; Tech Stack</h3>
+                  <p class="timeline-step-desc">Click to view methodology, tools, and workflow.</p>
+                </div>
+              </div>
+              
+              <div class="timeline-step" onclick="openAcademyArticle('recon-4', 'JS Recon \u0026 Content Discovery')">
+                <div class="timeline-marker">4</div>
+                <div class="timeline-content">
+                  <h3 class="timeline-step-title">JS Recon &amp; Content Discovery</h3>
+                  <p class="timeline-step-desc">Click to view methodology, tools, and workflow.</p>
+                </div>
+              </div>
+              
+            </div>
+            
+            <div class="timeline-container" id="timeline-fuzzing" style="display: none;">
+              
+            </div>
+            
+            <div class="timeline-container" id="timeline-xss" style="display: none;">
+              
+            </div>
+            
+            <div class="timeline-container" id="timeline-api" style="display: none;">
+              
+            </div>
+            
+          </div>
+
+        </div>
+
       </div>
     </main>
   </div>
@@ -629,6 +780,434 @@
       </div>
       <div class="modal-body" id="modalContent">
         <!-- Dyn contents -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Academy Rich Article Modal -->
+  <div class="modal-overlay academy-modal-overlay" id="academyModal">
+    <div class="modal-card academy-card">
+      <div class="modal-header">
+        <span class="modal-title" id="academyModalLabel">Interactive Module</span>
+        <button class="modal-close" onclick="closeAcademyModal()">&times;</button>
+      </div>
+      <div class="modal-body academy-modal-body">
+        
+          
+          <div class="academy-article-content" id="article-recon-1" style="display: none;">
+            
+            <div class="article-goal-box">
+              <h4>🎯 الهدف (The Goal)</h4>
+              <p>الهدف من مرحلة الاستطلاع (Reconnaissance) هو جمع أكبر قدر ممكن من المعلومات عن الهدف (الشركة، النطاقات، التقنيات، الموظفين). هذا يوسع مساحة الهجوم (Attack Surface) ويكشف عن الأصول المنسية أو غير المحمية جيداً.</p>
+            </div>
+
+            
+
+            <h4 class="article-section-title">🧭 Workflow الحقيقي (Pipeline)</h4>
+            <div class="article-workflow-box">
+              <code>Define Scope → Passive Recon → Active Recon → Content Discovery</code>
+            </div>
+
+            <div class="article-why-box">
+              <h4>💡 متى ولماذا نستخدم هذه الخطوة؟</h4>
+              <p>نستخدم هذه المرحلة دائماً كأول خطوة. بدون استطلاع جيد، لن تجد الثغرات الخفية لأنك ستختبر فقط ما يراه الجميع.</p>
+            </div>
+
+            <div class="article-mistakes-box">
+              <h4>❌ أخطاء شائعة</h4>
+              <ul>
+                
+                <li>تخطي هذه المرحلة والبدء بالهجوم فوراً.</li>
+                
+                <li>الاعتماد على أداة استطلاع واحدة فقط.</li>
+                
+              </ul>
+            </div>
+
+            <div class="article-result-box">
+              <h4>🎯 النتيجة النهائية (Output)</h4>
+              <pre>✔ خريطة واضحة للأصول (Assets Map).</pre>
+            </div>
+
+          </div>
+          
+          <div class="academy-article-content" id="article-recon-2" style="display: none;">
+            
+            <div class="article-goal-box">
+              <h4>🎯 الهدف (The Goal)</h4>
+              <p>الهدف من جمع النطاقات الفرعية (Subdomains) هو توسيع الـ Attack Surface لأن الشركات غالباً تنسى النطاقات القديمة (Dev/Test Servers) والتي قد تحتوي على ثغرات خطيرة.</p>
+            </div>
+
+            
+            <h4 class="article-section-title">🛠️ الأدوات المستخدمة (Tools)</h4>
+            <div class="article-tools-grid">
+              
+              <div class="tool-card">
+                <div class="tool-header">
+                  <span class="tool-name">subfinder</span>
+                </div>
+                <p class="tool-usage">جمع Subdomains بسرعة من مصادر مفتوحة (OSINT).</p>
+                <div class="tool-pros-cons">
+                  <div class="pros"><strong>المميزات:</strong>
+                    <ul><li>سريع جداً</li><li>خفيف</li><li>ممتاز للبداية</li></ul>
+                  </div>
+                  <div class="cons"><strong>العيوب:</strong>
+                    <ul><li>أحياناً يفوت بعض النطاقات إذا لم تقم بإعداد الـ API Keys</li></ul>
+                  </div>
+                </div>
+                <div class="tool-cmd-box">
+                  <code>subfinder -d target.com -all</code>
+                  <button class="copy-cmd-btn" onclick="copyText('subfinder \u002Dd target.com \u002Dall', this)">Copy</button>
+                </div>
+              </div>
+              
+              <div class="tool-card">
+                <div class="tool-header">
+                  <span class="tool-name">amass</span>
+                </div>
+                <p class="tool-usage">Deep Enumeration and Mapping (جمع عميق).</p>
+                <div class="tool-pros-cons">
+                  <div class="pros"><strong>المميزات:</strong>
+                    <ul><li>يجمع من ASN + APIs + Web Scraping</li></ul>
+                  </div>
+                  <div class="cons"><strong>العيوب:</strong>
+                    <ul><li>بطيء جداً</li><li>يستهلك موارد عالية</li></ul>
+                  </div>
+                </div>
+                <div class="tool-cmd-box">
+                  <code>amass enum -passive -d target.com</code>
+                  <button class="copy-cmd-btn" onclick="copyText('amass enum \u002Dpassive \u002Dd target.com', this)">Copy</button>
+                </div>
+              </div>
+              
+              <div class="tool-card">
+                <div class="tool-header">
+                  <span class="tool-name">assetfinder</span>
+                </div>
+                <p class="tool-usage">أداة خفيفة لاستخراج النطاقات المرتبطة بالهدف.</p>
+                <div class="tool-pros-cons">
+                  <div class="pros"><strong>المميزات:</strong>
+                    <ul><li>سريع</li><li>يسهل دمجه في السكربتات</li></ul>
+                  </div>
+                  <div class="cons"><strong>العيوب:</strong>
+                    <ul><li>نتائج محدودة مقارنة بـ Amass</li></ul>
+                  </div>
+                </div>
+                <div class="tool-cmd-box">
+                  <code>assetfinder --subs-only target.com</code>
+                  <button class="copy-cmd-btn" onclick="copyText('assetfinder \u002D\u002Dsubs\u002Donly target.com', this)">Copy</button>
+                </div>
+              </div>
+              
+            </div>
+            
+            
+            <h4 class="article-section-title">📊 جدول المقارنة</h4>
+            <div class="table-responsive">
+              <table class="cyber-table">
+                <thead>
+                  <tr>
+                    <th>Tool</th>
+                    <th>Speed</th>
+                    <th>Accuracy</th>
+                    <th>Deep Scan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  <tr>
+                    <td class="text-neon-cyan">subfinder</td>
+                    <td>Fast</td>
+                    <td>Good</td>
+                    <td>Medium</td>
+                  </tr>
+                  
+                  <tr>
+                    <td class="text-neon-cyan">amass</td>
+                    <td>Slow</td>
+                    <td>Excellent</td>
+                    <td>High</td>
+                  </tr>
+                  
+                  <tr>
+                    <td class="text-neon-cyan">assetfinder</td>
+                    <td>Very Fast</td>
+                    <td>Medium</td>
+                    <td>Low</td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+            
+            
+
+            <h4 class="article-section-title">🧭 Workflow الحقيقي (Pipeline)</h4>
+            <div class="article-workflow-box">
+              <code>subfinder -d target.com &gt; subs.txt ➔ amass enum -passive -d target.com &gt;&gt; subs.txt ➔ sort -u subs.txt</code>
+            </div>
+
+            <div class="article-why-box">
+              <h4>💡 متى ولماذا نستخدم هذه الخطوة؟</h4>
+              <p>نستخدم Subfinder للسرعة، و Amass للعمق. دمج الأدوات يضمن تغطية 100% للنطاقات.</p>
+            </div>
+
+            <div class="article-mistakes-box">
+              <h4>❌ أخطاء شائعة</h4>
+              <ul>
+                
+                <li>تشغيل Amass على نطاقات ضخمة جداً بدون Rate Limit.</li>
+                
+                <li>عدم فلترة النطاقات الميتة (Dead Domains) لاحقاً.</li>
+                
+                <li>الاعتماد على Subfinder بدون إعداد ملف الـ config للـ API Keys.</li>
+                
+              </ul>
+            </div>
+
+            <div class="article-result-box">
+              <h4>🎯 النتيجة النهائية (Output)</h4>
+              <pre>✔ قائمة ضخمة وشاملة بجميع النطاقات الفرعية (Subdomains List).</pre>
+            </div>
+
+          </div>
+          
+          <div class="academy-article-content" id="article-recon-3" style="display: none;">
+            
+            <div class="article-goal-box">
+              <h4>🎯 الهدف (The Goal)</h4>
+              <p>تصفية النطاقات الفرعية لمعرفة الأهداف الحية (Live Targets)، ثم فحص التقنيات (Tech Stack) العاملة عليها لتحديد نوع الثغرات.</p>
+            </div>
+
+            
+            <h4 class="article-section-title">🛠️ الأدوات المستخدمة (Tools)</h4>
+            <div class="article-tools-grid">
+              
+              <div class="tool-card">
+                <div class="tool-header">
+                  <span class="tool-name">httpx</span>
+                </div>
+                <p class="tool-usage">التحقق السريع من حالة الردود وعناوين الصفحات.</p>
+                <div class="tool-pros-cons">
+                  <div class="pros"><strong>المميزات:</strong>
+                    <ul><li>سريع جداً</li><li>يدعم الفلترة (Title, Status, Tech)</li></ul>
+                  </div>
+                  <div class="cons"><strong>العيوب:</strong>
+                    <ul><li>قد يُحظر الـ IP بسبب كثرة الطلبات (Rate Limiting)</li></ul>
+                  </div>
+                </div>
+                <div class="tool-cmd-box">
+                  <code>cat subs.txt | httpx -sc -title -tech</code>
+                  <button class="copy-cmd-btn" onclick="copyText('cat subs.txt | httpx \u002Dsc \u002Dtitle \u002Dtech', this)">Copy</button>
+                </div>
+              </div>
+              
+              <div class="tool-card">
+                <div class="tool-header">
+                  <span class="tool-name">whatweb</span>
+                </div>
+                <p class="tool-usage">جمع تفاصيل عميقة حول التقنيات العاملة على الخادم.</p>
+                <div class="tool-pros-cons">
+                  <div class="pros"><strong>المميزات:</strong>
+                    <ul><li>بصمات دقيقة (Accurate Signatures)</li></ul>
+                  </div>
+                  <div class="cons"><strong>العيوب:</strong>
+                    <ul><li>بطيء نسبياً مقارنة بـ httpx</li></ul>
+                  </div>
+                </div>
+                <div class="tool-cmd-box">
+                  <code>whatweb -i live_targets.txt</code>
+                  <button class="copy-cmd-btn" onclick="copyText('whatweb \u002Di live_targets.txt', this)">Copy</button>
+                </div>
+              </div>
+              
+            </div>
+            
+            
+            <h4 class="article-section-title">📊 جدول المقارنة</h4>
+            <div class="table-responsive">
+              <table class="cyber-table">
+                <thead>
+                  <tr>
+                    <th>Tool</th>
+                    <th>Speed</th>
+                    <th>Accuracy</th>
+                    <th>Deep Scan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  <tr>
+                    <td class="text-neon-cyan">httpx</td>
+                    <td>Very Fast</td>
+                    <td>Medium</td>
+                    <td>Medium</td>
+                  </tr>
+                  
+                  <tr>
+                    <td class="text-neon-cyan">whatweb</td>
+                    <td>Slow</td>
+                    <td>High</td>
+                    <td>High</td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+            
+            
+
+            <h4 class="article-section-title">🧭 Workflow الحقيقي (Pipeline)</h4>
+            <div class="article-workflow-box">
+              <code>cat subs.txt | httpx -silent &gt; live_hosts.txt ➔ httpx -l live_hosts.txt -tech</code>
+            </div>
+
+            <div class="article-why-box">
+              <h4>💡 متى ولماذا نستخدم هذه الخطوة؟</h4>
+              <p>بدون هذه الخطوة، ستضيع وقتاً طويلاً في فحص نطاقات لا تعمل (Dead).</p>
+            </div>
+
+            <div class="article-mistakes-box">
+              <h4>❌ أخطاء شائعة</h4>
+              <ul>
+                
+                <li>تجاهل النطاقات التي تعود بـ 403 Forbidden (قد تحتوي على مسارات مخفية).</li>
+                
+                <li>إرسال طلبات كثيرة دفعة واحدة مما يؤدي للحظر (WAF Block).</li>
+                
+              </ul>
+            </div>
+
+            <div class="article-result-box">
+              <h4>🎯 النتيجة النهائية (Output)</h4>
+              <pre>✔ قائمة النطاقات الحية (Live Hosts).
+✔ معرفة التقنيات العاملة (Tech Stack).</pre>
+            </div>
+
+          </div>
+          
+          <div class="academy-article-content" id="article-recon-4" style="display: none;">
+            
+            <div class="article-goal-box">
+              <h4>🎯 الهدف (The Goal)</h4>
+              <p>الزحف (Crawling) واستخراج الروابط والـ API Endpoints من ملفات الجافاسكربت لتوسيع نطاق الهجوم.</p>
+            </div>
+
+            
+            <h4 class="article-section-title">🛠️ الأدوات المستخدمة (Tools)</h4>
+            <div class="article-tools-grid">
+              
+              <div class="tool-card">
+                <div class="tool-header">
+                  <span class="tool-name">katana</span>
+                </div>
+                <p class="tool-usage">الزحف العميق واستخراج المسارات.</p>
+                <div class="tool-pros-cons">
+                  <div class="pros"><strong>المميزات:</strong>
+                    <ul><li>يدعم Headless Browser</li><li>يكتشف JS endpoints الحديثة</li></ul>
+                  </div>
+                  <div class="cons"><strong>العيوب:</strong>
+                    <ul><li>يستهلك موارد الجهاز</li></ul>
+                  </div>
+                </div>
+                <div class="tool-cmd-box">
+                  <code>katana -u target.com -jc</code>
+                  <button class="copy-cmd-btn" onclick="copyText('katana \u002Du target.com \u002Djc', this)">Copy</button>
+                </div>
+              </div>
+              
+              <div class="tool-card">
+                <div class="tool-header">
+                  <span class="tool-name">feroxbuster</span>
+                </div>
+                <p class="tool-usage">التخمين على المسارات (Directory Fuzzing) بسرعة عالية.</p>
+                <div class="tool-pros-cons">
+                  <div class="pros"><strong>المميزات:</strong>
+                    <ul><li>مبني بـ Rust (سريع جداً)</li><li>يدعم Recursion</li></ul>
+                  </div>
+                  <div class="cons"><strong>العيوب:</strong>
+                    <ul><li>قد يسبب إزعاج للهدف (Noisy)</li></ul>
+                  </div>
+                </div>
+                <div class="tool-cmd-box">
+                  <code>feroxbuster -u http://target.com -w words.txt</code>
+                  <button class="copy-cmd-btn" onclick="copyText('feroxbuster \u002Du http://target.com \u002Dw words.txt', this)">Copy</button>
+                </div>
+              </div>
+              
+            </div>
+            
+            
+            <h4 class="article-section-title">📊 جدول المقارنة</h4>
+            <div class="table-responsive">
+              <table class="cyber-table">
+                <thead>
+                  <tr>
+                    <th>Tool</th>
+                    <th>Speed</th>
+                    <th>Accuracy</th>
+                    <th>Deep Scan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  <tr>
+                    <td class="text-neon-cyan">katana</td>
+                    <td>Medium</td>
+                    <td>High</td>
+                    <td>Very High</td>
+                  </tr>
+                  
+                  <tr>
+                    <td class="text-neon-cyan">feroxbuster</td>
+                    <td>Very Fast</td>
+                    <td>High</td>
+                    <td>Medium</td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+            
+            
+
+            <h4 class="article-section-title">🧭 Workflow الحقيقي (Pipeline)</h4>
+            <div class="article-workflow-box">
+              <code>katana -u target.com -jc -d 3 &gt; endpoints.txt ➔ grep &quot;.js&quot; endpoints.txt &gt; js_files.txt</code>
+            </div>
+
+            <div class="article-why-box">
+              <h4>💡 متى ولماذا نستخدم هذه الخطوة؟</h4>
+              <p>أداة Katana ممتازة في Crawling لأنها تكتشف الـ Endpoints في تطبيقات SPA (React/Vue) بشكل أفضل من الأدوات التقليدية.</p>
+            </div>
+
+            <div class="article-mistakes-box">
+              <h4>❌ أخطاء شائعة</h4>
+              <ul>
+                
+                <li>نسيان قراءة وفحص ملفات الـ JS يدوياً لاستخراج مفاتيح API.</li>
+                
+                <li>تشغيل التخمين بدون ضبط الـ Threads مما يؤدي لانهيار السيرفر.</li>
+                
+              </ul>
+            </div>
+
+            <div class="article-result-box">
+              <h4>🎯 النتيجة النهائية (Output)</h4>
+              <pre>✔ روابط سرية (Hidden Endpoints).
+✔ ملفات الجافاسكربت (JS Files).
+✔ ثغرات محتملة وتسريب بيانات.</pre>
+            </div>
+
+          </div>
+          
+        
+          
+        
+          
+        
+          
+        
       </div>
     </div>
   </div>
@@ -1602,6 +2181,67 @@
         setTimeout(() => {
           copyBtnText.innerText = 'Copy';
           copyBtnText.style.color = '';
+        }, 2000);
+      });
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // ACADEMY MODULES LOGIC
+    // ─────────────────────────────────────────────────────────
+    function openAcademyFolder(folderId, title) {
+      document.getElementById('academyFoldersView').style.display = 'none';
+      document.getElementById('academyTimelinesWrap').style.display = 'block';
+      document.getElementById('activeTimelineTitle').innerText = '// ' + title + ' Path';
+      
+      document.querySelectorAll('.timeline-container').forEach(el => el.style.display = 'none');
+      const activeTimeline = document.getElementById('timeline-' + folderId);
+      if (activeTimeline) activeTimeline.style.display = 'block';
+
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Academy Folder Opened: ${title}`, 'text-neon-cyan');
+      }
+    }
+
+    function closeAcademyFolder() {
+      document.getElementById('academyTimelinesWrap').style.display = 'none';
+      document.getElementById('academyFoldersView').style.display = 'block';
+    }
+
+    function openAcademyArticle(articleId, title) {
+      document.querySelectorAll('.academy-article-content').forEach(el => el.style.display = 'none');
+      const activeArticle = document.getElementById('article-' + articleId);
+      if (activeArticle) activeArticle.style.display = 'block';
+      
+      document.getElementById('academyModalLabel').innerText = title;
+      document.getElementById('academyModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Loaded Academy Module: ${title}`, 'text-neon-cyan');
+      }
+    }
+
+    function closeAcademyModal() {
+      document.getElementById('academyModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    const academyModal = document.getElementById('academyModal');
+    if (academyModal) {
+      academyModal.addEventListener('click', (e) => {
+        if (e.target === academyModal) closeAcademyModal();
+      });
+    }
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerText;
+        btn.innerText = 'Copied!';
+        btn.classList.add('copied');
+        if (terminalInitialized) printLineToTerminal(`\n[info] Command copied to clipboard.`, 'text-neon-green');
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.classList.remove('copied');
         }, 2000);
       });
     }
