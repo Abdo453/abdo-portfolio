@@ -973,12 +973,8 @@
     }
 
     @media (max-width: 900px) {
-      .meth-logo {
-        font-size: 1.1rem;
-      }
-      .menu-toggle-btn {
-        display: block;
-      }
+      .meth-logo { font-size: 1.1rem; }
+      .menu-toggle-btn { display: block; }
       .meth-container {
         flex-direction: column;
         height: calc(100vh - 65px);
@@ -988,53 +984,94 @@
       .meth-sidebar {
         position: absolute;
         left: -360px;
-        top: 0;
-        bottom: 0;
-        width: 320px;
+        top: 0; bottom: 0;
+        width: 300px;
         height: 100%;
         z-index: 1000;
         transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 5px 0 25px rgba(0,0,0,0.9);
       }
-      .meth-sidebar.active {
-        left: 0;
-      }
+      .meth-sidebar.active { left: 0; }
       .meth-viewer {
         padding: 20px 15px !important;
         height: 100%;
         overflow-y: auto;
       }
-      .use-box-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-      }
+      .use-box-grid { grid-template-columns: 1fr; gap: 15px; }
       .flow-visualization {
-        padding: 20px 10px;
-        gap: 10px;
+        padding: 16px 10px;
+        gap: 8px;
+        -webkit-overflow-scrolling: touch;
       }
       .flow-node {
-        min-width: 130px;
-        padding: 10px 14px;
-        font-size: 1rem;
+        min-width: 120px;
+        padding: 10px 12px;
+        font-size: 0.95rem;
       }
-      .hero-title {
-        font-size: 1.8rem;
-      }
-      .hero-tagline {
-        font-size: 1.1rem;
-      }
-      .term-container {
-        height: 350px;
-      }
-      .lab-body {
-        padding: 15px;
-      }
+      .hero-title { font-size: 1.7rem; }
+      .hero-tagline { font-size: 1.05rem; }
+      .term-container { height: 330px; }
+      .lab-body { padding: 14px; }
       .lab-body > div {
         grid-template-columns: 1fr !important;
-        gap: 15px !important;
+        gap: 14px !important;
       }
+      /* Quick Jump modal — tablet */
+      .quick-jump-modal {
+        width: 92%;
+        max-width: 520px;
+      }
+      /* Progress + search on mobile sidebar */
+      .progress-tracker { margin: 8px 8px 0; }
+      .sidebar-search-wrap { padding: 8px 8px 0; }
+      .search-shortcut-hint { display: none; }
+      /* Sidebar card header on mobile */
+      .card-header h3 { font-size: 1.4rem; }
+    }
+
+    @media (max-width: 480px) {
+      .meth-header { padding: 10px 14px; }
+      .meth-logo { font-size: 0.9rem; }
+      .back-btn { font-size: 0.85rem; padding: 6px 10px; }
+      /* Header search button hidden */
+      .meth-header > div:last-child button:first-child { display: none; }
+      .meth-viewer { padding: 14px 10px !important; }
+      .hero-title { font-size: 1.35rem; }
+      .hero-tagline { font-size: 0.95rem; }
+      .card-header h3 { font-size: 1.2rem; }
+      .flow-node {
+        min-width: 100px;
+        padding: 8px 10px;
+        font-size: 0.85rem;
+      }
+      .flow-arrow { font-size: 1rem; }
+      .term-container { height: 280px; }
+      .cmd-ui-top {
+        font-size: 1rem;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      /* Quick Jump: full width on phone */
+      .quick-jump-modal {
+        width: 98%;
+        max-width: 98vw;
+        top: 8%;
+      }
+      .quick-jump-header { padding: 12px 14px; }
+      .quick-jump-input { font-size: 0.95rem; }
+      .quick-jump-footer { display: none; }
+      .quick-jump-result-item { padding: 10px 12px; }
+      .quick-jump-result-item .item-cat { display: none; }
+      /* Sidebar search */
+      .sidebar-search-input { font-size: 0.9rem; padding: 8px 12px; }
+      .meth-item { font-size: 1rem !important; }
+      .category-title { font-size: 1rem !important; }
+      /* Progress bar */
+      .progress-tracker-label span:first-child { font-size: 0.7rem; }
+      .progress-tracker-label span:last-child { font-size: 0.8rem; }
     }
   </style>
+
 </head>
 <body>
 

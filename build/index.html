@@ -25,16 +25,25 @@
     <div class="orb orb--cyan"></div>
   </div>
 
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
   <!-- Top Cyber Status Bar -->
   <header class="cyber-header">
-    <div class="header-logo">
-      <span class="logo-bracket">&lt;</span>Abdo Ramdan<span class="logo-bracket">/&gt;</span>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileSidebar()" style="display:none;" aria-label="Toggle Navigation">
+        ☰ Profile
+      </button>
+      <div class="header-logo">
+        <span class="logo-bracket">&lt;</span>Abdo Ramdan<span class="logo-bracket">/&gt;</span>
+      </div>
     </div>
     <div class="header-status">
       <span class="status-indicator"></span>
       <span class="status-text">SECURE TUNNEL ACTIVE // ETH0: 10.10.10.15</span>
     </div>
   </header>
+
 
   <!-- Main Grid Layout -->
   <div class="main-layout-container">
@@ -9029,6 +9038,65 @@
       if (targetPane) targetPane.classList.add('active');
     }
 
+
+    // =============================================
+    // MOBILE RESPONSIVE SIDEBAR
+    // =============================================
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarEl = document.querySelector('.sidebar-dashboard');
+
+    function isMobile() {
+      return window.innerWidth <= 768;
+    }
+
+    function toggleMobileSidebar() {
+      if (!sidebarEl) return;
+      const isOpen = sidebarEl.classList.contains('mobile-open');
+      if (isOpen) {
+        closeMobileSidebar();
+      } else {
+        openMobileSidebar();
+      }
+    }
+
+    function openMobileSidebar() {
+      if (!sidebarEl || !sidebarOverlay) return;
+      sidebarEl.classList.add('mobile-open');
+      sidebarOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      if (mobileMenuBtn) mobileMenuBtn.textContent = '✕ Close';
+    }
+
+    function closeMobileSidebar() {
+      if (!sidebarEl || !sidebarOverlay) return;
+      sidebarEl.classList.remove('mobile-open');
+      sidebarOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+      if (mobileMenuBtn) mobileMenuBtn.innerHTML = '☰ Profile';
+    }
+
+    // Show/hide hamburger button based on viewport
+    function updateMobileUI() {
+      if (!mobileMenuBtn) return;
+      if (isMobile()) {
+        mobileMenuBtn.style.display = 'flex';
+      } else {
+        mobileMenuBtn.style.display = 'none';
+        closeMobileSidebar();
+      }
+    }
+
+    // Auto close sidebar when switching tabs on mobile
+    const origSwitchTab = window.switchTab;
+    window.switchTab = function(tabId) {
+      if (origSwitchTab) origSwitchTab(tabId);
+      if (isMobile()) closeMobileSidebar();
+    };
+
+    window.addEventListener('resize', updateMobileUI);
+    document.addEventListener('DOMContentLoaded', updateMobileUI);
+    updateMobileUI();
 
   </script>
 </body>
