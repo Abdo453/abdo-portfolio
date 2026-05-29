@@ -165,6 +165,9 @@
         <button class="tab-link" onclick="switchTab('academy')" data-tab="academy">
           <span class="tab-icon">🗂️</span> Academy
         </button>
+        <button class="tab-link" onclick="switchTab('bugbounty')" data-tab="bugbounty">
+          <span class="tab-icon">🪲</span> Bug Bounty
+        </button>
         <button class="tab-link" onclick="switchTab('skills')" data-tab="skills">
           <span class="tab-icon">🛡️</span> Skills
         </button>
@@ -4984,6 +4987,2909 @@
 
           </div>
         </div>
+        
+        <!-- 8. BUG BOUNTY VIEW (3-Pane Explorer) -->
+        <div class="workspace-pane" id="pane-bugbounty">
+          <div class="explorer-layout">
+            
+            <!-- Pane 1: Sidebar (Folders) -->
+            <div class="explorer-sidebar">
+              <h3 class="explorer-title">EXPLORER</h3>
+              <div class="explorer-folders">
+                <div class="bb-folder explorer-folder" id="bb-ef-api_testing" onclick="openBBFolder('api_testing')">
+                  <span class="f-icon">📬</span>
+                  <span class="f-title">API Testing</span>
+                </div>
+                <div class="bb-folder explorer-folder" id="bb-ef-cloud_security" onclick="openBBFolder('cloud_security')">
+                  <span class="f-icon">☁️</span>
+                  <span class="f-title">Cloud Security</span>
+                </div>
+                <div class="bb-folder explorer-folder" id="bb-ef-cms_scanning" onclick="openBBFolder('cms_scanning')">
+                  <span class="f-icon">🛡️</span>
+                  <span class="f-title">CMS Scanning</span>
+                </div>
+                <div class="bb-folder explorer-folder" id="bb-ef-screenshotting" onclick="openBBFolder('screenshotting')">
+                  <span class="f-icon">📷</span>
+                  <span class="f-title">Screenshotting</span>
+                </div>
+                <div class="bb-folder explorer-folder" id="bb-ef-subdomain_takeover" onclick="openBBFolder('subdomain_takeover')">
+                  <span class="f-icon">🔗</span>
+                  <span class="f-title">Subdomain Takeover</span>
+                </div>
+                <div class="bb-folder explorer-folder" id="bb-ef-wordlists" onclick="openBBFolder('wordlists')">
+                  <span class="f-icon">📖</span>
+                  <span class="f-title">Wordlists</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 2: Tools Panel -->
+            <div class="explorer-tools-panel">
+              <h3 class="explorer-title">// Tools List</h3>
+              
+              <div id="bb-emptyToolsState" class="empty-state">
+                <span class="empty-icon">📁</span>
+                <p>Select a folder to view tools.</p>
+              </div>
+              <div class="bb-tools-list tools-list" id="bb-tools-api_testing" style="display: none;">
+                <div class="bb-tool-item tool-list-item" id="bb-ti-postman" onclick="openBBTool('postman')">
+                  <span class="t-icon">📬</span>
+                  <div class="t-info">
+                    <span class="t-name">Postman</span>
+                    <span class="t-meta">Fast | Easy</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-kiterunner" onclick="openBBTool('kiterunner')">
+                  <span class="t-icon">🏃</span>
+                  <div class="t-info">
+                    <span class="t-name">Kiterunner</span>
+                    <span class="t-meta">Very Fast | Intermediate</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-ffuf_api" onclick="openBBTool('ffuf_api')">
+                  <span class="t-icon">⚡</span>
+                  <div class="t-info">
+                    <span class="t-name">ffuf API fuzzing</span>
+                    <span class="t-meta">Very Fast | Intermediate</span>
+                  </div>
+                </div>
+              </div>
+              <div class="bb-tools-list tools-list" id="bb-tools-cloud_security" style="display: none;">
+                <div class="bb-tool-item tool-list-item" id="bb-ti-scoutsuite" onclick="openBBTool('scoutsuite')">
+                  <span class="t-icon">🔍</span>
+                  <div class="t-info">
+                    <span class="t-name">ScoutSuite</span>
+                    <span class="t-meta">Medium | Intermediate</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-prowler" onclick="openBBTool('prowler')">
+                  <span class="t-icon">🦁</span>
+                  <div class="t-info">
+                    <span class="t-name">Prowler</span>
+                    <span class="t-meta">Medium | Intermediate</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-pacu" onclick="openBBTool('pacu')">
+                  <span class="t-icon">🐻</span>
+                  <div class="t-info">
+                    <span class="t-name">Pacu</span>
+                    <span class="t-meta">Fast | Advanced</span>
+                  </div>
+                </div>
+              </div>
+              <div class="bb-tools-list tools-list" id="bb-tools-cms_scanning" style="display: none;">
+                <div class="bb-tool-item tool-list-item" id="bb-ti-wpscan" onclick="openBBTool('wpscan')">
+                  <span class="t-icon">🐝</span>
+                  <div class="t-info">
+                    <span class="t-name">WPScan</span>
+                    <span class="t-meta">Medium | Easy</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-joomscan" onclick="openBBTool('joomscan')">
+                  <span class="t-icon">🦁</span>
+                  <div class="t-info">
+                    <span class="t-name">Joomscan</span>
+                    <span class="t-meta">Fast | Easy</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-droopescan" onclick="openBBTool('droopescan')">
+                  <span class="t-icon">🐻</span>
+                  <div class="t-info">
+                    <span class="t-name">Droopescan</span>
+                    <span class="t-meta">Medium | Easy</span>
+                  </div>
+                </div>
+              </div>
+              <div class="bb-tools-list tools-list" id="bb-tools-screenshotting" style="display: none;">
+                <div class="bb-tool-item tool-list-item" id="bb-ti-aquatone" onclick="openBBTool('aquatone')">
+                  <span class="t-icon">📷</span>
+                  <div class="t-info">
+                    <span class="t-name">Aquatone</span>
+                    <span class="t-meta">Fast | Easy</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-gowitness" onclick="openBBTool('gowitness')">
+                  <span class="t-icon">👁️</span>
+                  <div class="t-info">
+                    <span class="t-name">Gowitness</span>
+                    <span class="t-meta">Very Fast | Easy</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-eyewitness" onclick="openBBTool('eyewitness')">
+                  <span class="t-icon">👀</span>
+                  <div class="t-info">
+                    <span class="t-name">EyeWitness</span>
+                    <span class="t-meta">Medium | Easy</span>
+                  </div>
+                </div>
+              </div>
+              <div class="bb-tools-list tools-list" id="bb-tools-subdomain_takeover" style="display: none;">
+                <div class="bb-tool-item tool-list-item" id="bb-ti-subzy" onclick="openBBTool('subzy')">
+                  <span class="t-icon">🔗</span>
+                  <div class="t-info">
+                    <span class="t-name">Subzy</span>
+                    <span class="t-meta">Very Fast | Easy</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-nuclei_takeover" onclick="openBBTool('nuclei_takeover')">
+                  <span class="t-icon">☢️</span>
+                  <div class="t-info">
+                    <span class="t-name">Nuclei Takeover Templates</span>
+                    <span class="t-meta">Fast | Intermediate</span>
+                  </div>
+                </div>
+              </div>
+              <div class="bb-tools-list tools-list" id="bb-tools-wordlists" style="display: none;">
+                <div class="bb-tool-item tool-list-item" id="bb-ti-seclists" onclick="openBBTool('seclists')">
+                  <span class="t-icon">📖</span>
+                  <div class="t-info">
+                    <span class="t-name">SecLists</span>
+                    <span class="t-meta">N/A | Easy</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-payloadsallthethings" onclick="openBBTool('payloadsallthethings')">
+                  <span class="t-icon">💡</span>
+                  <div class="t-info">
+                    <span class="t-name">PayloadsAllTheThings</span>
+                    <span class="t-meta">N/A | Easy</span>
+                  </div>
+                </div>
+                <div class="bb-tool-item tool-list-item" id="bb-ti-onelistforall" onclick="openBBTool('onelistforall')">
+                  <span class="t-icon">📜</span>
+                  <div class="t-info">
+                    <span class="t-name">OneListForAll</span>
+                    <span class="t-meta">N/A | Easy</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 3: Dynamic Content (Viewer) -->
+            <div class="explorer-content-panel">
+              <div id="bb-emptyContentState" class="empty-state">
+                <span class="empty-icon">🪲</span>
+                <p>Select a tool to view its deep analysis.</p>
+              </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-postman" style="display: none; --tool-color: #00e5ff;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">📬</span> Postman</h2>
+                      <p class="hero-tagline">Collaborative API Development & Testing Platform</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">GUI-BASED</span>
+                          <span class="cyber-badge">MANUAL/AUTO</span>
+                          <span class="cyber-badge">POPULAR</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>85%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>40%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 40%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>90%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-postman')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-postman')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-postman')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-postman')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-postman">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_api_testing.png" class="tool-graphic-img" alt="postman graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Postman?</h3></div>
+                      <p>منصة متكاملة لبناء واختبار واستخدام الـ APIs، تُستعمل بشكل واسع لفحص أمن نقاط الاتصال يدوياً.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ تعديل وقراءة الـ HTTP Requests بسهولة</li>
+                          <li>✔ دعم الأتمتة للمجموعات (Collections)</li>
+                          <li>✔ بيئة عمل مرئية بالكامل</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ عند اختبار منطق عمل الـ API (Business Logic)</li>
+                            <li>✔ عند عمل Fuzzing يدوي للطلبات</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ عند الرغبة في عمل Fuzzing سريع جداً لملايين المسارات (استخدم ffuf)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-postman">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">Download from postman.com/downloads</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('Download from postman.com/downloads', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">postman (GUI App)</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('postman (GUI App)', this)">📋 Copy</button>
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>--help</td><td>عرض خيارات المساعدة لنسخة Newman CLI</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-postman">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Launch GUI</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Import Spec</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Craft Requests</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Analyze Response</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">📬 postman</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">💻 proxy</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🔥 burp suite</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-postman">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>postman</td>
+                            <td>Medium</td>
+                            <td>High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                          <tr>
+                            <td>kiterunner</td>
+                            <td>Very Fast</td>
+                            <td>Medium</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('kiterunner')">🚀 kiterunner</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('ffuf_api')">🚀 ffuf_api</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-kiterunner" style="display: none; --tool-color: #00e5ff;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🏃</span> Kiterunner</h2>
+                      <p class="hero-tagline">Context-Aware API Scanning Tool</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">FAST</span>
+                          <span class="cyber-badge">API-ROUTES</span>
+                          <span class="cyber-badge">GO-BASED</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>95%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>60%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 60%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>85%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-kiterunner')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-kiterunner')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-kiterunner')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-kiterunner')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-kiterunner">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_api_testing.png" class="tool-graphic-img" alt="kiterunner graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Kiterunner?</h3></div>
+                      <p>أداة سريعة جداً مصممة خصيصاً لاكتشاف مسارات الـ API والـ Endpoints المخفية باستخدام ملفات التوجيه.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ سرعة فائقة في الفحص والتخمين</li>
+                          <li>✔ فهم سياق الـ APIs (REST, GraphQL)</li>
+                          <li>✔ دعم قراءة ملفات OpenAPI/Swagger</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ عندما تواجه هدفاً يعتمد على الـ API وتريد معرفة المسارات النشطة بسرعة</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ على المواقع التعريفية البسيطة التي لا تحتوي على خدمات API الخلفية</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-kiterunner">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">go install github.com/assetnote/kiterunner/cmd/kr@latest</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('go install github.com/assetnote/kiterunner/cmd/kr@latest', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">kr scan https://target.com/api -w routes.json</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('kr scan https://target.com/api -w routes.json', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('kr scan https://target.com/api -w routes.json')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>scan</td><td>بدء عملية الفحص</td></tr>
+                          <tr><td>-w</td><td>تحديد مسار ملف الكلمات/المسارات (Wordlist)</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-kiterunner">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Target API Host</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Wordlist (routes.json)</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Assetnote Scan</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Endpoints Discovered</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🏃 kiterunner</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🌐 httpx</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🔥 nuclei</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-kiterunner">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>kiterunner</td>
+                            <td>Very Fast</td>
+                            <td>High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('postman')">🚀 postman</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('ffuf_api')">🚀 ffuf_api</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-ffuf_api" style="display: none; --tool-color: #00e5ff;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">⚡</span> ffuf API fuzzing</h2>
+                      <p class="hero-tagline">Fuzzing API Endpoints with ffuf</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">FUZZER</span>
+                          <span class="cyber-badge">API-FUZZ</span>
+                          <span class="cyber-badge">GO-BASED</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>100%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 100%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>50%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 50%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>90%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-ffuf_api')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-ffuf_api')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-ffuf_api')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-ffuf_api')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-ffuf_api">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_api_testing.png" class="tool-graphic-img" alt="ffuf_api graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is ffuf API fuzzing?</h3></div>
+                      <p>استخدام أداة ffuf السريعة لتخمين وفحص مسارات ومعاملات الـ API باستخدام قوائم مخصصة.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ أسرع فاحص مسارات ويب على الإطلاق</li>
+                          <li>✔ القدرة على فحص ميثودز متعددة (POST, PUT, DELETE)</li>
+                          <li>✔ تصفية ذكية للاستجابات الخاطئة</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ لاكتشاف البارامترات والقيم داخل الـ API</li>
+                            <li>✔ لتخمين مسارات الـ endpoints المجهولة</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ إذا كانت الـ API محمية بـ Rate-Limit صارم جداً يسبب حظر الـ IP بسرعة</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-ffuf_api">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">go install github.com/ffuf/ffuf/v2@latest</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('go install github.com/ffuf/ffuf/v2@latest', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">ffuf -u https://target.com/api/FUZZ -w api_endpoints.txt -mc 200</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('ffuf -u https://target.com/api/FUZZ -w api_endpoints.txt -mc 200', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('ffuf -u https://target.com/api/FUZZ -w api_endpoints.txt -mc 200')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>-u</td><td>الرابط مع كلمة FUZZ للمكان المراد تخمينه</td></tr>
+                          <tr><td>-mc</td><td>فلترة النتائج بناءً على كود الاستجابة (Status Code)</td></tr>
+                          <tr><td>-X</td><td>تحديد طريقة الطلب (GET, POST, etc.)</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-ffuf_api">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">API Endpoint/FUZZ</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">API Wordlist</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">ffuf Engine</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Method Fuzzing</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Filter & Save</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">⚡ ffuf api</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">💻 burp suite</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-ffuf_api">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>ffuf api</td>
+                            <td>Very Fast</td>
+                            <td>High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('kiterunner')">🚀 kiterunner</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('postman')">🚀 postman</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-scoutsuite" style="display: none; --tool-color: #9b59ff;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🔍</span> ScoutSuite</h2>
+                      <p class="hero-tagline">Multi-Cloud Security Auditing Tool</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">MULTI-CLOUD</span>
+                          <span class="cyber-badge">AUDITING</span>
+                          <span class="cyber-badge">HTML-REPORT</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>60%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 60%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>50%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 50%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>95%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-scoutsuite')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-scoutsuite')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-scoutsuite')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-scoutsuite')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-scoutsuite">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_cloud_security.png" class="tool-graphic-img" alt="scoutsuite graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is ScoutSuite?</h3></div>
+                      <p>أداة مفتوحة المصدر لتدقيق وفحص أمان السحابة المتعددة (AWS, Azure, GCP)، تقوم بتحليل الإعدادات وتقديم تقرير تفاعلي.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ الحصول على نظرة شاملة لثغرات الحساب السحابي</li>
+                          <li>✔ تصدير تقرير HTML مرئي وجذاب وسهل القراءة</li>
+                          <li>✔ دعم منصات سحابية متعددة في مكان واحد</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ عند الحصول على وصول لقراءة حساب سحابي (ReadOnly credentials) وتريد تقييمه</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ عند الرغبة في محاولة استغلال الثغرات بشكل نشط وعنيف (استخدم Pacu)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-scoutsuite">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">pip install scoutsuite</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('pip install scoutsuite', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">scout aws --profile my-profile</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('scout aws --profile my-profile', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('scout aws --profile my-profile')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>aws</td><td>تحديد المزود (AWS) المراد فحصه</td></tr>
+                          <tr><td>--profile</td><td>استخدام ملف تعريف AWS CLI معين</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-scoutsuite">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Cloud APIs Connection</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Fetch Configuration</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Evaluate Ruleset</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Generate HTML Report</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">☁️ scoutsuite</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">📊 HTML Report</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-scoutsuite">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>scoutsuite</td>
+                            <td>Medium</td>
+                            <td>Very High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                          <tr>
+                            <td>prowler</td>
+                            <td>Medium</td>
+                            <td>Very High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('prowler')">🚀 prowler</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('pacu')">🚀 pacu</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-prowler" style="display: none; --tool-color: #9b59ff;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🦁</span> Prowler</h2>
+                      <p class="hero-tagline">AWS & Azure Security Assessment tool</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">CIS-BENCHMARKS</span>
+                          <span class="cyber-badge">AWS/AZURE</span>
+                          <span class="cyber-badge">COMPLIANCE</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>65%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 65%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>55%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 55%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>98%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 98%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-prowler')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-prowler')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-prowler')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-prowler')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-prowler">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_cloud_security.png" class="tool-graphic-img" alt="prowler graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Prowler?</h3></div>
+                      <p>أداة سطر أوامر قوية لتقييم أمان السحاب والمطابقة مع معايير الأمان مثل CIS Benchmarks و GDPR.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ فحص دقيق وشامل لأكثر من 240 فحص أمني</li>
+                          <li>✔ التحقق التلقائي من الالتزام بالمعايير العالمية</li>
+                          <li>✔ دعم AWS و Azure بشكل ممتاز</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ للتحقق من توافق إعدادات السحابة مع المعايير القياسية وصناعة تقارير التدقيق</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ عندما تريد أداة فحص سريعة جداً وخفيفة للـ Assets الخارجية فقط</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-prowler">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">pip install prowler</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('pip install prowler', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">prowler aws</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('prowler aws', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('prowler aws')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>-g</td><td>فحص مجموعة معايير أمان معينة فقط</td></tr>
+                          <tr><td>-M</td><td>تحديد صيغ الإخراج المطلوبة (json, csv, html)</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-prowler">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Credentials Auth</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">AWS API Queries</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Compliance Assessment</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">CLI/CSV Output</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🦁 prowler</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">📊 CSV/HTML Logs</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-prowler">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>prowler</td>
+                            <td>Medium</td>
+                            <td>Very High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('scoutsuite')">🚀 scoutsuite</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('pacu')">🚀 pacu</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-pacu" style="display: none; --tool-color: #9b59ff;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🐻</span> Pacu</h2>
+                      <p class="hero-tagline">AWS Penetration Testing Framework</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">OFFENSIVE-CLOUD</span>
+                          <span class="cyber-badge">EXPLOITATION</span>
+                          <span class="cyber-badge">FRAMEWORK</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>80%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>80%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>90%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-pacu')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-pacu')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-pacu')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-pacu')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-pacu">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_cloud_security.png" class="tool-graphic-img" alt="pacu graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Pacu?</h3></div>
+                      <p>إطار عمل هجومي مخصص لاختبار اختراق بيئات AWS، يساعد في تصعيد الصلاحيات وسرقة البيانات بطريقة مؤتمتة.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ أداة هجومية رائدة للأمازون AWS</li>
+                          <li>✔ تضم عشرات الموديلات الهجومية الجاهزة للتشغيل</li>
+                          <li>✔ تسهيل عمليات تصعيد الصلاحيات (PrivEsc) سحابياً</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ عند الرغبة في اختبار متانة الدفاعات السحابية ومحاكاة هجمات حقيقية داخل AWS</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ للتحقق السلبي أو البسيط من الالتزام بالقواعد (Compliance)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-pacu">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">pip install aws-pacu</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('pip install aws-pacu', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">python3 pacu.py</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('python3 pacu.py', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('python3 pacu.py')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>exec</td><td>تشغيل موديل هجومي معين</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-pacu">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Pacu Console</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Import Keys</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Run Enum Modules</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Execute PrivEsc/Attack</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🐻 pacu</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🔑 compromised_keys</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">👑 domain_admin</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-pacu">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>pacu</td>
+                            <td>Fast</td>
+                            <td>High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('scoutsuite')">🚀 scoutsuite</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('prowler')">🚀 prowler</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-wpscan" style="display: none; --tool-color: #ffb020;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🐝</span> WPScan</h2>
+                      <p class="hero-tagline">WordPress Vulnerability Scanner</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">WORDPRESS</span>
+                          <span class="cyber-badge">PLUGINS-ENUM</span>
+                          <span class="cyber-badge">VULN-DB</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>70%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 70%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>30%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 30%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>95%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-wpscan')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-wpscan')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-wpscan')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-wpscan')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-wpscan">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_cms_scanning.png" class="tool-graphic-img" alt="wpscan graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is WPScan?</h3></div>
+                      <p>أداة متخصصة لفحص مواقع ووردبريس، واكتشاف الإضافات والقوالب المصابة بثغرات أمنية وتخمين كلمات المرور.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ أكبر قاعدة بيانات لثغرات ووردبريس</li>
+                          <li>✔ كشف دقيق للإضافات والقوالب المثبتة</li>
+                          <li>✔ فحص ملفات النظام المعرضة للخطر</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ عند استهداف موقع يعمل بنظام إدارة المحتوى WordPress كلياً</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ عندما يكون الهدف تطبيق ويب مخصص (Custom App) أو CMS آخر كـ Drupal</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-wpscan">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">gem install wpscan</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('gem install wpscan', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">wpscan --url https://target.com --enumerate vp,vt,u</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('wpscan --url https://target.com --enumerate vp,vt,u', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('wpscan --url https://target.com --enumerate vp,vt,u')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>--url</td><td>تحديد رابط الموقع المستهدف</td></tr>
+                          <tr><td>--enumerate</td><td>تحديد خيارات الاستعلام (vp: إضافات، vt: قوالب، u: مستخدمين)</td></tr>
+                          <tr><td>--api-token</td><td>إدخال الـ Token الخاص بـ WPScan لجلب الثغرات المحدثة</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-wpscan">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Target URL</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Version Check</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Enumerate Plugins</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Compare with Vuln DB</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🐝 wpscan</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🔑 admin_credentials</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">💻 shell_upload</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-wpscan">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>wpscan</td>
+                            <td>Medium</td>
+                            <td>Very High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                          <tr>
+                            <td>joomscan</td>
+                            <td>Fast</td>
+                            <td>Medium</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('joomscan')">🚀 joomscan</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('droopescan')">🚀 droopescan</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-joomscan" style="display: none; --tool-color: #ffb020;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🦁</span> Joomscan</h2>
+                      <p class="hero-tagline">Joomla Vulnerability Scanner</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">JOOMLA</span>
+                          <span class="cyber-badge">FIREWALL-DETECTION</span>
+                          <span class="cyber-badge">PERL</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>80%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>25%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 25%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>80%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-joomscan')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-joomscan')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-joomscan')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-joomscan')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-joomscan">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_cms_scanning.png" class="tool-graphic-img" alt="joomscan graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Joomscan?</h3></div>
+                      <p>أداة من تطوير OWASP تفحص المواقع المبنية على نظام Joomla لاكتشاف الثغرات والتكوينات الخاطئة.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ بسيطة وسهلة التشغيل</li>
+                          <li>✔ تحديد إصدار جوملا ونوع جدار الحماية المستخدم</li>
+                          <li>✔ البحث عن ملفات التكوين المكشوفة</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ عند استهداف موقع يعمل بـ Joomla للبحث عن ثغرات المكونات الإضافية</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ على أي نظام إدارة محتوى آخر غير Joomla</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-joomscan">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">git clone https://github.com/OWASP/joomscan.git</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('git clone https://github.com/OWASP/joomscan.git', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">perl joomscan.pl -u https://target.com</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('perl joomscan.pl -u https://target.com', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('perl joomscan.pl -u https://target.com')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>-u</td><td>رابط الموقع الهدف</td></tr>
+                          <tr><td>--ec</td><td>فحص المكونات الإضافية (Components)</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-joomscan">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Target Joomla URL</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Detect Version</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Scan Components</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Vulnerability Report</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🦁 joomscan</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">📂 components_vuln</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-joomscan">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>joomscan</td>
+                            <td>Fast</td>
+                            <td>Medium</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('wpscan')">🚀 wpscan</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('droopescan')">🚀 droopescan</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-droopescan" style="display: none; --tool-color: #ffb020;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🐻</span> Droopescan</h2>
+                      <p class="hero-tagline">Drupal and Silverstripe vulnerability scanner</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">DRUPAL</span>
+                          <span class="cyber-badge">SILVERSTRIPE</span>
+                          <span class="cyber-badge">CMS-IDENTIFY</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>75%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 75%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>30%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 30%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>85%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-droopescan')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-droopescan')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-droopescan')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-droopescan')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-droopescan">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_cms_scanning.png" class="tool-graphic-img" alt="droopescan graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Droopescan?</h3></div>
+                      <p>أداة فحص مصممة للتعرف على الإصدارات والملفات والإضافات في مواقع Drupal و SilverStripe.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ أفضل أداة لفحص بيئات Drupal وتثبيتاتها</li>
+                          <li>✔ تخمين دقيق للملفات بناءً على الهاش الخاص بها</li>
+                          <li>✔ أداة خفيفة ومكتوبة ببايثون</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ عند التعامل مع مواقع أو جهات حكومية تستخدم نظام Drupal بشكل رئيسي</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ على المواقع التي لا تستعمل دروبال أو سيلفرسترايب</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-droopescan">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">pip install droopescan</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('pip install droopescan', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">droopescan scan drupal -u https://target.com</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('droopescan scan drupal -u https://target.com', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('droopescan scan drupal -u https://target.com')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>scan</td><td>تحديد نوع الموقع (drupal, silverstripe, wordpress)</td></tr>
+                          <tr><td>-u</td><td>رابط الهدف</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-droopescan">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">URL Target</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Hash Matching</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Determine Version</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Themes & Plugins Enum</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🐻 droopescan</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">📂 plugin_exploits</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-droopescan">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>droopescan</td>
+                            <td>Medium</td>
+                            <td>High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('wpscan')">🚀 wpscan</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('joomscan')">🚀 joomscan</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-aquatone" style="display: none; --tool-color: #ff0055;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">📷</span> Aquatone</h2>
+                      <p class="hero-tagline">Visual Inspection of Web Sites at Scale</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">VISUAL-RECON</span>
+                          <span class="cyber-badge">HTML-REPORT</span>
+                          <span class="cyber-badge">PORT-CLUSTERING</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>90%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>30%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 30%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>90%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-aquatone')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-aquatone')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-aquatone')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-aquatone')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-aquatone">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_screenshotting.png" class="tool-graphic-img" alt="aquatone graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Aquatone?</h3></div>
+                      <p>أداة لمعاينة صفحات الويب بصرياً لعدد كبير من الأهداف، تجمع اللقطات وتدمجها في تقرير تفاعلي مذهل.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ تجميع وتصنيف المواقع المتشابهة لتوفير الوقت</li>
+                          <li>✔ عرض العناوين والتقنيات بجانب كل لقطة شاشة</li>
+                          <li>✔ تصدير تقرير HTML متكامل وسريع التصفح</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ بعد عملية استطلاع واسعة والحصول على مئات النطاقات الحية لتصفحها سريعاً بالعين</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ إذا كان لديك نطاق واحد أو نطاقات قليلة جداً لا تحتاج أتمتة تصويرية</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-aquatone">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">Download precompiled binary from releases</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('Download precompiled binary from releases', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">cat live_hosts.txt | aquatone</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('cat live_hosts.txt | aquatone', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('cat live_hosts.txt | aquatone')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>-ports</td><td>تحديد المنافذ المراد فحصها وتصويرها</td></tr>
+                          <tr><td>-threads</td><td>عدد المهام المتزامنة للتصوير</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-aquatone">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Subdomains list</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Port Probe</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Chrome Headless Screenshots</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">HTML Dashboard</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🛰️ subfinder</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🌐 httpx</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">📷 aquatone</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">👁️ Visual Review</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-aquatone">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>aquatone</td>
+                            <td>Fast</td>
+                            <td>High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                          <tr>
+                            <td>gowitness</td>
+                            <td>Very Fast</td>
+                            <td>High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('gowitness')">🚀 gowitness</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('eyewitness')">🚀 eyewitness</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-gowitness" style="display: none; --tool-color: #ff0055;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">👁️</span> Gowitness</h2>
+                      <p class="hero-tagline">Go Web Screenshot Utility using Chrome Headless</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">GO-BASED</span>
+                          <span class="cyber-badge">SQLITE-DB</span>
+                          <span class="cyber-badge">FAST</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>95%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>35%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 35%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>92%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 92%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-gowitness')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-gowitness')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-gowitness')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-gowitness')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-gowitness">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_screenshotting.png" class="tool-graphic-img" alt="gowitness graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Gowitness?</h3></div>
+                      <p>أداة تصوير مواقع مبنية بلغة Go تستخدم Chrome Headless وتخزن اللقطات في قاعدة بيانات SQLite.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ سرعة استثنائية وقدرة على معالجة آلاف الروابط</li>
+                          <li>✔ تخزين منظم للبيانات داخل ملف قاعدة بيانات SQLite</li>
+                          <li>✔ واجهة ويب مدمجة لعرض الصور والبحث فيها</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ عند الحاجة لالتقاط لقطات الشاشة بسرعة فائقة وبطريقة منظمة وقابلة للبحث البرمجي</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ إذا كنت لا تملك متصفح Google Chrome أو Chromium مثبتاً على خادم الفحص</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-gowitness">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">go install github.com/sensepost/gowitness@latest</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('go install github.com/sensepost/gowitness@latest', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">gowitness file -f live_hosts.txt</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('gowitness file -f live_hosts.txt', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('gowitness file -f live_hosts.txt')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>file</td><td>تحديد وضع القراءة من ملف</td></tr>
+                          <tr><td>-f</td><td>مسار ملف العناوين</td></tr>
+                          <tr><td>server</td><td>تشغيل خادم الويب لعرض الصور الملتقطة تفاعلياً</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-gowitness">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">URLs input</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Chrome Browser Launch</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Capture & Render</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">SQLite database save</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">👁️ gowitness</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🖥️ Web GUI Interface</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-gowitness">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>gowitness</td>
+                            <td>Very Fast</td>
+                            <td>High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('aquatone')">🚀 aquatone</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('eyewitness')">🚀 eyewitness</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-eyewitness" style="display: none; --tool-color: #ff0055;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">👀</span> EyeWitness</h2>
+                      <p class="hero-tagline">Screenshots, Server Headers, and default credential checks</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">RECON-HELPER</span>
+                          <span class="cyber-badge">DEFAULT-CREDS</span>
+                          <span class="cyber-badge">PYTHON</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>75%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 75%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>40%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 40%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>95%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-eyewitness')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-eyewitness')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-eyewitness')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-eyewitness')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-eyewitness">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_screenshotting.png" class="tool-graphic-img" alt="eyewitness graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is EyeWitness?</h3></div>
+                      <p>أداة ممتازة تأخذ لقطات شاشة للمواقع، وتستخلص معلومات السيرفر وتحذر عند وجود لوحات تحكم تستعمل بيانات مرور افتراضية.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ كشف تلقائي للوحات التحكم الشهيرة وبيانات مرورها الافتراضية</li>
+                          <li>✔ تنظيم ممتاز للتقرير مع إظهار تفاصيل الـ HTTP Headers</li>
+                          <li>✔ دعم تصوير خدمات الـ RDP والـ VNC أيضاً</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ أثناء الفحوصات الداخلية للشبكات أو النطاقات الكبيرة للبحث عن أجهزة إلكترونية ببيانات مرور افتراضية</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ عندما تريد أداة خفيفة الحجم ولا تستهلك مساحة تخزينية كبيرة</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-eyewitness">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">git clone https://github.com/RedSiege/EyeWitness.git</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('git clone https://github.com/RedSiege/EyeWitness.git', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">python3 EyeWitness.py -f live_hosts.txt --web</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('python3 EyeWitness.py -f live_hosts.txt --web', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('python3 EyeWitness.py -f live_hosts.txt --web')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>--web</td><td>تفعيل الفحص وتصوير صفحات الويب</td></tr>
+                          <tr><td>-f</td><td>ملف يحتوي على العناوين المستهدفة</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-eyewitness">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Target URLs</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Identify Services (HTTP/RDP)</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Screenshot & Header Extract</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Report Generation</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">👀 eyewitness</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🔑 default_credentials_check</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-eyewitness">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>eyewitness</td>
+                            <td>Medium</td>
+                            <td>Very High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('aquatone')">🚀 aquatone</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('gowitness')">🚀 gowitness</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-subzy" style="display: none; --tool-color: #00ff66;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🔗</span> Subzy</h2>
+                      <p class="hero-tagline">Fast Subdomain Takeover Vulnerability Checker</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">TAKEOVER</span>
+                          <span class="cyber-badge">FAST-CHECK</span>
+                          <span class="cyber-badge">GO-BASED</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>98%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 98%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>20%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 20%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>90%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-subzy')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-subzy')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-subzy')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-subzy')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-subzy">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_subdomain_takeover.png" class="tool-graphic-img" alt="subzy graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Subzy?</h3></div>
+                      <p>أداة سريعة تفحص أسماء النطاقات الفرعية وتكتشف إمكانية الاستيلاء عليها (Takeover) بسبب وجود توجيهات DNS لخدمات سحابية غير مهيأة.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ سرعة مذهلة في معالجة آلاف النطاقات</li>
+                          <li>✔ قاعدة بيانات مدمجة للمؤشرات والخدمات الشهيرة (GitHub, Heroku, Shopify)</li>
+                          <li>✔ سهلة الاستخدام وسطر أوامر بسيط</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ بشكل روتيني بعد تجميع النطاقات الفرعية للبحث عن ثغرات الاستيلاء عالية الخطورة (Subdomain Takeover)</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ لا توجد حالة تمنع استخدامها فهي passive وآمنة تماماً</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-subzy">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">go install github.com/LukaSikic/subzy@latest</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('go install github.com/LukaSikic/subzy@latest', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">subzy run --targets subdomains.txt</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('subzy run --targets subdomains.txt', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('subzy run --targets subdomains.txt')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>run</td><td>بدء تشغيل عملية الفحص</td></tr>
+                          <tr><td>--targets</td><td>تحديد ملف النطاقات الفرعية المستهدفة</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-subzy">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Subdomains list</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">CNAME Resolution</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Check Service Response Signatures</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Vulnerable Alert</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🛰️ subfinder</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🔗 subzy</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🚩 takeover_exploit</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-subzy">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>subzy</td>
+                            <td>Very Fast</td>
+                            <td>High</td>
+                            <td>Yes</td>
+                            <td>No</td>
+                          </tr>
+                          <tr>
+                            <td>nuclei_takeover</td>
+                            <td>Fast</td>
+                            <td>Very High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('nuclei_takeover')">🚀 nuclei_takeover</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-nuclei_takeover" style="display: none; --tool-color: #00ff66;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">☢️</span> Nuclei Takeover Templates</h2>
+                      <p class="hero-tagline">Accurate Service Signature Matching using Nuclei</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">NUCLEI-TEMPLATES</span>
+                          <span class="cyber-badge">EXACT-MATCHING</span>
+                          <span class="cyber-badge">COMMUNITY-UPDATED</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>85%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>50%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 50%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>98%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 98%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-nuclei_takeover')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-nuclei_takeover')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-nuclei_takeover')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-nuclei_takeover')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-nuclei_takeover">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_subdomain_takeover.png" class="tool-graphic-img" alt="nuclei_takeover graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is Nuclei Takeover Templates?</h3></div>
+                      <p>استخدام قالب فحص الثغرات Nuclei مع قوالب الاستيلاء (takeovers) الخاصة بالمجتمع للتحقق بدقة شديدة.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ دقة مرتفعة للغاية ونسبة إنذار خاطئ شبه معدومة</li>
+                          <li>✔ قوالب محدثة باستمرار من مجتمع الأمن السيبراني العالمي</li>
+                          <li>✔ دعم سيناريوهات فحص متطورة ومركبة</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ لتأكيد وجود ثغرة subdomain takeover بدون أخطاء واستبعاد النتائج المزيفة</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ عندما تريد فحصاً عاماً وسريعاً جداً بدون إرسال طلبات HTTP مخصصة</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-nuclei_takeover">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">nuclei -l subdomains.txt -t takeovers/</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('nuclei -l subdomains.txt -t takeovers/', this)">📋 Copy</button>
+                          <button class="cmd-btn run-btn" onclick="simulateTerminal('nuclei -l subdomains.txt -t takeovers/')">▶ Run Demo</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔴 Flags & Parameters</h3></div>
+                      <table class="interactive-table">
+                        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+                        <tbody>
+                          <tr><td>-t takeovers/</td><td>تشغيل مجلد قوالب الاستيلاء فقط</td></tr>
+                          <tr><td>-l</td><td>ملف قائمة النطاقات الفرعية المراد فحصها</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-nuclei_takeover">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Subdomains list</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">HTTP Request</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Signature Regex Check</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Vulnerability Matching</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🔗 subdomain_list</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">☢️ nuclei takeover</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🚩 verified_takeover</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-nuclei_takeover">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟢 Comparison Chart</h3></div>
+                      <table class="interactive-table">
+                        <thead>
+                          <tr><th>Tool</th><th>Speed</th><th>Accuracy</th><th>Passive</th><th>Active</th></tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>nuclei takeover</td>
+                            <td>Fast</td>
+                            <td>Very High</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('subzy')">🚀 subzy</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-seclists" style="display: none; --tool-color: #ff3300;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">📖</span> SecLists</h2>
+                      <p class="hero-tagline">The Security Tester's Companion Wordlists</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">RESOURCE</span>
+                          <span class="cyber-badge">DICTIONARY</span>
+                          <span class="cyber-badge">MUST-HAVE</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>100%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 100%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>10%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 10%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>95%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-seclists')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-seclists')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-seclists')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-seclists')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-seclists">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_wordlists.png" class="tool-graphic-img" alt="seclists graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is SecLists?</h3></div>
+                      <p>المكتبة الأضخم والأهم لقوائم الكلمات المخصصة للأمن السيبراني، تحتوي على كلمات مرور، أسماء مستخدمين، مسارات ويب، وحقن ثغرات.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ القوائم مقسمة ومنظمة حسب نوع الفحص بشكل احترافي</li>
+                          <li>✔ توفير الوقت في كتابة قوائم كلمات من الصفر</li>
+                          <li>✔ تحديثات مستمرة من الباحثين الأمنيين</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ في جميع مراحل فحص وتخمين الثغرات (Directory search, Password spraying, XSS fuzzing)</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ لا توجد حالة، هي ركن أساسي لكل مختبر اختراق</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-seclists">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">git clone https://github.com/danielmiessler/SecLists.git</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('git clone https://github.com/danielmiessler/SecLists.git', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">ls -l /usr/share/seclists/</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('ls -l /usr/share/seclists/', this)">📋 Copy</button>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-seclists">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Determine Scan Type</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Select Wordlist from SecLists</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Load into Fuzzer</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Bruteforce / Exploit</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">📖 seclists</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">⚡ ffuf</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">📂 sensitive_files</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-seclists">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('payloadsallthethings')">🚀 payloadsallthethings</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('onelistforall')">🚀 onelistforall</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-payloadsallthethings" style="display: none; --tool-color: #ff3300;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">💡</span> PayloadsAllTheThings</h2>
+                      <p class="hero-tagline">Repository of useful payloads and bypasses</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">RESOURCE</span>
+                          <span class="cyber-badge">PAYLOADS</span>
+                          <span class="cyber-badge">BYPASSES</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>100%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 100%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>15%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 15%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>95%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-payloadsallthethings')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-payloadsallthethings')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-payloadsallthethings')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-payloadsallthethings')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-payloadsallthethings">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_wordlists.png" class="tool-graphic-img" alt="payloadsallthethings graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is PayloadsAllTheThings?</h3></div>
+                      <p>دليل ومرجع ضخم يحتوي على نصوص برمجية هجومية (Payloads) وحيل تخطي الحمايات لكل أنواع ثغرات تطبيقات الويب.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ أفضل مرجع لصياغة جمل الاستغلال (Exploits) يدوياً</li>
+                          <li>✔ حلول تخطي جدار الحماية (WAF Bypasses) مفصلة</li>
+                          <li>✔ أمثلة أكواد عملية لجميع الثغرات الشائعة</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ عندما تعثر على ثغرة وتريد صياغة Payload ناجح لتخطي الفلاتر والحمايات وإثبات الثغرة (PoC)</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ لا توجد حالة</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-payloadsallthethings">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">ls -l PayloadsAllTheThings/</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('ls -l PayloadsAllTheThings/', this)">📋 Copy</button>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-payloadsallthethings">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Find Web Vuln</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Lookup Vuln type</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Select Payload</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Modify & Inject</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">💡 payloadsallthethings</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">💉 exploit_crafting</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">👑 remote_code_execution</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-payloadsallthethings">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('seclists')">🚀 seclists</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('onelistforall')">🚀 onelistforall</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="bb-tool-content-view tool-content-view" id="bb-content-onelistforall" style="display: none; --tool-color: #ff3300;">
+                  
+                  <!-- HERO SECTION -->
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">📜</span> OneListForAll</h2>
+                      <p class="hero-tagline">A compiled and optimized wordlist for web fuzzing</p>
+                      <div class="hero-badges">
+                          <span class="cyber-badge">UNIFIED</span>
+                          <span class="cyber-badge">OPTIMIZED</span>
+                          <span class="cyber-badge">FUZZING</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Speed</span><span>100%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 100%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>10%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 10%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Accuracy</span><span>90%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TABS NAVIGATION -->
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchBBCyberTab(this, 'bb-tab-overview-onelistforall')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-commands-onelistforall')">Commands</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-workflow-onelistforall')">Workflow</button>
+                    <button class="cyber-tab-btn" onclick="switchBBCyberTab(this, 'bb-tab-comparisons-onelistforall')">Comparisons</button>
+                  </div>
+
+                  <!-- TAB: OVERVIEW -->
+                  <div class="tab-pane active" id="bb-tab-overview-onelistforall">
+                    <div class="cyber-card tool-graphic-card">
+                      <div class="tool-image-gallery">
+                        <img src="images/tools/bb_wordlists.png" class="tool-graphic-img" alt="onelistforall graphic" />
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>⚫ What is OneListForAll?</h3></div>
+                      <p>قائمة كلمات موحدة ومحسنة تجمع أفضل وأكثر مسارات الويب الحساسة تكراراً لحل مشكلة تشتت قوائم الكلمات.</p>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟣 Why Use It?</h3></div>
+                      <ul class="t-check-list">
+                          <li>✔ تجميع ذكي يقلل الوقت عبر حذف التكرار والمصطلحات النادرة</li>
+                          <li>✔ قائمة واحدة للفحص السريعة والفعال</li>
+                          <li>✔ أداء عالي وسرعة فحص ملحوظة</li>
+                      </ul>
+                    </div>
+
+                    <div class="use-box-grid">
+                      <div class="use-card perfect-for">
+                        <h4>✅ Perfect For:</h4>
+                        <ul>
+                            <li>✔ في الفحوصات الاستطلاعية السريعة لمسارات الويب الحساسة</li>
+                        </ul>
+                      </div>
+                      <div class="use-card avoid-when">
+                        <h4>❌ Avoid When:</h4>
+                        <ul>
+                            <li>❌ عندما تريد فحصاً عميقاً جداً وتفصيلياً بنوع معين من المسارات</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMMANDS -->
+                  <div class="tab-pane" id="bb-tab-commands-onelistforall">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Installation</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">git clone https://github.com/six2dez/OneListForAll.git</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('git clone https://github.com/six2dez/OneListForAll.git', this)">📋 Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>Core Command</h3></div>
+                      <div class="cmd-ui-box">
+                        <div class="cmd-ui-top">ls -l OneListForAll/</div>
+                        <div class="cmd-ui-bottom">
+                          <button class="cmd-btn" onclick="copyText('ls -l OneListForAll/', this)">📋 Copy</button>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: WORKFLOW -->
+                  <div class="tab-pane" id="bb-tab-workflow-onelistforall">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔵 Execution Flow</h3></div>
+                      <div class="workflow-map">
+                          <div class="wf-node">Fuzzing Setup</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Load OneListForAll</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Quick Web Scanning</div>
+                          <div class="wf-arrow">↓</div>
+                          <div class="wf-node">Key Findings</div>
+                      </div>
+                    </div>
+
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🟡 Real Attack Pipeline</h3></div>
+                      <div class="workflow-map" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">📜 onelistforall</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🦀 feroxbuster</div>
+                          <div class="wf-arrow" style="transform: rotate(-90deg);">↓</div>
+                          <div class="wf-node" style="border-color: #ffb020; box-shadow: 0 0 10px rgba(255,176,32,0.3);">🔥 discovery</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB: COMPARISONS -->
+                  <div class="tab-pane" id="bb-tab-comparisons-onelistforall">
+                    <div class="cyber-card">
+                      <div class="card-header"><h3>🔗 Related Tools</h3></div>
+                      <div class="related-tools-bar">
+                          <div class="related-tool-pill" onclick="openBBToolDirect('seclists')">🚀 seclists</div>
+                          <div class="related-tool-pill" onclick="openBBToolDirect('payloadsallthethings')">🚀 payloadsallthethings</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+            </div>
+
+          </div>
+        </div>
       </div>
 
   <!-- Footer -->
@@ -6067,6 +8973,58 @@
       } else {
         if(terminalInitialized) printLineToTerminal(`\n[error] Tool ${toolId} not found in path.`, 'text-neon-red');
       }
+    }
+
+    // ── Bug Bounty Explorer Navigation ──
+    function openBBFolder(folderId) {
+      document.querySelectorAll('.bb-folder').forEach(el => el.classList.remove('active'));
+      const activeFolder = document.getElementById('bb-ef-' + folderId);
+      if (activeFolder) activeFolder.classList.add('active');
+      document.getElementById('bb-emptyToolsState').style.display = 'none';
+      document.querySelectorAll('.bb-tools-list').forEach(el => el.style.display = 'none');
+      const activeTools = document.getElementById('bb-tools-' + folderId);
+      if (activeTools) activeTools.style.display = 'flex';
+      document.querySelectorAll('.bb-tool-content-view').forEach(el => el.style.display = 'none');
+      document.getElementById('bb-emptyContentState').style.display = 'flex';
+      document.querySelectorAll('.bb-tool-item').forEach(el => el.classList.remove('active'));
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Bug Bounty explorer navigated to: /usr/share/bugbounty/${folderId}`, 'text-neon-cyan');
+      }
+    }
+    function openBBTool(toolId) {
+      document.querySelectorAll('.bb-tool-item').forEach(el => el.classList.remove('active'));
+      const activeTool = document.getElementById('bb-ti-' + toolId);
+      if (activeTool) activeTool.classList.add('active');
+      document.getElementById('bb-emptyContentState').style.display = 'none';
+      document.querySelectorAll('.bb-tool-content-view').forEach(el => el.style.display = 'none');
+      const activeContent = document.getElementById('bb-content-' + toolId);
+      if (activeContent) activeContent.style.display = 'block';
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Displaying manual page for: ${toolId}`, 'text-neon-cyan');
+      }
+    }
+    function openBBToolDirect(toolId) {
+      const toolElement = document.getElementById('bb-ti-' + toolId);
+      if (toolElement) {
+        const parentList = toolElement.closest('.bb-tools-list');
+        if (parentList) {
+          const folderId = parentList.id.replace('bb-tools-', '');
+          openBBFolder(folderId);
+          setTimeout(() => {
+            openBBTool(toolId);
+          }, 100);
+        }
+      } else {
+        if (terminalInitialized) printLineToTerminal(`\n[error] Tool ${toolId} not found in Bug Bounty path.`, 'text-neon-red');
+      }
+    }
+    function switchBBCyberTab(btn, tabId) {
+      const toolView = btn.closest('.bb-tool-content-view');
+      toolView.querySelectorAll('.cyber-tab-btn').forEach(b => b.classList.remove('active'));
+      toolView.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const targetPane = toolView.querySelector('#' + tabId);
+      if (targetPane) targetPane.classList.add('active');
     }
   </script>
 </body>

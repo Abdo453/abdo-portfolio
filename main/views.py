@@ -788,7 +788,1268 @@ def get_portfolio_context():
                 'badge': 'Active',
                 'date': 'Continuous'
             },
-        ]
+        ],
+        'bugbounty_explorer': [       {       'color_theme': '#00e5ff',
+                'icon': '📬',
+                'id': 'api_testing',
+                'title': 'API Testing',
+                'tools': [       {       'badges': [       'GUI-BASED',
+                                                           'MANUAL/AUTO',
+                                                           'POPULAR'],
+                                         'cmd': 'postman (GUI App)',
+                                         'comparison': [       {       'accuracy': 'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Medium',
+                                                                       'tool': 'postman'},
+                                                               {       'accuracy': 'Medium',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Very '
+                                                                                'Fast',
+                                                                       'tool': 'kiterunner'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'عرض '
+                                                                          'خيارات '
+                                                                          'المساعدة '
+                                                                          'لنسخة '
+                                                                          'Newman '
+                                                                          'CLI',
+                                                                  'flag': '--help'}],
+                                         'flow_nodes': [       'Launch GUI',
+                                                               'Import Spec',
+                                                               'Craft Requests',
+                                                               'Analyze '
+                                                               'Response'],
+                                         'icon': '📬',
+                                         'id': 'postman',
+                                         'images': ['bb_api_testing.png'],
+                                         'install': 'Download from '
+                                                    'postman.com/downloads',
+                                         'name': 'Postman',
+                                         'related_tools': [       'kiterunner',
+                                                                  'ffuf_api'],
+                                         'speed': 'Fast',
+                                         'stats': {       'accuracy': 90,
+                                                          'complexity': 40,
+                                                          'speed': 85},
+                                         'tagline': 'Collaborative API '
+                                                    'Development & Testing '
+                                                    'Platform',
+                                         'what_is': 'منصة متكاملة لبناء '
+                                                    'واختبار واستخدام الـ '
+                                                    'APIs، تُستعمل بشكل واسع '
+                                                    'لفحص أمن نقاط الاتصال '
+                                                    'يدوياً.',
+                                         'when_not': [       'عند الرغبة في '
+                                                             'عمل Fuzzing سريع '
+                                                             'جداً لملايين '
+                                                             'المسارات (استخدم '
+                                                             'ffuf)'],
+                                         'when_use': [       'عند اختبار منطق '
+                                                             'عمل الـ API '
+                                                             '(Business Logic)',
+                                                             'عند عمل Fuzzing '
+                                                             'يدوي للطلبات'],
+                                         'why': [       'تعديل وقراءة الـ HTTP '
+                                                        'Requests بسهولة',
+                                                        'دعم الأتمتة للمجموعات '
+                                                        '(Collections)',
+                                                        'بيئة عمل مرئية '
+                                                        'بالكامل'],
+                                         'workflow_nodes': [       '📬 postman',
+                                                                   '💻 proxy',
+                                                                   '🔥 burp '
+                                                                   'suite']},
+                                 {       'badges': [       'FAST',
+                                                           'API-ROUTES',
+                                                           'GO-BASED'],
+                                         'cmd': 'kr scan '
+                                                'https://target.com/api -w '
+                                                'routes.json',
+                                         'comparison': [       {       'accuracy': 'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Very '
+                                                                                'Fast',
+                                                                       'tool': 'kiterunner'}],
+                                         'difficulty': 'Intermediate',
+                                         'flags': [       {       'desc': 'بدء '
+                                                                          'عملية '
+                                                                          'الفحص',
+                                                                  'flag': 'scan'},
+                                                          {       'desc': 'تحديد '
+                                                                          'مسار '
+                                                                          'ملف '
+                                                                          'الكلمات/المسارات '
+                                                                          '(Wordlist)',
+                                                                  'flag': '-w'}],
+                                         'flow_nodes': [       'Target API '
+                                                               'Host',
+                                                               'Wordlist '
+                                                               '(routes.json)',
+                                                               'Assetnote Scan',
+                                                               'Endpoints '
+                                                               'Discovered'],
+                                         'icon': '🏃',
+                                         'id': 'kiterunner',
+                                         'images': ['bb_api_testing.png'],
+                                         'install': 'go install '
+                                                    'github.com/assetnote/kiterunner/cmd/kr@latest',
+                                         'name': 'Kiterunner',
+                                         'related_tools': [       'postman',
+                                                                  'ffuf_api'],
+                                         'speed': 'Very Fast',
+                                         'stats': {       'accuracy': 85,
+                                                          'complexity': 60,
+                                                          'speed': 95},
+                                         'tagline': 'Context-Aware API '
+                                                    'Scanning Tool',
+                                         'what_is': 'أداة سريعة جداً مصممة '
+                                                    'خصيصاً لاكتشاف مسارات الـ '
+                                                    'API والـ Endpoints '
+                                                    'المخفية باستخدام ملفات '
+                                                    'التوجيه.',
+                                         'when_not': [       'على المواقع '
+                                                             'التعريفية '
+                                                             'البسيطة التي لا '
+                                                             'تحتوي على خدمات '
+                                                             'API الخلفية'],
+                                         'when_use': [       'عندما تواجه '
+                                                             'هدفاً يعتمد على '
+                                                             'الـ API وتريد '
+                                                             'معرفة المسارات '
+                                                             'النشطة بسرعة'],
+                                         'why': [       'سرعة فائقة في الفحص '
+                                                        'والتخمين',
+                                                        'فهم سياق الـ APIs '
+                                                        '(REST, GraphQL)',
+                                                        'دعم قراءة ملفات '
+                                                        'OpenAPI/Swagger'],
+                                         'workflow_nodes': [       '🏃 '
+                                                                   'kiterunner',
+                                                                   '🌐 httpx',
+                                                                   '🔥 nuclei']},
+                                 {       'badges': [       'FUZZER',
+                                                           'API-FUZZ',
+                                                           'GO-BASED'],
+                                         'cmd': 'ffuf -u '
+                                                'https://target.com/api/FUZZ '
+                                                '-w api_endpoints.txt -mc 200',
+                                         'comparison': [       {       'accuracy': 'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Very '
+                                                                                'Fast',
+                                                                       'tool': 'ffuf '
+                                                                               'api'}],
+                                         'difficulty': 'Intermediate',
+                                         'flags': [       {       'desc': 'الرابط '
+                                                                          'مع '
+                                                                          'كلمة '
+                                                                          'FUZZ '
+                                                                          'للمكان '
+                                                                          'المراد '
+                                                                          'تخمينه',
+                                                                  'flag': '-u'},
+                                                          {       'desc': 'فلترة '
+                                                                          'النتائج '
+                                                                          'بناءً '
+                                                                          'على '
+                                                                          'كود '
+                                                                          'الاستجابة '
+                                                                          '(Status '
+                                                                          'Code)',
+                                                                  'flag': '-mc'},
+                                                          {       'desc': 'تحديد '
+                                                                          'طريقة '
+                                                                          'الطلب '
+                                                                          '(GET, '
+                                                                          'POST, '
+                                                                          'etc.)',
+                                                                  'flag': '-X'}],
+                                         'flow_nodes': [       'API '
+                                                               'Endpoint/FUZZ',
+                                                               'API Wordlist',
+                                                               'ffuf Engine',
+                                                               'Method Fuzzing',
+                                                               'Filter & Save'],
+                                         'icon': '⚡',
+                                         'id': 'ffuf_api',
+                                         'images': ['bb_api_testing.png'],
+                                         'install': 'go install '
+                                                    'github.com/ffuf/ffuf/v2@latest',
+                                         'name': 'ffuf API fuzzing',
+                                         'related_tools': [       'kiterunner',
+                                                                  'postman'],
+                                         'speed': 'Very Fast',
+                                         'stats': {       'accuracy': 90,
+                                                          'complexity': 50,
+                                                          'speed': 100},
+                                         'tagline': 'Fuzzing API Endpoints '
+                                                    'with ffuf',
+                                         'what_is': 'استخدام أداة ffuf السريعة '
+                                                    'لتخمين وفحص مسارات '
+                                                    'ومعاملات الـ API باستخدام '
+                                                    'قوائم مخصصة.',
+                                         'when_not': [       'إذا كانت الـ API '
+                                                             'محمية بـ '
+                                                             'Rate-Limit صارم '
+                                                             'جداً يسبب حظر '
+                                                             'الـ IP بسرعة'],
+                                         'when_use': [       'لاكتشاف '
+                                                             'البارامترات '
+                                                             'والقيم داخل الـ '
+                                                             'API',
+                                                             'لتخمين مسارات '
+                                                             'الـ endpoints '
+                                                             'المجهولة'],
+                                         'why': [       'أسرع فاحص مسارات ويب '
+                                                        'على الإطلاق',
+                                                        'القدرة على فحص ميثودز '
+                                                        'متعددة (POST, PUT, '
+                                                        'DELETE)',
+                                                        'تصفية ذكية للاستجابات '
+                                                        'الخاطئة'],
+                                         'workflow_nodes': [       '⚡ ffuf api',
+                                                                   '💻 burp '
+                                                                   'suite']}]},
+        {       'color_theme': '#9b59ff',
+                'icon': '☁️',
+                'id': 'cloud_security',
+                'title': 'Cloud Security',
+                'tools': [       {       'badges': [       'MULTI-CLOUD',
+                                                           'AUDITING',
+                                                           'HTML-REPORT'],
+                                         'cmd': 'scout aws --profile '
+                                                'my-profile',
+                                         'comparison': [       {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Medium',
+                                                                       'tool': 'scoutsuite'},
+                                                               {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Medium',
+                                                                       'tool': 'prowler'}],
+                                         'difficulty': 'Intermediate',
+                                         'flags': [       {       'desc': 'تحديد '
+                                                                          'المزود '
+                                                                          '(AWS) '
+                                                                          'المراد '
+                                                                          'فحصه',
+                                                                  'flag': 'aws'},
+                                                          {       'desc': 'استخدام '
+                                                                          'ملف '
+                                                                          'تعريف '
+                                                                          'AWS '
+                                                                          'CLI '
+                                                                          'معين',
+                                                                  'flag': '--profile'}],
+                                         'flow_nodes': [       'Cloud APIs '
+                                                               'Connection',
+                                                               'Fetch '
+                                                               'Configuration',
+                                                               'Evaluate '
+                                                               'Ruleset',
+                                                               'Generate HTML '
+                                                               'Report'],
+                                         'icon': '🔍',
+                                         'id': 'scoutsuite',
+                                         'images': ['bb_cloud_security.png'],
+                                         'install': 'pip install scoutsuite',
+                                         'name': 'ScoutSuite',
+                                         'related_tools': ['prowler', 'pacu'],
+                                         'speed': 'Medium',
+                                         'stats': {       'accuracy': 95,
+                                                          'complexity': 50,
+                                                          'speed': 60},
+                                         'tagline': 'Multi-Cloud Security '
+                                                    'Auditing Tool',
+                                         'what_is': 'أداة مفتوحة المصدر لتدقيق '
+                                                    'وفحص أمان السحابة '
+                                                    'المتعددة (AWS, Azure, '
+                                                    'GCP)، تقوم بتحليل '
+                                                    'الإعدادات وتقديم تقرير '
+                                                    'تفاعلي.',
+                                         'when_not': [       'عند الرغبة في '
+                                                             'محاولة استغلال '
+                                                             'الثغرات بشكل نشط '
+                                                             'وعنيف (استخدم '
+                                                             'Pacu)'],
+                                         'when_use': [       'عند الحصول على '
+                                                             'وصول لقراءة حساب '
+                                                             'سحابي (ReadOnly '
+                                                             'credentials) '
+                                                             'وتريد تقييمه'],
+                                         'why': [       'الحصول على نظرة شاملة '
+                                                        'لثغرات الحساب السحابي',
+                                                        'تصدير تقرير HTML مرئي '
+                                                        'وجذاب وسهل القراءة',
+                                                        'دعم منصات سحابية '
+                                                        'متعددة في مكان واحد'],
+                                         'workflow_nodes': [       '☁️ '
+                                                                   'scoutsuite',
+                                                                   '📊 HTML '
+                                                                   'Report']},
+                                 {       'badges': [       'CIS-BENCHMARKS',
+                                                           'AWS/AZURE',
+                                                           'COMPLIANCE'],
+                                         'cmd': 'prowler aws',
+                                         'comparison': [       {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Medium',
+                                                                       'tool': 'prowler'}],
+                                         'difficulty': 'Intermediate',
+                                         'flags': [       {       'desc': 'فحص '
+                                                                          'مجموعة '
+                                                                          'معايير '
+                                                                          'أمان '
+                                                                          'معينة '
+                                                                          'فقط',
+                                                                  'flag': '-g'},
+                                                          {       'desc': 'تحديد '
+                                                                          'صيغ '
+                                                                          'الإخراج '
+                                                                          'المطلوبة '
+                                                                          '(json, '
+                                                                          'csv, '
+                                                                          'html)',
+                                                                  'flag': '-M'}],
+                                         'flow_nodes': [       'Credentials '
+                                                               'Auth',
+                                                               'AWS API '
+                                                               'Queries',
+                                                               'Compliance '
+                                                               'Assessment',
+                                                               'CLI/CSV '
+                                                               'Output'],
+                                         'icon': '🦁',
+                                         'id': 'prowler',
+                                         'images': ['bb_cloud_security.png'],
+                                         'install': 'pip install prowler',
+                                         'name': 'Prowler',
+                                         'related_tools': [       'scoutsuite',
+                                                                  'pacu'],
+                                         'speed': 'Medium',
+                                         'stats': {       'accuracy': 98,
+                                                          'complexity': 55,
+                                                          'speed': 65},
+                                         'tagline': 'AWS & Azure Security '
+                                                    'Assessment tool',
+                                         'what_is': 'أداة سطر أوامر قوية '
+                                                    'لتقييم أمان السحاب '
+                                                    'والمطابقة مع معايير '
+                                                    'الأمان مثل CIS Benchmarks '
+                                                    'و GDPR.',
+                                         'when_not': [       'عندما تريد أداة '
+                                                             'فحص سريعة جداً '
+                                                             'وخفيفة للـ '
+                                                             'Assets الخارجية '
+                                                             'فقط'],
+                                         'when_use': [       'للتحقق من توافق '
+                                                             'إعدادات السحابة '
+                                                             'مع المعايير '
+                                                             'القياسية وصناعة '
+                                                             'تقارير التدقيق'],
+                                         'why': [       'فحص دقيق وشامل لأكثر '
+                                                        'من 240 فحص أمني',
+                                                        'التحقق التلقائي من '
+                                                        'الالتزام بالمعايير '
+                                                        'العالمية',
+                                                        'دعم AWS و Azure بشكل '
+                                                        'ممتاز'],
+                                         'workflow_nodes': [       '🦁 prowler',
+                                                                   '📊 CSV/HTML '
+                                                                   'Logs']},
+                                 {       'badges': [       'OFFENSIVE-CLOUD',
+                                                           'EXPLOITATION',
+                                                           'FRAMEWORK'],
+                                         'cmd': 'python3 pacu.py',
+                                         'comparison': [       {       'accuracy': 'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Fast',
+                                                                       'tool': 'pacu'}],
+                                         'difficulty': 'Advanced',
+                                         'flags': [       {       'desc': 'تشغيل '
+                                                                          'موديل '
+                                                                          'هجومي '
+                                                                          'معين',
+                                                                  'flag': 'exec'}],
+                                         'flow_nodes': [       'Pacu Console',
+                                                               'Import Keys',
+                                                               'Run Enum '
+                                                               'Modules',
+                                                               'Execute '
+                                                               'PrivEsc/Attack'],
+                                         'icon': '🐻',
+                                         'id': 'pacu',
+                                         'images': ['bb_cloud_security.png'],
+                                         'install': 'pip install aws-pacu',
+                                         'name': 'Pacu',
+                                         'related_tools': [       'scoutsuite',
+                                                                  'prowler'],
+                                         'speed': 'Fast',
+                                         'stats': {       'accuracy': 90,
+                                                          'complexity': 80,
+                                                          'speed': 80},
+                                         'tagline': 'AWS Penetration Testing '
+                                                    'Framework',
+                                         'what_is': 'إطار عمل هجومي مخصص '
+                                                    'لاختبار اختراق بيئات AWS، '
+                                                    'يساعد في تصعيد الصلاحيات '
+                                                    'وسرقة البيانات بطريقة '
+                                                    'مؤتمتة.',
+                                         'when_not': [       'للتحقق السلبي أو '
+                                                             'البسيط من '
+                                                             'الالتزام '
+                                                             'بالقواعد '
+                                                             '(Compliance)'],
+                                         'when_use': [       'عند الرغبة في '
+                                                             'اختبار متانة '
+                                                             'الدفاعات '
+                                                             'السحابية ومحاكاة '
+                                                             'هجمات حقيقية '
+                                                             'داخل AWS'],
+                                         'why': [       'أداة هجومية رائدة '
+                                                        'للأمازون AWS',
+                                                        'تضم عشرات الموديلات '
+                                                        'الهجومية الجاهزة '
+                                                        'للتشغيل',
+                                                        'تسهيل عمليات تصعيد '
+                                                        'الصلاحيات (PrivEsc) '
+                                                        'سحابياً'],
+                                         'workflow_nodes': [       '🐻 pacu',
+                                                                   '🔑 '
+                                                                   'compromised_keys',
+                                                                   '👑 '
+                                                                   'domain_admin']}]},
+        {       'color_theme': '#ffb020',
+                'icon': '🛡️',
+                'id': 'cms_scanning',
+                'title': 'CMS Scanning',
+                'tools': [       {       'badges': [       'WORDPRESS',
+                                                           'PLUGINS-ENUM',
+                                                           'VULN-DB'],
+                                         'cmd': 'wpscan --url '
+                                                'https://target.com '
+                                                '--enumerate vp,vt,u',
+                                         'comparison': [       {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Medium',
+                                                                       'tool': 'wpscan'},
+                                                               {       'accuracy': 'Medium',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Fast',
+                                                                       'tool': 'joomscan'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'تحديد '
+                                                                          'رابط '
+                                                                          'الموقع '
+                                                                          'المستهدف',
+                                                                  'flag': '--url'},
+                                                          {       'desc': 'تحديد '
+                                                                          'خيارات '
+                                                                          'الاستعلام '
+                                                                          '(vp: '
+                                                                          'إضافات، '
+                                                                          'vt: '
+                                                                          'قوالب، '
+                                                                          'u: '
+                                                                          'مستخدمين)',
+                                                                  'flag': '--enumerate'},
+                                                          {       'desc': 'إدخال '
+                                                                          'الـ '
+                                                                          'Token '
+                                                                          'الخاص '
+                                                                          'بـ '
+                                                                          'WPScan '
+                                                                          'لجلب '
+                                                                          'الثغرات '
+                                                                          'المحدثة',
+                                                                  'flag': '--api-token'}],
+                                         'flow_nodes': [       'Target URL',
+                                                               'Version Check',
+                                                               'Enumerate '
+                                                               'Plugins',
+                                                               'Compare with '
+                                                               'Vuln DB'],
+                                         'icon': '🐝',
+                                         'id': 'wpscan',
+                                         'images': ['bb_cms_scanning.png'],
+                                         'install': 'gem install wpscan',
+                                         'name': 'WPScan',
+                                         'related_tools': [       'joomscan',
+                                                                  'droopescan'],
+                                         'speed': 'Medium',
+                                         'stats': {       'accuracy': 95,
+                                                          'complexity': 30,
+                                                          'speed': 70},
+                                         'tagline': 'WordPress Vulnerability '
+                                                    'Scanner',
+                                         'what_is': 'أداة متخصصة لفحص مواقع '
+                                                    'ووردبريس، واكتشاف '
+                                                    'الإضافات والقوالب المصابة '
+                                                    'بثغرات أمنية وتخمين كلمات '
+                                                    'المرور.',
+                                         'when_not': [       'عندما يكون الهدف '
+                                                             'تطبيق ويب مخصص '
+                                                             '(Custom App) أو '
+                                                             'CMS آخر كـ '
+                                                             'Drupal'],
+                                         'when_use': [       'عند استهداف موقع '
+                                                             'يعمل بنظام إدارة '
+                                                             'المحتوى '
+                                                             'WordPress كلياً'],
+                                         'why': [       'أكبر قاعدة بيانات '
+                                                        'لثغرات ووردبريس',
+                                                        'كشف دقيق للإضافات '
+                                                        'والقوالب المثبتة',
+                                                        'فحص ملفات النظام '
+                                                        'المعرضة للخطر'],
+                                         'workflow_nodes': [       '🐝 wpscan',
+                                                                   '🔑 '
+                                                                   'admin_credentials',
+                                                                   '💻 '
+                                                                   'shell_upload']},
+                                 {       'badges': [       'JOOMLA',
+                                                           'FIREWALL-DETECTION',
+                                                           'PERL'],
+                                         'cmd': 'perl joomscan.pl -u '
+                                                'https://target.com',
+                                         'comparison': [       {       'accuracy': 'Medium',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Fast',
+                                                                       'tool': 'joomscan'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'رابط '
+                                                                          'الموقع '
+                                                                          'الهدف',
+                                                                  'flag': '-u'},
+                                                          {       'desc': 'فحص '
+                                                                          'المكونات '
+                                                                          'الإضافية '
+                                                                          '(Components)',
+                                                                  'flag': '--ec'}],
+                                         'flow_nodes': [       'Target Joomla '
+                                                               'URL',
+                                                               'Detect Version',
+                                                               'Scan '
+                                                               'Components',
+                                                               'Vulnerability '
+                                                               'Report'],
+                                         'icon': '🦁',
+                                         'id': 'joomscan',
+                                         'images': ['bb_cms_scanning.png'],
+                                         'install': 'git clone '
+                                                    'https://github.com/OWASP/joomscan.git',
+                                         'name': 'Joomscan',
+                                         'related_tools': [       'wpscan',
+                                                                  'droopescan'],
+                                         'speed': 'Fast',
+                                         'stats': {       'accuracy': 80,
+                                                          'complexity': 25,
+                                                          'speed': 80},
+                                         'tagline': 'Joomla Vulnerability '
+                                                    'Scanner',
+                                         'what_is': 'أداة من تطوير OWASP تفحص '
+                                                    'المواقع المبنية على نظام '
+                                                    'Joomla لاكتشاف الثغرات '
+                                                    'والتكوينات الخاطئة.',
+                                         'when_not': [       'على أي نظام '
+                                                             'إدارة محتوى آخر '
+                                                             'غير Joomla'],
+                                         'when_use': [       'عند استهداف موقع '
+                                                             'يعمل بـ Joomla '
+                                                             'للبحث عن ثغرات '
+                                                             'المكونات '
+                                                             'الإضافية'],
+                                         'why': [       'بسيطة وسهلة التشغيل',
+                                                        'تحديد إصدار جوملا '
+                                                        'ونوع جدار الحماية '
+                                                        'المستخدم',
+                                                        'البحث عن ملفات '
+                                                        'التكوين المكشوفة'],
+                                         'workflow_nodes': [       '🦁 joomscan',
+                                                                   '📂 '
+                                                                   'components_vuln']},
+                                 {       'badges': [       'DRUPAL',
+                                                           'SILVERSTRIPE',
+                                                           'CMS-IDENTIFY'],
+                                         'cmd': 'droopescan scan drupal -u '
+                                                'https://target.com',
+                                         'comparison': [       {       'accuracy': 'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Medium',
+                                                                       'tool': 'droopescan'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'تحديد '
+                                                                          'نوع '
+                                                                          'الموقع '
+                                                                          '(drupal, '
+                                                                          'silverstripe, '
+                                                                          'wordpress)',
+                                                                  'flag': 'scan'},
+                                                          {       'desc': 'رابط '
+                                                                          'الهدف',
+                                                                  'flag': '-u'}],
+                                         'flow_nodes': [       'URL Target',
+                                                               'Hash Matching',
+                                                               'Determine '
+                                                               'Version',
+                                                               'Themes & '
+                                                               'Plugins Enum'],
+                                         'icon': '🐻',
+                                         'id': 'droopescan',
+                                         'images': ['bb_cms_scanning.png'],
+                                         'install': 'pip install droopescan',
+                                         'name': 'Droopescan',
+                                         'related_tools': [       'wpscan',
+                                                                  'joomscan'],
+                                         'speed': 'Medium',
+                                         'stats': {       'accuracy': 85,
+                                                          'complexity': 30,
+                                                          'speed': 75},
+                                         'tagline': 'Drupal and Silverstripe '
+                                                    'vulnerability scanner',
+                                         'what_is': 'أداة فحص مصممة للتعرف على '
+                                                    'الإصدارات والملفات '
+                                                    'والإضافات في مواقع Drupal '
+                                                    'و SilverStripe.',
+                                         'when_not': [       'على المواقع التي '
+                                                             'لا تستعمل دروبال '
+                                                             'أو سيلفرسترايب'],
+                                         'when_use': [       'عند التعامل مع '
+                                                             'مواقع أو جهات '
+                                                             'حكومية تستخدم '
+                                                             'نظام Drupal بشكل '
+                                                             'رئيسي'],
+                                         'why': [       'أفضل أداة لفحص بيئات '
+                                                        'Drupal وتثبيتاتها',
+                                                        'تخمين دقيق للملفات '
+                                                        'بناءً على الهاش الخاص '
+                                                        'بها',
+                                                        'أداة خفيفة ومكتوبة '
+                                                        'ببايثون'],
+                                         'workflow_nodes': [       '🐻 '
+                                                                   'droopescan',
+                                                                   '📂 '
+                                                                   'plugin_exploits']}]},
+        {       'color_theme': '#ff0055',
+                'icon': '📷',
+                'id': 'screenshotting',
+                'title': 'Screenshotting',
+                'tools': [       {       'badges': [       'VISUAL-RECON',
+                                                           'HTML-REPORT',
+                                                           'PORT-CLUSTERING'],
+                                         'cmd': 'cat live_hosts.txt | aquatone',
+                                         'comparison': [       {       'accuracy': 'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Fast',
+                                                                       'tool': 'aquatone'},
+                                                               {       'accuracy': 'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Very '
+                                                                                'Fast',
+                                                                       'tool': 'gowitness'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'تحديد '
+                                                                          'المنافذ '
+                                                                          'المراد '
+                                                                          'فحصها '
+                                                                          'وتصويرها',
+                                                                  'flag': '-ports'},
+                                                          {       'desc': 'عدد '
+                                                                          'المهام '
+                                                                          'المتزامنة '
+                                                                          'للتصوير',
+                                                                  'flag': '-threads'}],
+                                         'flow_nodes': [       'Subdomains '
+                                                               'list',
+                                                               'Port Probe',
+                                                               'Chrome '
+                                                               'Headless '
+                                                               'Screenshots',
+                                                               'HTML '
+                                                               'Dashboard'],
+                                         'icon': '📷',
+                                         'id': 'aquatone',
+                                         'images': ['bb_screenshotting.png'],
+                                         'install': 'Download precompiled '
+                                                    'binary from releases',
+                                         'name': 'Aquatone',
+                                         'related_tools': [       'gowitness',
+                                                                  'eyewitness'],
+                                         'speed': 'Fast',
+                                         'stats': {       'accuracy': 90,
+                                                          'complexity': 30,
+                                                          'speed': 90},
+                                         'tagline': 'Visual Inspection of Web '
+                                                    'Sites at Scale',
+                                         'what_is': 'أداة لمعاينة صفحات الويب '
+                                                    'بصرياً لعدد كبير من '
+                                                    'الأهداف، تجمع اللقطات '
+                                                    'وتدمجها في تقرير تفاعلي '
+                                                    'مذهل.',
+                                         'when_not': [       'إذا كان لديك '
+                                                             'نطاق واحد أو '
+                                                             'نطاقات قليلة '
+                                                             'جداً لا تحتاج '
+                                                             'أتمتة تصويرية'],
+                                         'when_use': [       'بعد عملية '
+                                                             'استطلاع واسعة '
+                                                             'والحصول على مئات '
+                                                             'النطاقات الحية '
+                                                             'لتصفحها سريعاً '
+                                                             'بالعين'],
+                                         'why': [       'تجميع وتصنيف المواقع '
+                                                        'المتشابهة لتوفير '
+                                                        'الوقت',
+                                                        'عرض العناوين '
+                                                        'والتقنيات بجانب كل '
+                                                        'لقطة شاشة',
+                                                        'تصدير تقرير HTML '
+                                                        'متكامل وسريع التصفح'],
+                                         'workflow_nodes': [       '🛰️ '
+                                                                   'subfinder',
+                                                                   '🌐 httpx',
+                                                                   '📷 aquatone',
+                                                                   '👁️ Visual '
+                                                                   'Review']},
+                                 {       'badges': [       'GO-BASED',
+                                                           'SQLITE-DB',
+                                                           'FAST'],
+                                         'cmd': 'gowitness file -f '
+                                                'live_hosts.txt',
+                                         'comparison': [       {       'accuracy': 'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Very '
+                                                                                'Fast',
+                                                                       'tool': 'gowitness'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'تحديد '
+                                                                          'وضع '
+                                                                          'القراءة '
+                                                                          'من '
+                                                                          'ملف',
+                                                                  'flag': 'file'},
+                                                          {       'desc': 'مسار '
+                                                                          'ملف '
+                                                                          'العناوين',
+                                                                  'flag': '-f'},
+                                                          {       'desc': 'تشغيل '
+                                                                          'خادم '
+                                                                          'الويب '
+                                                                          'لعرض '
+                                                                          'الصور '
+                                                                          'الملتقطة '
+                                                                          'تفاعلياً',
+                                                                  'flag': 'server'}],
+                                         'flow_nodes': [       'URLs input',
+                                                               'Chrome Browser '
+                                                               'Launch',
+                                                               'Capture & '
+                                                               'Render',
+                                                               'SQLite '
+                                                               'database save'],
+                                         'icon': '👁️',
+                                         'id': 'gowitness',
+                                         'images': ['bb_screenshotting.png'],
+                                         'install': 'go install '
+                                                    'github.com/sensepost/gowitness@latest',
+                                         'name': 'Gowitness',
+                                         'related_tools': [       'aquatone',
+                                                                  'eyewitness'],
+                                         'speed': 'Very Fast',
+                                         'stats': {       'accuracy': 92,
+                                                          'complexity': 35,
+                                                          'speed': 95},
+                                         'tagline': 'Go Web Screenshot Utility '
+                                                    'using Chrome Headless',
+                                         'what_is': 'أداة تصوير مواقع مبنية '
+                                                    'بلغة Go تستخدم Chrome '
+                                                    'Headless وتخزن اللقطات في '
+                                                    'قاعدة بيانات SQLite.',
+                                         'when_not': [       'إذا كنت لا تملك '
+                                                             'متصفح Google '
+                                                             'Chrome أو '
+                                                             'Chromium مثبتاً '
+                                                             'على خادم الفحص'],
+                                         'when_use': [       'عند الحاجة '
+                                                             'لالتقاط لقطات '
+                                                             'الشاشة بسرعة '
+                                                             'فائقة وبطريقة '
+                                                             'منظمة وقابلة '
+                                                             'للبحث البرمجي'],
+                                         'why': [       'سرعة استثنائية وقدرة '
+                                                        'على معالجة آلاف '
+                                                        'الروابط',
+                                                        'تخزين منظم للبيانات '
+                                                        'داخل ملف قاعدة بيانات '
+                                                        'SQLite',
+                                                        'واجهة ويب مدمجة لعرض '
+                                                        'الصور والبحث فيها'],
+                                         'workflow_nodes': [       '👁️ '
+                                                                   'gowitness',
+                                                                   '🖥️ Web GUI '
+                                                                   'Interface']},
+                                 {       'badges': [       'RECON-HELPER',
+                                                           'DEFAULT-CREDS',
+                                                           'PYTHON'],
+                                         'cmd': 'python3 EyeWitness.py -f '
+                                                'live_hosts.txt --web',
+                                         'comparison': [       {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Medium',
+                                                                       'tool': 'eyewitness'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'تفعيل '
+                                                                          'الفحص '
+                                                                          'وتصوير '
+                                                                          'صفحات '
+                                                                          'الويب',
+                                                                  'flag': '--web'},
+                                                          {       'desc': 'ملف '
+                                                                          'يحتوي '
+                                                                          'على '
+                                                                          'العناوين '
+                                                                          'المستهدفة',
+                                                                  'flag': '-f'}],
+                                         'flow_nodes': [       'Target URLs',
+                                                               'Identify '
+                                                               'Services '
+                                                               '(HTTP/RDP)',
+                                                               'Screenshot & '
+                                                               'Header Extract',
+                                                               'Report '
+                                                               'Generation'],
+                                         'icon': '👀',
+                                         'id': 'eyewitness',
+                                         'images': ['bb_screenshotting.png'],
+                                         'install': 'git clone '
+                                                    'https://github.com/RedSiege/EyeWitness.git',
+                                         'name': 'EyeWitness',
+                                         'related_tools': [       'aquatone',
+                                                                  'gowitness'],
+                                         'speed': 'Medium',
+                                         'stats': {       'accuracy': 95,
+                                                          'complexity': 40,
+                                                          'speed': 75},
+                                         'tagline': 'Screenshots, Server '
+                                                    'Headers, and default '
+                                                    'credential checks',
+                                         'what_is': 'أداة ممتازة تأخذ لقطات '
+                                                    'شاشة للمواقع، وتستخلص '
+                                                    'معلومات السيرفر وتحذر عند '
+                                                    'وجود لوحات تحكم تستعمل '
+                                                    'بيانات مرور افتراضية.',
+                                         'when_not': [       'عندما تريد أداة '
+                                                             'خفيفة الحجم ولا '
+                                                             'تستهلك مساحة '
+                                                             'تخزينية كبيرة'],
+                                         'when_use': [       'أثناء الفحوصات '
+                                                             'الداخلية للشبكات '
+                                                             'أو النطاقات '
+                                                             'الكبيرة للبحث عن '
+                                                             'أجهزة إلكترونية '
+                                                             'ببيانات مرور '
+                                                             'افتراضية'],
+                                         'why': [       'كشف تلقائي للوحات '
+                                                        'التحكم الشهيرة '
+                                                        'وبيانات مرورها '
+                                                        'الافتراضية',
+                                                        'تنظيم ممتاز للتقرير '
+                                                        'مع إظهار تفاصيل الـ '
+                                                        'HTTP Headers',
+                                                        'دعم تصوير خدمات الـ '
+                                                        'RDP والـ VNC أيضاً'],
+                                         'workflow_nodes': [       '👀 '
+                                                                   'eyewitness',
+                                                                   '🔑 '
+                                                                   'default_credentials_check']}]},
+        {       'color_theme': '#00ff66',
+                'icon': '🔗',
+                'id': 'subdomain_takeover',
+                'title': 'Subdomain Takeover',
+                'tools': [       {       'badges': [       'TAKEOVER',
+                                                           'FAST-CHECK',
+                                                           'GO-BASED'],
+                                         'cmd': 'subzy run --targets '
+                                                'subdomains.txt',
+                                         'comparison': [       {       'accuracy': 'High',
+                                                                       'active': 'No',
+                                                                       'passive': 'Yes',
+                                                                       'speed': 'Very '
+                                                                                'Fast',
+                                                                       'tool': 'subzy'},
+                                                               {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Fast',
+                                                                       'tool': 'nuclei_takeover'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'بدء '
+                                                                          'تشغيل '
+                                                                          'عملية '
+                                                                          'الفحص',
+                                                                  'flag': 'run'},
+                                                          {       'desc': 'تحديد '
+                                                                          'ملف '
+                                                                          'النطاقات '
+                                                                          'الفرعية '
+                                                                          'المستهدفة',
+                                                                  'flag': '--targets'}],
+                                         'flow_nodes': [       'Subdomains '
+                                                               'list',
+                                                               'CNAME '
+                                                               'Resolution',
+                                                               'Check Service '
+                                                               'Response '
+                                                               'Signatures',
+                                                               'Vulnerable '
+                                                               'Alert'],
+                                         'icon': '🔗',
+                                         'id': 'subzy',
+                                         'images': [       'bb_subdomain_takeover.png'],
+                                         'install': 'go install '
+                                                    'github.com/LukaSikic/subzy@latest',
+                                         'name': 'Subzy',
+                                         'related_tools': ['nuclei_takeover'],
+                                         'speed': 'Very Fast',
+                                         'stats': {       'accuracy': 90,
+                                                          'complexity': 20,
+                                                          'speed': 98},
+                                         'tagline': 'Fast Subdomain Takeover '
+                                                    'Vulnerability Checker',
+                                         'what_is': 'أداة سريعة تفحص أسماء '
+                                                    'النطاقات الفرعية وتكتشف '
+                                                    'إمكانية الاستيلاء عليها '
+                                                    '(Takeover) بسبب وجود '
+                                                    'توجيهات DNS لخدمات سحابية '
+                                                    'غير مهيأة.',
+                                         'when_not': [       'لا توجد حالة '
+                                                             'تمنع استخدامها '
+                                                             'فهي passive '
+                                                             'وآمنة تماماً'],
+                                         'when_use': [       'بشكل روتيني بعد '
+                                                             'تجميع النطاقات '
+                                                             'الفرعية للبحث عن '
+                                                             'ثغرات الاستيلاء '
+                                                             'عالية الخطورة '
+                                                             '(Subdomain '
+                                                             'Takeover)'],
+                                         'why': [       'سرعة مذهلة في معالجة '
+                                                        'آلاف النطاقات',
+                                                        'قاعدة بيانات مدمجة '
+                                                        'للمؤشرات والخدمات '
+                                                        'الشهيرة (GitHub, '
+                                                        'Heroku, Shopify)',
+                                                        'سهلة الاستخدام وسطر '
+                                                        'أوامر بسيط'],
+                                         'workflow_nodes': [       '🛰️ '
+                                                                   'subfinder',
+                                                                   '🔗 subzy',
+                                                                   '🚩 '
+                                                                   'takeover_exploit']},
+                                 {       'badges': [       'NUCLEI-TEMPLATES',
+                                                           'EXACT-MATCHING',
+                                                           'COMMUNITY-UPDATED'],
+                                         'cmd': 'nuclei -l subdomains.txt -t '
+                                                'takeovers/',
+                                         'comparison': [       {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'Yes',
+                                                                       'passive': 'No',
+                                                                       'speed': 'Fast',
+                                                                       'tool': 'nuclei '
+                                                                               'takeover'}],
+                                         'difficulty': 'Intermediate',
+                                         'flags': [       {       'desc': 'تشغيل '
+                                                                          'مجلد '
+                                                                          'قوالب '
+                                                                          'الاستيلاء '
+                                                                          'فقط',
+                                                                  'flag': '-t '
+                                                                          'takeovers/'},
+                                                          {       'desc': 'ملف '
+                                                                          'قائمة '
+                                                                          'النطاقات '
+                                                                          'الفرعية '
+                                                                          'المراد '
+                                                                          'فحصها',
+                                                                  'flag': '-l'}],
+                                         'flow_nodes': [       'Subdomains '
+                                                               'list',
+                                                               'HTTP Request',
+                                                               'Signature '
+                                                               'Regex Check',
+                                                               'Vulnerability '
+                                                               'Matching'],
+                                         'icon': '☢️',
+                                         'id': 'nuclei_takeover',
+                                         'images': [       'bb_subdomain_takeover.png'],
+                                         'install': 'go install '
+                                                    'github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest',
+                                         'name': 'Nuclei Takeover Templates',
+                                         'related_tools': ['subzy'],
+                                         'speed': 'Fast',
+                                         'stats': {       'accuracy': 98,
+                                                          'complexity': 50,
+                                                          'speed': 85},
+                                         'tagline': 'Accurate Service '
+                                                    'Signature Matching using '
+                                                    'Nuclei',
+                                         'what_is': 'استخدام قالب فحص الثغرات '
+                                                    'Nuclei مع قوالب الاستيلاء '
+                                                    '(takeovers) الخاصة '
+                                                    'بالمجتمع للتحقق بدقة '
+                                                    'شديدة.',
+                                         'when_not': [       'عندما تريد فحصاً '
+                                                             'عاماً وسريعاً '
+                                                             'جداً بدون إرسال '
+                                                             'طلبات HTTP '
+                                                             'مخصصة'],
+                                         'when_use': [       'لتأكيد وجود ثغرة '
+                                                             'subdomain '
+                                                             'takeover بدون '
+                                                             'أخطاء واستبعاد '
+                                                             'النتائج المزيفة'],
+                                         'why': [       'دقة مرتفعة للغاية '
+                                                        'ونسبة إنذار خاطئ شبه '
+                                                        'معدومة',
+                                                        'قوالب محدثة باستمرار '
+                                                        'من مجتمع الأمن '
+                                                        'السيبراني العالمي',
+                                                        'دعم سيناريوهات فحص '
+                                                        'متطورة ومركبة'],
+                                         'workflow_nodes': [       '🔗 '
+                                                                   'subdomain_list',
+                                                                   '☢️ nuclei '
+                                                                   'takeover',
+                                                                   '🚩 '
+                                                                   'verified_takeover']}]},
+        {       'color_theme': '#ff3300',
+                'icon': '📖',
+                'id': 'wordlists',
+                'title': 'Wordlists',
+                'tools': [       {       'badges': [       'RESOURCE',
+                                                           'DICTIONARY',
+                                                           'MUST-HAVE'],
+                                         'cmd': 'ls -l /usr/share/seclists/',
+                                         'comparison': [       {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'N/A',
+                                                                       'passive': 'N/A',
+                                                                       'speed': 'N/A',
+                                                                       'tool': 'seclists'},
+                                                               {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'N/A',
+                                                                       'passive': 'N/A',
+                                                                       'speed': 'N/A',
+                                                                       'tool': 'payloadsallthethings'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'مجلد '
+                                                                          'يحتوي '
+                                                                          'على '
+                                                                          'ملفات '
+                                                                          'نصية '
+                                                                          'فقط',
+                                                                  'flag': 'No '
+                                                                          'flags'}],
+                                         'flow_nodes': [       'Determine Scan '
+                                                               'Type',
+                                                               'Select '
+                                                               'Wordlist from '
+                                                               'SecLists',
+                                                               'Load into '
+                                                               'Fuzzer',
+                                                               'Bruteforce / '
+                                                               'Exploit'],
+                                         'icon': '📖',
+                                         'id': 'seclists',
+                                         'images': ['bb_wordlists.png'],
+                                         'install': 'git clone '
+                                                    'https://github.com/danielmiessler/SecLists.git',
+                                         'name': 'SecLists',
+                                         'related_tools': [       'payloadsallthethings',
+                                                                  'onelistforall'],
+                                         'speed': 'N/A',
+                                         'stats': {       'accuracy': 95,
+                                                          'complexity': 10,
+                                                          'speed': 100},
+                                         'tagline': "The Security Tester's "
+                                                    'Companion Wordlists',
+                                         'what_is': 'المكتبة الأضخم والأهم '
+                                                    'لقوائم الكلمات المخصصة '
+                                                    'للأمن السيبراني، تحتوي '
+                                                    'على كلمات مرور، أسماء '
+                                                    'مستخدمين، مسارات ويب، '
+                                                    'وحقن ثغرات.',
+                                         'when_not': [       'لا توجد حالة، هي '
+                                                             'ركن أساسي لكل '
+                                                             'مختبر اختراق'],
+                                         'when_use': [       'في جميع مراحل '
+                                                             'فحص وتخمين '
+                                                             'الثغرات '
+                                                             '(Directory '
+                                                             'search, Password '
+                                                             'spraying, XSS '
+                                                             'fuzzing)'],
+                                         'why': [       'القوائم مقسمة ومنظمة '
+                                                        'حسب نوع الفحص بشكل '
+                                                        'احترافي',
+                                                        'توفير الوقت في كتابة '
+                                                        'قوائم كلمات من الصفر',
+                                                        'تحديثات مستمرة من '
+                                                        'الباحثين الأمنيين'],
+                                         'workflow_nodes': [       '📖 seclists',
+                                                                   '⚡ ffuf',
+                                                                   '📂 '
+                                                                   'sensitive_files']},
+                                 {       'badges': [       'RESOURCE',
+                                                           'PAYLOADS',
+                                                           'BYPASSES'],
+                                         'cmd': 'ls -l PayloadsAllTheThings/',
+                                         'comparison': [       {       'accuracy': 'Very '
+                                                                                   'High',
+                                                                       'active': 'N/A',
+                                                                       'passive': 'N/A',
+                                                                       'speed': 'N/A',
+                                                                       'tool': 'payloadsallthethings'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'مستودع '
+                                                                          'مستندات '
+                                                                          'وأكواد '
+                                                                          'نصية',
+                                                                  'flag': 'No '
+                                                                          'flags'}],
+                                         'flow_nodes': [       'Find Web Vuln',
+                                                               'Lookup Vuln '
+                                                               'type',
+                                                               'Select Payload',
+                                                               'Modify & '
+                                                               'Inject'],
+                                         'icon': '💡',
+                                         'id': 'payloadsallthethings',
+                                         'images': ['bb_wordlists.png'],
+                                         'install': 'git clone '
+                                                    'https://github.com/swisskyrepo/PayloadsAllTheThings.git',
+                                         'name': 'PayloadsAllTheThings',
+                                         'related_tools': [       'seclists',
+                                                                  'onelistforall'],
+                                         'speed': 'N/A',
+                                         'stats': {       'accuracy': 95,
+                                                          'complexity': 15,
+                                                          'speed': 100},
+                                         'tagline': 'Repository of useful '
+                                                    'payloads and bypasses',
+                                         'what_is': 'دليل ومرجع ضخم يحتوي على '
+                                                    'نصوص برمجية هجومية '
+                                                    '(Payloads) وحيل تخطي '
+                                                    'الحمايات لكل أنواع ثغرات '
+                                                    'تطبيقات الويب.',
+                                         'when_not': ['لا توجد حالة'],
+                                         'when_use': [       'عندما تعثر على '
+                                                             'ثغرة وتريد صياغة '
+                                                             'Payload ناجح '
+                                                             'لتخطي الفلاتر '
+                                                             'والحمايات وإثبات '
+                                                             'الثغرة (PoC)'],
+                                         'why': [       'أفضل مرجع لصياغة جمل '
+                                                        'الاستغلال (Exploits) '
+                                                        'يدوياً',
+                                                        'حلول تخطي جدار '
+                                                        'الحماية (WAF '
+                                                        'Bypasses) مفصلة',
+                                                        'أمثلة أكواد عملية '
+                                                        'لجميع الثغرات '
+                                                        'الشائعة'],
+                                         'workflow_nodes': [       '💡 '
+                                                                   'payloadsallthethings',
+                                                                   '💉 '
+                                                                   'exploit_crafting',
+                                                                   '👑 '
+                                                                   'remote_code_execution']},
+                                 {       'badges': [       'UNIFIED',
+                                                           'OPTIMIZED',
+                                                           'FUZZING'],
+                                         'cmd': 'ls -l OneListForAll/',
+                                         'comparison': [       {       'accuracy': 'High',
+                                                                       'active': 'N/A',
+                                                                       'passive': 'N/A',
+                                                                       'speed': 'N/A',
+                                                                       'tool': 'onelistforall'}],
+                                         'difficulty': 'Easy',
+                                         'flags': [       {       'desc': 'ملف '
+                                                                          'نصي '
+                                                                          'موحد '
+                                                                          'للفحص',
+                                                                  'flag': 'No '
+                                                                          'flags'}],
+                                         'flow_nodes': [       'Fuzzing Setup',
+                                                               'Load '
+                                                               'OneListForAll',
+                                                               'Quick Web '
+                                                               'Scanning',
+                                                               'Key Findings'],
+                                         'icon': '📜',
+                                         'id': 'onelistforall',
+                                         'images': ['bb_wordlists.png'],
+                                         'install': 'git clone '
+                                                    'https://github.com/six2dez/OneListForAll.git',
+                                         'name': 'OneListForAll',
+                                         'related_tools': [       'seclists',
+                                                                  'payloadsallthethings'],
+                                         'speed': 'N/A',
+                                         'stats': {       'accuracy': 90,
+                                                          'complexity': 10,
+                                                          'speed': 100},
+                                         'tagline': 'A compiled and optimized '
+                                                    'wordlist for web fuzzing',
+                                         'what_is': 'قائمة كلمات موحدة ومحسنة '
+                                                    'تجمع أفضل وأكثر مسارات '
+                                                    'الويب الحساسة تكراراً لحل '
+                                                    'مشكلة تشتت قوائم الكلمات.',
+                                         'when_not': [       'عندما تريد فحصاً '
+                                                             'عميقاً جداً '
+                                                             'وتفصيلياً بنوع '
+                                                             'معين من '
+                                                             'المسارات'],
+                                         'when_use': [       'في الفحوصات '
+                                                             'الاستطلاعية '
+                                                             'السريعة لمسارات '
+                                                             'الويب الحساسة'],
+                                         'why': [       'تجميع ذكي يقلل الوقت '
+                                                        'عبر حذف التكرار '
+                                                        'والمصطلحات النادرة',
+                                                        'قائمة واحدة للفحص '
+                                                        'السريعة والفعال',
+                                                        'أداء عالي وسرعة فحص '
+                                                        'ملحوظة'],
+                                         'workflow_nodes': [       '📜 '
+                                                                   'onelistforall',
+                                                                   '🦀 '
+                                                                   'feroxbuster',
+                                                                   '🔥 '
+                                                                   'discovery']}]}]
     }
 
 def home(request):
