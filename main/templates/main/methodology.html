@@ -3,12 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pentesting & Bug Bounty Methodology | Abdo Ramdan</title>
+  <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/main/css/style.css">
   <style>
+    :root {
+      --neon-cyan: #00e5ff;
+      --neon-purple: #9b59ff;
+      --neon-green: #00ff66;
+      --neon-red: #ff0055;
+      --bg-dark: #020205;
+      --bg-card: rgba(10, 10, 20, 0.4);
+      --border-color: rgba(0, 229, 255, 0.15);
+    }
     body {
-      background-color: #020205;
+      background-color: var(--bg-dark);
       color: #e2e8f0;
       font-family: 'Inter', sans-serif;
       font-size: 1.25rem;
@@ -23,7 +32,7 @@
     .meth-header {
       background: rgba(4, 4, 8, 0.95);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+      border-bottom: 1px solid var(--border-color);
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
@@ -37,14 +46,14 @@
       font-family: 'Outfit', sans-serif;
       font-weight: 800;
       font-size: 1.7rem;
-      background: linear-gradient(90deg, #00e5ff, #9b59ff);
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: 1.5px;
     }
     .back-btn {
       background: rgba(0, 229, 255, 0.05);
-      color: #00e5ff;
+      color: var(--neon-cyan);
       border: 1px solid rgba(0, 229, 255, 0.3);
       padding: 8px 16px;
       border-radius: 4px;
@@ -59,7 +68,7 @@
     }
     .back-btn:hover {
       background: rgba(0, 229, 255, 0.15);
-      border-color: #00e5ff;
+      border-color: var(--neon-cyan);
       box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
       transform: translateY(-2px);
     }
@@ -71,7 +80,7 @@
     
     /* Collapsible Sidebar styling */
     .meth-sidebar {
-      width: 330px;
+      width: 350px;
       background: rgba(3, 3, 6, 0.98);
       border-right: 1px solid rgba(0, 229, 255, 0.08);
       padding: 20px 10px;
@@ -99,7 +108,7 @@
       transition: color 0.3s ease;
     }
     .category-title:hover {
-      color: #00e5ff;
+      color: var(--neon-cyan);
     }
     .category-items {
       display: flex;
@@ -132,7 +141,7 @@
     .meth-item.active {
       background: rgba(0, 229, 255, 0.06);
       border-color: rgba(0, 229, 255, 0.2);
-      color: #00e5ff;
+      color: var(--neon-cyan);
       box-shadow: 0 0 10px rgba(0, 229, 255, 0.03);
     }
     
@@ -154,7 +163,7 @@
     }
     .hero-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 2.5rem;
+      font-size: 2.6rem;
       font-weight: 800;
       color: #fff;
       margin: 0 0 8px 0;
@@ -171,7 +180,7 @@
 
     /* Cards and Elements */
     .cyber-card {
-      background: rgba(10, 10, 20, 0.4);
+      background: var(--bg-card);
       border: 1px solid rgba(255, 255, 255, 0.03);
       border-radius: 6px;
       padding: 24px;
@@ -219,7 +228,7 @@
     }
     .interactive-table th {
       background: rgba(0, 229, 255, 0.04);
-      color: #00e5ff;
+      color: var(--neon-cyan);
       font-family: 'Outfit', sans-serif;
       font-weight: 700;
     }
@@ -259,7 +268,7 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       padding: 6px 12px;
       border-radius: 3px;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       cursor: pointer;
       font-family: 'Inter', sans-serif;
       transition: all 0.2s ease;
@@ -270,12 +279,12 @@
     }
     .run-btn {
       background: rgba(0, 229, 255, 0.05);
-      color: #00e5ff;
+      color: var(--neon-cyan);
       border-color: rgba(0, 229, 255, 0.2);
     }
     .run-btn:hover {
       background: rgba(0, 229, 255, 0.15);
-      border-color: #00e5ff;
+      border-color: var(--neon-cyan);
     }
     
     /* Lists and Boxes */
@@ -296,7 +305,7 @@
       position: absolute;
       left: 0;
       top: 2px;
-      color: #00e5ff;
+      color: var(--neon-cyan);
     }
     
     .use-box-grid {
@@ -323,7 +332,7 @@
       font-size: 1.45rem;
     }
     .use-card.perfect-for h4 { color: #00ff66; }
-    .use-card.avoid-when h4 { color: #ff0055; }
+    .use-card.avoid-when h4 { color: var(--neon-red); }
     
     /* Attack Flow Diagram Visualization */
     .flow-visualization {
@@ -350,22 +359,23 @@
       box-shadow: 0 0 15px rgba(0, 229, 255, 0.05);
       transition: all 0.3s ease;
       cursor: pointer;
-      font-size: 1.05rem;
+      font-size: 1.2rem;
+      position: relative;
     }
     .flow-node:hover {
       transform: scale(1.03);
-      border-color: #00e5ff;
+      border-color: var(--neon-cyan);
       box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
     }
     .flow-node.active-stage {
       background: rgba(0, 229, 255, 0.1);
-      border-color: #00e5ff;
+      border-color: var(--neon-cyan);
       box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
-      color: #00e5ff;
+      color: var(--neon-cyan);
     }
     .flow-arrow {
       color: rgba(0, 229, 255, 0.4);
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       animation: pulse 1.5s infinite;
     }
 
@@ -378,7 +388,7 @@
       border-radius: 6px;
       border: 1px solid rgba(0, 229, 255, 0.1);
       font-family: 'Fira Code', monospace;
-      font-size: 1rem;
+      font-size: 1.15rem;
       margin: 15px 0;
     }
     .tree-branch {
@@ -403,7 +413,7 @@
       cursor: pointer;
       font-family: 'Outfit', sans-serif;
       font-weight: 600;
-      font-size: 1.05rem;
+      font-size: 1.2rem;
       transition: all 0.3s ease;
     }
     .vuln-tab:hover {
@@ -428,7 +438,7 @@
       display: flex;
       flex-direction: column;
       background: #010103;
-      border: 1px solid #00e5ff;
+      border: 1px solid var(--neon-cyan);
       border-radius: 6px;
       box-shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
       font-family: 'Fira Code', monospace;
@@ -443,8 +453,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.95rem;
-      color: #00e5ff;
+      font-size: 1.1rem;
+      color: var(--neon-cyan);
       font-weight: bold;
     }
     .term-window-controls {
@@ -457,15 +467,15 @@
       border-radius: 50%;
       background: #333;
     }
-    .term-dot.red { background: #ef4444; }
+    .term-dot.red { background: var(--neon-red); }
     .term-dot.yellow { background: #eab308; }
-    .term-dot.green { background: #22c55e; }
+    .term-dot.green { background: var(--neon-green); }
     .term-screen {
       flex: 1;
       padding: 20px;
       overflow-y: auto;
       color: #38bdf8;
-      font-size: 1rem;
+      font-size: 1.15rem;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -480,7 +490,7 @@
       gap: 10px;
     }
     .term-prompt {
-      color: #9b59ff;
+      color: var(--neon-purple);
       font-weight: bold;
     }
     .term-field {
@@ -489,7 +499,7 @@
       outline: none;
       color: #fff;
       font-family: 'Fira Code', monospace;
-      font-size: 1rem;
+      font-size: 1.15rem;
       flex: 1;
     }
     
@@ -500,6 +510,7 @@
       overflow: hidden;
       margin-top: 20px;
       background: rgba(155, 89, 255, 0.01);
+      margin-bottom: 25px;
     }
     .lab-header {
       background: rgba(155, 89, 255, 0.08);
@@ -520,7 +531,7 @@
       margin: 15px 0;
     }
     .lab-desc {
-      font-size: 1.05rem;
+      font-size: 1.2rem;
       color: #cbd5e1;
       line-height: 1.6;
     }
@@ -533,7 +544,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       background: #0a0a14;
-      border: 2px solid #00ff66;
+      border: 2px solid var(--neon-green);
       box-shadow: 0 0 30px rgba(0, 255, 102, 0.3);
       border-radius: 8px;
       z-index: 1000;
@@ -542,7 +553,7 @@
       text-align: center;
     }
     .popup-modal h4 {
-      color: #00ff66;
+      color: var(--neon-green);
       font-size: 1.3rem;
       margin-top: 0;
       margin-bottom: 10px;
@@ -550,7 +561,7 @@
     }
     .popup-modal p {
       color: #e2e8f0;
-      font-size: 1.05rem;
+      font-size: 1.2rem;
       line-height: 1.5;
     }
     .popup-overlay {
@@ -565,13 +576,13 @@
     }
     
     /* Utilities */
-    .text-primary { color: #00e5ff; }
+    .text-primary { color: var(--neon-cyan); }
     .text-secondary { color: #bf80ff; }
-    .text-neon-cyan { color: #00e5ff; text-shadow: 0 0 8px rgba(0, 229, 255, 0.4); }
-    .text-neon-green { color: #00ff66; text-shadow: 0 0 8px rgba(0, 255, 102, 0.4); }
-    .text-neon-red { color: #ff0055; text-shadow: 0 0 8px rgba(255, 0, 85, 0.4); }
+    .text-neon-cyan { color: var(--neon-cyan); text-shadow: 0 0 8px rgba(0, 229, 255, 0.4); }
+    .text-neon-green { color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 102, 0.4); }
+    .text-neon-red { color: var(--neon-red); text-shadow: 0 0 8px rgba(255, 0, 85, 0.4); }
     .mindset-quote {
-      border-left: 3px solid #9b59ff;
+      border-left: 3px solid var(--neon-purple);
       background: rgba(155, 89, 255, 0.05);
       margin: 15px 0;
       padding: 10px 15px;
@@ -613,7 +624,7 @@
 
   <!-- Top Navbar -->
   <header class="meth-header">
-    <div class="meth-logo">// OFFENSIVE ATTACK METHODOLOGY</div>
+    <div class="meth-logo">// OFFENSIVE SECURITY KNOWLEDGE PLATFORM</div>
     <a href="index.html" class="back-btn">
       <span>⬅</span> Back to Terminal OS
     </a>
@@ -744,21 +755,24 @@
       <div class="meth-content-view" id="meth-content-p0" style="display: block; --tool-color: #00e5ff;">
         <div class="cyber-hero">
           <h2 class="hero-title"><span class="hero-icon">🌍</span> 1. Subdomain Enumeration Workflow</h2>
-          <p class="hero-tagline">منهجية استكشاف النطاقات الفرعية الشاملة لتوسيع مساحة الهجوم</p>
+          <p class="hero-tagline">مسار جمع واستكشاف النطاقات الفرعية الشامل لتوسيع مساحة الهجوم بالكامل</p>
         </div>
 
+        <!-- Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>📋 Target workflow overview</h3></div>
-          <p>أساس عمليات صيد الثغرات. الهدف هنا هو جمع كافة النطاقات الممكنة باستخدام نهج متعدد المراحل:</p>
-          <div class="workflow-tree">
-            <span class="tree-branch">Recon</span><br>
-            └── <span class="tree-branch">Subdomain Enumeration</span><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;├── Subfinder (OSINT APIs)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;├── Assetfinder (Crt.sh)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;├── Amass (DNS Mapping)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;├── Findomain (Fast parsing)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;├── Chaos (ProjectDiscovery DB)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;└── Httpx (Alive Checker)
+          <div class="card-header"><h3>🗺️ Recon Workflow Flowchart (انقر على الخطوة للانتقال إليها)</h3></div>
+          <div class="flow-visualization">
+            <div class="flow-node active-stage" onclick="openMethPhase('p0')">Passive Enumeration (Subfinder / Assetfinder / Amass)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node" onclick="openMethPhase('p0')">Merge Results & Deduplicate</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node" onclick="openMethPhase('p0')">Alive Check (HTTPX)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node" onclick="openMethPhase('p0')">Screenshotting (Gowitness)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node" onclick="openMethPhase('p2')">Tech Detection (WhatWeb)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node" onclick="openMethPhase('p1')">Port Scanning (Naabu / Nmap)</div>
           </div>
         </div>
 
@@ -767,30 +781,30 @@
           <table class="interactive-table">
             <thead>
               <tr>
-                <th>الأداة</th>
-                <th>ليه نستخدمها؟</th>
-                <th>الأمر الأساسي</th>
+                <th>الأداة (Tool)</th>
+                <th>ليه نستخدمها؟ (Why This Tool?)</th>
+                <th>الأمر الأساسي (Command)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong class="text-primary">Subfinder</strong></td>
-                <td>سريع جدًا ويعتمد على محركات الـ APIs بالكامل.</td>
+                <td>سريع جدًا ويعتمد على الـ APIs الخارجية بشكل رائع لاستخلاص الأهداف بسرعة.</td>
                 <td><code>subfinder -d target.com -all -recursive -silent</code></td>
               </tr>
               <tr>
                 <td><strong class="text-primary">Assetfinder</strong></td>
-                <td>بسيط، خفيف، ويعتمد على محركات شهادات الأمان (crt.sh).</td>
+                <td>بسيط وخفيف، وممتاز في جلب البيانات سريعة من سجلات شهادات الأمان (crt.sh).</td>
                 <td><code>assetfinder --subs-only target.com</code></td>
               </tr>
               <tr>
                 <td><strong class="text-primary">Findomain</strong></td>
-                <td>سريع وممتاز في الاستخراج الفوري للنطاقات.</td>
+                <td>سريع للغاية في استرجاع النطاقات من المصادر المتعددة دون استهلاك موارد.</td>
                 <td><code>findomain -t target.com</code></td>
               </tr>
               <tr>
                 <td><strong class="text-primary">Amass (Passive)</strong></td>
-                <td>أقوى محرك استخبارات مفتوح المصدر (OSINT) لرسم هيكل النطاقات.</td>
+                <td>أداة رسم خرائط OSINT عميقة تعتمد على ربط المخرجات بقواعد بيانات خارجية.</td>
                 <td><code>amass enum -passive -d target.com</code></td>
               </tr>
             </tbody>
@@ -798,8 +812,8 @@
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>Step 2 — Merge Results & Deduplication</h3></div>
-          <p>دمج مخرجات جميع الأدوات وحذف المكرر لتقليص حجم الملف المستهدف:</p>
+          <div class="card-header"><h3>Step 2 — Merge & Deduplicate</h3></div>
+          <p>بعد جمع النتائج من كافة الأدوات السلبية، نقوم بدمجها وتنقيتها من التكرار:</p>
           <div class="cmd-ui-box">
             <div class="cmd-ui-top">cat subfinder.txt assetfinder.txt amass.txt findomain.txt | sort -u > allsubs.txt</div>
             <div class="cmd-ui-bottom">
@@ -809,8 +823,8 @@
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>Step 3 — Alive Domains Checking (HTTPX)</h3></div>
-          <p>تحديد الخوادم النشطة المستجيبة بروتوكولياً وتجاهل النطاقات الميتة (Dead / Parked Domains):</p>
+          <div class="card-header"><h3>Step 3 — Alive Checking (HTTPX)</h3></div>
+          <p><strong>لماذا؟</strong> ليست كل النطاقات المكتشفة سلبياً تعمل فعلاً؛ بعضها ميت (dead) أو معلق (parked). نقوم بتصفيتها للحصول على الخوادم النشطة:</p>
           <div class="cmd-ui-box">
             <div class="cmd-ui-top">httpx -l allsubs.txt -status-code -title -tech-detect -o alive.txt</div>
             <div class="cmd-ui-bottom">
@@ -822,7 +836,6 @@
 
         <div class="cyber-card">
           <div class="card-header"><h3>Step 4 — Visual Screenshotting</h3></div>
-          <p>التقاط صور لمحتوى المواقع للفرز السريع واكتشاف الواجهات المنسية:</p>
           <table class="interactive-table">
             <thead>
               <tr>
@@ -834,12 +847,12 @@
             <tbody>
               <tr>
                 <td><strong class="text-primary">Gowitness</strong></td>
-                <td>يلتقط صوراً معتمداً على محرك Chrome headless.</td>
+                <td>تأخذ لقطات شاشة معتمدة على محرك Chrome headless لفرز الصفحات بصرياً.</td>
                 <td><code>gowitness file -f alive.txt</code></td>
               </tr>
               <tr>
                 <td><strong class="text-primary">Aquatone</strong></td>
-                <td>يبني تقريراً مرئياً جميلاً مجمعاً للصفحات.</td>
+                <td>تبني هيكلاً مجمعاً تفاعلياً للنطاقات والصور لتسهيل الفرز.</td>
                 <td><code>cat alive.txt | aquatone</code></td>
               </tr>
             </tbody>
@@ -847,35 +860,41 @@
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>Step 5 — Target Decision Matrix</h3></div>
-          <p>توجيه عملية الفحص بذكاء بناءً على نوع الخادم المكتشف (الفرق بين الهواة والمحترفين):</p>
+          <div class="card-header"><h3>🎯 Target Decision Matrix (ماذا نفعل عند الاكتشاف؟)</h3></div>
+          <p>توجيه عملية الفحص بذكاء بناءً على نوع الخادم والتقنيات المستكشفة:</p>
           <table class="interactive-table">
             <thead>
               <tr>
-                <th>ماذا اكتشفنا؟</th>
-                <th>الخطوة التالية مباشرة (Target Action)</th>
+                <th>الاكتشاف (Discovery)</th>
+                <th>ماذا نفعل؟ (Target Action)</th>
+                <th>الأدوات المفضلة (Tools)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><span class="text-neon-cyan">Login Panels</span></td>
-                <td>اختبار التوثيق وتخمين الحسابات (Auth Testing / Bruteforcing)</td>
+                <td>اختبار آليات التوثيق وتخمين الحسابات الضعيفة</td>
+                <td>Hydra / Burp Intruder</td>
               </tr>
               <tr>
                 <td><span class="text-neon-cyan">Jenkins Server</span></td>
-                <td>البحث عن الثغرات المعروفة (RCE Research / CVEs)</td>
+                <td>البحث عن الثغرات المعروفة (CVEs) لتنفيذ الأوامر (RCE)</td>
+                <td>Nuclei / Searchsploit</td>
               </tr>
               <tr>
-                <td><span class="text-neon-cyan">Swagger / JSON API</span></td>
-                <td>سحب المسارات واختبار الـ endpoints (API Testing)</td>
+                <td><span class="text-neon-cyan">Swagger UI / GraphQL</span></td>
+                <td>سحب المسارات واختبار الـ Endpoints والـ Parameters</td>
+                <td>Postman / Kiterunner / InQL</td>
               </tr>
               <tr>
                 <td><span class="text-neon-cyan">S3 Bucket Leaks</span></td>
-                <td>فحص الصلاحيات ورفع الملفات (Bucket Misconfigurations)</td>
+                <td>فحص صلاحيات الوصول والقراءة والكتابة العشوائية</td>
+                <td>awscli / S3Scanner</td>
               </tr>
               <tr>
-                <td><span class="text-neon-cyan">WordPress</span></td>
-                <td>فحص الإضافات والقوالب المصابة باستخدام <code>wpscan</code></td>
+                <td><span class="text-neon-cyan">WordPress site</span></td>
+                <td>فحص القوالب والإضافات والبحث عن ثغرات شائعة</td>
+                <td>WPScan</td>
               </tr>
             </tbody>
           </table>
@@ -890,9 +909,33 @@
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ Tools Selection: Naabu vs Nmap</h3></div>
-          <p><strong>Naabu:</strong> أداة سريعة للغاية مكتوبة بلغة Go مخصصة لفحص آلاف المنافذ بالثانية عبر فحص SYN.</p>
-          <p><strong>Nmap:</strong> أداة فحص عميقة لمعرفة نوع وإصدار الخدمات المفتوحة ونظام التشغيل البرمجي.</p>
+          <div class="card-header"><h3>🛡️ Scanner Comparison (Naabu vs Nmap vs Rustscan)</h3></div>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الأداة</th>
+                <th>نوع القوة (Strength)</th>
+                <th>أفضل استخدام لـ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong class="text-primary">Naabu</strong></td>
+                <td>سرعة الفحص الفائقة وتكاملها مع خطوط الأنابيب</td>
+                <td>مسح آلاف النطاقات للبحث عن منافذ حية بسرعة</td>
+              </tr>
+              <tr>
+                <td><strong class="text-primary">Nmap</strong></td>
+                <td>عمق الفحص وتحديد الإصدارات الدقيقة وكتابة السكريبتات</td>
+                <td>فحص المنافذ المكشوفة لتحديد إصدارات الخدمات بدقة</td>
+              </tr>
+              <tr>
+                <td><strong class="text-primary">Rustscan</strong></td>
+                <td>السرعة الشديدة عبر استغلال خيوط المعالجة المتعددة</td>
+                <td>المسح الفوري لآلاف المنافذ قبل تمريرها لـ Nmap</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div class="cyber-card">
@@ -962,68 +1005,70 @@
           <p class="hero-tagline">أخطر مسارات الاستطلاع للبحث عن المسارات السرية والمفاتيح داخل ملفات الـ JS</p>
         </div>
 
+        <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>📦 JS Hunting Steps</h3></div>
-          <div class="workflow-tree">
-            <span class="tree-branch">JavaScript Recon</span><br>
-            ├── Collect JS Files (Katana / GAU)<br>
-            ├── Extract Endpoints (LinkFinder)<br>
-            └── Extract Secrets (SecretFinder / GitLeaks)
+          <div class="card-header"><h3>🗺️ JavaScript Recon Flowchart</h3></div>
+          <div class="flow-visualization">
+            <div class="flow-node active-stage">Collect JS Files (Katana / GAU / Waymore)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Beautify & Deobfuscate JS</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Extract Endpoints (LinkFinder / xnLinkFinder)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Extract Secrets & Credentials (SecretFinder / trufflehog)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Analyze APIs & Map Routes</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Test Hidden Features / Unused Parameters</div>
           </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>Step 1 — Collect JS Files</h3></div>
-          <p>سحب ملفات الجافا سكربت النشطة والأرشيفية للهدف:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">katana -u https://target.com -jc | grep -E "\.js$" > js_files.txt</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('katana -u https://target.com -jc | grep -E &quot;\\.js$&quot; > js_files.txt', this)">📋 Copy</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>Step 2 — Extract Endpoints (LinkFinder)</h3></div>
-          <p>تحليل ملف الـ JS واستخراج مسارات الـ API والـ Endpoints المكتوبة بداخله:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">python3 linkfinder.py -i https://target.com/assets/main.js -o cli</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('python3 linkfinder.py -i https://target.com/assets/main.js -o cli', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('python3 linkfinder.py -i target.js')">▶ Run Simulator</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>Step 3 — Secrets Classification Matrix</h3></div>
-          <p>الأسرار والمفاتيح الحساسة التي نكشفها بملفات الجافا سكربت:</p>
+          <div class="card-header"><h3>Secrets Classification (مصفوفة تصنيف الأسرار)</h3></div>
+          <p>أهم الأسرار والرموز الحساسة التي نكشفها بملفات الجافا سكربت:</p>
           <table class="interactive-table">
             <thead>
               <tr>
-                <th>نوع التسريب (Secret Type)</th>
-                <th>أمثلة وتأثيرات</th>
+                <th>النوع (Secret Type)</th>
+                <th>مثال (Example Target)</th>
+                <th>الأثر والخطورة</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong class="text-neon-cyan">API Keys</strong></td>
-                <td>خرائط Google, Stripe API, Twilio SID (دفع فواتير أو إساءة استخدام)</td>
+                <td><strong>AWS Keys</strong></td>
+                <td>AWS Access Key / Secret Access Key</td>
+                <td><span class="text-neon-red">Critical</span> — الاستيلاء على الخوادم ووحدات التخزين</td>
               </tr>
               <tr>
-                <td><strong class="text-neon-cyan">AWS Creds</strong></td>
-                <td>AWS Access Key, Secret Access Key (تسريب البنية التحتية السحابية)</td>
+                <td><strong>JWT Tokens</strong></td>
+                <td>Hardcoded Auth tokens / Secret keys</td>
+                <td><span class="text-neon-red">High</span> — انتحال شخصية حسابات الإدارة والمستخدمين</td>
               </tr>
               <tr>
-                <td><strong class="text-neon-cyan">Internal Domains</strong></td>
-                <td><code>staging.target.local</code>, <code>dev.target.internal</code></td>
+                <td><strong>GitHub Tokens</strong></td>
+                <td>GitHub PAT Tokens</td>
+                <td><span class="text-neon-red">Critical</span> — سرقة السورس كود وتدمير الـ CI/CD pipelines</td>
               </tr>
               <tr>
-                <td><strong class="text-neon-cyan">Firebase Config</strong></td>
-                <td>تسريب مفتاح قاعدة بيانات Firebase المفتوحة للعامة لقراءتها</td>
+                <td><strong>Internal URLs</strong></td>
+                <td>staging.target.local / dev.target.internal</td>
+                <td><span class="text-secondary">Medium</span> — اكتشاف خوادم وبيئات عمل داخلية غير محمية</td>
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ Code Execution Commands</h3></div>
+          <h4>1. Extract secrets with SecretFinder:</h4>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">python3 SecretFinder.py -i https://target.com/assets/main.js -o cli</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('python3 SecretFinder.py -i https://target.com/assets/main.js -o cli', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('secretfinder -i app.js')">▶ Run Simulator</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1054,30 +1099,91 @@
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>📦 Directory discovery tools</h3></div>
+          <div class="card-header"><h3>🛡️ Fuzzing Comparison (ffuf vs feroxbuster vs dirsearch vs wfuzz)</h3></div>
           <table class="interactive-table">
             <thead>
               <tr>
-                <th>الأداة</th>
-                <th>أفضل استخدام لـ</th>
-                <th>الميزة الرئيسية</th>
+                <th>Tool</th>
+                <th>Speed</th>
+                <th>Recursive</th>
+                <th>API Fuzzing</th>
+                <th>Best For</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong class="text-primary">FFUF</strong></td>
-                <td>السرعة الفائقة وتخصيص الطلبات</td>
-                <td>بسيط وسرعة معالجة عالية جداً</td>
+                <td>Very High</td>
+                <td>Medium</td>
+                <td>Excellent</td>
+                <td>APIs & Custom header fuzzing</td>
               </tr>
               <tr>
                 <td><strong class="text-primary">Feroxbuster</strong></td>
-                <td>الفحص المتداخل (Recursion)</td>
-                <td>يقوم بفحص المجلدات التي يتم اكتشافها تلقائياً</td>
+                <td>High</td>
+                <td>Excellent</td>
+                <td>Good</td>
+                <td>Deep Directory Discovery</td>
+              </tr>
+              <tr>
+                <td><strong class="text-primary">Dirsearch</strong></td>
+                <td>Medium</td>
+                <td>Good</td>
+                <td>Medium</td>
+                <td>Beginners & Simple quick scans</td>
               </tr>
               <tr>
                 <td><strong class="text-primary">Wfuzz</strong></td>
-                <td>التحكم الكامل بالبارامترات والمدخلات</td>
-                <td>يدعم فلاتر متقدمة برمجياً</td>
+                <td>Medium</td>
+                <td>Advanced</td>
+                <td>Excellent</td>
+                <td>Custom Payloads & multi-parameter</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📂 Sensitive Files Matrix (مصفوفة الملفات الأكثر أهمية)</h3></div>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الملف (File)</th>
+                <th>الخطورة (Severity)</th>
+                <th>السبب (Why?)</th>
+                <th>الإجراء المباشر (Next Action)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>.git/</code></td>
+                <td><span class="text-neon-red">Critical</span></td>
+                <td>تسريب الشيفرة البرمجية الكاملة للموقع مع تاريخ التعديلات والمبرمجين</td>
+                <td>استخدام <code>git-dumper</code> لسحب مجلد git بالكامل</td>
+              </tr>
+              <tr>
+                <td><code>.env</code></td>
+                <td><span class="text-neon-red">Critical</span></td>
+                <td>يضم كلمات مرور قواعد البيانات، مفاتيح الـ APIs الحساسة ورموز الربط</td>
+                <td>سحب الأسرار واستخدامها للولوج لقواعد البيانات أو السحابة مباشرة</td>
+              </tr>
+              <tr>
+                <td><code>backup.zip / backup.sql</code></td>
+                <td><span class="text-neon-red">Critical</span></td>
+                <td>نسخة احتياطية كاملة للملفات أو قاعدة البيانات الموثقة</td>
+                <td>فك الضغط ومراجعة الشيفرة البرمجية واستيراد قواعد البيانات</td>
+              </tr>
+              <tr>
+                <td><code>swagger.json</code></td>
+                <td><span class="text-neon-cyan">High</span></td>
+                <td>خريطة تفصيلية لجميع مسارات الـ APIs ومعاملاتها المتاحة</td>
+                <td>استيراد الملف ببرنامج Postman والبدء بفحص الـ API مباشرة</td>
+              </tr>
+              <tr>
+                <td><code>config.php.bak</code></td>
+                <td><span class="text-neon-red">Critical</span></td>
+                <td>يحتوي على مفاتيح الربط وتكوين قواعد البيانات المكتوبة مسبقاً</td>
+                <td>مراجعة التكوين واستخراج كلمات المرور</td>
               </tr>
             </tbody>
           </table>
@@ -1085,65 +1191,22 @@
 
         <div class="cyber-card">
           <div class="card-header"><h3>🛠️ Execution Workflow</h3></div>
-          
-          <h4>1. Basic scanning with FFUF:</h4>
+          <h4>1. FFUF Basic fuzzing:</h4>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -fc 404</div>
+            <div class="cmd-ui-top">ffuf -u https://target.com/FUZZ -w raft.txt -fc 404</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -fc 404', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('ffuf -u https://target.com/FUZZ -w raft.txt -fc 404', this)">📋 Copy</button>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('ffuf -u target.com/FUZZ')">▶ Run Simulator</button>
             </div>
           </div>
-
-          <h4>2. Recursive scanning with Feroxbuster:</h4>
+          <h4>2. Feroxbuster recursive fuzzing:</h4>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">feroxbuster -u https://target.com -w wordlist.txt -x php,html,txt,json</div>
+            <div class="cmd-ui-top">feroxbuster -u https://target.com -w wordlist.txt</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('feroxbuster -u https://target.com -w wordlist.txt -x php,html,txt,json', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('feroxbuster -u https://target.com -w wordlist.txt', this)">📋 Copy</button>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('feroxbuster -u https://target.com')">▶ Run Simulator</button>
             </div>
           </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>📂 Sensitive Files Discovery Matrix</h3></div>
-          <p>أهم الملفات الحساسة التي نكشفها بملفات صيد المجلدات والخطورة الكامنة فيها:</p>
-          <table class="interactive-table">
-            <thead>
-              <tr>
-                <th>الملف المكتشف</th>
-                <th>مستوى الخطورة</th>
-                <th>أهمية وتأثير الاكتشاف</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>.git/</code></td>
-                <td><span class="text-neon-red">Critical</span></td>
-                <td>سحب الشيفرة البرمجية الكاملة للموقع وتاريخ التعديل</td>
-              </tr>
-              <tr>
-                <td><code>.env</code></td>
-                <td><span class="text-neon-red">Critical</span></td>
-                <td>مفاتيح الربط وكلمات مرور قاعدة البيانات والأسرار البرمجية</td>
-              </tr>
-              <tr>
-                <td><code>backup.zip / db.sql</code></td>
-                <td><span class="text-neon-red">Critical</span></td>
-                <td>تحميل قاعدة البيانات بالكامل أو نسخ احتياطية للموقع</td>
-              </tr>
-              <tr>
-                <td><code>swagger.json / api-docs</code></td>
-                <td><span class="text-neon-cyan">High</span></td>
-                <td>خرائط APIs وتفاصيل هيكل المدخلات لاختبارها مباشرة</td>
-              </tr>
-              <tr>
-                <td><code>phpinfo.php</code></td>
-                <td><span class="text-secondary">Medium</span></td>
-                <td>تسريب معلومات تكوين خادم الويب والمسارات ومحركات الحماية</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
@@ -1154,46 +1217,57 @@
           <p class="hero-tagline">منهجية الفحص والتعرف على سياقات الحقن وكتابة الحمولات المناسبة</p>
         </div>
 
+        <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>📋 Context Analysis (مصفوفة سياقات الحقن)</h3></div>
-          <p>الحقن الناجح يعتمد بالكامل على السياق البرمجي الذي يظهر فيه المدخل:</p>
+          <div class="card-header"><h3>🗺️ XSS Hunting Flowchart</h3></div>
+          <div class="flow-visualization">
+            <div class="flow-node active-stage">Find Parameters (Reflected / Input fields)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Reflection Check (Check if input appears in response)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Context Analysis (HTML / Attribute / JS block)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Filter Detection & Bypass</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Payload Crafting</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">DOM / Blind XSS verification</div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📋 Context Matrix</h3></div>
           <table class="interactive-table">
             <thead>
               <tr>
-                <th>سياق الانعكاس (Context)</th>
-                <th>أمثلة للحمولات (PoC Payload)</th>
+                <th>سياق الحقن (Context)</th>
+                <th>المثال (HTML Context)</th>
+                <th>الحمولة المفضلة (Payload Example)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>HTML Tags</strong></td>
-                <td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code> أو <code>&lt;img src=x onerror=alert(1)&gt;</code></td>
+                <td><strong>HTML Context</strong></td>
+                <td><code>&lt;div&gt;REFLECTED_HERE&lt;/div&gt;</code></td>
+                <td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code> or <code>&lt;img src=x onerror=alert(1)&gt;</code></td>
               </tr>
               <tr>
-                <td><strong>HTML Attributes</strong></td>
+                <td><strong>Attribute Context</strong></td>
+                <td><code>&lt;input value="REFLECTED_HERE"&gt;</code></td>
                 <td><code>" onmouseover="alert(1)</code> or <code>" autofocus onerror="alert(1)</code></td>
               </tr>
               <tr>
-                <td><strong>Javascript Block</strong></td>
+                <td><strong>Javascript Context</strong></td>
+                <td><code>&lt;script&gt;var name = 'REFLECTED_HERE';&lt;/script&gt;</code></td>
                 <td><code>'; alert(1); //</code> or <code>-alert(1)-</code></td>
               </tr>
               <tr>
                 <td><strong>URL Schemes</strong></td>
-                <td><code>javascript:alert(1)</code> (في سياق روابط a href)</td>
+                <td><code>&lt;a href="REFLECTED_HERE"&gt;</code></td>
+                <td><code>javascript:alert(1)</code></td>
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Auto Scanning with Dalfox</h3></div>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">dalfox url https://target.com/search?q=test -b https://your-blind-xss.xss.ht</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('dalfox url https://target.com/search?q=test -b https://your-blind-xss.xss.ht', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('dalfox url https://target.com/search?q=test')">▶ Run Simulator</button>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -1204,14 +1278,21 @@
           <p class="hero-tagline">منهجية كشف واستغلال ثغرات قواعد البيانات</p>
         </div>
 
+        <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>📋 SQLi Detection Roadmap</h3></div>
-          <div class="workflow-tree">
-            <span class="tree-branch">SQLi Scan</span><br>
-            ├── Error-Based Detection (Injecting ' or ")<br>
-            ├── Boolean-Based Testing (Injecting AND 1=1 / AND 1=2)<br>
-            ├── Time-Based Blind Fuzzing (Injecting sleep(5))<br>
-            └── Database Dumping (SQLMap / Ghauri)
+          <div class="card-header"><h3>🗺️ SQLi Workflow Flowchart</h3></div>
+          <div class="flow-visualization">
+            <div class="flow-node active-stage">Find Parameter (e.g. ?id=1)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Error Detection (Inject single quote ')</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Boolean-based Testing (AND 1=1 / AND 1=2)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Time-based blind testing (sleep(5) / pg_sleep)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">DB Schema Enumeration</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Privilege Escalation & Dumping (SQLMap / Ghauri)</div>
           </div>
         </div>
 
@@ -1230,12 +1311,28 @@
       <!-- Phase 9: SSRF Workflow -->
       <div class="meth-content-view" id="meth-content-p9" style="display: none; --tool-color: #0284c7;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📡</span> 10. Server Side Request Forgery (SSRF)</h2>
+          <h2 class="hero-title"><span class="hero-icon">📡</span> 10. SSRF Workflow</h2>
           <p class="hero-tagline">فحص المدخلات البرمجية التي تطلب روابط خارجية واستغلالها</p>
         </div>
 
+        <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>☁️ Cloud Metadata IPs (SSRF targets)</h3></div>
+          <div class="card-header"><h3>🗺️ SSRF Workflow Flowchart</h3></div>
+          <div class="flow-visualization">
+            <div class="flow-node active-stage">Find URL Inputs (e.g. ?image=http://...)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Internal IP Testing (127.0.0.1 / localhost)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Cloud Metadata extraction (169.254.169.254)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">DNS Interaction check (Interactsh / Burp Collaborator)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Blind SSRF verification & exploitation</div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>☁️ Cloud SSRF Metadata Targets</h3></div>
           <p>أهم الأهداف التي يجب محاولة حقنها لسحب مفاتيح الربط السحابية المشفرة:</p>
           <table class="interactive-table">
             <thead>
@@ -1246,15 +1343,15 @@
             </thead>
             <tbody>
               <tr>
-                <td><strong>AWS (Amazon)</strong></td>
+                <td><strong>AWS (Amazon Web Services)</strong></td>
                 <td><code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code></td>
               </tr>
               <tr>
-                <td><strong>GCP (Google Cloud)</strong></td>
+                <td><strong>GCP (Google Cloud Platform)</strong></td>
                 <td><code>http://metadata.google.internal/computeMetadata/v1/instance/disks/</code> (Requires Headers)</td>
               </tr>
               <tr>
-                <td><strong>Azure (Microsoft)</strong></td>
+                <td><strong>Azure (Microsoft Azure)</strong></td>
                 <td><code>http://169.254.169.254/metadata/instance?api-version=2021-02-01</code> (Requires Headers)</td>
               </tr>
             </tbody>
@@ -1302,7 +1399,7 @@
 
         <div class="cyber-card">
           <div class="card-header"><h3>⚙️ Multi-request attack scenario</h3></div>
-          <p>إرسال طلبات متعددة لعمليات خصم الرصيد أو طلب الأكواد في أجزاء من الميكروثانية باستخدام Burp Suite Turbo Intruder لتكرار الكوبونات أو سحب رصيد مجاني.</p>
+          <p>إرسال طلبات متزامنة بكوبونات الخصم أو سحب المبالغ المالية بأجزاء من المايكروثانية باستخدام Burp Suite Turbo Intruder.</p>
         </div>
       </div>
 
@@ -1327,15 +1424,33 @@
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ jwt_tool usage</h3></div>
-          <p>أداة سطر الأوامر للتحليل واكتشاف ثغرات الـ signature bypass والتواقيع الضعيفة:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">python3 jwt_tool.py <TOKEN> -X a</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('python3 jwt_tool.py <TOKEN> -X a', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('python3 jwt_tool.py token')">▶ Run Simulator</button>
-            </div>
-          </div>
+          <div class="card-header"><h3>JWT Attacks Matrix (مصفوفة هجمات الـ JWT)</h3></div>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>طبيعة الهجوم (Attack Type)</th>
+                <th>آلية العمل (Mechanism)</th>
+                <th>أداة الاختبار (Tools)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>None Algorithm</strong></td>
+                <td>تغيير الـ Header إلى <code>"alg": "none"</code> وحذف التوقيع بالكامل.</td>
+                <td>jwt_tool / Burp Suite</td>
+              </tr>
+              <tr>
+                <td><strong>Weak Secret Cracking</strong></td>
+                <td>التخمين على المفتاح السري محلياً إذا كان ضعيفاً.</td>
+                <td>Hashcat / jwt_tool</td>
+              </tr>
+              <tr>
+                <td><strong>Key Confusion</strong></td>
+                <td>استخدام مفتاح التشفير العام لـ RS256 لتوقيع التوكن كـ HS256 متماثل.</td>
+                <td>jwt_tool</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -1365,9 +1480,26 @@
           <p class="hero-tagline">منهجية فحص واكتشاف واجهات برمجية التطبيقات (APIs)</p>
         </div>
 
+        <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>📦 API discovery with Kiterunner</h3></div>
-          <p>تخمين مسارات الـ API بالاعتماد على Routes مصممة خصيصاً للـ APIs:</p>
+          <div class="card-header"><h3>🗺️ API Hacking Flowchart</h3></div>
+          <div class="flow-visualization">
+            <div class="flow-node active-stage">Discover APIs (Kiterunner / Swagger OSINT)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Map Endpoints & Routes</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Authentication Analysis (JWT / API Key checks)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Parameter Discovery (Arjun / FFUF)</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">IDOR Testing on Endpoints</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">Mass Assignment & Rate Limit Testing</div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ Tool Specifications: Kiterunner Scan</h3></div>
           <div class="cmd-ui-box">
             <div class="cmd-ui-top">kr scan https://target.com/api -w /usr/share/wordlists/kiterunner/routes.kite</div>
             <div class="cmd-ui-bottom">
@@ -1386,7 +1518,7 @@
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🔗 Simple vs Advanced Pipelines</h3></div>
+          <div class="card-header"><h3>🔗 Automation Pipelines</h3></div>
           
           <h4>1. Simple Automation chain:</h4>
           <div class="cmd-ui-box">
@@ -1419,10 +1551,10 @@
         <div class="lab-box">
           <div class="lab-header">
             <h3>Lab 1: Reflected XSS Input Field</h3>
-            <span class="text-neon-cyan">Target: Local Vulnerable App</span>
+            <span class="text-neon-cyan">Difficulty: Easy | Category: Client-side</span>
           </div>
           <div class="lab-body">
-            <p class="lab-desc">حاول كتابة حمولة جافا سكربت مثل <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> لتنفيذها داخل المتصفح:</p>
+            <p class="lab-desc"><strong>Target:</strong> Search Box Endpoint.<br><strong>Tools Required:</strong> Web Browser.<br><strong>Methodology:</strong> Input script injection into search query to trigger client-side script alert.</p>
             <div class="lab-target-window">
               <input type="text" id="xssInput" placeholder="Enter search term..." style="background:#020205; border:1px solid #9b59ff; color:#fff; padding:10px; border-radius:4px; width:60%;">
               <button class="cmd-btn run-btn" onclick="runXSSLab()">Search</button>
@@ -1435,10 +1567,10 @@
         <div class="lab-box">
           <div class="lab-header">
             <h3>Lab 2: Billing API IDOR Simulator</h3>
-            <span class="text-neon-cyan">Target: /api/v1/invoice?id=101</span>
+            <span class="text-neon-cyan">Difficulty: Medium | Category: Access Control</span>
           </div>
           <div class="lab-body">
-            <p class="lab-desc">قم بتعديل الـ <code>id</code> من <code>101</code> (الحساب الخاص بك) إلى <code>102</code> أو <code>103</code> لتخطي الصلاحيات وسحب فواتير أشخاص آخرين:</p>
+            <p class="lab-desc"><strong>Target:</strong> <code>/api/v1/invoice?id=101</code><br><strong>Tools Required:</strong> Parameters modifier.<br><strong>Methodology:</strong> Change invoice ID parameter value to query other users private billing invoices.</p>
             <div class="lab-target-window">
               <label>API Invoice ID: </label>
               <input type="number" id="idorInput" value="101" style="background:#020205; border:1px solid #9b59ff; color:#fff; padding:10px; border-radius:4px; width:80px; text-align:center;">
