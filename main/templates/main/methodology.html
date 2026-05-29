@@ -2711,7 +2711,7 @@ Content-Type: application/json
       }
     }
 
-    // Tab switcher
+    // Tab switcher — includes visited phase tracking
     function openMethPhase(phaseId) {
       document.querySelectorAll('.meth-item').forEach(el => el.classList.remove('active'));
       const activeFolder = document.getElementById('meth-ef-' + phaseId);
@@ -2735,15 +2735,19 @@ Content-Type: application/json
       if (phaseId === 'p6' && nodes[2]) nodes[2].classList.add('active-stage');
       if (phaseId === 'p3' && nodes[3]) nodes[3].classList.add('active-stage');
       if (phaseId === 'p7' && nodes[4]) nodes[4].classList.add('active-stage');
+
+      // Track visited phases (progress tracker)
+      markVisitedSafe(phaseId);
     }
 
     // Switch Vuln Database Tabs
-    function switchVulnTab(tabId) {
+    function switchVulnTab(tabId, btnEl) {
       document.querySelectorAll('.vuln-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.vuln-pane').forEach(p => p.classList.remove('active'));
       
-      event.target.classList.add('active');
-      document.getElementById('vuln-' + tabId).classList.add('active');
+      if (btnEl) btnEl.classList.add('active');
+      const pane = document.getElementById('vuln-' + tabId);
+      if (pane) pane.classList.add('active');
     }
 
     // Copy utility
@@ -3057,10 +3061,8 @@ Content-Type: application/json
       if (label) label.textContent = count + ' / ' + TOTAL_PHASES;
     }
 
-    // Patch openMethPhase to also track visits
-    const _origOpenMethPhase = openMethPhase;
-    function openMethPhase(phaseId) {
-      _origOpenMethPhase(phaseId);
+    // markVisitedSafe: safe version that doesn't conflict with openMethPhase
+    function markVisitedSafe(phaseId) {
       markVisited(phaseId);
     }
 
