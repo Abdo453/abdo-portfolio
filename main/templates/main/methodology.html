@@ -623,35 +623,453 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      60% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ===== SEARCH BAR ===== */
+    .sidebar-search-wrap {
+      padding: 10px 10px 0;
+      position: relative;
+    }
+    .sidebar-search-input {
+      width: 100%;
+      background: rgba(0, 229, 255, 0.03);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      border-radius: 6px;
+      color: #e2e8f0;
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      padding: 10px 36px 10px 14px;
+      outline: none;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    .sidebar-search-input::placeholder { color: rgba(148, 163, 184, 0.5); }
+    .sidebar-search-input:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
+      background: rgba(0, 229, 255, 0.06);
+    }
+    .sidebar-search-icon {
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(0, 229, 255, 0.4);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+    .search-shortcut-hint {
+      text-align: center;
+      color: rgba(148,163,184,0.4);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      padding: 4px 0;
+    }
+    .search-no-results {
+      display: none;
+      text-align: center;
+      color: rgba(148,163,184,0.5);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      padding: 20px 10px;
+    }
+
+    /* ===== PROGRESS TRACKER ===== */
+    .progress-tracker {
+      margin: 10px 10px 0;
+      background: rgba(0, 229, 255, 0.03);
+      border: 1px solid rgba(0, 229, 255, 0.1);
+      border-radius: 6px;
+      padding: 10px 14px;
+    }
+    .progress-tracker-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .progress-tracker-label span:first-child {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: rgba(0, 229, 255, 0.7);
+    }
+    .progress-tracker-label span:last-child {
+      font-family: 'Outfit', monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+    }
+    .progress-bar-bg {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      height: 5px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+      transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 0 8px rgba(0,229,255,0.4);
+      width: 0%;
+    }
+
+    /* ===== BOOKMARK SYSTEM ===== */
+    .meth-item {
+      position: relative;
+    }
+    .bookmark-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(148, 163, 184, 0.3);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 2px 4px;
+      border-radius: 3px;
+      transition: all 0.2s ease;
+      display: none;
+      line-height: 1;
+    }
+    .meth-item:hover .bookmark-btn,
+    .meth-item .bookmark-btn.bookmarked {
+      display: inline-block;
+    }
+    .bookmark-btn.bookmarked {
+      color: #f59e0b;
+      text-shadow: 0 0 6px rgba(245,158,11,0.6);
+    }
+    .bookmark-btn:hover {
+      color: #f59e0b;
+      transform: translateY(-50%) scale(1.2);
+    }
+
+    /* ===== BOOKMARKS PANEL ===== */
+    .bookmarks-panel {
+      margin: 5px 10px 0;
+      background: rgba(245,158,11,0.03);
+      border: 1px solid rgba(245,158,11,0.15);
+      border-radius: 6px;
+      overflow: hidden;
+      display: none;
+    }
+    .bookmarks-panel.has-items {
+      display: block;
+    }
+    .bookmarks-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(245,158,11,0.1);
+      cursor: pointer;
+    }
+    .bookmarks-panel-header span {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #f59e0b;
+    }
+    .bookmarks-list {
+      padding: 5px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .bookmark-item-entry {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #cbd5e1;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+    .bookmark-item-entry:hover {
+      background: rgba(245,158,11,0.08);
+      color: #f59e0b;
+    }
+
+    /* ===== QUICK JUMP SHORTCUT MODAL ===== */
+    .quick-jump-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 5000;
+      backdrop-filter: blur(4px);
+      animation: fadeIn 0.15s ease;
+    }
+    .quick-jump-modal {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 600px;
+      background: #080810;
+      border: 1px solid rgba(0,229,255,0.25);
+      border-radius: 10px;
+      box-shadow: 0 0 40px rgba(0,229,255,0.15), 0 20px 60px rgba(0,0,0,0.8);
+      overflow: hidden;
+      animation: bounceIn 0.2s ease;
+    }
+    .quick-jump-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .quick-jump-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 1.1rem;
+    }
+    .quick-jump-input::placeholder { color: rgba(148,163,184,0.5); }
+    .quick-jump-icon {
+      color: var(--neon-cyan);
+      font-size: 1.1rem;
+    }
+    .quick-jump-esc {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: rgba(148,163,184,0.4);
+      border: 1px solid rgba(148,163,184,0.2);
+      border-radius: 3px;
+      padding: 2px 6px;
+    }
+    .quick-jump-results {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .quick-jump-result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .quick-jump-result-item:hover,
+    .quick-jump-result-item.selected {
+      background: rgba(0,229,255,0.06);
+      border-color: rgba(0,229,255,0.15);
+    }
+    .quick-jump-result-item .item-icon { font-size: 1.1rem; }
+    .quick-jump-result-item .item-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+    .quick-jump-result-item .item-cat {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: rgba(148,163,184,0.5);
+      margin-left: auto;
+    }
+    .quick-jump-result-item.match-highlight .item-name {
+      color: var(--neon-cyan);
+    }
+    .quick-jump-no-results {
+      text-align: center;
+      padding: 30px;
+      color: rgba(148,163,184,0.4);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    .quick-jump-footer {
+      padding: 10px 20px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .quick-jump-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: rgba(148,163,184,0.4);
+    }
+    .kbd {
+      border: 1px solid rgba(148,163,184,0.3);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.7rem;
+    }
+
+    /* ===== PHASE VISITED BADGE ===== */
+    .visited-badge {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--neon-green);
+      box-shadow: 0 0 5px rgba(0,255,102,0.6);
+      margin-left: auto;
+      margin-right: 4px;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .meth-item.visited .visited-badge {
+      opacity: 1;
+    }
     
-    @media (max-width: 1000px) {
+    /* Mobile Responsive Optimizations */
+    .menu-toggle-btn {
+      display: none;
+      background: rgba(0, 229, 255, 0.05);
+      color: var(--neon-cyan);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      font-family: 'Fira Code', monospace;
+    }
+    .menu-toggle-btn:hover {
+      background: rgba(0, 229, 255, 0.15);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+    }
+    
+    /* Table Responsive Wrapper */
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin: 15px 0;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      background: rgba(10, 10, 20, 0.2);
+    }
+    .interactive-table {
+      margin: 0;
+      min-width: 650px;
+    }
+
+    @media (max-width: 900px) {
+      .meth-logo {
+        font-size: 1.1rem;
+      }
+      .menu-toggle-btn {
+        display: block;
+      }
       .meth-container {
         flex-direction: column;
-        height: auto;
+        height: calc(100vh - 65px);
+        position: relative;
+        overflow: hidden;
       }
       .meth-sidebar {
-        width: 100%;
-        height: 300px;
-        border-right: none;
-        border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+        position: absolute;
+        left: -360px;
+        top: 0;
+        bottom: 0;
+        width: 320px;
+        height: 100%;
+        z-index: 1000;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 5px 0 25px rgba(0,0,0,0.9);
+      }
+      .meth-sidebar.active {
+        left: 0;
       }
       .meth-viewer {
-        padding: 20px;
+        padding: 20px 15px !important;
+        height: 100%;
+        overflow-y: auto;
       }
       .use-box-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      .flow-visualization {
+        padding: 20px 10px;
+        gap: 10px;
+      }
+      .flow-node {
+        min-width: 130px;
+        padding: 10px 14px;
+        font-size: 1rem;
+      }
+      .hero-title {
+        font-size: 1.8rem;
+      }
+      .hero-tagline {
+        font-size: 1.1rem;
+      }
+      .term-container {
+        height: 350px;
+      }
+      .lab-body {
+        padding: 15px;
+      }
+      .lab-body > div {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
       }
     }
   </style>
 </head>
 <body>
 
+  <!-- Quick Jump Modal (Ctrl+K) -->
+  <div class="quick-jump-overlay" id="quickJumpOverlay" onclick="closeQuickJump(event)">
+    <div class="quick-jump-modal">
+      <div class="quick-jump-header">
+        <span class="quick-jump-icon">🔍</span>
+        <input type="text" class="quick-jump-input" id="quickJumpInput" placeholder="Search phases, tools, techniques..." autocomplete="off">
+        <span class="quick-jump-esc" onclick="closeQuickJump()">ESC</span>
+      </div>
+      <div class="quick-jump-results" id="quickJumpResults"></div>
+      <div class="quick-jump-footer">
+        <div class="quick-jump-hint"><kbd class="kbd">↑↓</kbd> Navigate</div>
+        <div class="quick-jump-hint"><kbd class="kbd">Enter</kbd> Open</div>
+        <div class="quick-jump-hint"><kbd class="kbd">ESC</kbd> Close</div>
+        <div class="quick-jump-hint"><kbd class="kbd">Ctrl+K</kbd> Quick Jump</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Top Navbar -->
   <header class="meth-header">
-    <div class="meth-logo">// OFFENSIVE SECURITY KNOWLEDGE PLATFORM</div>
-    <a href="index.html" class="back-btn">
-      <span>⬅</span> Back to Terminal OS
-    </a>
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <button class="menu-toggle-btn" onclick="toggleMobileSidebar()">☰ Menu</button>
+      <div class="meth-logo">// OFFENSIVE SECURITY KNOWLEDGE PLATFORM</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <button onclick="openQuickJump()" style="background: rgba(0,229,255,0.05); color: var(--neon-cyan); border: 1px solid rgba(0,229,255,0.2); padding: 7px 14px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='rgba(0,229,255,0.12)'" onmouseout="this.style.background='rgba(0,229,255,0.05)'">
+        🔍 <span style="opacity:0.6; font-size:0.8rem;">Ctrl+K</span>
+      </button>
+      <a href="index.html" class="back-btn">
+        <span>⬅</span> Back to Terminal OS
+      </a>
+    </div>
   </header>
 
   <!-- Main Container -->
@@ -659,6 +1077,34 @@
     
     <!-- Left Sidebar: Categorized Accordion Phases -->
     <div class="meth-sidebar">
+
+      <!-- Search Bar -->
+      <div class="sidebar-search-wrap">
+        <input type="text" class="sidebar-search-input" id="sidebarSearch" placeholder="🔍 Filter phases..." oninput="filterSidebarItems(this.value)" autocomplete="off">
+      </div>
+      <div class="search-shortcut-hint">Ctrl+K for Quick Jump</div>
+
+      <!-- Progress Tracker -->
+      <div class="progress-tracker">
+        <div class="progress-tracker-label">
+          <span>// PHASES VISITED</span>
+          <span id="progressCount">0 / 20</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+      </div>
+
+      <!-- Bookmarks Panel -->
+      <div class="bookmarks-panel" id="bookmarksPanel">
+        <div class="bookmarks-panel-header" onclick="toggleBookmarksPanel()">
+          <span>📌 Bookmarks</span>
+          <span id="bookmarkCount" style="font-size:0.75rem; color:rgba(245,158,11,0.7);">0</span>
+        </div>
+        <div class="bookmarks-list" id="bookmarksList"></div>
+      </div>
+
+      <div class="search-no-results" id="searchNoResults">No phases match your search.</div>
       
       <!-- Category 1: Recon & Footprinting -->
       <div class="sidebar-category">
@@ -667,17 +1113,17 @@
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-recon">
-          <div class="meth-item active" id="meth-ef-p0" onclick="openMethPhase('p0')">
-            <span>├── 💻</span> <span>Subdomain Enumeration</span>
+          <div class="meth-item active" id="meth-ef-p0" onclick="openMethPhase('p0')" data-search="subdomain enumeration recon subfinder amass httpx naabu nmap katana nuclei">
+            <span>├── 💻</span> <span>Subdomain Enumeration</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p0', '💻 Subdomain Enumeration')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p2" onclick="openMethPhase('p2')">
-            <span>├── 🖥️</span> <span>Tech Detection</span>
+          <div class="meth-item" id="meth-ef-p2" onclick="openMethPhase('p2')" data-search="tech detection technology fingerprinting whatweb wappalyzer">
+            <span>├── 🖥️</span> <span>Tech Detection</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p2', '🖥️ Tech Detection')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p1" onclick="openMethPhase('p1')">
-            <span>├── 📡</span> <span>Port Scanning</span>
+          <div class="meth-item" id="meth-ef-p1" onclick="openMethPhase('p1')" data-search="port scanning nmap naabu masscan network">
+            <span>├── 📡</span> <span>Port Scanning</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p1', '📡 Port Scanning')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p_matrix" onclick="openMethPhase('p_matrix')">
-            <span>└── 🎯</span> <span>Decision Matrix</span>
+          <div class="meth-item" id="meth-ef-p_matrix" onclick="openMethPhase('p_matrix')" data-search="decision matrix recon strategy attack surface">
+            <span>└── 🎯</span> <span>Decision Matrix</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_matrix', '🎯 Decision Matrix')">★</button>
           </div>
         </div>
       </div>
@@ -689,23 +1135,23 @@
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-discover">
-          <div class="meth-item" id="meth-ef-p6" onclick="openMethPhase('p6')">
-            <span>├── 📂</span> <span>Directory Discovery</span>
+          <div class="meth-item" id="meth-ef-p6" onclick="openMethPhase('p6')" data-search="directory discovery ffuf gobuster dirsearch wordlist fuzzing">
+            <span>├── 📂</span> <span>Directory Discovery</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p6', '📂 Directory Discovery')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p4" onclick="openMethPhase('p4')">
-            <span>├── 📜</span> <span>JavaScript Recon</span>
+          <div class="meth-item" id="meth-ef-p4" onclick="openMethPhase('p4')" data-search="javascript recon js secret endpoints aws keys">
+            <span>├── 📜</span> <span>JavaScript Recon</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p4', '📜 JavaScript Recon')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p16" onclick="openMethPhase('p16')">
-            <span>├── 🧬</span> <span>APIs & REST Hacking</span>
+          <div class="meth-item" id="meth-ef-p16" onclick="openMethPhase('p16')" data-search="api rest hacking bola idor endpoints kiterunner">
+            <span>├── 🧬</span> <span>APIs & REST Hacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p16', '🧬 APIs & REST Hacking')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p_graphql" onclick="openMethPhase('p_graphql')">
-            <span>├── 🕸️</span> <span>GraphQL Hacking</span>
+          <div class="meth-item" id="meth-ef-p_graphql" onclick="openMethPhase('p_graphql')" data-search="graphql introspection batching bypass shopify">
+            <span>├── 🕸️</span> <span>GraphQL Hacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_graphql', '🕸️ GraphQL Hacking')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p5" onclick="openMethPhase('p5')">
-            <span>├── 🎛️</span> <span>Parameters Discovery</span>
+          <div class="meth-item" id="meth-ef-p5" onclick="openMethPhase('p5')" data-search="parameters discovery arjun hidden params fuzzing">
+            <span>├── 🎛️</span> <span>Parameters Discovery</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p5', '🎛️ Parameters Discovery')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p3" onclick="openMethPhase('p3')">
-            <span>└── 🕷️</span> <span>Crawling & Spidering</span>
+          <div class="meth-item" id="meth-ef-p3" onclick="openMethPhase('p3')" data-search="crawling spidering katana gospider hakrawler">
+            <span>└── 🕷️</span> <span>Crawling & Spidering</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p3', '🕷️ Crawling & Spidering')">★</button>
           </div>
         </div>
       </div>
@@ -717,38 +1163,38 @@
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-vuln">
-          <div class="meth-item" id="meth-ef-p7" onclick="openMethPhase('p7')">
-            <span>├── 🌐</span> <span>XSS Workflow</span>
+          <div class="meth-item" id="meth-ef-p7" onclick="openMethPhase('p7')" data-search="xss cross site scripting reflected stored dom bypass waf">
+            <span>├── 🌐</span> <span>XSS Workflow</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p7', '🌐 XSS Workflow')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p8" onclick="openMethPhase('p8')">
-            <span>├── 💉</span> <span>SQLi Workflow</span>
+          <div class="meth-item" id="meth-ef-p8" onclick="openMethPhase('p8')" data-search="sqli sql injection union error blind sqlmap">
+            <span>├── 💉</span> <span>SQLi Workflow</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p8', '💉 SQLi Workflow')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p9" onclick="openMethPhase('p9')">
-            <span>├── 📡</span> <span>SSRF Workflow</span>
+          <div class="meth-item" id="meth-ef-p9" onclick="openMethPhase('p9')" data-search="ssrf server side request forgery aws metadata cloud">
+            <span>├── 📡</span> <span>SSRF Workflow</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p9', '📡 SSRF Workflow')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p_ssti" onclick="openMethPhase('p_ssti')">
-            <span>├── 🧬</span> <span>SSTI Workflow</span>
+          <div class="meth-item" id="meth-ef-p_ssti" onclick="openMethPhase('p_ssti')" data-search="ssti server side template injection jinja2 rce flask">
+            <span>├── 🧬</span> <span>SSTI Workflow</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_ssti', '🧬 SSTI Workflow')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p_xxe" onclick="openMethPhase('p_xxe')">
-            <span>├── 🕸️</span> <span>XXE Injection</span>
+          <div class="meth-item" id="meth-ef-p_xxe" onclick="openMethPhase('p_xxe')" data-search="xxe xml external entity injection file read lfi">
+            <span>├── 🕸️</span> <span>XXE Injection</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_xxe', '🕸️ XXE Injection')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p10" onclick="openMethPhase('p10')">
-            <span>├── 🔑</span> <span>IDOR Testing</span>
+          <div class="meth-item" id="meth-ef-p10" onclick="openMethPhase('p10')" data-search="idor insecure direct object reference bola horizontal">
+            <span>├── 🔑</span> <span>IDOR Testing</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p10', '🔑 IDOR Testing')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p11" onclick="openMethPhase('p11')">
-            <span>├── 📤</span> <span>File Upload Exploits</span>
+          <div class="meth-item" id="meth-ef-p11" onclick="openMethPhase('p11')" data-search="file upload exploit shell bypass extension magic bytes">
+            <span>├── 📤</span> <span>File Upload Exploits</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p11', '📤 File Upload Exploits')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p12" onclick="openMethPhase('p12')">
-            <span>├── ⚡</span> <span>Race Conditions</span>
+          <div class="meth-item" id="meth-ef-p12" onclick="openMethPhase('p12')" data-search="race condition concurrent request shopify coupon">
+            <span>├── ⚡</span> <span>Race Conditions</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p12', '⚡ Race Conditions')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p14" onclick="openMethPhase('p14')">
-            <span>├── 🎫</span> <span>JWT Hacking</span>
+          <div class="meth-item" id="meth-ef-p14" onclick="openMethPhase('p14')" data-search="jwt hacking token rsa hmac confusion alg none">
+            <span>├── 🎫</span> <span>JWT Hacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p14', '🎫 JWT Hacking')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p13" onclick="openMethPhase('p13')">
-            <span>├── 🔐</span> <span>OAuth & Sessions</span>
+          <div class="meth-item" id="meth-ef-p13" onclick="openMethPhase('p13')" data-search="oauth session hijacking redirect uri token">
+            <span>├── 🔐</span> <span>OAuth & Sessions</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p13', '🔐 OAuth & Sessions')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p15" onclick="openMethPhase('p15')">
-            <span>└── ☁️</span> <span>Cloud Security</span>
+          <div class="meth-item" id="meth-ef-p15" onclick="openMethPhase('p15')" data-search="cloud security aws s3 bucket iam privilege escalation">
+            <span>└── ☁️</span> <span>Cloud Security</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p15', '☁️ Cloud Security')">★</button>
           </div>
         </div>
       </div>
@@ -760,20 +1206,20 @@
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-automation">
-          <div class="meth-item" id="meth-ef-p17" onclick="openMethPhase('p17')">
-            <span>├── ⚙️</span> <span>Automation Pipelines</span>
+          <div class="meth-item" id="meth-ef-p17" onclick="openMethPhase('p17')" data-search="automation pipeline bash scripting oneliners bug bounty">
+            <span>├── ⚙️</span> <span>Automation Pipelines</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p17', '⚙️ Automation Pipelines')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p_payloads" onclick="openMethPhase('p_payloads')">
-            <span>├── 📋</span> <span>Searchable Payloads</span>
+          <div class="meth-item" id="meth-ef-p_payloads" onclick="openMethPhase('p_payloads')" data-search="payloads xss sqli rce wordlist cheatsheet">
+            <span>├── 📋</span> <span>Searchable Payloads</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_payloads', '📋 Searchable Payloads')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p18" onclick="openMethPhase('p18')">
-            <span>├── 🧪</span> <span>Interactive Labs</span>
+          <div class="meth-item" id="meth-ef-p18" onclick="openMethPhase('p18')" data-search="interactive labs xss idor hands on practice">
+            <span>├── 🧪</span> <span>Interactive Labs</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p18', '🧪 Interactive Labs')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p_writeups" onclick="openMethPhase('p_writeups')">
-            <span>├── 📜</span> <span>Real Writeups</span>
+          <div class="meth-item" id="meth-ef-p_writeups" onclick="openMethPhase('p_writeups')" data-search="writeups bug bounty reports real world hackerone">
+            <span>├── 📜</span> <span>Real Writeups</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_writeups', '📜 Real Writeups')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p19" onclick="openMethPhase('p19')">
-            <span>└── 🐚</span> <span>Simulated Shell</span>
+          <div class="meth-item" id="meth-ef-p19" onclick="openMethPhase('p19')" data-search="simulated shell terminal emulator bash command line">
+            <span>└── 🐚</span> <span>Simulated Shell</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p19', '🐚 Simulated Shell')">★</button>
           </div>
         </div>
       </div>
@@ -885,7 +1331,7 @@ Content-Type: application/json
 
         <div class="cyber-card">
           <div class="card-header"><h3>⚡ Scanner Comparison (Naabu vs Nmap vs Rustscan)</h3></div>
-          <table class="interactive-table">
+          <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>الأداة (Tool)</th>
@@ -914,7 +1360,7 @@ Content-Type: application/json
                 <td>التحقق العميق وتحديد ثغرات الإصدارات المحددة</td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         <div class="cyber-card">
@@ -944,7 +1390,7 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
 
         <div class="cyber-card">
           <div class="card-header"><h3>🧠 Action Plan per Discovery Stack</h3></div>
-          <table class="interactive-table">
+          <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>الاكتشاف (Discovery)</th>
@@ -991,7 +1437,7 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
                 <td>تشغيل فحص كامل باستخدام <code>wpscan --url target.com -e u,ap,vt</code>.</td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
       <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
           <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: GitLab server mapping RCE</h3></div>
@@ -1010,7 +1456,7 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
 
         <div class="cyber-card">
           <div class="card-header"><h3>🛡️ Fuzzing Comparison (ffuf vs feroxbuster vs dirsearch vs wfuzz)</h3></div>
-          <table class="interactive-table">
+          <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>Tool</th>
@@ -1050,12 +1496,12 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
                 <td>Custom Payloads & multi-parameter injection</td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>📂 Sensitive Files Matrix (مصفوفة الملفات الأكثر أهمية)</h3></div>
-          <table class="interactive-table">
+          <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>الملف (File)</th>
@@ -1096,7 +1542,7 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
                 <td>فحص الإصدارات للبحث عن ثغرات CVEs معروفة.</td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         <div class="cyber-card">
@@ -1153,7 +1599,7 @@ git status</div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>Secrets Classification (مصفوفة تصنيف الأسرار)</h3></div>
-          <table class="interactive-table">
+          <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>النوع (Secret Type)</th>
@@ -1188,7 +1634,7 @@ git status</div>
                 <td><span class="text-secondary">Medium</span> — استغلال الموارد أو سرقة البيانات المالية للمستخدمين</td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         <div class="cyber-card">
@@ -1248,7 +1694,7 @@ aws s3 ls</div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>🛡️ API Security Checklist (REST vs SOAP vs GraphQL)</h3></div>
-          <table class="interactive-table">
+          <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>التصنيف</th>
@@ -1273,7 +1719,7 @@ aws s3 ls</div>
                 <td>Burp Suite, Python requests</td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         <div class="cyber-card">
@@ -1495,7 +1941,7 @@ aws s3 ls</div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>📋 Context Matrix</h3></div>
-          <table class="interactive-table">
+          <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>سياق الحقن (Context)</th>
@@ -1520,7 +1966,7 @@ aws s3 ls</div>
                 <td><code>'; alert(1); //</code></td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
       <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
           <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Cloudflare WAF bypass on financial forum</h3></div>
@@ -1610,7 +2056,7 @@ aws s3 ls</div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>🎯 Engine Payloads Comparison</h3></div>
-          <table class="interactive-table">
+          <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>المحرك (Engine)</th>
@@ -1639,7 +2085,7 @@ aws s3 ls</div>
                 <td><code>${os.system('id')}</code></td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
       <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
           <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Flask profile name SSTI RCE</h3></div>
@@ -2207,6 +2653,12 @@ Content-Type: application/json
   </div>
 
   <script>
+    // Toggle Mobile Sidebar
+    function toggleMobileSidebar() {
+      const sidebar = document.querySelector('.meth-sidebar');
+      sidebar.classList.toggle('active');
+    }
+
     // Toggle sidebar categories
     function toggleCategory(catId) {
       const cat = document.getElementById(catId);
@@ -2231,6 +2683,12 @@ Content-Type: application/json
       document.querySelectorAll('.meth-content-view').forEach(el => el.style.display = 'none');
       const activeContent = document.getElementById('meth-content-' + phaseId);
       if (activeContent) activeContent.style.display = 'block';
+
+      // Close mobile sidebar if open
+      const sidebar = document.querySelector('.meth-sidebar');
+      if (sidebar && sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
 
       // Auto update active node in attack flow if visible
       const nodes = document.querySelectorAll('.flow-node');
@@ -2506,6 +2964,281 @@ Content-Type: application/json
       openMethPhase('p19');
       executeTermCmd(cmd);
     }
+
+    // =============================================
+    // PHASE 3: ADVANCED FEATURES
+    // =============================================
+
+    // All phases registry for Quick Jump
+    const ALL_PHASES = [
+      { id: 'p0',        icon: '💻', name: 'Subdomain Enumeration',  cat: 'CORE RECON',        tags: 'subfinder amass httpx naabu nmap katana nuclei' },
+      { id: 'p2',        icon: '🖥️', name: 'Tech Detection',         cat: 'CORE RECON',        tags: 'whatweb wappalyzer fingerprinting' },
+      { id: 'p1',        icon: '📡', name: 'Port Scanning',           cat: 'CORE RECON',        tags: 'nmap masscan naabu network' },
+      { id: 'p_matrix',  icon: '🎯', name: 'Decision Matrix',         cat: 'CORE RECON',        tags: 'strategy attack surface planning' },
+      { id: 'p6',        icon: '📂', name: 'Directory Discovery',     cat: 'WEB DISCOVERY',     tags: 'ffuf gobuster dirsearch wordlist' },
+      { id: 'p4',        icon: '📜', name: 'JavaScript Recon',        cat: 'WEB DISCOVERY',     tags: 'js secrets endpoints aws keys' },
+      { id: 'p16',       icon: '🧬', name: 'APIs & REST Hacking',     cat: 'WEB DISCOVERY',     tags: 'bola idor kiterunner api endpoints' },
+      { id: 'p_graphql', icon: '🕸️', name: 'GraphQL Hacking',         cat: 'WEB DISCOVERY',     tags: 'introspection batching bypass shopify' },
+      { id: 'p5',        icon: '🎛️', name: 'Parameters Discovery',    cat: 'WEB DISCOVERY',     tags: 'arjun hidden params fuzzing debug' },
+      { id: 'p3',        icon: '🕷️', name: 'Crawling & Spidering',    cat: 'WEB DISCOVERY',     tags: 'katana gospider hakrawler crawl' },
+      { id: 'p7',        icon: '🌐', name: 'XSS Workflow',            cat: 'VULNERABILITIES',   tags: 'cross site scripting reflected stored dom waf bypass' },
+      { id: 'p8',        icon: '💉', name: 'SQLi Workflow',           cat: 'VULNERABILITIES',   tags: 'sql injection union error blind sqlmap' },
+      { id: 'p9',        icon: '📡', name: 'SSRF Workflow',           cat: 'VULNERABILITIES',   tags: 'server side request forgery aws metadata cloud' },
+      { id: 'p_ssti',    icon: '🧬', name: 'SSTI Workflow',           cat: 'VULNERABILITIES',   tags: 'jinja2 flask rce template injection' },
+      { id: 'p_xxe',     icon: '🕸️', name: 'XXE Injection',           cat: 'VULNERABILITIES',   tags: 'xml external entity file read lfi passwd' },
+      { id: 'p10',       icon: '🔑', name: 'IDOR Testing',            cat: 'VULNERABILITIES',   tags: 'insecure direct object reference bola horizontal' },
+      { id: 'p11',       icon: '📤', name: 'File Upload Exploits',    cat: 'VULNERABILITIES',   tags: 'shell bypass extension magic bytes png' },
+      { id: 'p12',       icon: '⚡', name: 'Race Conditions',         cat: 'VULNERABILITIES',   tags: 'concurrent request shopify coupon turbo' },
+      { id: 'p14',       icon: '🎫', name: 'JWT Hacking',             cat: 'VULNERABILITIES',   tags: 'token rsa hmac confusion alg none' },
+      { id: 'p13',       icon: '🔐', name: 'OAuth & Sessions',        cat: 'VULNERABILITIES',   tags: 'redirect uri hijacking oauth token' },
+      { id: 'p15',       icon: '☁️', name: 'Cloud Security',          cat: 'VULNERABILITIES',   tags: 'aws s3 bucket iam privilege escalation' },
+      { id: 'p17',       icon: '⚙️', name: 'Automation Pipelines',    cat: 'PIPELINES & LABS',  tags: 'bash scripting oneliners bug bounty automation' },
+      { id: 'p_payloads',icon: '📋', name: 'Searchable Payloads',     cat: 'PIPELINES & LABS',  tags: 'xss sqli rce wordlist cheatsheet' },
+      { id: 'p18',       icon: '🧪', name: 'Interactive Labs',        cat: 'PIPELINES & LABS',  tags: 'xss idor hands on practice lab' },
+      { id: 'p_writeups',icon: '📜', name: 'Real Writeups',           cat: 'PIPELINES & LABS',  tags: 'bug bounty reports hackerone writeups' },
+      { id: 'p19',       icon: '🐚', name: 'Simulated Shell',         cat: 'PIPELINES & LABS',  tags: 'terminal emulator bash command line' },
+    ];
+    const TOTAL_PHASES = ALL_PHASES.length;
+
+    // ---- VISITED PHASES (Progress Tracker) ----
+    let visitedPhases = new Set(JSON.parse(localStorage.getItem('meth_visited') || '[]'));
+
+    function markVisited(phaseId) {
+      visitedPhases.add(phaseId);
+      localStorage.setItem('meth_visited', JSON.stringify([...visitedPhases]));
+      const item = document.getElementById('meth-ef-' + phaseId);
+      if (item) item.classList.add('visited');
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const count = visitedPhases.size;
+      const pct = Math.round((count / TOTAL_PHASES) * 100);
+      const fill = document.getElementById('progressBarFill');
+      const label = document.getElementById('progressCount');
+      if (fill) fill.style.width = pct + '%';
+      if (label) label.textContent = count + ' / ' + TOTAL_PHASES;
+    }
+
+    // Patch openMethPhase to also track visits
+    const _origOpenMethPhase = openMethPhase;
+    function openMethPhase(phaseId) {
+      _origOpenMethPhase(phaseId);
+      markVisited(phaseId);
+    }
+
+    // Restore visited badges on load
+    function restoreVisited() {
+      visitedPhases.forEach(id => {
+        const item = document.getElementById('meth-ef-' + id);
+        if (item) item.classList.add('visited');
+      });
+      updateProgressBar();
+    }
+
+    // ---- BOOKMARK SYSTEM ----
+    let bookmarks = JSON.parse(localStorage.getItem('meth_bookmarks') || '[]');
+
+    function toggleBookmark(e, phaseId, name) {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      const idx = bookmarks.findIndex(b => b.id === phaseId);
+      if (idx === -1) {
+        bookmarks.push({ id: phaseId, name });
+        btn.classList.add('bookmarked');
+      } else {
+        bookmarks.splice(idx, 1);
+        btn.classList.remove('bookmarked');
+      }
+      localStorage.setItem('meth_bookmarks', JSON.stringify(bookmarks));
+      renderBookmarksPanel();
+    }
+
+    function renderBookmarksPanel() {
+      const panel = document.getElementById('bookmarksPanel');
+      const list  = document.getElementById('bookmarksList');
+      const count = document.getElementById('bookmarkCount');
+      if (!panel || !list || !count) return;
+
+      count.textContent = bookmarks.length;
+
+      if (bookmarks.length === 0) {
+        panel.classList.remove('has-items');
+        list.innerHTML = '';
+        return;
+      }
+      panel.classList.add('has-items');
+
+      list.innerHTML = bookmarks.map(b => `
+        <div class="bookmark-item-entry" onclick="openMethPhase('${b.id}')">
+          <span>★</span> <span>${b.name}</span>
+        </div>
+      `).join('');
+
+      // Sync bookmark buttons state
+      document.querySelectorAll('.bookmark-btn').forEach(btn => btn.classList.remove('bookmarked'));
+      bookmarks.forEach(b => {
+        const item = document.getElementById('meth-ef-' + b.id);
+        if (item) {
+          const btn = item.querySelector('.bookmark-btn');
+          if (btn) btn.classList.add('bookmarked');
+        }
+      });
+    }
+
+    function toggleBookmarksPanel() {
+      const list = document.getElementById('bookmarksList');
+      if (list) list.style.display = list.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    // ---- SIDEBAR SEARCH FILTER ----
+    function filterSidebarItems(query) {
+      const q = query.toLowerCase().trim();
+      const noResults = document.getElementById('searchNoResults');
+      let anyVisible = false;
+
+      document.querySelectorAll('.meth-item').forEach(item => {
+        const name   = (item.querySelector('span:nth-child(2)')?.textContent || '').toLowerCase();
+        const tags   = (item.getAttribute('data-search') || '').toLowerCase();
+        const match  = !q || name.includes(q) || tags.includes(q);
+        item.style.display = match ? '' : 'none';
+        if (match) anyVisible = true;
+      });
+
+      // Show/hide categories depending on whether children are visible
+      document.querySelectorAll('.sidebar-category').forEach(cat => {
+        const items = cat.querySelectorAll('.meth-item');
+        const hasVisible = [...items].some(i => i.style.display !== 'none');
+        cat.style.display = hasVisible ? '' : 'none';
+        // Auto-expand categories when searching
+        if (q) {
+          const catItems = cat.querySelector('.category-items');
+          if (catItems && hasVisible) catItems.style.maxHeight = '';
+        }
+      });
+
+      if (noResults) noResults.style.display = anyVisible ? 'none' : 'block';
+    }
+
+    // ---- QUICK JUMP MODAL (Ctrl+K) ----
+    let qjSelectedIdx = -1;
+
+    function openQuickJump() {
+      const overlay = document.getElementById('quickJumpOverlay');
+      const input   = document.getElementById('quickJumpInput');
+      if (!overlay || !input) return;
+      overlay.style.display = 'block';
+      input.value = '';
+      qjSelectedIdx = -1;
+      renderQuickJumpResults('');
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closeQuickJump(e) {
+      if (e && e.target !== document.getElementById('quickJumpOverlay')) return;
+      const overlay = document.getElementById('quickJumpOverlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    function renderQuickJumpResults(q) {
+      const container = document.getElementById('quickJumpResults');
+      if (!container) return;
+      const query = q.toLowerCase().trim();
+
+      const filtered = !query
+        ? ALL_PHASES
+        : ALL_PHASES.filter(p =>
+            p.name.toLowerCase().includes(query) ||
+            p.tags.toLowerCase().includes(query) ||
+            p.cat.toLowerCase().includes(query)
+          );
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="quick-jump-no-results">No results for "${q}"</div>`;
+        qjSelectedIdx = -1;
+        return;
+      }
+
+      container.innerHTML = filtered.map((p, i) => `
+        <div class="quick-jump-result-item ${i === qjSelectedIdx ? 'selected' : ''} ${query && p.name.toLowerCase().includes(query) ? 'match-highlight' : ''}"
+             onclick="selectQuickJump('${p.id}')"
+             data-phase="${p.id}">
+          <span class="item-icon">${p.icon}</span>
+          <span class="item-name">${p.name}</span>
+          <span class="item-cat">${p.cat}</span>
+        </div>
+      `).join('');
+    }
+
+    function selectQuickJump(phaseId) {
+      openMethPhase(phaseId);
+      const overlay = document.getElementById('quickJumpOverlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    // Quick Jump input handler
+    const qjInput = document.getElementById('quickJumpInput');
+    if (qjInput) {
+      qjInput.addEventListener('input', function() {
+        qjSelectedIdx = -1;
+        renderQuickJumpResults(this.value);
+      });
+
+      qjInput.addEventListener('keydown', function(e) {
+        const items = document.querySelectorAll('.quick-jump-result-item[data-phase]');
+        if (!items.length) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          qjSelectedIdx = Math.min(qjSelectedIdx + 1, items.length - 1);
+          items.forEach((el, i) => el.classList.toggle('selected', i === qjSelectedIdx));
+          items[qjSelectedIdx]?.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          qjSelectedIdx = Math.max(qjSelectedIdx - 1, 0);
+          items.forEach((el, i) => el.classList.toggle('selected', i === qjSelectedIdx));
+          items[qjSelectedIdx]?.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const selected = items[qjSelectedIdx] || items[0];
+          if (selected) selectQuickJump(selected.getAttribute('data-phase'));
+        } else if (e.key === 'Escape') {
+          const overlay = document.getElementById('quickJumpOverlay');
+          if (overlay) overlay.style.display = 'none';
+        }
+      });
+    }
+
+    // ---- GLOBAL KEYBOARD SHORTCUTS ----
+    document.addEventListener('keydown', function(e) {
+      // Ctrl+K = Open Quick Jump
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        openQuickJump();
+      }
+      // ESC = Close Quick Jump
+      if (e.key === 'Escape') {
+        const overlay = document.getElementById('quickJumpOverlay');
+        if (overlay && overlay.style.display === 'block') {
+          overlay.style.display = 'none';
+        }
+      }
+      // / = Focus sidebar search
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        const search = document.getElementById('sidebarSearch');
+        if (search) search.focus();
+      }
+    });
+
+    // ---- INIT ----
+    document.addEventListener('DOMContentLoaded', function() {
+      restoreVisited();
+      renderBookmarksPanel();
+      // Mark initial p0 as visited
+      markVisited('p0');
+    });
+
   </script>
 </body>
 </html>
