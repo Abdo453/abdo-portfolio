@@ -54,7 +54,7 @@ with open(html_path, 'r', encoding='utf-8') as f:
 if "tool-graphic-card" in html_code:
     print("Warning: tool-graphic-card already found in home.html. Stripping it first.")
     # Strip any existing tool-graphic-card blocks first
-    html_code = re.sub(r'\s*<div class="cyber-card tool-graphic-card">.*?</div>\s*</div>', '\n                    </div>', html_code, flags=re.DOTALL)
+    html_code = re.sub(r'\s*<div class="cyber-card tool-graphic-card">.*?</div>\s*</div>', '', html_code, flags=re.DOTALL)
 
 for tool_id, imgs in tool_images.items():
     # Build raw static paths for each image
