@@ -13,7 +13,7 @@
       --neon-green: #00ff66;
       --neon-red: #ff0055;
       --bg-dark: #020205;
-      --bg-card: rgba(10, 10, 20, 0.4);
+      --bg-card: rgba(10, 10, 20, 0.5);
       --border-color: rgba(0, 229, 255, 0.15);
     }
     body {
@@ -80,7 +80,7 @@
     
     /* Collapsible Sidebar styling */
     .meth-sidebar {
-      width: 350px;
+      width: 360px;
       background: rgba(3, 3, 6, 0.98);
       border-right: 1px solid rgba(0, 229, 255, 0.08);
       padding: 20px 10px;
@@ -393,6 +393,24 @@
     }
     .tree-branch {
       color: #38bdf8;
+    }
+    
+    /* Node Inspector Panel */
+    .node-inspector {
+      background: rgba(155, 89, 255, 0.05);
+      border: 1px solid rgba(155, 89, 255, 0.3);
+      border-radius: 6px;
+      padding: 20px;
+      margin-top: 15px;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .node-inspector-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      color: #bf80ff;
+      margin-top: 0;
+      margin-bottom: 8px;
     }
     
     /* Bug Encyclopedia custom tab styles */
@@ -758,21 +776,27 @@
           <p class="hero-tagline">مسار جمع واستكشاف النطاقات الفرعية الشامل لتوسيع مساحة الهجوم بالكامل</p>
         </div>
 
-        <!-- Flowchart Card -->
+        <!-- Interactive Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>🗺️ Recon Workflow Flowchart (انقر على الخطوة للانتقال إليها)</h3></div>
+          <div class="card-header"><h3>🗺️ Interactive Recon Workflow Flowchart (انقر على الخطوة للتفاصيل)</h3></div>
           <div class="flow-visualization">
-            <div class="flow-node active-stage" onclick="openMethPhase('p0')">Passive Enumeration (Subfinder / Assetfinder / Amass)</div>
+            <div class="flow-node active-stage" onclick="inspectNode('Recon Step 1: Passive Enumeration', 'البدء بجمع النطاقات الفرعية سلبياً باستخدام أدوات سريعة للحصول على أول قائمة بالخوادم دون لمس الهدف مباشرة.')">Passive Enumeration</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node" onclick="openMethPhase('p0')">Merge Results & Deduplicate</div>
+            <div class="flow-node" onclick="inspectNode('Recon Step 2: Merge Results', 'دمج مخرجات جميع أدوات الاستطلاع وحذف النطاقات المكررة لتقليص حجم القائمة وبدء فحص خفيف.')">Merge Results</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node" onclick="openMethPhase('p0')">Alive Check (HTTPX)</div>
+            <div class="flow-node" onclick="inspectNode('Recon Step 3: Alive Check (HTTPX)', 'التحقق من الخوادم النشطة المستجيبة بروتوكولياً وتصفية المواقع المغلقة لتجنب تضييع الوقت.')">Alive Check (HTTPX)</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node" onclick="openMethPhase('p0')">Screenshotting (Gowitness)</div>
+            <div class="flow-node" onclick="inspectNode('Recon Step 4: Screenshotting', 'التقاط صور لمحتوى المواقع النشطة آلياً باستخدام Gowitness للتعرف على الواجهات بصرياً وفرزها سريعاً.')">Screenshotting (Gowitness)</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node" onclick="openMethPhase('p2')">Tech Detection (WhatWeb)</div>
+            <div class="flow-node" onclick="inspectNode('Recon Step 5: Technology Detection', 'كشف التقنيات البرمجية، إطارات العمل، ولغات البرمجة المستخدمة في إدارة الخوادم النشطة.')">Tech Detection (WhatWeb)</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node" onclick="openMethPhase('p1')">Port Scanning (Naabu / Nmap)</div>
+            <div class="flow-node" onclick="inspectNode('Recon Step 6: Port Scanning', 'فحص المنافذ والخدمات المفتوحة على الخوادم النشطة لتحديد منافذ FTP أو SSH أو خدمات أخرى.')">Port Scanning (Naabu / Nmap)</div>
+          </div>
+          
+          <!-- Inspector Box -->
+          <div id="recon-inspector" class="node-inspector">
+            <div class="node-inspector-title" id="recon-inspector-title">Active Node Details</div>
+            <p id="recon-inspector-desc">Select a node above to inspect details and workflows.</p>
           </div>
         </div>
 
@@ -884,7 +908,7 @@
               <tr>
                 <td><span class="text-neon-cyan">Swagger UI / GraphQL</span></td>
                 <td>سحب المسارات واختبار الـ Endpoints والـ Parameters</td>
-                <td>Postman / Kiterunner / InQL</td>
+                <td>Postman / Kiterunner / InQL / GraphQL Voyager</td>
               </tr>
               <tr>
                 <td><span class="text-neon-cyan">S3 Bucket Leaks</span></td>
@@ -895,6 +919,16 @@
                 <td><span class="text-neon-cyan">WordPress site</span></td>
                 <td>فحص القوالب والإضافات والبحث عن ثغرات شائعة</td>
                 <td>WPScan</td>
+              </tr>
+              <tr>
+                <td><span class="text-neon-cyan">GitLab Instance</span></td>
+                <td>البحث عن تسريبات مفاتيح التوثيق (Tokens) والثغرات العامة</td>
+                <td>GitLeaks / Nuclei</td>
+              </tr>
+              <tr>
+                <td><span class="text-neon-cyan">Kibana Dashboard</span></td>
+                <td>البحث عن قواعد بيانات Elasticsearch المفتوحة والغير آمنة</td>
+                <td>curl / nuclei</td>
               </tr>
             </tbody>
           </table>
@@ -1007,19 +1041,25 @@
 
         <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>🗺️ JavaScript Recon Flowchart</h3></div>
+          <div class="card-header"><h3>🗺️ JavaScript Recon Flowchart (انقر على الخطوة للتفاصيل)</h3></div>
           <div class="flow-visualization">
-            <div class="flow-node active-stage">Collect JS Files (Katana / GAU / Waymore)</div>
+            <div class="flow-node active-stage" onclick="inspectNode('JS Step 1: Collect JS Files', 'سحب ملفات الجافا سكربت النشطة والأرشيفية بالاعتماد على أدوات الزحف Katana و GAU.')">Collect JS Files</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Beautify & Deobfuscate JS</div>
+            <div class="flow-node" onclick="inspectNode('JS Step 2: Beautify & Clean', 'تنسيق الملفات المضغوطة (Minified JS) لتسهيل قراءتها وفهم مسارات الاستدعاء.')">Beautify & Clean</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Extract Endpoints (LinkFinder / xnLinkFinder)</div>
+            <div class="flow-node" onclick="inspectNode('JS Step 3: Extract Endpoints', 'استخراج الروابط البرمجية ومسارات الـ APIs من الكود باستخدام LinkFinder.')">Extract Endpoints</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Extract Secrets & Credentials (SecretFinder / trufflehog)</div>
+            <div class="flow-node" onclick="inspectNode('JS Step 4: Extract Secrets', 'البحث عن المفاتيح والرموز الحساسة (Tokens, AWS keys) باستخدام SecretFinder.')">Extract Secrets</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Analyze APIs & Map Routes</div>
+            <div class="flow-node" onclick="inspectNode('JS Step 5: Analyze Routes', 'تحليل المسارات البرمجية وتخمين آليات التوثيق والصلاحيات (Role Access Map).')">Analyze Routes</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Test Hidden Features / Unused Parameters</div>
+            <div class="flow-node" onclick="inspectNode('JS Step 6: Test Hidden Features', 'البحث عن مميزات الإدارة المنسية والبارامترات غير المستخدمة لتخطي الصلاحيات.')">Test Hidden Features</div>
+          </div>
+          
+          <!-- Inspector Box -->
+          <div id="js-inspector" class="node-inspector">
+            <div class="node-inspector-title" id="js-inspector-title">Active Node Details</div>
+            <p id="js-inspector-desc">Select a node above to inspect details and workflows.</p>
           </div>
         </div>
 
@@ -1060,8 +1100,7 @@
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Code Execution Commands</h3></div>
-          <h4>1. Extract secrets with SecretFinder:</h4>
+          <div class="card-header"><h3>🛠 /usr/share/wordlists// JS Secrets Commands</h3></div>
           <div class="cmd-ui-box">
             <div class="cmd-ui-top">python3 SecretFinder.py -i https://target.com/assets/main.js -o cli</div>
             <div class="cmd-ui-bottom">
@@ -1185,28 +1224,31 @@
                 <td>يحتوي على مفاتيح الربط وتكوين قواعد البيانات المكتوبة مسبقاً</td>
                 <td>مراجعة التكوين واستخراج كلمات المرور</td>
               </tr>
+              <tr>
+                <td><code>phpinfo.php</code></td>
+                <td><span class="text-secondary">Medium</span></td>
+                <td>تسريب معلومات تكوين خادم الويب والمسارات ومحركات الحماية</td>
+                <td>فحص الإصدارات للبحث عن ثغرات CVEs معروفة</td>
+              </tr>
+              <tr>
+                <td><code>robots.txt</code></td>
+                <td><span class="text-primary">Low</span></td>
+                <td>يعرض مسارات خفية يطلب الموقع من محركات البحث عدم أرشفتها</td>
+                <td>فحص كافة المسارات المدرجة يدوياً للبحث عن ملفات منسية</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Execution Workflow</h3></div>
-          <h4>1. FFUF Basic fuzzing:</h4>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">ffuf -u https://target.com/FUZZ -w raft.txt -fc 404</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('ffuf -u https://target.com/FUZZ -w raft.txt -fc 404', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('ffuf -u target.com/FUZZ')">▶ Run Simulator</button>
-            </div>
-          </div>
-          <h4>2. Feroxbuster recursive fuzzing:</h4>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">feroxbuster -u https://target.com -w wordlist.txt</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('feroxbuster -u https://target.com -w wordlist.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('feroxbuster -u https://target.com')">▶ Run Simulator</button>
-            </div>
-          </div>
+          <div class="card-header"><h3>⚙️ Target Wordlist Extensions Discovery</h3></div>
+          <p>أهم الامتدادات المطلوب فحصها وتخمينها:</p>
+          <ul class="t-check-list">
+            <li>✔ <code>.php</code> — ملفات السكربت النشطة.</li>
+            <li>✔ <code>.bak / .old</code> — النسخ الاحتياطية لملفات التكوين.</li>
+            <li>✔ <code>.zip / .tar.gz</code> — الأرشيف المضغوط للمجلدات.</li>
+            <li>✔ <code>.env / .log / .sql</code> — سجلات التكوين والبيانات الحساسة.</li>
+          </ul>
         </div>
       </div>
 
@@ -1219,19 +1261,23 @@
 
         <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>🗺️ XSS Hunting Flowchart</h3></div>
+          <div class="card-header"><h3>🗺️ XSS Hunting Flowchart (انقر للتفاصيل)</h3></div>
           <div class="flow-visualization">
-            <div class="flow-node active-stage">Find Parameters (Reflected / Input fields)</div>
+            <div class="flow-node active-stage" onclick="inspectNode('XSS Step 1: Find Parameters', 'البحث عن معلمات الإدخال المباشرة في الرابط أو حقول البحث.')">Find Reflection</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Reflection Check (Check if input appears in response)</div>
+            <div class="flow-node" onclick="inspectNode('XSS Step 2: Context Analysis', 'تحديد طبيعة السياق الذي ينعكس فيه المدخل (HTML / Attribute / Script block).')">Context Analysis</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Context Analysis (HTML / Attribute / JS block)</div>
+            <div class="flow-node" onclick="inspectNode('XSS Step 3: Filter Detection', 'فحص الحماية ومعرفة الرموز المحظورة (مثل < or >) وكيفية تجاوزها.')">Filter Detection</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Filter Detection & Bypass</div>
+            <div class="flow-node" onclick="inspectNode('XSS Step 4: Payload Bypass', 'بناء حمولات تتجاوز مرشحات الحماية بنجاح.')">Payload Bypass</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Payload Crafting</div>
+            <div class="flow-node" onclick="inspectNode('XSS Step 5: DOM Analysis', 'مراقبة مسارات البيانات داخل كود الجافا سكربت ومحاولة حقن DOM XSS.')">DOM Analysis</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">DOM / Blind XSS verification</div>
+            <div class="flow-node" onclick="inspectNode('XSS Step 6: Blind XSS', 'استخدام خوادم خارجية مثل xss.ht لاستقبال استدعاءات Blind XSS خلف لوحات الإدارة.')">Blind XSS</div>
+          </div>
+          <div id="xss-inspector" class="node-inspector">
+            <div class="node-inspector-title" id="xss-inspector-title">Active Node Details</div>
+            <p id="xss-inspector-desc">Select a node above to inspect details and workflows.</p>
           </div>
         </div>
 
@@ -1280,19 +1326,23 @@
 
         <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>🗺️ SQLi Workflow Flowchart</h3></div>
+          <div class="card-header"><h3>🗺️ SQLi Workflow Flowchart (انقر للتفاصيل)</h3></div>
           <div class="flow-visualization">
-            <div class="flow-node active-stage">Find Parameter (e.g. ?id=1)</div>
+            <div class="flow-node active-stage" onclick="inspectNode('SQLi Step 1: Find Parameter', 'تحديد المتغيرات الحساسة التي تتعامل مع قاعدة البيانات مباشرة (مثل ?id=).')">Find Parameter</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Error Detection (Inject single quote ')</div>
+            <div class="flow-node" onclick="inspectNode('SQLi Step 2: Error Detection', 'حقن رموز مثل single quote \' لمراقبة حدوث أخطاء برمجية بقاعدة البيانات.')">Error Detection</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Boolean-based Testing (AND 1=1 / AND 1=2)</div>
+            <div class="flow-node" onclick="inspectNode('SQLi Step 3: Boolean Testing', 'إرسال استعلامات منطقية مثل AND 1=1 و AND 1=2 للتحقق من تغير استجابة الصفحة.')">Boolean Testing</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Time-based blind testing (sleep(5) / pg_sleep)</div>
+            <div class="flow-node" onclick="inspectNode('SQLi Step 4: Time-Based', 'إرسال استعلامات لتأخير الاستجابة (sleep) للتأكد من وجود ثغرة عمياء.')">Time-Based</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">DB Schema Enumeration</div>
+            <div class="flow-node" onclick="inspectNode('SQLi Step 5: DB Enumeration', 'سحب أسماء جداول البيانات والمستخدمين وإصدار النظام.')">DB Enumeration</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Privilege Escalation & Dumping (SQLMap / Ghauri)</div>
+            <div class="flow-node" onclick="inspectNode('SQLi Step 6: Exploitation', 'رفع ملفات أو استخراج كامل قواعد البيانات الحساسة بـ SQLMap.')">Privilege Escalation</div>
+          </div>
+          <div id="sqli-inspector" class="node-inspector">
+            <div class="node-inspector-title" id="sqli-inspector-title">Active Node Details</div>
+            <p id="sqli-inspector-desc">Select a node above to inspect details and workflows.</p>
           </div>
         </div>
 
@@ -1317,17 +1367,21 @@
 
         <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>🗺️ SSRF Workflow Flowchart</h3></div>
+          <div class="card-header"><h3>🗺️ SSRF Workflow Flowchart (انقر للتفاصيل)</h3></div>
           <div class="flow-visualization">
-            <div class="flow-node active-stage">Find URL Inputs (e.g. ?image=http://...)</div>
+            <div class="flow-node active-stage" onclick="inspectNode('SSRF Step 1: Find URL Input', 'البحث عن معاملات تطلب استدعاء روابط مثل ?url= or ?image=.')">Find URL Input</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Internal IP Testing (127.0.0.1 / localhost)</div>
+            <div class="flow-node" onclick="inspectNode('SSRF Step 2: Internal Access', 'محاولة استدعاء خوادم محلية داخلية (مثل http://127.0.0.1/ or localhost).')">Internal Access</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Cloud Metadata extraction (169.254.169.254)</div>
+            <div class="flow-node" onclick="inspectNode('SSRF Step 3: Cloud Metadata', 'استدعاء روابط السحابة العامة لاستخلاص مفاتيح IAM الحساسة.')">Cloud Metadata</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">DNS Interaction check (Interactsh / Burp Collaborator)</div>
+            <div class="flow-node" onclick="inspectNode('SSRF Step 4: DNS Interaction', 'مراقبة الاتصالات الخارجية عبر Interact.sh لتأكيد الثغرات العمياء.')">DNS Interaction</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Blind SSRF verification & exploitation</div>
+            <div class="flow-node" onclick="inspectNode('SSRF Step 5: Blind SSRF', 'استغلال الثغرة كبوابة لمسح الشبكة الداخلية للهدف.')">Blind SSRF</div>
+          </div>
+          <div id="ssrf-inspector" class="node-inspector">
+            <div class="node-inspector-title" id="ssrf-inspector-title">Active Node Details</div>
+            <p id="ssrf-inspector-desc">Select a node above to inspect details and workflows.</p>
           </div>
         </div>
 
@@ -1430,24 +1484,29 @@
               <tr>
                 <th>طبيعة الهجوم (Attack Type)</th>
                 <th>آلية العمل (Mechanism)</th>
-                <th>أداة الاختبار (Tools)</th>
+                <th>مثال PoC</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong>None Algorithm</strong></td>
                 <td>تغيير الـ Header إلى <code>"alg": "none"</code> وحذف التوقيع بالكامل.</td>
-                <td>jwt_tool / Burp Suite</td>
+                <td><code>"alg": "none"</code> (Bypass validation)</td>
               </tr>
               <tr>
                 <td><strong>Weak Secret Cracking</strong></td>
                 <td>التخمين على المفتاح السري محلياً إذا كان ضعيفاً.</td>
-                <td>Hashcat / jwt_tool</td>
+                <td>Bruteforcing signatures using hashcat</td>
               </tr>
               <tr>
                 <td><strong>Key Confusion</strong></td>
                 <td>استخدام مفتاح التشفير العام لـ RS256 لتوقيع التوكن كـ HS256 متماثل.</td>
-                <td>jwt_tool</td>
+                <td>HMAC symmetric RS256 confusion</td>
+              </tr>
+              <tr>
+                <td><strong>Expired Bypass</strong></td>
+                <td>تجاوز شروط التحقق من انتهاء صلاحية التوكن (validation flaws)</td>
+                <td>Modifying expiration claims inside payload</td>
               </tr>
             </tbody>
           </table>
@@ -1482,20 +1541,56 @@
 
         <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>🗺️ API Hacking Flowchart</h3></div>
+          <div class="card-header"><h3>🗺️ API Hacking Flowchart (انقر للتفاصيل)</h3></div>
           <div class="flow-visualization">
-            <div class="flow-node active-stage">Discover APIs (Kiterunner / Swagger OSINT)</div>
+            <div class="flow-node active-stage" onclick="inspectNode('API Step 1: Discover APIs', 'سحب عناوين Swagger أو تخمين مسارات الـ API بـ Kiterunner.')">Discover APIs</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Map Endpoints & Routes</div>
+            <div class="flow-node" onclick="inspectNode('API Step 2: Map Endpoints', 'تحديد كافة المسارات ونسخ طلبات الـ API إلى برنامج Postman.')">Map Endpoints</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Authentication Analysis (JWT / API Key checks)</div>
+            <div class="flow-node" onclick="inspectNode('API Step 3: Auth Analysis', 'اختبار آليات التوثيق وتمرير توكن فارغ أو فحص ثغرات JWT.')">Authentication Analysis</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Parameter Discovery (Arjun / FFUF)</div>
+            <div class="flow-node" onclick="inspectNode('API Step 4: Parameter Discovery', 'البحث عن معلمات برمجية مخفية لإرسال طلبات الإدارة.')">Parameter Discovery</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">IDOR Testing on Endpoints</div>
+            <div class="flow-node" onclick="inspectNode('API Step 5: IDOR Testing', 'تعديل المعرفات والـ UUIDs للوصول لمعلومات سرية تخص الآخرين.')">IDOR Testing</div>
             <div class="flow-arrow">▼</div>
-            <div class="flow-node">Mass Assignment & Rate Limit Testing</div>
+            <div class="flow-node" onclick="inspectNode('API Step 6: Mass Assignment', 'حقن خصائص إضافية (مثل admin: true) في طلبات POST/PUT لرفع الصلاحيات.')">Mass Assignment</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node" onclick="inspectNode('API Step 7: Rate Limit', 'إرسال طلبات مكثفة لمعرفة ما إذا كان الخادم يحد من الطلبات.')">Rate Limit Testing</div>
           </div>
+          <div id="api-inspector" class="node-inspector">
+            <div class="node-inspector-title" id="api-inspector-title">Active Node Details</div>
+            <p id="api-inspector-desc">Select a node above to inspect details and workflows.</p>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📦 API Security Checklist (REST, GraphQL, SOAP)</h3></div>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>تصنيف الـ API</th>
+                <th>نوع الاختبار الأساسي (Security Check)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>REST APIs</strong></td>
+                <td>اختبار الـ Endpoints والـ Bypasses وتخمين مسارات الإدارة</td>
+              </tr>
+              <tr>
+                <td><strong>GraphQL</strong></td>
+                <td>فحص ثغرات الـ Introspection Query (سحب هيكل قواعد البيانات بالكامل)</td>
+              </tr>
+              <tr>
+                <td><strong>SOAP APIs</strong></td>
+                <td>اختبار ثغرات حقن XML الخبيث (XXE injection)</td>
+              </tr>
+              <tr>
+                <td><strong>API Versioning</strong></td>
+                <td>التحقق من الإصدارات القديمة (مثل تغيير <code>/v2/</code> إلى <code>/v1/</code>) لتخطي الحماية</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div class="cyber-card">
@@ -1517,8 +1612,30 @@
           <p class="hero-tagline">منهجية دمج الأدوات في خطوط أنابيب برمجية تلقائية بالكامل</p>
         </div>
 
+        <!-- Visual Flowchart Card -->
         <div class="cyber-card">
-          <div class="card-header"><h3>🔗 Automation Pipelines</h3></div>
+          <div class="card-header"><h3>🗺️ Advanced Automation pipeline flow</h3></div>
+          <div class="flow-visualization">
+            <div class="flow-node active-stage">subfinder -d target.com -silent</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">httpx -silent</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">naabu -silent</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">katana -jc -silent</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">gau --threads 5</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">ffuf -w wordlist.txt</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">nuclei -severity high,critical</div>
+            <div class="flow-arrow">▼</div>
+            <div class="flow-node">notify -silent</div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🔗 Automation Commands</h3></div>
           
           <h4>1. Simple Automation chain:</h4>
           <div class="cmd-ui-box">
@@ -1527,15 +1644,6 @@
               <button class="cmd-btn" onclick="copyText('subfinder -d target.com -silent | httpx -silent | nuclei -t cves/', this)">📋 Copy</button>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('cat subs.txt | httpx | nuclei')">▶ Run Simulator</button>
             </div>
-          </div>
-
-          <h4>2. Advanced Recon Chain Flow:</h4>
-          <div class="workflow-tree">
-            subfinder -d target.com -silent<br>
-            └── httpx -silent (Check active)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;└── naabu -silent (Quick ports check)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── katana -jc -silent (JS routes crawl)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── nuclei -severity high,critical (Vulnerabilities check)
           </div>
         </div>
       </div>
@@ -1555,10 +1663,16 @@
           </div>
           <div class="lab-body">
             <p class="lab-desc"><strong>Target:</strong> Search Box Endpoint.<br><strong>Tools Required:</strong> Web Browser.<br><strong>Methodology:</strong> Input script injection into search query to trigger client-side script alert.</p>
+            
             <div class="lab-target-window">
               <input type="text" id="xssInput" placeholder="Enter search term..." style="background:#020205; border:1px solid #9b59ff; color:#fff; padding:10px; border-radius:4px; width:60%;">
               <button class="cmd-btn run-btn" onclick="runXSSLab()">Search</button>
               <div id="xssResult" style="margin-top:15px; padding:10px; background:rgba(255,255,255,0.02); min-height:40px;"></div>
+            </div>
+            
+            <div class="cmd-ui-box" style="margin-top: 15px;">
+              <div class="cmd-ui-top">GET /search?q=%3Cscript%3Ealert(1)%3C/script%3E HTTP/1.1
+Host: vulnerable-lab.local</div>
             </div>
           </div>
         </div>
@@ -1571,6 +1685,7 @@
           </div>
           <div class="lab-body">
             <p class="lab-desc"><strong>Target:</strong> <code>/api/v1/invoice?id=101</code><br><strong>Tools Required:</strong> Parameters modifier.<br><strong>Methodology:</strong> Change invoice ID parameter value to query other users private billing invoices.</p>
+            
             <div class="lab-target-window">
               <label>API Invoice ID: </label>
               <input type="number" id="idorInput" value="101" style="background:#020205; border:1px solid #9b59ff; color:#fff; padding:10px; border-radius:4px; width:80px; text-align:center;">
@@ -1578,6 +1693,12 @@
               <div id="idorResult" style="margin-top:15px; font-family: 'Fira Code', monospace; font-size:0.85rem; color:#00ff66; padding:15px; background:#04040a; border:1px solid rgba(255,255,255,0.05); min-height:60px;">
                 { "status": "waiting", "message": "Send request to start" }
               </div>
+            </div>
+            
+            <div class="cmd-ui-box" style="margin-top: 15px;">
+              <div class="cmd-ui-top">GET /api/v1/invoice?id=102 HTTP/1.1
+Host: vulnerable-lab.local
+Authorization: Bearer session_token_A</div>
             </div>
           </div>
         </div>
@@ -1681,6 +1802,40 @@
           btn.classList.remove('copied');
         }, 2000);
       });
+    }
+
+    // Node inspector
+    function inspectNode(title, desc) {
+      // Check which viewer contains the node to inspect and target the right inspector container
+      let inspector = document.getElementById('recon-inspector');
+      let titleEl = document.getElementById('recon-inspector-title');
+      let descEl = document.getElementById('recon-inspector-desc');
+      
+      if (title.startsWith('JS')) {
+        inspector = document.getElementById('js-inspector');
+        titleEl = document.getElementById('js-inspector-title');
+        descEl = document.getElementById('js-inspector-desc');
+      } else if (title.startsWith('XSS')) {
+        inspector = document.getElementById('xss-inspector');
+        titleEl = document.getElementById('xss-inspector-title');
+        descEl = document.getElementById('xss-inspector-desc');
+      } else if (title.startsWith('SQLi')) {
+        inspector = document.getElementById('sqli-inspector');
+        titleEl = document.getElementById('sqli-inspector-title');
+        descEl = document.getElementById('sqli-inspector-desc');
+      } else if (title.startsWith('SSRF')) {
+        inspector = document.getElementById('ssrf-inspector');
+        titleEl = document.getElementById('ssrf-inspector-title');
+        descEl = document.getElementById('ssrf-inspector-desc');
+      } else if (title.startsWith('API')) {
+        inspector = document.getElementById('api-inspector');
+        titleEl = document.getElementById('api-inspector-title');
+        descEl = document.getElementById('api-inspector-desc');
+      }
+
+      titleEl.innerText = title;
+      descEl.innerText = desc;
+      inspector.style.display = 'block';
     }
 
     // Labs scripts
