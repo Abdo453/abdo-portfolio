@@ -1269,55 +1269,280 @@
       <!-- Phase 0: Subdomains Workflow -->
       <div class="meth-content-view" id="meth-content-p0" style="display: block; --tool-color: #00e5ff;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">💻</span> Subdomain Enumeration Workflow</h2>
-          <p class="hero-tagline">منهجية استطلاع النطاقات الفرعية الكاملة لتوسيع مساحة الهجوم بشكل شامل</p>
+          <h2 class="hero-title"><span class="hero-icon">💻</span> Subdomain Enumeration → Full Attack Surface</h2>
+          <p class="hero-tagline">الـ Workflow الكامل من جمع الـ Subdomains وصولاً إلى مرحلة الاستغلال الفعلي — كما يُستخدم في Bug Bounty الحقيقي</p>
         </div>
 
+        <!-- Master Flowchart -->
         <div class="cyber-card">
-          <div class="card-header"><h3>🗺️ Recon Workflow Flowchart</h3></div>
+          <div class="card-header"><h3>🗺️ Full Recon → Exploitation Pipeline</h3></div>
           <div class="flow-visualization">
-            <div class="flow-node active-stage" onclick="inspectNode('Subfinder', 'أداة استعلام سريعة تعتمد على APIs سلبية ومصادر أرشيفية خارجية.')">Subfinder</div>
+            <div class="flow-node active-stage" onclick="inspectNode('Subfinder', 'جمع النطاقات الفرعية بشكل سلبي من APIs ومصادر OSINT خارجية. الأسرع والأوسع تغطية.')">① Passive Recon</div>
             <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('Amass', 'أداة رسم خرائط OSINT عميقة للبحث والتحقق من النطاقات.')">Amass</div>
+            <div class="flow-node" onclick="inspectNode('Amass', 'دمج نتائج أدوات متعددة وإزالة التكرار. الخطوة الأساسية قبل أي فحص نشط.')">② Merge &amp; Dedup</div>
             <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('httpx', 'التحقق من الخوادم النشطة المستجيبة بروتوكولياً وتصفية المواقع المغلقة.')">httpx</div>
+            <div class="flow-node" onclick="inspectNode('httpx', 'تصفية النطاقات الحية فعلياً مع كشف التقنيات والأكواد الحالة وعناوين IP.')">③ Alive Check</div>
             <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('Naabu', 'فحص المنافذ المفتوحة على الخوادم النشطة بسرعة فائقة.')">Naabu</div>
+            <div class="flow-node" onclick="inspectNode('Naabu', 'فحص المنافذ المفتوحة بسرعة عالية ثم تفصيل الخدمات بـ Nmap.')">④ Port Scanning</div>
             <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('Nmap', 'تحديد إصدارات الخدمات وأنظمة التشغيل بدقة وعمق.')">Nmap</div>
+            <div class="flow-node" onclick="inspectNode('Katana', 'الزحف على الصفحات واستخراج المسارات المخفية وملفات JS والـ Endpoints.')">⑤ Content Discovery</div>
             <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('Katana', 'زاحف ويب متطور لاستخراج مسارات الملفات والصفحات.')">Katana</div>
+            <div class="flow-node" onclick="inspectNode('Nuclei', 'فحص تلقائي بآلاف القوالب للكشف عن ثغرات CVEs والمسارات الحساسة.')">⑥ Vuln Scan</div>
             <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('Nuclei', 'فحص الثغرات الأمنية التلقائي باستخدام قوالب مجتمعية محدثة.')">Nuclei</div>
+            <div class="flow-node" style="border-color: var(--neon-red); color: var(--neon-red);" onclick="inspectNode('Subfinder', 'تحليل النتائج يدوياً وربطها: Takeover + IDOR + RCE + API bugs.')">⑦ Manual Exploit</div>
           </div>
           <div id="recon-inspector" class="node-inspector">
             <div class="node-inspector-title" id="recon-inspector-title">Active Node Details</div>
-            <p id="recon-inspector-desc">Select a node above to inspect details and workflows.</p>
+            <p id="recon-inspector-desc">انقر على أي مرحلة لعرض التفاصيل والأدوات.</p>
           </div>
         </div>
 
+        <!-- Phase 1: Passive Recon -->
         <div class="cyber-card">
-          <div class="card-header"><h3>Step 1 — Passive Enumeration</h3></div>
+          <div class="card-header"><h3>🧩 المرحلة 1 — Passive Recon (جمع بدون لمس الهدف)</h3></div>
+          <p style="color:var(--text-secondary); margin-bottom:12px;">الهدف: جمع أكبر عدد ممكن من الـ Subdomains من مصادر خارجية فقط — بدون أي طلبات مباشرة للهدف.</p>
           <div class="cmd-ui-box">
             <div class="cmd-ui-top">subfinder -d target.com -all -recursive -silent -o subfinder.txt
-amass enum -passive -d target.com -o amass.txt</div>
+amass enum -passive -d target.com -o amass.txt
+assetfinder --subs-only target.com > assetfinder.txt
+waybackurls target.com | grep target.com | cut -d "/" -f3 | sort -u > wayback.txt
+
+# دمج الكل وإزالة التكرار
+cat subfinder.txt amass.txt assetfinder.txt wayback.txt | sort -u > all_subs.txt
+wc -l all_subs.txt  # عدد النتائج الكلي</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -all -recursive -silent -o subfinder.txt\namass enum -passive -d target.com -o amass.txt', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -all -recursive -silent -o subfinder.txt\namass enum -passive -d target.com -o amass.txt\nassetfinder --subs-only target.com > assetfinder.txt\nwaybackurls target.com | grep target.com | cut -d \"/\" -f3 | sort -u > wayback.txt\ncat subfinder.txt amass.txt assetfinder.txt wayback.txt | sort -u > all_subs.txt', this)">📋 Copy All</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('subfinder -d target.com')">▶ Simulate</button>
+            </div>
+          </div>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead><tr><th>الأداة</th><th>المصدر</th><th>الأفضل لـ</th><th>السرعة</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Subfinder</strong></td><td>Shodan, Censys, VirusTotal, DNS</td><td>Bug Bounty اليومي</td><td><span class="text-neon-green">⚡ Ultra Fast</span></td></tr>
+              <tr><td><strong>Amass</strong></td><td>OSINT + DNS Brute + ASN</td><td>الشمولية والدقة</td><td><span class="text-secondary">🐢 Slow but Deep</span></td></tr>
+              <tr><td><strong>Assetfinder</strong></td><td>crt.sh, Facebook CT</td><td>سرعة أولية</td><td><span class="text-neon-cyan">⚡ Fast</span></td></tr>
+              <tr><td><strong>Waybackurls</strong></td><td>Wayback Machine Archive</td><td>النطاقات القديمة المؤرشفة</td><td><span class="text-neon-cyan">⚡ Fast</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <!-- Phase 2: Alive Check -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>🌐 المرحلة 2 — Alive Check (التحقق من النطاقات الحية)</h3></div>
+          <p style="color:var(--text-secondary); margin-bottom:12px;">فلترة النطاقات الشغالة فعلاً وجمع معلومات أولية عن كل هدف.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">httpx -l all_subs.txt -status-code -title -tech-detect -ip -o alive.txt
+
+# الناتج يكون هكذا:
+# https://admin.target.com [200] [Admin Dashboard] [Tech: PHP/7.4, Apache] [IP: 1.2.3.4]
+# https://dev.target.com   [200] [DevEnv]          [Tech: Node.js, Nginx]  [IP: 1.2.3.5]
+# https://api.target.com   [403] [Forbidden]       [Tech: Express]         [IP: 1.2.3.6]
+
+# استخراج فقط الحية (200/301/302/403)
+cat alive.txt | grep -E "\[200\]|\[301\]|\[302\]|\[403\]" > targets.txt</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('httpx -l all_subs.txt -status-code -title -tech-detect -ip -o alive.txt', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('httpx -l subs.txt')">▶ Simulate</button>
+            </div>
+          </div>
+          <p style="color:var(--text-secondary); font-size:0.88rem; margin-top:10px;">💡 <strong>ركز على:</strong> 403 Forbidden (مكانك تحاول تتخطاه) — Admin panels — Dev/Staging subdomains — خوادم بإصدارات قديمة</p>
+        </div>
+
+        <!-- Phase 3: Port Scanning -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>🔍 المرحلة 3 — Port Scanning (توسيع Attack Surface)</h3></div>
+          <p style="color:var(--text-secondary); margin-bottom:12px;">كتير من الثغرات موجودة على منافذ غير 80/443 — لازم تفحص كل المنافذ.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top"># خطوة 1: فحص سريع للمنافذ الشائعة
+naabu -l alive.txt -top-ports 1000 -silent -o ports.txt
+
+# خطوة 2: تفصيل عميق بـ Nmap
+nmap -iL ports.txt -sV -sC -Pn --open -oN nmap_full.txt
+
+# أو مباشرة للنطاقات الحية:
+nmap -sV -sC -p- --min-rate 5000 -Pn target.com -oN nmap.txt</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('naabu -l alive.txt -top-ports 1000 -silent -o ports.txt\nnmap -iL ports.txt -sV -sC -Pn --open -oN nmap_full.txt', this)">📋 Copy</button>
+            </div>
+          </div>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead><tr><th>المنفذ</th><th>الخدمة</th><th>الثغرة المحتملة</th></tr></thead>
+            <tbody>
+              <tr><td><code>5601</code></td><td>Kibana Dashboard</td><td><span class="text-neon-red">Unauthenticated Access → Data Exfiltration</span></td></tr>
+              <tr><td><code>8080/8443</code></td><td>Dev Web Servers</td><td><span class="text-neon-red">Admin panels, debug endpoints</span></td></tr>
+              <tr><td><code>6379</code></td><td>Redis</td><td><span class="text-neon-red">No Auth → RCE via SSRF chaining</span></td></tr>
+              <tr><td><code>9200/9300</code></td><td>Elasticsearch</td><td><span class="text-neon-red">Unauthenticated data access</span></td></tr>
+              <tr><td><code>27017</code></td><td>MongoDB</td><td><span class="text-neon-red">No Auth → full DB read/write</span></td></tr>
+              <tr><td><code>2375</code></td><td>Docker API</td><td><span class="text-neon-red">RCE via container escape</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <!-- Phase 4: Content Discovery -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>🧠 المرحلة 4 — Content Discovery (Endpoints + Hidden Paths)</h3></div>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top"># Crawling (الزحف التلقائي)
+katana -list alive.txt -d 5 -jc -kf -ef woff,css,png,svg,jpg -o crawl.txt
+
+# Fuzzing (تخمين المسارات)
+ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \
+     -mc 200,301,302,403 -t 100 -o ffuf_results.txt
+
+# فحص ملفات حساسة مباشرة
+ffuf -u https://target.com/FUZZ -w sensitive_files.txt \
+     -mc 200 -t 50</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('katana -list alive.txt -d 5 -jc -kf -ef woff,css,png,svg,jpg -o crawl.txt\nffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -mc 200,301,302,403 -t 100 -o ffuf_results.txt', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('ffuf -u target.com/FUZZ')">▶ Simulate FFUF</button>
             </div>
           </div>
         </div>
 
+        <!-- Phase 5: Vuln Scan -->
         <div class="cyber-card">
-          <div class="card-header"><h3>Step 2 — Merge & Alive Check</h3></div>
+          <div class="card-header"><h3>🧪 المرحلة 5 — Vulnerability Scanning (Automation Layer)</h3></div>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">cat subfinder.txt amass.txt | sort -u > all_subs.txt
-httpx -l all_subs.txt -status-code -title -tech-detect -o alive.txt</div>
+            <div class="cmd-ui-top"># Nuclei - فحص شامل بقوالب جاهزة
+nuclei -l alive.txt -t nuclei-templates/ -severity critical,high -o nuclei.txt
+
+# فحص Subdomain Takeover تحديداً
+nuclei -l all_subs.txt -t nuclei-templates/takeovers/ -o takeovers.txt
+
+# مثال Nuclei output:
+# [subdomain-takeover:azure] [http] [critical] https://old-api.target.com
+# [exposed-kibana] [http] [high] https://logs.target.com:5601</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('cat subfinder.txt amass.txt | sort -u > all_subs.txt\nhttpx -l all_subs.txt -status-code -title -tech-detect -o alive.txt', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('nuclei -l alive.txt -t nuclei-templates/ -severity critical,high -o nuclei.txt\nnuclei -l all_subs.txt -t nuclei-templates/takeovers/ -o takeovers.txt', this)">📋 Copy</button>
+              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('nuclei')">▶ Simulate Nuclei</button>
             </div>
           </div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+
+        <!-- Phase 6: Subdomain Takeover - Full Chain -->
+        <div class="cyber-card" style="border-color: rgba(255,0,85,0.3);">
+          <div class="card-header"><h3>🚨 المرحلة 6 — Recon → Exploitation: Subdomain Takeover Chain</h3></div>
+          <p style="color: var(--text-secondary); margin-bottom:14px;">هنا الفرق بين مبتدئ وـ Bug Bounty Hunter فعلي. مش الأدوات هي المهمة — المهم هو <strong style="color:var(--neon-cyan)">الربط بين النتائج</strong>.</p>
+
+          <div class="flow-visualization" style="margin-bottom: 16px;">
+            <div class="flow-node" style="border-color:var(--neon-cyan); font-size:0.85rem;">① Subfinder يلاقي<br><code>old-api.target.com</code></div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color:var(--neon-cyan); font-size:0.85rem;">② httpx يرجع<br>404 / Error page</div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color:var(--neon-orange); font-size:0.85rem;">③ dig يكشف CNAME<br>→ azurewebsites.net</div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color:var(--neon-red); font-size:0.85rem;">④ NXDOMAIN<br>= Dangling Record!</div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color:var(--neon-red); color:var(--neon-red); font-size:0.85rem;">⑤ Register Azure App<br>= Full Takeover ✅</div>
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <div class="card-header" style="margin-bottom:8px;"><h3 style="font-size:0.95rem;">Step A — تأكيد الـ CNAME المعلق</h3></div>
+            <div class="cmd-ui-box">
+              <div class="cmd-ui-top"># فحص DNS record
+dig sub.target.com CNAME
+host sub.target.com
+
+# الناتج الذي تبحث عنه:
+# sub.target.com.  300  IN  CNAME  something.azurewebsites.net.
+# something.azurewebsites.net: NXDOMAIN  ← هذا يعني الخدمة محذوفة!</div>
+              <div class="cmd-ui-bottom">
+                <button class="cmd-btn" onclick="copyText('dig sub.target.com CNAME\nhost sub.target.com', this)">📋 Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <div class="card-header" style="margin-bottom:8px;"><h3 style="font-size:0.95rem;">Step B — تأكيد الخدمة المحذوفة</h3></div>
+            <div class="cmd-ui-box">
+              <div class="cmd-ui-top"># افتح في المتصفح:
+https://sub.target.com
+
+# لو شفت رسائل زي:
+# "404 Web Site not found" → Azure App Service (takeable!)
+# "NoSuchBucket"           → AWS S3 Bucket (takeable!)
+# "There isn't a GitHub Pages site here" → GitHub Pages (takeable!)
+# "No such app"            → Heroku (takeable!)</div>
+              <div class="cmd-ui-bottom">
+                <button class="cmd-btn" onclick="copyText('curl -s -o /dev/null -w \"%{http_code}\" https://sub.target.com', this)">📋 Copy cURL Check</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <div class="card-header" style="margin-bottom:8px;"><h3 style="font-size:0.95rem;">Step C — الاستغلال (Conceptual)</h3></div>
+            <div class="cmd-ui-box">
+              <div class="cmd-ui-top"># Azure App Service Takeover:
+# 1. اعمل App Service جديد في Azure بنفس الـ hostname
+# 2. ارفع HTML بسيط
+# 3. الآن sub.target.com بيشير لـ serverك!
+
+# AWS S3 Takeover:
+aws s3api create-bucket --bucket sub.target.com --region us-east-1
+echo '&lt;html&gt;&lt;body&gt;Subdomain Taken&lt;/body&gt;&lt;/html&gt;' > index.html
+aws s3 website s3://sub.target.com --index-document index.html
+
+# GitHub Pages Takeover:
+# اعمل repo باسم username.github.io وادخل CNAME file بالـ subdomain</div>
+              <div class="cmd-ui-bottom">
+                <button class="cmd-btn" onclick="copyText('aws s3api create-bucket --bucket sub.target.com --region us-east-1', this)">📋 Copy S3 Command</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:0;">
+            <div class="card-header" style="margin-bottom:8px;"><h3 style="font-size:0.95rem;">Step D — Impact الحقيقي (ليه هو Critical؟)</h3></div>
+            <div class="table-wrapper"><table class="interactive-table">
+              <thead><tr><th>الاستغلال</th><th>الشرط</th><th>الخطورة</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Cookie Stealing</strong></td><td>Cookie بـ <code>domain=.target.com</code></td><td><span class="text-neon-red">Critical</span></td></tr>
+                <tr><td><strong>Session Hijacking</strong></td><td>SSO مربوط بنفس الـ domain</td><td><span class="text-neon-red">Critical</span></td></tr>
+                <tr><td><strong>Phishing داخل نطاق موثوق</strong></td><td>أي takeover</td><td><span class="text-neon-red">High</span></td></tr>
+                <tr><td><strong>CSP / CORS Bypass</strong></td><td>لو في whitelist للـ subdomain</td><td><span class="text-neon-red">High</span></td></tr>
+                <tr><td><strong>XSS via postMessage</strong></td><td>لو في iframe مربوط</td><td><span class="text-neon-cyan">Medium</span></td></tr>
+                <tr><td><strong>SSRF Chaining</strong></td><td>Internal network access</td><td><span class="text-neon-red">Critical</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <!-- Pro Tip -->
+        <div class="cyber-card" style="border-color: rgba(0,255,102,0.2); background: rgba(0,255,102,0.02);">
+          <div class="card-header"><h3 style="color:var(--neon-green);">🧠 Pro Tips — اللي تفرقك عن 90% من الناس</h3></div>
+          <ul class="t-check-list">
+            <li>✔ <strong>Subdomain + CNAME + Cloud service missing</strong> = Takeover → $500-$5000</li>
+            <li>✔ <strong>API endpoint + no auth check</strong> = IDOR/BOLA → $1000-$10000</li>
+            <li>✔ <strong>JS file + hidden endpoint + weak auth</strong> = Admin panel access</li>
+            <li>✔ <strong>Port 6379 Redis + SSRF</strong> = RCE بدون كود exploitation مباشر</li>
+            <li>✔ <strong>Dev/Staging subdomain + default creds</strong> = أسرع طريق لـ High Severity</li>
+            <li>✔ <strong>Old API version /v1/ بدل /v2/</strong> = تخطي الحماية الجديدة</li>
+          </ul>
+          <div style="margin-top: 14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="cmd-btn run-btn" onclick="openMethPhase('p1')" style="font-family:var(--font-heading);">📡 Port Scanning Deep Dive</button>
+            <button class="cmd-btn run-btn" onclick="openMethPhase('p_matrix')" style="font-family:var(--font-heading);">🎯 Decision Matrix</button>
+            <button class="cmd-btn run-btn" onclick="openMethPhase('p4')" style="font-family:var(--font-heading);">📜 JS Recon Next</button>
+          </div>
+        </div>
+
+        <!-- Full Case Study -->
+        <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.2); background: rgba(155, 89, 255, 0.03); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Starbucks Subdomain Takeover — Full Chain</h3></div>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead><tr><th>الخطوة</th><th>الإجراء</th><th>النتيجة</th></tr></thead>
+            <tbody>
+              <tr><td>① Discovery</td><td><code>subfinder -d starbucks.com</code></td><td>اكتشاف <code>starbucks-api.azurewebsites.net</code></td></tr>
+              <tr><td>② Verification</td><td><code>dig starbucks-api.starbucks.com CNAME</code></td><td>CNAME → Azure → <span class="text-neon-red">NXDOMAIN</span></td></tr>
+              <tr><td>③ Confirmation</td><td>فتح <code>https://starbucks-api.starbucks.com</code></td><td>"404 Web Site not found" on Azure</td></tr>
+              <tr><td>④ Exploitation</td><td>تسجيل Azure App Service بنفس المعرف</td><td>التحكم الكامل في محتوى الـ subdomain</td></tr>
+              <tr><td>⑤ Impact</td><td>Cookies بـ <code>.starbucks.com</code> مسربة لـ server المهاجم</td><td>Session Hijacking لكل زبائن التطبيق</td></tr>
+              <tr><td>⑥ Report</td><td>Responsible Disclosure لـ Starbucks Security Team</td><td><span class="text-neon-green">$2,000 Bug Bounty ✅</span></td></tr>
+            </tbody>
+          </table></div>
+          <p style="margin-top:12px; color:var(--text-secondary); font-size:0.88rem;">⚠️ <strong>ملاحظة:</strong> الاستغلال الفعلي يتم فقط ضمن نطاق Bug Bounty المصرح به. التوثيق والـ Proof of Concept هو ما يُرسل للشركة.</p>
+        </div>
+
+      </div>
+ound: rgba(155, 89, 255, 0.02); margin-top: 20px;">
           <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Starbucks Subdomain Takeover</h3></div>
           <p><strong>الوصف (Scenario):</strong> تم العثور على نطاق فرعي نشط لشركة Starbucks يشير إلى خادم Azure سحابي تم حذفه مسبقاً.</p>
           <p><strong>الاستغلال (Exploitation):</strong> قام الباحث بتسجيل خادم Azure بنفس المعرف، مما مكنه من توجيه حركة المرور وسرقة التوكنز الخاصة بزبائن التطبيق.</p>
@@ -1327,7 +1552,6 @@ httpx -l all_subs.txt -status-code -title -tech-detect -o alive.txt</div>
           </div>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
         </div>
-      </div>
 
       <!-- Phase 2: Tech Detection -->
       <div class="meth-content-view" id="meth-content-p2" style="display: none; --tool-color: #ffb020;">
