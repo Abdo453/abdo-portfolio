@@ -1,0 +1,304 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Bounty Bootcamp — HunterOS Book Guide</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;900&family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../css/style.css" />
+  
+  <style>
+    body {
+      font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+      background-color: #030308;
+      color: #e2e8f0;
+      line-height: 1.8;
+      padding-bottom: 60px;
+    }
+    .book-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .back-btn-wrap {
+      margin-bottom: 25px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: rgba(0, 229, 255, 0.02);
+      transition: all 0.2s ease;
+    }
+    .back-link:hover {
+      background: rgba(0, 229, 255, 0.08);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+      transform: translateX(4px);
+    }
+    .book-header {
+      background: linear-gradient(135deg, rgba(0, 255, 102, 0.05) 0%, rgba(3, 3, 8, 0.5) 100%);
+      border: 1px solid rgba(0, 255, 102, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      margin-bottom: 35px;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .book-cover-art {
+      font-size: 6rem;
+      background: rgba(0, 255, 102, 0.08);
+      border: 1px dashed var(--accent-green);
+      border-radius: 8px;
+      width: 150px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0, 255, 102, 0.1);
+    }
+    .book-meta-info {
+      flex: 1;
+      min-width: 250px;
+    }
+    .book-title {
+      font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 8px 0;
+      text-shadow: 0 0 15px rgba(0,255,102,0.25);
+    }
+    .book-author {
+      font-family: 'Fira Code', monospace;
+      color: var(--accent-green);
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+    .book-stats {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+    }
+    .reading-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 30px;
+    }
+    @media (max-width: 800px) {
+      .reading-grid {
+        grid-template-columns: 1fr;
+      }
+      .book-sidebar {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+      }
+    }
+    .book-sidebar {
+      background: rgba(6, 6, 16, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      height: fit-content;
+    }
+    .toc-title {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent-green);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .toc-item {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+      transition: all 0.2s ease;
+    }
+    .toc-item:hover {
+      color: #fff;
+      padding-right: 4px;
+    }
+    .book-content {
+      background: rgba(6, 6, 16, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 30px;
+    }
+    .content-sec {
+      margin-bottom: 40px;
+      scroll-margin-top: 40px;
+    }
+    .sec-title {
+      color: #fff;
+      font-size: 1.4rem;
+      border-bottom: 1px solid rgba(0, 255, 102, 0.15);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .code-box {
+      font-family: 'Fira Code', monospace;
+      background: #06060c;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 12px;
+      border-radius: 6px;
+      color: var(--accent-green);
+      font-size: 0.88rem;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .key-point {
+      border-right: 3px solid var(--accent-green);
+      background: rgba(0, 255, 102, 0.03);
+      padding: 12px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Matrix Grid & Background Orbs -->
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="book-container">
+    
+    <!-- Back button -->
+    <div class="back-btn-wrap">
+      <a href="../index.html" class="back-link">
+        ← العودة للوحة التحكم
+      </a>
+    </div>
+
+    <!-- Header Block -->
+    <header class="book-header">
+      <div class="book-cover-art">📖</div>
+      <div class="book-meta-info">
+        <h1 class="book-title">Bug Bounty Bootcamp</h1>
+        <div class="book-author">By Vicky Li</div>
+        <div class="book-stats">
+          <span class="stat-badge text-neon-green">اللغة: العربية / الإنجليزية</span>
+          <span class="stat-badge text-neon-cyan">المستوى: مبتدئ</span>
+          <span class="stat-badge text-neon-orange">الموضوع: أساسيات صيد الثغرات والتقارير</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Reading Grid -->
+    <div class="reading-grid">
+      
+      <!-- Sidebar Table of Contents -->
+      <aside class="book-sidebar">
+        <div class="toc-title">فصول الكتاب</div>
+        <a href="#about" class="toc-item">1. نظرة عامة عن الكتاب</a>
+        <a href="#recon" class="toc-item">2. الاستطلاع وجمع المعلومات</a>
+        <a href="#vulns" class="toc-item">3. أهم الثغرات وشرحها</a>
+        <a href="#reports" class="toc-item">4. كتابة التقارير الاحترافية</a>
+        <a href="#tips" class="toc-item">5. نصائح البقاء والنمو</a>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="book-content">
+        
+        <!-- Section 1: About -->
+        <section id="about" class="content-sec">
+          <h2 class="sec-title">1. نظرة عامة عن الكتاب</h2>
+          <p>كتاب <strong>Bug Bounty Bootcamp</strong> للكاتبة فيكي لي (Vicky Li) يعتبر المنهج التدريبي الأكثر تنظيماً للمبتدئين في مجال الـ Bug Bounty. يتميز الكتاب بأنه يبدأ من الصفر تماماً، حيث لا يفترض معرفة مسبقة معقدة، ويأخذ بيد القارئ لتعلم المفاهيم الأساسية للويب، وكيفية إعداد بيئة العمل الخاصة به، والتعامل مع الثغرات وكتابة التقارير بطريقة تضمن الحصول على مكافآت مقبولة.</p>
+          <div class="key-point">
+            <strong>رسالة الكتاب الأساسية:</strong> النجاح في صيد الثغرات لا يعتمد على الذكاء الخارق، بل على الانضباط المنهجي، والقدرة على البحث المنظم، ومواصلة المحاولة عندما يفشل الآخرون.
+          </div>
+        </section>
+
+        <!-- Section 2: Recon -->
+        <section id="recon" class="content-sec">
+          <h2 class="sec-title">2. الاستطلاع وجمع المعلومات (Reconnaissance)</h2>
+          <p>تركز فيكي لي على أن عملية الاستطلاع هي الأساس الذي يبنى عليه صيد الثغرات بالكامل. فكلما جمعت معلومات أكثر عن الهدف، زادت فرصة اكتشاف أجزاء مهملة من التطبيق قد تحتوي على ثغرات قاتلة.</p>
+          <p><strong>خطوات الاستطلاع الأساسية:</strong></p>
+          <ul>
+            <li><strong>اكتشاف النطاقات الفرعية (Subdomain Enumeration):</strong> استخدام أدوات مثل <code>subfinder</code> و <code>assetfinder</code>.</li>
+            <li><strong>فحص المنافذ والخدمات (Port Scanning):</strong> استخدام <code>nmap</code> أو <code>naabu</code> لمعرفة الخدمات المفتوحة.</li>
+            <li><strong>البحث عن الملفات والمسارات المخفية (Directory Brute Forcing):</strong> استخدام أدوات مثل <code>gobuster</code> أو <code>dirsearch</code> للبحث عن لوحات التحكم المفتوحة أو ملفات التكوين الحساسة.</li>
+          </ul>
+          <div class="code-box">
+            # مثال على فحص المسارات المخفية باستخدام gobuster
+            gobuster dir -u https://target.com -w common-wordlist.txt -t 50
+          </div>
+        </section>
+
+        <!-- Section 3: Vulns -->
+        <section id="vulns" class="content-sec">
+          <h2 class="sec-title">3. أهم الثغرات وشرحها عملياً</h2>
+          <p>يشرح الكتاب عدداً كبيراً من الثغرات الأمنية وكيفية اكتشافها يدوياً والتأكد منها:</p>
+          
+          <h3>أ. ثغرات تخطي صلاحيات الكائنات (IDOR)</h3>
+          <p>تحدث ثغرة Insecure Direct Object Reference عندما يعتمد التطبيق على معرّف (ID) يرسله المستخدم للوصول إلى بيانات معينة دون التحقق من صلاحيات هذا المستخدم الفنية.</p>
+          <div class="code-box">
+            # استبدال معرّف الحساب في الطلب
+            GET /api/user/profile?id=2001 -> الوصول لبيانات مستخدم آخر بدلاً من id=2002
+          </div>
+
+          <h3>ب. ثغرة تزوير الطلب عبر المواقع (CSRF)</h3>
+          <p>تسمح ثغرة Cross-Site Request Forgery للمهاجم بإجبار متصفح الضحية على تنفيذ إجراء غير مرغوب فيه في موقع يكون مسجلاً فيه الدخول حالياً، مثل تغيير كلمة المرور أو البريد الإلكتروني.</p>
+          
+          <h3>ج. حقن الكيانات الخارجية لـ XML (XXE)</h3>
+          <p>تحدث عندما يقوم التطبيق بتحليل مدخلات XML تحتوي على مراجع لكيانات خارجية غير موثوقة، مما قد يؤدي لقراءة الملفات الداخلية للخادم أو تنفيذ طلبات داخلية.</p>
+        </section>
+
+        <!-- Section 4: Reports -->
+        <section id="reports" class="content-sec">
+          <h2 class="sec-title">4. كتابة التقارير الاحترافية (Report Writing)</h2>
+          <p>تؤكد الكاتبة أن التقرير السيئ قد يضيع عليك تعب أيام كاملة من البحث والصيد. فالتقرير هو وسيلة التواصل الوحيدة بينك وبين فريق أمن المعلومات بالشركة.</p>
+          <p><strong>عناصر التقرير الذهبية:</strong></p>
+          <ol>
+            <li><strong>العنوان الواضح (Clear Title):</strong> يصف الثغرة ومكانها وتأثيرها باختصار.</li>
+            <li><strong>الوصف (Description):</strong> شرح مبسط للمشكلة البرمجية خلف الثغرة.</li>
+            <li><strong>خطوات إعادة الإنتاج (Steps to Reproduce):</strong> خطوات مرقمة ودقيقة جداً تمكن أي شخص من تكرار الثغرة وتجربتها.</li>
+            <li><strong>إثبات المفهوم (Proof of Concept - PoC):</strong> لقطة شاشة أو فيديو أو كود يوضح نجاح الاستغلال.</li>
+            <li><strong>التأثير (Impact):</strong> ما الذي يمكن للمهاجم فعله إذا استغل هذه الثغرة؟</li>
+          </ol>
+        </section>
+
+        <!-- Section 5: Tips -->
+        <section id="tips" class="content-sec">
+          <h2 class="sec-title">5. نصائح البقاء والنمو في المجال</h2>
+          <ul>
+            <li><strong>تجنب الإحباط (Burnout):</strong> خذ فترات راحة منتظمة، ولا تقارن مكافآتك بمكافآت المحترفين على تويتر في البداية.</li>
+            <li><strong>ابنِ قائمة كلمات مرورك الخاصة (Custom Wordlists):</strong> تجميع الكلمات والمسارات من الأهداف التي تفحصها يمنحك ميزة لا يملكها بقية الباحثين.</li>
+            <li><strong>احترم قواعد البرنامج (Scope & Rules of Engagement):</strong> التزم دائماً بالنطاق المحدد للبرنامج ولا تحاول اختبار نطاقات خارجة عنه لتفادي المشاكل القانونية.</li>
+          </ul>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

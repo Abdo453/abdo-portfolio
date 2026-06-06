@@ -55,6 +55,29 @@ with open(meth_output_path, 'w', encoding='utf-8') as f:
 print(f"Static HTML written to {meth_output_path}")
 print(f"File size: {os.path.getsize(meth_output_path)} bytes")
 
+# --- Render standalone books ---
+books_dir = os.path.join(build_dir, 'books')
+os.makedirs(books_dir, exist_ok=True)
+
+books = [
+    'real_world_bug_hunting.html',
+    'bug_bounty_bootcamp.html',
+    'web_hackers_handbook.html'
+]
+
+for book in books:
+    book_html = render_to_string(f'main/books/{book}', context, request=request)
+    book_html = book_html.replace('/static/main/css/style.css', '../css/style.css')
+    book_html = book_html.replace('/static/main/images/', '../images/')
+    book_html = book_html.replace('/static/main/', '../')
+    
+    book_output_path = os.path.join(books_dir, book)
+    with open(book_output_path, 'w', encoding='utf-8') as f:
+        f.write(book_html)
+    
+    print(f"Static Book HTML written to {book_output_path}")
+    print(f"File size: {os.path.getsize(book_output_path)} bytes")
+
 # Auto-copy assets
 import shutil
 

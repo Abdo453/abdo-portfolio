@@ -1,0 +1,300 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Web Application Hacker's Handbook — HunterOS Book Guide</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;900&family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../css/style.css" />
+  
+  <style>
+    body {
+      font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+      background-color: #030308;
+      color: #e2e8f0;
+      line-height: 1.8;
+      padding-bottom: 60px;
+    }
+    .book-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .back-btn-wrap {
+      margin-bottom: 25px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: rgba(0, 229, 255, 0.02);
+      transition: all 0.2s ease;
+    }
+    .back-link:hover {
+      background: rgba(0, 229, 255, 0.08);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+      transform: translateX(4px);
+    }
+    .book-header {
+      background: linear-gradient(135deg, rgba(255, 170, 0, 0.05) 0%, rgba(3, 3, 8, 0.5) 100%);
+      border: 1px solid rgba(255, 170, 0, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      margin-bottom: 35px;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .book-cover-art {
+      font-size: 6rem;
+      background: rgba(255, 170, 0, 0.08);
+      border: 1px dashed var(--accent-orange);
+      border-radius: 8px;
+      width: 150px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(255, 170, 0, 0.1);
+    }
+    .book-meta-info {
+      flex: 1;
+      min-width: 250px;
+    }
+    .book-title {
+      font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 8px 0;
+      text-shadow: 0 0 15px rgba(255,170,0,0.25);
+    }
+    .book-author {
+      font-family: 'Fira Code', monospace;
+      color: var(--accent-orange);
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+    .book-stats {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+    }
+    .reading-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 30px;
+    }
+    @media (max-width: 800px) {
+      .reading-grid {
+        grid-template-columns: 1fr;
+      }
+      .book-sidebar {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+      }
+    }
+    .book-sidebar {
+      background: rgba(6, 6, 16, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      height: fit-content;
+    }
+    .toc-title {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent-orange);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .toc-item {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+      transition: all 0.2s ease;
+    }
+    .toc-item:hover {
+      color: #fff;
+      padding-right: 4px;
+    }
+    .book-content {
+      background: rgba(6, 6, 16, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 30px;
+    }
+    .content-sec {
+      margin-bottom: 40px;
+      scroll-margin-top: 40px;
+    }
+    .sec-title {
+      color: #fff;
+      font-size: 1.4rem;
+      border-bottom: 1px solid rgba(255, 170, 0, 0.15);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .code-box {
+      font-family: 'Fira Code', monospace;
+      background: #06060c;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 12px;
+      border-radius: 6px;
+      color: var(--accent-orange);
+      font-size: 0.88rem;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .key-point {
+      border-right: 3px solid var(--accent-orange);
+      background: rgba(255, 170, 0, 0.03);
+      padding: 12px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Matrix Grid & Background Orbs -->
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="book-container">
+    
+    <!-- Back button -->
+    <div class="back-btn-wrap">
+      <a href="../index.html" class="back-link">
+        ← العودة للوحة التحكم
+      </a>
+    </div>
+
+    <!-- Header Block -->
+    <header class="book-header">
+      <div class="book-cover-art">📖</div>
+      <div class="book-meta-info">
+        <h1 class="book-title">The Web Application Hacker's Handbook</h1>
+        <div class="book-author">By Dafydd Stuttard & Marcus Pinto</div>
+        <div class="book-stats">
+          <span class="stat-badge text-neon-orange">اللغة: العربية / الإنجليزية</span>
+          <span class="stat-badge text-neon-cyan">المستوى: متوسط إلى متقدم</span>
+          <span class="stat-badge text-neon-green">الموضوع: منهجية اختبار الاختراق المتكاملة</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Reading Grid -->
+    <div class="reading-grid">
+      
+      <!-- Sidebar Table of Contents -->
+      <aside class="book-sidebar">
+        <div class="toc-title">فصول الكتاب</div>
+        <a href="#about" class="toc-item">1. نظرة عامة عن المرجع</a>
+        <a href="#mapping" class="toc-item">2. رسم خريطة التطبيق</a>
+        <a href="#auth" class="toc-item">3. مهاجمة المصادقة وإدارة الجلسات</a>
+        <a href="#datastore" class="toc-item">4. مهاجمة مخازن البيانات وحقن الكود</a>
+        <a href="#tools" class="toc-item">5. أدوات الاعتراض والتحليل (Burp)</a>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="book-content">
+        
+        <!-- Section 1: About -->
+        <section id="about" class="content-sec">
+          <h2 class="sec-title">1. نظرة عامة عن المرجع (إنجيل الويب)</h2>
+          <p>كتاب <strong>The Web Application Hacker's Handbook (WAHH)</strong> هو المرجع الأساسي والأشهر عالمياً في مجال اختبار اختراق الويب وأمن التطبيقات. تم تأليفه بواسطة مطوري أداة Burp Suite الشهيرة. يغطي الكتاب بعمق شديد كيف تعمل بروتوكولات الويب وتطبيقاته في الخلفية، وكيف يمكن إساءة استخدام هذه التقنيات وتفكيك منطق العمل الخاص بها.</p>
+          <div class="key-point">
+            <strong>القاعدة الذهبية للكتاب:</strong> يكمن الفشل الأمني دائماً في الفجوة بين ما يعتقد المطور أن التطبيق يفعله، وبين ما يفعله التطبيق فعلياً في الواقع عند استقبال مدخلات غير متوقعة.
+          </div>
+        </section>
+
+        <!-- Section 2: Mapping -->
+        <section id="mapping" class="content-sec">
+          <h2 class="sec-title">2. رسم خريطة التطبيق وتحليله (Mapping & Analyzing)</h2>
+          <p>يشير الكاتبان إلى أن الهجوم الفعال يبدأ بفهم دقيق لكل مسار ووظيفة داخل التطبيق. يجب على المختبر تحديد:</p>
+          <ul>
+            <li><strong>نقاط الإدخال (Entry Points):</strong> المعاملات (Parameters)، الرؤوس (Headers)، ملفات الارتباط (Cookies).</li>
+            <li><strong>التقنيات المستخدمة (Tech Stack):</strong> لغات البرمجة، خوادم الويب، وقواعد البيانات الخلفية.</li>
+            <li><strong>تدفق البيانات (Data Flows):</strong> كيف يتم تمرير المدخلات ومعالجتها بين المكونات المختلفة.</li>
+          </ul>
+          <p>أفضل طريقة للقيام بذلك هي تصفح الموقع بالكامل يدوياً مع تشغيل أداة Burp Suite لبناء خريطة شجرية للموقع (Target Site Map).</p>
+        </section>
+
+        <!-- Section 3: Auth -->
+        <section id="auth" class="content-sec">
+          <h2 class="sec-title">3. مهاجمة نظام المصادقة وإدارة الجلسات</h2>
+          <p>تعتبر آليات التحقق من الهوية وإدارة الجلسات من أكثر المناطق استهدافاً لأنها تتيح الوصول المباشر لبيانات المستخدمين الآخرين.</p>
+          <p><strong>أهم التكتيكات لمهاجمة هذه الأنظمة:</strong></p>
+          <ul>
+            <li><strong>التنبؤ بالرموز وتخمينها (Predicting Session Tokens):</strong> فحص مدى عشوائية الـ Session IDs.</li>
+            <li><strong>سرقة الجلسات (Session Hijacking):</strong> من خلال ثغرات XSS أو استنشاق البيانات (Sniffing) أو التخزين غير الآمن.</li>
+            <li><strong>تخطي قفل الحسابات وحظر التخمين (Rate Limiting Bypass):</strong> التلاعب بالترويسات مثل <code>X-Forwarded-For</code> لإيهام النظام بأن الطلبات قادمة من مصادر مختلفة.</li>
+          </ul>
+          <div class="code-box">
+            // ترويسات يتم التلاعب بها لتجاوز قيود Rate Limit
+            X-Forwarded-For: 127.0.0.1
+            X-Originating-IP: 127.0.0.1
+            X-Remote-IP: 127.0.0.1
+          </div>
+        </section>
+
+        <!-- Section 4: Datastore -->
+        <section id="datastore" class="content-sec">
+          <h2 class="sec-title">4. مهاجمة مخازن البيانات وحقن الكود (Attacking Data Stores)</h2>
+          <p>يغطي الكتاب بالتفصيل هجمات الحقن (Injection Attacks)، حيث يتم تمرير بيانات خبيثة يفسرها محرك البيانات الخلفي كأوامر برمجية.</p>
+          <p><strong>حقن لغة الاستعلامات البنيوية (SQL Injection):</strong></p>
+          <p>يتم استغلالها لقراءة قواعد البيانات بالكامل أو حتى الكتابة فيها وتجاوز شاشات تسجيل الدخول.</p>
+          <div class="code-box">
+            # مثال تخطي تسجيل دخول كلاسيكي
+            admin' OR '1'='1
+          </div>
+          <p>يتناول الكتاب أيضاً حقن الأوامر (OS Command Injection) وحقن بروتوكول LDAP وحقن ملفات XML، موضحاً الفروقات الجوهرية والمنهجيات المناسبة للتعرف عليها.</p>
+        </section>
+
+        <!-- Section 5: Tools -->
+        <section id="tools" class="content-sec">
+          <h2 class="sec-title">5. أدوات الاعتراض والتحليل (Burp Suite)</h2>
+          <p>يرتبط هذا الكتاب ارتباطاً وثيقاً بـ Burp Suite. يشرح الكتاب كيفية استخدام مكونات الأداة بشكل احترافي:</p>
+          <ul>
+            <li><strong>Burp Proxy:</strong> لاعتراض وتعديل الطلبات والاستجابات في الوقت الفعلي.</li>
+            <li><strong>Burp Intruder:</strong> للقيام بالهجمات التلقائية المخصصة (Brute forcing, fuzzing, parameter sweeping).</li>
+            <li><strong>Burp Repeater:</strong> لتعديل طلب فردي وإعادة إرساله بشكل يدوي لمراقبة ردود فعل الخادم وتغير الاستجابة.</li>
+            <li><strong>Burp Comparer:</strong> لمقارنة استجابتين مختلفتين ورصد التغيرات البسيطة في حجم البيانات أو محتواها.</li>
+          </ul>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

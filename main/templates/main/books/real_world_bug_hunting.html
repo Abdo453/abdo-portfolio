@@ -1,0 +1,291 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-World Bug Hunting — HunterOS Book Guide</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;900&family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../css/style.css" />
+  
+  <style>
+    body {
+      font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+      background-color: #030308;
+      color: #e2e8f0;
+      line-height: 1.8;
+      padding-bottom: 60px;
+    }
+    .book-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .back-btn-wrap {
+      margin-bottom: 25px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: rgba(0, 229, 255, 0.02);
+      transition: all 0.2s ease;
+    }
+    .back-link:hover {
+      background: rgba(0, 229, 255, 0.08);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+      transform: translateX(4px);
+    }
+    .book-header {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(3, 3, 8, 0.5) 100%);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      margin-bottom: 35px;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .book-cover-art {
+      font-size: 6rem;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px dashed var(--accent-cyan);
+      border-radius: 8px;
+      width: 150px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0, 229, 255, 0.1);
+    }
+    .book-meta-info {
+      flex: 1;
+      min-width: 250px;
+    }
+    .book-title {
+      font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 8px 0;
+      text-shadow: 0 0 15px rgba(0,229,255,0.25);
+    }
+    .book-author {
+      font-family: 'Fira Code', monospace;
+      color: var(--accent-cyan);
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+    .book-stats {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+    }
+    .reading-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 30px;
+    }
+    @media (max-width: 800px) {
+      .reading-grid {
+        grid-template-columns: 1fr;
+      }
+      .book-sidebar {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+      }
+    }
+    .book-sidebar {
+      background: rgba(6, 6, 16, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      height: fit-content;
+    }
+    .toc-title {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .toc-item {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+      transition: all 0.2s ease;
+    }
+    .toc-item:hover {
+      color: #fff;
+      padding-right: 4px;
+    }
+    .book-content {
+      background: rgba(6, 6, 16, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 30px;
+    }
+    .content-sec {
+      margin-bottom: 40px;
+      scroll-margin-top: 40px;
+    }
+    .sec-title {
+      color: #fff;
+      font-size: 1.4rem;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .code-box {
+      font-family: 'Fira Code', monospace;
+      background: #06060c;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 12px;
+      border-radius: 6px;
+      color: var(--accent-cyan);
+      font-size: 0.88rem;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .key-point {
+      border-right: 3px solid var(--accent-orange);
+      background: rgba(255, 154, 86, 0.03);
+      padding: 12px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Matrix Grid & Background Orbs -->
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="book-container">
+    
+    <!-- Back button -->
+    <div class="back-btn-wrap">
+      <a href="../index.html" class="back-link">
+        ← العودة للوحة التحكم
+      </a>
+    </div>
+
+    <!-- Header Block -->
+    <header class="book-header">
+      <div class="book-cover-art">📖</div>
+      <div class="book-meta-info">
+        <h1 class="book-title">Real-World Bug Hunting</h1>
+        <div class="book-author">By Peter Yaworski</div>
+        <div class="book-stats">
+          <span class="stat-badge text-neon-cyan">اللغة: العربية / الإنجليزية</span>
+          <span class="stat-badge text-neon-orange">المستوى: مبتدئ إلى متوسط</span>
+          <span class="stat-badge text-neon-green">الموضوع: ثغرات الويب والتطبيقات</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Reading Grid -->
+    <div class="reading-grid">
+      
+      <!-- Sidebar Table of Contents -->
+      <aside class="book-sidebar">
+        <div class="toc-title">فصول الكتاب</div>
+        <a href="#about" class="toc-item">1. نظرة عامة عن الكتاب</a>
+        <a href="#open-redirect" class="toc-item">2. ثغرة Open Redirect</a>
+        <a href="#ssrf" class="toc-item">3. ثغرة SSRF وكيفية عملها</a>
+        <a href="#xss" class="toc-item">4. ثغرات XSS وأنواعها</a>
+        <a href="#lessons" class="toc-item">5. أهم الدروس المستفادة</a>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="book-content">
+        
+        <!-- Section 1: About -->
+        <section id="about" class="content-sec">
+          <h2 class="sec-title">1. نظرة عامة عن الكتاب</h2>
+          <p>كتاب <strong>Real-World Bug Hunting</strong> هو أحد أفضل الكتب الموصى بها لأي شخص يرغب في الدخول إلى مجال صيد ثغرات البرامج (Bug Bounty). يركز الكاتب بيتر ياورسكي على شرح كيفية عمل الثغرات الأمنية في العالم الحقيقي بناءً على تقارير حقيقية تم تقديمها لشركات كبرى على منصات مثل HackerOne.</p>
+          <div class="key-point">
+            <strong>نصيحة الكاتب الذهبية:</strong> لا تحفظ الأدوات أو تشغلها بشكل أعمى، بل افهم كيف يعمل التطبيق في الخلفية لتتمكن من إيجاد الثغرات التي تغفل عنها أدوات الفحص التلقائي.
+          </div>
+        </section>
+
+        <!-- Section 2: Open Redirect -->
+        <section id="open-redirect" class="content-sec">
+          <h2 class="sec-title">2. ثغرة التوجيه المفتوح (Open Redirect)</h2>
+          <p>تشرح فصول الكتاب الأولى كيف يستغل المهاجم المعاملات (Parameters) التي تتحكم في إعادة التوجيه بعد تسجيل الدخول أو إتمام عملية معينة لتوجيه المستخدمين لمواقع التصيد الاحتيالي.</p>
+          <div class="code-box">
+            // مثال على رابط مصاب بالثغرة
+            https://target.com/login?next=http://attacker.com
+          </div>
+          <p><strong>طرق فحص الثغرة وتخطي الفلاتر:</strong></p>
+          <ul>
+            <li>استبدال النطاق الكامل برمز الخط المائل المزدوج: <code>//attacker.com</code></li>
+            <li>التخطي باستخدام رموز url encode أو الكود البرمجي المباشر.</li>
+          </ul>
+        </section>
+
+        <!-- Section 3: SSRF -->
+        <section id="ssrf" class="content-sec">
+          <h2 class="sec-title">3. ثغرة طلب الخادم المزيف (SSRF)</h2>
+          <p>تعتبر ثغرة Server-Side Request Forgery من الثغرات ذات الأهمية العالية (High/Critical) لأنها تسمح للمهاجم بإجبار خادم الويب على إرسال طلبات داخلية أو خارجية نيابة عنه، وبالتالي فحص الشبكة الداخلية للخادم وقراءة البيانات الحساسة.</p>
+          <div class="code-box">
+            // استدعاء معلومات خوادم AWS الداخلية
+            https://target.com/preview?url=http://169.254.169.254/latest/meta-data/
+          </div>
+          <p>يوضح الكتاب كيف تمكن بعض الباحثين من قراءة بيانات السحابة وحجز مكافآت تجاوزت الـ $10,000 عبر استغلال هذه الثغرة للوصول للخدمات السحابية للشركات.</p>
+        </section>
+
+        <!-- Section 4: XSS -->
+        <section id="xss" class="content-sec">
+          <h2 class="sec-title">4. ثغرات حقن النص البرمجي (XSS)</h2>
+          <p>يغطي الكتاب ثغرات Cross-Site Scripting بأنواعها الثلاثة الرئيسية: Reflected و Stored و DOM-Based. يشرح الكاتب كيف يمكن للمهاجم سرقة ملفات الارتباط (Session Cookies) أو تعديل الصفحة لتنفيذ عمليات ضارة باسم المستخدم.</p>
+          <p><strong>تخطي الفلاتر البسيطة:</strong></p>
+          <div class="code-box">
+            &lt;img src=x onerror=alert(1)&gt;
+          </div>
+        </section>
+
+        <!-- Section 5: Lessons -->
+        <section id="lessons" class="content-sec">
+          <h2 class="sec-title">5. أهم الدروس المستفادة</h2>
+          <ul>
+            <li>المنهجية الفعالة وتوثيق الخطوات هما سر النجاح كصياد ثغرات محترف.</li>
+            <li>كتابة التقارير بطريقة احترافية تسهل على فريق الحماية فهم المشكلة وحجم التأثير، مما يضمن تقييم ثغرتك بمكافأة عادلة.</li>
+            <li>التعلم المستمر ومتابعة التقارير العامة (Disclosed Reports) تفتح لك آفاقاً جديدة لأفكار استغلال مبتكرة.</li>
+          </ul>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
