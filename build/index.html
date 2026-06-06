@@ -38,7 +38,11 @@
         <span class="logo-bracket">&lt;</span>Abdo Ramdan<span class="logo-bracket">/&gt;</span>
       </div>
     </div>
-    <div class="header-status">
+    <div class="header-status" style="display:flex; align-items:center; gap:12px;">
+      <button onclick="openCommandPalette()" style="background: rgba(0,229,255,0.05); color: var(--accent-cyan); border: 1px solid rgba(0,229,255,0.25); padding: 5px 10px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 6px;" aria-label="Search Palette">
+        🔍 <span class="status-text" style="opacity:0.6; font-size:0.7rem;">Ctrl+K</span>
+      </button>
+      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Theme">🌙</button>
       <span class="status-indicator"></span>
       <span class="status-text">SECURE TUNNEL ACTIVE // ETH0: 10.10.10.15</span>
     </div>
@@ -56,7 +60,7 @@
       <!-- Profile Header -->
       <div class="profile-card">
         <div class="avatar-wrapper">
-          <img src="images/profile.png" alt="Abdo Ramdan Profile Photo" class="profile-avatar" />
+          <img loading="lazy" src="images/profile.png" alt="Abdo Ramdan Profile Photo" class="profile-avatar" />
           <div class="avatar-glow"></div>
         </div>
         <h1 class="profile-name">Abdo Ramdan</h1>
@@ -159,6 +163,26 @@
         </div>
       </div>
 
+      <!-- Playbook Progress Widget (Phase 2) -->
+      <div class="dashboard-widget playbook-progress-widget" id="sidebarProgressWidget" style="display: none;">
+        <h3 class="widget-title">// Playbook Progress</h3>
+        <div class="lab-progress-bar">
+          <div class="lab-progress-fill" id="sidebarPlaybookProgressFill" style="width: 0%;"></div>
+        </div>
+        <div class="active-mission" style="margin-top: 8px; font-size: 0.75rem; display: flex; justify-content: space-between;">
+          <span>Phases Read:</span>
+          <span id="sidebarPlaybookProgressText" class="text-neon-cyan">0 / 26</span>
+        </div>
+      </div>
+
+      <!-- Starred Chapters Widget (Phase 2) -->
+      <div class="dashboard-widget starred-chapters-widget" id="sidebarBookmarksWidget" style="display: none;">
+        <h3 class="widget-title">// Starred Chapters</h3>
+        <div id="sidebarBookmarksList" style="display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; font-size: 0.75rem;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
     </aside>
 
     <!-- ═══════════════════════════════════════════════════════════
@@ -196,6 +220,9 @@
           <span class="tab-icon">📡</span> Contact
         </button>
       </div>
+
+      <!-- Breadcrumbs (Phase 2) -->
+      <div class="breadcrumb-box" style="margin-left: 8px;">Home &gt; Shell Terminal</div>
 
       <!-- Workspace Panes -->
       <div class="pane-container">
@@ -312,7 +339,7 @@
             
             <div class="visual-project-card" style="--project-glow: #00ff66">
               <div class="project-card-image-wrap">
-                <img src="images/port_scanner.png" alt="Multithreaded Port Scanner" class="project-card-image" />
+                <img loading="lazy" src="images/port_scanner.png" alt="Multithreaded Port Scanner" class="project-card-image" />
                 <div class="project-glow-layer" style="background: #00ff661a"></div>
               </div>
               <div class="project-card-info">
@@ -342,7 +369,7 @@
             
             <div class="visual-project-card" style="--project-glow: #00e5ff">
               <div class="project-card-image-wrap">
-                <img src="images/dir_bruteforce.png" alt="Directory Bruteforcer" class="project-card-image" />
+                <img loading="lazy" src="images/dir_bruteforce.png" alt="Directory Bruteforcer" class="project-card-image" />
                 <div class="project-glow-layer" style="background: #00e5ff1a"></div>
               </div>
               <div class="project-card-info">
@@ -372,7 +399,7 @@
             
             <div class="visual-project-card" style="--project-glow: #ff9a56">
               <div class="project-card-image-wrap">
-                <img src="images/linux_enum.png" alt="Linux Enumeration Script" class="project-card-image" />
+                <img loading="lazy" src="images/linux_enum.png" alt="Linux Enumeration Script" class="project-card-image" />
                 <div class="project-glow-layer" style="background: #ff9a561a"></div>
               </div>
               <div class="project-card-info">
@@ -402,7 +429,7 @@
             
             <div class="visual-project-card" style="--project-glow: #ff6b9d">
               <div class="project-card-image-wrap">
-                <img src="images/htb_writeup.png" alt="HTB / THM Writeups" class="project-card-image" />
+                <img loading="lazy" src="images/htb_writeup.png" alt="HTB / THM Writeups" class="project-card-image" />
                 <div class="project-glow-layer" style="background: #ff6b9d1a"></div>
               </div>
               <div class="project-card-info">
@@ -945,7 +972,7 @@
                   <div class="tab-pane active" id="tab-overview-subfinder">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/category_recon.png" class="tool-graphic-img" alt="subfinder graphic" />
+                        <img loading="lazy" src="images/tools/category_recon.png" class="tool-graphic-img" alt="subfinder graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -1157,8 +1184,8 @@
                   <div class="tab-pane active" id="tab-overview-amass">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_amass_1.png" class="tool-graphic-img" alt="amass graphic" />
-                        <img src="images/tools/tool_amass_2.png" class="tool-graphic-img" alt="amass graphic" />
+                        <img loading="lazy" src="images/tools/tool_amass_1.png" class="tool-graphic-img" alt="amass graphic" />
+                        <img loading="lazy" src="images/tools/tool_amass_2.png" class="tool-graphic-img" alt="amass graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -1357,7 +1384,7 @@
                   <div class="tab-pane active" id="tab-overview-assetfinder">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_assetfinder.png" class="tool-graphic-img" alt="assetfinder graphic" />
+                        <img loading="lazy" src="images/tools/tool_assetfinder.png" class="tool-graphic-img" alt="assetfinder graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -1546,7 +1573,7 @@
                   <div class="tab-pane active" id="tab-overview-chaos">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_chaos.png" class="tool-graphic-img" alt="chaos graphic" />
+                        <img loading="lazy" src="images/tools/tool_chaos.png" class="tool-graphic-img" alt="chaos graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -1737,8 +1764,8 @@
                   <div class="tab-pane active" id="tab-overview-katana">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_katana_1.png" class="tool-graphic-img" alt="katana graphic" />
-                        <img src="images/tools/tool_katana_2.png" class="tool-graphic-img" alt="katana graphic" />
+                        <img loading="lazy" src="images/tools/tool_katana_1.png" class="tool-graphic-img" alt="katana graphic" />
+                        <img loading="lazy" src="images/tools/tool_katana_2.png" class="tool-graphic-img" alt="katana graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -1942,7 +1969,7 @@
                   <div class="tab-pane active" id="tab-overview-hakrawler">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_hakrawler.png" class="tool-graphic-img" alt="hakrawler graphic" />
+                        <img loading="lazy" src="images/tools/tool_hakrawler.png" class="tool-graphic-img" alt="hakrawler graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -2131,7 +2158,7 @@
                   <div class="tab-pane active" id="tab-overview-gospider">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_gospider.png" class="tool-graphic-img" alt="gospider graphic" />
+                        <img loading="lazy" src="images/tools/tool_gospider.png" class="tool-graphic-img" alt="gospider graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -2327,7 +2354,7 @@
                   <div class="tab-pane active" id="tab-overview-gau">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_gau_1.png" class="tool-graphic-img" alt="gau graphic" />
+                        <img loading="lazy" src="images/tools/tool_gau_1.png" class="tool-graphic-img" alt="gau graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -2529,7 +2556,7 @@
                   <div class="tab-pane active" id="tab-overview-waybackurls">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_gau_2.png" class="tool-graphic-img" alt="waybackurls graphic" />
+                        <img loading="lazy" src="images/tools/tool_gau_2.png" class="tool-graphic-img" alt="waybackurls graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -2718,7 +2745,7 @@
                   <div class="tab-pane active" id="tab-overview-waymore">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_gau_3.png" class="tool-graphic-img" alt="waymore graphic" />
+                        <img loading="lazy" src="images/tools/tool_gau_3.png" class="tool-graphic-img" alt="waymore graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -2908,7 +2935,7 @@
                   <div class="tab-pane active" id="tab-overview-ffuf">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_dir_1.png" class="tool-graphic-img" alt="ffuf graphic" />
+                        <img loading="lazy" src="images/tools/tool_dir_1.png" class="tool-graphic-img" alt="ffuf graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -3114,7 +3141,7 @@
                   <div class="tab-pane active" id="tab-overview-feroxbuster">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_dir_2.png" class="tool-graphic-img" alt="feroxbuster graphic" />
+                        <img loading="lazy" src="images/tools/tool_dir_2.png" class="tool-graphic-img" alt="feroxbuster graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -3305,7 +3332,7 @@
                   <div class="tab-pane active" id="tab-overview-gobuster">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_gobuster.png" class="tool-graphic-img" alt="gobuster graphic" />
+                        <img loading="lazy" src="images/tools/tool_gobuster.png" class="tool-graphic-img" alt="gobuster graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -3496,7 +3523,7 @@
                   <div class="tab-pane active" id="tab-overview-dirsearch">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/category_dir.png" class="tool-graphic-img" alt="dirsearch graphic" />
+                        <img loading="lazy" src="images/tools/category_dir.png" class="tool-graphic-img" alt="dirsearch graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -3684,7 +3711,7 @@
                   <div class="tab-pane active" id="tab-overview-arjun">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_param_1.png" class="tool-graphic-img" alt="arjun graphic" />
+                        <img loading="lazy" src="images/tools/tool_param_1.png" class="tool-graphic-img" alt="arjun graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -3879,7 +3906,7 @@
                   <div class="tab-pane active" id="tab-overview-paramspider">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_param_2.png" class="tool-graphic-img" alt="paramspider graphic" />
+                        <img loading="lazy" src="images/tools/tool_param_2.png" class="tool-graphic-img" alt="paramspider graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -4068,7 +4095,7 @@
                   <div class="tab-pane active" id="tab-overview-linkfinder">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_js_2.png" class="tool-graphic-img" alt="linkfinder graphic" />
+                        <img loading="lazy" src="images/tools/tool_js_2.png" class="tool-graphic-img" alt="linkfinder graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -4262,7 +4289,7 @@
                   <div class="tab-pane active" id="tab-overview-secretfinder">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_js_3.png" class="tool-graphic-img" alt="secretfinder graphic" />
+                        <img loading="lazy" src="images/tools/tool_js_3.png" class="tool-graphic-img" alt="secretfinder graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -4450,7 +4477,7 @@
                   <div class="tab-pane active" id="tab-overview-nuclei">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_vuln_1.png" class="tool-graphic-img" alt="nuclei graphic" />
+                        <img loading="lazy" src="images/tools/tool_vuln_1.png" class="tool-graphic-img" alt="nuclei graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -4652,7 +4679,7 @@
                   <div class="tab-pane active" id="tab-overview-dalfox">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_vuln_2.png" class="tool-graphic-img" alt="dalfox graphic" />
+                        <img loading="lazy" src="images/tools/tool_vuln_2.png" class="tool-graphic-img" alt="dalfox graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -4846,7 +4873,7 @@
                   <div class="tab-pane active" id="tab-overview-sqlmap">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/tool_vuln_3.png" class="tool-graphic-img" alt="sqlmap graphic" />
+                        <img loading="lazy" src="images/tools/tool_vuln_3.png" class="tool-graphic-img" alt="sqlmap graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -5223,7 +5250,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-postman">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_api_testing.png" class="tool-graphic-img" alt="postman graphic" />
+                        <img loading="lazy" src="images/tools/bb_api_testing.png" class="tool-graphic-img" alt="postman graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -5393,7 +5420,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-kiterunner">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_api_testing.png" class="tool-graphic-img" alt="kiterunner graphic" />
+                        <img loading="lazy" src="images/tools/bb_api_testing.png" class="tool-graphic-img" alt="kiterunner graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -5556,7 +5583,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-ffuf_api">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_api_testing.png" class="tool-graphic-img" alt="ffuf_api graphic" />
+                        <img loading="lazy" src="images/tools/bb_api_testing.png" class="tool-graphic-img" alt="ffuf_api graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -5721,7 +5748,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-scoutsuite">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_cloud_security.png" class="tool-graphic-img" alt="scoutsuite graphic" />
+                        <img loading="lazy" src="images/tools/bb_cloud_security.png" class="tool-graphic-img" alt="scoutsuite graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -5889,7 +5916,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-prowler">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_cloud_security.png" class="tool-graphic-img" alt="prowler graphic" />
+                        <img loading="lazy" src="images/tools/bb_cloud_security.png" class="tool-graphic-img" alt="prowler graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -6050,7 +6077,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-pacu">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_cloud_security.png" class="tool-graphic-img" alt="pacu graphic" />
+                        <img loading="lazy" src="images/tools/bb_cloud_security.png" class="tool-graphic-img" alt="pacu graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -6212,7 +6239,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-wpscan">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_cms_scanning.png" class="tool-graphic-img" alt="wpscan graphic" />
+                        <img loading="lazy" src="images/tools/bb_cms_scanning.png" class="tool-graphic-img" alt="wpscan graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -6383,7 +6410,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-joomscan">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_cms_scanning.png" class="tool-graphic-img" alt="joomscan graphic" />
+                        <img loading="lazy" src="images/tools/bb_cms_scanning.png" class="tool-graphic-img" alt="joomscan graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -6544,7 +6571,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-droopescan">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_cms_scanning.png" class="tool-graphic-img" alt="droopescan graphic" />
+                        <img loading="lazy" src="images/tools/bb_cms_scanning.png" class="tool-graphic-img" alt="droopescan graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -6705,7 +6732,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-aquatone">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_screenshotting.png" class="tool-graphic-img" alt="aquatone graphic" />
+                        <img loading="lazy" src="images/tools/bb_screenshotting.png" class="tool-graphic-img" alt="aquatone graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -6877,7 +6904,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-gowitness">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_screenshotting.png" class="tool-graphic-img" alt="gowitness graphic" />
+                        <img loading="lazy" src="images/tools/bb_screenshotting.png" class="tool-graphic-img" alt="gowitness graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -7039,7 +7066,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-eyewitness">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_screenshotting.png" class="tool-graphic-img" alt="eyewitness graphic" />
+                        <img loading="lazy" src="images/tools/bb_screenshotting.png" class="tool-graphic-img" alt="eyewitness graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -7200,7 +7227,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-subzy">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_subdomain_takeover.png" class="tool-graphic-img" alt="subzy graphic" />
+                        <img loading="lazy" src="images/tools/bb_subdomain_takeover.png" class="tool-graphic-img" alt="subzy graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -7369,7 +7396,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-nuclei_takeover">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_subdomain_takeover.png" class="tool-graphic-img" alt="nuclei_takeover graphic" />
+                        <img loading="lazy" src="images/tools/bb_subdomain_takeover.png" class="tool-graphic-img" alt="nuclei_takeover graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -7531,7 +7558,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-seclists">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_wordlists.png" class="tool-graphic-img" alt="seclists graphic" />
+                        <img loading="lazy" src="images/tools/bb_wordlists.png" class="tool-graphic-img" alt="seclists graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -7667,7 +7694,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-payloadsallthethings">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_wordlists.png" class="tool-graphic-img" alt="payloadsallthethings graphic" />
+                        <img loading="lazy" src="images/tools/bb_wordlists.png" class="tool-graphic-img" alt="payloadsallthethings graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -7803,7 +7830,7 @@
                   <div class="tab-pane active" id="bb-tab-overview-onelistforall">
                     <div class="cyber-card tool-graphic-card">
                       <div class="tool-image-gallery">
-                        <img src="images/tools/bb_wordlists.png" class="tool-graphic-img" alt="onelistforall graphic" />
+                        <img loading="lazy" src="images/tools/bb_wordlists.png" class="tool-graphic-img" alt="onelistforall graphic" />
                       </div>
                     </div>
                     <div class="cyber-card">
@@ -9092,12 +9119,314 @@
     window.switchTab = function(tabId) {
       if (origSwitchTab) origSwitchTab(tabId);
       if (isMobile()) closeMobileSidebar();
+      
+      // Sync bottom navigation items active class
+      document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.bottomTab === tabId);
+      });
+      
+      // Update breadcrumbs dynamically
+      const breadcrumb = document.querySelector('.breadcrumb-box');
+      if (breadcrumb) {
+        let path = 'Home';
+        if (tabId === 'terminal') path = 'Home &gt; Shell Terminal';
+        else if (tabId === 'academy') path = 'Home &gt; Academy';
+        else if (tabId === 'bugbounty') path = 'Home &gt; Bug Bounty Tools';
+        else if (tabId === 'skills') path = 'Home &gt; Skills Inventory';
+        else if (tabId === 'projects') path = 'Home &gt; Projects Hub';
+        else if (tabId === 'writeups') path = 'Home &gt; Writeups Database';
+        else if (tabId === 'certs') path = 'Home &gt; Certifications';
+        else if (tabId === 'contact') path = 'Home &gt; Transmission Contact';
+        breadcrumb.innerHTML = path;
+      }
     };
 
+    // ── Light/Dark Theme Switcher (Phase 2) ──
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-theme');
+      localStorage.setItem('theme_preference', isLight ? 'light' : 'dark');
+      const toggleBtn = document.getElementById('themeToggleBtn');
+      if (toggleBtn) toggleBtn.textContent = isLight ? '☀️' : '🌙';
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Theme changed to: ${isLight ? 'LIGHT MODE' : 'DARK MODE'}`, 'text-neon-cyan');
+      }
+    }
+    
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme_preference');
+      const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      const isLight = savedTheme === 'light' || (!savedTheme && systemPrefersLight);
+      
+      if (isLight) {
+        document.body.classList.add('light-theme');
+        const toggleBtn = document.getElementById('themeToggleBtn');
+        if (toggleBtn) toggleBtn.textContent = '☀️';
+      }
+    }
+
+    // ── FAB Scroll-To-Top (Phase 2) ──
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    window.addEventListener('scroll', function() {
+      const btn = document.getElementById('scrollTopBtn');
+      if (btn) {
+        if (window.scrollY > 300 && isMobile()) {
+          btn.style.display = 'flex';
+        } else {
+          btn.style.display = 'none';
+        }
+      }
+    });
+
+    // ── Playbook Progress & Starred Chapters (Phase 2) ──
+    function syncPlaybookProgress() {
+      const visited = JSON.parse(localStorage.getItem('meth_visited') || '[]');
+      const bookmarks = JSON.parse(localStorage.getItem('meth_bookmarks') || '[]');
+      
+      // Update playbook progress widget
+      const progressWidget = document.getElementById('sidebarProgressWidget');
+      if (progressWidget) {
+        progressWidget.style.display = 'block';
+        const fill = document.getElementById('sidebarPlaybookProgressFill');
+        const text = document.getElementById('sidebarPlaybookProgressText');
+        const totalPhases = 26;
+        const count = visited.length;
+        const pct = Math.min(Math.round((count / totalPhases) * 100), 100);
+        if (fill) fill.style.width = pct + '%';
+        if (text) text.textContent = `${count} / ${totalPhases} (${pct}%)`;
+      }
+      
+      // Update bookmarks widget
+      const bookmarksWidget = document.getElementById('sidebarBookmarksWidget');
+      const list = document.getElementById('sidebarBookmarksList');
+      if (bookmarksWidget && list) {
+        if (bookmarks.length > 0) {
+          bookmarksWidget.style.display = 'block';
+          list.innerHTML = bookmarks.map(b => `
+            <div style="background: rgba(0, 229, 255, 0.03); border: 1px solid var(--border-glass); padding: 8px; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openStarredPhase('${b.id}')">
+              <span class="text-neon-green">★</span> <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;">${b.name}</span>
+            </div>
+          `).join('');
+        } else {
+          bookmarksWidget.style.display = 'none';
+        }
+      }
+    }
+    
+    function openStarredPhase(phaseId) {
+      if (terminalInitialized) printLineToTerminal(`\n[info] Launching playbook helper for starred phase: ${phaseId}`, 'text-neon-cyan');
+      window.open(`methodology.html?phase=${phaseId}`, '_blank');
+    }
+
+    // ── Command Palette Logic (Phase 2) ──
+    let cpSelectedIdx = -1;
+    const commandPaletteItems = [
+      { text: "Go to Terminal", action: "tab:terminal", icon: "🐚", category: "Navigation" },
+      { text: "Go to Academy", action: "tab:academy", icon: "📚", category: "Navigation" },
+      { text: "Go to Bug Bounty", action: "tab:bugbounty", icon: "🛠️", category: "Navigation" },
+      { text: "Go to Skills", action: "tab:skills", icon: "📊", category: "Navigation" },
+      { text: "Go to Projects", action: "tab:projects", icon: "📂", category: "Navigation" },
+      { text: "Go to Writeups", action: "tab:writeups", icon: "📜", category: "Navigation" },
+      { text: "Go to Certifications", action: "tab:certs", icon: "🎓", category: "Navigation" },
+      { text: "Go to Contact", action: "tab:contact", icon: "✉️", category: "Navigation" },
+      { text: "Open Full Methodology", action: "link:methodology.html", icon: "🗺️", category: "Navigation" },
+      
+      // Quick Tool searches
+      { text: "Search subfinder", action: "tool:subfinder", icon: "🔎", category: "Tools" },
+      { text: "Search amass", action: "tool:amass", icon: "🔎", category: "Tools" },
+      { text: "Search assetfinder", action: "tool:assetfinder", icon: "🔎", category: "Tools" },
+      { text: "Search httpx", action: "tool:httpx", icon: "🔎", category: "Tools" },
+      { text: "Search naabu", action: "tool:naabu", icon: "🔎", category: "Tools" },
+      { text: "Search katana", action: "tool:katana", icon: "🔎", category: "Tools" },
+      { text: "Search nuclei", action: "tool:nuclei", icon: "🔎", category: "Tools" },
+      { text: "Search gobuster", action: "tool:gobuster", icon: "🔎", category: "Tools" },
+      
+      // Terminal commands shortcuts
+      { text: "Run system audit", action: "cmd:audit", icon: "▶", category: "Terminal Command" },
+      { text: "Check SUID binaries", action: "cmd:suid", icon: "▶", category: "Terminal Command" },
+      { text: "View flags solved", action: "cmd:flags", icon: "▶", category: "Terminal Command" },
+      { text: "Reset terminal game", action: "cmd:reset", icon: "▶", category: "Terminal Command" }
+    ];
+
+    function openCommandPalette() {
+      const overlay = document.getElementById('commandPaletteOverlay');
+      const input = document.getElementById('commandPaletteInput');
+      if (!overlay || !input) return;
+      overlay.classList.add('active');
+      input.value = '';
+      cpSelectedIdx = -1;
+      renderCommandPaletteResults('');
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closeCommandPalette(e) {
+      if (e && e.target !== document.getElementById('commandPaletteOverlay')) return;
+      const overlay = document.getElementById('commandPaletteOverlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    function filterCommandPalette(query) {
+      renderCommandPaletteResults(query);
+    }
+
+    function renderCommandPaletteResults(query) {
+      const resultsContainer = document.getElementById('commandPaletteResults');
+      if (!resultsContainer) return;
+      
+      const q = query.toLowerCase().trim();
+      const filtered = commandPaletteItems.filter(item => 
+        !q || item.text.toLowerCase().includes(q) || item.category.toLowerCase().includes(q)
+      );
+      
+      if (filtered.length === 0) {
+        resultsContainer.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-muted);">No results found</div>';
+        return;
+      }
+      
+      resultsContainer.innerHTML = filtered.map((item, idx) => `
+        <div class="command-palette-item ${idx === cpSelectedIdx ? 'selected' : ''}" onclick="selectCommandPaletteItem('${item.action}')" data-action="${item.action}">
+          <div class="command-palette-item-left">
+            <span class="command-palette-item-icon">${item.icon}</span>
+            <span class="command-palette-item-text">${item.text}</span>
+          </div>
+          <span class="command-palette-item-hint">${item.category}</span>
+        </div>
+      `).join('');
+      
+      const renderedItems = resultsContainer.querySelectorAll('.command-palette-item');
+      renderedItems.forEach((el, i) => {
+        el.addEventListener('mouseenter', () => {
+          cpSelectedIdx = i;
+          renderedItems.forEach((item, k) => item.classList.toggle('selected', k === cpSelectedIdx));
+        });
+      });
+    }
+
+    function selectCommandPaletteItem(action) {
+      closeCommandPalette();
+      const [type, value] = action.split(':');
+      
+      if (type === 'tab') {
+        switchTab(value);
+      } else if (type === 'link') {
+        window.open(value, '_blank');
+      } else if (type === 'tool') {
+        switchTab('bugbounty');
+        if (window.openBBTool) {
+          openBBTool(value);
+        }
+      } else if (type === 'cmd') {
+        switchTab('terminal');
+        const input = document.getElementById('consoleInput');
+        if (input) {
+          input.value = value;
+          const event = new KeyboardEvent('keydown', { key: 'Enter' });
+          input.dispatchEvent(event);
+          if (window.executeQuickCommand) {
+            window.executeQuickCommand(value);
+          }
+        }
+      }
+    }
+
+    // Register keyboard navigation for Command Palette
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        const overlay = document.getElementById('commandPaletteOverlay');
+        if (overlay && overlay.classList.contains('active')) {
+          closeCommandPalette();
+        } else {
+          openCommandPalette();
+        }
+      }
+      if (e.key === 'Escape') {
+        closeCommandPalette();
+        closeMobileSidebar();
+      }
+      
+      const overlay = document.getElementById('commandPaletteOverlay');
+      if (overlay && overlay.classList.contains('active')) {
+        const items = document.querySelectorAll('.command-palette-item');
+        if (items.length > 0) {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            cpSelectedIdx = Math.min(cpSelectedIdx + 1, items.length - 1);
+            items.forEach((el, i) => el.classList.toggle('selected', i === cpSelectedIdx));
+            items[cpSelectedIdx]?.scrollIntoView({ block: 'nearest' });
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            cpSelectedIdx = Math.max(cpSelectedIdx - 1, 0);
+            items.forEach((el, i) => el.classList.toggle('selected', i === cpSelectedIdx));
+            items[cpSelectedIdx]?.scrollIntoView({ block: 'nearest' });
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            const selected = items[cpSelectedIdx] || items[0];
+            if (selected) {
+              selectCommandPaletteItem(selected.getAttribute('data-action'));
+            }
+          }
+        }
+      }
+    });
+
     window.addEventListener('resize', updateMobileUI);
-    document.addEventListener('DOMContentLoaded', updateMobileUI);
+    document.addEventListener('DOMContentLoaded', () => {
+      updateMobileUI();
+      initTheme();
+      syncPlaybookProgress();
+    });
     updateMobileUI();
 
   </script>
+
+  <!-- Floating Action Button (FAB) -->
+  <button class="fab-btn" id="scrollTopBtn" onclick="scrollToTop()" title="Scroll to Top" aria-label="Scroll to Top">▲</button>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="bottom-nav" aria-label="Mobile Navigation">
+    <button class="bottom-nav-item" onclick="toggleMobileSidebar()" aria-label="Profile Dashboard">
+      <span class="bottom-nav-icon">👤</span>
+      <span class="bottom-nav-label">Profile</span>
+    </button>
+    <button class="bottom-nav-item active" onclick="switchTab('terminal')" data-bottom-tab="terminal" aria-label="Terminal">
+      <span class="bottom-nav-icon">🐚</span>
+      <span class="bottom-nav-label">Terminal</span>
+    </button>
+    <button class="bottom-nav-item" onclick="switchTab('bugbounty')" data-bottom-tab="bugbounty" aria-label="Bug Bounty">
+      <span class="bottom-nav-icon">🛠️</span>
+      <span class="bottom-nav-label">Bounty</span>
+    </button>
+    <button class="bottom-nav-item" onclick="switchTab('academy')" data-bottom-tab="academy" aria-label="Academy">
+      <span class="bottom-nav-icon">📚</span>
+      <span class="bottom-nav-label">Academy</span>
+    </button>
+    <a class="bottom-nav-item" href="methodology.html" target="_blank" aria-label="Methodology">
+      <span class="bottom-nav-icon">🗺️</span>
+      <span class="bottom-nav-label">Method</span>
+    </a>
+  </nav>
+
+  <!-- Command Palette Modal (Ctrl+K) -->
+  <div class="command-palette-overlay" id="commandPaletteOverlay" onclick="closeCommandPalette(event)">
+    <div class="command-palette-card">
+      <div class="command-palette-search">
+        <span class="command-palette-search-icon">🔍</span>
+        <input type="text" class="command-palette-input" id="commandPaletteInput" placeholder="Type a search query or navigation shortcut..." oninput="filterCommandPalette(this.value)" autocomplete="off">
+      </div>
+      <div class="command-palette-results" id="commandPaletteResults">
+        <!-- Results dynamically populated -->
+      </div>
+      <div class="command-palette-footer">
+        <div class="command-palette-shortcut"><kbd class="kbd">↑↓</kbd> Navigate</div>
+        <div class="command-palette-shortcut"><kbd class="kbd">Enter</kbd> Open</div>
+        <div class="command-palette-shortcut"><kbd class="kbd">ESC</kbd> Close</div>
+        <div class="command-palette-shortcut"><kbd class="kbd">Ctrl+K</kbd> Toggle Palette</div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

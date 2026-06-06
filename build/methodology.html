@@ -974,6 +974,7 @@
 
     @media (max-width: 900px) {
       .meth-logo { font-size: 1.1rem; }
+      .logo-sub { display: none; }
       .menu-toggle-btn { display: block; }
       .meth-container {
         flex-direction: column;
@@ -1097,12 +1098,13 @@
   <header class="meth-header">
     <div style="display: flex; align-items: center; gap: 15px;">
       <button class="menu-toggle-btn" onclick="toggleMobileSidebar()">☰ Menu</button>
-      <div class="meth-logo">// OFFENSIVE SECURITY KNOWLEDGE PLATFORM</div>
+      <div class="meth-logo">// <span class="logo-main">OFFENSIVE SECURITY</span><span class="logo-sub"> KNOWLEDGE PLATFORM</span></div>
     </div>
     <div style="display: flex; align-items: center; gap: 12px;">
       <button onclick="openQuickJump()" style="background: rgba(0,229,255,0.05); color: var(--neon-cyan); border: 1px solid rgba(0,229,255,0.2); padding: 7px 14px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='rgba(0,229,255,0.12)'" onmouseout="this.style.background='rgba(0,229,255,0.05)'">
         🔍 <span style="opacity:0.6; font-size:0.8rem;">Ctrl+K</span>
       </button>
+      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Theme">🌙</button>
       <a href="index.html" class="back-btn">
         <span>⬅</span> Back to Terminal OS
       </a>
@@ -1274,7 +1276,7 @@
         </div>
 
         <!-- Master Flowchart -->
-        <div class="cyber-card">
+        <div class="cyber-card mobile-accordion">
           <div class="card-header"><h3>🗺️ Full Recon → Exploitation Pipeline</h3></div>
           <div class="flow-visualization">
             <div class="flow-node active-stage" onclick="inspectNode('Subfinder', 'جمع النطاقات الفرعية بشكل سلبي من APIs ومصادر OSINT خارجية. الأسرع والأوسع تغطية.')">① Passive Recon</div>
@@ -1298,7 +1300,7 @@
         </div>
 
         <!-- Phase 1: Passive Recon -->
-        <div class="cyber-card">
+        <div class="cyber-card mobile-accordion">
           <div class="card-header"><h3>🧩 المرحلة 1 — Passive Recon (جمع بدون لمس الهدف)</h3></div>
           <p style="color:var(--text-secondary); margin-bottom:12px;">الهدف: جمع أكبر عدد ممكن من الـ Subdomains من مصادر خارجية فقط — بدون أي طلبات مباشرة للهدف.</p>
           <div class="cmd-ui-box">
@@ -1327,7 +1329,7 @@ wc -l all_subs.txt  # عدد النتائج الكلي</div>
         </div>
 
         <!-- Phase 2: Alive Check -->
-        <div class="cyber-card">
+        <div class="cyber-card mobile-accordion">
           <div class="card-header"><h3>🌐 المرحلة 2 — Alive Check (التحقق من النطاقات الحية)</h3></div>
           <p style="color:var(--text-secondary); margin-bottom:12px;">فلترة النطاقات الشغالة فعلاً وجمع معلومات أولية عن كل هدف.</p>
           <div class="cmd-ui-box">
@@ -1349,7 +1351,7 @@ cat alive.txt | grep -E "\[200\]|\[301\]|\[302\]|\[403\]" > targets.txt</div>
         </div>
 
         <!-- Phase 3: Port Scanning -->
-        <div class="cyber-card">
+        <div class="cyber-card mobile-accordion">
           <div class="card-header"><h3>🔍 المرحلة 3 — Port Scanning (توسيع Attack Surface)</h3></div>
           <p style="color:var(--text-secondary); margin-bottom:12px;">كتير من الثغرات موجودة على منافذ غير 80/443 — لازم تفحص كل المنافذ.</p>
           <div class="cmd-ui-box">
@@ -1379,7 +1381,7 @@ nmap -sV -sC -p- --min-rate 5000 -Pn target.com -oN nmap.txt</div>
         </div>
 
         <!-- Phase 4: Content Discovery -->
-        <div class="cyber-card">
+        <div class="cyber-card mobile-accordion">
           <div class="card-header"><h3>🧠 المرحلة 4 — Content Discovery (Endpoints + Hidden Paths)</h3></div>
           <div class="cmd-ui-box">
             <div class="cmd-ui-top"># Crawling (الزحف التلقائي)
@@ -1400,7 +1402,7 @@ ffuf -u https://target.com/FUZZ -w sensitive_files.txt \
         </div>
 
         <!-- Phase 5: Vuln Scan -->
-        <div class="cyber-card">
+        <div class="cyber-card mobile-accordion">
           <div class="card-header"><h3>🧪 المرحلة 5 — Vulnerability Scanning (Automation Layer)</h3></div>
           <div class="cmd-ui-box">
             <div class="cmd-ui-top"># Nuclei - فحص شامل بقوالب جاهزة
@@ -1420,7 +1422,7 @@ nuclei -l all_subs.txt -t nuclei-templates/takeovers/ -o takeovers.txt
         </div>
 
         <!-- Phase 6: Subdomain Takeover - Full Chain -->
-        <div class="cyber-card" style="border-color: rgba(255,0,85,0.3);">
+        <div class="cyber-card mobile-accordion" style="border-color: rgba(255,0,85,0.3);">
           <div class="card-header"><h3>🚨 المرحلة 6 — Recon → Exploitation: Subdomain Takeover Chain</h3></div>
           <p style="color: var(--text-secondary); margin-bottom:14px;">هنا الفرق بين مبتدئ وـ Bug Bounty Hunter فعلي. مش الأدوات هي المهمة — المهم هو <strong style="color:var(--neon-cyan)">الربط بين النتائج</strong>.</p>
 
@@ -1507,7 +1509,7 @@ aws s3 website s3://sub.target.com --index-document index.html
         </div>
 
         <!-- Pro Tip -->
-        <div class="cyber-card" style="border-color: rgba(0,255,102,0.2); background: rgba(0,255,102,0.02);">
+        <div class="cyber-card mobile-accordion" style="border-color: rgba(0,255,102,0.2); background: rgba(0,255,102,0.02);">
           <div class="card-header"><h3 style="color:var(--neon-green);">🧠 Pro Tips — اللي تفرقك عن 90% من الناس</h3></div>
           <ul class="t-check-list">
             <li>✔ <strong>Subdomain + CNAME + Cloud service missing</strong> = Takeover → $500-$5000</li>
@@ -1525,7 +1527,7 @@ aws s3 website s3://sub.target.com --index-document index.html
         </div>
 
         <!-- Full Case Study -->
-        <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.2); background: rgba(155, 89, 255, 0.03); margin-top: 20px;">
+        <div class="cyber-card mobile-accordion" style="border: 1px solid rgba(155, 89, 255, 0.2); background: rgba(155, 89, 255, 0.03); margin-top: 20px;">
           <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Starbucks Subdomain Takeover — Full Chain</h3></div>
           <div class="table-wrapper"><table class="interactive-table">
             <thead><tr><th>الخطوة</th><th>الإجراء</th><th>النتيجة</th></tr></thead>
@@ -1542,16 +1544,7 @@ aws s3 website s3://sub.target.com --index-document index.html
         </div>
 
       </div>
-ound: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Starbucks Subdomain Takeover</h3></div>
-          <p><strong>الوصف (Scenario):</strong> تم العثور على نطاق فرعي نشط لشركة Starbucks يشير إلى خادم Azure سحابي تم حذفه مسبقاً.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> قام الباحث بتسجيل خادم Azure بنفس المعرف، مما مكنه من توجيه حركة المرور وسرقة التوكنز الخاصة بزبائن التطبيق.</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">host starbucks-api.azurewebsites.net
-# Returns NXDOMAIN (Alias pointing to unclaimed resources)</div>
-          </div>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
-        </div>
+
 
       <!-- Phase 2: Tech Detection -->
       <div class="meth-content-view" id="meth-content-p2" style="display: none; --tool-color: #ffb020;">
@@ -3494,10 +3487,145 @@ Content-Type: application/json
       }
     });
 
+    // ── Light/Dark Theme Switcher (Phase 2) ──
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-theme');
+      localStorage.setItem('theme_preference', isLight ? 'light' : 'dark');
+      const toggleBtn = document.getElementById('themeToggleBtn');
+      if (toggleBtn) toggleBtn.textContent = isLight ? '☀️' : '🌙';
+    }
+    
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme_preference');
+      const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      const isLight = savedTheme === 'light' || (!savedTheme && systemPrefersLight);
+      
+      if (isLight) {
+        document.body.classList.add('light-theme');
+        const toggleBtn = document.getElementById('themeToggleBtn');
+        if (toggleBtn) toggleBtn.textContent = '☀️';
+      }
+    }
+
+    // ── Auto Table of Contents for Phase 0 (Phase 2) ──
+    function generateTOC() {
+      const p0Container = document.getElementById('meth-content-p0');
+      if (!p0Container) return;
+      
+      const cards = p0Container.querySelectorAll('.cyber-card.mobile-accordion');
+      const tocItems = [];
+      
+      cards.forEach((card, idx) => {
+        const header = card.querySelector('.card-header h3');
+        if (header) {
+          const cardId = `p0-card-${idx}`;
+          card.id = cardId;
+          const title = header.textContent.replace(/^[^\w\s\u0600-\u06FF]+/g, '').trim();
+          tocItems.push({ id: cardId, title });
+        }
+      });
+      
+      if (tocItems.length > 0) {
+        const tocBox = document.createElement('div');
+        tocBox.className = 'toc-box';
+        tocBox.innerHTML = `
+          <div class="toc-title">📋 Table of Contents</div>
+          <div class="toc-links">
+            ${tocItems.map(item => `<span class="toc-link-item" onclick="document.getElementById('${item.id}').scrollIntoView({ behavior: 'smooth' })">• ${item.title}</span>`).join('')}
+          </div>
+        `;
+        const hero = p0Container.querySelector('.cyber-hero');
+        if (hero) {
+          hero.parentNode.insertBefore(tocBox, hero.nextSibling);
+        }
+      }
+    }
+
+    // ── Dynamic Metadata & Breadcrumbs (Phase 2) ──
+    function renderTacticsMetadata() {
+      const views = document.querySelectorAll('.meth-content-view');
+      const difficultyMap = {
+        'p0': { read: '15 min', level: 'Intermediate', tool: 'Recon' },
+        'p2': { read: '5 min', level: 'Beginner', tool: 'Fingerprint' },
+        'p1': { read: '8 min', level: 'Beginner', tool: 'Port Scan' },
+        'p_matrix': { read: '5 min', level: 'Intermediate', tool: 'Strategy' },
+        'p6': { read: '10 min', level: 'Intermediate', tool: 'Fuzzing' },
+        'p4': { read: '12 min', level: 'Advanced', tool: 'JS Analysis' },
+        'p_writeups': { read: '25 min', level: 'Intermediate', tool: 'Reports' },
+        'p19': { read: '5 min', level: 'Beginner', tool: 'CLI Terminal' }
+      };
+
+      views.forEach(view => {
+        const hero = view.querySelector('.cyber-hero');
+        if (hero) {
+          const id = view.id.replace('meth-content-', '');
+          const meta = difficultyMap[id] || { read: '8 min', level: 'Intermediate', tool: 'Exploit' };
+          
+          const metaBox = document.createElement('div');
+          metaBox.className = 'meta-header-box';
+          metaBox.innerHTML = `
+            <span class="meta-badge">⏱ ${meta.read} read</span>
+            <span class="meta-badge">📖 ${meta.level}</span>
+            <span class="meta-badge">🛠 ${meta.tool}</span>
+          `;
+          hero.appendChild(metaBox);
+        }
+      });
+    }
+
+    function renderBreadcrumbs() {
+      const views = document.querySelectorAll('.meth-content-view');
+      views.forEach(view => {
+        const hero = view.querySelector('.cyber-hero');
+        if (hero) {
+          const title = hero.querySelector('.hero-title')?.textContent || 'Details';
+          const breadBox = document.createElement('div');
+          breadBox.className = 'breadcrumb-box';
+          breadBox.innerHTML = `
+            <span>Playbook</span>
+            <span class="breadcrumb-separator">&gt;</span>
+            <span>Academy</span>
+            <span class="breadcrumb-separator">&gt;</span>
+            <span class="text-neon-cyan">${title}</span>
+          `;
+          hero.parentNode.insertBefore(breadBox, hero);
+        }
+      });
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+      const sidebar = document.querySelector('.meth-sidebar');
+      const toggleBtn = document.querySelector('.menu-toggle-btn');
+      if (window.innerWidth <= 900 && sidebar && sidebar.classList.contains('active')) {
+        if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Toggle expanded state of mobile accordions
+    document.addEventListener('click', function(e) {
+      if (window.innerWidth <= 768) {
+        const header = e.target.closest('.cyber-card.mobile-accordion .card-header');
+        if (header) {
+          const card = header.closest('.cyber-card');
+          if (card) {
+            card.classList.toggle('expanded');
+          }
+        }
+      }
+    });
+
     // ---- INIT ----
     document.addEventListener('DOMContentLoaded', function() {
       restoreVisited();
       renderBookmarksPanel();
+      initTheme();
+      generateTOC();
+      renderTacticsMetadata();
+      renderBreadcrumbs();
+      
       // Mark initial p0 as visited
       markVisited('p0');
     });
