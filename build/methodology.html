@@ -1071,6 +1071,1160 @@
       .progress-tracker-label span:first-child { font-size: 0.7rem; }
       .progress-tracker-label span:last-child { font-size: 0.8rem; }
     }
+
+    /* ============================================================
+       BUG BOUNTY OPERATING SYSTEM — Phase Module Styles
+    ============================================================ */
+
+    /* Phase Module Header */
+    .phase-module-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 22px 0 18px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .phase-module-icon {
+      font-size: 2.8rem;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 10px currentColor);
+    }
+    .phase-module-meta {
+      flex: 1;
+      min-width: 200px;
+    }
+    .phase-module-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 6px 0;
+      line-height: 1.2;
+    }
+    .phase-module-tagline {
+      font-size: 1.1rem;
+      color: rgba(0,229,255,0.7);
+      margin: 0 0 12px 0;
+      font-weight: 400;
+    }
+    .phase-meta-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid;
+      letter-spacing: 0.5px;
+    }
+    .badge-easy {
+      color: #00ff66;
+      border-color: rgba(0,255,102,0.4);
+      background: rgba(0,255,102,0.07);
+    }
+    .badge-medium {
+      color: #fbbf24;
+      border-color: rgba(251,191,36,0.4);
+      background: rgba(251,191,36,0.07);
+    }
+    .badge-hard {
+      color: #ff0055;
+      border-color: rgba(255,0,85,0.4);
+      background: rgba(255,0,85,0.07);
+    }
+    .badge-time {
+      color: var(--neon-cyan);
+      border-color: rgba(0,229,255,0.3);
+      background: rgba(0,229,255,0.06);
+    }
+    .badge-tool {
+      color: #bf80ff;
+      border-color: rgba(155,89,255,0.3);
+      background: rgba(155,89,255,0.06);
+    }
+    .badge-reward {
+      color: #fbbf24;
+      border-color: rgba(251,191,36,0.3);
+      background: rgba(251,191,36,0.05);
+    }
+
+    /* Decision Tree */
+    .decision-tree {
+      background: #030308;
+      border: 1px solid rgba(0,229,255,0.12);
+      border-radius: 8px;
+      padding: 24px 20px;
+      margin: 20px 0;
+      font-family: 'Fira Code', monospace;
+    }
+    .dt-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dt-node {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin: 6px 0;
+    }
+    .dt-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 30px;
+      padding-top: 2px;
+    }
+    .dt-connector-line {
+      width: 1px;
+      flex: 1;
+      background: rgba(0,229,255,0.2);
+      min-height: 16px;
+    }
+    .dt-branch-icon {
+      color: rgba(0,229,255,0.5);
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+    .dt-question {
+      background: rgba(0,229,255,0.06);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin: 4px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+    .dt-question:hover {
+      background: rgba(0,229,255,0.12);
+      border-color: var(--neon-cyan);
+      transform: translateX(3px);
+    }
+    .dt-question-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+    .dt-answer-yes {
+      background: rgba(0,255,102,0.05);
+      border: 1px solid rgba(0,255,102,0.2);
+      border-radius: 4px;
+      padding: 8px 12px;
+      margin: 4px 0 4px 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dt-answer-no {
+      background: rgba(255,0,85,0.05);
+      border: 1px solid rgba(255,0,85,0.2);
+      border-radius: 4px;
+      padding: 8px 12px;
+      margin: 4px 0 4px 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dt-answer-yes:hover {
+      background: rgba(0,255,102,0.1);
+      border-color: var(--neon-green);
+    }
+    .dt-answer-no:hover {
+      background: rgba(255,0,85,0.1);
+      border-color: var(--neon-red);
+    }
+    .dt-answer-yes span:first-child { color: var(--neon-green); font-weight: 700; }
+    .dt-answer-no span:first-child { color: var(--neon-red); font-weight: 700; }
+    .dt-answer-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+    .dt-arrow-to {
+      font-size: 0.8rem;
+      color: rgba(148,163,184,0.5);
+      margin-left: auto;
+      font-style: italic;
+    }
+    .dt-result-box {
+      background: rgba(155,89,255,0.08);
+      border: 1px solid rgba(155,89,255,0.3);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin: 6px 0 6px 30px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .dt-result-box.show { display: block; }
+    .dt-result-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      color: #bf80ff;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .dt-result-text {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* Interactive Checklist */
+    .phase-checklist {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      user-select: none;
+    }
+    .checklist-item:hover {
+      background: rgba(0,229,255,0.04);
+      border-color: rgba(0,229,255,0.12);
+    }
+    .checklist-item.checked {
+      background: rgba(0,255,102,0.04);
+      border-color: rgba(0,255,102,0.15);
+    }
+    .checklist-item.checked .check-box {
+      background: var(--neon-green);
+      border-color: var(--neon-green);
+      box-shadow: 0 0 8px rgba(0,255,102,0.5);
+    }
+    .checklist-item.checked .check-box::after {
+      content: '✓';
+      color: #000;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .checklist-item.checked .check-label {
+      text-decoration: line-through;
+      color: rgba(148,163,184,0.5);
+    }
+    .check-box {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(0,229,255,0.3);
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+      margin-top: 1px;
+    }
+    .check-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+      transition: all 0.25s ease;
+    }
+    .check-label code {
+      background: rgba(0,229,255,0.08);
+      color: var(--neon-cyan);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88em;
+    }
+    .checklist-progress-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: rgba(148,163,184,0.6);
+    }
+    .checklist-bar {
+      flex: 1;
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .checklist-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      box-shadow: 0 0 6px rgba(0,255,102,0.4);
+    }
+
+    /* Mistakes vs Best Practices */
+    .mistakes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .mistake-card {
+      padding: 16px;
+      border-radius: 6px;
+    }
+    .mistake-card.bad {
+      background: rgba(255,0,85,0.04);
+      border: 1px solid rgba(255,0,85,0.2);
+    }
+    .mistake-card.good {
+      background: rgba(0,255,102,0.04);
+      border: 1px solid rgba(0,255,102,0.2);
+    }
+    .mistake-card h5 {
+      margin: 0 0 12px 0;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mistake-card.bad h5 { color: var(--neon-red); }
+    .mistake-card.good h5 { color: var(--neon-green); }
+    .mistake-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .mistake-list li {
+      font-size: 0.92rem;
+      color: #94a3b8;
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .mistake-card.bad .mistake-list li::before {
+      content: '✗';
+      position: absolute;
+      left: 0;
+      color: var(--neon-red);
+      font-size: 0.8rem;
+    }
+    .mistake-card.good .mistake-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--neon-green);
+      font-size: 0.8rem;
+    }
+
+    /* OS Phase Section Labels */
+    .os-section-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      color: rgba(0,229,255,0.5);
+      text-transform: uppercase;
+      margin: 22px 0 8px 0;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(0,229,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .os-section-label::before {
+      content: '//';
+      color: rgba(0,229,255,0.3);
+    }
+
+    /* What / Goal info boxes */
+    .info-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .info-box {
+      padding: 14px 16px;
+      border-radius: 6px;
+    }
+    .info-box.what {
+      background: rgba(0,229,255,0.04);
+      border: 1px solid rgba(0,229,255,0.15);
+    }
+    .info-box.goal {
+      background: rgba(155,89,255,0.04);
+      border: 1px solid rgba(155,89,255,0.15);
+    }
+    .info-box h5 {
+      margin: 0 0 8px 0;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .info-box.what h5 { color: var(--neon-cyan); }
+    .info-box.goal h5 { color: #bf80ff; }
+    .info-box p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    /* Phase tip callout */
+    .tip-callout {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(251,191,36,0.05);
+      border: 1px solid rgba(251,191,36,0.2);
+      border-radius: 6px;
+      margin: 12px 0;
+    }
+    .tip-callout-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .tip-callout-text {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .tip-callout-text strong { color: #fbbf24; }
+
+    /* Real Case study — upgraded */
+    .case-study-card {
+      background: rgba(155,89,255,0.04);
+      border: 1px solid rgba(155,89,255,0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .case-study-header {
+      background: rgba(155,89,255,0.08);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(155,89,255,0.15);
+    }
+    .case-study-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      color: #bf80ff;
+      font-weight: 700;
+    }
+    .case-study-bounty {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: var(--neon-green);
+      background: rgba(0,255,102,0.06);
+      border: 1px solid rgba(0,255,102,0.2);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .case-study-body {
+      padding: 18px;
+    }
+    .case-study-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+    .case-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(155,89,255,0.15);
+      border: 1px solid rgba(155,89,255,0.3);
+      color: #bf80ff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .case-step-text {
+      font-size: 0.92rem;
+      color: #94a3b8;
+      line-height: 1.55;
+    }
+    .case-step-text strong { color: #e2e8f0; }
+    .case-step-text code {
+      background: rgba(0,229,255,0.07);
+      color: var(--neon-cyan);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85em;
+    }
+
+    @media (max-width: 900px) {
+      .mistakes-grid { grid-template-columns: 1fr; }
+      .info-duo { grid-template-columns: 1fr; }
+      .phase-module-title { font-size: 1.5rem; }
+    }
+
+    /* Decision Tree result boxes — hidden by default */
+    .dt-result-box {
+      display: none;
+      margin-top: 10px;
+      padding: 14px 16px;
+      background: rgba(0,229,255,0.04);
+      border: 1px solid rgba(0,229,255,0.15);
+      border-left: 3px solid var(--neon-cyan);
+      border-radius: 0 6px 6px 0;
+      animation: fadeIn 0.2s ease;
+    }
+    .dt-result-box.show { display: block; }
+    .dt-result-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      margin-bottom: 8px;
+    }
+    .dt-result-text {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+    .dt-result-text code {
+      background: rgba(0,229,255,0.07);
+      color: var(--neon-cyan);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85em;
+    }
+    .dt-branches {
+      display: flex;
+      gap: 10px;
+      margin: 8px 0;
+      flex-wrap: wrap;
+    }
+    .dt-answer-yes, .dt-answer-no {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      transition: all 0.2s ease;
+      flex: 1;
+      min-width: 160px;
+      border: 1px solid;
+    }
+    .dt-answer-yes {
+      background: rgba(0,255,102,0.06);
+      border-color: rgba(0,255,102,0.25);
+      color: var(--neon-green);
+    }
+    .dt-answer-yes:hover {
+      background: rgba(0,255,102,0.14);
+      border-color: var(--neon-green);
+      box-shadow: 0 0 12px rgba(0,255,102,0.15);
+    }
+    .dt-answer-yes span:first-child {
+      background: var(--neon-green);
+      color: #000;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+    .dt-answer-no {
+      background: rgba(255,0,85,0.04);
+      border-color: rgba(255,0,85,0.2);
+      color: rgba(255,100,130,0.8);
+    }
+    .dt-answer-no:hover {
+      background: rgba(255,0,85,0.1);
+      border-color: var(--neon-red);
+    }
+    .dt-answer-no span:first-child {
+      background: var(--neon-red);
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+    .dt-answer-text { flex: 1; color: #94a3b8; }
+    .dt-arrow-to {
+      font-size: 0.72rem;
+      color: rgba(148,163,184,0.5);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+  </style>
+
+  <style>
+    /* ============================================================
+       HUNT DASHBOARD — Active Session Sticky Panel
+    ============================================================ */
+    .hunt-dashboard {
+      background: rgba(2,2,6,0.98);
+      border-bottom: 1px solid rgba(0,229,255,0.1);
+      position: sticky;
+      top: 65px;
+      z-index: 90;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1);
+      backdrop-filter: blur(16px);
+    }
+    .hunt-dashboard.visible { max-height: 220px; }
+    .hunt-dash-inner {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 14px 28px;
+    }
+    /* Progress Ring SVG */
+    .hunt-ring-wrap {
+      position: relative;
+      width: 76px; height: 76px;
+      flex-shrink: 0;
+    }
+    .hunt-ring {
+      width: 76px; height: 76px;
+      transform: rotate(-90deg);
+    }
+    .ring-bg {
+      fill: none;
+      stroke: rgba(255,255,255,0.06);
+      stroke-width: 9;
+    }
+    .ring-progress {
+      fill: none;
+      stroke: url(#ringGrad);
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-dasharray: 213;
+      stroke-dashoffset: 213;
+      transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .ring-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+    .ring-pct-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--neon-cyan);
+      line-height: 1;
+    }
+    .ring-sub-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.55rem;
+      color: rgba(0,229,255,0.4);
+      line-height: 1;
+    }
+    /* Hunt Info */
+    .hunt-info { flex: 1; min-width: 0; }
+    .hunt-target-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: rgba(0,229,255,0.5);
+      letter-spacing: 2.5px;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+    }
+    .hunt-target-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hunt-phases-row {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    .hunt-phase-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid;
+    }
+    .hunt-phase-chip.done {
+      background: rgba(0,255,102,0.08);
+      border-color: rgba(0,255,102,0.3);
+      color: var(--neon-green);
+    }
+    .hunt-phase-chip.active {
+      background: rgba(0,229,255,0.08);
+      border-color: rgba(0,229,255,0.4);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0,229,255,0.15);
+      animation: pulse 2s infinite;
+    }
+    .hunt-phase-chip.pending {
+      background: rgba(255,255,255,0.02);
+      border-color: rgba(255,255,255,0.07);
+      color: rgba(148,163,184,0.4);
+    }
+    .hunt-phase-chip:hover {
+      border-color: rgba(0,229,255,0.3);
+      color: var(--neon-cyan);
+      transform: translateY(-1px);
+    }
+    .hunt-phase-count {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.68rem;
+      color: rgba(148,163,184,0.35);
+    }
+    /* Hunt Actions */
+    .hunt-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex-shrink: 0;
+      align-items: flex-end;
+    }
+    .hunt-btn {
+      padding: 8px 16px;
+      border-radius: 5px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 1px solid;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      background: transparent;
+    }
+    .hunt-btn.primary {
+      background: rgba(0,229,255,0.07);
+      border-color: rgba(0,229,255,0.3);
+      color: var(--neon-cyan);
+    }
+    .hunt-btn.primary:hover {
+      background: rgba(0,229,255,0.18);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 14px rgba(0,229,255,0.2);
+    }
+    .hunt-btn.danger {
+      background: rgba(255,0,85,0.04);
+      border-color: rgba(255,0,85,0.18);
+      color: rgba(255,0,85,0.6);
+      font-size: 0.72rem;
+      padding: 5px 12px;
+    }
+    .hunt-btn.danger:hover {
+      background: rgba(255,0,85,0.1);
+      border-color: var(--neon-red);
+      color: var(--neon-red);
+    }
+    .hunt-toggle-strip {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 0;
+      background: rgba(0,229,255,0.02);
+      border-bottom: 1px solid rgba(0,229,255,0.07);
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: rgba(0,229,255,0.35);
+      letter-spacing: 1px;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .hunt-toggle-strip:hover {
+      color: var(--neon-cyan);
+      background: rgba(0,229,255,0.05);
+    }
+
+    /* ============================================================
+       START HUNT MODAL — 3-Step Flow
+    ============================================================ */
+    .shunt-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.93);
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .shunt-box {
+      background: #070710;
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 12px;
+      padding: 32px 28px;
+      width: 90%;
+      max-width: 460px;
+      box-shadow: 0 0 60px rgba(0,229,255,0.08), 0 20px 60px rgba(0,0,0,0.9);
+      animation: bounceIn 0.28s ease;
+    }
+    .shunt-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .shunt-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: rgba(0,229,255,0.6);
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .shunt-input {
+      width: 100%;
+      background: rgba(0,229,255,0.04);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 6px;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 1.1rem;
+      padding: 12px 16px;
+      outline: none;
+      box-sizing: border-box;
+      margin-bottom: 18px;
+      transition: all 0.3s;
+    }
+    .shunt-input:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 16px rgba(0,229,255,0.15);
+    }
+    .shunt-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .shunt-option {
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .shunt-option:hover, .shunt-option.selected {
+      background: rgba(0,229,255,0.07);
+      border-color: rgba(0,229,255,0.3);
+      color: #fff;
+    }
+    .shunt-summary {
+      background: rgba(0,229,255,0.04);
+      border: 1px solid rgba(0,229,255,0.14);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.9;
+    }
+    .shunt-summary strong { color: var(--neon-cyan); }
+    .shunt-btns { display: flex; gap: 10px; }
+
+    /* ============================================================
+       MARK PHASE COMPLETE BUTTON
+    ============================================================ */
+    .mark-complete-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 18px;
+      margin-top: 28px;
+      background: rgba(0,255,102,0.06);
+      border: 1px solid rgba(0,255,102,0.25);
+      border-radius: 8px;
+      color: var(--neon-green);
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+    .mark-complete-btn:hover {
+      background: rgba(0,255,102,0.14);
+      border-color: var(--neon-green);
+      box-shadow: 0 0 24px rgba(0,255,102,0.18);
+      transform: translateY(-2px);
+    }
+    .mark-complete-btn.completed {
+      background: rgba(0,255,102,0.12);
+      border-color: var(--neon-green);
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+    .mark-complete-btn:disabled { opacity: 0.7; cursor: default; }
+
+    /* ============================================================
+       EXPECTED OUTPUT BOX
+    ============================================================ */
+    .expected-output {
+      background: rgba(0,255,102,0.02);
+      border: 1px solid rgba(0,255,102,0.1);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .expected-output-header {
+      padding: 7px 16px;
+      background: rgba(0,255,102,0.05);
+      border-bottom: 1px solid rgba(0,255,102,0.1);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: var(--neon-green);
+      letter-spacing: 1.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .expected-output-body {
+      padding: 12px 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: #4b5563;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+    .expected-output-body .hot { color: #fbbf24; }
+    .expected-output-body .crit { color: var(--neon-red); }
+
+    /* ============================================================
+       TOOL CARDS ROW
+    ============================================================ */
+    .tool-cards-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+    .tool-card-mini {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 7px;
+      padding: 12px 14px;
+      cursor: default;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 90px;
+    }
+    .tool-card-mini:hover {
+      border-color: rgba(0,229,255,0.22);
+      background: rgba(0,229,255,0.03);
+      transform: translateY(-2px);
+    }
+    .tool-name {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--neon-cyan);
+    }
+    .tool-tag {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      color: rgba(148,163,184,0.5);
+      line-height: 1.3;
+    }
+
+    /* ============================================================
+       IF NOTHING FOUND
+    ============================================================ */
+    .if-nothing-box {
+      background: rgba(251,191,36,0.04);
+      border: 1px solid rgba(251,191,36,0.15);
+      border-radius: 8px;
+      padding: 18px;
+      margin: 12px 0;
+    }
+    .if-nothing-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .if-nothing-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .if-nothing-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.92rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .if-nothing-list li::before {
+      content: '→';
+      color: #fbbf24;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-weight: 700;
+    }
+    .if-nothing-list li code {
+      color: var(--neon-cyan);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85em;
+      background: rgba(0,229,255,0.07);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* ============================================================
+       WHEN TO STOP
+    ============================================================ */
+    .stop-check-box {
+      background: rgba(0,229,255,0.03);
+      border: 1px solid rgba(0,229,255,0.12);
+      border-radius: 8px;
+      padding: 18px;
+      margin: 16px 0;
+    }
+    .stop-check-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ============================================================
+       CONFIRM DIALOGS
+    ============================================================ */
+    .confirm-dialog-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 8999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .confirm-dialog {
+      background: #080813;
+      border: 1px solid rgba(255,0,85,0.3);
+      border-radius: 10px;
+      padding: 28px;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255,0,85,0.12);
+      animation: bounceIn 0.2s ease;
+    }
+    .confirm-dialog h4 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--neon-red);
+      margin: 0 0 10px 0;
+      font-size: 1.1rem;
+    }
+    .confirm-dialog p {
+      color: #94a3b8;
+      font-size: 0.88rem;
+      margin: 0 0 20px 0;
+      line-height: 1.5;
+    }
+    .confirm-dialog-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hunt-dash-inner { padding: 12px 14px; gap: 12px; flex-wrap: wrap; min-height: auto; }
+      .hunt-ring-wrap { width: 60px; height: 60px; }
+      .hunt-ring { width: 60px; height: 60px; }
+      .hunt-phases-row { gap: 5px; }
+      .hunt-phase-chip { font-size: 0.62rem; padding: 3px 8px; }
+      .hunt-actions { flex-direction: row; }
+      .shunt-box { padding: 22px 18px; }
+      .tool-card-mini { min-width: 80px; }
+    }
   </style>
 
 </head>
@@ -1111,8 +2265,124 @@
     </div>
   </header>
 
+  <!-- =============================================
+       HUNT DASHBOARD — Sticky Active Session Panel
+  ============================================= -->
+  <div id="hunt-dashboard" class="hunt-dashboard">
+    <div class="hunt-toggle-strip" onclick="toggleHuntDash()" id="huntToggleStrip">
+      <span id="huntToggleIcon">▲</span> <span id="huntToggleLabel">ACTIVE HUNT SESSION</span>
+    </div>
+    <div class="hunt-dash-inner" id="huntDashInner">
+      <!-- Progress Ring -->
+      <div class="hunt-ring-wrap">
+        <svg class="hunt-ring" viewBox="0 0 76 76">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#00e5ff;stop-opacity:1"/>
+              <stop offset="100%" style="stop-color:#9b59ff;stop-opacity:1"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="38" cy="38" r="34"/>
+          <circle class="ring-progress" id="huntRingProgress" cx="38" cy="38" r="34"/>
+        </svg>
+        <div class="ring-label">
+          <div class="ring-pct-text" id="huntRingPct">0%</div>
+          <div class="ring-sub-text" id="huntPhaseFraction">0/6</div>
+        </div>
+      </div>
+      <!-- Hunt Info -->
+      <div class="hunt-info">
+        <div class="hunt-target-label">🎯 Active Hunt</div>
+        <div class="hunt-target-name" id="huntTargetDisplay">No active session</div>
+        <div class="hunt-phases-row" id="huntPhasesRow">
+          <div class="hunt-phase-chip pending">🌍 Recon</div>
+          <div class="hunt-phase-chip pending">⚙️ JS</div>
+          <div class="hunt-phase-chip pending">🔌 API</div>
+          <div class="hunt-phase-chip pending">🛡️ Vulns</div>
+          <div class="hunt-phase-chip pending">💉 SQLi</div>
+          <div class="hunt-phase-chip pending">🔑 IDOR</div>
+        </div>
+        <div class="hunt-phase-count" id="huntPhaseCount">Start a hunt to track progress</div>
+      </div>
+      <!-- Actions -->
+      <div class="hunt-actions">
+        <button class="hunt-btn primary" onclick="openStartHuntModal()">▶ Start Hunt</button>
+        <button class="hunt-btn danger" onclick="confirmResetHunt()" id="huntResetBtn" style="display:none;">⟳ Reset Hunt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       START HUNT MODAL — 3-Step Flow
+  ============================================= -->
+  <div id="start-hunt-modal" class="shunt-overlay" style="display:none;">
+    <div class="shunt-box">
+      <!-- Step 1: Target -->
+      <div id="shunt-step-1">
+        <div class="shunt-title">🎯 New Hunt Session</div>
+        <label class="shunt-label">// TARGET DOMAIN</label>
+        <input class="shunt-input" id="shuntTargetInput" placeholder="example.com" type="text"
+               onkeydown="if(event.key==='Enter') shuntNextStep(1)">
+        <div class="shunt-btns">
+          <button class="hunt-btn primary" onclick="shuntNextStep(1)" style="flex:1; padding:12px;">Continue →</button>
+          <button class="hunt-btn" onclick="closeStartHuntModal()" style="padding:12px 14px; border-color:rgba(255,255,255,0.1); color:#64748b;">✕</button>
+        </div>
+      </div>
+      <!-- Step 2: Program Type -->
+      <div id="shunt-step-2" style="display:none;">
+        <div class="shunt-title">📋 Program Type</div>
+        <div class="shunt-options">
+          <div class="shunt-option" onclick="selectProgram('bug_bounty', this)">🏆 Bug Bounty — HackerOne, Bugcrowd</div>
+          <div class="shunt-option" onclick="selectProgram('vdp', this)">📋 VDP — Vulnerability Disclosure Program</div>
+          <div class="shunt-option" onclick="selectProgram('internal', this)">🔒 Internal / Pentest</div>
+        </div>
+        <button class="hunt-btn" onclick="shuntBackStep()" style="border-color:rgba(255,255,255,0.1); color:#64748b;">← Back</button>
+      </div>
+      <!-- Step 3: Summary + Confirm -->
+      <div id="shunt-step-3" style="display:none;">
+        <div class="shunt-title">✅ Ready to Hunt</div>
+        <div id="shuntSummary" class="shunt-summary"></div>
+        <div class="shunt-btns">
+          <button class="hunt-btn primary" onclick="startHunt()" style="flex:1; padding:12px;">▶ Start Hunt</button>
+          <button class="hunt-btn" onclick="shuntBackStep2()" style="padding:12px 14px; border-color:rgba(255,255,255,0.1); color:#64748b;">← Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       CONFIRM DIALOGS
+  ============================================= -->
+  <!-- Reset Hunt -->
+  <div id="confirm-reset-overlay" class="confirm-dialog-overlay" style="display:none;" onclick="if(event.target===this) closeConfirmDlg('confirm-reset-overlay')">
+    <div class="confirm-dialog">
+      <h4>⟳ Reset Hunt?</h4>
+      <p>سيتم مسح الـ target والـ progress والـ checklists. يتم الاحتفاظ بالـ Bookmarks والإعدادات.</p>
+      <div class="confirm-dialog-btns">
+        <button class="hunt-btn danger" onclick="doResetHunt()" style="padding:9px 18px; font-size:0.82rem;">نعم، Reset</button>
+        <button class="hunt-btn" onclick="closeConfirmDlg('confirm-reset-overlay')" style="padding:9px 18px; border-color:rgba(255,255,255,0.1); color:#94a3b8;">إلغاء</button>
+      </div>
+      <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06);">
+        <button class="hunt-btn danger" onclick="confirmFactoryReset()" style="width:100%; font-size:0.72rem; opacity:0.6;">Factory Reset — مسح كل شيء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Factory Reset -->
+  <div id="confirm-factory-overlay" class="confirm-dialog-overlay" style="display:none;">
+    <div class="confirm-dialog">
+      <h4>⚠️ Factory Reset?</h4>
+      <p>سيتم مسح <strong>كل شيء</strong>: الـ Hunt، الـ Bookmarks، الـ visited pages، والـ theme. لا يمكن التراجع.</p>
+      <div class="confirm-dialog-btns">
+        <button class="hunt-btn danger" onclick="doFactoryReset()" style="padding:9px 18px; font-size:0.82rem;">مسح الكل</button>
+        <button class="hunt-btn" onclick="closeConfirmDlg('confirm-factory-overlay')" style="padding:9px 18px; border-color:rgba(255,255,255,0.1); color:#94a3b8;">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Main Container -->
   <main class="meth-container">
+
     
     <!-- Left Sidebar: Categorized Accordion Phases -->
     <div class="meth-sidebar">
@@ -1268,284 +2538,410 @@
     <!-- Right Viewer: Dynamic Content Panes -->
     <div class="meth-viewer">
       
-      <!-- Phase 0: Subdomains Workflow -->
+      <!-- Phase 0: Subdomain Enumeration — BUG BOUNTY OS MODULE -->
       <div class="meth-content-view" id="meth-content-p0" style="display: block; --tool-color: #00e5ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">💻</span> Subdomain Enumeration → Full Attack Surface</h2>
-          <p class="hero-tagline">الـ Workflow الكامل من جمع الـ Subdomains وصولاً إلى مرحلة الاستغلال الفعلي — كما يُستخدم في Bug Bounty الحقيقي</p>
-        </div>
 
-        <!-- Master Flowchart -->
-        <div class="cyber-card mobile-accordion">
-          <div class="card-header"><h3>🗺️ Full Recon → Exploitation Pipeline</h3></div>
-          <div class="flow-visualization">
-            <div class="flow-node active-stage" onclick="inspectNode('Subfinder', 'جمع النطاقات الفرعية بشكل سلبي من APIs ومصادر OSINT خارجية. الأسرع والأوسع تغطية.')">① Passive Recon</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('Amass', 'دمج نتائج أدوات متعددة وإزالة التكرار. الخطوة الأساسية قبل أي فحص نشط.')">② Merge &amp; Dedup</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('httpx', 'تصفية النطاقات الحية فعلياً مع كشف التقنيات والأكواد الحالة وعناوين IP.')">③ Alive Check</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('Naabu', 'فحص المنافذ المفتوحة بسرعة عالية ثم تفصيل الخدمات بـ Nmap.')">④ Port Scanning</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('Katana', 'الزحف على الصفحات واستخراج المسارات المخفية وملفات JS والـ Endpoints.')">⑤ Content Discovery</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('Nuclei', 'فحص تلقائي بآلاف القوالب للكشف عن ثغرات CVEs والمسارات الحساسة.')">⑥ Vuln Scan</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" style="border-color: var(--neon-red); color: var(--neon-red);" onclick="inspectNode('Subfinder', 'تحليل النتائج يدوياً وربطها: Takeover + IDOR + RCE + API bugs.')">⑦ Manual Exploit</div>
-          </div>
-          <div id="recon-inspector" class="node-inspector">
-            <div class="node-inspector-title" id="recon-inspector-title">Active Node Details</div>
-            <p id="recon-inspector-desc">انقر على أي مرحلة لعرض التفاصيل والأدوات.</p>
+        <!-- Phase Module Header -->
+        <div class="phase-module-header">
+          <div class="phase-module-icon">💻</div>
+          <div class="phase-module-meta">
+            <h1 class="phase-module-title">Subdomain Enumeration</h1>
+            <p class="phase-module-tagline">Build your full attack surface before touching the target — as used in real Bug Bounty</p>
+            <div class="phase-meta-badges">
+              <span class="badge badge-medium">🟠 Medium</span>
+              <span class="badge badge-time">⏱ 20-40 min</span>
+              <span class="badge badge-tool">🔧 subfinder · amass · httpx · nuclei</span>
+              <span class="badge badge-reward">💰 $500 → $5,000</span>
+            </div>
           </div>
         </div>
 
-        <!-- Phase 1: Passive Recon -->
-        <div class="cyber-card mobile-accordion">
-          <div class="card-header"><h3>🧩 المرحلة 1 — Passive Recon (جمع بدون لمس الهدف)</h3></div>
-          <p style="color:var(--text-secondary); margin-bottom:12px;">الهدف: جمع أكبر عدد ممكن من الـ Subdomains من مصادر خارجية فقط — بدون أي طلبات مباشرة للهدف.</p>
+        <!-- WHAT & GOAL -->
+        <div class="info-duo">
+          <div class="info-box what">
+            <h5>📖 What is it?</h5>
+            <p>عملية اكتشاف كل النطاقات الفرعية المرتبطة بالهدف من مصادر OSINT خارجية أو DNS نشط — بدون لمس الـ target مباشرة.</p>
+          </div>
+          <div class="info-box goal">
+            <h5>🎯 Goal</h5>
+            <p>بناء أوسع Attack Surface ممكن. كل subdomain = نقطة دخول: Takeover / Admin panel / Dev environment / API مكشوف.</p>
+          </div>
+        </div>
+
+        <!-- DECISION TREE — Real Branching -->
+        <p class="os-section-label">🌳 Decision Tree — Follow the Path</p>
+        <div class="cyber-card">
+          <div class="card-header"><h3>🌳 Interactive Decision Tree — انقر على إجابتك</h3></div>
+          <div class="decision-tree">
+
+            <!-- ROOT QUESTION -->
+            <div style="margin-bottom:14px;">
+              <div class="dt-question" onclick="dtBranch('dtq1y','dtq1n')">
+                <div class="dt-question-text">🚦 هل عندك scope واضح من الـ program؟ (*.target.com أم target.com فقط؟)</div>
+              </div>
+              <div class="dt-branches">
+                <div class="dt-answer-yes" onclick="dtBranch('dtq1y','dtq1n')">
+                  <span>YES</span><span class="dt-answer-text">عندي scope واضح</span>
+                  <span class="dt-arrow-to">→ ابدأ Passive Recon</span>
+                </div>
+                <div class="dt-answer-no" onclick="dtBranch('dtq1n','dtq1y')">
+                  <span>NO</span><span class="dt-answer-text">غير متأكد</span>
+                  <span class="dt-arrow-to">→ اقرأ الـ Policy أولاً</span>
+                </div>
+              </div>
+              <div id="dtq1n" class="dt-result-box">
+                <div class="dt-result-title">⛔ Stop — اقرأ الـ Policy أولاً</div>
+                <div class="dt-result-text">
+                  قبل أي شيء: افتح صفحة الـ program على HackerOne / Bugcrowd وحدد:<br>
+                  • ما هو الـ in-scope? (wildcard *.target.com أم subdomain محددة؟)<br>
+                  • ما المستثنى؟ (production DB, payment systems, 3rd party)<br>
+                  • هل مسموح بـ automated scanning؟<br>
+                  ثم ارجع وابدأ.
+                </div>
+              </div>
+              <div id="dtq1y" class="dt-result-box">
+                <div class="dt-result-title">✅ شغّل Passive Recon — ثم أجب:</div>
+                <div class="dt-result-text">
+                  <code>subfinder + amass + assetfinder + gau</code> → دمج النتائج → <code>sort -u</code>
+                </div>
+                <!-- Q2 Nested -->
+                <div style="margin-top:12px;">
+                  <div class="dt-question" onclick="dtBranch('dtq2y','dtq2n')">
+                    <div class="dt-question-text">📊 هل وجدت 100+ subdomain من الـ Passive Recon؟</div>
+                  </div>
+                  <div class="dt-branches">
+                    <div class="dt-answer-yes" onclick="dtBranch('dtq2y','dtq2n')">
+                      <span>YES</span><span class="dt-answer-text">نتائج كثيرة</span>
+                      <span class="dt-arrow-to">→ Live Check بـ httpx</span>
+                    </div>
+                    <div class="dt-answer-no" onclick="dtBranch('dtq2n','dtq2y')">
+                      <span>NO</span><span class="dt-answer-text">نتائج قليلة</span>
+                      <span class="dt-arrow-to">→ مصادر إضافية</span>
+                    </div>
+                  </div>
+                  <div id="dtq2n" class="dt-result-box">
+                    <div class="dt-result-title">🔍 جرب مصادر إضافية</div>
+                    <div class="dt-result-text">
+                      • <code>crt.sh/?q=%.target.com</code> — Certificate Transparency<br>
+                      • Shodan: <code>ssl.cert.subject.CN:target.com</code><br>
+                      • Google: <code>site:*.target.com -www</code><br>
+                      • GitHub: <code>"target.com" extension:js</code><br>
+                      • <code>amass enum -active -brute -d target.com</code>
+                    </div>
+                  </div>
+                  <div id="dtq2y" class="dt-result-box">
+                    <div class="dt-result-title">✅ شغّل httpx — ثم أجب:</div>
+                    <div class="dt-result-text"><code>httpx -l all_subs.txt -status-code -title -tech-detect</code></div>
+                    <!-- Q3 Nested -->
+                    <div style="margin-top:12px;">
+                      <div class="dt-question" onclick="dtBranch('dtq3y','dtq3n')">
+                        <div class="dt-question-text">🔴 هل وجدت: dev / staging / admin / test / api في أسماء الـ subdomains؟</div>
+                      </div>
+                      <div class="dt-branches">
+                        <div class="dt-answer-yes" onclick="dtBranch('dtq3y','dtq3n')">
+                          <span>YES</span><span class="dt-answer-text">وجدت</span>
+                          <span class="dt-arrow-to">→ أولوية قصوى!</span>
+                        </div>
+                        <div class="dt-answer-no" onclick="dtBranch('dtq3n','dtq3y')">
+                          <span>NO</span><span class="dt-answer-text">لم أجد</span>
+                          <span class="dt-arrow-to">→ فحص CNAME + Ports</span>
+                        </div>
+                      </div>
+                      <div id="dtq3y" class="dt-result-box">
+                        <div class="dt-result-title">🎯 HIGH PRIORITY — Dev/Staging/Admin Found!</div>
+                        <div class="dt-result-text">
+                          هذه بيئات اختبار غالباً حمايتها أضعف:<br>
+                          • Default creds: <code>admin:admin</code>, <code>test:test</code>, <code>admin:password123</code><br>
+                          • Debug endpoints: <code>/debug</code>, <code>/console</code>, <code>/phpinfo.php</code>, <code>/.env</code><br>
+                          • APIs بدون auth: <code>/api/v1/users</code>, <code>/internal/</code><br>
+                          💰 هذا النوع يعطي $500-$5,000 بسهولة نسبياً
+                        </div>
+                      </div>
+                      <div id="dtq3n" class="dt-result-box">
+                        <div class="dt-result-title">→ فحص CNAME ثم Port Scan</div>
+                        <div class="dt-result-text">
+                          • <code>dig sub.target.com CNAME</code> على كل 404 response<br>
+                          • NXDOMAIN = Takeover محتمل → راجع قسم الـ Takeover أدناه<br>
+                          • <code>naabu -l alive.txt -p 6379,9200,5601,2375,27017</code>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- BONUS: 404 Check -->
+            <div style="margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.05);">
+              <div class="dt-question" onclick="dtBranch('dtq4y')">
+                <div class="dt-question-text">🔍 بونص: هل وجدت subdomain يظهر "Web Site not found" أو "NoSuchBucket"؟</div>
+              </div>
+              <div id="dtq4y" class="dt-result-box">
+                <div class="dt-result-title">🚨 Subdomain Takeover محتمل!</div>
+                <div class="dt-result-text">
+                  • شغّل: <code>dig sub.target.com CNAME</code><br>
+                  • إذا رجع CNAME → خدمة سحابية → ثم NXDOMAIN = Dangling DNS = Takeover!<br>
+                  • راجع: <code>nuclei -l all_subs.txt -t nuclei-templates/takeovers/</code><br>
+                  • Fingerprints: Azure (azurewebsites.net), GitHub Pages, Heroku, Fastly, Shopify
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOOLS -->
+        <p class="os-section-label">🔧 Tools</p>
+        <div class="tool-cards-row">
+          <div class="tool-card-mini">
+            <div class="tool-name">subfinder</div>
+            <div class="tool-tag">Passive OSINT — أسرع وأوسع تغطية</div>
+          </div>
+          <div class="tool-card-mini">
+            <div class="tool-name">amass</div>
+            <div class="tool-tag">Deep OSINT + DNS brute — الأشمل والأبطأ</div>
+          </div>
+          <div class="tool-card-mini">
+            <div class="tool-name">assetfinder</div>
+            <div class="tool-tag">crt.sh + Facebook CT — سريع</div>
+          </div>
+          <div class="tool-card-mini">
+            <div class="tool-name">httpx</div>
+            <div class="tool-tag">Live check + tech + status codes</div>
+          </div>
+          <div class="tool-card-mini">
+            <div class="tool-name">nuclei</div>
+            <div class="tool-tag">Takeover templates + CVEs</div>
+          </div>
+          <div class="tool-card-mini">
+            <div class="tool-name">naabu</div>
+            <div class="tool-tag">Port scan — منافذ غير معيارية</div>
+          </div>
+        </div>
+
+        <!-- COMMANDS + EXPECTED OUTPUT -->
+        <p class="os-section-label">💻 Commands</p>
+
+        <!-- Step 1: Passive -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>① Passive Collection</h3></div>
           <div class="cmd-ui-box">
             <div class="cmd-ui-top">subfinder -d target.com -all -recursive -silent -o subfinder.txt
 amass enum -passive -d target.com -o amass.txt
 assetfinder --subs-only target.com > assetfinder.txt
-waybackurls target.com | grep target.com | cut -d "/" -f3 | sort -u > wayback.txt
+gau target.com | grep -oP '(?<=://)[^/?]+' | sort -u > gau.txt
 
-# دمج الكل وإزالة التكرار
-cat subfinder.txt amass.txt assetfinder.txt wayback.txt | sort -u > all_subs.txt
-wc -l all_subs.txt  # عدد النتائج الكلي</div>
+# Merge & deduplicate all sources
+cat subfinder.txt amass.txt assetfinder.txt gau.txt | sort -u > all_subs.txt
+echo "[*] Total unique: $(wc -l < all_subs.txt)"</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -all -recursive -silent -o subfinder.txt\namass enum -passive -d target.com -o amass.txt\nassetfinder --subs-only target.com > assetfinder.txt\nwaybackurls target.com | grep target.com | cut -d \"/\" -f3 | sort -u > wayback.txt\ncat subfinder.txt amass.txt assetfinder.txt wayback.txt | sort -u > all_subs.txt', this)">📋 Copy All</button>
+              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -all -recursive -silent -o subfinder.txt\namass enum -passive -d target.com -o amass.txt\nassetfinder --subs-only target.com > assetfinder.txt\ncat subfinder.txt amass.txt assetfinder.txt | sort -u > all_subs.txt', this)">📋 Copy</button>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('subfinder -d target.com')">▶ Simulate</button>
             </div>
           </div>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead><tr><th>الأداة</th><th>المصدر</th><th>الأفضل لـ</th><th>السرعة</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Subfinder</strong></td><td>Shodan, Censys, VirusTotal, DNS</td><td>Bug Bounty اليومي</td><td><span class="text-neon-green">⚡ Ultra Fast</span></td></tr>
-              <tr><td><strong>Amass</strong></td><td>OSINT + DNS Brute + ASN</td><td>الشمولية والدقة</td><td><span class="text-secondary">🐢 Slow but Deep</span></td></tr>
-              <tr><td><strong>Assetfinder</strong></td><td>crt.sh, Facebook CT</td><td>سرعة أولية</td><td><span class="text-neon-cyan">⚡ Fast</span></td></tr>
-              <tr><td><strong>Waybackurls</strong></td><td>Wayback Machine Archive</td><td>النطاقات القديمة المؤرشفة</td><td><span class="text-neon-cyan">⚡ Fast</span></td></tr>
-            </tbody>
-          </table></div>
+          <div class="expected-output">
+            <div class="expected-output-header">⬇ EXPECTED OUTPUT</div>
+            <div class="expected-output-body">api.target.com
+<span class="hot">dev.target.com              ← HOT 🎯</span>
+<span class="hot">staging-auth.target.com     ← HOT 🎯</span>
+<span class="hot">admin.target.com            ← HOT 🎯</span>
+assets.target.com
+cdn.target.com
+mail.target.com
+...
+[*] Total unique: <span class="hot">347 subdomains</span>
+
+<span style="color:rgba(100,116,139,0.6)">Normal: 100-500 | Large targets: 500-2000+</span>
+<span style="color:rgba(100,116,139,0.6)">Flag: dev / staging / admin / test / api → check first</span></div>
+          </div>
         </div>
 
-        <!-- Phase 2: Alive Check -->
-        <div class="cyber-card mobile-accordion">
-          <div class="card-header"><h3>🌐 المرحلة 2 — Alive Check (التحقق من النطاقات الحية)</h3></div>
-          <p style="color:var(--text-secondary); margin-bottom:12px;">فلترة النطاقات الشغالة فعلاً وجمع معلومات أولية عن كل هدف.</p>
+        <!-- Step 2: Live Check -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>② Live Host Check + Fingerprint</h3></div>
           <div class="cmd-ui-box">
             <div class="cmd-ui-top">httpx -l all_subs.txt -status-code -title -tech-detect -ip -o alive.txt
 
-# الناتج يكون هكذا:
-# https://admin.target.com [200] [Admin Dashboard] [Tech: PHP/7.4, Apache] [IP: 1.2.3.4]
-# https://dev.target.com   [200] [DevEnv]          [Tech: Node.js, Nginx]  [IP: 1.2.3.5]
-# https://api.target.com   [403] [Forbidden]       [Tech: Express]         [IP: 1.2.3.6]
-
-# استخراج فقط الحية (200/301/302/403)
-cat alive.txt | grep -E "\[200\]|\[301\]|\[302\]|\[403\]" > targets.txt</div>
+# Filter interesting targets
+grep -E "\[200\]|\[403\]|\[301\]" alive.txt > targets.txt
+echo "Live hosts: $(wc -l < alive.txt)"</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('httpx -l all_subs.txt -status-code -title -tech-detect -ip -o alive.txt', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('httpx -l all_subs.txt -status-code -title -tech-detect -ip -o alive.txt\ngrep -E \"\\[200\\]|\\[403\\]|\\[301\\]\" alive.txt > targets.txt', this)">📋 Copy</button>
               <button class="cmd-btn run-btn" onclick="triggerTerminalSim('httpx -l subs.txt')">▶ Simulate</button>
             </div>
           </div>
-          <p style="color:var(--text-secondary); font-size:0.88rem; margin-top:10px;">💡 <strong>ركز على:</strong> 403 Forbidden (مكانك تحاول تتخطاه) — Admin panels — Dev/Staging subdomains — خوادم بإصدارات قديمة</p>
-        </div>
+          <div class="expected-output">
+            <div class="expected-output-header">⬇ EXPECTED OUTPUT</div>
+            <div class="expected-output-body">https://api.target.com [<span class="hot">200</span>] [API Portal] [Node.js, Express, nginx]
+https://<span class="hot">dev</span>.target.com [<span class="hot">200</span>] [DevEnv - Internal] [PHP/8.1, nginx]     <span class="hot">← TEST THIS</span>
+https://admin.target.com [<span class="crit">403</span>] [Forbidden] [Apache]                 <span class="hot">← TRY BYPASS</span>
+https://old.target.com [<span class="crit">404</span>] Not Found                               <span class="crit">← CHECK CNAME</span>
+https://cdn.target.com [301] → assets.cdn.net
 
-        <!-- Phase 3: Port Scanning -->
-        <div class="cyber-card mobile-accordion">
-          <div class="card-header"><h3>🔍 المرحلة 3 — Port Scanning (توسيع Attack Surface)</h3></div>
-          <p style="color:var(--text-secondary); margin-bottom:12px;">كتير من الثغرات موجودة على منافذ غير 80/443 — لازم تفحص كل المنافذ.</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top"># خطوة 1: فحص سريع للمنافذ الشائعة
-naabu -l alive.txt -top-ports 1000 -silent -o ports.txt
-
-# خطوة 2: تفصيل عميق بـ Nmap
-nmap -iL ports.txt -sV -sC -Pn --open -oN nmap_full.txt
-
-# أو مباشرة للنطاقات الحية:
-nmap -sV -sC -p- --min-rate 5000 -Pn target.com -oN nmap.txt</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('naabu -l alive.txt -top-ports 1000 -silent -o ports.txt\nnmap -iL ports.txt -sV -sC -Pn --open -oN nmap_full.txt', this)">📋 Copy</button>
-            </div>
-          </div>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead><tr><th>المنفذ</th><th>الخدمة</th><th>الثغرة المحتملة</th></tr></thead>
-            <tbody>
-              <tr><td><code>5601</code></td><td>Kibana Dashboard</td><td><span class="text-neon-red">Unauthenticated Access → Data Exfiltration</span></td></tr>
-              <tr><td><code>8080/8443</code></td><td>Dev Web Servers</td><td><span class="text-neon-red">Admin panels, debug endpoints</span></td></tr>
-              <tr><td><code>6379</code></td><td>Redis</td><td><span class="text-neon-red">No Auth → RCE via SSRF chaining</span></td></tr>
-              <tr><td><code>9200/9300</code></td><td>Elasticsearch</td><td><span class="text-neon-red">Unauthenticated data access</span></td></tr>
-              <tr><td><code>27017</code></td><td>MongoDB</td><td><span class="text-neon-red">No Auth → full DB read/write</span></td></tr>
-              <tr><td><code>2375</code></td><td>Docker API</td><td><span class="text-neon-red">RCE via container escape</span></td></tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <!-- Phase 4: Content Discovery -->
-        <div class="cyber-card mobile-accordion">
-          <div class="card-header"><h3>🧠 المرحلة 4 — Content Discovery (Endpoints + Hidden Paths)</h3></div>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top"># Crawling (الزحف التلقائي)
-katana -list alive.txt -d 5 -jc -kf -ef woff,css,png,svg,jpg -o crawl.txt
-
-# Fuzzing (تخمين المسارات)
-ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \
-     -mc 200,301,302,403 -t 100 -o ffuf_results.txt
-
-# فحص ملفات حساسة مباشرة
-ffuf -u https://target.com/FUZZ -w sensitive_files.txt \
-     -mc 200 -t 50</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('katana -list alive.txt -d 5 -jc -kf -ef woff,css,png,svg,jpg -o crawl.txt\nffuf -u https://target.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -mc 200,301,302,403 -t 100 -o ffuf_results.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('ffuf -u target.com/FUZZ')">▶ Simulate FFUF</button>
-            </div>
+<span style="color:rgba(100,116,139,0.6)">403 = Try bypass headers | 404 = Check CNAME for Takeover | Dev = Default creds</span></div>
           </div>
         </div>
 
-        <!-- Phase 5: Vuln Scan -->
-        <div class="cyber-card mobile-accordion">
-          <div class="card-header"><h3>🧪 المرحلة 5 — Vulnerability Scanning (Automation Layer)</h3></div>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top"># Nuclei - فحص شامل بقوالب جاهزة
-nuclei -l alive.txt -t nuclei-templates/ -severity critical,high -o nuclei.txt
-
-# فحص Subdomain Takeover تحديداً
-nuclei -l all_subs.txt -t nuclei-templates/takeovers/ -o takeovers.txt
-
-# مثال Nuclei output:
-# [subdomain-takeover:azure] [http] [critical] https://old-api.target.com
-# [exposed-kibana] [http] [high] https://logs.target.com:5601</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('nuclei -l alive.txt -t nuclei-templates/ -severity critical,high -o nuclei.txt\nnuclei -l all_subs.txt -t nuclei-templates/takeovers/ -o takeovers.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('nuclei')">▶ Simulate Nuclei</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Phase 6: Subdomain Takeover - Full Chain -->
-        <div class="cyber-card mobile-accordion" style="border-color: rgba(255,0,85,0.3);">
-          <div class="card-header"><h3>🚨 المرحلة 6 — Recon → Exploitation: Subdomain Takeover Chain</h3></div>
-          <p style="color: var(--text-secondary); margin-bottom:14px;">هنا الفرق بين مبتدئ وـ Bug Bounty Hunter فعلي. مش الأدوات هي المهمة — المهم هو <strong style="color:var(--neon-cyan)">الربط بين النتائج</strong>.</p>
-
-          <div class="flow-visualization" style="margin-bottom: 16px;">
-            <div class="flow-node" style="border-color:var(--neon-cyan); font-size:0.85rem;">① Subfinder يلاقي<br><code>old-api.target.com</code></div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" style="border-color:var(--neon-cyan); font-size:0.85rem;">② httpx يرجع<br>404 / Error page</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" style="border-color:var(--neon-orange); font-size:0.85rem;">③ dig يكشف CNAME<br>→ azurewebsites.net</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" style="border-color:var(--neon-red); font-size:0.85rem;">④ NXDOMAIN<br>= Dangling Record!</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" style="border-color:var(--neon-red); color:var(--neon-red); font-size:0.85rem;">⑤ Register Azure App<br>= Full Takeover ✅</div>
-          </div>
-
-          <div style="margin-bottom: 14px;">
-            <div class="card-header" style="margin-bottom:8px;"><h3 style="font-size:0.95rem;">Step A — تأكيد الـ CNAME المعلق</h3></div>
-            <div class="cmd-ui-box">
-              <div class="cmd-ui-top"># فحص DNS record
-dig sub.target.com CNAME
-host sub.target.com
-
-# الناتج الذي تبحث عنه:
-# sub.target.com.  300  IN  CNAME  something.azurewebsites.net.
-# something.azurewebsites.net: NXDOMAIN  ← هذا يعني الخدمة محذوفة!</div>
-              <div class="cmd-ui-bottom">
-                <button class="cmd-btn" onclick="copyText('dig sub.target.com CNAME\nhost sub.target.com', this)">📋 Copy</button>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-bottom: 14px;">
-            <div class="card-header" style="margin-bottom:8px;"><h3 style="font-size:0.95rem;">Step B — تأكيد الخدمة المحذوفة</h3></div>
-            <div class="cmd-ui-box">
-              <div class="cmd-ui-top"># افتح في المتصفح:
-https://sub.target.com
-
-# لو شفت رسائل زي:
-# "404 Web Site not found" → Azure App Service (takeable!)
-# "NoSuchBucket"           → AWS S3 Bucket (takeable!)
-# "There isn't a GitHub Pages site here" → GitHub Pages (takeable!)
-# "No such app"            → Heroku (takeable!)</div>
-              <div class="cmd-ui-bottom">
-                <button class="cmd-btn" onclick="copyText('curl -s -o /dev/null -w \"%{http_code}\" https://sub.target.com', this)">📋 Copy cURL Check</button>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-bottom: 14px;">
-            <div class="card-header" style="margin-bottom:8px;"><h3 style="font-size:0.95rem;">Step C — الاستغلال (Conceptual)</h3></div>
-            <div class="cmd-ui-box">
-              <div class="cmd-ui-top"># Azure App Service Takeover:
-# 1. اعمل App Service جديد في Azure بنفس الـ hostname
-# 2. ارفع HTML بسيط
-# 3. الآن sub.target.com بيشير لـ serverك!
-
-# AWS S3 Takeover:
-aws s3api create-bucket --bucket sub.target.com --region us-east-1
-echo '&lt;html&gt;&lt;body&gt;Subdomain Taken&lt;/body&gt;&lt;/html&gt;' > index.html
-aws s3 website s3://sub.target.com --index-document index.html
-
-# GitHub Pages Takeover:
-# اعمل repo باسم username.github.io وادخل CNAME file بالـ subdomain</div>
-              <div class="cmd-ui-bottom">
-                <button class="cmd-btn" onclick="copyText('aws s3api create-bucket --bucket sub.target.com --region us-east-1', this)">📋 Copy S3 Command</button>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-bottom:0;">
-            <div class="card-header" style="margin-bottom:8px;"><h3 style="font-size:0.95rem;">Step D — Impact الحقيقي (ليه هو Critical؟)</h3></div>
-            <div class="table-wrapper"><table class="interactive-table">
-              <thead><tr><th>الاستغلال</th><th>الشرط</th><th>الخطورة</th></tr></thead>
-              <tbody>
-                <tr><td><strong>Cookie Stealing</strong></td><td>Cookie بـ <code>domain=.target.com</code></td><td><span class="text-neon-red">Critical</span></td></tr>
-                <tr><td><strong>Session Hijacking</strong></td><td>SSO مربوط بنفس الـ domain</td><td><span class="text-neon-red">Critical</span></td></tr>
-                <tr><td><strong>Phishing داخل نطاق موثوق</strong></td><td>أي takeover</td><td><span class="text-neon-red">High</span></td></tr>
-                <tr><td><strong>CSP / CORS Bypass</strong></td><td>لو في whitelist للـ subdomain</td><td><span class="text-neon-red">High</span></td></tr>
-                <tr><td><strong>XSS via postMessage</strong></td><td>لو في iframe مربوط</td><td><span class="text-neon-cyan">Medium</span></td></tr>
-                <tr><td><strong>SSRF Chaining</strong></td><td>Internal network access</td><td><span class="text-neon-red">Critical</span></td></tr>
-              </tbody>
-            </table></div>
-          </div>
-        </div>
-
-        <!-- Pro Tip -->
-        <div class="cyber-card mobile-accordion" style="border-color: rgba(0,255,102,0.2); background: rgba(0,255,102,0.02);">
-          <div class="card-header"><h3 style="color:var(--neon-green);">🧠 Pro Tips — اللي تفرقك عن 90% من الناس</h3></div>
-          <ul class="t-check-list">
-            <li>✔ <strong>Subdomain + CNAME + Cloud service missing</strong> = Takeover → $500-$5000</li>
-            <li>✔ <strong>API endpoint + no auth check</strong> = IDOR/BOLA → $1000-$10000</li>
-            <li>✔ <strong>JS file + hidden endpoint + weak auth</strong> = Admin panel access</li>
-            <li>✔ <strong>Port 6379 Redis + SSRF</strong> = RCE بدون كود exploitation مباشر</li>
-            <li>✔ <strong>Dev/Staging subdomain + default creds</strong> = أسرع طريق لـ High Severity</li>
-            <li>✔ <strong>Old API version /v1/ بدل /v2/</strong> = تخطي الحماية الجديدة</li>
+        <!-- CHECKLIST -->
+        <p class="os-section-label">✅ Checklist — Saved Automatically</p>
+        <div class="cyber-card">
+          <div class="card-header"><h3>☑ Subdomain Enumeration Checklist</h3></div>
+          <ul class="phase-checklist" id="checklist-p0">
+            <li class="checklist-item" onclick="toggleCheck(this,'p0',0)">
+              <div class="check-box"></div>
+              <div class="check-label">شغّل <code>subfinder -d target.com -all -recursive -silent</code></div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0',1)">
+              <div class="check-box"></div>
+              <div class="check-label">شغّل <code>amass enum -passive -d target.com</code></div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0',2)">
+              <div class="check-box"></div>
+              <div class="check-label">شغّل <code>assetfinder --subs-only target.com</code> + <code>gau</code></div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0',3)">
+              <div class="check-box"></div>
+              <div class="check-label">دمج النتائج: <code>cat *.txt | sort -u > all_subs.txt</code></div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0',4)">
+              <div class="check-box"></div>
+              <div class="check-label">شغّل <code>httpx -l all_subs.txt -status-code -title -tech-detect</code></div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0',5)">
+              <div class="check-box"></div>
+              <div class="check-label">افحص <code>dev / staging / admin / test / api</code> subdomains أولاً</div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0',6)">
+              <div class="check-box"></div>
+              <div class="check-label">شغّل <code>dig CNAME</code> على كل 404 response</div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0',7)">
+              <div class="check-box"></div>
+              <div class="check-label">شغّل <code>nuclei -l all_subs.txt -t nuclei-templates/takeovers/</code></div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0',8)">
+              <div class="check-box"></div>
+              <div class="check-label">شغّل <code>naabu -l alive.txt -p 6379,9200,5601,27017,2375</code></div>
+            </li>
           </ul>
-          <div style="margin-top: 14px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="cmd-btn run-btn" onclick="openMethPhase('p1')" style="font-family:var(--font-heading);">📡 Port Scanning Deep Dive</button>
-            <button class="cmd-btn run-btn" onclick="openMethPhase('p_matrix')" style="font-family:var(--font-heading);">🎯 Decision Matrix</button>
-            <button class="cmd-btn run-btn" onclick="openMethPhase('p4')" style="font-family:var(--font-heading);">📜 JS Recon Next</button>
+          <div class="checklist-progress-mini">
+            <span id="p0-checklist-count">0 / 9 completed</span>
+            <div class="checklist-bar"><div class="checklist-bar-fill" id="p0-checklist-bar" style="width:0%"></div></div>
           </div>
         </div>
 
-        <!-- Full Case Study -->
-        <div class="cyber-card mobile-accordion" style="border: 1px solid rgba(155, 89, 255, 0.2); background: rgba(155, 89, 255, 0.03); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Starbucks Subdomain Takeover — Full Chain</h3></div>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead><tr><th>الخطوة</th><th>الإجراء</th><th>النتيجة</th></tr></thead>
-            <tbody>
-              <tr><td>① Discovery</td><td><code>subfinder -d starbucks.com</code></td><td>اكتشاف <code>starbucks-api.azurewebsites.net</code></td></tr>
-              <tr><td>② Verification</td><td><code>dig starbucks-api.starbucks.com CNAME</code></td><td>CNAME → Azure → <span class="text-neon-red">NXDOMAIN</span></td></tr>
-              <tr><td>③ Confirmation</td><td>فتح <code>https://starbucks-api.starbucks.com</code></td><td>"404 Web Site not found" on Azure</td></tr>
-              <tr><td>④ Exploitation</td><td>تسجيل Azure App Service بنفس المعرف</td><td>التحكم الكامل في محتوى الـ subdomain</td></tr>
-              <tr><td>⑤ Impact</td><td>Cookies بـ <code>.starbucks.com</code> مسربة لـ server المهاجم</td><td>Session Hijacking لكل زبائن التطبيق</td></tr>
-              <tr><td>⑥ Report</td><td>Responsible Disclosure لـ Starbucks Security Team</td><td><span class="text-neon-green">$2,000 Bug Bounty ✅</span></td></tr>
-            </tbody>
-          </table></div>
-          <p style="margin-top:12px; color:var(--text-secondary); font-size:0.88rem;">⚠️ <strong>ملاحظة:</strong> الاستغلال الفعلي يتم فقط ضمن نطاق Bug Bounty المصرح به. التوثيق والـ Proof of Concept هو ما يُرسل للشركة.</p>
+        <!-- IF NOTHING FOUND -->
+        <p class="os-section-label">🔍 If Nothing Found</p>
+        <div class="if-nothing-box">
+          <div class="if-nothing-title">❓ نتائج قليلة جداً؟ جرب هذه:</div>
+          <ul class="if-nothing-list">
+            <li>Certificate Transparency: <code>https://crt.sh/?q=%.target.com</code></li>
+            <li>Shodan: <code>ssl.cert.subject.CN:target.com</code> أو <code>hostname:target.com</code></li>
+            <li>Google dorking: <code>site:*.target.com -www -blog</code></li>
+            <li>GitHub dorking: <code>"target.com" extension:js OR extension:env</code></li>
+            <li>Active DNS Brute: <code>amass enum -active -brute -d target.com -w /opt/wordlists/subdomains.txt</code></li>
+            <li>WaybackMachine: <code>waybackurls target.com | grep target.com | cut -d/ -f3 | sort -u</code></li>
+          </ul>
         </div>
+
+        <!-- COMMON MISTAKES vs BEST PRACTICES -->
+        <p class="os-section-label">⚠️ Common Mistakes vs Best Practices</p>
+        <div class="cyber-card">
+          <div class="card-header"><h3>❌ ✅ الأخطاء مقابل أفضل الممارسات</h3></div>
+          <div class="mistakes-grid">
+            <div class="mistake-card bad">
+              <h5>❌ Common Mistakes</h5>
+              <ul class="mistake-list">
+                <li>الاكتفاء بـ subfinder وحدها فقط</li>
+                <li>تجاهل 404 responses بدون فحص CNAME</li>
+                <li>عدم فحص المنافذ غير المعيارية</li>
+                <li>تجاهل subdomains القديمة المؤرشفة</li>
+                <li>بدء Active Recon قبل انتهاء Passive</li>
+                <li>نسيان wildcard: <code>*.target.com</code></li>
+              </ul>
+            </div>
+            <div class="mistake-card good">
+              <h5>✅ Best Practices</h5>
+              <ul class="mistake-list">
+                <li>دمج 4+ مصادر + <code>sort -u</code> دائماً</li>
+                <li>فحص كل CNAME يشير لسحابية بـ <code>dig</code></li>
+                <li>naabu على كل host حي للمنافذ</li>
+                <li>dev / staging / admin = الأولوية الأولى دائماً</li>
+                <li>gau + waybackurls للأرشيف التاريخي</li>
+                <li>Passive أولاً ← Active لاحقاً دائماً</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- REAL CASE STUDY -->
+        <p class="os-section-label">📂 Real World Case</p>
+        <div class="case-study-card">
+          <div class="case-study-header">
+            <div class="case-study-title">📂 Starbucks Subdomain Takeover — Full Chain</div>
+            <div class="case-study-bounty">💰 $2,000 Bounty</div>
+          </div>
+          <div class="case-study-body">
+            <div class="case-study-step">
+              <div class="case-step-num">①</div>
+              <div class="case-step-text"><strong>Recon:</strong> <code>subfinder -d starbucks.com</code> وجد <code>starbucks-api.starbucks.com</code></div>
+            </div>
+            <div class="case-study-step">
+              <div class="case-step-num">②</div>
+              <div class="case-step-text"><strong>Live Check:</strong> httpx أرجع <code>404 — Web Site not found</code> → مؤشر takeover</div>
+            </div>
+            <div class="case-study-step">
+              <div class="case-step-num">③</div>
+              <div class="case-step-text"><strong>CNAME:</strong> <code>dig starbucks-api.starbucks.com CNAME</code> → <code>azurewebsites.net</code> → NXDOMAIN = Dangling!</div>
+            </div>
+            <div class="case-study-step">
+              <div class="case-step-num">④</div>
+              <div class="case-step-text"><strong>Exploit:</strong> تسجيل Azure App Service بنفس المعرف → التحكم الكامل في الـ subdomain</div>
+            </div>
+            <div class="case-study-step">
+              <div class="case-step-num">⑤</div>
+              <div class="case-step-text"><strong>Impact:</strong> Cookies بـ <code>.starbucks.com</code> → Session Hijacking لكل مستخدمي التطبيق</div>
+            </div>
+            <div class="case-study-step">
+              <div class="case-step-num">⑥</div>
+              <div class="case-step-text"><strong>Report:</strong> Responsible Disclosure → <span style="color:var(--neon-green);">$2,000 Bug Bounty ✅</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WHEN TO STOP -->
+        <p class="os-section-label">🛑 When to Stop?</p>
+        <div class="stop-check-box">
+          <div class="stop-check-title">✅ هل أنت جاهز للمرحلة التالية؟</div>
+          <ul class="phase-checklist" id="checklist-p0-stop" style="margin:0 0 14px;">
+            <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',0)">
+              <div class="check-box"></div>
+              <div class="check-label">جمعت 100+ subdomain من 3+ مصادر مختلفة</div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',1)">
+              <div class="check-box"></div>
+              <div class="check-label">فرزت الحية بـ httpx وحددت الأكثر أهمية</div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',2)">
+              <div class="check-box"></div>
+              <div class="check-label">فحصت CNAME لكل 404 response</div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',3)">
+              <div class="check-box"></div>
+              <div class="check-label">سجّلت dev / staging / admin subdomains للفحص اللاحق</div>
+            </li>
+          </ul>
+          <div class="tip-callout" style="margin:0;">
+            <div class="tip-callout-icon">➡️</div>
+            <div class="tip-callout-text"><strong>Next Phase:</strong> اذهب لـ JS Analysis — افتح ملفات JS على كل host حي وابحث عن hidden endpoints وأسرار مسرّبة (API keys, tokens, internal paths).</div>
+          </div>
+        </div>
+
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p0" onclick="markPhaseComplete('p0','p4')">
+          ✅ Mark Phase Complete — Subdomain Enumeration Done → JS Analysis
+        </button>
 
       </div>
-
-
       <!-- Phase 2: Tech Detection -->
       <div class="meth-content-view" id="meth-content-p2" style="display: none; --tool-color: #ffb020;">
         <div class="cyber-hero">
@@ -3617,19 +5013,337 @@ Content-Type: application/json
       }
     });
 
-    // ---- INIT ----
+
+    // =============================================
+    // BUG BOUNTY OPERATING SYSTEM — Core Engine
+    // =============================================
+
+    // Decision Tree — Real Yes/No Branching
+    function dtBranch(showId, hideId) {
+      const showEl = document.getElementById(showId);
+      const hideEl = hideId ? document.getElementById(hideId) : null;
+      if (!showEl) return;
+      const isOpen = showEl.classList.contains('show');
+      if (isOpen) {
+        showEl.classList.remove('show');
+        showEl.style.display = 'none';
+      } else {
+        showEl.classList.add('show');
+        showEl.style.display = 'block';
+        if (hideEl) {
+          hideEl.classList.remove('show');
+          hideEl.style.display = 'none';
+        }
+      }
+    }
+
+    // ---- CHECKLISTS — Persistent localStorage ----
+    function toggleCheck(item, phaseId, index) {
+      item.classList.toggle('checked');
+      const isChecked = item.classList.contains('checked');
+      localStorage.setItem('bb_check_' + phaseId + '_' + index, isChecked ? '1' : '0');
+      updateChecklistProgress(phaseId);
+    }
+
+    function updateChecklistProgress(phaseId) {
+      const list = document.getElementById('checklist-' + phaseId);
+      if (!list) return;
+      const items = list.querySelectorAll('.checklist-item');
+      const checked = list.querySelectorAll('.checklist-item.checked').length;
+      const total = items.length;
+      const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+      const countEl = document.getElementById(phaseId + '-checklist-count');
+      const barEl = document.getElementById(phaseId + '-checklist-bar');
+      if (countEl) countEl.textContent = checked + ' / ' + total + ' completed';
+      if (barEl) barEl.style.width = pct + '%';
+    }
+
+    function loadChecklistState(phaseId, count) {
+      for (let i = 0; i < count; i++) {
+        const saved = localStorage.getItem('bb_check_' + phaseId + '_' + i);
+        if (saved === '1') {
+          const list = document.getElementById('checklist-' + phaseId);
+          if (!list) continue;
+          const items = list.querySelectorAll('.checklist-item');
+          if (items[i]) items[i].classList.add('checked');
+        }
+      }
+      updateChecklistProgress(phaseId);
+    }
+
+    // ---- MARK PHASE COMPLETE ----
+    function markPhaseComplete(phaseId, nextPhaseId) {
+      const btn = document.getElementById('complete-btn-' + phaseId);
+      if (btn) {
+        btn.classList.add('completed');
+        btn.innerHTML = '✅ Phase Completed! Navigating...';
+        btn.disabled = true;
+      }
+      localStorage.setItem('bb_phase_done_' + phaseId, '1');
+
+      // Update hunt session
+      const session = JSON.parse(localStorage.getItem('bb_hunt_session') || 'null');
+      if (session) {
+        if (!session.completedPhases) session.completedPhases = [];
+        if (!session.completedPhases.includes(phaseId)) {
+          session.completedPhases.push(phaseId);
+        }
+        localStorage.setItem('bb_hunt_session', JSON.stringify(session));
+        updateHuntDashboard();
+      }
+
+      setTimeout(function() { openMethPhase(nextPhaseId); }, 700);
+    }
+
+    // =============================================
+    // HUNT DASHBOARD
+    // =============================================
+
+    const HUNT_PHASES_DEF = [
+      { id: 'p0',  label: '🌍 Recon',   next: 'p4'         },
+      { id: 'p4',  label: '⚙️ JS',      next: 'p16'        },
+      { id: 'p16', label: '🔌 API',     next: 'p7'         },
+      { id: 'p7',  label: '🛡️ XSS',    next: 'p8'         },
+      { id: 'p8',  label: '💉 SQLi',    next: 'p10'        },
+      { id: 'p10', label: '🔑 IDOR',    next: 'p_writeups' },
+    ];
+
+    function initHuntDashboard() {
+      const session = JSON.parse(localStorage.getItem('bb_hunt_session') || 'null');
+      if (session) {
+        const dash = document.getElementById('hunt-dashboard');
+        if (dash) dash.classList.add('visible');
+        const resetBtn = document.getElementById('huntResetBtn');
+        if (resetBtn) resetBtn.style.display = 'block';
+        updateHuntDashboard();
+      }
+    }
+
+    function updateHuntDashboard() {
+      const session = JSON.parse(localStorage.getItem('bb_hunt_session') || 'null');
+      if (!session) return;
+
+      const targetEl = document.getElementById('huntTargetDisplay');
+      const phasesRow = document.getElementById('huntPhasesRow');
+      const phaseCount = document.getElementById('huntPhaseCount');
+      const ringProgress = document.getElementById('huntRingProgress');
+      const ringPct = document.getElementById('huntRingPct');
+      const ringFrac = document.getElementById('huntPhaseFraction');
+
+      if (targetEl) targetEl.textContent = session.target || 'Unknown';
+
+      const done = (session.completedPhases || []).length;
+      const total = HUNT_PHASES_DEF.length;
+      const pct = Math.round((done / total) * 100);
+
+      // SVG Ring — circumference = 2 * π * 34 ≈ 213.6
+      if (ringProgress) {
+        const circumference = 213.6;
+        const offset = circumference - (pct / 100) * circumference;
+        ringProgress.style.strokeDashoffset = offset;
+      }
+      if (ringPct) ringPct.textContent = pct + '%';
+      if (ringFrac) ringFrac.textContent = done + '/' + total;
+      if (phaseCount) phaseCount.textContent = done + ' / ' + total + ' phases complete';
+
+      if (phasesRow) {
+        phasesRow.innerHTML = HUNT_PHASES_DEF.map(function(phase) {
+          const isDone = (session.completedPhases || []).includes(phase.id);
+          const cls = isDone ? 'done' : 'pending';
+          const icon = isDone ? '✅ ' : '';
+          return '<div class="hunt-phase-chip ' + cls + '" onclick="openMethPhase(\'' + phase.id + '\')">' + icon + phase.label + '</div>';
+        }).join('');
+      }
+    }
+
+    function toggleHuntDash() {
+      const inner = document.getElementById('huntDashInner');
+      const icon = document.getElementById('huntToggleIcon');
+      if (!inner) return;
+      if (inner.style.display === 'none') {
+        inner.style.display = 'flex';
+        if (icon) icon.textContent = '▲';
+      } else {
+        inner.style.display = 'none';
+        if (icon) icon.textContent = '▼';
+      }
+    }
+
+    // =============================================
+    // START HUNT MODAL — 3 Steps
+    // =============================================
+
+    let _selectedProgram = 'bug_bounty';
+
+    function openStartHuntModal() {
+      const modal = document.getElementById('start-hunt-modal');
+      if (!modal) return;
+      modal.style.display = 'flex';
+      document.getElementById('shunt-step-1').style.display = 'block';
+      document.getElementById('shunt-step-2').style.display = 'none';
+      document.getElementById('shunt-step-3').style.display = 'none';
+      const inp = document.getElementById('shuntTargetInput');
+      const session = JSON.parse(localStorage.getItem('bb_hunt_session') || 'null');
+      if (inp) {
+        inp.value = session ? session.target : '';
+        setTimeout(function() { inp.focus(); }, 100);
+      }
+    }
+
+    function closeStartHuntModal() {
+      const modal = document.getElementById('start-hunt-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function shuntNextStep(step) {
+      if (step === 1) {
+        const target = (document.getElementById('shuntTargetInput') || {}).value;
+        if (!target || !target.trim()) {
+          const inp = document.getElementById('shuntTargetInput');
+          if (inp) { inp.style.borderColor = 'var(--neon-red)'; setTimeout(function(){ inp.style.borderColor = ''; }, 1500); }
+          return;
+        }
+        document.getElementById('shunt-step-1').style.display = 'none';
+        document.getElementById('shunt-step-2').style.display = 'block';
+      }
+    }
+
+    function shuntBackStep() {
+      document.getElementById('shunt-step-2').style.display = 'none';
+      document.getElementById('shunt-step-1').style.display = 'block';
+    }
+
+    function shuntBackStep2() {
+      document.getElementById('shunt-step-3').style.display = 'none';
+      document.getElementById('shunt-step-2').style.display = 'block';
+    }
+
+    function selectProgram(type, el) {
+      _selectedProgram = type;
+      document.querySelectorAll('.shunt-option').forEach(function(o) { o.classList.remove('selected'); });
+      if (el) el.classList.add('selected');
+
+      setTimeout(function() {
+        const target = (document.getElementById('shuntTargetInput') || {}).value || '';
+        const labels = { bug_bounty: '🏆 Bug Bounty', vdp: '📋 VDP', internal: '🔒 Internal' };
+        const summary = document.getElementById('shuntSummary');
+        if (summary) {
+          summary.innerHTML = '<strong>Target:</strong> ' + target + '<br><strong>Program:</strong> ' + (labels[type] || type) + '<br><strong>Date:</strong> ' + new Date().toLocaleDateString('en-US', {day:'numeric',month:'short',year:'numeric'});
+        }
+        document.getElementById('shunt-step-2').style.display = 'none';
+        document.getElementById('shunt-step-3').style.display = 'block';
+      }, 180);
+    }
+
+    function startHunt() {
+      const target = ((document.getElementById('shuntTargetInput') || {}).value || '').trim();
+      if (!target) return;
+
+      const session = {
+        target: target,
+        program: _selectedProgram,
+        startedAt: new Date().toISOString(),
+        completedPhases: []
+      };
+      localStorage.setItem('bb_hunt_session', JSON.stringify(session));
+      closeStartHuntModal();
+
+      const dash = document.getElementById('hunt-dashboard');
+      if (dash) dash.classList.add('visible');
+      const resetBtn = document.getElementById('huntResetBtn');
+      if (resetBtn) resetBtn.style.display = 'block';
+
+      updateHuntDashboard();
+      openMethPhase('p0');
+    }
+
+    // ---- RESET ----
+    function confirmResetHunt() {
+      const ol = document.getElementById('confirm-reset-overlay');
+      if (ol) ol.style.display = 'flex';
+    }
+
+    function confirmFactoryReset() {
+      closeConfirmDlg('confirm-reset-overlay');
+      const ol = document.getElementById('confirm-factory-overlay');
+      if (ol) ol.style.display = 'flex';
+    }
+
+    function closeConfirmDlg(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    }
+
+    function doResetHunt() {
+      localStorage.removeItem('bb_hunt_session');
+
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && (k.startsWith('bb_check_') || k.startsWith('bb_phase_done_'))) keysToRemove.push(k);
+      }
+      keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
+
+      // Reset UI
+      document.querySelectorAll('.checklist-item.checked').forEach(function(el) { el.classList.remove('checked'); });
+      document.querySelectorAll('.checklist-bar-fill').forEach(function(el) { el.style.width = '0%'; });
+      document.querySelectorAll('.mark-complete-btn').forEach(function(btn) {
+        btn.classList.remove('completed');
+        btn.disabled = false;
+        if (btn.id === 'complete-btn-p0') btn.innerHTML = '✅ Mark Phase Complete — Subdomain Enumeration Done → JS Analysis';
+      });
+
+      const dash = document.getElementById('hunt-dashboard');
+      if (dash) dash.classList.remove('visible');
+      const resetBtn = document.getElementById('huntResetBtn');
+      if (resetBtn) resetBtn.style.display = 'none';
+      const targetEl = document.getElementById('huntTargetDisplay');
+      if (targetEl) targetEl.textContent = 'No active session';
+
+      closeConfirmDlg('confirm-reset-overlay');
+    }
+
+    function doFactoryReset() {
+      localStorage.clear();
+      location.reload();
+    }
+
+    // =============================================
+    // DOMContentLoaded INIT
+    // =============================================
     document.addEventListener('DOMContentLoaded', function() {
+      // Existing inits
       restoreVisited();
       renderBookmarksPanel();
       initTheme();
-      generateTOC();
-      renderTacticsMetadata();
-      renderBreadcrumbs();
-      
-      // Mark initial p0 as visited
+      if (typeof generateTOC === 'function') generateTOC();
+      if (typeof renderTacticsMetadata === 'function') renderTacticsMetadata();
+      if (typeof renderBreadcrumbs === 'function') renderBreadcrumbs();
       markVisited('p0');
+
+      // BB OS inits
+      initHuntDashboard();
+      loadChecklistState('p0', 9);
+      loadChecklistState('p0-stop', 4);
+
+      // Restore completed phase buttons
+      HUNT_PHASES_DEF.forEach(function(phase) {
+        if (localStorage.getItem('bb_phase_done_' + phase.id) === '1') {
+          const btn = document.getElementById('complete-btn-' + phase.id);
+          if (btn) { btn.classList.add('completed'); btn.innerHTML = '✅ Phase Completed!'; btn.disabled = true; }
+        }
+      });
+
+      // Close Start Hunt Modal on overlay click
+      const modal = document.getElementById('start-hunt-modal');
+      if (modal) {
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) closeStartHuntModal();
+        });
+      }
     });
 
   </script>
+
 </body>
 </html>

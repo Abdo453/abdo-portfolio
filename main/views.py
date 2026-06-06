@@ -2054,3 +2054,7 @@ def get_portfolio_context():
 
 def home(request):
     return render(request, 'main/home.html', get_portfolio_context())
+
+def methodology(request):
+    return render(request, 'main/methodology.html', get_portfolio_context())
+
