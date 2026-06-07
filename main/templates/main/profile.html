@@ -37,6 +37,18 @@
       <p style="font-size:0.9rem;color:#cbd5e1;margin:10px 0 0 0;">Total Completion / نسبة الإنجاز الكلية</p>
     </div>
   </div>
+  
+  <div style="margin-top: 25px; padding: 15px; background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <h3 style="color:#fff;margin:0 0 4px 0;font-size:0.95rem;">Backup & Restore Progress / حفظ واستعادة التقدم</h3>
+      <p style="margin:0;font-size:0.75rem;color:#94a3b8;">Save your solved labs and badges progress as a JSON file, or restore it from a backup.</p>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="academy-btn" onclick="backupProgress()" style="padding:6px 12px;font-size:0.8rem;background:rgba(0, 229, 255, 0.05);border-color:rgba(0, 229, 255, 0.3);color:var(--neon-cyan);">📥 Backup / حفظ احتياطي</button>
+      <button class="academy-btn" onclick="triggerRestore()" style="padding:6px 12px;font-size:0.8rem;background:rgba(155, 89, 255, 0.05);border-color:rgba(155, 89, 255, 0.3);color:var(--neon-purple, #b026ff);">📤 Restore / استعادة</button>
+      <input type="file" id="restoreFile" accept=".json" onchange="restoreProgress(this)" style="display:none;">
+    </div>
+  </div>
 </div>
 
 <div class="section-card">
@@ -214,6 +226,44 @@
       win.print();
       win.close();
     }, 500);
+  };
+
+  window.backupProgress = function() {
+    var backupData = {};
+    for (var i = 0; i < localStorage.length; i++) {
+      var key = localStorage.key(i);
+      backupData[key] = localStorage.getItem(key);
+    }
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData));
+    var downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "hunteros_academy_backup.json");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
+  window.triggerRestore = function() {
+    document.getElementById('restoreFile').click();
+  };
+
+  window.restoreProgress = function(input) {
+    var file = input.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var backupData = JSON.parse(e.target.result);
+        Object.keys(backupData).forEach(function(key) {
+          localStorage.setItem(key, backupData[key]);
+        });
+        alert("Progress restored successfully! Refreshing page... / تم استعادة التقدم بنجاح! جاري تحديث الصفحة...");
+        window.location.reload();
+      } catch (err) {
+        alert("Invalid backup file! / ملف النسخة الاحتياطية غير صالح!");
+      }
+    };
+    reader.readAsText(file);
   };
 })();
 </script>
