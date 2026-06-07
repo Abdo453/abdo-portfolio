@@ -22,7 +22,7 @@
       padding-bottom: 60px;
     }
     .book-container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 40px auto;
       padding: 0 20px;
     }
@@ -104,10 +104,10 @@
     }
     .reading-grid {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 280px 1fr;
       gap: 30px;
     }
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
       .reading-grid {
         grid-template-columns: 1fr;
       }
@@ -152,7 +152,7 @@
       padding: 30px;
     }
     .content-sec {
-      margin-bottom: 40px;
+      margin-bottom: 50px;
       scroll-margin-top: 40px;
     }
     .sec-title {
@@ -179,6 +179,75 @@
       padding: 12px 18px;
       border-radius: 0 6px 6px 0;
       margin: 20px 0;
+    }
+    .benefit-box {
+      border-right: 3px solid var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.03);
+      padding: 12px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+    }
+    
+    /* Interactive Quiz Accordion Styles */
+    .quiz-container {
+      background: rgba(255, 170, 0, 0.02);
+      border: 1px solid rgba(255, 170, 0, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+    .quiz-title {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent-orange);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quiz-question-btn {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 12px 0;
+      font-family: inherit;
+      text-align: right;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: color 0.2s ease;
+    }
+    .quiz-question-btn:hover {
+      color: var(--accent-orange);
+    }
+    .toggle-icon {
+      color: var(--accent-orange);
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+    .quiz-answer-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease;
+      padding: 0 15px;
+      border-right: 3px solid var(--accent-orange);
+      background: rgba(255, 170, 0, 0.01);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-top: 0;
+    }
+    .quiz-answer-panel.open {
+      max-height: 200px;
+      padding: 12px 15px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -215,79 +284,236 @@
       
       <!-- Sidebar Table of Contents -->
       <aside class="book-sidebar">
-        <div class="toc-title">فصول الكتاب</div>
-        <a href="#about" class="toc-item">1. نظرة عامة عن المرجع</a>
-        <a href="#mapping" class="toc-item">2. رسم خريطة التطبيق</a>
-        <a href="#auth" class="toc-item">3. مهاجمة المصادقة وإدارة الجلسات</a>
-        <a href="#datastore" class="toc-item">4. مهاجمة مخازن البيانات وحقن الكود</a>
-        <a href="#tools" class="toc-item">5. أدوات الاعتراض والتحليل (Burp)</a>
+        <div class="toc-title">الوحدات التعليمية</div>
+        <a href="#module1" class="toc-item">1. رسم خريطة التطبيق</a>
+        <a href="#module2" class="toc-item">2. مهاجمة أنظمة المصادقة</a>
+        <a href="#module3" class="toc-item">3. مهاجمة إدارة الجلسات</a>
+        <a href="#module4" class="toc-item">4. مهاجمة مخازن البيانات</a>
+        <a href="#module5" class="toc-item">5. أدوات الاعتراض والبروكسي</a>
       </aside>
 
       <!-- Main Content Area -->
       <main class="book-content">
         
-        <!-- Section 1: About -->
-        <section id="about" class="content-sec">
-          <h2 class="sec-title">1. نظرة عامة عن المرجع (إنجيل الويب)</h2>
-          <p>كتاب <strong>The Web Application Hacker's Handbook (WAHH)</strong> هو المرجع الأساسي والأشهر عالمياً في مجال اختبار اختراق الويب وأمن التطبيقات. تم تأليفه بواسطة مطوري أداة Burp Suite الشهيرة. يغطي الكتاب بعمق شديد كيف تعمل بروتوكولات الويب وتطبيقاته في الخلفية، وكيف يمكن إساءة استخدام هذه التقنيات وتفكيك منطق العمل الخاص بها.</p>
-          <div class="key-point">
-            <strong>القاعدة الذهبية للكتاب:</strong> يكمن الفشل الأمني دائماً في الفجوة بين ما يعتقد المطور أن التطبيق يفعله، وبين ما يفعله التطبيق فعلياً في الواقع عند استقبال مدخلات غير متوقعة.
+        <!-- Module 1: Mapping -->
+        <section id="module1" class="content-sec">
+          <h2 class="sec-title">الوحدة الأولى: رسم خريطة التطبيق وتحليله (Mapping & Analyzing)</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>قبل أن تطلق هجوماً واحداً، يجب أن تفهم تضاريس الهدف بالكامل. رسم خريطة التطبيق يكشف لك عن المسارات والصفحات والمعاملات (Parameters) المخفية في خوادم الويب، وهي المساحة التي تقع فيها معظم الأخطاء البرمجية للمطورين.</p>
+          </div>
+
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>يشير الكتاب إلى أن الهجوم الفعال يبدأ بـ Mapping دقيق. يتضمن ذلك تحديد:</p>
+          <ul>
+            <li><strong>نقاط الإدخال (Entry Points):</strong> تحديد كل معامل (Parameter) يستقبل منه التطبيق بيانات في ترويسات الطلب، الرابط، أو جسم الطلب.</li>
+            <li><strong>التقنيات المستخدمة (Tech Stack):</strong> تحديد لغات البرمجة (مثل PHP, Python)، وخوادم الويب (مثل Nginx, IIS)، وقاعدة البيانات.</li>
+          </ul>
+          <p>أفضل طريقة للقيام بذلك هي تصفح الموقع بالكامل يدوياً مع تشغيل أداة <code>Burp Suite</code> لبناء خريطة شجرية تفاعلية للموقع (Site Map) تحت تبويب Target.</p>
+
+          <!-- Quiz 1 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q1-1')">
+                <span>1. ما أهمية بناء خريطة شجرية للموقع (Site Map) قبل البدء في الهجوم؟</span>
+                <span class="toggle-icon" id="icon-q1-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q1-1">
+                <strong>الإجابة النموذجية:</strong> تمنح المختبر رؤية كاملة لكافة المسارات والصفحات والملفات التي تم اكتشافها وتفاعلاتها، وتكشف المسارات القديمة أو المخفية التي قد تحتوي على ثغرات أمنية مهملة دون تكرار العمل اليدوي.
+              </div>
+            </div>
+
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q1-2')">
+                <span>2. كيف يساعد فحص الرؤوس (HTTP Headers) في معرفة مكونات الـ Tech Stack للهدف؟</span>
+                <span class="toggle-icon" id="icon-q1-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q1-2">
+                <strong>الإجابة النموذجية:</strong> تحتوي بعض الرؤوس مثل <code>Server</code> أو <code>X-Powered-By</code> على معلومات تفصيلية عن نوع خادم الويب وإصداره (مثل Apache/2.4.41) أو لغة البرمجة (مثل PHP/7.4)، مما يوجه الباحث الأمني للبحث عن ثغرات معروفة وعلنية لهذه الإصدارات المحددة.
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Section 2: Mapping -->
-        <section id="mapping" class="content-sec">
-          <h2 class="sec-title">2. رسم خريطة التطبيق وتحليله (Mapping & Analyzing)</h2>
-          <p>يشير الكاتبان إلى أن الهجوم الفعال يبدأ بفهم دقيق لكل مسار ووظيفة داخل التطبيق. يجب على المختبر تحديد:</p>
-          <ul>
-            <li><strong>نقاط الإدخال (Entry Points):</strong> المعاملات (Parameters)، الرؤوس (Headers)، ملفات الارتباط (Cookies).</li>
-            <li><strong>التقنيات المستخدمة (Tech Stack):</strong> لغات البرمجة، خوادم الويب، وقواعد البيانات الخلفية.</li>
-            <li><strong>تدفق البيانات (Data Flows):</strong> كيف يتم تمرير المدخلات ومعالجتها بين المكونات المختلفة.</li>
-          </ul>
-          <p>أفضل طريقة للقيام بذلك هي تصفح الموقع بالكامل يدوياً مع تشغيل أداة Burp Suite لبناء خريطة شجرية للموقع (Target Site Map).</p>
-        </section>
+        <!-- Module 2: Auth -->
+        <section id="module2" class="content-sec">
+          <h2 class="sec-title">الوحدة الثانية: مهاجمة أنظمة المصادقة (Attacking Authentication)</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>آليات المصادقة هي البوابة الرئيسية لحماية حسابات المستخدمين. كشف الأخطاء في هذه الأنظمة يعني القدرة على تخطي شاشات تسجيل الدخول، أو انتحال هويات المستخدمين، أو الاستيلاء على الحسابات (Account Takeover) بالكامل.</p>
+          </div>
 
-        <!-- Section 3: Auth -->
-        <section id="auth" class="content-sec">
-          <h2 class="sec-title">3. مهاجمة نظام المصادقة وإدارة الجلسات</h2>
-          <p>تعتبر آليات التحقق من الهوية وإدارة الجلسات من أكثر المناطق استهدافاً لأنها تتيح الوصول المباشر لبيانات المستخدمين الآخرين.</p>
-          <p><strong>أهم التكتيكات لمهاجمة هذه الأنظمة:</strong></p>
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>تتمحور هجمات المصادقة حول التغلب على الحماية المفروضة على الحسابات، وتضم:</p>
           <ul>
-            <li><strong>التنبؤ بالرموز وتخمينها (Predicting Session Tokens):</strong> فحص مدى عشوائية الـ Session IDs.</li>
-            <li><strong>سرقة الجلسات (Session Hijacking):</strong> من خلال ثغرات XSS أو استنشاق البيانات (Sniffing) أو التخزين غير الآمن.</li>
-            <li><strong>تخطي قفل الحسابات وحظر التخمين (Rate Limiting Bypass):</strong> التلاعب بالترويسات مثل <code>X-Forwarded-For</code> لإيهام النظام بأن الطلبات قادمة من مصادر مختلفة.</li>
+            <li><strong>تخمين كلمات المرور (Brute Force):</strong> محاولة إدخال كلمات مرور عشوائية أو شهيرة لحساب معين.</li>
+            <li><strong>تجاوز حظر المحاولات المتكررة (Rate Limiting Bypass):</strong> استغلال التلاعب بالرؤوس لإيهام النظام بأن الطلبات قادمة من عناوين IP مختلفة.</li>
+            <li><strong>ثغرات استعادة كلمة المرور (Password Reset Flaws):</strong> التلاعب بالمعاملات لتوجيه رابط الاستعادة لخادم خارجي.</li>
           </ul>
           <div class="code-box">
-            // ترويسات يتم التلاعب بها لتجاوز قيود Rate Limit
+            # مثال على رأس HTTP لتغيير عنوان الـ IP المزعوم
             X-Forwarded-For: 127.0.0.1
-            X-Originating-IP: 127.0.0.1
-            X-Remote-IP: 127.0.0.1
+          </div>
+
+          <!-- Quiz 2 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q2-1')">
+                <span>1. كيف يمكن للمهاجم تخطي حظر المحاولات المتكررة (Rate Limiting) على صفحة تسجيل الدخول؟</span>
+                <span class="toggle-icon" id="icon-q2-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q2-1">
+                <strong>الإجابة النموذجية:</strong> من خلال التلاعب بالرؤوس الأمنية التي تحدد هوية العميل مثل <code>X-Forwarded-For</code> أو <code>X-Real-IP</code> وتغيير قيمها بشكل عشوائي مع كل طلب لمنع أنظمة كشف التخمين من رصد وتثبيت الـ IP الفعلي.
+              </div>
+            </div>
+
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q2-2')">
+                <span>2. ما هي الثغرة الشائعة في آليات استعادة كلمة المرور عبر البريد الإلكتروني؟</span>
+                <span class="toggle-icon" id="icon-q2-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q2-2">
+                <strong>الإجابة النموذجية:</strong> ثغرات Host Header Injection، حيث يستبدل المهاجم ترويسة <code>Host</code> في طلب الاستعادة بنطاق خبيث يمتلكه. إذا استخدم المطور هذه الترويسة لإنشاء رابط التفعيل، فسيتم إرسال الرابط للضحية مشيراً لخادم المهاجم، وعند الضغط عليه يتم تسريب رمز التفعيل (Token) للمهاجم.
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Section 4: Datastore -->
-        <section id="datastore" class="content-sec">
-          <h2 class="sec-title">4. مهاجمة مخازن البيانات وحقن الكود (Attacking Data Stores)</h2>
-          <p>يغطي الكتاب بالتفصيل هجمات الحقن (Injection Attacks)، حيث يتم تمرير بيانات خبيثة يفسرها محرك البيانات الخلفي كأوامر برمجية.</p>
-          <p><strong>حقن لغة الاستعلامات البنيوية (SQL Injection):</strong></p>
-          <p>يتم استغلالها لقراءة قواعد البيانات بالكامل أو حتى الكتابة فيها وتجاوز شاشات تسجيل الدخول.</p>
-          <div class="code-box">
-            # مثال تخطي تسجيل دخول كلاسيكي
-            admin' OR '1'='1
+        <!-- Module 3: Session -->
+        <section id="module3" class="content-sec">
+          <h2 class="sec-title">الوحدة الثالثة: مهاجمة إدارة الجلسات (Attacking Session Management)</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>حتى لو كان نظام تسجيل الدخول آمناً، فإن إدارة الجلسة السيئة قد تهدم هذا الأمان. تعلم هذا الجانب يتيح لك فهم كيفية سرقة رموز الجلسات (Session Tokens) وانتحال شخصيات المستخدمين النشطين دون الحاجة لمعرفة كلمات مرورهم.</p>
           </div>
-          <p>يتناول الكتاب أيضاً حقن الأوامر (OS Command Injection) وحقن بروتوكول LDAP وحقن ملفات XML، موضحاً الفروقات الجوهرية والمنهجيات المناسبة للتعرف عليها.</p>
-        </section>
 
-        <!-- Section 5: Tools -->
-        <section id="tools" class="content-sec">
-          <h2 class="sec-title">5. أدوات الاعتراض والتحليل (Burp Suite)</h2>
-          <p>يرتبط هذا الكتاب ارتباطاً وثيقاً بـ Burp Suite. يشرح الكتاب كيفية استخدام مكونات الأداة بشكل احترافي:</p>
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>تركز إدارة الجلسة على التحقق من هوية المستخدم بعد تسجيل الدخول عبر الرموز (Tokens/Cookies). تقع الثغرات في هذا القسم عند:</p>
           <ul>
-            <li><strong>Burp Proxy:</strong> لاعتراض وتعديل الطلبات والاستجابات في الوقت الفعلي.</li>
-            <li><strong>Burp Intruder:</strong> للقيام بالهجمات التلقائية المخصصة (Brute forcing, fuzzing, parameter sweeping).</li>
-            <li><strong>Burp Repeater:</strong> لتعديل طلب فردي وإعادة إرساله بشكل يدوي لمراقبة ردود فعل الخادم وتغير الاستجابة.</li>
-            <li><strong>Burp Comparer:</strong> لمقارنة استجابتين مختلفتين ورصد التغيرات البسيطة في حجم البيانات أو محتواها.</li>
+            <li><strong>التنبؤ بالرموز (Predictable Tokens):</strong> إذا لم تكن الرموز عشوائية (مثلاً مشفرة بـ Base64 أو تعتمد على وقت تسجيل الدخول فقط).</li>
+            <li><strong>غياب العلامات الأمنية (Flags):</strong> عدم تفعيل علامات مثل <code>HttpOnly</code> (لحمايتها من الـ XSS) أو <code>Secure</code> (لضمان إرسالها عبر HTTPS فقط).</li>
           </ul>
+
+          <!-- Quiz 3 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q3-1')">
+                <span>1. ما هي الخطورة الأمنية المترتبة على جعل قيمة الـ Session Token متوقعة أو غير عشوائية؟</span>
+                <span class="toggle-icon" id="icon-q3-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q3-1">
+                <strong>الإجابة النموذجية:</strong> تمكن المهاجمين من التنبؤ برموز الجلسات الخاصة بالمستخدمين الآخرين وتوليد رموز صحيحة يدوياً، مما يسمح لهم بانتحال شخصية المستخدمين دون معرفة كلمة مرورهم (Session Hijacking).
+              </div>
+            </div>
+
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q3-2')">
+                <span>2. ما هو الخيار (Flag) الأمني الذي يجب تعيينه على ملفات تعريف الارتباط لمنع قراءتها عبر ثغرات XSS؟</span>
+                <span class="toggle-icon" id="icon-q3-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q3-2">
+                <strong>الإجابة النموذجية:</strong> وسم <code>HttpOnly</code>، حيث يمنع المتصفح لغة جافا سكريبت من الوصول لملف تعريف الارتباط (Cookie)، مما يحميه من السرقة حتى لو كان الموقع مصاباً بثغرة XSS.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Module 4: Datastores -->
+        <section id="module4" class="content-sec">
+          <h2 class="sec-title">الوحدة الرابعة: مهاجمة مخازن البيانات (SQL Injection & XML Injection)</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>مخازن البيانات هي القلب النابض لأي تطبيق ويب. مهاجمتها تعني الوصول المباشر لمعلومات المستخدمين وسجلات النظام والقدرة على تعديل قاعدة البيانات أو قراءة ملفات الخادم الحساسة.</p>
+          </div>
+
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>يغطي المرجع بعمق هجمات الحقن التي تستهدف قواعد البيانات (SQLi) ومحللات البيانات (XML Parsers):</p>
+          <ul>
+            <li><strong>حقن الـ SQL الأعمى (Blind SQLi):</strong> عندما لا يعرض التطبيق أخطاءً أو نتائج مباشرة، بل يستلزم إرسال شروط منطقية (True/False) أو استعلامات زمنية (Time-based SQLi) لاستنتاج الحروف حرفاً بحرف.</li>
+            <li><strong>حقن الكيانات الخارجية لـ XML (XXE):</strong> استغلال محلل XML غير آمن لقراءة ملفات الخادم المحلية أو عمل طلبات داخلية (SSRF).</li>
+          </ul>
+          <div class="code-box">
+            # مثال على payload للحقن الأعمى المعتمد على الوقت
+            admin' AND SLEEP(5)--
+          </div>
+
+          <!-- Quiz 4 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q4-1')">
+                <span>1. ما الفرق بين حقن SQL الكلاسيكي (In-band SQLi) والحقن الأعمى (Blind SQLi)؟</span>
+                <span class="toggle-icon" id="icon-q4-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q4-1">
+                <strong>الإجابة النموذجية:</strong> في SQLi الكلاسيكي، تظهر البيانات المستخرجة مباشرة في محتوى صفحة الويب أو رسائل الخطأ. أما في Blind SQLi، لا تظهر أي بيانات على الشاشة، ويجب على المهاجم استنتاج البيانات من خلال طرح أسئلة منطقية (True/False) ومراقبة تغير استجابة الصفحة أو الوقت المستغرق للمعالجة (Time-based).
+              </div>
+            </div>
+
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q4-2')">
+                <span>2. كيف يمكن استغلال ثغرة حقن الكيانات الخارجية (XXE) لقراءة ملفات النظام الداخلية للخادم؟</span>
+                <span class="toggle-icon" id="icon-q4-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q4-2">
+                <strong>الإجابة النموذجية:</strong> من خلال إرسال ملف XML يحتوي على تعريف كيان خارجي (External Entity) يشير إلى مسار ملف محلي على الخادم (مثل <code>file:///etc/passwd</code> في لينكس)، ثم استدعاء هذا الكيان داخل الطلب ليقوم المحلل بقراءته وعرض محتواه في الاستجابة.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Module 5: Tools -->
+        <section id="module5" class="content-sec">
+          <h2 class="sec-title">الوحدة الخامسة: استخدام البروكسي وأدوات الاعتراض (Burp Suite Pro Tricks)</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>البروكسي هو العين التي ترى بها حركة البيانات بين متصفحك والخادم. بدون إتقان أدوات الاعتراض، ستظل فحصك محدوداً بالواجهة الأمامية ولن تتمكن من تعديل الطلبات وفهم طريقة استجابة النظام الخلفي للبيانات الخبيثة.</p>
+          </div>
+
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>يعتبر <code>Burp Suite</code> هو البرنامج الأساسي الذي يتمحور حوله الكتاب. يجب على المختبر معرفة كيفية استخدام مكوناته باحترافية:</p>
+          <ul>
+            <li><strong>Burp Intruder:</strong> للقيام بالهجمات التلقائية المخصصة (Brute forcing, fuzzing).</li>
+            <li><strong>Burp Repeater:</strong> لتعديل طلب فردي وإعادة إرساله يدوياً ومراقبة التغير في الاستجابة.</li>
+            <li><strong>Burp Comparer:</strong> لمقارنة استجابتين مختلفتين ورصد التغيرات البسيطة بايت ببايت.</li>
+          </ul>
+
+          <!-- Quiz 5 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q5-1')">
+                <span>1. متى نفضل استخدام Burp Intruder بدلاً من Burp Repeater؟</span>
+                <span class="toggle-icon" id="icon-q5-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q5-1">
+                <strong>الإجابة النموذجية:</strong> نفضل استخدام Intruder عند الحاجة لإجراء عمليات هجومية آلية ومتكررة تعتمد على قوائم كلمات مرور (Wordlists) أو معاملات متعددة (مثل brute forcing أو fuzzing). بينما نستخدم Repeater لإجراء اختبار يدوي دقيق لطلب فردي وتعديله ومراقبة الاستجابة مراراً وتكراراً.
+              </div>
+            </div>
+
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q5-2')">
+                <span>2. كيف يساعد استخدام Burp Comparer في تحليل الفروق الدقيقة في استجابات خوادم الويب؟</span>
+                <span class="toggle-icon" id="icon-q5-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q5-2">
+                <strong>الإجابة النموذجية:</strong> يتيح مقارنة استجابتين برمجياً بايت ببايت أو كلمة بكلمة، مما يسهل رصد الاختلافات الطفيفة جداً في الحجم أو المحتوى والتي تشير غالباً إلى نجاح أو فشل هجمات الحقن الأعمى (Blind SQLi/Auth bypass).
+              </div>
+            </div>
+          </div>
         </section>
 
       </main>
@@ -295,6 +521,24 @@
     </div>
 
   </div>
+
+  <!-- Interactive Quiz Accordion Logic -->
+  <script>
+    function toggleAnswer(ansId) {
+      const panel = document.getElementById('ans-' + ansId);
+      const icon = document.getElementById('icon-' + ansId);
+      
+      if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+        icon.innerText = '[ + ]';
+        icon.style.color = 'var(--accent-orange)';
+      } else {
+        panel.classList.add('open');
+        icon.innerText = '[ - ]';
+        icon.style.color = 'var(--accent-cyan)';
+      }
+    }
+  </script>
 
 </body>
 </html>

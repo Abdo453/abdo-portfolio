@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bug Bounty Academy — Arabic & English cybersecurity learning">
+  <title>SQL Injection Lab | Abdo Ramdan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/academy.css">
+  
+<style>
+  /* Fallback Styles for standalone copy-paste robustness */
+  .academy-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 58px);
+  }
+  .academy-sidebar {
+    background: rgba(3, 3, 8, 0.98);
+    border-left: 1px solid rgba(0, 229, 255, 0.08);
+    padding: 20px 12px;
+  }
+  .sidebar-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: rgba(0, 229, 255, 0.45);
+    letter-spacing: 1.5px;
+    padding: 0 10px 10px;
+    text-transform: uppercase;
+  }
+  .sidebar-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 4px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+    transition: all 0.2s ease;
+  }
+  .sidebar-link:hover { color: #f1f5f9; background: rgba(255,255,255,0.02); }
+  .sidebar-link.active {
+    color: #00e5ff;
+    background: rgba(0, 229, 255, 0.06);
+    border-color: rgba(0, 229, 255, 0.15);
+  }
+  @media (max-width: 900px) {
+    .academy-layout { grid-template-columns: 1fr; }
+    .academy-sidebar { border-left: none; border-bottom: 1px solid rgba(0,229,255,0.08); max-height: 200px; }
+  }
+</style>
+
+</head>
+<body class="academy-page">
+
+<header class="academy-header">
+  <div class="academy-logo">🎯 Bug Bounty Academy</div>
+  <nav class="academy-nav-links">
+    <a class="academy-btn" href="../index.html">← Home / الرئيسية</a>
+    <a class="academy-btn" href="../methodology.html" target="_blank">🗺️ Methodology</a>
+    <a class="academy-btn" href="../bug-bounty-writeups.html">📝 Writeups</a>
+  </nav>
+</header>
+
+<div class="academy-layout">
+  <aside class="academy-sidebar">
+    <div class="sidebar-title">Vulnerabilities / الثغرات</div>
+    <a class="sidebar-link " href="../vulnerabilities/sql-injection.html">💉 SQL Injection</a>
+    <a class="sidebar-link " href="../vulnerabilities/idor.html">🔓 IDOR / BAC</a>
+    <a class="sidebar-link " href="../vulnerabilities/ssrf.html">🌐 SSRF</a>
+    <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
+    <a class="sidebar-link active" href="sql-injection-lab.html">🧪 SQLi Lab</a>
+    <a class="sidebar-link" href="../index.html">🐚 Linux Terminal</a>
+  </aside>
+
+  <main class="academy-main">
+    
+<div class="page-hero">
+  <h1 class="page-title">مختبر SQL Injection التفاعلي</h1>
+  <p class="page-title-en">Interactive SQL Injection Lab — 3 Levels</p>
+  <span class="severity-pill pill-medium">MEDIUM</span>
+  <span class="severity-pill pill-high">⏱ ~30 min</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p>محاكي تطبيق ويب ضعيف. جرّب payloads في parameter <code>id</code> واضغط <strong>Send Request</strong>. كل level له هدف و flag مختلف.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p>Simulated vulnerable web app. Test payloads in the <code>id</code> parameter and hit <strong>Send Request</strong>. Each level has a unique goal and flag.</p>
+  </div>
+</div>
+
+<div class="lab-hud">
+  <span>Level: <strong id="hudLevel">1</strong>/3</span>
+  <span>Flags: <strong id="hudFlags">0</strong>/3</span>
+  <span>Progress: <strong id="hudProgress">0%</strong></span>
+</div>
+
+<div class="lab-level-tabs">
+  <button class="lab-tab active" data-level="1" onclick="switchLevel(1)">L1 — UNION</button>
+  <button class="lab-tab" data-level="2" onclick="switchLevel(2)">L2 — Blind</button>
+  <button class="lab-tab" data-level="3" onclick="switchLevel(3)">L3 — WAF Bypass</button>
+</div>
+
+<div class="section-card" style="padding:0;border:none;background:transparent;">
+  <div class="lab-simulator">
+    <div class="lab-sim-bar">
+      <label>GET</label>
+      <input type="text" id="labUrl" value="/products.php?id=1" readonly style="flex:2;">
+      <label>id=</label>
+      <input type="text" id="labPayload" placeholder="1" autocomplete="off" spellcheck="false">
+      <button class="lab-sim-btn" onclick="sendLabRequest()">Send ▶</button>
+    </div>
+    <div class="lab-output" id="labOutput">
+      <span class="info">[*] SQL Injection Lab ready. Level 1: extract users via UNION SELECT.</span><br>
+      <span class="info">[*] Hint L1: try ' UNION SELECT username,password FROM users--</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Theory / النظرية</h2>
+  <div id="theoryL1">
+    <div class="bilingual-block">
+      <div class="lang-section"><span class="lang-tag">AR</span><p>Level 1: استخدم <code>UNION SELECT</code> لدمج نتائج من جدول <code>users</code>.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 1: Use <code>UNION SELECT</code> to merge results from the <code>users</code> table.</p></div>
+    </div>
+  </div>
+  <div id="theoryL2" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section"><span class="lang-tag">AR</span><p>Level 2: Boolean blind — الاستعلام يُرجع true/false. جرّب <code>AND SUBSTRING(...)=...</code></p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 2: Boolean blind — query returns true/false. Try <code>AND SUBSTRING(...)=...</code></p></div>
+    </div>
+  </div>
+  <div id="theoryL3" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section"><span class="lang-tag">AR</span><p>Level 3: WAF يحجب UNION و SELECT. استخدم comment injection أو الـ encoding لتخطي الفحص.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 3: WAF blocks UNION and SELECT. Use comment injection or encoding to bypass check.</p></div>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="../vulnerabilities/sql-injection.html" style="display:inline-block;margin-top:8px;">← العودة لصفحة SQLi / Back to SQLi Page</a>
+
+  </main>
+</div>
+
+<script>
+  function copyCmd(btn) {
+    var pre = btn.closest('.cmd-block').querySelector('pre');
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.textContent.trim()).then(function() {
+      var o = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = o; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+
+<script>
+(function() {
+  var currentLevel = 1;
+  var flags = { 1: false, 2: false, 3: false };
+  var FLAG = {
+    1: 'FLAG{sqli_union}',
+    2: 'FLAG{sqli_blind}',
+    3: 'FLAG{sqli_waf}'
+  };
+
+  function updateHud() {
+    var n = Object.keys(flags).filter(function(k) { return flags[k]; }).length;
+    document.getElementById('hudFlags').textContent = n;
+    document.getElementById('hudLevel').textContent = currentLevel;
+    document.getElementById('hudProgress').textContent = Math.round((n / 3) * 100) + '%';
+    document.querySelectorAll('.lab-tab').forEach(function(t) {
+      var lv = parseInt(t.getAttribute('data-level'), 10);
+      t.classList.toggle('done', flags[lv]);
+      t.classList.toggle('active', lv === currentLevel);
+    });
+    try { localStorage.setItem('sqli_lab_flags', JSON.stringify(flags)); } catch(e) {}
+  }
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('sqli_lab_flags') || '{}');
+    [1,2,3].forEach(function(k) { if (saved[k]) flags[k] = true; });
+    updateHud();
+  } catch(e) {}
+
+  window.switchLevel = function(lv) {
+    currentLevel = lv;
+    document.getElementById('theoryL1').style.display = lv === 1 ? 'block' : 'none';
+    document.getElementById('theoryL2').style.display = lv === 2 ? 'block' : 'none';
+    document.getElementById('theoryL3').style.display = lv === 3 ? 'block' : 'none';
+    document.getElementById('labPayload').value = '';
+    
+    var out = document.getElementById('labOutput');
+    if (lv === 1) {
+      out.innerHTML = '<span class="info">[*] SQL Injection Lab ready. Level 1: extract users via UNION SELECT.</span><br>' +
+                      '<span class="info">[*] Hint L1: try \' UNION SELECT username,password FROM users--</span>';
+    } else if (lv === 2) {
+      out.innerHTML = '<span class="info">[*] Level 2: Boolean-based blind. Extract admin credentials.</span><br>' +
+                      '<span class="info">[*] Hint L2: Try querying SUBSTRING of the password to verify characters.</span>';
+    } else {
+      out.innerHTML = '<span class="info">[*] Level 3: WAF Bypass. Bypass filters on UNION and SELECT keywords.</span><br>' +
+                      '<span class="info">[*] Hint L3: Check comments placement or URL hex encoding.</span>';
+    }
+    updateHud();
+  };
+
+  window.sendLabRequest = function() {
+    var payload = document.getElementById('labPayload').value;
+    var out = document.getElementById('labOutput');
+    var p = payload.toLowerCase().replace(/\s+/g, ' ');
+
+    out.innerHTML = '<span class="info">[*] GET /products.php?id=' + escapeHtml(payload) + '</span><br><br>';
+
+    // Database error simulation if quotes are unbalanced and not commented
+    var hasUnbalancedQuote = (payload.split("'").length - 1) % 2 !== 0;
+    var hasComment = payload.includes('--') || payload.includes('#');
+    
+    if (hasUnbalancedQuote && !hasComment) {
+      out.innerHTML += '<span class="error">[-] Database Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\\\' LIMIT 1\' at line 1</span><br>';
+      out.innerHTML += '<span class="info">[!] Hint: The query broke due to an unbalanced single quote. Try balancing quotes or closing the query with a comment block (--).</span>';
+      return;
+    }
+
+    if (currentLevel === 1) {
+      if (/union/.test(p) && /select/.test(p) && (/user/.test(p) || /password/.test(p))) {
+        flags[1] = true;
+        out.innerHTML += '<span class="success">[+] Query executed successfully!</span><br>';
+        out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">id | username | password\n1  | admin    | P@ssw0rd!\n2  | guest    | guest123</pre>';
+        out.innerHTML += '<span class="success">[+] Level 1 complete! Flag: ' + FLAG[1] + '</span>';
+      } else if (/or\s+1\s*=\s*1/.test(p) || /'\s*or\s*'1'='1/.test(p)) {
+        out.innerHTML += '<span class="success">[+] Authentication bypass — all products returned.</span><br>';
+        out.innerHTML += '<span class="info">[!] Good start — now try UNION SELECT on users table.</span>';
+      } else {
+        out.innerHTML += '<span class="error">[-] Normal response: Product #1 — Wireless Router ($49.99)</span><br>';
+        out.innerHTML += '<span class="info">[!] Hint: \' UNION SELECT username,password FROM users--</span>';
+      }
+    }
+
+    if (currentLevel === 2) {
+      if (/substring|substr|ascii|mid/.test(p) && /and/.test(p)) {
+        flags[2] = true;
+        out.innerHTML += '<span class="success">[+] Boolean TRUE — Welcome back, admin!</span><br>';
+        out.innerHTML += '<span class="success">[+] Blind extraction successful. Secret: admin_secret_key_2024</span><br>';
+        out.innerHTML += '<span class="success">[+] Level 2 complete! Flag: ' + FLAG[2] + '</span>';
+      } else if (/and\s+1\s*=\s*2/.test(p)) {
+        out.innerHTML += '<span class="error">[-] Boolean FALSE — Product not found.</span>';
+      } else {
+        out.innerHTML += '<span class="error">[-] Product not found.</span><br>';
+        out.innerHTML += '<span class="info">[!] Hint: Try testing password segments using AND SUBSTRING(password,1,1)=\'a\'--</span>';
+      }
+    }
+
+    if (currentLevel === 3) {
+      // Sophisticated WAF Bypass Checks:
+      // 1. Inline comments: e.g. un/**/ion, sel/**/ect, etc.
+      var hasCommentsInKeywords = /un\/\*\*\/(?:ion|ion)/.test(p) || /sel\/\*\*\/(?:ect|ect)/.test(p);
+      // 2. Spaces replacement: e.g. 1/**/union/**/select
+      var hasSpaceReplacement = /\/\*\*\/\s*union\s*\/\*\*\/\s*select/.test(p);
+      // 3. Hex/URL encoded equivalents: %55%4e%49%4f%4e or %75%6e%69%6f%6e (UNION), %73%65%6c%65%63%74 or %53%45%4c%45%43%54 (SELECT)
+      var hasURLEncodedUnion = /%55%4e%49%4f%4e/i.test(payload) || /%75%6e%69%6f%6e/i.test(payload);
+      var hasURLEncodedSelect = /%53%45%4c%45%43%54/i.test(payload) || /%73%65%6c%65%63%74/i.test(payload);
+      
+      var bypassed = hasCommentsInKeywords || hasSpaceReplacement || (hasURLEncodedUnion && (hasURLEncodedSelect || /select/i.test(payload)));
+      var wafBlocked = (/union/.test(p) && /select/.test(p) && !bypassed) || (/or\s+1\s*=\s*1/i.test(p) && !bypassed);
+
+      if (wafBlocked) {
+        out.innerHTML += '<span class="error">[-] WAF BLOCKED: Suspicious query pattern or SQL keywords detected!</span><br>';
+        out.innerHTML += '<span class="info">[!] Hint: Try comments placement (UN/**/ION SEL/**/ECT), space replacement, or hex encoding.</span>';
+      } else if (bypassed || (/\/\*\*\//.test(payload) && /union|select/i.test(payload))) {
+        flags[3] = true;
+        out.innerHTML += '<span class="success">[+] WAF bypassed! Admin panel accessible.</span><br>';
+        out.innerHTML += '<span class="success">[+] Level 3 complete! Flag: ' + FLAG[3] + '</span>';
+      } else {
+        out.innerHTML += '<span class="error">[-] Request blocked or invalid.</span><br>';
+        out.innerHTML += '<span class="info">[!] WAF active filters: UNION, SELECT, OR 1=1</span>';
+      }
+    }
+
+    updateHud();
+    if (flags[1] && flags[2] && flags[3]) {
+      out.innerHTML += '<br><div class="success" style="border: 1px dashed var(--accent-green); padding: 15px; border-radius: 8px; margin-top: 15px; background: rgba(0, 255, 102, 0.05); text-align: center;">';
+      out.innerHTML += '<span style="font-size: 1.5rem;">🏆</span><br>';
+      out.innerHTML += '<strong style="color:#fff; font-size:1.1rem;">[★] Certificate: "SQL Injection Proficiency Badge"</strong><br>';
+      out.innerHTML += '<span style="font-family:\'Fira Code\', monospace; color:var(--accent-green); font-size:0.9rem;">ID: SQLI-MASTER-HUNTEROS</span><br>';
+      out.innerHTML += '<span style="font-size:0.8rem; color:var(--text-muted);">تم إحراز شارة التميز بنجاح في اختراق قواعد البيانات!</span>';
+      out.innerHTML += '</div>';
+    }
+  };
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  document.getElementById('labPayload').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') sendLabRequest();
+  });
+})();
+</script>
+
+</body>
+</html>

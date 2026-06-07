@@ -1,0 +1,106 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}IDOR — Broken Access Control{% endblock %}
+{% block meta_desc %}IDOR and Broken Access Control — Arabic & English guide with testing commands and tools{% endblock %}
+{% block css_path %}/static/main/css/academy.css{% endblock %}
+{% block home_link %}../index.html{% endblock %}
+{% block methodology_link %}../methodology.html{% endblock %}
+{% block writeups_link %}../bug-bounty-writeups.html{% endblock %}
+{% block sqli_link %}sql-injection.html{% endblock %}
+{% block idor_link %}idor.html{% endblock %}
+{% block ssrf_link %}ssrf.html{% endblock %}
+{% block sqli_lab_link %}../labs/sql-injection-lab.html{% endblock %}
+{% block home_labs_link %}../index.html{% endblock %}
+{% block nav_idor %}active{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">IDOR — الوصول المباشر غير الآمن للكائنات</h1>
+  <p class="page-title-en">IDOR — Insecure Direct Object Reference</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-high">OWASP A01</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>IDOR</strong> يحدث عندما يستطيع المستخدم الوصول لبيانات أو موارد تخص مستخدمين آخرين بتغيير معرّف (ID, UUID, filename) في الطلب — بدون فحص صلاحيات كافٍ من السيرفر.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>IDOR</strong> happens when a user accesses another user's data by modifying an object identifier (ID, UUID, filename) in the request — without adequate server-side authorization checks.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أنواع IDOR / IDOR Types</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>URL Parameter IDOR</h4>
+      <p>تغيير <code>user_id=123</code> → <code>user_id=124</code></p>
+    </div>
+    <div class="type-item">
+      <h4>API / JSON Body</h4>
+      <p>تعديل <code>id</code> أو <code>accountId</code> في POST/PUT body</p>
+    </div>
+    <div class="type-item">
+      <h4>UUID Manipulation</h4>
+      <p>تخمين أو leak UUIDs من responses أخرى</p>
+    </div>
+    <div class="type-item">
+      <h4>Mass Assignment</h4>
+      <p>إرسال fields زيادة: <code>role: admin</code>, <code>isPremium: true</code></p>
+    </div>
+    <div class="type-item">
+      <h4>Function-Level BAC</h4>
+      <p>الوصول لـ admin endpoints كـ regular user</p>
+    </div>
+    <div class="type-item">
+      <h4>Path Traversal</h4>
+      <p><code>../../etc/passwd</code> في file download paths</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر الاختبار / Testing Commands</h2>
+  <div class="cmd-block">
+    <pre># URL IDOR
+GET /api/users/1001/profile HTTP/1.1
+GET /api/users/1002/profile HTTP/1.1
+
+# JSON body swap
+POST /api/orders HTTP/1.1
+{"order_id": "ORD-9999", "user_id": "VICTIM_UUID"}
+
+# Path traversal
+GET /download?file=../../../etc/passwd HTTP/1.1</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">Autorize (Burp)</span>
+    <span class="tool-chip">AuthMatrix (Burp)</span>
+    <span class="tool-chip">Burp Comparer</span>
+    <span class="tool-chip">ffuf</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup & Lab</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+    </div>
+  </div>
+  <a class="cta-lab" href="../labs/idor-lab.html" style="opacity:0.6;pointer-events:none;">🧪 IDOR Lab — قريباً / Coming Soon</a>
+</div>
+{% endblock %}

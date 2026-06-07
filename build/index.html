@@ -379,6 +379,19 @@
 <div class="workspace-pane" id="pane-writeups">
           <h2 class="pane-view-title">// Security Knowledge Base & CTF Writeups</h2>
           <div class="visual-writeups-grid">
+
+            <a href="bug-bounty-writeups.html" class="visual-writeup-card" style="text-decoration:none;color:inherit;border-color:rgba(0,229,255,0.25);">
+              <div class="writeup-card-header">
+                <span class="writeup-card-date">Pentester.land</span>
+                <span class="writeup-read">10 writeups</span>
+              </div>
+              <h3 class="writeup-card-title">🎯 أحدث Bug Bounty Writeups</h3>
+              <p class="writeup-card-desc">تحليل عربي لأحدث 10 writeups — Critical إلى High مع payloads ودروس مستفادة. / Arabic analysis with copy-ready payloads.</p>
+              <div class="writeup-card-link">
+                <span>فتح الصفحة / Open Page</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </div>
+            </a>
             
             <div class="visual-writeup-card" onclick="openWriteupModal('nmap-notes')">
               <div class="writeup-card-header">
@@ -4816,6 +4829,16 @@
                 <!-- 3. INTERACTIVE LABS VIEW -->
         <div class="workspace-pane" id="pane-labs">
           <h2 class="pane-view-title">// Cybersecurity Interactive Labs</h2>
+
+          <div class="cyber-card" style="margin-bottom:20px;padding:16px 20px;">
+            <div class="card-header" style="margin-bottom:10px;"><h3>📚 Vulnerability Guides / أدلة الثغرات</h3></div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <a href="vulnerabilities/sql-injection.html" class="hunt-btn link-btn" style="text-decoration:none;font-size:0.85rem;">💉 SQL Injection</a>
+              <a href="vulnerabilities/idor.html" class="hunt-btn link-btn" style="text-decoration:none;font-size:0.85rem;">🔓 IDOR</a>
+              <a href="vulnerabilities/ssrf.html" class="hunt-btn link-btn" style="text-decoration:none;font-size:0.85rem;">🌐 SSRF</a>
+              <a href="bug-bounty-writeups.html" class="hunt-btn link-btn" style="text-decoration:none;font-size:0.85rem;">📝 BB Writeups</a>
+            </div>
+          </div>
           
           <div class="labs-layout">
             <!-- Labs Directory / List -->
@@ -4830,6 +4853,15 @@
                 <p class="lab-card-desc">تعلم أساسيات سطر الأوامر في لينكس وفك تشفير الملفات السرية للوصول للأعلام (Flags).</p>
               </div>
               
+              <a href="labs/sql-injection-lab.html" class="lab-card" style="text-decoration:none;color:inherit;display:block;">
+                <div class="lab-card-meta">
+                  <span class="badge badge-medium">🟠 Medium</span>
+                  <span class="lab-duration">⏱ 30 min</span>
+                </div>
+                <h4 class="lab-card-title">💉 SQL Injection Lab</h4>
+                <p class="lab-card-desc">مختبر تفاعلي — 3 مستويات: UNION, Blind, WAF Bypass. / Interactive 3-level SQLi simulator.</p>
+              </a>
+
               <div class="lab-card disabled">
                 <div class="lab-card-meta">
                   <span class="badge badge-medium">🟠 Medium</span>
@@ -5562,6 +5594,18 @@
     let historyIndex = -1;
 
     // Cybersecurity Lab progression variables
+    function openLab(labId, cardEl) {
+      document.querySelectorAll('.lab-card').forEach(function(c) {
+        if (!c.classList.contains('disabled') && c.tagName !== 'A') c.classList.remove('active');
+      });
+      if (cardEl && cardEl.classList) cardEl.classList.add('active');
+      document.querySelectorAll('.active-lab-view').forEach(function(v) { v.classList.remove('active'); });
+      var target = document.getElementById('lab-' + labId);
+      if (target) target.classList.add('active');
+      var input = document.getElementById('consoleInput');
+      if (input) setTimeout(function() { input.focus(); }, 100);
+    }
+
     let gameLevel = 1;
     let gameScore = 0;
     let flagsCaptured = [];
@@ -6671,6 +6715,11 @@
       { text: "Go to Book Collection", action: "tab:books", icon: "📖", category: "Navigation" },
       { text: "Go to About Profile", action: "tab:about", icon: "👤", category: "Navigation" },
       { text: "Open Full Methodology", action: "link:methodology.html", icon: "🗺️", category: "Navigation" },
+      { text: "SQL Injection Guide", action: "link:vulnerabilities/sql-injection.html", icon: "💉", category: "Academy" },
+      { text: "IDOR Guide", action: "link:vulnerabilities/idor.html", icon: "🔓", category: "Academy" },
+      { text: "SSRF Guide", action: "link:vulnerabilities/ssrf.html", icon: "🌐", category: "Academy" },
+      { text: "SQL Injection Lab", action: "link:labs/sql-injection-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Bug Bounty Writeups", action: "link:bug-bounty-writeups.html", icon: "📝", category: "Writeups" },
       
       // Quick Tool searches
       { text: "Search subfinder", action: "tool:subfinder", icon: "🔎", category: "Tools" },

@@ -1,0 +1,117 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}SQL Injection — From Zero to Hero{% endblock %}
+{% block meta_desc %}SQL Injection tutorial in Arabic and English — types, sqlmap commands, tools, and interactive lab{% endblock %}
+{% block css_path %}/static/main/css/academy.css{% endblock %}
+{% block home_link %}../index.html{% endblock %}
+{% block methodology_link %}../methodology.html{% endblock %}
+{% block writeups_link %}../bug-bounty-writeups.html{% endblock %}
+{% block sqli_link %}sql-injection.html{% endblock %}
+{% block idor_link %}idor.html{% endblock %}
+{% block ssrf_link %}ssrf.html{% endblock %}
+{% block sqli_lab_link %}../labs/sql-injection-lab.html{% endblock %}
+{% block home_labs_link %}../index.html{% endblock %}
+{% block nav_sqli %}active{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">حقن SQL — من الصفر للاحتراف</h1>
+  <p class="page-title-en">SQL Injection — From Zero to Hero</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">OWASP A03</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>SQL Injection</strong> ثغرة تحدث عندما يُدمَج مدخل المستخدم مباشرة في استعلام SQL بدون تعقيم (sanitization). المهاجم يستطيع قراءة، تعديل، أو حذف بيانات قاعدة البيانات — وأحياناً الوصول لـ RCE عبر <code>xp_cmdshell</code> أو file write.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>SQL Injection</strong> occurs when user input is concatenated into SQL queries without proper sanitization. Attackers can read, modify, or delete database records — and sometimes achieve RCE via <code>xp_cmdshell</code> or file write primitives.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أنواع SQLi / SQLi Types</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>In-band (Classic)</h4>
+      <p class="lang-ar">النتيجة تظهر في نفس response — الأسهل للاستغلال.</p>
+      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">Results appear in the same HTTP response.</p>
+    </div>
+    <div class="type-item">
+      <h4>Union-based</h4>
+      <p class="lang-ar">استخدام <code>UNION SELECT</code> لسحب بيانات من جداول أخرى.</p>
+      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">Use <code>UNION SELECT</code> to extract data from other tables.</p>
+    </div>
+    <div class="type-item">
+      <h4>Boolean-based Blind</h4>
+      <p class="lang-ar">الفرق بين true/false في المحتوى — استخراج حرف حرف.</p>
+      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">Infer data from true/false response differences.</p>
+    </div>
+    <div class="type-item">
+      <h4>Time-based Blind</h4>
+      <p class="lang-ar"><code>SLEEP(5)</code> أو <code>WAITFOR DELAY</code> — لا فرق في المحتوى.</p>
+      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;"><code>SLEEP()</code> / <code>WAITFOR DELAY</code> — no visible content change.</p>
+    </div>
+    <div class="type-item">
+      <h4>Error-based</h4>
+      <p class="lang-ar">استغلال رسائل الخطأ لاستخراج البيانات.</p>
+      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">Extract data from verbose SQL error messages.</p>
+    </div>
+    <div class="type-item">
+      <h4>NoSQL Injection</h4>
+      <p class="lang-ar">MongoDB, Redis — operators مثل <code>$gt</code>, <code>$ne</code>.</p>
+      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">MongoDB/Redis — abuse operators like <code>$gt</code>, <code>$ne</code>.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر الاختبار / Testing Commands</h2>
+  <div class="cmd-block">
+    <pre>sqlmap -u "https://target.com/page.php?id=1" --dbs --batch
+sqlmap -u "https://target.com/page.php?id=1" -D database_name -T users --dump
+sqlmap -u "https://target.com/page.php?id=1" --os-shell</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+  <div class="cmd-block">
+    <pre># Manual UNION probe
+' ORDER BY 3--
+' UNION SELECT NULL,username,password FROM users--
+
+# NoSQL (MongoDB)
+{"username": {"$gt": ""}, "password": {"$gt": ""}}
+
+python nosqlmap.py -t https://target.com/api/login</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">SQLMap</span>
+    <span class="tool-chip">NoSQLMap</span>
+    <span class="tool-chip">sqlmaptamper</span>
+    <span class="tool-chip">Burp Suite</span>
+    <span class="tool-chip">ffuf</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup & Lab</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>اقرأ writeup: <strong>SQL Injection: From Zero to RCE</strong> — من اكتشاف parameter لـ database dump ثم RCE.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Recommended writeup: <strong>SQL Injection: From Zero to RCE</strong> — from parameter discovery to database dump and RCE.</p>
+    </div>
+  </div>
+  <a class="cta-lab" href="../labs/sql-injection-lab.html">🧪 افتح SQL Injection Lab — 3 Levels</a>
+</div>
+{% endblock %}
