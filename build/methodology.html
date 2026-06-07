@@ -3015,7 +3015,7 @@ https://cdn.target.com [301] → assets.cdn.net
         <p class="os-section-label">💡 Edge Cases — ماذا تفعل لو؟</p>
         <div class="cyber-card" style="border-color: var(--neon-purple); background: rgba(155, 89, 255, 0.02);">
           <div class="card-header"><h3 style="color:var(--neon-purple);">💡 What-If Scenarios & Edge Cases</h3></div>
-          <div style="display:flex; flex-direction:column; gap:16px; font-size:1.15rem; line-height:1.7;">
+          <div style="display:flex; flex-direction:column; gap:16px; font-size:1.15rem; line-height:1.7; color:#cbd5e1;">
             <div>
               <strong style="color:var(--neon-red);">❓ Scenario 1: كل النطاقات الفرعية خلف Cloudflare؟ (Behind Cloudflare CDN)</strong>
               <p style="margin:4px 0 0 10px; color:#cbd5e1;">
@@ -3073,7 +3073,7 @@ https://cdn.target.com [301] → assets.cdn.net
         <div class="cyber-card" style="border: 1px dashed var(--neon-cyan); background: rgba(0, 229, 255, 0.02); margin-bottom: 30px;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
             <div>
-              <h4 style="margin:0 0 5px 0; font-family:'Outfit',sans-serif; font-size:1.25rem; color:#fff;">🧪 جاهز لتطبيق ما تعلمته؟</h4>
+              <h4 style="margin:0 0 5px 0; font-family:'Outfit',sans-serif; font-size:1.25rem; color:#fff;">🧪 جاهز لتطبيق ما تعلمته?</h4>
               <p style="margin:0; font-size:0.95rem; color:var(--text-secondary);">اختبر مهاراتك في كشف النطاقات الفرعية الضعيفة واستغلال ثغرات الـ Takeover في المختبر التفاعلي.</p>
             </div>
             <a href="index.html#labs" class="back-btn" style="white-space:nowrap;" onclick="localStorage.setItem('switch_tab_direct', 'labs')">
@@ -4711,7 +4711,12 @@ Content-Type: application/json
         </div>
       </div>
 
-    </div><!-- Popup Modal structure for alert testing -->
+    
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_scen_takeover" onclick="markPhaseComplete('p_scen_takeover','complete')">
+          ✅ Mark Phase Complete — Subdomain Takeover Scenario Done → Proceed to Complete Playbook!
+        </button>
+</div><!-- Popup Modal structure for alert testing -->
   <div class="popup-overlay" id="popupOverlay"></div>
   <div class="popup-modal" id="popupModal">
     <h4>🎉 XSS Exploded Successfully!</h4>
@@ -5571,12 +5576,7 @@ Content-Type: application/json
           const isDone = (session.completedPhases || []).includes(phase.id);
           const cls = isDone ? 'done' : 'pending';
           const icon = isDone ? '✅ ' : '';
-          return '<div class="hunt-phase-chip ' + cls + '" onclick="openMethPhase(\'' + phase.id + '\')">' + icon + phase.label + '
-        <!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p_scen_takeover" onclick="markPhaseComplete('p_scen_takeover','complete')">
-          ✅ Mark Phase Complete — Subdomain Takeover Scenario Done → Proceed to Complete Playbook!
-        </button>
-</div>';
+          return '<div class="hunt-phase-chip ' + cls + '" onclick="openMethPhase(\'' + phase.id + '\')">' + icon + phase.label + '</div>';
         }).join('');
       }
     }
