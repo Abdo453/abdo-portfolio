@@ -504,6 +504,11 @@
                   <span class="f-icon">🔥</span>
                   <span class="f-title">Vulnerability Scanning</span>
                 </div>
+
+                <div class="explorer-folder" id="ef-linux_security" onclick="openExplorerFolder('linux_security')">
+                  <span class="f-icon">🐧</span>
+                  <span class="f-title">Linux Security</span>
+                </div>
                 
               </div>
             </div>
@@ -713,6 +718,50 @@
                 </div>
                 
               </div>
+
+              <div class="tools-list" id="tools-linux_security" style="display: none;">
+                
+                <div class="tool-list-item" id="ti-linpeas" onclick="openExplorerTool('linpeas')">
+                  <span class="t-icon">🐧</span>
+                  <div class="t-info">
+                    <span class="t-name">linpeas</span>
+                    <span class="t-meta">Fast | Easy</span>
+                  </div>
+                </div>
+                
+                <div class="tool-list-item" id="ti-linenum" onclick="openExplorerTool('linenum')">
+                  <span class="t-icon">🛡️</span>
+                  <div class="t-info">
+                    <span class="t-name">linenum</span>
+                    <span class="t-meta">Fast | Easy</span>
+                  </div>
+                </div>
+                
+                <div class="tool-list-item" id="ti-linux-exploit-suggester" onclick="openExplorerTool('linux-exploit-suggester')">
+                  <span class="t-icon">💡</span>
+                  <div class="t-info">
+                    <span class="t-name">linux-exploit-suggester</span>
+                    <span class="t-meta">Fast | Intermediate</span>
+                  </div>
+                </div>
+                
+                <div class="tool-list-item" id="ti-pspy" onclick="openExplorerTool('pspy')">
+                  <span class="t-icon">🕵️</span>
+                  <div class="t-info">
+                    <span class="t-name">pspy</span>
+                    <span class="t-meta">Medium | Intermediate</span>
+                  </div>
+                </div>
+                
+                <div class="tool-list-item" id="ti-gtfobins" onclick="openExplorerTool('gtfobins')">
+                  <span class="t-icon">📜</span>
+                  <div class="t-info">
+                    <span class="t-name">gtfobins</span>
+                    <span class="t-meta">Reference | Easy</span>
+                  </div>
+                </div>
+                
+              </div>
               
             </div>
 
@@ -723,7 +772,226 @@
                 <p>Select a tool to view its deep analysis.</p>
               </div>
 
-              
+              <!-- ========================================== -->
+              <!-- LINUX SECURITY TOOLS                       -->
+              <!-- ========================================== -->
+
+              <!-- 1. linpeas -->
+              <div class="tool-content-view" id="content-linpeas" style="display: none; --tool-color: #00ff66;">
+                <div class="cyber-hero">
+                  <div class="hero-left">
+                    <h2 class="hero-title"><span class="hero-icon">🐧</span> linpeas</h2>
+                    <p class="hero-tagline">Linux Privilege Escalation Awesome Script</p>
+                    <div class="hero-badges">
+                      <span class="cyber-badge">ENUMERATION</span>
+                      <span class="cyber-badge">BEST-IN-CLASS</span>
+                      <span class="cyber-badge">AUTOMATED</span>
+                    </div>
+                  </div>
+                  <div class="hero-right">
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Speed</span><span>90%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+                    </div>
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Complexity</span><span>10%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 10%;"></div></div>
+                    </div>
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Accuracy</span><span>95%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="cyber-tabs">
+                  <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-linpeas')">Overview</button>
+                  <button class="cyber-tab-btn" onclick="switchCyberTab(this, 'tab-commands-linpeas')">Commands</button>
+                </div>
+                <div class="tab-pane active" id="tab-overview-linpeas">
+                  <div class="cyber-card">
+                    <h3>What is LinPEAS? / ما هو؟</h3>
+                    <p>سكربت فحص تلقائي رائع يبحث في نظام الملفات والعمليات والصلاحيات والشبكات السحابية لاكتشاف كافة مسارات ترقية الصلاحيات إلى root.</p>
+                  </div>
+                  <div class="cyber-card">
+                    <h3>Features / المميزات</h3>
+                    <ul class="t-check-list">
+                      <li>✔ فحص شامل بنقرة واحدة</li>
+                      <li>✔ ألوان مميزة لتوضيح الثغرات الكرتيكال فوراً</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="tab-pane" id="tab-commands-linpeas" style="display:none;">
+                  <div class="cyber-card">
+                    <h3>Commands / الأوامر</h3>
+                    <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;">curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh</pre>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. linenum -->
+              <div class="tool-content-view" id="content-linenum" style="display: none; --tool-color: #00ff66;">
+                <div class="cyber-hero">
+                  <div class="hero-left">
+                    <h2 class="hero-title"><span class="hero-icon">🛡️</span> linenum</h2>
+                    <p class="hero-tagline">Local Linux Enumeration Script</p>
+                    <div class="hero-badges">
+                      <span class="cyber-badge">ENUMERATION</span>
+                      <span class="cyber-badge">LIGHTWEIGHT</span>
+                      <span class="cyber-badge">SHELL-BASED</span>
+                    </div>
+                  </div>
+                  <div class="hero-right">
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Speed</span><span>95%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                    </div>
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Complexity</span><span>10%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 10%;"></div></div>
+                    </div>
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Accuracy</span><span>85%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 85%;"></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="cyber-tabs">
+                  <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-linenum')">Overview</button>
+                  <button class="cyber-tab-btn" onclick="switchCyberTab(this, 'tab-commands-linenum')">Commands</button>
+                </div>
+                <div class="tab-pane active" id="tab-overview-linenum">
+                  <div class="cyber-card">
+                    <h3>What is LinEnum?</h3>
+                    <p>سكربت مخصص لجمع معلومات تفصيلية عن نظام لينكس وتدقيق التكوينات الخاطئة وملفات التكوين الحساسة.</p>
+                  </div>
+                </div>
+                <div class="tab-pane" id="tab-commands-linenum" style="display:none;">
+                  <div class="cyber-card">
+                    <h3>Commands</h3>
+                    <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;">./LinEnum.sh -t -r report.txt</pre>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. linux-exploit-suggester -->
+              <div class="tool-content-view" id="content-linux-exploit-suggester" style="display: none; --tool-color: #ffd700;">
+                <div class="cyber-hero">
+                  <div class="hero-left">
+                    <h2 class="hero-title"><span class="hero-icon">💡</span> linux-exploit-suggester</h2>
+                    <p class="hero-tagline">Linux Kernel Exploit Suggestion Utility</p>
+                    <div class="hero-badges">
+                      <span class="cyber-badge">AUDIT</span>
+                      <span class="cyber-badge">KERNEL-CHECK</span>
+                      <span class="cyber-badge">PERL-BASED</span>
+                    </div>
+                  </div>
+                  <div class="hero-right">
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Speed</span><span>98%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 98%;"></div></div>
+                    </div>
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Complexity</span><span>15%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 15%;"></div></div>
+                    </div>
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Accuracy</span><span>80%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 80%;"></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="cyber-tabs">
+                  <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-les')">Overview</button>
+                  <button class="cyber-tab-btn" onclick="switchCyberTab(this, 'tab-commands-les')">Commands</button>
+                </div>
+                <div class="tab-pane active" id="tab-overview-les">
+                  <div class="cyber-card">
+                    <h3>What is Linux Exploit Suggester?</h3>
+                    <p>أداة تفحص إصدار النواة وتقوم بمطابقتها تلقائياً بقاعدة البيانات لاقتراح الثغرات المحلية المناسبة (Kernel Exploit).</p>
+                  </div>
+                </div>
+                <div class="tab-pane" id="tab-commands-les" style="display:none;">
+                  <div class="cyber-card">
+                    <h3>Commands</h3>
+                    <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;">perl linux-exploit-suggester.pl -k 4.4.0</pre>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. pspy -->
+              <div class="tool-content-view" id="content-pspy" style="display: none; --tool-color: #ffd700;">
+                <div class="cyber-hero">
+                  <div class="hero-left">
+                    <h2 class="hero-title"><span class="hero-icon">🕵️</span> pspy</h2>
+                    <p class="hero-tagline">Monitor Linux Processes Without Root Privileges</p>
+                    <div class="hero-badges">
+                      <span class="cyber-badge">MONITOR</span>
+                      <span class="cyber-badge">REAL-TIME</span>
+                      <span class="cyber-badge">NO-ROOT-REQ</span>
+                    </div>
+                  </div>
+                  <div class="hero-right">
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Speed</span><span>90%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 90%;"></div></div>
+                    </div>
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Complexity</span><span>20%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 20%;"></div></div>
+                    </div>
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Accuracy</span><span>95%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="cyber-tabs">
+                  <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-pspy')">Overview</button>
+                  <button class="cyber-tab-btn" onclick="switchCyberTab(this, 'tab-commands-pspy')">Commands</button>
+                </div>
+                <div class="tab-pane active" id="tab-overview-pspy">
+                  <div class="cyber-card">
+                    <h3>What is pspy?</h3>
+                    <p>أداة لمراقبة العمليات الجارية في الخلفية وسكربتات الـ Cron النشطة لحظة بلحظة بدون صلاحيات root.</p>
+                  </div>
+                </div>
+                <div class="tab-pane" id="tab-commands-pspy" style="display:none;">
+                  <div class="cyber-card">
+                    <h3>Commands</h3>
+                    <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;">./pspy64 -pf -i 1000</pre>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 5. gtfobins -->
+              <div class="tool-content-view" id="content-gtfobins" style="display: none; --tool-color: #9b59ff;">
+                <div class="cyber-hero">
+                  <div class="hero-left">
+                    <h2 class="hero-title"><span class="hero-icon">📜</span> gtfobins</h2>
+                    <p class="hero-tagline">SUID Binaries Database Reference</p>
+                    <div class="hero-badges">
+                      <span class="cyber-badge">REFERENCE</span>
+                      <span class="cyber-badge">WEB-DATABASE</span>
+                      <span class="cyber-badge">BEST-PRACTICE</span>
+                    </div>
+                  </div>
+                  <div class="hero-right">
+                    <div class="stat-row">
+                      <div class="stat-label"><span>Accuracy</span><span>100%</span></div>
+                      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 100%;"></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="cyber-tabs">
+                  <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-gtfo')">Overview</button>
+                </div>
+                <div class="tab-pane active" id="tab-overview-gtfo">
+                  <div class="cyber-card">
+                    <h3>What is GTFOBins?</h3>
+                    <p>قاعدة بيانات كاملة على الويب توفر طرقاً وحمولات لاستغلال ثغرات SUID و Sudo و Capabilities على مختلف أدوات نظام Unix.</p>
+                  </div>
+                </div>
+              </div>
                 
                 <div class="tool-content-view" id="content-subfinder" style="display: none; --tool-color: #00e5ff;">
                   
@@ -4836,6 +5104,7 @@
               <a href="vulnerabilities/sql-injection.html" class="hunt-btn link-btn" style="text-decoration:none;font-size:0.85rem;">💉 SQL Injection</a>
               <a href="vulnerabilities/idor.html" class="hunt-btn link-btn" style="text-decoration:none;font-size:0.85rem;">🔓 IDOR</a>
               <a href="vulnerabilities/ssrf.html" class="hunt-btn link-btn" style="text-decoration:none;font-size:0.85rem;">🌐 SSRF</a>
+              <a href="linux-security/linux-fundamentals.html" class="hunt-btn link-btn" style="text-decoration:none;font-size:0.85rem;">🐧 Linux Security</a>
               <a href="bug-bounty-writeups.html" class="hunt-btn link-btn" style="text-decoration:none;font-size:0.85rem;">📝 BB Writeups</a>
             </div>
           </div>
@@ -4852,6 +5121,15 @@
                 <h4 class="lab-card-title">🐚 Linux Terminal Simulator</h4>
                 <p class="lab-card-desc">تعلم أساسيات سطر الأوامر في لينكس وفك تشفير الملفات السرية للوصول للأعلام (Flags).</p>
               </div>
+
+              <a href="linux-security/linux-labs.html" class="lab-card" style="text-decoration:none;color:inherit;display:block;">
+                <div class="lab-card-meta">
+                  <span class="badge badge-hard">🔴 Hard</span>
+                  <span class="lab-duration">⏱ 50 min</span>
+                </div>
+                <h4 class="lab-card-title">🐧 Linux Security Labs (6 Levels)</h4>
+                <p class="lab-card-desc">مختبرات حماية لينكس وترقية الصلاحيات SUID/Cron/Sudo واستغلال النواة.</p>
+              </a>
               
               <a href="labs/sql-injection-lab.html" class="lab-card" style="text-decoration:none;color:inherit;display:block;">
                 <div class="lab-card-meta">
@@ -4859,26 +5137,44 @@
                   <span class="lab-duration">⏱ 30 min</span>
                 </div>
                 <h4 class="lab-card-title">💉 SQL Injection Lab</h4>
-                <p class="lab-card-desc">مختبر تفاعلي — 3 مستويات: UNION, Blind, WAF Bypass. / Interactive 3-level SQLi simulator.</p>
+                <p class="lab-card-desc">مختبر تفاعلي — 3 مستويات: UNION, Blind, WAF Bypass.</p>
               </a>
 
-              <div class="lab-card disabled">
+              <a href="labs/command-injection-lab.html" class="lab-card" style="text-decoration:none;color:inherit;display:block;">
                 <div class="lab-card-meta">
                   <span class="badge badge-medium">🟠 Medium</span>
                   <span class="lab-duration">⏱ 25 min</span>
                 </div>
                 <h4 class="lab-card-title">💻 Command Injection Sandbox</h4>
-                <p class="lab-card-desc">مختبر تفاعلي لاستغلال ثغرات حقن الأوامر وتخطي فلاتر الحماية (قريباً).</p>
-              </div>
+                <p class="lab-card-desc">مختبر تفاعلي لاستغلال ثغرات حقن الأوامر وتخطي فلاتر الحماية.</p>
+              </a>
 
-              <div class="lab-card disabled">
+              <a href="labs/jwt-lab.html" class="lab-card" style="text-decoration:none;color:inherit;display:block;">
                 <div class="lab-card-meta">
                   <span class="badge badge-hard">🔴 Hard</span>
                   <span class="lab-duration">⏱ 40 min</span>
                 </div>
                 <h4 class="lab-card-title">🔑 JWT Token Forgery Sandbox</h4>
-                <p class="lab-card-desc">مختبر متقدم للتلاعب بـ JWT وتزوير التوقيع لتخطي الصلاحيات (قريباً).</p>
-              </div>
+                <p class="lab-card-desc">مختبر متقدم للتلاعب بـ JWT وتزوير التوقيع لتخطي الصلاحيات.</p>
+              </a>
+
+              <a href="labs/idor-lab.html" class="lab-card" style="text-decoration:none;color:inherit;display:block;">
+                <div class="lab-card-meta">
+                  <span class="badge badge-high" style="background:var(--neon-orange);color:#000;">🟠 Medium</span>
+                  <span class="lab-duration">⏱ 30 min</span>
+                </div>
+                <h4 class="lab-card-title">🔓 IDOR & BAC Lab</h4>
+                <p class="lab-card-desc">التلاعب بمعرفات API وتخطي الصلاحيات ومصادقة الكائنات.</p>
+              </a>
+
+              <a href="labs/ssrf-lab.html" class="lab-card" style="text-decoration:none;color:inherit;display:block;">
+                <div class="lab-card-meta">
+                  <span class="badge badge-high" style="background:var(--neon-orange);color:#000;">🟠 Medium</span>
+                  <span class="lab-duration">⏱ 30 min</span>
+                </div>
+                <h4 class="lab-card-title">🌐 SSRF Cloud Lab</h4>
+                <p class="lab-card-desc">استدعاء البيانات الخلفية وتسريب مفاتيح AWS Metadata.</p>
+              </a>
 
             </div>
 

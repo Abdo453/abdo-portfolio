@@ -1,104 +1,30 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Bug Bounty Academy — Arabic & English cybersecurity learning">
-  <title>Linux Security Lab | Abdo Ramdan</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
-  <script>
-    (function() {
-      if (localStorage.getItem('academy_theme') === 'light') {
-        document.documentElement.classList.add('light-mode');
-      }
-    })();
-  </script>
-  
-</head>
-<body class="academy-page">
-<script>
-  if (localStorage.getItem('academy_theme') === 'light') {
-    document.body.classList.add('light-mode');
-  }
-</script>
+{% extends "main/academy/base.html" %}
 
-<header class="academy-header">
-  <div class="academy-logo">🎯 Bug Bounty Academy</div>
-  <nav class="academy-nav-links">
-    <a class="academy-btn" href="index.html">← Home / الرئيسية</a>
-    <a class="academy-btn" href="methodology.html" target="_blank">🗺️ Methodology</a>
-    <a class="academy-btn" href="bug-bounty-writeups.html">📝 Writeups</a>
-    <a class="academy-btn" href="profile.html">👤 Profile</a>
-    <button class="academy-btn" id="themeToggleBtn" onclick="toggleTheme()" style="padding:7px 10px;">🌓</button>
-  </nav>
-</header>
+{% block title %}Linux Security Labs{% endblock %}
 
-<div class="academy-layout">
-  <aside class="academy-sidebar">
-    <div class="sidebar-title">Vulnerabilities / الثغرات</div>
-    <a class="sidebar-link" href="vulnerabilities/sql-injection.html">💉 SQL Injection</a>
-    <a class="sidebar-link" href="vulnerabilities/idor.html">🔓 IDOR / BAC</a>
-    <a class="sidebar-link" href="vulnerabilities/ssrf.html">🌐 SSRF</a>
-    <a class="sidebar-link" href="vulnerabilities/command-injection.html">⚡ Command Injection</a>
-    <a class="sidebar-link" href="vulnerabilities/jwt-security.html">🎟️ JWT Security</a>
-    <a class="sidebar-link" href="vulnerabilities/graphql-injection.html">🛰️ GraphQL Security</a>
-    <a class="sidebar-link" href="vulnerabilities/race-conditions.html">⏱️ Race Conditions</a>
-    <a class="sidebar-link" href="vulnerabilities/web-cache-poisoning.html">📦 Web Cache Poisoning</a>
-    <a class="sidebar-link" href="vulnerabilities/api-security.html">🔑 API Security</a>
-    <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
-    <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
-    <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
-    
-    <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
-    <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
-    <a class="sidebar-link" href="labs/linux-security-lab.html">🐧 Linux Security Lab</a>
-    <a class="sidebar-link" href="labs/sql-injection-lab.html">🧪 SQLi Lab</a>
-    <a class="sidebar-link" href="labs/command-injection-lab.html">🧪 Command Injection Lab</a>
-    <a class="sidebar-link" href="labs/jwt-lab.html">🧪 JWT Forgery Lab</a>
-    <a class="sidebar-link" href="labs/idor-lab.html">🧪 IDOR Lab</a>
-    <a class="sidebar-link" href="labs/ssrf-lab.html">🧪 SSRF Lab</a>
-    <a class="sidebar-link" href="labs/graphql-lab.html">🧪 GraphQL Lab</a>
-    <a class="sidebar-link" href="labs/race-condition-lab.html">🧪 Race Conditions Lab</a>
-    <a class="sidebar-link" href="labs/api-security-lab.html">🧪 API Security Lab</a>
-    <a class="sidebar-link" href="labs/ai-security-lab.html">🧪 AI Security Lab</a>
-    <a class="sidebar-link" href="labs/cloud-security-lab.html">🧪 Cloud Security Lab</a>
-
-    <div class="sidebar-title" style="margin-top:18px;">Linux Track / مسار لينكس</div>
-    <a class="sidebar-link" href="linux-security/linux-fundamentals.html">🐧 Linux Level 1</a>
-    <a class="sidebar-link" href="linux-security/linux-privesc.html">🔴 Linux Level 2</a>
-    <a class="sidebar-link" href="linux-security/linux-labs.html">🧪 Linux Labs</a>
-    <a class="sidebar-link" href="linux-security/linux-commands.html">📜 Commands Reference</a>
-    <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
-
-    <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
-    <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
-  </aside>
-
-  <main class="academy-main">
-    
+{% block content %}
 <div class="page-hero">
-  <h1 class="page-title">مختبر أمن لينكس وترقية الصلاحيات</h1>
-  <p class="page-title-en">Linux Security & Privilege Escalation Lab — 5 Levels</p>
-  <span class="severity-pill pill-medium">MEDIUM</span>
-  <span class="severity-pill pill-high">⏱ ~40 min</span>
+  <h1 class="page-title">مختبرات أمن لينكس التفاعلية</h1>
+  <p class="page-title-en">Interactive Linux Security Labs — 6 Levels</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">⏱ ~50 min</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p>مختبر محاكاة نظام تشغيل Linux تفاعلي. تدرج من سطر الأوامر الأساسي حتى ترقية صلاحياتك لـ Root لقراءة كافة الـ Flags.</p>
+    <p>مختبر محاكاة نظام تشغيل Linux تفاعلي. تدرج من سطر الأوامر الأساسي حتى ترقية صلاحياتك لـ Root واستغلال النواة لقراءة كافة الـ Flags.</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p>Simulated interactive Linux terminal. Escalate your privileges from a standard user to Root to extract all flags.</p>
+    <p>Simulated interactive Linux terminal. Escalate your privileges from a standard user to Root and exploit kernel vulnerabilities to extract all flags.</p>
   </div>
 </div>
 
 <div class="lab-hud">
   <span>Current User: <strong id="hudUser" style="color:var(--neon-green)">guest</strong></span>
-  <span>Level: <strong id="hudLevel">1</strong>/5</span>
-  <span>Flags: <strong id="hudFlags">0</strong>/5</span>
+  <span>Level: <strong id="hudLevel">1</strong>/6</span>
+  <span>Flags: <strong id="hudFlags">0</strong>/6</span>
   <span>Progress: <strong id="hudProgress">0%</strong></span>
 </div>
 
@@ -108,16 +34,17 @@
   <button class="lab-tab" data-level="3" onclick="switchLevel(3)">L3 — SUID</button>
   <button class="lab-tab" data-level="4" onclick="switchLevel(4)">L4 — Cron</button>
   <button class="lab-tab" data-level="5" onclick="switchLevel(5)">L5 — Sudo</button>
+  <button class="lab-tab" data-level="6" onclick="switchLevel(6)">L6 — Kernel</button>
 </div>
 
 <div class="section-card" style="padding:0;border:none;background:transparent;">
   <div class="lab-simulator" style="border-color:var(--neon-green)">
     <div class="lab-sim-bar" style="background:rgba(0,255,102,0.02)">
       <label style="color:var(--neon-green)">bash simulator</label>
-      <span style="color:#64748b;font-size:0.75rem;margin-left:auto;">HunterOS shell v1.2</span>
+      <span style="color:#64748b;font-size:0.75rem;margin-left:auto;">HunterOS Shell v1.5</span>
     </div>
     
-    <div class="lab-output" id="termOutput" style="min-height:300px;background:#020205;color:#22c55e;">
+    <div class="lab-output" id="termOutput" style="min-height:320px;background:#020205;color:#22c55e;padding:18px;font-family:'Fira Code', monospace;font-size:0.84rem;line-height:1.6;direction:ltr;text-align:left;overflow-y:auto;">
       <span>[*] Linux terminal initialized. Current user: guest.</span><br>
       <span>[*] Target: Find the flags hidden in system.</span><br>
       <span>Type <strong>help</strong> or <strong>hint</strong> to start.</span><br><br>
@@ -132,139 +59,69 @@
 </div>
 
 <div class="section-card">
-  <h2>Theory / النظرية</h2>
+  <h2>Theory & Mission / النظرية والمهمة</h2>
   <div id="theoryL1">
     <div class="bilingual-block">
-      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 1: استخدم <code>ls</code> و <code>cd</code> و <code>cat</code> لتصفح المجلدات وقراءة ملف العلم الأول.</p></div>
-      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 1: Use <code>ls</code>, <code>cd</code>, and <code>cat</code> to browse directories and read the first flag file.</p></div>
+      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 1: استخدم <code>ls</code> و <code>cd</code> و <code>cat</code> لتصفح المجلدات وقراءة ملف العلم الأول <code>flag1.txt</code>.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 1: Use <code>ls</code>, <code>cd</code>, and <code>cat</code> to browse directories and read the first flag file <code>flag1.txt</code>.</p></div>
     </div>
   </div>
   <div id="theoryL2" style="display:none;">
     <div class="bilingual-block">
-      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 2: هناك ملف باسم <code>secret.txt</code> محمي الصلاحيات. استخدم <code>chmod</code> لتعديل صلاحيات قراءته.</p></div>
-      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 2: A file named <code>secret.txt</code> is blocked. Use <code>chmod</code> to alter permissions to read it.</p></div>
+      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 2: هناك ملف باسم <code>secret.txt</code> محمي الصلاحيات في مجلد <code>secrets</code>. استخدم <code>chmod</code> لتعديل صلاحيات قراءته واستخراج العلم الثاني.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 2: A file named <code>secret.txt</code> in <code>secrets</code> dir is restricted. Use <code>chmod</code> to alter permissions to read it.</p></div>
     </div>
   </div>
   <div id="theoryL3" style="display:none;">
     <div class="bilingual-block">
-      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 3: ابحث عن ملفات SUID بالدالة <code>find / -perm -4000</code>. استغل أحدها لإنشاء shell مرتفع الصلاحية.</p></div>
-      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 3: Search for SUID files using <code>find / -perm -4000</code>. Exploit one of them to spawn a privileged shell.</p></div>
+      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 3: ابحث عن ملفات SUID بالدالة <code>find / -perm -4000</code>. استغل ملف <code>find</code> لتشغيل shell مرتفع الصلاحية.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 3: Search for SUID files using <code>find / -perm -4000</code>. Exploit the <code>find</code> binary to spawn a privileged shell.</p></div>
     </div>
   </div>
   <div id="theoryL4" style="display:none;">
     <div class="bilingual-block">
-      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 4: ابحث عن ملفات Cron المجدولة القابلة للكتابة. اكتب أمراً فيها لينفذ تلقائياً كمسؤول.</p></div>
-      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 4: Look for writable scheduled Cron scripts. Write commands inside them to execute as admin.</p></div>
+      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 4: ابحث عن ملفات Cron المجدولة القابلة للكتابة في <code>/var/tmp</code>. اكتب أمراً فيها لينفذ تلقائياً كمسؤول.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 4: Look for writable scheduled Cron scripts in <code>/var/tmp</code>. Write commands inside them to execute as admin.</p></div>
     </div>
   </div>
   <div id="theoryL5" style="display:none;">
     <div class="bilingual-block">
-      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 5: تفقد صلاحيات sudo بالأمر <code>sudo -l</code>. استغل الأداة المسموحة لإنشاء shell للـ root.</p></div>
-      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 5: Check sudo privileges via <code>sudo -l</code>. Exploit allowed commands to spawn a root shell.</p></div>
+      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 5: تفقد صلاحيات sudo بالأمر <code>sudo -l</code>. استغل أداة <code>awk</code> لإنشاء shell للـ root.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 5: Check sudo privileges via <code>sudo -l</code>. Exploit the allowed <code>awk</code> binary to spawn a root shell.</p></div>
+    </div>
+  </div>
+  <div id="theoryL6" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 6: استغلال ثغرة النواة (Kernel Exploit). تفقد إصدار النواة بـ <code>uname -a</code>، ثم ابحث واستغل الثغرة عبر تشغيل ملف ثغرة محاكي <code>./dirty_cow_exploit</code>.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 6: Kernel Exploit. Check the kernel version via <code>uname -a</code>, identify vulnerabilities, and execute the simulated exploit payload <code>./dirty_cow_exploit</code> to escalate to root.</p></div>
     </div>
   </div>
 </div>
 
-<a class="academy-btn" href="../vulnerabilities/sql-injection.html" style="display:inline-block;margin-top:8px;">← العودة للأكاديمية / Back to Academy</a>
+<a class="academy-btn" href="linux-fundamentals.html" style="display:inline-block;margin-top:8px;">← العودة لأساسيات لينكس / Back to Linux Fundamentals</a>
+{% endblock %}
 
-  </main>
-</div>
-
-<!-- Dynamic Relative Path & Active Class Resolver -->
-<script>
-  (function() {
-    var path = window.location.pathname;
-    
-    // Detect subdir depth based on folder structure in path
-    var isSubdir = path.includes('/vulnerabilities/') || path.includes('/labs/') || path.includes('/linux-security/') || path.includes('/writeups/') || path.includes('/books/');
-    if (!isSubdir && window.location.protocol === 'file:') {
-      var parts = window.location.href.split('/');
-      isSubdir = parts.includes('vulnerabilities') || parts.includes('labs') || parts.includes('linux-security') || parts.includes('writeups') || parts.includes('books');
-    }
-    
-    var prefix = isSubdir ? '../' : '';
-    
-    // Fix stylesheet href dynamically
-    var cssLink = document.getElementById('academyCssLink');
-    if (cssLink) {
-      cssLink.setAttribute('href', prefix + 'css/academy.css');
-    }
-    
-    // Fix all page links
-    var links = document.querySelectorAll('a, link, script');
-    links.forEach(function(el) {
-      var href = el.getAttribute('href');
-      if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('javascript:')) {
-        if (!href.startsWith('../') && !href.startsWith('./') && !href.startsWith('/')) {
-          el.setAttribute('href', prefix + href);
-        }
-      }
-      var src = el.getAttribute('src');
-      if (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('./') && !src.startsWith('../')) {
-        el.setAttribute('src', prefix + src);
-      }
-    });
-
-    // Resolve active sidebar link
-    var currentUrl = window.location.href.split('#')[0].split('?')[0];
-    var sidebarLinks = document.querySelectorAll('.sidebar-link');
-    sidebarLinks.forEach(function(link) {
-      var rawHref = link.getAttribute('href');
-      // Resolve link's raw destination (removing prefix if subdir)
-      var target = isSubdir && rawHref.startsWith('../') ? rawHref.substring(3) : rawHref;
-      if (currentUrl.endsWith(target)) {
-        link.classList.add('active');
-      } else {
-        link.classList.remove('active');
-      }
-    });
-  })();
-</script>
-<script>
-  function copyCmd(btn) {
-    var pre = btn.closest('.cmd-block').querySelector('pre');
-    if (!pre) return;
-    navigator.clipboard.writeText(pre.textContent.trim()).then(function() {
-      var o = btn.textContent;
-      btn.textContent = '✓ Copied';
-      btn.classList.add('copied');
-      setTimeout(function() { btn.textContent = o; btn.classList.remove('copied'); }, 2000);
-    });
-  }
-  function toggleTheme() {
-    var isLight = document.body.classList.contains('light-mode');
-    if (isLight) {
-      document.body.classList.remove('light-mode');
-      document.documentElement.classList.remove('light-mode');
-      localStorage.setItem('academy_theme', 'dark');
-    } else {
-      document.body.classList.add('light-mode');
-      document.documentElement.classList.add('light-mode');
-      localStorage.setItem('academy_theme', 'light');
-    }
-  }
-</script>
-
+{% block extra_js %}
 <script>
 (function() {
   var level = 1;
-  var flags = { 1: false, 2: false, 3: false, 4: false, 5: false };
+  var flags = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
   var FLAG = {
     1: 'FLAG{linux_basics_master}',
     2: 'FLAG{linux_permissions_cracked}',
     3: 'FLAG{linux_suid_privesc}',
     4: 'FLAG{linux_cron_takeover}',
-    5: 'FLAG{linux_sudo_root}'
+    5: 'FLAG{linux_sudo_root}',
+    6: 'FLAG{linux_kernel_dirty_cow}'
   };
   
-  // Simulated File System state
   var currentDir = "/home/guest";
   var user = "guest";
   
   var files = {
     "/home/guest": {
-      "welcome.txt": "Welcome to HunterOS Linux Lab! Go to your tasks.",
-      "flag1.txt": "FLAG{linux_basics_master} - Good job! Now move to Level 2."
+      "welcome.txt": "Welcome to HunterOS Linux Labs! Explore your commands.",
+      "flag1.txt": "FLAG{linux_basics_master} - Level 1 Completed! Now head to Level 2."
     },
     "/home/guest/secrets": {
       "secret.txt": "[BLOCK] Restricted permissions. Try changing perms using chmod."
@@ -272,12 +129,16 @@
     "/var/tmp": {
       "backup.sh": "#!/bin/bash\necho 'Running scheduled backup...'"
     },
+    "/tmp": {
+      "dirty_cow_exploit": "[ELF Executable] Simulated Dirty COW Kernel Exploit binary."
+    },
     "/root": {
-      "flag5.txt": "FLAG{linux_sudo_root} - Congratulations! You have conquered the Linux Privilege Escalation track!"
+      "flag5.txt": "FLAG{linux_sudo_root} - Sudo bypass completed!",
+      "flag6.txt": "FLAG{linux_kernel_dirty_cow} - Kernel exploit successful! You conquered the Linux Security Track!"
     }
   };
   
-  var secretFilePerms = 000; // restricted initially
+  var secretFilePerms = 000;
   var cronHacked = false;
 
   function updateHud() {
@@ -285,7 +146,7 @@
     document.getElementById('hudFlags').textContent = n;
     document.getElementById('hudLevel').textContent = level;
     document.getElementById('hudUser').textContent = user;
-    document.getElementById('hudProgress').textContent = Math.round((n / 5) * 100) + '%';
+    document.getElementById('hudProgress').textContent = Math.round((n / 6) * 100) + '%';
     
     document.querySelectorAll('.lab-tab').forEach(function(t) {
       var lv = parseInt(t.getAttribute('data-level'), 10);
@@ -297,18 +158,18 @@
     var symbol = (user === 'root') ? '#' : '$';
     promptEl.textContent = user + '@hunteros:' + currentDir + symbol;
     
-    try { localStorage.setItem('linux_lab_flags', JSON.stringify(flags)); } catch(e) {}
+    try { localStorage.setItem('linux_security_track_flags', JSON.stringify(flags)); } catch(e) {}
   }
 
   try {
-    var saved = JSON.parse(localStorage.getItem('linux_lab_flags') || '{}');
-    [1,2,3,4,5].forEach(function(k) { if (saved[k]) flags[k] = true; });
+    var saved = JSON.parse(localStorage.getItem('linux_security_track_flags') || '{}');
+    [1,2,3,4,5,6].forEach(function(k) { if (saved[k]) flags[k] = true; });
     updateHud();
   } catch(e) {}
 
   window.switchLevel = function(lv) {
     level = lv;
-    for (var i = 1; i <= 5; i++) {
+    for (var i = 1; i <= 6; i++) {
       var el = document.getElementById('theoryL' + i);
       if (el) el.style.display = (i === lv) ? 'block' : 'none';
     }
@@ -344,7 +205,7 @@
     var cmd = args[0].toLowerCase();
     
     if (cmd === 'help') {
-      writeToTerm("Available commands: help, clear, pwd, ls, cd, cat, chmod, find, sudo, echo, whoami, hint");
+      writeToTerm("Available commands: help, clear, pwd, ls, cd, cat, chmod, find, sudo, echo, whoami, uname, hint");
       return;
     }
     if (cmd === 'clear') {
@@ -361,6 +222,14 @@
       writeToTerm(currentDir);
       return;
     }
+    if (cmd === 'uname') {
+      if (args[1] === '-a') {
+        writeToTerm("Linux hunteros 4.4.0-21-generic #37-Ubuntu SMP Mon Apr 18 18:33:37 UTC 2016 x86_64 GNU/Linux");
+      } else {
+        writeToTerm("Linux");
+      }
+      return;
+    }
     if (cmd === 'hint') {
       showHint();
       return;
@@ -375,8 +244,8 @@
         } else {
           names.forEach(function(n) {
             var color = "color:#fff;";
-            if (n === 'flag1.txt' || n === 'flag5.txt') color = "color:var(--neon-cyan);font-weight:bold;";
-            if (n === 'backup.sh') color = "color:var(--neon-green);";
+            if (n.startsWith('flag')) color = "color:var(--neon-cyan);font-weight:bold;";
+            if (n === 'backup.sh' || n === 'dirty_cow_exploit') color = "color:var(--neon-green);";
             writeToTerm('<span style="' + color + '">' + n + '</span>');
           });
         }
@@ -394,6 +263,7 @@
         else if (currentDir === '/home') currentDir = '/';
         else if (currentDir === '/var/tmp') currentDir = '/var';
         else if (currentDir === '/var') currentDir = '/';
+        else if (currentDir === '/tmp') currentDir = '/';
         else if (currentDir === '/root' && user !== 'root') {
           writeToTerm("cd: /root: Permission denied", "error");
         } else {
@@ -403,6 +273,8 @@
         currentDir = '/home/guest/secrets';
       } else if (dest === '/var/tmp' || dest === 'tmp' && currentDir === '/var') {
         currentDir = '/var/tmp';
+      } else if (dest === '/tmp') {
+        currentDir = '/tmp';
       } else if (dest === '/root') {
         if (user === 'root') {
           currentDir = '/root';
@@ -449,6 +321,14 @@
         } else {
           writeToTerm("cat: flag5.txt: Permission denied", "error");
         }
+      } else if (file === 'flag6.txt' && currentDir === '/root') {
+        if (user === 'root') {
+          flags[6] = true;
+          writeToTerm(files["/root"]["flag6.txt"], "success");
+          updateHud();
+        } else {
+          writeToTerm("cat: flag6.txt: Permission denied", "error");
+        }
       } else {
         writeToTerm("cat: " + file + ": No such file or permission denied", "error");
       }
@@ -485,14 +365,13 @@
       return;
     }
     
-    // Level 3 SUID exploit
     if (cmd === '/usr/bin/find' || cmd === 'find') {
       var exploitArgs = cmdLine.toLowerCase();
       if (exploitArgs.includes('-exec') && exploitArgs.includes('/bin/sh') && exploitArgs.includes(';')) {
         flags[3] = true;
         writeToTerm("[+] Executing SUID exploit on find...", "success");
-        writeToTerm("[+] Spawning root-privileged shell shell...", "success");
-        user = "root-admin"; // Privileged shell
+        writeToTerm("[+] Spawning root-privileged shell...", "success");
+        user = "root-admin"; 
         writeToTerm("FLAG{linux_suid_privesc} - Level 3 Complete! SUID binaries are dangerous.", "success");
         updateHud();
       } else {
@@ -512,7 +391,6 @@
           files["/var/tmp"]["backup.sh"] += "\n" + appendContent;
           writeToTerm("[+] Appended command to backup.sh");
           
-          // Trigger Cron check if cron command mimics reverse shell / privilege escalation
           if (appendContent.includes('chmod u+s /bin/bash') || appendContent.includes('cat /root/flag') || appendContent.includes('root')) {
             cronHacked = true;
             writeToTerm("[*] Simulating cron daemon runtime execution (1 minute cron window)...");
@@ -544,7 +422,8 @@
           user = "root";
           currentDir = "/root";
           writeToTerm("[+] Sudo authorization verified. Spawning root shell...", "success");
-          writeToTerm("root@hunteros:# whoami\nroot", "success");
+          writeToTerm("root@hunteros:# whoami\nroot\nFLAG{linux_sudo_root}", "success");
+          flags[5] = true;
           updateHud();
         } else {
           writeToTerm("awk: command executed.");
@@ -552,6 +431,27 @@
         return;
       }
       writeToTerm("sudo: permission denied or password required", "error");
+      return;
+    }
+
+    // Level 6: Kernel Exploit
+    if (cmd === './dirty_cow_exploit' && currentDir === '/tmp') {
+      if (level >= 6) {
+        writeToTerm("[*] Running Dirty COW Kernel Exploit (CVE-2016-5195)...");
+        writeToTerm("[*] Exploiting pwritev/madvise race condition...");
+        setTimeout(function() {
+          user = "root";
+          currentDir = "/root";
+          flags[6] = true;
+          writeToTerm("[+] Exploit successful! Overwrote /etc/passwd config successfully.", "success");
+          writeToTerm("[+] Dropping into root shell...", "success");
+          writeToTerm("root@hunteros:# whoami\nroot", "success");
+          writeToTerm("FLAG{linux_kernel_dirty_cow} - Level 6 Complete! Kernel is rooted.", "success");
+          updateHud();
+        }, 1500);
+      } else {
+        writeToTerm("Permission denied: cannot execute binary in this level context.");
+      }
       return;
     }
     
@@ -567,8 +467,10 @@
       writeToTerm("[Hint L3]: Run 'find / -perm -4000' to find SUID files. Check out how to exploit find via gtfobins (find . -exec /bin/sh -p \\; -quit).");
     } else if (level === 4) {
       writeToTerm("[Hint L4]: Browse to '/var/tmp'. The script 'backup.sh' is writable. Append a shell trigger: echo 'chmod u+s /bin/bash' >> backup.sh");
-    } else {
+    } else if (level === 5) {
       writeToTerm("[Hint L5]: Run 'sudo -l' to check allowed root commands. Exploit awk to spawn shell: sudo awk 'BEGIN {system(\"/bin/sh\")}'");
+    } else {
+      writeToTerm("[Hint L6]: Inspect kernel version: 'uname -a'. Run the exploit file located in /tmp: 'cd /tmp' then './dirty_cow_exploit'.");
     }
   }
 
@@ -577,6 +479,4 @@
   }
 })();
 </script>
-
-</body>
-</html>
+{% endblock %}

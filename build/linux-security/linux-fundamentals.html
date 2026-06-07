@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Bug Bounty Academy — Arabic & English cybersecurity learning">
-  <title>Linux Fundamentals | Abdo Ramdan</title>
+  <title>Linux Fundamentals - Level 1 | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
   <script>
@@ -65,8 +65,9 @@
     <a class="sidebar-link" href="labs/cloud-security-lab.html">🧪 Cloud Security Lab</a>
 
     <div class="sidebar-title" style="margin-top:18px;">Linux Track / مسار لينكس</div>
-    <a class="sidebar-link" href="linux-security/linux-fundamentals.html">🐧 Linux Fundamentals</a>
-    <a class="sidebar-link" href="linux-security/linux-privesc.html">🚀 Privilege Escalation</a>
+    <a class="sidebar-link" href="linux-security/linux-fundamentals.html">🐧 Linux Level 1</a>
+    <a class="sidebar-link" href="linux-security/linux-privesc.html">🔴 Linux Level 2</a>
+    <a class="sidebar-link" href="linux-security/linux-labs.html">🧪 Linux Labs</a>
     <a class="sidebar-link" href="linux-security/linux-commands.html">📜 Commands Reference</a>
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
 
@@ -77,139 +78,186 @@
   <main class="academy-main">
     
 <div class="page-hero">
-  <h1 class="page-title">أساسيات نظام لينكس للباحثين الأمنيين</h1>
-  <p class="page-title-en">Linux Fundamentals for Security Professionals</p>
+  <h1 class="page-title">Linux Security Fundamentals - Level 1</h1>
+  <p class="page-title-en">Linux Security Fundamentals — Level 1 Track</p>
   <span class="severity-pill pill-low">TRACK 1</span>
-  <span class="severity-pill pill-high">⏱ ~20 min</span>
+  <span class="severity-pill pill-high">⏱ ~30 min</span>
 </div>
 
 <div class="section-card">
-  <h2>1. Introduction / مقدمة</h2>
+  <h2>📖 What is it? / ما هو؟</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>لينكس هو نظام التشغيل الأساسي الذي تعمل عليه أغلب خوادم الويب والبنى التحتية السحابية وأدوات اختبار الاختراق (مثل Kali Linux). لفهم كيفية اختراق أو حماية هذه الأنظمة، يجب أولاً إتقان كيفية التعامل مع سطر الأوامر وفهم بيئة العمل الداخلية للنظام.</p>
+      <p>أساسيات نظام تشغيل لينكس المخصصة لباحثي الثغرات (Bug Bounty Hunters) ومختبري الاختراق (Penetration Testers). لينكس هو العمود الفقري للبنية التحتية للإنترنت وأدوات اختبار الاختراق.</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>Linux is the backbone of most web servers, cloud infrastructures, and penetration testing platforms (e.g. Kali Linux). To understand how to compromise or secure these systems, you must first master the command-line interface and the inner workings of the operating system.</p>
-    </div>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>2. Linux Directory Structure / هيكل المجلدات</h2>
-  <div class="bilingual-block">
-    <div class="lang-section">
-      <span class="lang-tag">AR</span>
-      <p>على عكس ويندوز، لا توجد أقراص مثل <code>C:</code> أو <code>D:</code>. كل شيء في لينكس يبدأ من المجلد الجذري (Root Directory) <code>/</code>:</p>
-      <ul>
-        <li><code>/bin</code> & <code>/sbin</code>: ملفات البرامج والأوامر الأساسية.</li>
-        <li><code>/etc</code>: ملفات تكوين وإعدادات النظام والخدمات.</li>
-        <li><code>/home</code>: المجلدات الخاصة بالمستخدمين العاديين.</li>
-        <li><code>/root</code>: المجلد الخاص بمسؤول النظام (Root User).</li>
-        <li><code>/var/log</code>: ملفات سجلات النظام والأحداث (Logs).</li>
-        <li><code>/tmp</code> & <code>/var/tmp</code>: ملفات مؤقتة (تُحذف تلقائياً في الغالب وتكون قابلة للكتابة لأي مستخدم).</li>
-      </ul>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>Unlike Windows, Linux has no drive letters (like <code>C:</code> or <code>D:</code>). Everything starts from the root directory <code>/</code>:</p>
-      <ul>
-        <li><code>/bin</code> & <code>/sbin</code>: Essential user binaries and system binaries.</li>
-        <li><code>/etc</code>: System configuration files.</li>
-        <li><code>/home</code>: User home directories.</li>
-        <li><code>/root</code>: Superuser (Root) home directory.</li>
-        <li><code>/var/log</code>: System log files.</li>
-        <li><code>/tmp</code> & <code>/var/tmp</code>: Temporary directories (often world-writable).</li>
-      </ul>
+      <p>Linux operating system essentials tailored for Bug Bounty Hunters and Penetration Testers. Linux is the backbone of web infrastructure and security audit distributions.</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>3. Basic Commands / الأوامر الأساسية</h2>
+  <h2>🎯 Goal / الهدف</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>إليك أهم الأوامر التي تحتاجها يومياً:</p>
+      <p>القدرة على التنقل التام في سطر الأوامر (CLI)، فهم الصلاحيات، وإدارة الملفات والعمليات والتعامل مع الشبكات ومعالجة النصوص البرمجية.</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>Here are the core commands you need on a daily basis:</p>
+      <p>Acquiring total command-line navigation capabilities, understanding permissions model, managing file operations, network sockets, text processing, and active processes.</p>
     </div>
-  </div>
-
-  <div class="cmd-block">
-    <div class="cmd-bar">
-      <span>Who Am I / التحقق من المستخدم الحالي</span>
-      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-    </div>
-    <pre>whoami</pre>
-  </div>
-
-  <div class="cmd-block">
-    <div class="cmd-bar">
-      <span>List Directory Contents / عرض محتويات المجلد</span>
-      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-    </div>
-    <pre>ls -la</pre>
-  </div>
-
-  <div class="cmd-block">
-    <div class="cmd-bar">
-      <span>Print Working Directory / معرفة المسار الحالي</span>
-      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-    </div>
-    <pre>pwd</pre>
-  </div>
-
-  <div class="cmd-block">
-    <div class="cmd-bar">
-      <span>Read File / قراءة محتوى ملف</span>
-      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
-    </div>
-    <pre>cat /etc/passwd</pre>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>4. Permissions Model / نظام الصلاحيات</h2>
-  <div class="bilingual-block">
+  <h2>📚 Topics & Commands / المواضيع والأوامر</h2>
+
+  <!-- 1. Basic Navigation -->
+  <h3>1. Basic Navigation / التنقل الأساسي</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>كل ملف أو مجلد في لينكس ينتمي إلى <strong>مستخدم (Owner)</strong> و<strong>مجموعة (Group)</strong>، ويحتوي على ثلاثة أنواع من الصلاحيات:</p>
-      <ul>
-        <li><code>r</code> (Read): القراءة (تمثل بالقيمة 4).</li>
-        <li><code>w</code> (Write): الكتابة والتعديل (تمثل بالقيمة 2).</li>
-        <li><code>x</code> (Execute): التشغيل (تمثل بالقيمة 1).</li>
-      </ul>
-      <p>يتم تمثيل الصلاحيات كأرقام ثلاثية، مثلاً <code>chmod 755 file.sh</code> تعني:</p>
-      <ul>
-        <li>7 (4+2+1): صلاحيات كاملة للمالك (rwx).</li>
-        <li>5 (4+1): قراءة وتشغيل للمجموعة (r-x).</li>
-        <li>5 (4+1): قراءة وتشغيل للآخرين (r-x).</li>
-      </ul>
+      <p>التنقل عبر المجلدات، معرفة المجلد الحالي، وعرض الملفات المخفية:</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>Every file and folder in Linux is assigned to an <strong>Owner</strong> and a <strong>Group</strong>, with three permission classes:</p>
-      <ul>
-        <li><code>r</code> (Read): represented numerically by 4.</li>
-        <li><code>w</code> (Write): represented numerically by 2.</li>
-        <li><code>x</code> (Execute): represented numerically by 1.</li>
-      </ul>
-      <p>Permissions are often set as three octal digits, for example <code>chmod 755 file.sh</code> sets:</p>
-      <ul>
-        <li>7 (4+2+1): Owner has full rights (rwx).</li>
-        <li>5 (4+1): Group has read & execute (r-x).</li>
-        <li>5 (4+1): Others have read & execute (r-x).</li>
-      </ul>
+      <p>Moving across directories, displaying working directory paths, and listing hidden files:</p>
     </div>
+  </div>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>pwd                    # Print working directory
+cd /var/log            # Change directory to /var/log
+ls -la                 # List all files including hidden ones
+cd ~                   # Go to home directory
+cd ..                  # Go up one level
+cd -                   # Toggle back to previous directory</pre>
+  </div>
+
+  <!-- 2. File Operations -->
+  <h3 style="margin-top:20px;">2. File Operations / إدارة الملفات</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>إنشاء وتعديل ونسخ وحذف الملفات والمجلدات:</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Creating, copying, moving, and recursively deleting files or folders:</p>
+    </div>
+  </div>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>touch file.txt         # Create empty file
+mkdir new_dir          # Create new directory
+rm -rf junk_dir        # Force recursive delete of directory
+cp file.txt copy.txt   # Copy file
+mv file.txt /tmp/      # Move file
+cat /etc/hosts         # Output file contents
+head -n 5 /etc/passwd  # View first 5 lines
+tail -n 5 /etc/passwd  # View last 5 lines
+less /var/log/syslog   # View file page by page</pre>
+  </div>
+
+  <!-- 3. Permissions -->
+  <h3 style="margin-top:20px;">3. Permissions / الصلاحيات والملكيات</h3>
+  <div class="bilingual-block" style="margin-bottom:12px;">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>تعديل صلاحيات القراءة والكتابة والتشغيل للمستخدمين والمجموعات:</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Changing read, write, and execute bits for owners, groups, and others:</p>
+    </div>
+  </div>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>chmod 777 exploit.sh   # Read, write, execute for all (Dangerous!)
+chmod 755 script.py    # Full permissions for owner, read/execute for others
+chmod 644 config.txt   # Read/write for owner, read-only for others
+chown root:root file   # Change owner and group to root</pre>
+  </div>
+
+  <!-- 4. Users & Groups -->
+  <h3 style="margin-top:20px;">4. Users & Groups / المستخدمين والمجموعات</h3>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>whoami                 # Display current username
+id                     # Display user and group IDs (UID/GID)
+groups                 # List user groups
+su - admin             # Switch to another user session
+sudo -i                # Elevate shell session to root
+cat /etc/passwd        # Check all system users list
+cat /etc/shadow        # Check encrypted user password hashes (root only)</pre>
+  </div>
+
+  <!-- 5. Process Management -->
+  <h3 style="margin-top:20px;">5. Process Management / إدارة العمليات</h3>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>ps aux                 # Display all active system processes
+top                    # Interactive process manager (CPU/Memory usage)
+kill -9 [PID]          # Force terminate a process by ID
+jobs                   # List background job processes
+fg %1                  # Bring background job to foreground
+bg %1                  # Resume suspended job in background</pre>
+  </div>
+
+  <!-- 6. Networking -->
+  <h3 style="margin-top:20px;">6. Networking / الشبكات والاتصالات</h3>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>ip a                   # View network interfaces and IP addresses
+ss -antp               # Show TCP listening ports with process IDs
+netstat -tulnp         # Alternative way to check open ports
+ping -c 3 8.8.8.8      # Check host reachability
+curl http://test.com   # Fetch HTTP page contents
+wget http://test.com   # Download file via HTTP
+nc -lvnp 4444          # Start netcat listener for incoming shells</pre>
+  </div>
+
+  <!-- 7. Text Processing -->
+  <h3 style="margin-top:20px;">7. Text Processing / معالجة وفلترة النصوص</h3>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>grep "admin" log.txt   # Extract lines containing 'admin'
+awk -F: '{print $1}'   # Split fields (e.g., extracting usernames from passwd)
+sed 's/old/new/g' file # Replace strings inline
+cut -d' ' -f2 file.txt # Extract specific column by delimiter
+sort | uniq -c         # Sort lines and count unique occurrences
+wc -l files.txt        # Count total lines of a file
+xargs                  # Build and execute commands from standard input</pre>
+  </div>
+
+  <!-- 8. Package Management -->
+  <h3 style="margin-top:20px;">8. Package Management / إدارة حزم التثبيت</h3>
+  <div class="cmd-block">
+    <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    <pre>apt update && apt install nmap     # Debian/Ubuntu package managers
+dpkg -i tool.deb                   # Install local debian package
+yum install nmap                   # RedHat/CentOS package managers
+rpm -ivh tool.rpm                  # Install local RPM package</pre>
   </div>
 </div>
 
-<a class="academy-btn" href="linux-privesc.html" style="display:inline-block;margin-top:8px;">الانتقال إلى مسار ترقية الصلاحيات / Next: Privilege Escalation Track →</a>
+<div class="section-card">
+  <h2>✅ Next Steps / الخطوة القادمة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>بعد تعلم الأساسيات، انتقل إلى المستوى الثاني لتعلم هجمات ترقية الصلاحيات واكتشاف الثغرات المحلية.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Now that you mastered the fundamentals, proceed to Level 2 (Privilege Escalation) to audit misconfigured hosts.</p>
+    </div>
+  </div>
+  <a class="academy-btn" href="linux-privesc.html" style="display:inline-block;margin-top:10px;">🔴 Linux Level 2 (PrivEsc) →</a>
+</div>
 
   </main>
 </div>
