@@ -231,21 +231,37 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Sidebar Widgets Base */
 .dashboard-widget {
-  background: var(--bg-sidebar);
+  background: rgba(5, 5, 12, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: var(--border-radius);
   padding: 20px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-widget:hover {
+  border-color: rgba(0, 229, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 229, 255, 0.06);
 }
 
 /* Profile Card */
 .profile-card {
-  background: var(--bg-sidebar);
+  background: rgba(5, 5, 12, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: var(--border-radius);
   padding: 24px;
   text-align: center;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+  border-color: rgba(0, 255, 102, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 255, 102, 0.06);
 }
 
 .avatar-wrapper {
@@ -572,7 +588,9 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  background: var(--bg-sidebar);
+  background: rgba(5, 5, 12, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   padding: 6px;
   border-radius: var(--border-radius);
@@ -835,11 +853,19 @@ h1, h2, h3, h4, h5, h6 {
    2. VISUAL SKILLS CARDS
    ───────────────────────────────────────────────────────── */
 .visual-skills-card {
-  background: var(--bg-sidebar);
+  background: rgba(5, 5, 12, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: var(--border-radius);
   padding: 24px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.visual-skills-card:hover {
+  border-color: rgba(0, 229, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 229, 255, 0.06);
 }
 
 .skills-categories-grid {
@@ -904,19 +930,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .visual-project-card {
-  background: var(--bg-sidebar);
+  background: rgba(5, 5, 12, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: var(--border-radius);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-  transition: var(--transition-base);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .visual-project-card:hover {
   border-color: var(--project-glow, var(--border-glass-hover));
-  box-shadow: 0 0 20px var(--project-glow);
+  box-shadow: 0 0 25px var(--project-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
   transform: translateY(-4px);
 }
 
@@ -1017,7 +1045,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .visual-writeup-card {
-  background: var(--bg-sidebar);
+  background: rgba(5, 5, 12, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: var(--border-radius);
   padding: 20px;
@@ -1025,13 +1055,13 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  transition: var(--transition-base);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .visual-writeup-card:hover {
   border-color: var(--border-glass-hover);
-  box-shadow: var(--shadow-glow-cyan);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-cyan), 0 8px 32px rgba(0, 0, 0, 0.4);
+  transform: translateY(-3px);
 }
 
 .writeup-card-header {
@@ -1085,7 +1115,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .visual-cert-card {
-  background: var(--bg-sidebar);
+  background: rgba(5, 5, 12, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: var(--border-radius);
   padding: 20px;
@@ -1094,12 +1126,12 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: space-between;
   height: 180px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-  transition: var(--transition-base);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .visual-cert-card:hover {
   border-color: var(--cert-glow);
-  box-shadow: 0 0 16px var(--cert-glow);
+  box-shadow: 0 0 20px var(--cert-glow), 0 8px 32px rgba(0, 0, 0, 0.4);
   transform: translateY(-3px);
 }
 
@@ -1177,7 +1209,9 @@ h1, h2, h3, h4, h5, h6 {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 30px;
-  background: var(--bg-sidebar);
+  background: rgba(5, 5, 12, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: var(--border-radius);
   padding: 24px;
@@ -2425,20 +2459,29 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Cyber Cards */
 .cyber-card {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(8, 8, 18, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
   position: relative;
   overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.cyber-card:hover {
+  border-color: rgba(0, 229, 255, 0.2);
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.06);
+  transform: translateY(-2px);
 }
 
 .cyber-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; width: 100%; height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.15), transparent);
 }
 
 .card-header {

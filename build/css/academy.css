@@ -7,7 +7,7 @@
   --neon-orange: #ff8c00;
   --neon-yellow: #ffd700;
   --bg-dark: #020205;
-  --bg-card: rgba(10, 10, 20, 0.55);
+  --bg-card: rgba(10, 10, 24, 0.45);
   --border-color: rgba(0, 229, 255, 0.15);
 }
 
@@ -21,12 +21,70 @@ body.academy-page {
   line-height: 1.75;
   margin: 0;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Ambient Neon Orbs & Grid */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.05;
+  animation: orbFloat 25s ease-in-out infinite;
+}
+.orb-1 {
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, var(--neon-cyan), transparent 70%);
+  top: -10%;
+  left: -10%;
+}
+.orb-2 {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, var(--neon-purple), transparent 70%);
+  bottom: -10%;
+  right: -10%;
+  animation-delay: -5s;
+}
+.orb-3 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--neon-green), transparent 70%);
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: -10s;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -40px) scale(1.1); }
+}
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.02;
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, var(--neon-cyan) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--neon-cyan) 1px, transparent 1px);
 }
 
 .academy-header {
-  background: rgba(4, 4, 8, 0.96);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color);
+  background: rgba(4, 4, 10, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
   padding: 14px 28px;
   display: flex;
   justify-content: space-between;
@@ -36,6 +94,7 @@ body.academy-page {
   z-index: 200;
   gap: 12px;
   flex-wrap: wrap;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
 .academy-logo {
@@ -75,13 +134,18 @@ body.academy-page {
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: calc(100vh - 58px);
+  position: relative;
+  z-index: 1;
 }
 
 .academy-sidebar {
-  background: rgba(3, 3, 8, 0.98);
-  border-left: 1px solid rgba(0, 229, 255, 0.08);
-  padding: 20px 12px;
+  background: rgba(3, 3, 8, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-inline-end: 1px solid rgba(0, 229, 255, 0.1);
+  padding: 24px 12px;
   overflow-y: auto;
+  z-index: 10;
 }
 
 .sidebar-title {
@@ -96,28 +160,37 @@ body.academy-page {
 
 .sidebar-link {
   display: block;
-  padding: 9px 12px;
-  border-radius: 4px;
+  padding: 10px 12px;
+  border-radius: 8px;
   color: #94a3b8;
   text-decoration: none;
   font-size: 0.88rem;
   font-weight: 600;
   border: 1px solid transparent;
-  margin-bottom: 2px;
-  transition: all 0.2s ease;
+  margin-bottom: 3px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar-link:hover { color: #f1f5f9; background: rgba(255,255,255,0.02); }
+.sidebar-link:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.03);
+  padding-inline-start: 18px;
+}
+
 .sidebar-link.active {
   color: var(--neon-cyan);
-  background: rgba(0, 229, 255, 0.06);
-  border-color: rgba(0, 229, 255, 0.15);
+  background: rgba(0, 229, 255, 0.08);
+  border-color: rgba(0, 229, 255, 0.25);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.1);
+  padding-inline-start: 18px;
 }
 
 .academy-main {
   padding: 36px 40px 80px;
   overflow-y: auto;
   background: radial-gradient(circle at top left, rgba(155, 89, 255, 0.02), transparent 50%);
+  position: relative;
+  z-index: 1;
 }
 
 .page-hero {
@@ -163,10 +236,20 @@ body.academy-page {
 }
 
 .lang-section {
-  background: var(--bg-card);
-  border: 1px solid rgba(255,255,255,0.04);
-  border-radius: 6px;
-  padding: 16px 18px;
+  background: rgba(10, 10, 24, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lang-section:hover {
+  border-color: rgba(0, 229, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 229, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 .lang-tag {
@@ -174,7 +257,7 @@ body.academy-page {
   font-size: 0.68rem;
   font-weight: 700;
   color: var(--neon-cyan);
-  background: rgba(0,229,255,0.08);
+  background: rgba(0, 229, 255, 0.08);
   padding: 2px 8px;
   border-radius: 3px;
   margin-bottom: 8px;
@@ -184,11 +267,21 @@ body.academy-page {
 .lang-en { direction: ltr; text-align: left; font-family: 'Inter', sans-serif; }
 
 .section-card {
-  background: var(--bg-card);
-  border: 1px solid rgba(255,255,255,0.04);
-  border-radius: 8px;
-  padding: 22px 24px;
-  margin-bottom: 22px;
+  background: rgba(10, 10, 24, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-card:hover {
+  border-color: rgba(0, 229, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 229, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 .section-card h2 {
@@ -197,7 +290,7 @@ body.academy-page {
   color: var(--neon-cyan);
   margin: 0 0 14px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .type-grid {
@@ -208,10 +301,18 @@ body.academy-page {
 }
 
 .type-item {
-  background: rgba(0,0,0,0.25);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 6px;
+  background: rgba(8, 8, 18, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
   padding: 14px;
+  transition: all 0.3s ease;
+}
+
+.type-item:hover {
+  border-color: rgba(0, 229, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 .type-item h4 {
