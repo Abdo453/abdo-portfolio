@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="IDOR and Broken Access Control — Arabic & English guide with testing commands and tools">
-  <title>IDOR — Broken Access Control | Abdo Ramdan</title>
+  <meta name="description" content="AWS, GCP, Azure security controls, S3 buckets, cloud metadata APIs, and pacu in Arabic & English">
+  <title>Cloud Security — AWS, GCP, Azure | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
   
@@ -60,66 +60,56 @@
   <main class="academy-main">
     
 <div class="page-hero">
-  <h1 class="page-title">IDOR — الوصول المباشر غير الآمن للكائنات</h1>
-  <p class="page-title-en">IDOR — Insecure Direct Object Reference</p>
-  <span class="severity-pill pill-high">HIGH</span>
-  <span class="severity-pill pill-high">OWASP A01</span>
+  <h1 class="page-title">أمن السحابيات — AWS, GCP, Azure</h1>
+  <p class="page-title-en">Cloud Security — AWS, GCP, Azure</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">OWASP Cloud Top 10</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>IDOR</strong> يحدث عندما يستطيع المستخدم الوصول لبيانات أو موارد تخص مستخدمين آخرين بتغيير معرّف (ID, UUID, filename) في الطلب — بدون فحص صلاحيات كافٍ من السيرفر.</p>
+    <p><strong>Cloud Security</strong> تختص بدراسة الثغرات والأخطاء الإدارية والتنظيمية في بيئات السحاب (AWS, Azure, GCP). تشمل الثغرات شيوعاً فتح حاويات التخزين (Open S3 Buckets) للعامة، وإعدادات الهوية غير الآمنة (IAM Misconfigurations)، وتسريب رموز الوصول السحابية عبر ثغرات SSRF.</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>IDOR</strong> happens when a user accesses another user's data by modifying an object identifier (ID, UUID, filename) in the request — without adequate server-side authorization checks.</p>
+    <p><strong>Cloud Security</strong> explores vulnerabilities, misconfigurations, and privilege issues in cloud architectures (AWS, Azure, GCP). Common attacks include exposing data via open S3 buckets, overly permissive IAM roles, and leaking cloud access keys via SSRF.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أنواع IDOR / IDOR Types</h2>
+  <h2>أشهر ثغرات بيئات السحاب / Vulnerabilities</h2>
   <div class="type-grid">
     <div class="type-item">
-      <h4>URL Parameter IDOR</h4>
-      <p>تغيير <code>user_id=123</code> → <code>user_id=124</code></p>
+      <h4>Open S3 Buckets / Storage</h4>
+      <p>ترك حاويات التخزين مفتوحة بدون صلاحيات تمنع القراءة أو الكتابة العامة.</p>
     </div>
     <div class="type-item">
-      <h4>API / JSON Body</h4>
-      <p>تعديل <code>id</code> أو <code>accountId</code> في POST/PUT body</p>
+      <h4>IAM Privilege Escalation</h4>
+      <p>ترقية صلاحيات حساب سحابي بسيط لمدير النظام (Administrator) بسبب صلاحيات IAM فضفاضة.</p>
     </div>
     <div class="type-item">
-      <h4>UUID Manipulation</h4>
-      <p>تخمين أو leak UUIDs من responses أخرى</p>
+      <h4>Cloud Metadata Leakage</h4>
+      <p>قراءة بيانات تعريف السيرفر (Metadata Service) لاستخراج مفاتيح الوصول المؤقتة للـ IAM Role.</p>
     </div>
     <div class="type-item">
-      <h4>Mass Assignment</h4>
-      <p>إرسال fields زيادة: <code>role: admin</code>, <code>isPremium: true</code></p>
-    </div>
-    <div class="type-item">
-      <h4>Function-Level BAC</h4>
-      <p>الوصول لـ admin endpoints كـ regular user</p>
-    </div>
-    <div class="type-item">
-      <h4>Path Traversal</h4>
-      <p><code>../../etc/passwd</code> في file download paths</p>
+      <h4>Container Escape</h4>
+      <p>الهروب من الحاويات (Docker/K8s) إلى نظام التشغيل الأساسي للمضيف (Host OS).</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار / Testing Commands</h2>
+  <h2>أوامر الاختبار / Cloud Testing Commands</h2>
   <div class="cmd-block">
-    <pre># URL IDOR
-GET /api/users/1001/profile HTTP/1.1
-GET /api/users/1002/profile HTTP/1.1
+    <pre># Check if S3 bucket allows public listing
+aws s3 ls s3://target-leaked-bucket --no-sign-request
 
-# JSON body swap
-POST /api/orders HTTP/1.1
-{"order_id": "ORD-9999", "user_id": "VICTIM_UUID"}
+# Fetch AWS Metadata Credentials using curl (IMDSv1)
+curl http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role
 
-# Path traversal
-GET /download?file=../../../etc/passwd HTTP/1.1</pre>
+# Scan cloud resources for misconfigurations with cloud_enum
+python3 cloud_enum.py -k targetcompany</pre>
     <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
   </div>
 </div>
@@ -127,10 +117,10 @@ GET /download?file=../../../etc/passwd HTTP/1.1</pre>
 <div class="section-card">
   <h2>الأدوات / Tools</h2>
   <div class="tools-row">
-    <span class="tool-chip">Autorize (Burp)</span>
-    <span class="tool-chip">AuthMatrix (Burp)</span>
-    <span class="tool-chip">Burp Comparer</span>
-    <span class="tool-chip">ffuf</span>
+    <span class="tool-chip">ScoutSuite</span>
+    <span class="tool-chip">Prowler</span>
+    <span class="tool-chip">pacu (AWS Exploitation Framework)</span>
+    <span class="tool-chip">cloud_enum</span>
   </div>
 </div>
 
@@ -139,14 +129,14 @@ GET /download?file=../../../etc/passwd HTTP/1.1</pre>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+      <p>Writeup: <strong>Cloud SSRF: Escaping the Container</strong> — شرح اختراق خادم ويب عبر SSRF للوصول لمفاتيح IAM السحابية للشركة، والسيطرة على لوحة تحكم AWS بالكامل.</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+      <p>Writeup: <strong>Cloud SSRF: Escaping the Container</strong> — showing how an SSRF was chained to steal AWS credentials and achieve full account takeover.</p>
     </div>
   </div>
-  <a class="cta-lab" href="labs/idor-lab.html">🧪 افتح IDOR Lab — 3 Scenarios</a>
+  <a class="cta-lab" href="labs/cloud-security-lab.html">🧪 افتح Cloud Security Lab — 2 Levels</a>
 </div>
 
   </main>

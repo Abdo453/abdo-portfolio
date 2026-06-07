@@ -1,0 +1,93 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Race Conditions — The Hidden Logic Flaw{% endblock %}
+{% block meta_desc %}Race conditions, TOCTOU, double spending, coupon abuse, and turbo-intruder scripts in Arabic & English{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">Race Conditions — ثغرة التزامن والمنطق المخفي</h1>
+  <p class="page-title-en">Race Conditions — The Hidden Logic Flaw</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">OWASP A04</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>Race Condition</strong> (حالة السباق) هي ثغرة منطقية تحدث عندما يعالج التطبيق طلبات متعددة بشكل متزامن دون التحقق السليم من الحالات المتتالية في قاعدة البيانات. يسمح هذا للمهاجمين بالقيام بـ "شراء مزدوج" (Double Spending) أو تطبيق كود خصم واحد عدة مرات قبل تحديث قيمته في السيرفر.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>Race Condition</strong> is a logical vulnerability that occurs when an application processes multiple concurrent requests without proper database state locking. This enables attackers to perform "double spending" or apply a single coupon multiple times before the server updates its status.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أنواع ثغرات Race Conditions / Vulnerability Types</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>Double Spending / Payment Abuse</h4>
+      <p>إرسال طلبات سحب أو تحويل أموال متزامنة للحصول على مبلغ مضاعف من رصيد وحيد.</p>
+    </div>
+    <div class="type-item">
+      <h4>Coupon / Gift Card Re-use</h4>
+      <p>استخدام كود خصم وحيد مئات المرات متزامناً لتخفيض السعر للصفر.</p>
+    </div>
+    <div class="type-item">
+      <h4>File Upload Collision</h4>
+      <p>رفع ملف وتعديله قبل إجراء الفحص الأمني (TOCTOU).</p>
+    </div>
+    <div class="type-item">
+      <h4>TOCTOU (Time-of-Check to Time-of-Use)</h4>
+      <p>الفارق الزمني بين عملية التحقق الأمنية وبين التعديل الفعلي للبيانات.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر وسيناريوهات الاختبار / Testing & Scripts</h2>
+  <p>يتم اختبار هذه الثغرة بإرسال طلبات متزامنة في نطاق جزء من الثانية (Miliseconds) باستخدام Turbo Intruder في Burp Suite:</p>
+  <div class="cmd-block">
+    <pre># Python script using requests-racer for parallel threads
+from requests_racer import Racers
+import requests
+
+racers = Racers()
+url = "https://target.com/api/coupons/apply"
+headers = {"Authorization": "Bearer TOKEN"}
+data = {"coupon": "DISCOUNT100"}
+
+# Prepare multiple requests to be fired concurrently
+for i in range(10):
+    requests.post(url, headers=headers, json=data, hooks={'pre_send': racers.racer_hook()})
+
+# Firing all requests at the exact same millisecond
+racers.fire()</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">Turbo Intruder (Burp Suite Extension)</span>
+    <span class="tool-chip">requests-racer</span>
+    <span class="tool-chip">Burp Repeater (Group Send in Parallel)</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup & Lab</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>Writeup: <strong>Race Conditions in Payments</strong> — كيف تم سحب 2500$ من حساب يحتوي على 10$ فقط بإرسال 50 طلباً متزامناً.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Writeup: <strong>Race Conditions in Payments</strong> — how concurrent requests drained $2500 from a $10 account.</p>
+    </div>
+  </div>
+  <a class="cta-lab" href="labs/race-condition-lab.html">🧪 افتح Race Conditions Lab — 2 Levels</a>
+</div>
+{% endblock %}

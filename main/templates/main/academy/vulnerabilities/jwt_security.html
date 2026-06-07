@@ -1,0 +1,86 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}JWT Security — Attacks & Forgery{% endblock %}
+{% block meta_desc %}JWT structure, algorithm confusion, weak secrets, jku header injection, and tools in Arabic & English{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">أمن الـ JWT — هجمات وتزوير الرموز</h1>
+  <p class="page-title-en">JWT Security — Attacks & Forgery</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">OWASP A02</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>JWT (JSON Web Token)</strong> هو معيار مستخدم لتمثيل الادعاءات بين طرفين بشكل آمن كـ JSON Objects. تكمن المشاكل الأمنية في كيفية إعداد الخادم للتحقق من التوقيع (Signature)، مما يسمح بتزوير الرموز عبر هجمات Algorithm Confusion، وتخمين المفاتيح الضعيفة، وحقن رؤوس jku/jwk.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>JWT (JSON Web Token)</strong> is an open standard used to share claims securely between parties. Vulnerabilities arise from improper signature verification on the server side, allowing token forgery via algorithm confusion, weak key brute-forcing, and jku/jwk header injection.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أشهر ثغرات وهجمات JWT / Vulnerability Types</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>Algorithm Confusion (none alg)</h4>
+      <p>تعديل خوارزمية التوقيع في الـ Header لـ <code>none</code> وحذف التوقيع بالكامل لخداع السيرفر لقبول التوكن المعدل.</p>
+    </div>
+    <div class="type-item">
+      <h4>Weak Signing Key Brute Force</h4>
+      <p>تخمين المفتاح السري (Secret Key) المستخدم لتوقيع الرمز خارجياً عبر القواميس.</p>
+    </div>
+    <div class="type-item">
+      <h4>jku Header Injection</h4>
+      <p>حقن رأس jku ليشير لنطاق يمتلكه المهاجم يحتوي على مفاتيح عمومية خبيثة يقبلها الخادم لتأكيد التوقيع.</p>
+    </div>
+    <div class="type-item">
+      <h4>kid (Key ID) Manipulation</h4>
+      <p>تعديل معرّف المفتاح jku ليوجه لمسار متوقع أو ملف فارغ على السيرفر لتخطي فحص التوقيع.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر واختبار الثغرة / JWT Commands</h2>
+  <div class="cmd-block">
+    <pre># Brute forcing JWT weak secrets with Hashcat
+hashcat -m 16500 jwt_token.txt /usr/share/wordlists/rockyou.txt
+
+# Testing tokens using jwt_tool
+python3 jwt_tool.py "eyJhbGciOiJIUzI1Ni..." -T
+
+# Forging tokens using none algorithm
+python3 jwt_tool.py "eyJhbGciOiJIUzI1Ni..." -X a</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">jwt_tool</span>
+    <span class="tool-chip">jwt.io (Web Interface)</span>
+    <span class="tool-chip">Hashcat</span>
+    <span class="tool-chip">Burp JWT Editor Extension</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup & Lab</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>Writeup: <strong>JWT Attacks: Beyond the Basics</strong> — شرح تفصيلي لكيفية فك تشفير وتعديل صلاحيات حساب مستخدم عادي ليصبح مدير نظام عبر استغلال خوارزمية none.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Writeup: <strong>JWT Attacks: Beyond the Basics</strong> — detailed walkthrough on escalalating user privileges to administrator by exploiting a none algorithm flaw.</p>
+    </div>
+  </div>
+  <a class="cta-lab" href="labs/jwt-lab.html">🧪 افتح JWT Forgery Lab — 3 Levels</a>
+</div>
+{% endblock %}

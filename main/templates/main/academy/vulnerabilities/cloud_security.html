@@ -1,0 +1,86 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Cloud Security — AWS, GCP, Azure{% endblock %}
+{% block meta_desc %}AWS, GCP, Azure security controls, S3 buckets, cloud metadata APIs, and pacu in Arabic & English{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">أمن السحابيات — AWS, GCP, Azure</h1>
+  <p class="page-title-en">Cloud Security — AWS, GCP, Azure</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">OWASP Cloud Top 10</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>Cloud Security</strong> تختص بدراسة الثغرات والأخطاء الإدارية والتنظيمية في بيئات السحاب (AWS, Azure, GCP). تشمل الثغرات شيوعاً فتح حاويات التخزين (Open S3 Buckets) للعامة، وإعدادات الهوية غير الآمنة (IAM Misconfigurations)، وتسريب رموز الوصول السحابية عبر ثغرات SSRF.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>Cloud Security</strong> explores vulnerabilities, misconfigurations, and privilege issues in cloud architectures (AWS, Azure, GCP). Common attacks include exposing data via open S3 buckets, overly permissive IAM roles, and leaking cloud access keys via SSRF.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أشهر ثغرات بيئات السحاب / Vulnerabilities</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>Open S3 Buckets / Storage</h4>
+      <p>ترك حاويات التخزين مفتوحة بدون صلاحيات تمنع القراءة أو الكتابة العامة.</p>
+    </div>
+    <div class="type-item">
+      <h4>IAM Privilege Escalation</h4>
+      <p>ترقية صلاحيات حساب سحابي بسيط لمدير النظام (Administrator) بسبب صلاحيات IAM فضفاضة.</p>
+    </div>
+    <div class="type-item">
+      <h4>Cloud Metadata Leakage</h4>
+      <p>قراءة بيانات تعريف السيرفر (Metadata Service) لاستخراج مفاتيح الوصول المؤقتة للـ IAM Role.</p>
+    </div>
+    <div class="type-item">
+      <h4>Container Escape</h4>
+      <p>الهروب من الحاويات (Docker/K8s) إلى نظام التشغيل الأساسي للمضيف (Host OS).</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر الاختبار / Cloud Testing Commands</h2>
+  <div class="cmd-block">
+    <pre># Check if S3 bucket allows public listing
+aws s3 ls s3://target-leaked-bucket --no-sign-request
+
+# Fetch AWS Metadata Credentials using curl (IMDSv1)
+curl http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role
+
+# Scan cloud resources for misconfigurations with cloud_enum
+python3 cloud_enum.py -k targetcompany</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">ScoutSuite</span>
+    <span class="tool-chip">Prowler</span>
+    <span class="tool-chip">pacu (AWS Exploitation Framework)</span>
+    <span class="tool-chip">cloud_enum</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup & Lab</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>Writeup: <strong>Cloud SSRF: Escaping the Container</strong> — شرح اختراق خادم ويب عبر SSRF للوصول لمفاتيح IAM السحابية للشركة، والسيطرة على لوحة تحكم AWS بالكامل.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Writeup: <strong>Cloud SSRF: Escaping the Container</strong> — showing how an SSRF was chained to steal AWS credentials and achieve full account takeover.</p>
+    </div>
+  </div>
+  <a class="cta-lab" href="labs/cloud-security-lab.html">🧪 افتح Cloud Security Lab — 2 Levels</a>
+</div>
+{% endblock %}

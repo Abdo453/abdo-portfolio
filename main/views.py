@@ -2061,17 +2061,34 @@ def methodology(request):
 def bug_bounty_writeups(request):
     return render(request, 'main/bug_bounty_writeups.html', get_portfolio_context())
 
-ACADEMY_PAGES = {
-    'vulnerabilities/sql-injection.html': 'main/academy/vulnerabilities/sql_injection.html',
-    'vulnerabilities/idor.html': 'main/academy/vulnerabilities/idor.html',
-    'vulnerabilities/ssrf.html': 'main/academy/vulnerabilities/ssrf.html',
-    'labs/sql-injection-lab.html': 'main/academy/labs/sql_injection_lab.html',
-}
+from django.template.exceptions import TemplateDoesNotExist
+from django.http import Http404
 
-def academy_page(request, path):
-    from django.http import Http404
-    template = ACADEMY_PAGES.get(path)
-    if not template:
+def academy_vuln(request, page):
+    template_name = page.replace('.html', '').replace('-', '_')
+    try:
+        return render(request, f'main/academy/vulnerabilities/{template_name}.html', get_portfolio_context())
+    except TemplateDoesNotExist:
         raise Http404
-    return render(request, template, get_portfolio_context())
+
+def academy_lab(request, page):
+    template_name = page.replace('.html', '').replace('-', '_')
+    try:
+        return render(request, f'main/academy/labs/{template_name}.html', get_portfolio_context())
+    except TemplateDoesNotExist:
+        raise Http404
+
+def academy_linux(request, page):
+    template_name = page.replace('.html', '').replace('-', '_')
+    try:
+        return render(request, f'main/academy/linux/{template_name}.html', get_portfolio_context())
+    except TemplateDoesNotExist:
+        raise Http404
+
+def academy_writeup(request, page):
+    template_name = page.replace('.html', '').replace('-', '_')
+    try:
+        return render(request, f'main/writeups/{template_name}.html', get_portfolio_context())
+    except TemplateDoesNotExist:
+        raise Http404
 

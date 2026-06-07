@@ -1,0 +1,87 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}API Security — OWASP API Top 10{% endblock %}
+{% block meta_desc %}API security vulnerabilities, OWASP API Top 10, REST/SOAP testing, and tools in Arabic & English{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">أمن الـ APIs — معايير OWASP العشرة</h1>
+  <p class="page-title-en">API Security — OWASP API Top 10</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-high">OWASP API10</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>API Security</strong> تركز على حماية واجهات برمجة التطبيقات (REST, GraphQL, gRPC) من الاستخدام الخاطئ. تعد الـ APIs هي العمود الفقري للتطبيقات الحديثة وتطبيقات الجوال، وتصنف ثغراتها وفق OWASP API Top 10 التي تشمل تخطي الصلاحيات، وغياب Rate Limit، والتسريب المفرط للبيانات.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>API Security</strong> focuses on protecting backend APIs (REST, GraphQL, gRPC) from abuse. As APIs are the backbone of modern web and mobile apps, they are cataloged under the OWASP API Top 10, covering broken object authorization, rate limiting failures, and excessive data exposure.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أشهر ثغرات الـ APIs / Top Vulnerabilities</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>BOLA (Broken Object Level Auth)</h4>
+      <p>الوصول لبيانات كائن آخر بتغيير المعرّف (مثل IDOR).</p>
+    </div>
+    <div class="type-item">
+      <h4>BFLA (Broken Function Level Auth)</h4>
+      <p>الوصول لوظائف إدارية (Admin APIs) بدون صلاحيات مناسبة.</p>
+    </div>
+    <div class="type-item">
+      <h4>Unrestricted Resource Consumption</h4>
+      <p>غياب الـ Rate Limiting مما يسمح بإغراق الـ API بملايين الطلبات وتعطيلها.</p>
+    </div>
+    <div class="type-item">
+      <h4>Broken Object Property Level Auth</h4>
+      <p>تعديل خصائص داخل الـ JSON Body لم يكن مسموحاً بتغييرها (Mass Assignment).</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر الاختبار / API Testing Commands</h2>
+  <div class="cmd-block">
+    <pre># Fuzzing API endpoints with Kiterunner
+kiterunner scan https://api.target.com/v1 -w /opt/wordlists/routes.kb
+
+# Discovering hidden parameters with Arjun
+arjun -u https://api.target.com/v1/users -m GET
+
+# Intercepting and testing with curl
+curl -X DELETE -H "Authorization: Bearer USER_TOKEN" https://api.target.com/v1/posts/2001</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">Postman</span>
+    <span class="tool-chip">Kiterunner</span>
+    <span class="tool-chip">Arjun</span>
+    <span class="tool-chip">crAPI (Vulnerable App)</span>
+    <span class="tool-chip">Burp Suite</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup & Lab</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>Writeup: <strong>API Hacking: Breaking Modern Applications</strong> — كيف تم فحص وتفكيك واجهات برمجة التطبيقات الخاصة بتطبيق توصيل شهير وسحب بيانات السائقين والرحلات بالكامل.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Writeup: <strong>API Hacking: Breaking Modern Applications</strong> — a detailed report on dismantling delivery application APIs to dump user and trip details.</p>
+    </div>
+  </div>
+  <a class="cta-lab" href="labs/api-security-lab.html">🧪 افتح API Security Lab — 3 Levels</a>
+</div>
+{% endblock %}

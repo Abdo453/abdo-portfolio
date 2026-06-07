@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="IDOR and Broken Access Control — Arabic & English guide with testing commands and tools">
-  <title>IDOR — Broken Access Control | Abdo Ramdan</title>
+  <meta name="description" content="Active Directory enumeration, Kerberoasting, BloodHound analysis, and Domain Admin attack paths in Arabic & English">
+  <title>Active Directory Pentesting | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
   
@@ -60,66 +60,64 @@
   <main class="academy-main">
     
 <div class="page-hero">
-  <h1 class="page-title">IDOR — الوصول المباشر غير الآمن للكائنات</h1>
-  <p class="page-title-en">IDOR — Insecure Direct Object Reference</p>
-  <span class="severity-pill pill-high">HIGH</span>
-  <span class="severity-pill pill-high">OWASP A01</span>
+  <h1 class="page-title">اختبار اختراق الـ Active Directory</h1>
+  <p class="page-title-en">Active Directory Pentesting</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">AD Security</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>IDOR</strong> يحدث عندما يستطيع المستخدم الوصول لبيانات أو موارد تخص مستخدمين آخرين بتغيير معرّف (ID, UUID, filename) في الطلب — بدون فحص صلاحيات كافٍ من السيرفر.</p>
+    <p><strong>Active Directory (AD)</strong> هو نظام إدارة الهويات والوصول الرئيسي في شبكات المؤسسات والشركات الكبرى. تركز عمليات اختبار اختراق الـ AD على استغلال البروتوكولات الأمنية القديمة، وسرقة الـ Hashes لكلمات المرور، والبحث عن مسارات ترقية الصلاحيات للوصول لـ Domain Admin.</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>IDOR</strong> happens when a user accesses another user's data by modifying an object identifier (ID, UUID, filename) in the request — without adequate server-side authorization checks.</p>
+    <p><strong>Active Directory (AD)</strong> is the enterprise directory service developed by Microsoft. Active Directory pentesting focuses on identifying security misconfigurations, extracting credential hashes, and mapping paths to achieve Domain Administrator privileges.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أنواع IDOR / IDOR Types</h2>
+  <h2>أشهر ثغرات وهجمات الـ Active Directory / Attack Types</h2>
   <div class="type-grid">
     <div class="type-item">
-      <h4>URL Parameter IDOR</h4>
-      <p>تغيير <code>user_id=123</code> → <code>user_id=124</code></p>
+      <h4>AD Enumeration</h4>
+      <p>جمع بيانات المستخدمين والمجموعات والصلاحيات والأجهزة داخل الشبكة.</p>
     </div>
     <div class="type-item">
-      <h4>API / JSON Body</h4>
-      <p>تعديل <code>id</code> أو <code>accountId</code> في POST/PUT body</p>
+      <h4>Kerberoasting</h4>
+      <p>طلب بطاقات الخدمة (TGS tickets) للمستخدمين الذين يمتلكون قيم SPN ومحاولة فك تشفيرها خارجياً للحصول على كلمات المرور.</p>
     </div>
     <div class="type-item">
-      <h4>UUID Manipulation</h4>
-      <p>تخمين أو leak UUIDs من responses أخرى</p>
+      <h4>AS-REP Roasting</h4>
+      <p>استهداف حسابات لا تتطلب مصادقة مسبقة لـ Kerberos وسرقة الـ Hashes الخاصة بها مباشرة.</p>
     </div>
     <div class="type-item">
-      <h4>Mass Assignment</h4>
-      <p>إرسال fields زيادة: <code>role: admin</code>, <code>isPremium: true</code></p>
+      <h4>Pass-the-Hash (PtH)</h4>
+      <p>استخدام الـ NTLM Hash لتسجيل الدخول للأجهزة دون الحاجة لمعرفة كلمة المرور النصية.</p>
     </div>
     <div class="type-item">
-      <h4>Function-Level BAC</h4>
-      <p>الوصول لـ admin endpoints كـ regular user</p>
+      <h4>Golden & Silver Tickets</h4>
+      <p>تزوير بطاقات Kerberos كاملة الصلاحية للبقاء الدائم بالشبكة (Persistence).</p>
     </div>
     <div class="type-item">
-      <h4>Path Traversal</h4>
-      <p><code>../../etc/passwd</code> في file download paths</p>
+      <h4>BloodHound Analysis</h4>
+      <p>تحليل مسارات الهجوم الشجرية للوصول لمدير النطاق (Domain Admin Path).</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار / Testing Commands</h2>
+  <h2>أوامر الاختبار والتحليل / AD Commands</h2>
   <div class="cmd-block">
-    <pre># URL IDOR
-GET /api/users/1001/profile HTTP/1.1
-GET /api/users/1002/profile HTTP/1.1
+    <pre># Python collector for BloodHound enumeration
+bloodhound-python -d targetdomain.local -u domain_user -p domain_password -c All -ns 10.10.10.100
 
-# JSON body swap
-POST /api/orders HTTP/1.1
-{"order_id": "ORD-9999", "user_id": "VICTIM_UUID"}
+# Dumping hashes from Domain Controller with Secretsdump
+impacket-secretsdump targetdomain/admin_user:admin_pass@10.10.10.100
 
-# Path traversal
-GET /download?file=../../../etc/passwd HTTP/1.1</pre>
+# Performing Kerberoasting
+impacket-GetUserSPNs targetdomain.local/domain_user:domain_password -request -dc-ip 10.10.10.100</pre>
     <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
   </div>
 </div>
@@ -127,26 +125,26 @@ GET /download?file=../../../etc/passwd HTTP/1.1</pre>
 <div class="section-card">
   <h2>الأدوات / Tools</h2>
   <div class="tools-row">
-    <span class="tool-chip">Autorize (Burp)</span>
-    <span class="tool-chip">AuthMatrix (Burp)</span>
-    <span class="tool-chip">Burp Comparer</span>
-    <span class="tool-chip">ffuf</span>
+    <span class="tool-chip">BloodHound</span>
+    <span class="tool-chip">Impacket Suite (secretsdump, psexec)</span>
+    <span class="tool-chip">CrackMapExec / NetExec</span>
+    <span class="tool-chip">Mimikatz</span>
+    <span class="tool-chip">PowerView</span>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>Writeup & Lab</h2>
+  <h2>Writeup</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+      <p>Writeup: <strong>Active Directory: From Enumeration to Domain Admin</strong> — تقرير عملي تفصيلي يوضح كيف تم الدخول بحساب موظف عادي بالشركة وترقية الصلاحيات حتى السيطرة الكاملة على الـ Domain Controller.</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+      <p>Writeup: <strong>Active Directory: From Enumeration to Domain Admin</strong> — step-by-step documentation on escalating a low-privileged domain account to full Active Directory takeover.</p>
     </div>
   </div>
-  <a class="cta-lab" href="labs/idor-lab.html">🧪 افتح IDOR Lab — 3 Scenarios</a>
 </div>
 
   </main>

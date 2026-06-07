@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="IDOR and Broken Access Control — Arabic & English guide with testing commands and tools">
-  <title>IDOR — Broken Access Control | Abdo Ramdan</title>
+  <meta name="description" content="Race conditions, TOCTOU, double spending, coupon abuse, and turbo-intruder scripts in Arabic & English">
+  <title>Race Conditions — The Hidden Logic Flaw | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
   
@@ -60,66 +60,64 @@
   <main class="academy-main">
     
 <div class="page-hero">
-  <h1 class="page-title">IDOR — الوصول المباشر غير الآمن للكائنات</h1>
-  <p class="page-title-en">IDOR — Insecure Direct Object Reference</p>
+  <h1 class="page-title">Race Conditions — ثغرة التزامن والمنطق المخفي</h1>
+  <p class="page-title-en">Race Conditions — The Hidden Logic Flaw</p>
   <span class="severity-pill pill-high">HIGH</span>
-  <span class="severity-pill pill-high">OWASP A01</span>
+  <span class="severity-pill pill-medium">OWASP A04</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>IDOR</strong> يحدث عندما يستطيع المستخدم الوصول لبيانات أو موارد تخص مستخدمين آخرين بتغيير معرّف (ID, UUID, filename) في الطلب — بدون فحص صلاحيات كافٍ من السيرفر.</p>
+    <p><strong>Race Condition</strong> (حالة السباق) هي ثغرة منطقية تحدث عندما يعالج التطبيق طلبات متعددة بشكل متزامن دون التحقق السليم من الحالات المتتالية في قاعدة البيانات. يسمح هذا للمهاجمين بالقيام بـ "شراء مزدوج" (Double Spending) أو تطبيق كود خصم واحد عدة مرات قبل تحديث قيمته في السيرفر.</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>IDOR</strong> happens when a user accesses another user's data by modifying an object identifier (ID, UUID, filename) in the request — without adequate server-side authorization checks.</p>
+    <p><strong>Race Condition</strong> is a logical vulnerability that occurs when an application processes multiple concurrent requests without proper database state locking. This enables attackers to perform "double spending" or apply a single coupon multiple times before the server updates its status.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أنواع IDOR / IDOR Types</h2>
+  <h2>أنواع ثغرات Race Conditions / Vulnerability Types</h2>
   <div class="type-grid">
     <div class="type-item">
-      <h4>URL Parameter IDOR</h4>
-      <p>تغيير <code>user_id=123</code> → <code>user_id=124</code></p>
+      <h4>Double Spending / Payment Abuse</h4>
+      <p>إرسال طلبات سحب أو تحويل أموال متزامنة للحصول على مبلغ مضاعف من رصيد وحيد.</p>
     </div>
     <div class="type-item">
-      <h4>API / JSON Body</h4>
-      <p>تعديل <code>id</code> أو <code>accountId</code> في POST/PUT body</p>
+      <h4>Coupon / Gift Card Re-use</h4>
+      <p>استخدام كود خصم وحيد مئات المرات متزامناً لتخفيض السعر للصفر.</p>
     </div>
     <div class="type-item">
-      <h4>UUID Manipulation</h4>
-      <p>تخمين أو leak UUIDs من responses أخرى</p>
+      <h4>File Upload Collision</h4>
+      <p>رفع ملف وتعديله قبل إجراء الفحص الأمني (TOCTOU).</p>
     </div>
     <div class="type-item">
-      <h4>Mass Assignment</h4>
-      <p>إرسال fields زيادة: <code>role: admin</code>, <code>isPremium: true</code></p>
-    </div>
-    <div class="type-item">
-      <h4>Function-Level BAC</h4>
-      <p>الوصول لـ admin endpoints كـ regular user</p>
-    </div>
-    <div class="type-item">
-      <h4>Path Traversal</h4>
-      <p><code>../../etc/passwd</code> في file download paths</p>
+      <h4>TOCTOU (Time-of-Check to Time-of-Use)</h4>
+      <p>الفارق الزمني بين عملية التحقق الأمنية وبين التعديل الفعلي للبيانات.</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار / Testing Commands</h2>
+  <h2>أوامر وسيناريوهات الاختبار / Testing & Scripts</h2>
+  <p>يتم اختبار هذه الثغرة بإرسال طلبات متزامنة في نطاق جزء من الثانية (Miliseconds) باستخدام Turbo Intruder في Burp Suite:</p>
   <div class="cmd-block">
-    <pre># URL IDOR
-GET /api/users/1001/profile HTTP/1.1
-GET /api/users/1002/profile HTTP/1.1
+    <pre># Python script using requests-racer for parallel threads
+from requests_racer import Racers
+import requests
 
-# JSON body swap
-POST /api/orders HTTP/1.1
-{"order_id": "ORD-9999", "user_id": "VICTIM_UUID"}
+racers = Racers()
+url = "https://target.com/api/coupons/apply"
+headers = {"Authorization": "Bearer TOKEN"}
+data = {"coupon": "DISCOUNT100"}
 
-# Path traversal
-GET /download?file=../../../etc/passwd HTTP/1.1</pre>
+# Prepare multiple requests to be fired concurrently
+for i in range(10):
+    requests.post(url, headers=headers, json=data, hooks={'pre_send': racers.racer_hook()})
+
+# Firing all requests at the exact same millisecond
+racers.fire()</pre>
     <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
   </div>
 </div>
@@ -127,10 +125,9 @@ GET /download?file=../../../etc/passwd HTTP/1.1</pre>
 <div class="section-card">
   <h2>الأدوات / Tools</h2>
   <div class="tools-row">
-    <span class="tool-chip">Autorize (Burp)</span>
-    <span class="tool-chip">AuthMatrix (Burp)</span>
-    <span class="tool-chip">Burp Comparer</span>
-    <span class="tool-chip">ffuf</span>
+    <span class="tool-chip">Turbo Intruder (Burp Suite Extension)</span>
+    <span class="tool-chip">requests-racer</span>
+    <span class="tool-chip">Burp Repeater (Group Send in Parallel)</span>
   </div>
 </div>
 
@@ -139,14 +136,14 @@ GET /download?file=../../../etc/passwd HTTP/1.1</pre>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+      <p>Writeup: <strong>Race Conditions in Payments</strong> — كيف تم سحب 2500$ من حساب يحتوي على 10$ فقط بإرسال 50 طلباً متزامناً.</p>
     </div>
     <div class="lang-section lang-en">
       <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+      <p>Writeup: <strong>Race Conditions in Payments</strong> — how concurrent requests drained $2500 from a $10 account.</p>
     </div>
   </div>
-  <a class="cta-lab" href="labs/idor-lab.html">🧪 افتح IDOR Lab — 3 Scenarios</a>
+  <a class="cta-lab" href="labs/race-condition-lab.html">🧪 افتح Race Conditions Lab — 2 Levels</a>
 </div>
 
   </main>

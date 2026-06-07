@@ -1,0 +1,94 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Active Directory Pentesting{% endblock %}
+{% block meta_desc %}Active Directory enumeration, Kerberoasting, BloodHound analysis, and Domain Admin attack paths in Arabic & English{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">اختبار اختراق الـ Active Directory</h1>
+  <p class="page-title-en">Active Directory Pentesting</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">AD Security</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p><strong>Active Directory (AD)</strong> هو نظام إدارة الهويات والوصول الرئيسي في شبكات المؤسسات والشركات الكبرى. تركز عمليات اختبار اختراق الـ AD على استغلال البروتوكولات الأمنية القديمة، وسرقة الـ Hashes لكلمات المرور، والبحث عن مسارات ترقية الصلاحيات للوصول لـ Domain Admin.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p><strong>Active Directory (AD)</strong> is the enterprise directory service developed by Microsoft. Active Directory pentesting focuses on identifying security misconfigurations, extracting credential hashes, and mapping paths to achieve Domain Administrator privileges.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أشهر ثغرات وهجمات الـ Active Directory / Attack Types</h2>
+  <div class="type-grid">
+    <div class="type-item">
+      <h4>AD Enumeration</h4>
+      <p>جمع بيانات المستخدمين والمجموعات والصلاحيات والأجهزة داخل الشبكة.</p>
+    </div>
+    <div class="type-item">
+      <h4>Kerberoasting</h4>
+      <p>طلب بطاقات الخدمة (TGS tickets) للمستخدمين الذين يمتلكون قيم SPN ومحاولة فك تشفيرها خارجياً للحصول على كلمات المرور.</p>
+    </div>
+    <div class="type-item">
+      <h4>AS-REP Roasting</h4>
+      <p>استهداف حسابات لا تتطلب مصادقة مسبقة لـ Kerberos وسرقة الـ Hashes الخاصة بها مباشرة.</p>
+    </div>
+    <div class="type-item">
+      <h4>Pass-the-Hash (PtH)</h4>
+      <p>استخدام الـ NTLM Hash لتسجيل الدخول للأجهزة دون الحاجة لمعرفة كلمة المرور النصية.</p>
+    </div>
+    <div class="type-item">
+      <h4>Golden & Silver Tickets</h4>
+      <p>تزوير بطاقات Kerberos كاملة الصلاحية للبقاء الدائم بالشبكة (Persistence).</p>
+    </div>
+    <div class="type-item">
+      <h4>BloodHound Analysis</h4>
+      <p>تحليل مسارات الهجوم الشجرية للوصول لمدير النطاق (Domain Admin Path).</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أوامر الاختبار والتحليل / AD Commands</h2>
+  <div class="cmd-block">
+    <pre># Python collector for BloodHound enumeration
+bloodhound-python -d targetdomain.local -u domain_user -p domain_password -c All -ns 10.10.10.100
+
+# Dumping hashes from Domain Controller with Secretsdump
+impacket-secretsdump targetdomain/admin_user:admin_pass@10.10.10.100
+
+# Performing Kerberoasting
+impacket-GetUserSPNs targetdomain.local/domain_user:domain_password -request -dc-ip 10.10.10.100</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الأدوات / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">BloodHound</span>
+    <span class="tool-chip">Impacket Suite (secretsdump, psexec)</span>
+    <span class="tool-chip">CrackMapExec / NetExec</span>
+    <span class="tool-chip">Mimikatz</span>
+    <span class="tool-chip">PowerView</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Writeup</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>Writeup: <strong>Active Directory: From Enumeration to Domain Admin</strong> — تقرير عملي تفصيلي يوضح كيف تم الدخول بحساب موظف عادي بالشركة وترقية الصلاحيات حتى السيطرة الكاملة على الـ Domain Controller.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Writeup: <strong>Active Directory: From Enumeration to Domain Admin</strong> — step-by-step documentation on escalating a low-privileged domain account to full Active Directory takeover.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
