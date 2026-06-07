@@ -2955,12 +2955,138 @@ https://cdn.target.com [301] → assets.cdn.net
           </div>
         </div>
 
-        <!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p0" onclick="markPhaseComplete('p0','p4')">
-          ✅ Mark Phase Complete — Subdomain Enumeration Done → JS Analysis
-        </button>
+      
+        <!-- VISUAL ATTACK FLOW -->
+        <p class="os-section-label">🗺️ Recon Attack Flowchart — مخطط تدفق عملية الفحص</p>
+        <div class="cyber-card" style="background: rgba(2, 2, 5, 0.85); overflow-x: auto; padding: 24px; border: 1px solid rgba(0, 229, 255, 0.15);">
+          <div style="display: flex; align-items: center; justify-content: center; min-width: 850px; gap: 15px; font-family: 'Outfit', monospace; font-size: 0.82rem; text-align: center; color: #fff;">
+            <div style="padding: 10px 14px; border: 1px solid var(--neon-cyan); border-radius: 4px; background: rgba(0,229,255,0.05); box-shadow: 0 0 10px rgba(0,229,255,0.1);">🎯 Scope Definition</div>
+            <span style="color: var(--neon-cyan); font-weight: bold;">➡</span>
+            <div style="padding: 10px 14px; border: 1px solid var(--neon-cyan); border-radius: 4px; background: rgba(0,229,255,0.05); box-shadow: 0 0 10px rgba(0,229,255,0.1);">🌍 Passive Recon<br>(Subfinder/Amass)</div>
+            <span style="color: var(--neon-cyan); font-weight: bold;">➡</span>
+            <div style="padding: 10px 14px; border: 1px solid var(--neon-cyan); border-radius: 4px; background: rgba(0,229,255,0.05); box-shadow: 0 0 10px rgba(0,229,255,0.1);">📡 Live Check<br>(httpx)</div>
+            <span style="color: var(--neon-cyan); font-weight: bold;">➡</span>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="padding: 8px 12px; border: 1px solid var(--neon-red); border-radius: 4px; background: rgba(255,0,85,0.05); box-shadow: 0 0 10px rgba(255,0,85,0.1);">❌ 404/403 Responses<br>(CNAME/Takeover Audit)</div>
+              <div style="padding: 8px 12px; border: 1px solid var(--neon-green); border-radius: 4px; background: rgba(0,255,102,0.05); box-shadow: 0 0 10px rgba(0,255,102,0.1);">🟢 200 OK Alive Hosts<br>(Port Scan & JS Analysis)</div>
+            </div>
+            <span style="color: var(--neon-cyan); font-weight: bold;">➡</span>
+            <div style="padding: 10px 14px; border: 1px solid var(--neon-cyan); border-radius: 4px; background: rgba(0,229,255,0.05); box-shadow: 0 0 10px rgba(0,229,255,0.1);">🎯 Prioritize Target<br>(Dev/Staging panels)</div>
+          </div>
+        </div>
 
-      </div>
+        <!-- TOOL SELECTION GUIDE -->
+        <p class="os-section-label">🛠️ Tool Selection Guide — اختيار الأداة المناسبة</p>
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ Passive Subdomain Tools Comparison</h3></div>
+          <table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الأداة (Tool)</th>
+                <th>السرعة (Speed)</th>
+                <th>العمق (Depth)</th>
+                <th>أفضل استخدام (Best For)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>subfinder</strong></td>
+                <td>⚡ 95% (Fast)</td>
+                <td>🌊 Wide (Good)</td>
+                <td>البداية السريعة لجمع نطاقات من مصادر OSINT العامة مجاناً.</td>
+              </tr>
+              <tr>
+                <td><strong>amass</strong></td>
+                <td>🐢 20% (Slow)</td>
+                <td>🌊 Deep (Thorough)</td>
+                <td>البحث الموسّع والشامل، يدعم الـ Active resolution والتخمين الذاتي.</td>
+              </tr>
+              <tr>
+                <td><strong>assetfinder</strong></td>
+                <td>⚡ 98% (Very Fast)</td>
+                <td>🌊 Medium</td>
+                <td>التركيز المباشر والسريع جداً على شهادات التشفير crt.sh.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- EDGE CASES & WHAT-IF SCENARIOS -->
+        <p class="os-section-label">💡 Edge Cases — ماذا تفعل لو؟</p>
+        <div class="cyber-card" style="border-color: var(--neon-purple); background: rgba(155, 89, 255, 0.02);">
+          <div class="card-header"><h3 style="color:var(--neon-purple);">💡 What-If Scenarios & Edge Cases</h3></div>
+          <div style="display:flex; flex-direction:column; gap:16px; font-size:1.15rem; line-height:1.7;">
+            <div>
+              <strong style="color:var(--neon-red);">❓ Scenario 1: كل النطاقات الفرعية خلف Cloudflare؟ (Behind Cloudflare CDN)</strong>
+              <p style="margin:4px 0 0 10px; color:#cbd5e1;">
+                • <strong>الحل:</strong> ابحث عن الـ Origin IP الحقيقي للسيرفر لتخطي الحماية. استخدم أدوات مثل Shodan أو Censys للبحث عن الشهادة التاريخية، أو فحص سجلات DNS التاريخية (DNSTrails) لرصد IP السيرفر قبل تفعيل Cloudflare.
+              </p>
+            </div>
+            <div>
+              <strong style="color:var(--neon-red);">❓ Scenario 2: الـ Scope محدد بنطاق واحد فقط ولا يسمح بـ Wildcard؟ (Single Target Only)</strong>
+              <p style="margin:4px 0 0 10px; color:#cbd5e1;">
+                • <strong>الحل:</strong> ركّز بالكامل على تخمين المجلدات والملفات (Directory Discovery)، فحص ثغرات المدخلات والمعاملات (Parameters Discovery)، وقراءة ملفات الـ JS بدقة للعثور على API endpoints داخل نفس النطاق.
+              </p>
+            </div>
+            <div>
+              <strong style="color:var(--neon-red);">❓ Scenario 3: البرنامج يمنع الفحص التلقائي تماماً؟ (No Automated Scans Allowed)</strong>
+              <p style="margin:4px 0 0 10px; color:#cbd5e1;">
+                • <strong>الحل:</strong> اعتمد 100% على الـ OSINT السلبي والتصفح اليدوي عبر المتصفح مع تفعيل Burp Suite للاستماع فقط (Passive Interception). قم بتحليل طلبات التطبيق العادية دون إرسال طلبات فحص مكثفة.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ETHICAL BOUNDARIES & RISK MANAGEMENT -->
+        <p class="os-section-label">🛡️ Ethical Boundaries & Risk Management — أخلاقيات وجودة الفحص</p>
+        <div class="cyber-card" style="border-color: var(--neon-green); background: rgba(0, 255, 102, 0.01);">
+          <div class="card-header"><h3 style="color:var(--neon-green);">🛡️ Ethical Boundaries & DoS Prevention</h3></div>
+          <div style="font-size:1.15rem; line-height:1.7; color:#cbd5e1;">
+            <p style="margin: 0 0 10px 0;">
+              لتجنب التسبب في هجمات حرمان الخدمة (DoS) غير المقصودة وتفادي حظر عنوان الـ IP الخاص بك من قبل جدران الحماية (WAF):
+            </p>
+            <ul style="padding-left: 20px; margin: 0;">
+              <li><strong>التحكم بالـ Rate Limiting:</strong> حدد عدد الطلبات في الثانية عند استخدام httpx أو ffuf (مثلاً استخدام علم <code>-t 10</code> أو <code>-rate-limit 15</code>).</li>
+              <li><strong>تجنب فحص ملفات ضخمة:</strong> لا تشغل فحصاً تلقائياً بمجلدات ضخمة جداً (wordlists تزيد عن 50 ألف سطر) على السيرفرات الضعيفة.</li>
+              <li><strong>احترم ملف الـ robots.txt:</strong> اقرأه يدوياً قبل الفحص لتفادي الضغط على المسارات المستبعدة.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- OUTPUT INTERPRETATION -->
+        <p class="os-section-label">📊 Output Interpretation — تحليل وتفسير النتائج</p>
+        <div class="cyber-card">
+          <div class="card-header"><h3>📊 How to Read & Analyze httpx Output</h3></div>
+          <div style="display:flex; flex-direction:column; gap:14px; font-size:1.15rem; line-height:1.7; color:#cbd5e1;">
+            <p style="margin:0;">بفرض أنك حصلت على المخرجات التالية من أداة httpx:</p>
+            <pre style="background:#04040a; padding:14px; border-radius:4px; color:var(--neon-cyan); font-family:monospace; margin:0; border: 1px solid rgba(255,255,255,0.05);">https://dev.target.com [200] [DevEnv - Internal] [PHP/8.1, nginx/1.18]</pre>
+            <div style="padding-left:15px; border-left:2px solid var(--neon-cyan);">
+              • <strong>[PHP/8.1]</strong>: إشارة فورية لوجود لغة PHP بإصدار 8.1. ابحث فوراً عن CVEs معروفة لهذا الإصدار (مثال: RCE ثغرة PHP 8.1.0-dev backdoor).<br>
+              • <strong>[nginx/1.18]</strong>: ابحث عن أخطاء التكوين الشائعة في خوادم nginx مثل Nginx Alias Traversal أو استغلال الصلاحيات في ملف التكوين.<br>
+              • <strong>ماذا لو حصلت على [403 Forbidden]؟</strong> لا تترك النطاق! جرب تخطي جدار الحماية (WAF Bypass) عبر تغيير الـ Headers (مثل <code>X-Forwarded-For: 127.0.0.1</code>) أو استخدام مسارات بديلة مثل <code>/admin/..;/</code>.
+            </div>
+          </div>
+        </div>
+
+        <!-- PRACTICE LAB INTEGRATION -->
+        <p class="os-section-label">🧪 Practice Lab — التطبيق العملي</p>
+        <div class="cyber-card" style="border: 1px dashed var(--neon-cyan); background: rgba(0, 229, 255, 0.02); margin-bottom: 30px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+            <div>
+              <h4 style="margin:0 0 5px 0; font-family:'Outfit',sans-serif; font-size:1.25rem; color:#fff;">🧪 جاهز لتطبيق ما تعلمته؟</h4>
+              <p style="margin:0; font-size:0.95rem; color:var(--text-secondary);">اختبر مهاراتك في كشف النطاقات الفرعية الضعيفة واستغلال ثغرات الـ Takeover في المختبر التفاعلي.</p>
+            </div>
+            <a href="index.html#labs" class="back-btn" style="white-space:nowrap;" onclick="localStorage.setItem('switch_tab_direct', 'labs')">
+              ▶ Launch Interactive Labs
+            </a>
+          </div>
+        </div>
+
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p0" onclick="markPhaseComplete('p0','p2')">
+          ✅ Mark Phase Complete — Subdomain Enumeration Done → Proceed to Technology Detection
+        </button>
+</div>
       <!-- Phase 2: Tech Detection -->
       <div class="meth-content-view" id="meth-content-p2" style="display: none; --tool-color: #ffb020;">
         <div class="cyber-hero">
@@ -2989,7 +3115,12 @@ Content-Type: application/json
           </div>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$10,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p2" onclick="markPhaseComplete('p2','p1')">
+          ✅ Mark Phase Complete — Technology Detection Done → Proceed to Port Scanning
+        </button>
+</div>
 
       <!-- Phase 1: Port Scanning -->
       <div class="meth-content-view" id="meth-content-p1" style="display: none; --tool-color: #ff0055;">
@@ -3048,7 +3179,12 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
           <p><strong>الاستغلال (Exploitation):</strong> الدخول مباشرة للوحة التحكم وقراءة قواعد البيانات والـ Elasticsearch وسحب بيانات المستخدمين.</p>
           <p><strong>الأثر (Impact):</strong> تسريب بيانات ملايين العملاء لشركة شحن معروفة.</p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p1" onclick="markPhaseComplete('p1','p_matrix')">
+          ✅ Mark Phase Complete — Port Scanning Done → Proceed to Decision Matrix
+        </button>
+</div>
 
       <!-- Phase Recon Decision Matrix -->
       <div class="meth-content-view" id="meth-content-p_matrix" style="display: none; --tool-color: #00e5ff;">
@@ -3114,7 +3250,12 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
           <p><strong>الاستغلال (Exploitation):</strong> تم استغلال ثغرة رفع الملفات وتمرير حمولات لملفات صور معطوبة لتنفيذ الأوامر (CVE-2021-22205).</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$5,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_matrix" onclick="markPhaseComplete('p_matrix','p6')">
+          ✅ Mark Phase Complete — Decision Matrix Done → Proceed to Directory Discovery
+        </button>
+</div>
 
       <!-- Phase 6: Directory Discovery -->
       <div class="meth-content-view" id="meth-content-p6" style="display: none; --tool-color: #00ff66;">
@@ -3235,7 +3376,12 @@ git status</div>
           </div>
           <p><strong>الأثر (Impact):</strong> السيطرة الكاملة على السيرفر والبيانات.</p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p6" onclick="markPhaseComplete('p6','p4')">
+          ✅ Mark Phase Complete — Directory Discovery Done → Proceed to JavaScript Recon
+        </button>
+</div>
 
       <!-- Phase 4: JavaScript Recon -->
       <div class="meth-content-view" id="meth-content-p4" style="display: none; --tool-color: #00e5ff;">
@@ -3352,7 +3498,12 @@ aws s3 ls</div>
           </div>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$5,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p4" onclick="markPhaseComplete('p4','p16')">
+          ✅ Mark Phase Complete — JavaScript Recon Done → Proceed to APIs & REST Hacking
+        </button>
+</div>
 
       <!-- Phase 16: API Testing Workflow -->
       <div class="meth-content-view" id="meth-content-p16" style="display: none; --tool-color: #14b8a6;">
@@ -3422,7 +3573,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> بتعديل المعرف UUID بالطلب إلى حساب آخر، استطاع المهاجم جلب تفاصيل رحلات ومواقع الزبائن بالكامل.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$10,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p16" onclick="markPhaseComplete('p16','p_graphql')">
+          ✅ Mark Phase Complete — APIs & REST Hacking Done → Proceed to GraphQL Hacking
+        </button>
+</div>
 
       <!-- Phase GraphQL Hacking -->
       <div class="meth-content-view" id="meth-content-p_graphql" style="display: none; --tool-color: #14b8a6;">
@@ -3540,7 +3696,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> دمج الباحث 500 محاولة لتخمين الرموز السرية داخل طلب HTTP واحد، متخطياً الـ Rate Limiter.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_graphql" onclick="markPhaseComplete('p_graphql','p5')">
+          ✅ Mark Phase Complete — GraphQL Hacking Done → Proceed to Parameters Discovery
+        </button>
+</div>
 
       <!-- Phase 5: Parameters Discovery -->
       <div class="meth-content-view" id="meth-content-p5" style="display: none; --tool-color: #9b59ff;">
@@ -3565,7 +3726,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> حقن المعامل <code>?bypass=true</code> أو تغيير القيمة البرمجية إلى <code>0</code> لتنفيذ عمليات الشراء مجاناً.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,500</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p5" onclick="markPhaseComplete('p5','p3')">
+          ✅ Mark Phase Complete — Parameters Discovery Done → Proceed to Crawling & Spidering
+        </button>
+</div>
 
       <!-- Phase 3: Crawling & Spidering -->
       <div class="meth-content-view" id="meth-content-p3" style="display: none; --tool-color: #ff00d4;">
@@ -3590,7 +3756,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> تحميل الملف وقراءة بيانات وجداول التوثيق كاملة.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$1,500</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p3" onclick="markPhaseComplete('p3','p7')">
+          ✅ Mark Phase Complete — Crawling & Spidering Done → Proceed to XSS Workflow
+        </button>
+</div>
 
       <!-- Phase 7: XSS Workflow -->
       <div class="meth-content-view" id="meth-content-p7" style="display: none; --tool-color: #bf80ff;">
@@ -3646,7 +3817,12 @@ aws s3 ls</div>
           </div>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p7" onclick="markPhaseComplete('p7','p8')">
+          ✅ Mark Phase Complete — XSS Workflow Done → Proceed to SQLi Workflow
+        </button>
+</div>
 
       <!-- Phase 8: SQLi Workflow -->
       <div class="meth-content-view" id="meth-content-p8" style="display: none; --tool-color: #ef4444;">
@@ -3678,7 +3854,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> حقن استعلام UNION وسحب معلومات وبيانات الإدارة كاملة.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$8,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p8" onclick="markPhaseComplete('p8','p9')">
+          ✅ Mark Phase Complete — SQLi Workflow Done → Proceed to SSRF Workflow
+        </button>
+</div>
 
       <!-- Phase 9: SSRF Workflow -->
       <div class="meth-content-view" id="meth-content-p9" style="display: none; --tool-color: #0284c7;">
@@ -3704,7 +3885,12 @@ aws s3 ls</div>
           </div>
           <p><strong>الأثر (Impact):</strong> تسوية قضائية بقيمة 250 مليون دولار.</p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p9" onclick="markPhaseComplete('p9','p_ssti')">
+          ✅ Mark Phase Complete — SSRF Workflow Done → Proceed to SSTI Workflow
+        </button>
+</div>
 
       <!-- Phase SSTI Workflow -->
       <div class="meth-content-view" id="meth-content-p_ssti" style="display: none; --tool-color: #ff0055;">
@@ -3762,7 +3948,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> انعكاس الاسم بالنتيجة الحسابية 49، ثم تحويل الحمولة لاستدعاء كيانات بايثون العامة لتنفيذ الأوامر.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_ssti" onclick="markPhaseComplete('p_ssti','p_xxe')">
+          ✅ Mark Phase Complete — SSTI Workflow Done → Proceed to XXE Injection
+        </button>
+</div>
 
       <!-- Phase XXE Injection -->
       <div class="meth-content-view" id="meth-content-p_xxe" style="display: none; --tool-color: #14b8a6;">
@@ -3791,7 +3982,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> تعديل ملف الـ XML لحقن كيان خارجي (External Entity) يشير لملفات النظام وعرض محتواها بالصفحة.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_xxe" onclick="markPhaseComplete('p_xxe','p10')">
+          ✅ Mark Phase Complete — XXE Injection Done → Proceed to IDOR Testing
+        </button>
+</div>
 
       <!-- Phase 10: IDOR Testing -->
       <div class="meth-content-view" id="meth-content-p10" style="display: none; --tool-color: #10b981;">
@@ -3810,7 +4006,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> تغيير المعرف من 101 لـ 102 وقراءة بيانات ومواقع شحنات زبائن آخرين.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,500</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p10" onclick="markPhaseComplete('p10','p11')">
+          ✅ Mark Phase Complete — IDOR Testing Done → Proceed to File Upload Exploits
+        </button>
+</div>
 
       <!-- Phase 11: File Upload Exploits -->
       <div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #f59e0b;">
@@ -3834,7 +4035,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> تغيير امتداد الملف لـ <code>.phtml</code> وتعديل الـ Content-Type إلى <code>image/png</code> لتنفيذ أوامر النظام RCE.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,500</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p11" onclick="markPhaseComplete('p11','p12')">
+          ✅ Mark Phase Complete — File Upload Exploits Done → Proceed to Race Conditions
+        </button>
+</div>
 
       <!-- Phase 12: Race Conditions -->
       <div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #f43f5e;">
@@ -3853,7 +4059,12 @@ aws s3 ls</div>
           <p><strong>الاستغلال (Exploitation):</strong> إرسال 50 طلباً متزامناً بالمايكروثانية باستخدام Burp Suite Turbo Intruder، مما جعل قاعدة البيانات تقبل الكود مكرراً.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p12" onclick="markPhaseComplete('p12','p14')">
+          ✅ Mark Phase Complete — Race Conditions Done → Proceed to JWT Hacking
+        </button>
+</div>
 
       <!-- Phase 14: JWT Hacking -->
       <div class="meth-content-view" id="meth-content-p14" style="display: none; --tool-color: #d946ef;">
@@ -3931,7 +4142,12 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
           <p><strong>الاستغلال (Exploitation):</strong> قام المهاجم بجلب المفتاح العام وتعديل الهيدر ليصبح HS256 والتوقيع به، مما أدى لدخوله كمدير للنظام.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$5,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p14" onclick="markPhaseComplete('p14','p13')">
+          ✅ Mark Phase Complete — JWT Hacking Done → Proceed to OAuth & Sessions
+        </button>
+</div>
 
       <!-- Phase 13: OAuth & Sessions -->
       <div class="meth-content-view" id="meth-content-p13" style="display: none; --tool-color: #8b5cf6;">
@@ -3950,7 +4166,12 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
           <p><strong>الاستغلال (Exploitation):</strong> توجيه الرابط لنطاق فرعي خارجي يسيطر عليه المهاجم لاستلام التوكنز وتخطي الحماية كاملة.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p13" onclick="markPhaseComplete('p13','p15')">
+          ✅ Mark Phase Complete — OAuth & Sessions Done → Proceed to Cloud Security
+        </button>
+</div>
 
       <!-- Phase 15: Cloud Security -->
       <div class="meth-content-view" id="meth-content-p15" style="display: none; --tool-color: #0ea5e9;">
@@ -3975,7 +4196,12 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
           <p><strong>الاستغلال (Exploitation):</strong> سحب كامل محتويات الدليل وقراءة ملفات الـ PDF والنسخ الاحتياطية المسربة.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p15" onclick="markPhaseComplete('p15','p17')">
+          ✅ Mark Phase Complete — Cloud Security Done → Proceed to Automation Pipelines
+        </button>
+</div>
 
       <!-- Phase 17: Automation Pipelines -->
       <div class="meth-content-view" id="meth-content-p17" style="display: none; --tool-color: #10b981;">
@@ -4010,7 +4236,12 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
             </div>
           </div>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p17" onclick="markPhaseComplete('p17','p_payloads')">
+          ✅ Mark Phase Complete — Automation Pipelines Done → Proceed to Searchable Payloads
+        </button>
+</div>
 
       <!-- Phase Searchable Payloads -->
       <div class="meth-content-view" id="meth-content-p_payloads" style="display: none; --tool-color: #bf80ff;">
@@ -4123,7 +4354,12 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
             </div>
           </div>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_payloads" onclick="markPhaseComplete('p_payloads','p18')">
+          ✅ Mark Phase Complete — Searchable Payloads Done → Proceed to Interactive Labs
+        </button>
+</div>
 
       <!-- Phase 18: Interactive Labs -->
       <div class="meth-content-view" id="meth-content-p18" style="display: none; --tool-color: #bf80ff;">
@@ -4262,7 +4498,12 @@ Content-Type: application/json
             </div>
           </div>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p18" onclick="markPhaseComplete('p18','p_writeups')">
+          ✅ Mark Phase Complete — Interactive Labs Done → Proceed to Real Writeups
+        </button>
+</div>
 
       <!-- Phase: Writeups -->
       <div class="meth-content-view" id="meth-content-p_writeups" style="display: none; --tool-color: #bf80ff;">
@@ -4280,7 +4521,12 @@ Content-Type: application/json
             <li>✔ <strong>Report 3:</strong> IDOR allowing complete catalog data download (Hall of fame)</li>
           </ul>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_writeups" onclick="markPhaseComplete('p_writeups','p19')">
+          ✅ Mark Phase Complete — Real Writeups Done → Proceed to Simulated Shell
+        </button>
+</div>
 
       <!-- Phase 19: Simulated Shell -->
       <div class="meth-content-view" id="meth-content-p19" style="display: none; --tool-color: #00ff66;">
@@ -4311,7 +4557,12 @@ Content-Type: application/json
             </div>
           </div>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p19" onclick="markPhaseComplete('p19','p_scen_rce')">
+          ✅ Mark Phase Complete — Simulated Shell Done → Proceed to LFI to RCE Scenario
+        </button>
+</div>
 
       <!-- Scenario 1: LFI to RCE via Log Poisoning -->
       <div class="meth-content-view" id="meth-content-p_scen_rce" style="display: none; --tool-color: #ff3366;">
@@ -4356,7 +4607,12 @@ Content-Type: application/json
           <p><strong>التأثير (Impact):</strong> اختراق كامل للنظام (RCE) مع إمكانية الوصول إلى الملفات الحساسة وقاعدة البيانات والشبكة الداخلية.</p>
           <p><strong>المكافأة المتوقعة (Bounty):</strong> <span class="text-neon-green">$3,000 - $5,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_scen_rce" onclick="markPhaseComplete('p_scen_rce','p_scen_idor')">
+          ✅ Mark Phase Complete — LFI to RCE Scenario Done → Proceed to IDOR Admin Takeover
+        </button>
+</div>
 
       <!-- Scenario 2: IDOR Admin Takeover -->
       <div class="meth-content-view" id="meth-content-p_scen_idor" style="display: none; --tool-color: #ffaa00;">
@@ -4405,7 +4661,12 @@ Content-Type: application/json
           <p><strong>التأثير (Impact):</strong> السيطرة الكاملة على حساب الإدارة (Admin Privilege Escalation) والتحكم في النظام ومستخدميه.</p>
           <p><strong>المكافأة المتوقعة (Bounty):</strong> <span class="text-neon-green">$2,500 - $4,000</span></p>
         </div>
-      </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_scen_idor" onclick="markPhaseComplete('p_scen_idor','p_scen_takeover')">
+          ✅ Mark Phase Complete — IDOR Admin Takeover Done → Proceed to Subdomain Takeover Scenario
+        </button>
+</div>
 
       <!-- Scenario 3: Subdomain Takeover -->
       <div class="meth-content-view" id="meth-content-p_scen_takeover" style="display: none; --tool-color: #00ff66;">
@@ -4807,6 +5068,9 @@ Content-Type: application/json
       { id: 'p18',       icon: '🧪', name: 'Interactive Labs',        cat: 'PIPELINES & LABS',  tags: 'xss idor hands on practice lab' },
       { id: 'p_writeups',icon: '📜', name: 'Real Writeups',           cat: 'PIPELINES & LABS',  tags: 'bug bounty reports hackerone writeups' },
       { id: 'p19',       icon: '🐚', name: 'Simulated Shell',         cat: 'PIPELINES & LABS',  tags: 'terminal emulator bash command line' },
+          { id: 'p_scen_rce',     icon: '💥', name: 'LFI to RCE Scenario',      cat: 'HACKER SCENARIOS',  tags: 'scenario rce remote code execution lfi log poisoning' },
+      { id: 'p_scen_idor',    icon: '🔑', name: 'IDOR Admin Takeover',       cat: 'HACKER SCENARIOS',  tags: 'scenario idor access control api parameter tampering' },
+      { id: 'p_scen_takeover',icon: '🏳️', name: 'Subdomain Takeover',         cat: 'HACKER SCENARIOS',  tags: 'scenario subdomain takeover cname dns hijacking github pages' },
     ];
     const TOTAL_PHASES = ALL_PHASES.length;
 
@@ -5307,7 +5571,12 @@ Content-Type: application/json
           const isDone = (session.completedPhases || []).includes(phase.id);
           const cls = isDone ? 'done' : 'pending';
           const icon = isDone ? '✅ ' : '';
-          return '<div class="hunt-phase-chip ' + cls + '" onclick="openMethPhase(\'' + phase.id + '\')">' + icon + phase.label + '</div>';
+          return '<div class="hunt-phase-chip ' + cls + '" onclick="openMethPhase(\'' + phase.id + '\')">' + icon + phase.label + '
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_scen_takeover" onclick="markPhaseComplete('p_scen_takeover','complete')">
+          ✅ Mark Phase Complete — Subdomain Takeover Scenario Done → Proceed to Complete Playbook!
+        </button>
+</div>';
         }).join('');
       }
     }
@@ -5483,7 +5752,7 @@ Content-Type: application/json
       loadChecklistState('p0-stop', 4);
 
       // Restore completed phase buttons
-      HUNT_PHASES_DEF.forEach(function(phase) {
+      ALL_PHASES.forEach(function(phase) {
         if (localStorage.getItem('bb_phase_done_' + phase.id) === '1') {
           const btn = document.getElementById('complete-btn-' + phase.id);
           if (btn) { btn.classList.add('completed'); btn.innerHTML = '✅ Phase Completed!'; btn.disabled = true; }

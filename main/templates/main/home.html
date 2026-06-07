@@ -7497,6 +7497,18 @@
       initTheme();
       syncPlaybookProgress();
       updateDashboardActiveHunt();
+      
+      // Direct tab redirection from methodology or other pages
+      const directTab = localStorage.getItem('switch_tab_direct');
+      if (directTab) {
+        localStorage.removeItem('switch_tab_direct');
+        switchTab(directTab);
+      } else if (window.location.hash) {
+        const hash = window.location.hash.replace('#', '');
+        if (['dashboard', 'academy', 'labs', 'simulator', 'articles', 'writeups', 'books', 'about'].includes(hash)) {
+          switchTab(hash);
+        }
+      }
     });
     updateMobileUI();
 
