@@ -1,0 +1,248 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Race Conditions Lab{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">مختبر حالة السباق (Race Conditions)</h1>
+  <p class="page-title-en">Interactive Race Conditions Lab — 2 Levels</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">OWASP A04</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p>محاكي ثغرات السباق. قم بإرسال طلبات متزامنة في نفس اللحظة (Concurrently) لتخطي التحقق من الأرصدة أو القسائم المتاحة.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p>Simulated Race Conditions lab. Send concurrent, parallel HTTP requests in the same millisecond to bypass server-side balance or usage checks.</p>
+  </div>
+</div>
+
+<div class="lab-hud">
+  <span>Level: <strong id="hudLevel">1</strong>/2</span>
+  <span>Flags: <strong id="hudFlags">0</strong>/2</span>
+  <span>Progress: <strong id="hudProgress">0%</strong></span>
+</div>
+
+<div class="lab-level-tabs">
+  <button class="lab-tab active" data-level="1" onclick="switchLevel(1)">L1 — Coupon Reuse</button>
+  <button class="lab-tab" data-level="2" onclick="switchLevel(2)">L2 — Double Spend</button>
+</div>
+
+<div class="section-card" style="padding:0;border:none;background:transparent;">
+  <div class="lab-simulator" style="border-color:var(--neon-cyan)">
+    <div class="lab-sim-bar" style="background:rgba(0,229,255,0.02)">
+      <label style="color:var(--neon-cyan)">Concurrent Request Simulator</label>
+      <span style="color:#64748b;font-size:0.75rem;margin-left:auto;">Wallet Balance: <strong id="walletBal" style="color:#22c55e;">$50</strong></span>
+    </div>
+    
+    <div style="display:flex;flex-direction:column;background:#030308;padding:15px;gap:12px;border-bottom:1px solid rgba(0,229,255,0.1);">
+      <div id="couponPane" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:0.85rem;color:#cbd5e1;white-space:nowrap;">Enter Promo Code:</label>
+        <input type="text" id="promoInput" value="SAVE50" readonly style="background:#000;border:1px solid rgba(255,255,255,0.1);padding:6px 12px;border-radius:4px;color:var(--neon-cyan);font-family:'Fira Code', monospace;font-size:0.85rem;width:120px;">
+        <label style="font-size:0.85rem;color:#cbd5e1;white-space:nowrap;margin-left:10px;">Thread Count:</label>
+        <input type="number" id="threadCount" value="1" min="1" max="20" style="background:#000;border:1px solid rgba(255,255,255,0.1);padding:6px 10px;border-radius:4px;color:#fff;font-family:'Fira Code', monospace;font-size:0.85rem;width:60px;">
+        <button class="lab-sim-btn" onclick="triggerRaceCoupon()" style="background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.3);color:var(--neon-cyan)">Send Concurrent Requests ▶</button>
+      </div>
+
+      <div id="transferPane" style="display:none;gap:10px;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:0.85rem;color:#cbd5e1;white-space:nowrap;">Transfer Amount:</label>
+        <input type="number" id="transferAmount" value="40" style="background:#000;border:1px solid rgba(255,255,255,0.1);padding:6px 12px;border-radius:4px;color:var(--neon-cyan);font-family:'Fira Code', monospace;font-size:0.85rem;width:100px;">
+        <label style="font-size:0.85rem;color:#cbd5e1;white-space:nowrap;margin-left:10px;">Parallel Requests:</label>
+        <input type="number" id="spendThreads" value="1" min="1" max="20" style="background:#000;border:1px solid rgba(255,255,255,0.1);padding:6px 10px;border-radius:4px;color:#fff;font-family:'Fira Code', monospace;font-size:0.85rem;width:60px;">
+        <button class="lab-sim-btn" onclick="triggerRaceSpend()" style="background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.3);color:var(--neon-cyan)">Execute Parallel Payments ▶</button>
+      </div>
+    </div>
+    
+    <div class="lab-output" id="raceOutput" style="min-height:180px;background:#020205;color:#e2e8f0;">
+      <span class="info">[*] Race Condition Simulator initialized. Level 1: Bypass coupon "single-use only" filter.</span><br>
+      <span>Your current balance is $50. Target: Use the SAVE50 coupon multiple times concurrently to reach a balance of $250 or more.</span><br>
+      <span class="info">[*] Hint L1: Increase the Thread Count (e.g., to 10 or 15) to fire parallel coupon redeem requests concurrently.</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Theory / النظرية</h2>
+  <div id="theoryL1">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 1: إعادة استخدام كوبونات الخصم. إذا كان السيرفر يفحص حالة صلاحية الكود (is_redeemed) في قاعدة البيانات ثم يقوم بإضافته لاحقاً، فإن إرسال 10 طلبات متزامنة في نفس المللي ثانية قد تنجح جميعها قبل تحديث حالة الكود إلى "مستخدم".</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 1: Coupon Code Reuse. If the application checks if a coupon is redeemed, performs balance updates, and only then marks it as used, multiple threads can execute the check simultaneously, permitting multiple applications of a single-use coupon.</p>
+      </div>
+    </div>
+  </div>
+  <div id="theoryL2" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 2: الإنفاق المزدوج المحاكي. عند تحويل الأموال، يفحص النظام أولاً: <code>balance >= amount</code>. إذا قمت بإرسال 5 طلبات تحويل بقيمة $40 متزامنة ولديك $50 فقط، فستنجح جميعها قبل خصم الأرصدة، مما يسبب سحب أموال أكثر من رصيدك الحقيقي.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 2: Wallet Double Spend. During transfers, the API checks if balance is sufficient. Sending multiple parallel transfers concurrently might allow them to pass the check simultaneously before database debit updates are committed.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="../vulnerabilities/race-conditions.html" style="display:inline-block;margin-top:8px;">← العودة لصفحة Race Conditions / Back to Race Conditions Page</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  var level = 1;
+  var flags = { 1: false, 2: false };
+  var FLAG = {
+    1: 'FLAG{coupon_race_condition_bypassed}',
+    2: 'FLAG{wallet_double_spend_hijack}'
+  };
+
+  var walletBalance = 50;
+  var couponRedeemed = false;
+
+  function updateHud() {
+    var n = Object.keys(flags).filter(function(k) { return flags[k]; }).length;
+    document.getElementById('hudFlags').textContent = n;
+    document.getElementById('hudLevel').textContent = level;
+    document.getElementById('hudProgress').textContent = Math.round((n / 2) * 100) + '%';
+    document.getElementById('walletBal').textContent = "$" + walletBalance;
+    
+    document.querySelectorAll('.lab-tab').forEach(function(t) {
+      var lv = parseInt(t.getAttribute('data-level'), 10);
+      if (lv <= 2) {
+        t.classList.toggle('done', flags[lv]);
+        t.classList.toggle('active', lv === level);
+      }
+    });
+    try { localStorage.setItem('race_lab_flags', JSON.stringify(flags)); } catch(e) {}
+  }
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('race_lab_flags') || '{}');
+    [1,2].forEach(function(k) { if (saved[k]) flags[k] = true; });
+    updateHud();
+  } catch(e) {}
+
+  window.switchLevel = function(lv) {
+    if (lv > 2) return;
+    level = lv;
+    document.getElementById('theoryL1').style.display = lv === 1 ? 'block' : 'none';
+    document.getElementById('theoryL2').style.display = lv === 2 ? 'block' : 'none';
+    
+    document.getElementById('couponPane').style.display = lv === 1 ? 'flex' : 'none';
+    document.getElementById('transferPane').style.display = lv === 2 ? 'flex' : 'none';
+    
+    var out = document.getElementById('raceOutput');
+    if (lv === 1) {
+      walletBalance = 50;
+      couponRedeemed = false;
+      out.innerHTML = '<span class="info">[*] Level 1. Coupon Reuse.</span><br>' +
+                      '<span>Target: Get balance to $250 or more using the SAVE50 coupon (single-use).</span>';
+    } else {
+      walletBalance = 50;
+      out.innerHTML = '<span class="info">[*] Level 2. Wallet Double Spend.</span><br>' +
+                      '<span>Target: Exploit state race condition to transfer more money than you have, bringing wallet to negative balance.</span>';
+    }
+    updateHud();
+  };
+
+  window.triggerRaceCoupon = function() {
+    var out = document.getElementById('raceOutput');
+    var threads = parseInt(document.getElementById('threadCount').value, 10) || 1;
+    
+    out.innerHTML = '<span class="info">[*] Spinning up ' + threads + ' concurrent request threads...</span><br>';
+    
+    var successes = 0;
+    var failures = 0;
+    
+    // Simulate concurrent database lookups and writes
+    for (var i = 0; i < threads; i++) {
+      if (threads > 8) {
+        // High thread count causes race condition success!
+        successes++;
+        walletBalance += 50;
+      } else {
+        // Safe serial checks
+        if (!couponRedeemed) {
+          couponRedeemed = true;
+          successes++;
+          walletBalance += 50;
+        } else {
+          failures++;
+        }
+      }
+    }
+
+    out.innerHTML += '<span class="success">[+] Processed requests:</span><br>';
+    out.innerHTML += '<span class="success">  - Successful Redemptions: ' + successes + '</span><br>';
+    out.innerHTML += '<span class="error">  - Failed Redemptions (already applied): ' + failures + '</span><br>';
+    
+    if (walletBalance >= 250) {
+      flags[1] = true;
+      out.innerHTML += '<br><span class="success">[+] Target balance reached! Coupon race condition exploited successfully.</span><br>';
+      out.innerHTML += '<span class="success">[+] ' + FLAG[1] + '</span>';
+    } else {
+      out.innerHTML += '<br><span class="error">[-] Target not achieved. Coupon applied once or twice. Increase threads to bypass DB commit window.</span>';
+    }
+    updateHud();
+  };
+
+  window.triggerRaceSpend = function() {
+    var out = document.getElementById('raceOutput');
+    var amount = parseInt(document.getElementById('transferAmount').value, 10) || 10;
+    var threads = parseInt(document.getElementById('spendThreads').value, 10) || 1;
+
+    out.innerHTML = '<span class="info">[*] Dispatching ' + threads + ' parallel billing transactions...</span><br>';
+
+    var successCount = 0;
+    var failCount = 0;
+
+    for (var i = 0; i < threads; i++) {
+      if (threads >= 6) {
+        // Race condition triggers
+        successCount++;
+        walletBalance -= amount;
+      } else {
+        // Serial check validation
+        if (walletBalance >= amount) {
+          successCount++;
+          walletBalance -= amount;
+        } else {
+          failCount++;
+        }
+      }
+    }
+
+    out.innerHTML += '<span class="success">[+] Transaction outcomes:</span><br>';
+    out.innerHTML += '<span class="success">  - Successful Transfers: ' + successCount + ' (debit of $' + (successCount * amount) + ')</span><br>';
+    out.innerHTML += '<span class="error">  - Rejected Transfers (Insufficient funds): ' + failCount + '</span><br>';
+
+    if (walletBalance < 0) {
+      flags[2] = true;
+      out.innerHTML += '<br><span class="success">[+] Race condition exploited! Wallet balance is negative: ' + walletBalance + '$</span><br>';
+      out.innerHTML += '<span class="success">[+] ' + FLAG[2] + '</span>';
+    } else {
+      out.innerHTML += '<br><span class="error">[-] Wallet balance remains positive. Try sending more parallel transactions to override balance checks.</span>';
+    }
+    updateHud();
+
+    if (flags[1] && flags[2]) {
+      out.innerHTML += '<br><div class="success" style="border: 1px dashed var(--accent-green, #00ff66); padding: 15px; border-radius: 8px; margin-top: 15px; background: rgba(0, 255, 102, 0.05); text-align: center;">';
+      out.innerHTML += '<span style="font-size: 1.5rem;">🏆</span><br>';
+      out.innerHTML += '<strong style="color:#fff; font-size:1.1rem;">[★] Certificate: "Concurrency Auditing Expert Badge"</strong><br>';
+      out.innerHTML += '<span style="font-family:\'Fira Code\', monospace; color:var(--accent-green, #00ff66); font-size:0.9rem;">ID: CONCURRENCY-RACE-HUNTER</span><br>';
+      out.innerHTML += '</div>';
+    }
+  };
+})();
+</script>
+{% endblock %}

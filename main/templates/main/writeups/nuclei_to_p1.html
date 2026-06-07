@@ -1,0 +1,70 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Nuclei to P1 Writeup{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">من فحص النواة التلقائي إلى ثغرة P1</h1>
+  <p class="page-title-en">From Nuclei Automation to P1 Critical Vulnerability Chain</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">Bounty: $3,000</span>
+</div>
+
+<div class="section-card">
+  <h2>Overview / نظرة عامة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>يوضح هذا التقرير كيفية الانتقال من مسح بسيط باستخدام أداة <strong>Nuclei</strong> لاكتشاف ملفات مكشوفة، إلى بناء سلسلة استغلال كاملة تؤدي لتشغيل الأوامر عن بعد (RCE) على خادم حساس والحصول على مكافأة بقيمة 3,000 دولار.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>This writeup details how an initial template match in <strong>Nuclei</strong> scanner pointing to exposed config files was leveraged into a full Remote Code Execution (RCE) chain on a sensitive portal, earning a $3,000 bounty.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Exploitation Steps / خطوات الاستغلال</h2>
+  <ol class="steps-list">
+    <li>تشغيل فحص Nuclei على النطاق المستهدف واكتشاف ملف تكوين Git مكشوف <code>/.git/config</code>.</li>
+    <li>تحميل مستودع Git بالكامل باستخدام أداة <code>git-dumper</code> لاستعادة الكود البرمجي للموقع.</li>
+    <li>مراجعة الكود البرمجي واكتشاف مفاتيح AWS السحابية وكلمة مرور قاعدة البيانات المكتوبة بشكل صلب (Hardcoded).</li>
+    <li>استغلال لوحة تحكم إدارية داخلية مكشوفة عن طريق تسجيل الدخول بالبيانات المستخرجة.</li>
+    <li>رفع ملف webshell عبر ميزة ترقية وتحديث ملفات التكوين لتشغيل أوامر النظام كـ root.</li>
+  </ol>
+</div>
+
+<div class="section-card">
+  <h2>Testing Commands / الأوامر المستخدمة</h2>
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Nuclei Scan Command / أمر فحص النواة</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>nuclei -u https://target.com -t exposures/configs/git-config.yaml</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Git Dumper Tool / استخراج مستودع جيت</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>git-dumper https://target.com/.git/ output_dir/</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Remediation / التخفيف والحماية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>احرص على تقييد الوصول للمجلدات الحساسة مثل <code>.git</code> في خادم الويب (Nginx/Apache)، ولا تقم أبداً بكتابة كلمات المرور بشكل صلب داخل الكود.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Always restrict public access to sensitive folders like <code>.git</code> in Nginx/Apache configuration, and never hardcode API keys or credentials in source code files.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

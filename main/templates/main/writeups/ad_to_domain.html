@@ -1,0 +1,70 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Active Directory Domain takeover Writeup{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">اختراق الـ Active Directory والوصول للتحكم الكامل</h1>
+  <p class="page-title-en">Active Directory Hacking: From Guest to Domain Admin</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">Bounty: Internal Audit</span>
+</div>
+
+<div class="section-card">
+  <h2>Overview / نظرة عامة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>تعتمد أغلب الشركات الكبرى على Active Directory (AD) لإدارة هويات وصلاحيات الموظفين والأجهزة. يوضح هذا التقرير سلسلة اختراق بدأت من مستخدم عادي بالشركة وانتهت بالتحكم بالـ Domain Controller بالكامل.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Enterprise networks rely on Active Directory (AD) to handle authentication. This writeup describes a full attack chain starting from low-privileged workstation access to gaining Domain Admin rights.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Attack Path / سلسلة الهجوم</h2>
+  <ol class="steps-list">
+    <li>اكتشاف حساب عادي بكلمة مرور ضعيفة عبر هجمات التخمين الموجهة (Password Spraying).</li>
+    <li>تشغيل أداة BloodHound لرسم خريطة شبكة AD ومعرفة مسارات ترقية الصلاحيات.</li>
+    <li>استغلال ثغرة Kerberoasting لاستخراج وتشفير تذاكر الخدمة (TGS) وكسرها للحصول على كلمة مرور حساب الخدمة.</li>
+    <li>استغلال صلاحيات حساب الخدمة المرتفعة على مجلدات النسخ الاحتياطي لاستخراج تفاصيل Domain Controller.</li>
+    <li>حقن تذكرة Kerberos ذهبية (Golden Ticket) للوصول للتحكم الكامل.</li>
+  </ol>
+</div>
+
+<div class="section-card">
+  <h2>Exploit Commands / أوامر الفحص والاستخراج</h2>
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Kerberoasting with GetUserSPNs / استخراج تذاكر Kerberoast</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>GetUserSPNs.py -request -dc-ip 10.10.10.50 domain.local/user:password</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>TGS Ticket Cracking with Hashcat / كسر التذاكر المستخرجة</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>hashcat -m 13100 kerberoast_hashes.txt wordlist.txt</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Remediation / التخفيف والحماية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>احرص على استخدام كلمات مرور طويلة ومعقدة لحسابات الخدمة (Service Accounts)، وفعل ميزات الأمان مثل Kerberos AES Encryption، وراقب التغييرات غير المألوفة في مجموعات المسؤولين.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Enforce long, complex passwords on service accounts (GMSAs), restrict access to sensitive AD objects, and enable Kerberos AES encryption standard.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

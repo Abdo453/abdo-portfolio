@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bug Bounty Academy — Arabic & English cybersecurity learning">
+  <title>Linux Commands Reference | Abdo Ramdan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
+  <script>
+    (function() {
+      if (localStorage.getItem('academy_theme') === 'light') {
+        document.documentElement.classList.add('light-mode');
+      }
+    })();
+  </script>
+  
+</head>
+<body class="academy-page">
+<script>
+  if (localStorage.getItem('academy_theme') === 'light') {
+    document.body.classList.add('light-mode');
+  }
+</script>
+
+<header class="academy-header">
+  <div class="academy-logo">🎯 Bug Bounty Academy</div>
+  <nav class="academy-nav-links">
+    <a class="academy-btn" href="index.html">← Home / الرئيسية</a>
+    <a class="academy-btn" href="methodology.html" target="_blank">🗺️ Methodology</a>
+    <a class="academy-btn" href="bug-bounty-writeups.html">📝 Writeups</a>
+    <a class="academy-btn" href="profile.html">👤 Profile</a>
+    <button class="academy-btn" id="themeToggleBtn" onclick="toggleTheme()" style="padding:7px 10px;">🌓</button>
+  </nav>
+</header>
+
+<div class="academy-layout">
+  <aside class="academy-sidebar">
+    <div class="sidebar-title">Vulnerabilities / الثغرات</div>
+    <a class="sidebar-link" href="vulnerabilities/sql-injection.html">💉 SQL Injection</a>
+    <a class="sidebar-link" href="vulnerabilities/idor.html">🔓 IDOR / BAC</a>
+    <a class="sidebar-link" href="vulnerabilities/ssrf.html">🌐 SSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/command-injection.html">⚡ Command Injection</a>
+    <a class="sidebar-link" href="vulnerabilities/jwt-security.html">🎟️ JWT Security</a>
+    <a class="sidebar-link" href="vulnerabilities/graphql-injection.html">🛰️ GraphQL Security</a>
+    <a class="sidebar-link" href="vulnerabilities/race-conditions.html">⏱️ Race Conditions</a>
+    <a class="sidebar-link" href="vulnerabilities/web-cache-poisoning.html">📦 Web Cache Poisoning</a>
+    <a class="sidebar-link" href="vulnerabilities/api-security.html">🔑 API Security</a>
+    <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
+    <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
+    <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    
+    <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
+    <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
+    <a class="sidebar-link" href="labs/linux-security-lab.html">🐧 Linux Security Lab</a>
+    <a class="sidebar-link" href="labs/sql-injection-lab.html">🧪 SQLi Lab</a>
+    <a class="sidebar-link" href="labs/command-injection-lab.html">🧪 Command Injection Lab</a>
+    <a class="sidebar-link" href="labs/jwt-lab.html">🧪 JWT Forgery Lab</a>
+    <a class="sidebar-link" href="labs/idor-lab.html">🧪 IDOR Lab</a>
+    <a class="sidebar-link" href="labs/ssrf-lab.html">🧪 SSRF Lab</a>
+    <a class="sidebar-link" href="labs/graphql-lab.html">🧪 GraphQL Lab</a>
+    <a class="sidebar-link" href="labs/race-condition-lab.html">🧪 Race Conditions Lab</a>
+    <a class="sidebar-link" href="labs/api-security-lab.html">🧪 API Security Lab</a>
+    <a class="sidebar-link" href="labs/ai-security-lab.html">🧪 AI Security Lab</a>
+    <a class="sidebar-link" href="labs/cloud-security-lab.html">🧪 Cloud Security Lab</a>
+
+    <div class="sidebar-title" style="margin-top:18px;">Linux Track / مسار لينكس</div>
+    <a class="sidebar-link" href="linux-security/linux-fundamentals.html">🐧 Linux Fundamentals</a>
+    <a class="sidebar-link" href="linux-security/linux-privesc.html">🚀 Privilege Escalation</a>
+    <a class="sidebar-link" href="linux-security/linux-commands.html">📜 Commands Reference</a>
+    <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
+
+    <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
+    <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
+  </aside>
+
+  <main class="academy-main">
+    
+<div class="page-hero">
+  <h1 class="page-title">جدول الأوامر المرجعي لنظام لينكس</h1>
+  <p class="page-title-en">Linux Commands Reference Table</p>
+  <span class="severity-pill pill-medium">REFERENCE</span>
+  <span class="severity-pill pill-high">⏱ Cheat Sheet</span>
+</div>
+
+<div class="section-card">
+  <h2>Linux Commands Cheat Sheet / مرجع الأوامر السريع</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>جدول مصنف لأهم الأوامر والبارامترات التي يستخدمها باحث الثغرات ومختبر الاختراق أثناء التعامل مع خوادم لينكس.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>A categorized table containing the most critical commands and parameters used by researchers during Linux host audits.</p>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto;margin-top:15px;">
+    <table style="width:100%;border-collapse:collapse;color:#cbd5e1;font-size:0.9rem;text-align:left;">
+      <thead>
+        <tr style="border-bottom:2px solid rgba(0,229,255,0.15);background:rgba(0,229,255,0.02);">
+          <th style="padding:12px;color:var(--neon-cyan);">Category / الفئة</th>
+          <th style="padding:12px;color:var(--neon-cyan);">Command / الأمر</th>
+          <th style="padding:12px;color:var(--neon-cyan);">Description (EN)</th>
+          <th style="padding:12px;color:var(--neon-cyan);">الوصف (AR)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:12px;font-weight:bold;">File Operations</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">cat [file]</code></td>
+          <td style="padding:12px;">Display file contents</td>
+          <td style="padding:12px;direction:rtl;">عرض محتويات الملف</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01);">
+          <td style="padding:12px;font-weight:bold;">File Operations</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">grep "[pattern]" [file]</code></td>
+          <td style="padding:12px;">Search for matching strings</td>
+          <td style="padding:12px;direction:rtl;">البحث عن نصوص مطابقة داخل ملف</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:12px;font-weight:bold;">System Audit</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">uname -a</code></td>
+          <td style="padding:12px;">Print kernel version details</td>
+          <td style="padding:12px;direction:rtl;">عرض تفاصيل إصدار النواة ونوع النظام</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01);">
+          <td style="padding:12px;font-weight:bold;">System Audit</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">ps aux</code></td>
+          <td style="padding:12px;">List running processes</td>
+          <td style="padding:12px;direction:rtl;">عرض العمليات والبرامج النشطة حالياً</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:12px;font-weight:bold;">Network</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">netstat -tulnp</code></td>
+          <td style="padding:12px;">List listening ports and sockets</td>
+          <td style="padding:12px;direction:rtl;">عرض المنافذ المفتوحة والمستمعة على السيرفر</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01);">
+          <td style="padding:12px;font-weight:bold;">Network</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">ss -antp</code></td>
+          <td style="padding:12px;">List active network connections</td>
+          <td style="padding:12px;direction:rtl;">عرض اتصالات الشبكة النشطة</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:12px;font-weight:bold;">Permissions</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">chmod +x [file]</code></td>
+          <td style="padding:12px;">Make file executable</td>
+          <td style="padding:12px;direction:rtl;">جعل الملف قابلاً للتشغيل كبرنامج</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01);">
+          <td style="padding:12px;font-weight:bold;">Permissions</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">chown root:root [file]</code></td>
+          <td style="padding:12px;">Change file owner to root</td>
+          <td style="padding:12px;direction:rtl;">تغيير مالك ومجموعة الملف إلى root</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<a class="academy-btn" href="linux-checklist.html" style="display:inline-block;margin-top:8px;">الانتقال إلى قائمة تدقيق النظام / Next: Audit Checklist →</a>
+
+  </main>
+</div>
+
+<!-- Dynamic Relative Path & Active Class Resolver -->
+<script>
+  (function() {
+    var path = window.location.pathname;
+    
+    // Detect subdir depth based on folder structure in path
+    var isSubdir = path.includes('/vulnerabilities/') || path.includes('/labs/') || path.includes('/linux-security/') || path.includes('/writeups/') || path.includes('/books/');
+    if (!isSubdir && window.location.protocol === 'file:') {
+      var parts = window.location.href.split('/');
+      isSubdir = parts.includes('vulnerabilities') || parts.includes('labs') || parts.includes('linux-security') || parts.includes('writeups') || parts.includes('books');
+    }
+    
+    var prefix = isSubdir ? '../' : '';
+    
+    // Fix stylesheet href dynamically
+    var cssLink = document.getElementById('academyCssLink');
+    if (cssLink) {
+      cssLink.setAttribute('href', prefix + 'css/academy.css');
+    }
+    
+    // Fix all page links
+    var links = document.querySelectorAll('a, link, script');
+    links.forEach(function(el) {
+      var href = el.getAttribute('href');
+      if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('javascript:')) {
+        if (!href.startsWith('../') && !href.startsWith('./') && !href.startsWith('/')) {
+          el.setAttribute('href', prefix + href);
+        }
+      }
+      var src = el.getAttribute('src');
+      if (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('./') && !src.startsWith('../')) {
+        el.setAttribute('src', prefix + src);
+      }
+    });
+
+    // Resolve active sidebar link
+    var currentUrl = window.location.href.split('#')[0].split('?')[0];
+    var sidebarLinks = document.querySelectorAll('.sidebar-link');
+    sidebarLinks.forEach(function(link) {
+      var rawHref = link.getAttribute('href');
+      // Resolve link's raw destination (removing prefix if subdir)
+      var target = isSubdir && rawHref.startsWith('../') ? rawHref.substring(3) : rawHref;
+      if (currentUrl.endsWith(target)) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  })();
+</script>
+<script>
+  function copyCmd(btn) {
+    var pre = btn.closest('.cmd-block').querySelector('pre');
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.textContent.trim()).then(function() {
+      var o = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = o; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+  function toggleTheme() {
+    var isLight = document.body.classList.contains('light-mode');
+    if (isLight) {
+      document.body.classList.remove('light-mode');
+      document.documentElement.classList.remove('light-mode');
+      localStorage.setItem('academy_theme', 'dark');
+    } else {
+      document.body.classList.add('light-mode');
+      document.documentElement.classList.add('light-mode');
+      localStorage.setItem('academy_theme', 'light');
+    }
+  }
+</script>
+
+</body>
+</html>

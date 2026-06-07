@@ -1,0 +1,285 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}API Security Lab{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">مختبر أمن الـ APIs</h1>
+  <p class="page-title-en">Interactive API Security & Hacking Lab — 3 Levels</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">OWASP API-Top-10</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p>محاكي ثغرات الـ APIs. استغل تخطي الصلاحيات، تعديل الـ HTTP Methods، وحقن معاملات الحساب لترقية الصلاحيات والوصول للمسؤول.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p>Simulated API Hacking lab. Exploit authorization bypass, HTTP method overriding, and nested mass assignment parameters to conquer the API endpoints.</p>
+  </div>
+</div>
+
+<div class="lab-hud">
+  <span>Level: <strong id="hudLevel">1</strong>/3</span>
+  <span>Flags: <strong id="hudFlags">0</strong>/3</span>
+  <span>Progress: <strong id="hudProgress">0%</strong></span>
+</div>
+
+<div class="lab-level-tabs">
+  <button class="lab-tab active" data-level="1" onclick="switchLevel(1)">L1 — Method Override</button>
+  <button class="lab-tab" data-level="2" onclick="switchLevel(2)">L2 — Auth Bypass</button>
+  <button class="lab-tab" data-level="3" onclick="switchLevel(3)">L3 — Mass Assignment</button>
+</div>
+
+<div class="section-card" style="padding:0;border:none;background:transparent;">
+  <div class="lab-simulator" style="border-color:var(--neon-cyan)">
+    <div class="lab-sim-bar" style="background:rgba(0,229,255,0.02)">
+      <label style="color:var(--neon-cyan)">API Request Forge</label>
+    </div>
+    
+    <div style="display:flex;flex-direction:column;background:#030308;padding:15px;gap:12px;border-bottom:1px solid rgba(0,229,255,0.1);">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <select id="apiMethod" style="background:#000;border:1px solid rgba(255,255,255,0.1);color:#fff;padding:6px 10px;border-radius:4px;font-family:'Fira Code', monospace;font-size:0.85rem;">
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="DELETE">DELETE</option>
+        </select>
+        <span style="font-family:'Fira Code', monospace;color:#888;">https://api.hunteros.com</span>
+        <input type="text" id="apiPath" value="/api/v1/users/info" style="background:#000;border:1px solid rgba(255,255,255,0.1);padding:6px 12px;border-radius:4px;color:var(--neon-cyan);font-family:'Fira Code', monospace;font-size:0.85rem;flex:1;min-width:220px;">
+        <button class="lab-sim-btn" onclick="sendApiForge()" style="background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.3);color:var(--neon-cyan)">Send Request ▶</button>
+      </div>
+
+      <!-- Headers and parameters input -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label style="font-size:0.8rem;color:#cbd5e1;">Request Headers (One per line):</label>
+          <textarea id="apiHeaders" placeholder="Authorization: Bearer guest-token" style="background:#000;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:#cbd5e1;font-family:'Fira Code', monospace;font-size:0.8rem;padding:8px;resize:none;height:80px;"></textarea>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label style="font-size:0.8rem;color:#cbd5e1;">JSON / Form Body Payload:</label>
+          <textarea id="apiBody" placeholder='{"user": "guest"}' style="background:#000;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:#cbd5e1;font-family:'Fira Code', monospace;font-size:0.8rem;padding:8px;resize:none;height:80px;"></textarea>
+        </div>
+      </div>
+    </div>
+    
+    <div class="lab-output" id="apiForgeOutput" style="min-height:180px;background:#020205;color:#e2e8f0;">
+      <span class="info">[*] API Request Forge initialized. Level 1: HTTP Method Override.</span><br>
+      <span>The system blocks DELETE request method at the network firewall. Target: Execute DELETE on `/api/v1/users/delete`.</span><br>
+      <span class="info">[*] Hint L1: Fire a POST request to `/api/v1/users/delete` and add a method override header like <code>X-HTTP-Method-Override: DELETE</code>.</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Theory / النظرية</h2>
+  <div id="theoryL1">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 1: تجاوز طرق طلب HTTP (Method Overriding). في الشبكات المقيدة، يتم حظر طرق الطلب مثل DELETE أو PUT على الجدران النارية. لتجاوز ذلك، تسمح بعض الأطر البرمجية بإرسال طلب POST مع ترويسة <code>X-HTTP-Method-Override: DELETE</code> ليعامل الخادم الطلب كحذف.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 1: HTTP Method Overriding. Firewalls often block DELETE or PUT requests. To support clients, APIs support headers like <code>X-HTTP-Method-Override: DELETE</code> to wrap restricted actions inside standard POST requests.</p>
+      </div>
+    </div>
+  </div>
+  <div id="theoryL2" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 2: تخطي مصادقة مسار API. يمر فحص الأمان عبر بوابة ذكية (API Gateway) تفحص عنوان المسار. إذا تم حظر <code>/api/v1/admin</code>، قد ننجح في إرسال طلب يحتوي على تخطي مسار نسبي مثل <code>/api/v1/auth/../admin/users</code> ليتخطى فحص البوابة ولكن يعالجه الخادم الداخلي للوصول للبيانات.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 2: API Path Authentication Bypass. Routers check access controls against simple URL matches. Attackers utilize path traversal characters (like <code>/api/v1/auth/../admin/users</code> or <code>/api/v1/*/admin</code>) to deceive filters while reaching admin targets.</p>
+      </div>
+    </div>
+  </div>
+  <div id="theoryL3" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 3: التخصيص الجماعي التراكمي (API Mass Assignment). عند إنشاء حساب جديد عبر <code>POST /api/v1/register</code>، يتم تحويل الحقول تلقائياً للمخطط البرمجي (Model). استغل ذلك بإضافة خصائص مثل <code>"user": { "role": "admin" }</code> لتسجيل الحساب كمسؤول.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 3: API Mass Assignment. API developers map raw request data directly to entity fields. Inject nested parameters (like <code>"user": {"is_admin": true}</code> or <code>"role": "admin"</code>) inside register payloads to escalate profile rights.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="../vulnerabilities/api-security.html" style="display:inline-block;margin-top:8px;">← العودة لصفحة أمن API / Back to API Page</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  var level = 1;
+  var flags = { 1: false, 2: false, 3: false };
+  var FLAG = {
+    1: 'FLAG{api_http_method_overridden}',
+    2: 'FLAG{api_gateway_path_traversal}',
+    3: 'FLAG{api_mass_assignment_privesc}'
+  };
+
+  var pathInput = document.getElementById('apiPath');
+  var methodSelect = document.getElementById('apiMethod');
+  var headersArea = document.getElementById('apiHeaders');
+  var bodyArea = document.getElementById('apiBody');
+
+  function updateHud() {
+    var n = Object.keys(flags).filter(function(k) { return flags[k]; }).length;
+    document.getElementById('hudFlags').textContent = n;
+    document.getElementById('hudLevel').textContent = level;
+    document.getElementById('hudProgress').textContent = Math.round((n / 3) * 100) + '%';
+    
+    document.querySelectorAll('.lab-tab').forEach(function(t) {
+      var lv = parseInt(t.getAttribute('data-level'), 10);
+      t.classList.toggle('done', flags[lv]);
+      t.classList.toggle('active', lv === level);
+    });
+    try { localStorage.setItem('api_lab_flags', JSON.stringify(flags)); } catch(e) {}
+  }
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('api_lab_flags') || '{}');
+    [1,2,3].forEach(function(k) { if (saved[k]) flags[k] = true; });
+    updateHud();
+  } catch(e) {}
+
+  window.switchLevel = function(lv) {
+    level = lv;
+    document.getElementById('theoryL1').style.display = lv === 1 ? 'block' : 'none';
+    document.getElementById('theoryL2').style.display = lv === 2 ? 'block' : 'none';
+    document.getElementById('theoryL3').style.display = lv === 3 ? 'block' : 'none';
+    
+    var out = document.getElementById('apiForgeOutput');
+    if (lv === 1) {
+      methodSelect.value = "POST";
+      pathInput.value = "/api/v1/users/delete";
+      headersArea.value = "Content-Type: application/json";
+      bodyArea.value = '{"id": 99}';
+      out.innerHTML = '<span class="info">[*] Level 1. Method Override.</span><br>' +
+                      '<span>Target: Trigger a DELETE operation. Directly sending DELETE is blocked by firewall.</span>';
+    } else if (lv === 2) {
+      methodSelect.value = "GET";
+      pathInput.value = "/api/v1/users/info";
+      headersArea.value = "Authorization: Bearer guest-token";
+      bodyArea.value = '';
+      out.innerHTML = '<span class="info">[*] Level 2. Path Authorization Bypass.</span><br>' +
+                      '<span>Target: Get data from protected route `/api/v1/admin/users` (directly blocked by gateway).</span>';
+    } else {
+      methodSelect.value = "POST";
+      pathInput.value = "/api/v1/register";
+      headersArea.value = "Content-Type: application/json";
+      bodyArea.value = '{\n  "username": "tester",\n  "email": "tester@test.local"\n}';
+      out.innerHTML = '<span class="info">[*] Level 3. API Mass Assignment.</span><br>' +
+                      '<span>Target: Register a user and inject admin status.</span>';
+    }
+    updateHud();
+  };
+
+  window.sendApiForge = function() {
+    var out = document.getElementById('apiForgeOutput');
+    var method = methodSelect.value;
+    var path = pathInput.value.trim();
+    var headersRaw = headersArea.value.trim();
+    var bodyRaw = bodyArea.value.trim();
+
+    out.innerHTML = '<span class="info">[*] Sending HTTP Request...</span><br><br>';
+
+    // Parse headers
+    var headers = {};
+    var lines = headersRaw.split('\n');
+    lines.forEach(function(l) {
+      var parts = l.split(':');
+      if (parts.length >= 2) {
+        headers[parts[0].trim().toLowerCase()] = parts.slice(1).join(':').trim();
+      }
+    });
+
+    if (level === 1) {
+      if (path === '/api/v1/users/delete') {
+        if (method === 'DELETE') {
+          out.innerHTML += '<span class="error">[-] HTTP 403 Forbidden: WAF / Firewall blocked DELETE requests.</span>';
+        } else if (method === 'POST') {
+          var overrideHeader = headers['x-http-method-override'] || headers['x-method-override'];
+          if (overrideHeader && overrideHeader.toLowerCase() === 'delete') {
+            flags[1] = true;
+            out.innerHTML += '<span class="success">[+] HTTP 200 OK: User deletion executed successfully!</span><br>';
+            out.innerHTML += '<span class="success">[+] ' + FLAG[1] + '</span>';
+          } else {
+            out.innerHTML += '<span class="error">[-] HTTP 400 Bad Request: POST method is not supported on this endpoint unless override is specified.</span>';
+          }
+        } else {
+          out.innerHTML += '<span class="error">[-] HTTP 405 Method Not Allowed.</span>';
+        }
+      } else {
+        out.innerHTML += '<span class="error">[-] HTTP 404 Route Not Found.</span>';
+      }
+    }
+
+    if (level === 2) {
+      var cleanPath = path.toLowerCase().replace(/\s+/g, '');
+      if (cleanPath.includes('/admin/users')) {
+        if (cleanPath.startsWith('/api/v1/admin/users')) {
+          out.innerHTML += '<span class="error">[-] HTTP 401 Unauthorized: Access to `/api/v1/admin` is blocked by Gateway Policy.</span>';
+        } else if (cleanPath.includes('..') || cleanPath.includes('/./')) {
+          flags[2] = true;
+          out.innerHTML += '<span class="success">[+] HTTP 200 OK: Authentication bypassed successfully! Gateway bypassed and path resolved.</span><br>';
+          out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">[\n  {"user": "admin", "privs": "*", "secret": "' + FLAG[2] + '"}\n]</pre>';
+        } else {
+          out.innerHTML += '<span class="error">[-] HTTP 401 Unauthorized: Missing administrative authorization.</span>';
+        }
+      } else {
+        out.innerHTML += '<span class="success">[+] HTTP 200 OK: Loaded general user data details.</span>';
+      }
+    }
+
+    if (level === 3) {
+      if (path === '/api/v1/register' && method === 'POST') {
+        var json;
+        try {
+          json = JSON.parse(bodyRaw);
+        } catch(e) {
+          out.innerHTML += '<span class="error">[-] HTTP 400 Bad Request: Invalid JSON Payload.</span>';
+          return;
+        }
+
+        var isUserAdmin = (json.is_admin === true || json.is_admin === 'true' || json.role === 'admin' || (json.user && (json.user.role === 'admin' || json.user.is_admin === true)));
+        
+        if (isUserAdmin) {
+          flags[3] = true;
+          out.innerHTML += '<span class="success">[+] HTTP 201 Created: Account registered successfully as Administrator!</span><br>';
+          out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">{\n  "status": "success",\n  "data": {\n    "username": "' + escapeHtml(json.username || "admin_forged") + '",\n    "role": "admin",\n    "flag": "' + FLAG[3] + '"\n  }\n}</pre>';
+        } else {
+          out.innerHTML += '<span class="success">[+] HTTP 201 Created: Guest account registered.</span><br>';
+          out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">{\n  "status": "success",\n  "data": {\n    "username": "' + escapeHtml(json.username || "guest") + '",\n    "role": "guest"\n  }\n}</pre>';
+          out.innerHTML += '<span class="info">[!] Hint: Try adding `"is_admin": true` or `"role": "admin"` directly in the root or nested JSON body.</span>';
+        }
+      } else {
+        out.innerHTML += '<span class="error">[-] HTTP 404 Route Not Found. Send POST to `/api/v1/register`.</span>';
+      }
+    }
+
+    updateHud();
+
+    if (flags[1] && flags[2] && flags[3]) {
+      out.innerHTML += '<br><div class="success" style="border: 1px dashed var(--accent-green, #00ff66); padding: 15px; border-radius: 8px; margin-top: 15px; background: rgba(0, 255, 102, 0.05); text-align: center;">';
+      out.innerHTML += '<span style="font-size: 1.5rem;">🏆</span><br>';
+      out.innerHTML += '<strong style="color:#fff; font-size:1.1rem;">[★] Certificate: "API Auditing & Security Expert Badge"</strong><br>';
+      out.innerHTML += '<span style="font-family:\'Fira Code\', monospace; color:var(--accent-green, #00ff66); font-size:0.9rem;">ID: API-SECURITY-DESTROYER</span><br>';
+      out.innerHTML += '</div>';
+    }
+  };
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,229 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Command Injection Lab{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">مختبر حقن الأوامر التفاعلي</h1>
+  <p class="page-title-en">Interactive Command Injection Lab — 3 Levels</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">OWASP A03</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p>محاكي أداة تشخيص الشبكة (Ping Utility) الضعيفة. تلاعب بمدخلات الـ IP لحقن أوامر النظام وقراءة الـ Flags.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p>Simulated vulnerable Network Ping utility. Manipulate the IP parameter to inject system commands and extract flags.</p>
+  </div>
+</div>
+
+<div class="lab-hud">
+  <span>Level: <strong id="hudLevel">1</strong>/3</span>
+  <span>Flags: <strong id="hudFlags">0</strong>/3</span>
+  <span>Progress: <strong id="hudProgress">0%</strong></span>
+</div>
+
+<div class="lab-level-tabs">
+  <button class="lab-tab active" data-level="1" onclick="switchLevel(1)">L1 — Basic</button>
+  <button class="lab-tab" data-level="2" onclick="switchLevel(2)">L2 — Blind</button>
+  <button class="lab-tab" data-level="3" onclick="switchLevel(3)">L3 — WAF Bypass</button>
+</div>
+
+<div class="section-card" style="padding:0;border:none;background:transparent;">
+  <div class="lab-simulator" style="border-color:var(--neon-red)">
+    <div class="lab-sim-bar" style="background:rgba(255,0,85,0.02)">
+      <label style="color:var(--neon-red)">ping diagnostic utility</label>
+    </div>
+    
+    <div style="display:flex;background:#030308;padding:15px;gap:10px;border-bottom:1px solid rgba(255,0,85,0.1);align-items:center;flex-wrap:wrap;">
+      <span style="font-family:'Fira Code', monospace;color:#cbd5e1;font-size:0.85rem;">ping -c 3</span>
+      <input type="text" id="ipInput" placeholder="8.8.8.8" autocomplete="off" spellcheck="false" style="background:#000;border:1px solid rgba(255,255,255,0.1);padding:6px 12px;border-radius:4px;color:var(--neon-red);font-family:'Fira Code', monospace;font-size:0.85rem;flex:1;min-width:180px;">
+      <button class="lab-sim-btn" onclick="runPing()" style="background:rgba(255,0,85,0.1);border-color:rgba(255,0,85,0.3);color:var(--neon-red)">Run Ping ▶</button>
+    </div>
+    
+    <div class="lab-output" id="pingOutput" style="min-height:200px;background:#020205;color:#e2e8f0;">
+      <span class="info">[*] Command Injection Lab initialized.</span><br>
+      <span>Enter an IP Address above to test network connectivity.</span><br>
+      <span class="info">[*] Hint L1: Try injecting commands using separation characters like semicolon (;) or vertical bar (|). E.g.: 8.8.8.8; whoami</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Theory / النظرية</h2>
+  <div id="theoryL1">
+    <div class="bilingual-block">
+      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 1: حقن كلاسيكي. النتيجة تنعكس مباشرة في الاستجابة. استخدم <code>; whoami</code> أو <code>; cat flag.txt</code>.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 1: Classic command injection. Output is returned in the response. Use <code>; whoami</code> or <code>; cat flag.txt</code>.</p></div>
+    </div>
+  </div>
+  <div id="theoryL2" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 2: حقن أعمى (Blind). السيرفر لا يرجع مخرجات الأمر المحقون بل يظهر فقط نجاح/فشل الـ ping. استخدم الـ Time Delay مثل <code>; sleep 5</code> للاستكشاف.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 2: Blind command injection. No command output is returned. Infer command execution using time delays like <code>; sleep 5</code>.</p></div>
+    </div>
+  </div>
+  <div id="theoryL3" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section"><span class="lang-tag">AR</span><p>المستوى 3: جدار الحماية (WAF) يمنع الفراغات (Spaces). تجنب استخدام المسافات لتخطي الفلتر، وجرب بدائل مثل <code>$IFS</code>.</p></div>
+      <div class="lang-section lang-en"><span class="lang-tag">EN</span><p>Level 3: WAF blocks spaces. Bypass space filters using shell variables like <code>$IFS</code>.</p></div>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="../vulnerabilities/command-injection.html" style="display:inline-block;margin-top:8px;">← العودة لصفحة Command Injection / Back to Cmd Injection</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  var level = 1;
+  var flags = { 1: false, 2: false, 3: false };
+  var FLAG = {
+    1: 'FLAG{cmd_inj_basic}',
+    2: 'FLAG{cmd_inj_blind}',
+    3: 'FLAG{cmd_inj_rce}'
+  };
+
+  function updateHud() {
+    var n = Object.keys(flags).filter(function(k) { return flags[k]; }).length;
+    document.getElementById('hudFlags').textContent = n;
+    document.getElementById('hudLevel').textContent = level;
+    document.getElementById('hudProgress').textContent = Math.round((n / 3) * 100) + '%';
+    document.querySelectorAll('.lab-tab').forEach(function(t) {
+      var lv = parseInt(t.getAttribute('data-level'), 10);
+      t.classList.toggle('done', flags[lv]);
+      t.classList.toggle('active', lv === level);
+    });
+    try { localStorage.setItem('cmd_inj_flags', JSON.stringify(flags)); } catch(e) {}
+  }
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('cmd_inj_flags') || '{}');
+    [1,2,3].forEach(function(k) { if (saved[k]) flags[k] = true; });
+    updateHud();
+  } catch(e) {}
+
+  window.switchLevel = function(lv) {
+    level = lv;
+    document.getElementById('theoryL1').style.display = lv === 1 ? 'block' : 'none';
+    document.getElementById('theoryL2').style.display = lv === 2 ? 'block' : 'none';
+    document.getElementById('theoryL3').style.display = lv === 3 ? 'block' : 'none';
+    document.getElementById('ipInput').value = '';
+    
+    var out = document.getElementById('pingOutput');
+    if (lv === 1) {
+      out.innerHTML = '<span class="info">[*] Switched to Level 1. Classic Command Injection.</span><br>' +
+                      '<span>Hint L1: Try 8.8.8.8; cat flag.txt</span>';
+    } else if (lv === 2) {
+      out.innerHTML = '<span class="info">[*] Switched to Level 2. Blind Command Injection (Time-based).</span><br>' +
+                      '<span>Hint L2: Use sleep command to confirm code execution (e.g. ; sleep 5).</span>';
+    } else {
+      out.innerHTML = '<span class="info">[*] Switched to Level 3. Space Filter Bypass.</span><br>' +
+                      '<span>Hint L3: WAF blocks spaces. Find shell equivalents like $IFS (e.g. ;cat$IFSflag.txt).</span>';
+    }
+    updateHud();
+  };
+
+  window.runPing = function() {
+    var input = document.getElementById('ipInput').value.trim();
+    var out = document.getElementById('pingOutput');
+    
+    if (!input) {
+      out.innerHTML = '<span class="error">[-] IP Address cannot be empty.</span>';
+      return;
+    }
+    
+    out.innerHTML = '<span class="info">[*] Firing request: ping -c 3 ' + escapeHtml(input) + '</span><br><br>';
+    
+    var normalized = input.toLowerCase().replace(/\s+/g, ' ');
+    var hasPipe = input.includes(';') || input.includes('|') || input.includes('&') || input.includes('$') || input.includes('`');
+    
+    if (level === 1) {
+      if (hasPipe) {
+        if (normalized.includes('cat flag.txt') || normalized.includes('cat flag')) {
+          flags[1] = true;
+          out.innerHTML += 'PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.<br>64 bytes from 8.8.8.8: icmp_seq=1 ttl=56 time=12.4 ms<br><br>';
+          out.innerHTML += '<span class="success">[+] Executing injected payload: cat flag.txt</span><br>';
+          out.innerHTML += '<span class="success">[+] ' + FLAG[1] + '</span>';
+        } else if (normalized.includes('whoami')) {
+          out.innerHTML += 'PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.<br><br>';
+          out.innerHTML += '<span class="success">[+] Executing: whoami</span><br>';
+          out.innerHTML += '<span class="success">www-data</span>';
+        } else {
+          out.innerHTML += 'PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.<br><br>';
+          out.innerHTML += '<span class="success">[+] Command executed but returned empty or error. Try reading flag.txt.</span>';
+        }
+      } else {
+        simulatePing(out);
+      }
+    }
+    
+    if (level === 2) {
+      if (hasPipe) {
+        if (normalized.includes('sleep 5') || normalized.includes('sleep 10')) {
+          out.innerHTML += '<i>(Simulating time delay...)</i><br>';
+          var seconds = normalized.includes('sleep 10') ? 10000 : 5000;
+          setTimeout(function() {
+            flags[2] = true;
+            out.innerHTML += '<span class="success">[+] Response received after ' + (seconds/1000) + ' seconds.</span><br>';
+            out.innerHTML += '<span class="success">[+] Level 2 Complete! Flag: ' + FLAG[2] + '</span>';
+            updateHud();
+          }, 2000); // 2 sec simulated delay for instant feedback
+        } else if (normalized.includes('cat flag.txt')) {
+          // Output is hidden (Blind)!
+          out.innerHTML += 'PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.<br>64 bytes from 8.8.8.8: icmp_seq=1 ttl=56 time=12.4 ms<br><br>';
+          out.innerHTML += '<span class="info">[!] Command executed successfully in background, but output is BLIND. Try sleep payload to confirm.</span>';
+        } else {
+          out.innerHTML += 'PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.<br>64 bytes from 8.8.8.8: icmp_seq=1 ttl=56 time=12.4 ms';
+        }
+      } else {
+        simulatePing(out);
+      }
+    }
+    
+    if (level === 3) {
+      if (hasPipe) {
+        var hasSpace = /\s/.test(input);
+        if (hasSpace) {
+          out.innerHTML += '<span class="error">[-] WAF BLOCKED: Request contains forbidden character (space)</span>';
+        } else {
+          // Check for spaces bypass like $IFS
+          if (normalized.includes('cat$ifsflag.txt') || normalized.includes('cat${ifs}flag.txt')) {
+            flags[3] = true;
+            out.innerHTML += '<span class="success">[+] WAF Bypassed! Command executed.</span><br>';
+            out.innerHTML += '<span class="success">[+] ' + FLAG[3] + '</span>';
+          } else {
+            out.innerHTML += '<span class="success">[+] Command executed, but space filters applied. Make sure you read flag.txt without using spaces.</span>';
+          }
+        }
+      } else {
+        simulatePing(out);
+      }
+    }
+    
+    updateHud();
+  };
+
+  function simulatePing(out) {
+    out.innerHTML += 'PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.<br>';
+    out.innerHTML += '64 bytes from 8.8.8.8: icmp_seq=1 ttl=56 time=12.4 ms<br>';
+    out.innerHTML += '64 bytes from 8.8.8.8: icmp_seq=2 ttl=56 time=11.1 ms<br>';
+    out.innerHTML += '--- 8.8.8.8 ping statistics ---<br>';
+    out.innerHTML += '2 packets transmitted, 2 received, 0% packet loss, time 1002ms';
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  
+  document.getElementById('ipInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') runPing();
+  });
+})();
+</script>
+{% endblock %}

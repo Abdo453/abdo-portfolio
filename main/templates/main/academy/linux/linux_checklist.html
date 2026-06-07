@@ -1,0 +1,119 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Linux Security Checklist{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">قائمة تدقيق وحماية سيرفرات لينكس</h1>
+  <p class="page-title-en">Linux Server Security Audit Checklist</p>
+  <span class="severity-pill pill-high">CHECKLIST</span>
+  <span class="severity-pill pill-medium">⏱ Interactive</span>
+</div>
+
+<div class="section-card">
+  <h2>Audit Checklist / قائمة التدقيق التفاعلية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>قائمة تفاعلية لحماية وتأمين خوادم لينكس ضد الاختراقات وترقية الصلاحيات. يتم حفظ حالتك تلقائياً في المتصفح.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>An interactive checklist to audit and harden Linux server environments. Your progress is saved automatically via localStorage.</p>
+    </div>
+  </div>
+
+  <div id="checklistProgress" style="margin-top:15px;background:rgba(255,255,255,0.05);height:8px;border-radius:4px;overflow:hidden;">
+    <div id="progressBar" style="background:var(--neon-cyan);width:0%;height:100%;transition:width 0.3s ease;"></div>
+  </div>
+  <p style="font-size:0.8rem;color:#94a3b8;margin-top:5px;">Completed: <strong id="progressText">0/5</strong> items</p>
+
+  <div style="margin-top:20px;display:flex;flex-direction:column;gap:12px;">
+    <!-- Checklist Item 1 -->
+    <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,0.02);padding:12px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);">
+      <input type="checkbox" id="chk1" class="audit-check" style="margin-top:4px;cursor:pointer;" onchange="updateChecklistProgress()">
+      <div style="flex:1;">
+        <label for="chk1" style="font-weight:bold;color:#fff;cursor:pointer;">Disable Password Authentication for SSH / تعطيل تسجيل دخول SSH بكلمات المرور</label>
+        <p style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">Use SSH Keys instead of raw passwords to protect against brute-force attacks. Edit <code>/etc/ssh/sshd_config</code> and set <code>PasswordAuthentication no</code>.</p>
+      </div>
+    </div>
+
+    <!-- Checklist Item 2 -->
+    <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,0.02);padding:12px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);">
+      <input type="checkbox" id="chk2" class="audit-check" style="margin-top:4px;cursor:pointer;" onchange="updateChecklistProgress()">
+      <div style="flex:1;">
+        <label for="chk2" style="font-weight:bold;color:#fff;cursor:pointer;">Remove Writable Permissions on SUID Binaries / إزالة صلاحيات الكتابة لملفات SUID</label>
+        <p style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">Audit SUID binaries and remove any unnecessary execution bits for ordinary users. Use <code>chmod u-s [file]</code>.</p>
+      </div>
+    </div>
+
+    <!-- Checklist Item 3 -->
+    <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,0.02);padding:12px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);">
+      <input type="checkbox" id="chk3" class="audit-check" style="margin-top:4px;cursor:pointer;" onchange="updateChecklistProgress()">
+      <div style="flex:1;">
+        <label for="chk3" style="font-weight:bold;color:#fff;cursor:pointer;">Strict File Permissions on Shadow / حماية وتشفير ملفات كلمات المرور</label>
+        <p style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">Ensure <code>/etc/shadow</code> containing user hashes is readable only by root. Run <code>chmod 600 /etc/shadow</code>.</p>
+      </div>
+    </div>
+
+    <!-- Checklist Item 4 -->
+    <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,0.02);padding:12px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);">
+      <input type="checkbox" id="chk4" class="audit-check" style="margin-top:4px;cursor:pointer;" onchange="updateChecklistProgress()">
+      <div style="flex:1;">
+        <label for="chk4" style="font-weight:bold;color:#fff;cursor:pointer;">Configure Firewall Rules / تفعيل جدار الحماية وعزل المنافذ</label>
+        <p style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">Enable UFW or iptables to block all traffic except required active services (e.g., ports 80, 443, 22). Use <code>ufw default deny incoming</code>.</p>
+      </div>
+    </div>
+
+    <!-- Checklist Item 5 -->
+    <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,0.02);padding:12px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);">
+      <input type="checkbox" id="chk5" class="audit-check" style="margin-top:4px;cursor:pointer;" onchange="updateChecklistProgress()">
+      <div style="flex:1;">
+        <label for="chk5" style="font-weight:bold;color:#fff;cursor:pointer;">Disable Unused Services / إيقاف الخدمات غير المستخدمة</label>
+        <p style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">Deactivate and stop non-essential network services like old FTP/Telnet ports. Use <code>systemctl disable --now inetd</code>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="../index.html" style="display:inline-block;margin-top:8px;">← العودة للوحة الأكاديمية / Back to Academy Dashboard</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  // Load saved checklist progress from localStorage
+  try {
+    var saved = JSON.parse(localStorage.getItem('linux_audit_checklist') || '{}');
+    ['chk1','chk2','chk3','chk4','chk5'].forEach(function(id) {
+      if (saved[id]) {
+        document.getElementById(id).checked = true;
+      }
+    });
+  } catch(e) {}
+  
+  window.updateChecklistProgress = function() {
+    var boxes = document.querySelectorAll('.audit-check');
+    var total = boxes.length;
+    var checked = 0;
+    var state = {};
+
+    boxes.forEach(function(b) {
+      if (b.checked) checked++;
+      state[b.id] = b.checked;
+    });
+
+    var pct = Math.round((checked / total) * 100);
+    document.getElementById('progressBar').style.width = pct + "%";
+    document.getElementById('progressText').textContent = checked + "/" + total;
+
+    try {
+      localStorage.setItem('linux_audit_checklist', JSON.stringify(state));
+    } catch(e) {}
+  };
+
+  // Run on load
+  updateChecklistProgress();
+})();
+</script>
+{% endblock %}

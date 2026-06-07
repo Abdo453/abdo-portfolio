@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bug Bounty Academy — Arabic & English cybersecurity learning">
+  <title>GraphQL Security Lab | Abdo Ramdan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
+  <script>
+    (function() {
+      if (localStorage.getItem('academy_theme') === 'light') {
+        document.documentElement.classList.add('light-mode');
+      }
+    })();
+  </script>
+  
+</head>
+<body class="academy-page">
+<script>
+  if (localStorage.getItem('academy_theme') === 'light') {
+    document.body.classList.add('light-mode');
+  }
+</script>
+
+<header class="academy-header">
+  <div class="academy-logo">🎯 Bug Bounty Academy</div>
+  <nav class="academy-nav-links">
+    <a class="academy-btn" href="index.html">← Home / الرئيسية</a>
+    <a class="academy-btn" href="methodology.html" target="_blank">🗺️ Methodology</a>
+    <a class="academy-btn" href="bug-bounty-writeups.html">📝 Writeups</a>
+    <a class="academy-btn" href="profile.html">👤 Profile</a>
+    <button class="academy-btn" id="themeToggleBtn" onclick="toggleTheme()" style="padding:7px 10px;">🌓</button>
+  </nav>
+</header>
+
+<div class="academy-layout">
+  <aside class="academy-sidebar">
+    <div class="sidebar-title">Vulnerabilities / الثغرات</div>
+    <a class="sidebar-link" href="vulnerabilities/sql-injection.html">💉 SQL Injection</a>
+    <a class="sidebar-link" href="vulnerabilities/idor.html">🔓 IDOR / BAC</a>
+    <a class="sidebar-link" href="vulnerabilities/ssrf.html">🌐 SSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/command-injection.html">⚡ Command Injection</a>
+    <a class="sidebar-link" href="vulnerabilities/jwt-security.html">🎟️ JWT Security</a>
+    <a class="sidebar-link" href="vulnerabilities/graphql-injection.html">🛰️ GraphQL Security</a>
+    <a class="sidebar-link" href="vulnerabilities/race-conditions.html">⏱️ Race Conditions</a>
+    <a class="sidebar-link" href="vulnerabilities/web-cache-poisoning.html">📦 Web Cache Poisoning</a>
+    <a class="sidebar-link" href="vulnerabilities/api-security.html">🔑 API Security</a>
+    <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
+    <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
+    <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    
+    <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
+    <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
+    <a class="sidebar-link" href="labs/linux-security-lab.html">🐧 Linux Security Lab</a>
+    <a class="sidebar-link" href="labs/sql-injection-lab.html">🧪 SQLi Lab</a>
+    <a class="sidebar-link" href="labs/command-injection-lab.html">🧪 Command Injection Lab</a>
+    <a class="sidebar-link" href="labs/jwt-lab.html">🧪 JWT Forgery Lab</a>
+    <a class="sidebar-link" href="labs/idor-lab.html">🧪 IDOR Lab</a>
+    <a class="sidebar-link" href="labs/ssrf-lab.html">🧪 SSRF Lab</a>
+    <a class="sidebar-link" href="labs/graphql-lab.html">🧪 GraphQL Lab</a>
+    <a class="sidebar-link" href="labs/race-condition-lab.html">🧪 Race Conditions Lab</a>
+    <a class="sidebar-link" href="labs/api-security-lab.html">🧪 API Security Lab</a>
+    <a class="sidebar-link" href="labs/ai-security-lab.html">🧪 AI Security Lab</a>
+    <a class="sidebar-link" href="labs/cloud-security-lab.html">🧪 Cloud Security Lab</a>
+
+    <div class="sidebar-title" style="margin-top:18px;">Linux Track / مسار لينكس</div>
+    <a class="sidebar-link" href="linux-security/linux-fundamentals.html">🐧 Linux Fundamentals</a>
+    <a class="sidebar-link" href="linux-security/linux-privesc.html">🚀 Privilege Escalation</a>
+    <a class="sidebar-link" href="linux-security/linux-commands.html">📜 Commands Reference</a>
+    <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
+
+    <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
+    <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
+  </aside>
+
+  <main class="academy-main">
+    
+<div class="page-hero">
+  <h1 class="page-title">مختبر ثغرات GraphQL</h1>
+  <p class="page-title-en">Interactive GraphQL Security Lab — 2 Levels</p>
+  <span class="severity-pill pill-medium">MEDIUM</span>
+  <span class="severity-pill pill-high">OWASP A03:2021</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p>محاكي ثغرات GraphQL. قم بتعديل استعلامات GraphQL واستغل ميزة الاستبطان (Introspection) وسرقة البيانات الحساسة.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p>Simulated GraphQL security lab. Manipulate queries, exploit introspection queries, and leak sensitive dataset structures.</p>
+  </div>
+</div>
+
+<div class="lab-hud">
+  <span>Level: <strong id="hudLevel">1</strong>/2</span>
+  <span>Flags: <strong id="hudFlags">0</strong>/2</span>
+  <span>Progress: <strong id="hudProgress">0%</strong></span>
+</div>
+
+<div class="lab-level-tabs">
+  <button class="lab-tab active" data-level="1" onclick="switchLevel(1)">L1 — Introspection</button>
+  <button class="lab-tab" data-level="2" onclick="switchLevel(2)">L2 — Query Injection</button>
+</div>
+
+<div class="section-card" style="padding:0;border:none;background:transparent;">
+  <div class="lab-simulator" style="border-color:var(--neon-purple, #b026ff)">
+    <div class="lab-sim-bar" style="background:rgba(176,38,255,0.02)">
+      <label style="color:var(--neon-purple, #b026ff)">GraphQL Client Console</label>
+    </div>
+    
+    <div style="display:flex;flex-direction:column;background:#030308;padding:15px;gap:10px;border-bottom:1px solid rgba(176,38,255,0.1);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-family:'Fira Code', monospace;color:#888;">POST /graphql</span>
+        <button class="lab-sim-btn" onclick="sendGraphqlQuery()" style="background:rgba(176,38,255,0.1);border-color:rgba(176,38,255,0.3);color:var(--neon-purple, #b026ff)">Execute Query ▶</button>
+      </div>
+      
+      <label style="font-size:0.8rem;color:#cbd5e1;">Query Body:</label>
+      <textarea id="graphqlQuery" style="background:#000;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--neon-cyan);font-family:'Fira Code', monospace;font-size:0.8rem;padding:8px;resize:none;height:140px;">query {
+  products {
+    id
+    name
+    price
+  }
+}</textarea>
+    </div>
+    
+    <div class="lab-output" id="graphqlOutput" style="min-height:180px;background:#020205;color:#e2e8f0;">
+      <span class="info">[*] GraphQL API ready. Level 1: Discover database schema via Introspection.</span><br>
+      <span>Try executing the default query above.</span><br>
+      <span class="info">[*] Hint L1: Ask GraphQL about itself using <code>{ __schema { queryType { name } } }</code> or querying <code>__type</code> / <code>__schema</code>.</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Theory / النظرية</h2>
+  <div id="theoryL1">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 1: الاستبطان (Introspection). إذا لم يتم تعطيل هذه الميزة في بيئة الإنتاج، يستطيع المخترق إرسال استعلام <code>__schema</code> لمعرفة الهيكل الكامل لقاعدة البيانات، بما في ذلك أسماء الاستعلامات المخفية (مثل <code>system_config</code> أو <code>users</code>).</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 1: Introspection. When left enabled, clients can query the <code>__schema</code> meta-fields to list all queries, mutations, types, and fields available on the endpoint.</p>
+      </div>
+    </div>
+  </div>
+  <div id="theoryL2" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 2: حقن وتعديل الاستعلامات. بعد معرفة هيكل المخطط، قم بصياغة استعلام مباشر لاستخراج الحقول الحساسة من كائن المستخدمين مثل <code>admin_secret</code> أو <code>flag</code> في استعلام <code>users</code>.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 2: Query Injection. Armed with schema information, craft a custom query targeting sensitive objects like <code>users</code> or <code>privateConfig</code> to pull unexposed credentials.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="../vulnerabilities/graphql-injection.html" style="display:inline-block;margin-top:8px;">← العودة لصفحة GraphQL / Back to GraphQL Page</a>
+
+  </main>
+</div>
+
+<!-- Dynamic Relative Path & Active Class Resolver -->
+<script>
+  (function() {
+    var path = window.location.pathname;
+    
+    // Detect subdir depth based on folder structure in path
+    var isSubdir = path.includes('/vulnerabilities/') || path.includes('/labs/') || path.includes('/linux-security/') || path.includes('/writeups/') || path.includes('/books/');
+    if (!isSubdir && window.location.protocol === 'file:') {
+      var parts = window.location.href.split('/');
+      isSubdir = parts.includes('vulnerabilities') || parts.includes('labs') || parts.includes('linux-security') || parts.includes('writeups') || parts.includes('books');
+    }
+    
+    var prefix = isSubdir ? '../' : '';
+    
+    // Fix stylesheet href dynamically
+    var cssLink = document.getElementById('academyCssLink');
+    if (cssLink) {
+      cssLink.setAttribute('href', prefix + 'css/academy.css');
+    }
+    
+    // Fix all page links
+    var links = document.querySelectorAll('a, link, script');
+    links.forEach(function(el) {
+      var href = el.getAttribute('href');
+      if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('javascript:')) {
+        if (!href.startsWith('../') && !href.startsWith('./') && !href.startsWith('/')) {
+          el.setAttribute('href', prefix + href);
+        }
+      }
+      var src = el.getAttribute('src');
+      if (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('./') && !src.startsWith('../')) {
+        el.setAttribute('src', prefix + src);
+      }
+    });
+
+    // Resolve active sidebar link
+    var currentUrl = window.location.href.split('#')[0].split('?')[0];
+    var sidebarLinks = document.querySelectorAll('.sidebar-link');
+    sidebarLinks.forEach(function(link) {
+      var rawHref = link.getAttribute('href');
+      // Resolve link's raw destination (removing prefix if subdir)
+      var target = isSubdir && rawHref.startsWith('../') ? rawHref.substring(3) : rawHref;
+      if (currentUrl.endsWith(target)) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  })();
+</script>
+<script>
+  function copyCmd(btn) {
+    var pre = btn.closest('.cmd-block').querySelector('pre');
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.textContent.trim()).then(function() {
+      var o = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = o; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+  function toggleTheme() {
+    var isLight = document.body.classList.contains('light-mode');
+    if (isLight) {
+      document.body.classList.remove('light-mode');
+      document.documentElement.classList.remove('light-mode');
+      localStorage.setItem('academy_theme', 'dark');
+    } else {
+      document.body.classList.add('light-mode');
+      document.documentElement.classList.add('light-mode');
+      localStorage.setItem('academy_theme', 'light');
+    }
+  }
+</script>
+
+<script>
+(function() {
+  var level = 1;
+  var flags = { 1: false, 2: false };
+  var FLAG = {
+    1: 'FLAG{graphql_introspection_leaked}',
+    2: 'FLAG{graphql_query_injected_admin}'
+  };
+
+  var queryArea = document.getElementById('graphqlQuery');
+
+  function updateHud() {
+    var n = Object.keys(flags).filter(function(k) { return flags[k]; }).length;
+    document.getElementById('hudFlags').textContent = n;
+    document.getElementById('hudLevel').textContent = level;
+    document.getElementById('hudProgress').textContent = Math.round((n / 2) * 100) + '%';
+    
+    document.querySelectorAll('.lab-tab').forEach(function(t) {
+      var lv = parseInt(t.getAttribute('data-level'), 10);
+      if (lv <= 2) {
+        t.classList.toggle('done', flags[lv]);
+        t.classList.toggle('active', lv === level);
+      }
+    });
+    try { localStorage.setItem('graphql_lab_flags', JSON.stringify(flags)); } catch(e) {}
+  }
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('graphql_lab_flags') || '{}');
+    [1,2].forEach(function(k) { if (saved[k]) flags[k] = true; });
+    updateHud();
+  } catch(e) {}
+
+  window.switchLevel = function(lv) {
+    if (lv > 2) return;
+    level = lv;
+    document.getElementById('theoryL1').style.display = lv === 1 ? 'block' : 'none';
+    document.getElementById('theoryL2').style.display = lv === 2 ? 'block' : 'none';
+    
+    var out = document.getElementById('graphqlOutput');
+    if (lv === 1) {
+      queryArea.value = "query {\n  products {\n    id\n    name\n    price\n  }\n}";
+      out.innerHTML = '<span class="info">[*] Switched to Level 1. Introspection Query.</span><br>' +
+                      '<span>Target: Dump schema info using __schema queries.</span>';
+    } else {
+      queryArea.value = "query {\n  products {\n    id\n    name\n  }\n}";
+      out.innerHTML = '<span class="info">[*] Switched to Level 2. Query Injection.</span><br>' +
+                      '<span>Target: Exploit hidden query queries found in schema to read flag.</span>';
+    }
+    updateHud();
+  };
+
+  window.sendGraphqlQuery = function() {
+    var out = document.getElementById('graphqlOutput');
+    var query = queryArea.value.trim();
+
+    out.innerHTML = '<span class="info">[*] Posting GraphQL payload...</span><br><br>';
+
+    var clean = query.replace(/\s+/g, ' ').toLowerCase();
+
+    if (level === 1) {
+      if (clean.includes('__schema') || clean.includes('__type')) {
+        flags[1] = true;
+        out.innerHTML += '<span class="success">[+] 200 OK: Introspection Query Successful!</span><br>';
+        out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">{\n  "data": {\n    "__schema": {\n      "queryType": {\n        "name": "Query",\n        "fields": [\n          {"name": "products"},\n          {"name": "system_diagnostics", "description": "Admin usage only"}\n        ]\n      }\n    }\n  },\n  "flag": "' + FLAG[1] + '"\n}</pre>';
+      } else if (clean.includes('products')) {
+        out.innerHTML += '<span class="success">[+] 200 OK:</span><br>';
+        out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">{\n  "data": {\n    "products": [\n      {"id": "1", "name": "Security Audit Tool", "price": 499.00}\n    ]\n  }\n}</pre>';
+      } else {
+        out.innerHTML += '<span class="error">[-] GraphQL Error: Cannot query field on root type.</span>';
+      }
+    }
+
+    if (level === 2) {
+      if (clean.includes('system_diagnostics') || clean.includes('systemdiagnostics')) {
+        flags[2] = true;
+        out.innerHTML += '<span class="success">[+] 200 OK: Query field "system_diagnostics" resolved!</span><br>';
+        out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">{\n  "data": {\n    "system_diagnostics": {\n      "status": "online",\n      "cpu_load": "12%",\n      "flag": "' + FLAG[2] + '"\n    }\n  }\n}</pre>';
+      } else if (clean.includes('products')) {
+        out.innerHTML += '<span class="success">[+] 200 OK:</span><br>';
+        out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">{\n  "data": {\n    "products": [\n      {"id": "1", "name": "Security Audit Tool"}\n    ]\n  }\n}</pre>';
+        out.innerHTML += '<span class="info">[!] Hint: Did you look at the Schema fields in Level 1? Try querying "system_diagnostics".</span>';
+      } else {
+        out.innerHTML += '<span class="error">[-] GraphQL Error: Field not found.</span>';
+      }
+    }
+
+    updateHud();
+
+    if (flags[1] && flags[2]) {
+      out.innerHTML += '<br><div class="success" style="border: 1px dashed var(--accent-green, #00ff66); padding: 15px; border-radius: 8px; margin-top: 15px; background: rgba(0, 255, 102, 0.05); text-align: center;">';
+      out.innerHTML += '<span style="font-size: 1.5rem;">🏆</span><br>';
+      out.innerHTML += '<strong style="color:#fff; font-size:1.1rem;">[★] Certificate: "GraphQL Security Specialist Badge"</strong><br>';
+      out.innerHTML += '<span style="font-family:\'Fira Code\', monospace; color:var(--accent-green, #00ff66); font-size:0.9rem;">ID: GQL-SCHEMA-BREACHER</span><br>';
+      out.innerHTML += '</div>';
+    }
+  };
+})();
+</script>
+
+</body>
+</html>

@@ -9,6 +9,7 @@ def scan_templates():
         # (template, output_path, css_prefix)
         ('main/methodology.html', 'methodology.html', ''),
         ('main/bug_bounty_writeups.html', 'bug-bounty-writeups.html', ''),
+        ('main/profile.html', 'profile.html', ''),
     ]
     
     # 1. Scan vulnerabilities

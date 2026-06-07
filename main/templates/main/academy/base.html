@@ -7,9 +7,21 @@
   <title>{% block title %}Academy{% endblock %} | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" id="academyCssLink" href="/static/main/css/academy.css">
+  <script>
+    (function() {
+      if (localStorage.getItem('academy_theme') === 'light') {
+        document.documentElement.classList.add('light-mode');
+      }
+    })();
+  </script>
   {% block extra_head %}{% endblock %}
 </head>
 <body class="academy-page">
+<script>
+  if (localStorage.getItem('academy_theme') === 'light') {
+    document.body.classList.add('light-mode');
+  }
+</script>
 
 <header class="academy-header">
   <div class="academy-logo">🎯 Bug Bounty Academy</div>
@@ -17,6 +29,8 @@
     <a class="academy-btn" href="index.html">← Home / الرئيسية</a>
     <a class="academy-btn" href="methodology.html" target="_blank">🗺️ Methodology</a>
     <a class="academy-btn" href="bug-bounty-writeups.html">📝 Writeups</a>
+    <a class="academy-btn" href="profile.html">👤 Profile</a>
+    <button class="academy-btn" id="themeToggleBtn" onclick="toggleTheme()" style="padding:7px 10px;">🌓</button>
   </nav>
 </header>
 
@@ -55,6 +69,9 @@
     <a class="sidebar-link" href="linux-security/linux-privesc.html">🚀 Privilege Escalation</a>
     <a class="sidebar-link" href="linux-security/linux-commands.html">📜 Commands Reference</a>
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
+
+    <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
+    <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
   </aside>
 
   <main class="academy-main">
@@ -122,6 +139,18 @@
       btn.classList.add('copied');
       setTimeout(function() { btn.textContent = o; btn.classList.remove('copied'); }, 2000);
     });
+  }
+  function toggleTheme() {
+    var isLight = document.body.classList.contains('light-mode');
+    if (isLight) {
+      document.body.classList.remove('light-mode');
+      document.documentElement.classList.remove('light-mode');
+      localStorage.setItem('academy_theme', 'dark');
+    } else {
+      document.body.classList.add('light-mode');
+      document.documentElement.classList.add('light-mode');
+      localStorage.setItem('academy_theme', 'light');
+    }
   }
 </script>
 {% block extra_js %}{% endblock %}

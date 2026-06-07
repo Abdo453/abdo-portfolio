@@ -1,0 +1,140 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Linux Fundamentals{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">أساسيات نظام لينكس للباحثين الأمنيين</h1>
+  <p class="page-title-en">Linux Fundamentals for Security Professionals</p>
+  <span class="severity-pill pill-low">TRACK 1</span>
+  <span class="severity-pill pill-high">⏱ ~20 min</span>
+</div>
+
+<div class="section-card">
+  <h2>1. Introduction / مقدمة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>لينكس هو نظام التشغيل الأساسي الذي تعمل عليه أغلب خوادم الويب والبنى التحتية السحابية وأدوات اختبار الاختراق (مثل Kali Linux). لفهم كيفية اختراق أو حماية هذه الأنظمة، يجب أولاً إتقان كيفية التعامل مع سطر الأوامر وفهم بيئة العمل الداخلية للنظام.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Linux is the backbone of most web servers, cloud infrastructures, and penetration testing platforms (e.g. Kali Linux). To understand how to compromise or secure these systems, you must first master the command-line interface and the inner workings of the operating system.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>2. Linux Directory Structure / هيكل المجلدات</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>على عكس ويندوز، لا توجد أقراص مثل <code>C:</code> أو <code>D:</code>. كل شيء في لينكس يبدأ من المجلد الجذري (Root Directory) <code>/</code>:</p>
+      <ul>
+        <li><code>/bin</code> & <code>/sbin</code>: ملفات البرامج والأوامر الأساسية.</li>
+        <li><code>/etc</code>: ملفات تكوين وإعدادات النظام والخدمات.</li>
+        <li><code>/home</code>: المجلدات الخاصة بالمستخدمين العاديين.</li>
+        <li><code>/root</code>: المجلد الخاص بمسؤول النظام (Root User).</li>
+        <li><code>/var/log</code>: ملفات سجلات النظام والأحداث (Logs).</li>
+        <li><code>/tmp</code> & <code>/var/tmp</code>: ملفات مؤقتة (تُحذف تلقائياً في الغالب وتكون قابلة للكتابة لأي مستخدم).</li>
+      </ul>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Unlike Windows, Linux has no drive letters (like <code>C:</code> or <code>D:</code>). Everything starts from the root directory <code>/</code>:</p>
+      <ul>
+        <li><code>/bin</code> & <code>/sbin</code>: Essential user binaries and system binaries.</li>
+        <li><code>/etc</code>: System configuration files.</li>
+        <li><code>/home</code>: User home directories.</li>
+        <li><code>/root</code>: Superuser (Root) home directory.</li>
+        <li><code>/var/log</code>: System log files.</li>
+        <li><code>/tmp</code> & <code>/var/tmp</code>: Temporary directories (often world-writable).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>3. Basic Commands / الأوامر الأساسية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>إليك أهم الأوامر التي تحتاجها يومياً:</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Here are the core commands you need on a daily basis:</p>
+    </div>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Who Am I / التحقق من المستخدم الحالي</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>whoami</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>List Directory Contents / عرض محتويات المجلد</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>ls -la</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Print Working Directory / معرفة المسار الحالي</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>pwd</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Read File / قراءة محتوى ملف</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>cat /etc/passwd</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>4. Permissions Model / نظام الصلاحيات</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>كل ملف أو مجلد في لينكس ينتمي إلى <strong>مستخدم (Owner)</strong> و<strong>مجموعة (Group)</strong>، ويحتوي على ثلاثة أنواع من الصلاحيات:</p>
+      <ul>
+        <li><code>r</code> (Read): القراءة (تمثل بالقيمة 4).</li>
+        <li><code>w</code> (Write): الكتابة والتعديل (تمثل بالقيمة 2).</li>
+        <li><code>x</code> (Execute): التشغيل (تمثل بالقيمة 1).</li>
+      </ul>
+      <p>يتم تمثيل الصلاحيات كأرقام ثلاثية، مثلاً <code>chmod 755 file.sh</code> تعني:</p>
+      <ul>
+        <li>7 (4+2+1): صلاحيات كاملة للمالك (rwx).</li>
+        <li>5 (4+1): قراءة وتشغيل للمجموعة (r-x).</li>
+        <li>5 (4+1): قراءة وتشغيل للآخرين (r-x).</li>
+      </ul>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Every file and folder in Linux is assigned to an <strong>Owner</strong> and a <strong>Group</strong>, with three permission classes:</p>
+      <ul>
+        <li><code>r</code> (Read): represented numerically by 4.</li>
+        <li><code>w</code> (Write): represented numerically by 2.</li>
+        <li><code>x</code> (Execute): represented numerically by 1.</li>
+      </ul>
+      <p>Permissions are often set as three octal digits, for example <code>chmod 755 file.sh</code> sets:</p>
+      <ul>
+        <li>7 (4+2+1): Owner has full rights (rwx).</li>
+        <li>5 (4+1): Group has read & execute (r-x).</li>
+        <li>5 (4+1): Others have read & execute (r-x).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="linux-privesc.html" style="display:inline-block;margin-top:8px;">الانتقال إلى مسار ترقية الصلاحيات / Next: Privilege Escalation Track →</a>
+{% endblock %}

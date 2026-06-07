@@ -1,0 +1,220 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}User Profile & Academy Progress{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">ملف الطالب ولوحة الإنجازات</h1>
+  <p class="page-title-en">Cyber Academy Profile & Achievements</p>
+  <span class="severity-pill pill-medium" style="background:var(--neon-green);color:#000;">STUDENT</span>
+  <span class="severity-pill pill-high">⏱ Active</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p>تتبع تقدمك الأكاديمي، واطلع على الشارات الرقمية والشهادات الفنية التي أحرزتها بعد حل المختبرات التفاعلية.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p>Track your academic progress, view earned digital badges, and print your security certificates upon completing interactive labs.</p>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Overall Progress / التقدم العام</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:20px;margin-top:15px;">
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:8px;text-align:center;">
+      <h3 style="font-size:2.5rem;color:var(--neon-cyan);margin:0;" id="labsCompletedCount">0/11</h3>
+      <p style="font-size:0.9rem;color:#cbd5e1;margin:10px 0 0 0;">Labs Completed / المختبرات المكتملة</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:8px;text-align:center;">
+      <h3 style="font-size:2.5rem;color:var(--neon-purple, #b026ff);margin:0;" id="flagsFoundCount">0/31</h3>
+      <p style="font-size:0.9rem;color:#cbd5e1;margin:10px 0 0 0;">Flags Captured / الأعلام المكتشفة</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:8px;text-align:center;">
+      <h3 style="font-size:2.5rem;color:var(--neon-green);margin:0;" id="completionPct">0%</h3>
+      <p style="font-size:0.9rem;color:#cbd5e1;margin:10px 0 0 0;">Total Completion / نسبة الإنجاز الكلية</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Earned Badges / شارات التميز الرقمية</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));gap:15px;margin-top:15px;" id="badgesContainer">
+    <!-- Badges will be dynamically updated by JS -->
+    <div class="badge-item locked" id="badge-sqli" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">🛡️</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">SQLi Master</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-cmd" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">🐚</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">RCE Hacker</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-jwt" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">🎟️</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">JWT Expert</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-idor" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">🔓</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">BAC Auditor</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-ssrf" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">🌐</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">SSRF Expert</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-graphql" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">🛰️</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">GQL Auditor</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-race" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">⏱️</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">Race Expert</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-api" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">🔑</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">API Sec Specialist</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-ai" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">🤖</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">AI Sec Specialist</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-cloud" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">☁️</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">Cloud Security</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+    <div class="badge-item locked" id="badge-linux" style="padding:15px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);text-align:center;background:rgba(0,0,0,0.3);opacity:0.4;">
+      <span style="font-size:2rem;">🐧</span>
+      <h4 style="margin:8px 0 2px 0;font-size:0.9rem;color:#fff;">Linux Administrator</h4>
+      <span style="font-size:0.75rem;color:#94a3b8;">Locked</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-card" id="certSection" style="display:none;">
+  <h2>Academy Certificates / شهادات الإتمام</h2>
+  <div style="background:rgba(0,255,102,0.03);border:1px dashed var(--neon-green);border-radius:8px;padding:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;">
+    <div>
+      <h3 style="color:#fff;margin:0 0 5px 0;">🥇 Certificate of Pentesting Mastery</h3>
+      <p style="margin:0;font-size:0.85rem;color:#cbd5e1;">Issued upon capturing all flags and solving all interactive cyber security labs.</p>
+    </div>
+    <button class="academy-btn" onclick="printCertificate()" style="background:var(--neon-green);color:#000;border-color:var(--neon-green);">Print Certificate / طباعة الشهادة 🖨️</button>
+  </div>
+</div>
+
+<!-- Hidden printable certificate layout container -->
+<div id="printArea" style="display:none;">
+  <div style="width:800px;height:560px;padding:40px;border:15px double #00e5ff;background:#050510;color:#fff;font-family:'Outfit', 'Noto Kufi Arabic', sans-serif;text-align:center;box-sizing:border-box;position:relative;">
+    <div style="position:absolute;top:20px;left:20px;color:rgba(0,229,255,0.15);font-size:5rem;font-weight:800;pointer-events:none;">HUNTEROS</div>
+    <div style="font-size:1.2rem;letter-spacing:4px;color:#00e5ff;text-transform:uppercase;margin-top:20px;">Certificate of Completion</div>
+    <div style="font-size:2.8rem;font-weight:800;margin:30px 0 10px 0;background:linear-gradient(90deg, #00e5ff, #9b59ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Cyber Security Pentesting Expert</div>
+    <p style="font-size:1rem;color:#94a3b8;margin:0 0 40px 0;">This is to certify that the bearer has successfully audited and conquered all interactive labs in the Bug Bounty Academy.</p>
+    
+    <div style="border-top:1px solid rgba(255,255,255,0.1);width:300px;margin:0 auto 20px auto;padding-top:10px;">
+      <span style="font-family:'Fira Code', monospace;font-size:1.1rem;color:#00ff66;">ACADEMY GRADUATE</span>
+    </div>
+    
+    <div style="display:flex;justify-content:space-between;padding:0 50px;margin-top:60px;font-size:0.85rem;color:#64748b;">
+      <div>Date: <span style="color:#cbd5e1;" id="certDate">2026-06-07</span></div>
+      <div>Verification ID: <span style="color:#cbd5e1;font-family:'Fira Code', monospace;">ID: GRAD-BBA-99201</span></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  // Read flags stats
+  var labKeys = {
+    'sqli': 'sqli_lab_flags',
+    'cmd': 'cmd_inj_flags',
+    'jwt': 'jwt_lab_flags',
+    'idor': 'idor_lab_flags',
+    'ssrf': 'ssrf_lab_flags',
+    'graphql': 'graphql_lab_flags',
+    'race': 'race_lab_flags',
+    'api': 'api_lab_flags',
+    'ai': 'ai_lab_flags',
+    'cloud': 'cloud_lab_flags',
+    'linux': 'linux_lab_flags'
+  };
+
+  var totalFlags = 31;
+  var flagsCaptured = 0;
+  var completedLabs = 0;
+
+  Object.keys(labKeys).forEach(function(key) {
+    try {
+      var saved = JSON.parse(localStorage.getItem(labKeys[key]) || '{}');
+      var solvedList = Object.keys(saved).filter(function(k) { return saved[k]; });
+      flagsCaptured += solvedList.length;
+
+      var totalForThisLab = (key === 'linux') ? 5 : ((key === 'graphql' || key === 'race' || key === 'ai' || key === 'cloud') ? 2 : 3);
+      
+      if (solvedList.length === totalForThisLab) {
+        completedLabs++;
+        // Unlock badge UI
+        var badgeEl = document.getElementById('badge-' + key);
+        if (badgeEl) {
+          badgeEl.classList.remove('locked');
+          badgeEl.style.opacity = '1';
+          badgeEl.style.background = 'rgba(0, 229, 255, 0.04)';
+          badgeEl.style.borderColor = 'rgba(0, 229, 255, 0.3)';
+          badgeEl.querySelector('span').style.textShadow = '0 0 10px rgba(0, 229, 255, 0.5)';
+          var labelSpan = badgeEl.querySelector('span + h4 + span');
+          if (labelSpan) {
+            labelSpan.textContent = 'Unlocked';
+            labelSpan.style.color = 'var(--neon-green)';
+          }
+        }
+      }
+    } catch(e) {}
+  });
+
+  // Display stats
+  document.getElementById('labsCompletedCount').textContent = completedLabs + "/11";
+  document.getElementById('flagsFoundCount').textContent = flagsCaptured + "/" + totalFlags;
+  var pctVal = Math.round((flagsCaptured / totalFlags) * 100);
+  document.getElementById('completionPct').textContent = pctVal + "%";
+
+  // If at least one lab completed, show certificate section
+  if (completedLabs >= 1) {
+    document.getElementById('certSection').style.display = 'block';
+  }
+
+  // Set today's date on certificate
+  var today = new Date().toISOString().split('T')[0];
+  var dateEl = document.getElementById('certDate');
+  if (dateEl) dateEl.textContent = today;
+
+  window.printCertificate = function() {
+    var printContent = document.getElementById('printArea').innerHTML;
+    var originalContent = document.body.innerHTML;
+    
+    var win = window.open('', '', 'width=900,height=650');
+    win.document.write('<html><head><title>Print Certificate</title>');
+    win.document.write('<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&family=Noto+Kufi+Arabic&display=swap" rel="stylesheet">');
+    win.document.write('<style>body { background:#000; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }</style></head><body>');
+    win.document.write(printContent);
+    win.document.write('</body></html>');
+    win.document.close();
+    win.focus();
+    setTimeout(function() {
+      win.print();
+      win.close();
+    }, 500);
+  };
+})();
+</script>
+{% endblock %}

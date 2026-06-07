@@ -1,0 +1,68 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Advanced JWT Attacks Writeup{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">هجمات JWT المتقدمة وتزوير التواقيع</h1>
+  <p class="page-title-en">Advanced JWT Attacks: Algorithm Confusion and Key Cracking</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">Bounty: $2,000</span>
+</div>
+
+<div class="section-card">
+  <h2>Overview / نظرة عامة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>تعتمد العديد من تطبيقات الويب الحديثة على JSON Web Tokens (JWT) للمصادقة وتخزين الجلسات. يوضح هذا التقرير كيفية استغلال التكوينات الخاطئة في التحقق من التوقيع لتجاوز المصادقة بالكامل والدخول كمسؤول.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Modern applications heavily rely on JSON Web Tokens (JWT) for session management. This writeup illustrates how verification implementation flaws (like algorithm confusion or weak keys) were exploited to bypass access control.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Exploitation vectors / نوافذ الاستغلال</h2>
+  <ol class="steps-list">
+    <li>تخطي التحقق من التوقيع عن طريق تعيين خوارزمية التشفير إلى <code>"none"</code> في رأس التوكن.</li>
+    <li>استغلال خلط الخوارزمية (Algorithm Confusion) بتزوير توقيع RS256 باستخدام خوارزمية متماثلة HS256 بمفتاح عام مكشوف للجميع.</li>
+    <li>تخمين وكسر كلمات السر الضعيفة للـ HMAC باستخدام هجوم القوة العمياء القائم على القواميس.</li>
+  </ol>
+</div>
+
+<div class="section-card">
+  <h2>Cracking & Forging Commands / أوامر الكسر والتزوير</h2>
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>JWT Hash Cracking using John the Ripper / كسر مفتاح JWT</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>john --format=HMAC-256 --wordlist=passwords.txt jwt_hash.txt</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>JWT Tool Encoding / تشفير توكن معدل</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>jwt_tool.py [JWT_TOKEN] -X a -r admin</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Remediation / التخفيف والحماية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>لا تثق أبداً بـ <code>alg</code> header المار من المتصفح دون فلترة، واحرص على استخدام مكتبات مصادقة قياسية محدثة ومفاتيح تشفير معقدة وغير قابلة للتخمين.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Never trust the <code>alg</code> header from user input without validation, enforce cryptographic checks on the backend, and employ strong secret keys for signing tokens.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

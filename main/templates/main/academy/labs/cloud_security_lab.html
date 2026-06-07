@@ -1,0 +1,302 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Cloud Security Lab{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">مختبر أمن السحابيات والحاويات (Cloud Security)</h1>
+  <p class="page-title-en">Interactive Cloud Security & Container Escape Lab — 2 Levels</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">OWASP Cloud Top 10</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p>محاكي ثغرات السحابيات. استعرض ملفات S3 المفتوحة للعامة، ثم اخترق واهرب من الحاوية (Container Escape) للتحكم بالسيرفر المضيف.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p>Simulated Cloud Security lab. Enumerate public S3 buckets, extract backup keys, and perform a container escape to conquer the host system.</p>
+  </div>
+</div>
+
+<div class="lab-hud">
+  <span>Level: <strong id="hudLevel">1</strong>/2</span>
+  <span>Flags: <strong id="hudFlags">0</strong>/2</span>
+  <span>Progress: <strong id="hudProgress">0%</strong></span>
+</div>
+
+<div class="lab-level-tabs">
+  <button class="lab-tab active" data-level="1" onclick="switchLevel(1)">L1 — S3 Leakage</button>
+  <button class="lab-tab" data-level="2" onclick="switchLevel(2)">L2 — Docker Escape</button>
+</div>
+
+<div class="section-card" style="padding:0;border:none;background:transparent;">
+  <div class="lab-simulator" style="border-color:var(--neon-green)">
+    <div class="lab-sim-bar" style="background:rgba(0,255,102,0.02)">
+      <label style="color:var(--neon-green)">AWS & Docker Cloud Shell</label>
+      <span style="color:#64748b;font-size:0.75rem;margin-left:auto;">Container OS: Alpine 3.14</span>
+    </div>
+    
+    <div class="lab-output" id="cloudTermOutput" style="min-height:260px;background:#020205;color:#22c55e;">
+      <span>[*] Cloud security shell environment initialized.</span><br>
+      <span>Type <strong>help</strong> or <strong>hint</strong> to start your enumeration.</span><br><br>
+      <span id="cloudPrompt" style="color:#00e5ff;">cloud-user@aws-instance:~$ </span>
+    </div>
+    
+    <div style="display:flex;background:#030308;border-top:1px solid rgba(0,255,102,0.1);align-items:center;padding:5px 10px;">
+      <span id="cloudInputPrompt" style="font-family:'Fira Code', monospace;font-size:0.85rem;color:#00e5ff;margin-right:5px;white-space:nowrap;">cloud-user@aws-instance:~$</span>
+      <input type="text" id="cloudTermInput" autocomplete="off" spellcheck="false" style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-family:'Fira Code', monospace;font-size:0.85rem;" autofocus>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Theory / النظرية</h2>
+  <div id="theoryL1">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 1: تسريبات مخازن S3 المفتوحة (S3 Buckets). يترك المطورون أحياناً صلاحيات قراءة مخازن التخزين مفتوحة للكل (Anonymous Access). استخدم أدوات المحاكاة مثل <code>aws s3 ls</code> لفحص المخازن مثل <code>s3://hunteros-backups</code> واستخراج الملفات السرية.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 1: S3 Bucket Misconfiguration. Storage buckets left with public read access allow anonymous enumeration. Use <code>aws s3 ls s3://[bucket]</code> commands to audit storage nodes and retrieve backups.</p>
+      </div>
+    </div>
+  </div>
+  <div id="theoryL2" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 2: الهروب من حاويات دوجر (Docker Container Escape). عندما تعمل حاوية Docker بصلاحيات مرتفعة (Privileged Mode)، يمكنها الوصول للقرص الصلب الفعلي للسيرفر المضيف. ابحث عن الأقراص الصلبة باستخدام <code>fdisk -l</code> أو افحص المجلدات، ثم قم بدمج/ربط (mount) القرص الفعلي <code>/dev/xvda1</code> بمجلد داخل الحاوية لتجاوز العزل.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 2: Container Escape. Privileged Docker containers can interact with host hardware. Use <code>fdisk -l</code> or <code>lsblk</code> to identify the host drive (e.g. <code>/dev/sda1</code> or <code>/dev/xvda1</code>) and mount it to get root control of the parent host operating system.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="../vulnerabilities/cloud-security.html" style="display:inline-block;margin-top:8px;">← العودة لصفحة أمن السحابيات / Back to Cloud Page</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  var level = 1;
+  var flags = { 1: false, 2: false };
+  var FLAG = {
+    1: 'FLAG{public_s3_bucket_leaked_credentials}',
+    2: 'FLAG{docker_container_escape_to_host}'
+  };
+
+  var user = "cloud-user";
+  var host = "aws-instance";
+  var currentDir = "~";
+
+  var s3Buckets = {
+    "s3://hunteros-assets": [
+      "logo.png",
+      "style.css"
+    ],
+    "s3://hunteros-backups": [
+      "database_backup.sql",
+      "aws_keys.txt"
+    ]
+  };
+
+  var fileContents = {
+    "aws_keys.txt": "AccessKey = AKIAIOSFODNN7EXAMPLE\nSecretKey = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\nFlag = " + FLAG[1],
+    "database_backup.sql": "-- SQL Dump\n-- Table structure for users\nINSERT INTO users VALUES ('admin', 'hashed_pass');"
+  };
+
+  var containerMounted = false;
+
+  function updateHud() {
+    var n = Object.keys(flags).filter(function(k) { return flags[k]; }).length;
+    document.getElementById('hudFlags').textContent = n;
+    document.getElementById('hudLevel').textContent = level;
+    document.getElementById('hudProgress').textContent = Math.round((n / 2) * 100) + '%';
+    
+    document.querySelectorAll('.lab-tab').forEach(function(t) {
+      var lv = parseInt(t.getAttribute('data-level'), 10);
+      if (lv <= 2) {
+        t.classList.toggle('done', flags[lv]);
+        t.classList.toggle('active', lv === level);
+      }
+    });
+
+    var symbol = (user === 'root') ? '#' : '$';
+    document.getElementById('cloudInputPrompt').textContent = user + '@' + host + ':' + currentDir + symbol;
+    
+    try { localStorage.setItem('cloud_lab_flags', JSON.stringify(flags)); } catch(e) {}
+  }
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('cloud_lab_flags') || '{}');
+    [1,2].forEach(function(k) { if (saved[k]) flags[k] = true; });
+    updateHud();
+  } catch(e) {}
+
+  window.switchLevel = function(lv) {
+    if (lv > 2) return;
+    level = lv;
+    document.getElementById('theoryL1').style.display = lv === 1 ? 'block' : 'none';
+    document.getElementById('theoryL2').style.display = lv === 2 ? 'block' : 'none';
+    
+    if (lv === 1) {
+      user = "cloud-user";
+      host = "aws-instance";
+      currentDir = "~";
+      writeToTerm("[*] Switched to Level 1. S3 enumeration terminal.");
+    } else {
+      user = "root";
+      host = "docker-container";
+      currentDir = "/";
+      writeToTerm("[*] Switched to Level 2. Privileged Docker container console.");
+    }
+    updateHud();
+  };
+
+  function writeToTerm(text, className) {
+    var out = document.getElementById('cloudTermOutput');
+    var span = document.createElement('span');
+    if (className) span.className = className;
+    span.innerHTML = text + "<br>";
+    out.insertBefore(span, document.getElementById('cloudPrompt'));
+    out.scrollTop = out.scrollHeight;
+  }
+
+  var termInput = document.getElementById('cloudTermInput');
+  termInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      var val = termInput.value.trim();
+      termInput.value = '';
+      if (val) {
+        handleCommand(val);
+      }
+    }
+  });
+
+  function handleCommand(cmdLine) {
+    var symbol = (user === 'root') ? '#' : '$';
+    writeToTerm(user + '@' + host + ':' + currentDir + symbol + " " + escapeHtml(cmdLine), "info");
+    
+    var args = cmdLine.split(/\s+/);
+    var cmd = args[0].toLowerCase();
+
+    if (cmd === 'help') {
+      writeToTerm("Available commands: help, clear, whoami, hint, ls, cat, aws, fdisk, mount");
+      return;
+    }
+    if (cmd === 'clear') {
+      var out = document.getElementById('cloudTermOutput');
+      out.innerHTML = '<span id="cloudPrompt" style="color:#00e5ff;">' + user + '@' + host + ':' + currentDir + symbol + ' </span>';
+      updateHud();
+      return;
+    }
+    if (cmd === 'whoami') {
+      writeToTerm(user);
+      return;
+    }
+    if (cmd === 'hint') {
+      showHint();
+      return;
+    }
+
+    if (level === 1) {
+      if (cmd === 'aws') {
+        var action = args[1];
+        if (action === 's3') {
+          var subAction = args[2];
+          if (subAction === 'ls') {
+            var targetBucket = args[3];
+            if (!targetBucket) {
+              writeToTerm("Available public buckets:\n- s3://hunteros-assets\n- s3://hunteros-backups");
+            } else if (s3Buckets[targetBucket]) {
+              var files = s3Buckets[targetBucket];
+              files.forEach(function(f) { writeToTerm("2026-06-07 12:00:00        1024 " + f); });
+            } else {
+              writeToTerm("An error occurred (AccessDenied) when calling the ListObjectsV2 operation: Access Denied");
+            }
+          } else if (subAction === 'cp') {
+            var src = args[3];
+            var dest = args[4];
+            if (src && src.startsWith('s3://hunteros-backups/')) {
+              var fName = src.replace('s3://hunteros-backups/', '');
+              if (fileContents[fName]) {
+                writeToTerm("download: " + src + " to " + (dest || fName));
+                writeToTerm("\n[File Content of " + fName + "]:\n" + fileContents[fName], "success");
+                if (fName === 'aws_keys.txt') {
+                  flags[1] = true;
+                  updateHud();
+                }
+              } else {
+                writeToTerm("Error: Object " + src + " not found.");
+              }
+            } else {
+              writeToTerm("aws s3 cp [src] [dest]");
+            }
+          } else {
+            writeToTerm("aws s3 ls [bucket] or aws s3 cp s3://[bucket]/[file] .");
+          }
+        } else {
+          writeToTerm("aws [s3]");
+        }
+        return;
+      }
+    }
+
+    if (level === 2) {
+      if (cmd === 'fdisk' || cmd === 'lsblk') {
+        var arg = args[1];
+        if (cmd === 'fdisk' && arg === '-l') {
+          writeToTerm("Disk /dev/xvda1: 40 GiB, 42949672960 bytes, 83886080 sectors\nUnits: sectors of 1 * 512 = 512 bytes\nDevice       Boot Start      End  Sectors Size Id Type\n/dev/xvda1   *     2048 83886046 83883999  40G 83 Linux");
+        } else {
+          writeToTerm("/dev/xvda1 (Host file system drive)");
+        }
+        return;
+      }
+
+      if (cmd === 'mount') {
+        var dev = args[1];
+        var dest = args[2];
+        if (dev === '/dev/xvda1') {
+          if (dest) {
+            containerMounted = true;
+            currentDir = dest;
+            writeToTerm("[+] Device /dev/xvda1 mounted successfully on " + dest, "success");
+            writeToTerm("[+] Escaped Container sandbox! You are now viewing the host file system root.", "success");
+            writeToTerm("[+] FLAG: " + FLAG[2], "success");
+            flags[2] = true;
+            updateHud();
+          } else {
+            writeToTerm("mount: missing mountpoint destination (e.g. mount /dev/xvda1 /mnt)");
+          }
+        } else {
+          writeToTerm("mount: device not found or permission denied");
+        }
+        return;
+      }
+    }
+
+    writeToTerm("bash: " + cmd + ": command not found. Type <strong>help</strong>.");
+  }
+
+  function showHint() {
+    if (level === 1) {
+      writeToTerm("[Hint L1]: List buckets: 'aws s3 ls'. Inspect the backup bucket files: 'aws s3 ls s3://hunteros-backups'. Download files using 'aws s3 cp s3://hunteros-backups/aws_keys.txt .'");
+    } else {
+      writeToTerm("[Hint L2]: Container is in privileged mode. Find disk drives: 'fdisk -l'. Mount host drive on a temp directory: 'mount /dev/xvda1 /mnt' to escape container.");
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+})();
+</script>
+{% endblock %}

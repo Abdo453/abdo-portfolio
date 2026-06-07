@@ -1,0 +1,72 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Race Conditions in Payments Writeup{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">حالة السباق في بوابات الدفع الإلكتروني</h1>
+  <p class="page-title-en">Race Conditions in Payment Gateways & E-commerce</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">Bounty: $3,500</span>
+</div>
+
+<div class="section-card">
+  <h2>Overview / نظرة عامة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>ثغرات حالة السباق (Race Condition) تحدث نتيجة عدم معالجة الطلبات المتزامنة بشكل صحيح على مستوى قاعدة البيانات. يستعرض هذا التقرير كيفية استغلال هذه الثغرة للحصول على سلع مجانية وتكرار سحب الرصيد من المحفظة الرقمية.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Race condition vulnerabilities emerge when concurrent application requests are processed without proper locking mechanisms. This report documents how this flaw was exploited to redeem single-use discount codes multiple times.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Exploitation Methodology / آلية الاستغلال</h2>
+  <ol class="steps-list">
+    <li>تحديد معامل تطبيق قسيمة الخصم <code>POST /api/v1/coupons/redeem</code>.</li>
+    <li>إعداد أداة اختبار وإرسال طلبات متزامنة في نفس اللحظة (Concurrently) باستخدام Turbo Intruder أو سكربت مخصص.</li>
+    <li>إرسال 20 طلباً متزامناً لإضافة قسيمة خصم مخصصة للاستخدام الفردي بقيمة $50.</li>
+    <li>بسبب غياب آلية القفل (Mutex/Row Locking)، يقبل النظام إضافتها 8 مرات متتالية قبل تحديث حالة الاستخدام إلى "مستخدمة" في قاعدة البيانات، مما وفر خصماً كلياً بقيمة $400.</li>
+  </ol>
+</div>
+
+<div class="section-card">
+  <h2>Turbo Intruder Script / سكربت الاستغلال المتزامن</h2>
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Turbo Intruder Python Script / سكربت بايثون لإرسال الطلبات المتزامنة</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=1,
+                           pipeline=False)
+    
+    req = target.req
+    for i in range(30):
+        engine.queue(req, i)
+
+def handleResponse(req, interesting):
+    table.add(req)</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Remediation / التخفيف والحماية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>استخدم تقنيات القفل المتزامن على مستوى قاعدة البيانات مثل (Row Locking) أو المعاملات المعزولة (Atomic Transactions) للتحقق من الحالة وتحديثها بشكل فوري ومنع أي سباق للمعالجة.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Implement database row-level locking (e.g. <code>SELECT ... FOR UPDATE</code> in SQL) or distributed locking services to ensure state validation and modification operations run atomically.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

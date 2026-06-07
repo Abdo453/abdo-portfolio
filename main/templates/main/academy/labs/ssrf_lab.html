@@ -1,0 +1,219 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}SSRF Lab{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">مختبر ثغرات SSRF</h1>
+  <p class="page-title-en">Interactive Server-Side Request Forgery Lab — 3 Levels</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">OWASP A10:2021</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p>محاكي ثغرات SSRF. تلاعب بمعاملات جلب الملفات والصور لإجبار السيرفر على الاتصال بالخوادم الداخلية وشبكات السحابية لقراءة البيانات الحساسة.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p>Simulated Server-Side Request Forgery (SSRF) lab. Manipulate URL fetchers and proxy utilities to coerce the server to interact with internal networks, private portals, and cloud metadata endpoints.</p>
+  </div>
+</div>
+
+<div class="lab-hud">
+  <span>Level: <strong id="hudLevel">1</strong>/3</span>
+  <span>Flags: <strong id="hudFlags">0</strong>/3</span>
+  <span>Progress: <strong id="hudProgress">0%</strong></span>
+</div>
+
+<div class="lab-level-tabs">
+  <button class="lab-tab active" data-level="1" onclick="switchLevel(1)">L1 — Internal Portals</button>
+  <button class="lab-tab" data-level="2" onclick="switchLevel(2)">L2 — Cloud Metadata</button>
+  <button class="lab-tab" data-level="3" onclick="switchLevel(3)">L3 — Blind SSRF</button>
+</div>
+
+<div class="section-card" style="padding:0;border:none;background:transparent;">
+  <div class="lab-simulator" style="border-color:var(--neon-cyan)">
+    <div class="lab-sim-bar" style="background:rgba(0,229,255,0.02)">
+      <label style="color:var(--neon-cyan)">File / Image Proxy URL Fetcher</label>
+    </div>
+    
+    <div style="display:flex;background:#030308;padding:15px;gap:10px;border-bottom:1px solid rgba(0,229,255,0.1);align-items:center;flex-wrap:wrap;">
+      <span style="font-family:'Fira Code', monospace;color:#888;">GET /proxy.php?url=</span>
+      <input type="text" id="fetchUrl" value="http://public-assets.com/images/logo.png" style="background:#000;border:1px solid rgba(255,255,255,0.1);padding:6px 12px;border-radius:4px;color:var(--neon-cyan);font-family:'Fira Code', monospace;font-size:0.85rem;flex:1;min-width:260px;">
+      <button class="lab-sim-btn" onclick="sendFetchRequest()" style="background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.3);color:var(--neon-cyan)">Fetch Asset ▶</button>
+    </div>
+    
+    <div class="lab-output" id="fetchOutput" style="min-height:180px;background:#020205;color:#e2e8f0;">
+      <span class="info">[*] SSRF Proxy simulator ready. Level 1: fetch local server assets.</span><br>
+      <span>Try changing the URL parameters to point to internal networks or localhost.</span><br>
+      <span class="info">[*] Hint L1: Try fetching the internal admin portal at <code>http://localhost:8080/admin</code> or <code>http://127.0.0.1:8080/admin</code>.</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Theory / النظرية</h2>
+  <div id="theoryL1">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 1: الوصول إلى الخدمات الداخلية. الخوادم تمتلك أحياناً لوحات تحكم داخلية غير مصادق عليها متاحة فقط للمضيف المحلي (localhost). تلاعب بمعامل <code>url</code> ليطلب السيرفر صفحة <code>http://localhost:8080/admin</code> بالنيابة عنك.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 1: Fetching internal hosts. Apps often trust internal network queries coming from localhost. Force the server to query <code>http://localhost:8080/admin</code> using the <code>url</code> parameter.</p>
+      </div>
+    </div>
+  </div>
+  <div id="theoryL2" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 2: واجهة بيانات الميتا السحابية (Cloud Metadata). الخوادم السحابية (AWS, GCP, DigitalOcean) توفر خوادم بيانات وصفية عند عناوين IP ثابتة (مثل AWS <code>http://169.254.169.254/latest/meta-data/</code>). استغل الـ SSRF لتسريب مفاتيح وسرية الوصول السحابية (IAM Credentials).</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 2: Cloud Instance Metadata API. Cloud infrastructure (AWS, Azure, DigitalOcean) exposes internal metadata servers on fixed link-local IP <code>169.254.169.254</code>. Query this endpoint to read AWS credentials (AWS IAM Keys).</p>
+      </div>
+    </div>
+  </div>
+  <div id="theoryL3" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 3: ثغرة SSRF العمياء (Blind SSRF). لا تظهر مخرجات الطلب في الاستجابة، ولكن يقوم الخادم بإرسال الطلب بالفعل. لمعرفة نجاح الأمر، يرسل المخترق الطلب إلى سيرفر خارجي يراقبه (Collaborator). استخدم نطاق متعاون خارجي (مثل <code>http://collaborator.hunteros.com</code>) لمراقبة التفاعلات.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 3: Blind Out-of-band (OAST) SSRF. The server fetches the URL but suppresses the output. Attackers must trigger a connection to an external site they monitor (e.g. <code>http://collaborator.hunteros.com</code>) to register incoming DNS/HTTP lookup events.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="../vulnerabilities/ssrf.html" style="display:inline-block;margin-top:8px;">← العودة لصفحة SSRF / Back to SSRF Page</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  var level = 1;
+  var flags = { 1: false, 2: false, 3: false };
+  var FLAG = {
+    1: 'FLAG{ssrf_localhost_portal_accessed}',
+    2: 'FLAG{ssrf_aws_metadata_leak}',
+    3: 'FLAG{ssrf_blind_collaborator_callback}'
+  };
+
+  var fetchInput = document.getElementById('fetchUrl');
+
+  function updateHud() {
+    var n = Object.keys(flags).filter(function(k) { return flags[k]; }).length;
+    document.getElementById('hudFlags').textContent = n;
+    document.getElementById('hudLevel').textContent = level;
+    document.getElementById('hudProgress').textContent = Math.round((n / 3) * 100) + '%';
+    
+    document.querySelectorAll('.lab-tab').forEach(function(t) {
+      var lv = parseInt(t.getAttribute('data-level'), 10);
+      t.classList.toggle('done', flags[lv]);
+      t.classList.toggle('active', lv === level);
+    });
+    try { localStorage.setItem('ssrf_lab_flags', JSON.stringify(flags)); } catch(e) {}
+  }
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('ssrf_lab_flags') || '{}');
+    [1,2,3].forEach(function(k) { if (saved[k]) flags[k] = true; });
+    updateHud();
+  } catch(e) {}
+
+  window.switchLevel = function(lv) {
+    level = lv;
+    document.getElementById('theoryL1').style.display = lv === 1 ? 'block' : 'none';
+    document.getElementById('theoryL2').style.display = lv === 2 ? 'block' : 'none';
+    document.getElementById('theoryL3').style.display = lv === 3 ? 'block' : 'none';
+    
+    var out = document.getElementById('fetchOutput');
+    if (lv === 1) {
+      fetchInput.value = "http://public-assets.com/images/logo.png";
+      out.innerHTML = '<span class="info">[*] Switched to Level 1. Internal Portals.</span><br>' +
+                      '<span>Target: Access http://localhost:8080/admin</span>';
+    } else if (lv === 2) {
+      fetchInput.value = "http://public-assets.com/images/logo.png";
+      out.innerHTML = '<span class="info">[*] Switched to Level 2. Cloud Metadata.</span><br>' +
+                      '<span>Target: Read IAM security credentials via AWS link-local IP (169.254.169.254).</span>';
+    } else {
+      fetchInput.value = "http://public-assets.com/images/logo.png";
+      out.innerHTML = '<span class="info">[*] Switched to Level 3. Blind SSRF.</span><br>' +
+                      '<span>Target: Force HTTP connection call to collaborator domain (collaborator.hunteros.com).</span>';
+    }
+    updateHud();
+  };
+
+  window.sendFetchRequest = function() {
+    var out = document.getElementById('fetchOutput');
+    var url = fetchInput.value.trim();
+
+    out.innerHTML = '<span class="info">[*] Backend firing curl request to: ' + escapeHtml(url) + '</span><br><br>';
+
+    var p = url.toLowerCase();
+
+    if (level === 1) {
+      if (p.includes('localhost:8080/admin') || p.includes('127.0.0.1:8080/admin')) {
+        flags[1] = true;
+        out.innerHTML += '<span class="success">[+] 200 OK: Connected to Internal Administrator Portal!</span><br>';
+        out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">&lt;html&gt;\n  &lt;body&gt;\n    &lt;h1&gt;Admin Panel&lt;/h1&gt;\n    &lt;p&gt;Secret Flag: ' + FLAG[1] + '&lt;/p&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</pre>';
+      } else if (p.includes('localhost') || p.includes('127.0.0.1')) {
+        out.innerHTML += '<span class="success">[+] 200 OK: Localhost root page retrieved. Try accessing port 8080/admin.</span>';
+      } else {
+        out.innerHTML += '<span class="success">[+] 200 OK: Loaded public image asset (size: 450 bytes)</span>';
+      }
+    }
+
+    if (level === 2) {
+      if (p.includes('169.254.169.254')) {
+        if (p.includes('/latest/meta-data/iam/security-credentials/')) {
+          flags[2] = true;
+          out.innerHTML += '<span class="success">[+] 200 OK: AWS Instance Credentials Leaked!</span><br>';
+          out.innerHTML += '<pre style="color:#94a3b8;margin:10px 0;">{\n  "AccessKeyId": "ASIA5QWZ3N7EXAMPLE",\n  "SecretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",\n  "Token": "IQoJb3JpZ2luX2VjE...",\n  "Flag": "' + FLAG[2] + '"\n}</pre>';
+        } else {
+          out.innerHTML += '<span class="success">[+] 200 OK: Cloud Metadata Service detected. Directory structure:\n- latest/\n- user-data/\n\nTry seeking: latest/meta-data/iam/security-credentials/</span>';
+        }
+      } else {
+        out.innerHTML += '<span class="success">[+] 200 OK: Fetched resource (302 redirected to CDN)</span>';
+      }
+    }
+
+    if (level === 3) {
+      // Blind SSRF check
+      if (p.includes('collaborator.hunteros.com') || p.includes('interactsh') || p.includes('webhook.site')) {
+        flags[3] = true;
+        out.innerHTML += '<span class="info">[-] HTTP Response body is suppressed.</span><br>';
+        out.innerHTML += '<span class="success">[+] OAST Alert: Received HTTP request on collaborator server!</span><br>';
+        out.innerHTML += '<span class="success">[+] User-Agent: curl/7.68.0, Source IP: 10.12.0.45</span><br>';
+        out.innerHTML += '<span class="success">[+] ' + FLAG[3] + '</span>';
+      } else {
+        out.innerHTML += '<span class="info">[-] Fetching resource... response is blank. (Backend logs: HTTP 200 fetched successfully).</span><br>';
+        out.innerHTML += '<span class="info">[!] Hint: In Blind SSRF, you do not see the response. Send a request to "collaborator.hunteros.com" to monitor Out-of-Band callback logs.</span>';
+      }
+    }
+
+    updateHud();
+
+    if (flags[1] && flags[2] && flags[3]) {
+      out.innerHTML += '<br><div class="success" style="border: 1px dashed var(--accent-green, #00ff66); padding: 15px; border-radius: 8px; margin-top: 15px; background: rgba(0, 255, 102, 0.05); text-align: center;">';
+      out.innerHTML += '<span style="font-size: 1.5rem;">🏆</span><br>';
+      out.innerHTML += '<strong style="color:#fff; font-size:1.1rem;">[★] Certificate: "SSRF Master Badge"</strong><br>';
+      out.innerHTML += '<span style="font-family:\'Fira Code\', monospace; color:var(--accent-green, #00ff66); font-size:0.9rem;">ID: SSRF-NETWORK-COERCER</span><br>';
+      out.innerHTML += '</div>';
+    }
+  };
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+})();
+</script>
+{% endblock %}

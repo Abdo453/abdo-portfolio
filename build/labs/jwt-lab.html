@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bug Bounty Academy — Arabic & English cybersecurity learning">
+  <title>JWT Forgery Lab | Abdo Ramdan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" id="academyCssLink" href="../css/academy.css">
+  <script>
+    (function() {
+      if (localStorage.getItem('academy_theme') === 'light') {
+        document.documentElement.classList.add('light-mode');
+      }
+    })();
+  </script>
+  
+</head>
+<body class="academy-page">
+<script>
+  if (localStorage.getItem('academy_theme') === 'light') {
+    document.body.classList.add('light-mode');
+  }
+</script>
+
+<header class="academy-header">
+  <div class="academy-logo">🎯 Bug Bounty Academy</div>
+  <nav class="academy-nav-links">
+    <a class="academy-btn" href="index.html">← Home / الرئيسية</a>
+    <a class="academy-btn" href="methodology.html" target="_blank">🗺️ Methodology</a>
+    <a class="academy-btn" href="bug-bounty-writeups.html">📝 Writeups</a>
+    <a class="academy-btn" href="profile.html">👤 Profile</a>
+    <button class="academy-btn" id="themeToggleBtn" onclick="toggleTheme()" style="padding:7px 10px;">🌓</button>
+  </nav>
+</header>
+
+<div class="academy-layout">
+  <aside class="academy-sidebar">
+    <div class="sidebar-title">Vulnerabilities / الثغرات</div>
+    <a class="sidebar-link" href="vulnerabilities/sql-injection.html">💉 SQL Injection</a>
+    <a class="sidebar-link" href="vulnerabilities/idor.html">🔓 IDOR / BAC</a>
+    <a class="sidebar-link" href="vulnerabilities/ssrf.html">🌐 SSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/command-injection.html">⚡ Command Injection</a>
+    <a class="sidebar-link" href="vulnerabilities/jwt-security.html">🎟️ JWT Security</a>
+    <a class="sidebar-link" href="vulnerabilities/graphql-injection.html">🛰️ GraphQL Security</a>
+    <a class="sidebar-link" href="vulnerabilities/race-conditions.html">⏱️ Race Conditions</a>
+    <a class="sidebar-link" href="vulnerabilities/web-cache-poisoning.html">📦 Web Cache Poisoning</a>
+    <a class="sidebar-link" href="vulnerabilities/api-security.html">🔑 API Security</a>
+    <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
+    <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
+    <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    
+    <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
+    <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
+    <a class="sidebar-link" href="labs/linux-security-lab.html">🐧 Linux Security Lab</a>
+    <a class="sidebar-link" href="labs/sql-injection-lab.html">🧪 SQLi Lab</a>
+    <a class="sidebar-link" href="labs/command-injection-lab.html">🧪 Command Injection Lab</a>
+    <a class="sidebar-link" href="labs/jwt-lab.html">🧪 JWT Forgery Lab</a>
+    <a class="sidebar-link" href="labs/idor-lab.html">🧪 IDOR Lab</a>
+    <a class="sidebar-link" href="labs/ssrf-lab.html">🧪 SSRF Lab</a>
+    <a class="sidebar-link" href="labs/graphql-lab.html">🧪 GraphQL Lab</a>
+    <a class="sidebar-link" href="labs/race-condition-lab.html">🧪 Race Conditions Lab</a>
+    <a class="sidebar-link" href="labs/api-security-lab.html">🧪 API Security Lab</a>
+    <a class="sidebar-link" href="labs/ai-security-lab.html">🧪 AI Security Lab</a>
+    <a class="sidebar-link" href="labs/cloud-security-lab.html">🧪 Cloud Security Lab</a>
+
+    <div class="sidebar-title" style="margin-top:18px;">Linux Track / مسار لينكس</div>
+    <a class="sidebar-link" href="linux-security/linux-fundamentals.html">🐧 Linux Fundamentals</a>
+    <a class="sidebar-link" href="linux-security/linux-privesc.html">🚀 Privilege Escalation</a>
+    <a class="sidebar-link" href="linux-security/linux-commands.html">📜 Commands Reference</a>
+    <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
+
+    <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
+    <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
+  </aside>
+
+  <main class="academy-main">
+    
+<div class="page-hero">
+  <h1 class="page-title">مختبر تزوير وتعديل JWT</h1>
+  <p class="page-title-en">Interactive JWT Forgery & Exploitation Lab — 3 Levels</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">OWASP A01</span>
+</div>
+
+<div class="bilingual-block">
+  <div class="lang-section">
+    <span class="lang-tag">AR</span>
+    <p>محاكي ثغرات JWT. تلاعب برأس التوكن (Header) وحمولته (Payload) وتوقيعه لتسجيل الدخول كمسؤول (admin) والحصول على الـ Flags.</p>
+  </div>
+  <div class="lang-section lang-en">
+    <span class="lang-tag">EN</span>
+    <p>Simulated JWT exploitation lab. Manipulate the token header, payload, and signature to authenticate as "admin" and retrieve the flags.</p>
+  </div>
+</div>
+
+<div class="lab-hud">
+  <span>Level: <strong id="hudLevel">1</strong>/3</span>
+  <span>Flags: <strong id="hudFlags">0</strong>/3</span>
+  <span>Progress: <strong id="hudProgress">0%</strong></span>
+</div>
+
+<div class="lab-level-tabs">
+  <button class="lab-tab active" data-level="1" onclick="switchLevel(1)">L1 — None Alg</button>
+  <button class="lab-tab" data-level="2" onclick="switchLevel(2)">L2 — Weak HMAC</button>
+  <button class="lab-tab" data-level="3" onclick="switchLevel(3)">L3 — JKU Injection</button>
+</div>
+
+<div class="section-card" style="padding:0;border:none;background:transparent;">
+  <div class="lab-simulator" style="border-color:var(--neon-purple, #b026ff)">
+    <div class="lab-sim-bar" style="background:rgba(176,38,255,0.02)">
+      <label style="color:var(--neon-purple, #b026ff)">JWT Token Editor & Decoder</label>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;background:#030308;padding:15px;gap:15px;border-bottom:1px solid rgba(176,38,255,0.1);min-height:260px;">
+      <!-- Input fields for editing JWT parts -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:0.8rem;color:#cbd5e1;">Header (JSON)</label>
+        <textarea id="jwtHeader" style="background:#000;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--neon-cyan);font-family:'Fira Code', monospace;font-size:0.8rem;padding:8px;resize:none;height:70px;">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</textarea>
+        
+        <label style="font-size:0.8rem;color:#cbd5e1;">Payload (JSON)</label>
+        <textarea id="jwtPayload" style="background:#000;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--neon-orange, #f97316);font-family:'Fira Code', monospace;font-size:0.8rem;padding:8px;resize:none;height:90px;">{
+  "user": "guest",
+  "role": "guest_user"
+}</textarea>
+      </div>
+
+      <!-- Live encoded token and signature -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:0.8rem;color:#cbd5e1;">Key / Signature (Level 2/3)</label>
+        <input type="text" id="jwtSignature" placeholder="Signature (e.g. secret_key)" style="background:#000;border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:#f43f5e;font-family:'Fira Code', monospace;font-size:0.8rem;padding:6px 12px;">
+        
+        <label style="font-size:0.8rem;color:#cbd5e1;">Encoded JWT</label>
+        <textarea id="jwtRaw" readonly style="background:#020205;border:1px solid rgba(255,255,255,0.05);border-radius:4px;color:#94a3b8;font-family:'Fira Code', monospace;font-size:0.75rem;padding:8px;resize:none;height:80px;"></textarea>
+        
+        <button class="lab-sim-btn" onclick="sendToken()" style="background:rgba(176,38,255,0.1);border-color:rgba(176,38,255,0.3);color:var(--neon-purple, #b026ff);align-self:flex-end;margin-top:5px;width:100%;">Submit Token / إرسال التوكن ▶</button>
+      </div>
+    </div>
+    
+    <div class="lab-output" id="labOutput" style="min-height:150px;background:#020205;color:#e2e8f0;">
+      <span class="info">[*] JWT Lab initialized.</span><br>
+      <span>Edit the header/payload above, it will automatically encode. Target: Elevate role to 'admin' and bypass validations.</span><br>
+      <span class="info">[*] Hint L1: Change "alg" to "none" (or "NONE") in Header, and set "user" to "admin" or "role" to "admin" in Payload. Remove signature.</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Theory / النظرية</h2>
+  <div id="theoryL1">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 1: خوارزمية (none). تسمح بعض المكتبات الضعيفة بقبول التوكنات الخالية من التوقيع إذا تم تعيين <code>"alg": "none"</code>. قم بتعديل الرأس والحمولة ثم احذف قيمة التوقيع تماماً.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 1: (none) Algorithm. Some vulnerable libraries accept tokens with no signature if <code>"alg": "none"</code> is set. Alter the header and payload, and empty the signature input.</p>
+      </div>
+    </div>
+  </div>
+  <div id="theoryL2" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 2: كسر مفتاح HMAC الضعيف. المفتاح السري المستخدم هو كلمة شائعة. خمن المفتاح (مثلاً <code>secret</code> أو <code>admin</code> أو <code>supersecret</code>) ووقّع به توكن الـ admin.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 2: Cracking Weak HMAC key. The signing key is a common dictionary word. Guess/Bruteforce the key (e.g. <code>secret</code> or <code>123456</code>) to forge your admin token signature.</p>
+      </div>
+    </div>
+  </div>
+  <div id="theoryL3" style="display:none;">
+    <div class="bilingual-block">
+      <div class="lang-section">
+        <span class="lang-tag">AR</span>
+        <p>المستوى 3: حقن JKU (JWK Set URL). تلاعب بمتغير <code>jku</code> في الرأس ليشير إلى رابط خارجي موثوق أو متخطي الفحص (مثل <code>http://localhost/keys.json</code>) لتجاوز التحقق من التوقيع.</p>
+      </div>
+      <div class="lang-section lang-en">
+        <span class="lang-tag">EN</span>
+        <p>Level 3: JKU (JWK Set URL) Injection. Manipulate the <code>jku</code> header parameter to point to an attacker-controlled or local URL (e.g., <code>http://localhost/keys.json</code>) to control the verification key.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="academy-btn" href="../vulnerabilities/jwt-security.html" style="display:inline-block;margin-top:8px;">← العودة لصفحة JWT / Back to JWT Page</a>
+
+  </main>
+</div>
+
+<!-- Dynamic Relative Path & Active Class Resolver -->
+<script>
+  (function() {
+    var path = window.location.pathname;
+    
+    // Detect subdir depth based on folder structure in path
+    var isSubdir = path.includes('/vulnerabilities/') || path.includes('/labs/') || path.includes('/linux-security/') || path.includes('/writeups/') || path.includes('/books/');
+    if (!isSubdir && window.location.protocol === 'file:') {
+      var parts = window.location.href.split('/');
+      isSubdir = parts.includes('vulnerabilities') || parts.includes('labs') || parts.includes('linux-security') || parts.includes('writeups') || parts.includes('books');
+    }
+    
+    var prefix = isSubdir ? '../' : '';
+    
+    // Fix stylesheet href dynamically
+    var cssLink = document.getElementById('academyCssLink');
+    if (cssLink) {
+      cssLink.setAttribute('href', prefix + 'css/academy.css');
+    }
+    
+    // Fix all page links
+    var links = document.querySelectorAll('a, link, script');
+    links.forEach(function(el) {
+      var href = el.getAttribute('href');
+      if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('javascript:')) {
+        if (!href.startsWith('../') && !href.startsWith('./') && !href.startsWith('/')) {
+          el.setAttribute('href', prefix + href);
+        }
+      }
+      var src = el.getAttribute('src');
+      if (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('./') && !src.startsWith('../')) {
+        el.setAttribute('src', prefix + src);
+      }
+    });
+
+    // Resolve active sidebar link
+    var currentUrl = window.location.href.split('#')[0].split('?')[0];
+    var sidebarLinks = document.querySelectorAll('.sidebar-link');
+    sidebarLinks.forEach(function(link) {
+      var rawHref = link.getAttribute('href');
+      // Resolve link's raw destination (removing prefix if subdir)
+      var target = isSubdir && rawHref.startsWith('../') ? rawHref.substring(3) : rawHref;
+      if (currentUrl.endsWith(target)) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  })();
+</script>
+<script>
+  function copyCmd(btn) {
+    var pre = btn.closest('.cmd-block').querySelector('pre');
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.textContent.trim()).then(function() {
+      var o = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = o; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+  function toggleTheme() {
+    var isLight = document.body.classList.contains('light-mode');
+    if (isLight) {
+      document.body.classList.remove('light-mode');
+      document.documentElement.classList.remove('light-mode');
+      localStorage.setItem('academy_theme', 'dark');
+    } else {
+      document.body.classList.add('light-mode');
+      document.documentElement.classList.add('light-mode');
+      localStorage.setItem('academy_theme', 'light');
+    }
+  }
+</script>
+
+<script>
+(function() {
+  var level = 1;
+  var flags = { 1: false, 2: false, 3: false };
+  var FLAG = {
+    1: 'FLAG{jwt_none_alg_bypass}',
+    2: 'FLAG{jwt_weak_key_cracked}',
+    3: 'FLAG{jwt_jku_injection_success}'
+  };
+
+  var headerArea = document.getElementById('jwtHeader');
+  var payloadArea = document.getElementById('jwtPayload');
+  var sigInput = document.getElementById('jwtSignature');
+  var rawArea = document.getElementById('jwtRaw');
+
+  function base64UrlEncode(str) {
+    try {
+      var b64 = btoa(unescape(encodeURIComponent(str)));
+      return b64.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+    } catch(e) { return ""; }
+  }
+
+  function encodeToken() {
+    var h = headerArea.value;
+    var p = payloadArea.value;
+    var s = sigInput.value;
+
+    var hEnc = base64UrlEncode(h);
+    var pEnc = base64UrlEncode(p);
+    
+    var sig = "";
+    if (s && s.trim() !== "") {
+      // Simple pseudo signature simulation
+      sig = base64UrlEncode(s);
+    }
+
+    rawArea.value = hEnc + "." + pEnc + "." + (sig || "");
+  }
+
+  headerArea.addEventListener('input', encodeToken);
+  payloadArea.addEventListener('input', encodeToken);
+  sigInput.addEventListener('input', encodeToken);
+  
+  // Initial encoding
+  encodeToken();
+
+  function updateHud() {
+    var n = Object.keys(flags).filter(function(k) { return flags[k]; }).length;
+    document.getElementById('hudFlags').textContent = n;
+    document.getElementById('hudLevel').textContent = level;
+    document.getElementById('hudProgress').textContent = Math.round((n / 3) * 100) + '%';
+    
+    document.querySelectorAll('.lab-tab').forEach(function(t) {
+      var lv = parseInt(t.getAttribute('data-level'), 10);
+      t.classList.toggle('done', flags[lv]);
+      t.classList.toggle('active', lv === level);
+    });
+    try { localStorage.setItem('jwt_lab_flags', JSON.stringify(flags)); } catch(e) {}
+  }
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('jwt_lab_flags') || '{}');
+    [1,2,3].forEach(function(k) { if (saved[k]) flags[k] = true; });
+    updateHud();
+  } catch(e) {}
+
+  window.switchLevel = function(lv) {
+    level = lv;
+    document.getElementById('theoryL1').style.display = lv === 1 ? 'block' : 'none';
+    document.getElementById('theoryL2').style.display = lv === 2 ? 'block' : 'none';
+    document.getElementById('theoryL3').style.display = lv === 3 ? 'block' : 'none';
+    
+    var out = document.getElementById('labOutput');
+    if (lv === 1) {
+      headerArea.value = '{\n  "alg": "HS256",\n  "typ": "JWT"\n}';
+      payloadArea.value = '{\n  "user": "guest",\n  "role": "guest_user"\n}';
+      sigInput.value = '';
+      out.innerHTML = '<span class="info">[*] Switched to Level 1. none Algorithm.</span><br>' +
+                      '<span>Hint L1: Change Header alg to "none", and set Payload user to "admin" or role to "admin".</span>';
+    } else if (lv === 2) {
+      headerArea.value = '{\n  "alg": "HS256",\n  "typ": "JWT"\n}';
+      payloadArea.value = '{\n  "user": "guest",\n  "role": "guest_user"\n}';
+      sigInput.value = 'guest_signature';
+      out.innerHTML = '<span class="info">[*] Switched to Level 2. Weak HMAC Key.</span><br>' +
+                      '<span>Hint L2: The backend signature key is weak. Try secret words like "secret" or "key".</span>';
+    } else {
+      headerArea.value = '{\n  "alg": "RS256",\n  "typ": "JWT",\n  "kid": "key-1"\n}';
+      payloadArea.value = '{\n  "user": "guest",\n  "role": "guest_user"\n}';
+      sigInput.value = 'rsa_signature';
+      out.innerHTML = '<span class="info">[*] Switched to Level 3. JKU Header Injection.</span><br>' +
+                      '<span>Hint L3: Add "jku": "http://localhost/keys.json" to header to spoof verified keys.</span>';
+    }
+    encodeToken();
+    updateHud();
+  };
+
+  window.sendToken = function() {
+    var out = document.getElementById('labOutput');
+    var hRaw = headerArea.value;
+    var pRaw = payloadArea.value;
+    var sigRaw = sigInput.value;
+
+    var hJson, pJson;
+    try {
+      hJson = JSON.parse(hRaw);
+    } catch(e) {
+      out.innerHTML = '<span class="error">[-] JWT Header JSON syntax error!</span>';
+      return;
+    }
+    try {
+      pJson = JSON.parse(pRaw);
+    } catch(e) {
+      out.innerHTML = '<span class="error">[-] JWT Payload JSON syntax error!</span>';
+      return;
+    }
+
+    out.innerHTML = '<span class="info">[*] Sending Token: ' + rawArea.value + '</span><br><br>';
+
+    var userVal = pJson.user || pJson.username || "";
+    var roleVal = pJson.role || pJson.admin || "";
+
+    var isAdmin = (userVal.toLowerCase() === 'admin' || roleVal.toLowerCase() === 'admin');
+
+    if (!isAdmin) {
+      out.innerHTML += '<span class="error">[-] Authentication successful, but logged in as: ' + userVal + ' (' + roleVal + ').</span><br>';
+      out.innerHTML += '<span class="error">[-] Access Denied: Admin role required.</span>';
+      return;
+    }
+
+    if (level === 1) {
+      var alg = hJson.alg ? hJson.alg.toLowerCase() : "";
+      if (alg === 'none') {
+        if (!sigRaw || sigRaw.trim() === "") {
+          flags[1] = true;
+          out.innerHTML += '<span class="success">[+] Signature verified with algorithm "none"! Welcome Admin!</span><br>';
+          out.innerHTML += '<span class="success">[+] ' + FLAG[1] + '</span>';
+        } else {
+          out.innerHTML += '<span class="error">[-] Signature validation failed. Algorithm "none" expects no signature.</span>';
+        }
+      } else {
+        out.innerHTML += '<span class="error">[-] Verification failed: Invalid signature for algorithm ' + hJson.alg + '.</span>';
+      }
+    }
+
+    if (level === 2) {
+      if (hJson.alg && hJson.alg.toUpperCase() === 'HS256') {
+        if (sigRaw.trim() === 'secret') {
+          flags[2] = true;
+          out.innerHTML += '<span class="success">[+] Key signature matched "secret"! Signature verified.</span><br>';
+          out.innerHTML += '<span class="success">[+] ' + FLAG[2] + '</span>';
+        } else {
+          out.innerHTML += '<span class="error">[-] Signature verification failed: Invalid HMAC-SHA256 signature key.</span><br>';
+          out.innerHTML += '<span class="info">[!] Hint: Try guessing common secret keys like "secret", "admin", "12345".</span>';
+        }
+      } else {
+        out.innerHTML += '<span class="error">[-] Error: Server requires HS256 algorithm signature.</span>';
+      }
+    }
+
+    if (level === 3) {
+      if (hJson.jku && (hJson.jku.includes('localhost') || hJson.jku.includes('127.0.0.1'))) {
+        flags[3] = true;
+        out.innerHTML += '<span class="success">[+] Verification key fetched successfully from: ' + hJson.jku + '</span><br>';
+        out.innerHTML += '<span class="success">[+] JWT Signature matched spoofed public key. Access granted!</span><br>';
+        out.innerHTML += '<span class="success">[+] ' + FLAG[3] + '</span>';
+      } else {
+        out.innerHTML += '<span class="error">[-] Signature validation failed: JKU header missing or points to untrusted domain.</span><br>';
+        out.innerHTML += '<span class="info">[!] Hint: Try adding "jku": "http://localhost/keys.json" to the Header JSON.</span>';
+      }
+    }
+
+    updateHud();
+    
+    if (flags[1] && flags[2] && flags[3]) {
+      out.innerHTML += '<br><div class="success" style="border: 1px dashed var(--accent-green, #00ff66); padding: 15px; border-radius: 8px; margin-top: 15px; background: rgba(0, 255, 102, 0.05); text-align: center;">';
+      out.innerHTML += '<span style="font-size: 1.5rem;">🏆</span><br>';
+      out.innerHTML += '<strong style="color:#fff; font-size:1.1rem;">[★] Certificate: "JWT Security Specialist Badge"</strong><br>';
+      out.innerHTML += '<span style="font-family:\'Fira Code\', monospace; color:var(--accent-green, #00ff66); font-size:0.9rem;">ID: JWT-FORGERY-MASTER</span><br>';
+      out.innerHTML += '</div>';
+    }
+  };
+})();
+</script>
+
+</body>
+</html>

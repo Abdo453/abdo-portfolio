@@ -1,0 +1,91 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Linux Commands Reference{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">جدول الأوامر المرجعي لنظام لينكس</h1>
+  <p class="page-title-en">Linux Commands Reference Table</p>
+  <span class="severity-pill pill-medium">REFERENCE</span>
+  <span class="severity-pill pill-high">⏱ Cheat Sheet</span>
+</div>
+
+<div class="section-card">
+  <h2>Linux Commands Cheat Sheet / مرجع الأوامر السريع</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>جدول مصنف لأهم الأوامر والبارامترات التي يستخدمها باحث الثغرات ومختبر الاختراق أثناء التعامل مع خوادم لينكس.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>A categorized table containing the most critical commands and parameters used by researchers during Linux host audits.</p>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto;margin-top:15px;">
+    <table style="width:100%;border-collapse:collapse;color:#cbd5e1;font-size:0.9rem;text-align:left;">
+      <thead>
+        <tr style="border-bottom:2px solid rgba(0,229,255,0.15);background:rgba(0,229,255,0.02);">
+          <th style="padding:12px;color:var(--neon-cyan);">Category / الفئة</th>
+          <th style="padding:12px;color:var(--neon-cyan);">Command / الأمر</th>
+          <th style="padding:12px;color:var(--neon-cyan);">Description (EN)</th>
+          <th style="padding:12px;color:var(--neon-cyan);">الوصف (AR)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:12px;font-weight:bold;">File Operations</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">cat [file]</code></td>
+          <td style="padding:12px;">Display file contents</td>
+          <td style="padding:12px;direction:rtl;">عرض محتويات الملف</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01);">
+          <td style="padding:12px;font-weight:bold;">File Operations</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">grep "[pattern]" [file]</code></td>
+          <td style="padding:12px;">Search for matching strings</td>
+          <td style="padding:12px;direction:rtl;">البحث عن نصوص مطابقة داخل ملف</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:12px;font-weight:bold;">System Audit</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">uname -a</code></td>
+          <td style="padding:12px;">Print kernel version details</td>
+          <td style="padding:12px;direction:rtl;">عرض تفاصيل إصدار النواة ونوع النظام</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01);">
+          <td style="padding:12px;font-weight:bold;">System Audit</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">ps aux</code></td>
+          <td style="padding:12px;">List running processes</td>
+          <td style="padding:12px;direction:rtl;">عرض العمليات والبرامج النشطة حالياً</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:12px;font-weight:bold;">Network</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">netstat -tulnp</code></td>
+          <td style="padding:12px;">List listening ports and sockets</td>
+          <td style="padding:12px;direction:rtl;">عرض المنافذ المفتوحة والمستمعة على السيرفر</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01);">
+          <td style="padding:12px;font-weight:bold;">Network</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">ss -antp</code></td>
+          <td style="padding:12px;">List active network connections</td>
+          <td style="padding:12px;direction:rtl;">عرض اتصالات الشبكة النشطة</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:12px;font-weight:bold;">Permissions</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">chmod +x [file]</code></td>
+          <td style="padding:12px;">Make file executable</td>
+          <td style="padding:12px;direction:rtl;">جعل الملف قابلاً للتشغيل كبرنامج</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01);">
+          <td style="padding:12px;font-weight:bold;">Permissions</td>
+          <td style="padding:12px;"><code style="color:#f43f5e;">chown root:root [file]</code></td>
+          <td style="padding:12px;">Change file owner to root</td>
+          <td style="padding:12px;direction:rtl;">تغيير مالك ومجموعة الملف إلى root</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<a class="academy-btn" href="linux-checklist.html" style="display:inline-block;margin-top:8px;">الانتقال إلى قائمة تدقيق النظام / Next: Audit Checklist →</a>
+{% endblock %}

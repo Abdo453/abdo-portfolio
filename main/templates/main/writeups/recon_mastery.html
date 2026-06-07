@@ -1,0 +1,70 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Reconnaissance Mastery Writeup{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">احتراف الاستطلاع الرقمي (Recon Mastery)</h1>
+  <p class="page-title-en">Reconnaissance Mastery: Subdomain Takeover and Port Scanning</p>
+  <span class="severity-pill pill-high">HIGH</span>
+  <span class="severity-pill pill-medium">Bounty: $1,500</span>
+</div>
+
+<div class="section-card">
+  <h2>Overview / نظرة عامة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>الاستطلاع الرقمي هو حجر الأساس لأي عملية اختبار اختراق ناجحة. يتحدث هذا الدليل والتقرير عن كيفية اكتشاف نطاقات فرعية منسية ومنافذ غير مألوفة مكنت من الاستحواذ على نطاق فرعي حساس تابع لشركة عالمية.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Reconnaissance is the foundation of successful pentesting. This report details how sub-domain discovery and port auditing identified a dangling DNS pointer, leading to a subdomain takeover on a major enterprise target.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Recon Checklist / قائمة عمليات الاستطلاع</h2>
+  <ol class="steps-list">
+    <li>جمع النطاقات الفرعية باستخدام أداة <code>subfinder</code> و <code>assetfinder</code>.</li>
+    <li>فلترة النطاقات الفعالة باستخدام <code>httpx</code> والتحقق من رموز الاستجابة (Status Codes).</li>
+    <li>فحص المنافذ المفتوحة والخدمات النشطة باستخدام <code>nmap</code> أو <code>naabu</code>.</li>
+    <li>مراقبة سجلات DNS والبحث عن قيم CNAME تشير لمستضيفين خارجيين ملغيين (Dangling CNAME).</li>
+  </ol>
+</div>
+
+<div class="section-card">
+  <h2>Commands Used / الأوامر المستخدمة</h2>
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Subdomain Discovery / جمع النطاقات</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>subfinder -d target.com -o subs.txt
+assetfinder --subs-only target.com >> subs.txt</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>HTTP Probe / التحقق من المواقع النشطة</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>cat subs.txt | sort -u | httpx -title -status-code -mc 200,302 -o active.txt</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>Remediation / التخفيف والحماية</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>احرص على حذف سجلات DNS CNAME غير المستخدمة فور إيقاف أي خدمة سحابية خارجية (مثل S3 أو Heroku) لمنع المخترقين من الاستحواذ عليها.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Harden DNS management by deleting any legacy CNAME records pointing to decommissioned third-party cloud assets (like S3 buckets or Heroku apps) immediately.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

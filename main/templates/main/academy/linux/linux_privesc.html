@@ -1,0 +1,102 @@
+{% extends "main/academy/base.html" %}
+
+{% block title %}Linux Privilege Escalation{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1 class="page-title">ترقية الصلاحيات في نظام لينكس (PrivEsc)</h1>
+  <p class="page-title-en">Linux Privilege Escalation Track</p>
+  <span class="severity-pill pill-critical">TRACK 2</span>
+  <span class="severity-pill pill-high">⏱ ~30 min</span>
+</div>
+
+<div class="section-card">
+  <h2>1. What is Privilege Escalation? / ما هي ترقية الصلاحيات؟</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>ترقية الصلاحيات هي عملية استغلال ثغرة أمنية أو تكوين خاطئ (Misconfiguration) في نظام التشغيل للوصول إلى مستوى صلاحيات أعلى من المخصص للحساب الحالي (غالباً الانتقال من مستخدم عادي مثل <code>www-data</code> إلى مسؤول النظام <code>root</code>).</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Privilege escalation is the process of exploiting bugs or misconfigurations within an operating system to gain elevated access to resources that are normally protected from standard accounts (usually moving from a low-priv privilege like <code>www-data</code> to <code>root</code>).</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>2. SUID/SGID Exploits / استغلال صلاحية SUID</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>عند تعيين بت SUID على ملف تنفيذي، يتم تشغيل هذا الملف بصلاحيات مالك الملف (غالباً root) بدلاً من المستخدم الذي قام بتشغيله. إذا كان هذا الملف يسمح بتنفيذ أوامر أو قراءة ملفات بطرق غير مباشرة، يمكن استخدامه لترقية الصلاحيات.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>When the SUID bit is set on an executable, it runs with the privileges of the file owner (usually root) rather than the user invoking it. If the binary supports command execution or interactive shells, it can be exploited to spawn a root shell.</p>
+    </div>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Find all SUID binaries / البحث عن ملفات SUID</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>find / -perm -4000 -type f 2>/dev/null</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>3. Sudo Privileges & GTFOBins / صلاحيات Sudo و GTFOBins</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>يسمح أمر <code>sudo</code> للمستخدمين بتشغيل تطبيقات بصلاحيات root. يفحص المخترقون الصلاحيات المسموح بتشغيلها دون كلمة مرور <code>(NOPASSWD)</code> ثم يستعينون بموقع <strong>GTFOBins</strong> لمعرفة كيفية استغلال هذه البرمجيات (مثل <code>awk</code>, <code>find</code>, <code>vim</code>, <code>bash</code>) للحصول على shell.</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>The <code>sudo</code> utility lets users execute commands with root permissions. Security auditors check allowed commands without password prompt via <code>sudo -l</code>, and then reference resources like <strong>GTFOBins</strong> to exploit applications (e.g. <code>awk</code>, <code>find</code>, <code>vim</code>) to drop into a root terminal.</p>
+    </div>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>List Sudo Privileges / عرض الصلاحيات المتاحة</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>sudo -l</pre>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Example Awk Sudo Exploit / استغلال أداة Awk</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>sudo awk 'BEGIN {system("/bin/sh")}'</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>4. Writable Cron Jobs / المهام المجدولة القابلة للكتابة</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>الـ Cron Jobs هي سكربتات يتم تشغيلها دورياً (مثلاً كل دقيقة) بصلاحيات معينة. إذا كان السكربت الذي يقوم الـ Cron بتشغيله مملوكاً لـ root ولكنه قابل للكتابة (Writable) لمستخدم عادي، يمكننا تعديله لإضافة أوامر مثل منح صلاحية SUID للـ Bash أو إنشاء اتصال عكسي (Reverse Shell).</p>
+    </div>
+    <div class="lang-section lang-en">
+      <span class="lang-tag">EN</span>
+      <p>Cron Jobs are automated tasks executed periodically (e.g., every minute). If a cron script runs as root but is writable by low-privilege users, attackers can inject malicious payloads (like adding SUID to bash or establishing a reverse shell) to achieve root status.</p>
+    </div>
+  </div>
+
+  <div class="cmd-block">
+    <div class="cmd-bar">
+      <span>Inject SUID backdoor into writable script / حقن باب خلفي في سكربت Cron</span>
+      <button class="copy-btn" onclick="copyCmd(this)">Copy</button>
+    </div>
+    <pre>echo "chmod u+s /bin/bash" >> /path/to/writable_script.sh</pre>
+  </div>
+</div>
+
+<a class="academy-btn" href="linux-commands.html" style="display:inline-block;margin-top:8px;">الانتقال إلى جدول الأوامر المرجعي / Next: Commands Reference →</a>
+{% endblock %}
