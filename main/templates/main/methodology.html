@@ -13,7 +13,7 @@
       --neon-green: #00ff66;
       --neon-red: #ff0055;
       --bg-dark: #020205;
-      --bg-card: rgba(10, 10, 20, 0.5);
+      --bg-card: rgba(8, 8, 20, 0.45);
       --border-color: rgba(0, 229, 255, 0.15);
     }
     body {
@@ -28,11 +28,69 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+      position: relative;
     }
+
+    /* Ambient Neon Orbs & Grid */
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(140px);
+      opacity: 0.05;
+      animation: orbFloat 25s ease-in-out infinite;
+    }
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--neon-cyan), transparent 70%);
+      top: -10%;
+      left: -10%;
+    }
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--neon-purple), transparent 70%);
+      bottom: -10%;
+      right: -10%;
+      animation-delay: -5s;
+    }
+    .orb-3 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--neon-green), transparent 70%);
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -10s;
+    }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(50px, -50px) scale(1.1); }
+    }
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.02;
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, var(--neon-cyan) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--neon-cyan) 1px, transparent 1px);
+    }
+
     .meth-header {
-      background: rgba(4, 4, 8, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-color);
+      background: rgba(4, 4, 10, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
@@ -40,7 +98,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
     }
     .meth-logo {
       font-family: 'Outfit', sans-serif;
@@ -76,18 +134,23 @@
       display: flex;
       flex: 1;
       height: calc(100vh - 65px);
+      position: relative;
+      z-index: 1;
     }
     
     /* Collapsible Sidebar styling */
     .meth-sidebar {
       width: 360px;
-      background: rgba(3, 3, 6, 0.98);
-      border-right: 1px solid rgba(0, 229, 255, 0.08);
-      padding: 20px 10px;
+      background: rgba(3, 3, 8, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(0, 229, 255, 0.1);
+      padding: 24px 14px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 20px;
+      z-index: 10;
     }
     .sidebar-category {
       display: flex;
@@ -123,36 +186,93 @@
     .meth-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 4px;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
       cursor: pointer;
       border: 1px solid transparent;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       color: #94a3b8;
       font-family: 'Outfit', sans-serif;
       font-weight: 600;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
     }
     .meth-item:hover {
-      background: rgba(255, 255, 255, 0.02);
-      color: #f1f5f9;
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      padding-left: 20px;
     }
     .meth-item.active {
-      background: rgba(0, 229, 255, 0.06);
-      border-color: rgba(0, 229, 255, 0.2);
+      background: rgba(0, 229, 255, 0.08);
+      border-color: rgba(0, 229, 255, 0.25);
       color: var(--neon-cyan);
-      box-shadow: 0 0 10px rgba(0, 229, 255, 0.03);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+      padding-left: 20px;
+    }
+
+    /* Light Theme Overrides */
+    body.light-theme {
+      background-color: #f8fafc;
+      color: #334155;
+    }
+    body.light-theme .grid-bg {
+      opacity: 0.04;
+      background-image: 
+        linear-gradient(to right, #0ea5e9 1px, transparent 1px),
+        linear-gradient(to bottom, #0ea5e9 1px, transparent 1px);
+    }
+    body.light-theme .orb {
+      opacity: 0.08;
+    }
+    body.light-theme .meth-sidebar {
+      background: rgba(248, 250, 252, 0.75);
+      border-right: 1px solid rgba(15, 23, 42, 0.08);
+    }
+    body.light-theme .meth-header {
+      background: rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    }
+    body.light-theme .cyber-card {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+      color: #334155;
+    }
+    body.light-theme .cyber-card:hover {
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), 0 0 20px rgba(14, 165, 233, 0.1);
+    }
+    body.light-theme .card-header h3 {
+      color: #0f172a;
+    }
+    body.light-theme .hero-title {
+      color: #0f172a;
+    }
+    body.light-theme .meth-item {
+      color: #64748b;
+    }
+    body.light-theme .meth-item:hover {
+      background: rgba(15, 23, 42, 0.02);
+      color: #0f172a;
+    }
+    body.light-theme .meth-item.active {
+      background: rgba(14, 165, 233, 0.08);
+      border-color: rgba(14, 165, 233, 0.2);
+      color: #0284c7;
+    }
+    body.light-theme .category-title {
+      color: #475569;
     }
     
     .meth-viewer {
       flex: 1;
       padding: 40px;
       overflow-y: auto;
-      background: radial-gradient(circle at top right, rgba(155, 89, 255, 0.015), transparent 60%);
+      background: radial-gradient(circle at top right, rgba(155, 89, 255, 0.02), transparent 60%);
       display: flex;
       flex-direction: column;
       gap: 30px;
+      position: relative;
+      z-index: 1;
     }
     
     /* Cyber Hero Styling */
@@ -180,23 +300,37 @@
 
     /* Cards and Elements */
     .cyber-card {
-      background: var(--bg-card);
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      border-radius: 6px;
+      background: rgba(10, 10, 24, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
       padding: 24px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       position: relative;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-      transition: border-color 0.3s ease;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .cyber-card:hover {
-      border-color: rgba(0, 229, 255, 0.1);
+      border-color: var(--tool-color, var(--neon-cyan));
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 229, 255, 0.15);
+      transform: translateY(-2px);
     }
     .cyber-card.border-neon {
       border: 1px solid rgba(0, 229, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 15px rgba(0, 229, 255, 0.05);
+    }
+    .cyber-card.border-neon:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 25px rgba(0, 229, 255, 0.15);
     }
     .cyber-card.border-purple {
       border: 1px solid rgba(155, 89, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 15px rgba(155, 89, 255, 0.05);
+    }
+    .cyber-card.border-purple:hover {
+      border-color: var(--neon-purple);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 25px rgba(155, 89, 255, 0.15);
     }
     .card-header {
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -2229,6 +2363,14 @@
 
 </head>
 <body>
+
+  <!-- Floating Background Orbs & Grid -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="grid-bg"></div>
 
   <!-- Quick Jump Modal (Ctrl+K) -->
   <div class="quick-jump-overlay" id="quickJumpOverlay" onclick="closeQuickJump(event)">
