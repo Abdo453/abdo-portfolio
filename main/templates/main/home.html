@@ -6531,6 +6531,8 @@
         printLineToTerminal('FLAG{EASTER_EGG_FOUND_YOU_ARE_CURIOUS} - Nice check!', 'text-neon-orange');
       } else if (command === 'hack' || command === 'exploit') {
         printLineToTerminal('[~] Running exploit payloads against localhost... Failed. Firewall dropped packets.', 'text-neon-red');
+      } else if (['ls', 'cd', 'pwd', 'cat', 'chmod', 'chown', 'whoami', 'id', 'uname'].includes(command)) {
+        printLineToTerminal(`bash: ${command}: command available inside the lab session. Run <span class="text-neon-cyan">'linux'</span> to start the interactive lab!`, 'text-neon-orange');
       } else {
         // Typo check suggestion
         const typoSuggest = checkCommandTypos(command);
