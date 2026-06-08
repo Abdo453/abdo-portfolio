@@ -22,7 +22,7 @@ html_content = r'''<!DOCTYPE html>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
 
   <!-- Curriculum Database -->
-  <script src="/js/curriculum.js"></script>
+  <script src="/static/main/js/curriculum.js"></script>
 
   <style>
     :root {
