@@ -375,7 +375,7 @@ html_content = r'''<!DOCTYPE html>
                 opt.value = level.id;
                 
                 let isUnlocked = unlockedLevels.includes(level.id);
-                opt.innerText = \`\${level.title} \${isUnlocked ? '🔓' : '🔒'}\`;
+                opt.innerText = `${level.title} ${isUnlocked ? '🔓' : '🔒'}`;
                 if(!isUnlocked) opt.disabled = true;
                 
                 optgroup.appendChild(opt);
@@ -401,14 +401,14 @@ html_content = r'''<!DOCTYPE html>
 
         currentLevelId = levelId;
         document.getElementById('theory-box').innerHTML = levelData.theory;
-        document.getElementById('editor-filename').innerText = \`workspace/\${levelId}.py\`;
-        document.getElementById('term-header-title').innerText = \`Terminal — /workspace/\${levelId}.py\`;
+        document.getElementById('editor-filename').innerText = `workspace/${levelId}.py`;
+        document.getElementById('term-header-title').innerText = `Terminal — /workspace/${levelId}.py`;
         
         if(editor) {
             editor.setValue(levelData.initialCode);
         }
         term.clear();
-        term.writeln(\`\x1b[36m[*] Loaded \${levelId}.py\x1b[0m\\n\`);
+        term.writeln(`\x1b[36m[*] Loaded ${levelId}.py\x1b[0m\n`);
     }
 
     // --- Unlock Logic ---
@@ -421,17 +421,17 @@ html_content = r'''<!DOCTYPE html>
                 localStorage.setItem('pyhackers_unlocked', JSON.stringify(unlockedLevels));
                 
                 // Update UI Dropdown
-                const opt = document.querySelector(\`option[value="\${nextLevel.id}"]\`);
+                const opt = document.querySelector(`option[value="${nextLevel.id}"]`);
                 if(opt) {
                     opt.disabled = false;
                     opt.innerText = opt.innerText.replace('🔒', '🔓');
                 }
                 
-                term.writeln(\`\\n\x1b[1;33m[!] UNLOCKED: \${nextLevel.title} 🔓\x1b[0m\`);
-                term.writeln(\`\x1b[33mSelect it from the dropdown menu above to continue.\x1b[0m\`);
+                term.writeln(`\n\x1b[1;33m[!] UNLOCKED: ${nextLevel.title} 🔓\x1b[0m`);
+                term.writeln(`\x1b[33mSelect it from the dropdown menu above to continue.\x1b[0m`);
             }
         } else if (idx === allLevels.length - 1) {
-            term.writeln(\`\\n\x1b[1;35m🎉 CONGRATULATIONS! You have completed the entire curriculum!\x1b[0m\`);
+            term.writeln(`\n\x1b[1;35m🎉 CONGRATULATIONS! You have completed the entire curriculum!\x1b[0m`);
         }
     }
 
@@ -440,7 +440,7 @@ html_content = r'''<!DOCTYPE html>
       try {
         pyodide = await loadPyodide();
         pyodide.setStdout({ batched: (str) => { term.writeln(str); } });
-        pyodide.setStderr({ batched: (str) => { term.writeln(\`\x1b[31m\${str}\x1b[0m\`); } });
+        pyodide.setStderr({ batched: (str) => { term.writeln(`\x1b[31m${str}\x1b[0m`); } });
         
         term.writeln('\x1b[32m[+] Python 3.11 Engine Loaded.\x1b[0m');
         term.writeln('\x1b[33m[!] Read the challenge on the right, write code on the left, and click "Run Code".\x1b[0m\\n');
@@ -449,7 +449,7 @@ html_content = r'''<!DOCTYPE html>
         btn.innerText = "▶ Run Code";
         btn.disabled = false;
       } catch (err) {
-        term.writeln(\`\x1b[31m[-] Engine Load Failed: \${err}\x1b[0m\`);
+        term.writeln(`\x1b[31m[-] Engine Load Failed: ${err}\x1b[0m`);
       }
     }
 
@@ -478,12 +478,12 @@ html_content = r'''<!DOCTYPE html>
     async function executePython() {
       if (!pyodide || !editor) return;
       if (!unlockedLevels.includes(currentLevelId)) {
-          term.writeln(\`\x1b[31m[-] Cannot run locked level!\x1b[0m\`);
+          term.writeln(`\x1b[31m[-] Cannot run locked level!\x1b[0m`);
           return;
       }
 
       const code = editor.getValue();
-      term.writeln(\`\x1b[90m$ python3 \${currentLevelId}.py\x1b[0m\`);
+      term.writeln(`\x1b[90m$ python3 ${currentLevelId}.py\x1b[0m`);
       
       let outBuffer = "";
       pyodide.setStdout({ batched: (str) => { 
@@ -499,11 +499,11 @@ html_content = r'''<!DOCTYPE html>
         if(levelData && levelData.validate) {
             const isSuccess = levelData.validate(outBuffer);
             if(isSuccess) {
-                term.writeln(\`\x1b[1;32m✅ [SUCCESS] Challenge Passed!\x1b[0m\`);
-                term.writeln(\`\x1b[32m+50 XP\x1b[0m\`);
+                term.writeln(`\x1b[1;32m✅ [SUCCESS] Challenge Passed!\x1b[0m`);
+                term.writeln(`\x1b[32m+50 XP\x1b[0m`);
                 unlockNextLevel(currentLevelId);
             } else {
-                term.writeln(\`\x1b[1;31m❌ [FAILED] Incorrect output. Read the challenge again.\x1b[0m\`);
+                term.writeln(`\x1b[1;31m❌ [FAILED] Incorrect output. Read the challenge again.\x1b[0m`);
             }
         }
         
