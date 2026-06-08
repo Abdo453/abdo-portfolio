@@ -8,6 +8,7 @@ def scan_templates():
     pages = [
         # (template, output_path, css_prefix)
         ('main/about.html', 'about.html', ''),
+        ('main/quiz.html', 'quiz.html', ''),
         ('main/methodology.html', 'methodology.html', ''),
         ('main/bug_bounty_writeups.html', 'bug-bounty-writeups.html', ''),
         ('main/profile.html', 'profile.html', ''),

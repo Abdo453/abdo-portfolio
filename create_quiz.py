@@ -1,0 +1,689 @@
+import os
+
+QUIZ_HTML = r"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Bug Bounty Daily Challenge Quiz — Test your offensive security knowledge" />
+  <title>Daily Challenge | HunterOS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --neon-cyan: #00e5ff;
+      --neon-green: #00ff66;
+      --neon-purple: #9b59ff;
+      --neon-red: #ff0055;
+      --neon-orange: #ff9a56;
+      --bg-dark: #030308;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding-top: 70px;
+    }
+
+    /* ── Top Nav ── */
+    .quiz-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 14px 30px;
+      background: rgba(3,3,8,0.97);
+      border-bottom: 1px solid rgba(0,229,255,0.12);
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100;
+    }
+    .quiz-back {
+      color: #94a3b8; text-decoration: none;
+      font-family: 'Fira Code', monospace; font-size: 0.9rem;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.3s;
+    }
+    .quiz-back:hover { color: var(--neon-cyan); }
+    .header-logo { font-family: 'Fira Code', monospace; font-size: 1rem; color: #fff; }
+    .logo-bracket { color: var(--neon-cyan); }
+
+    /* ── Orbs / Background ── */
+    .grid-bg {
+      position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px; pointer-events: none; z-index: 0;
+    }
+    .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(80px);
+      animation: orbFloat 10s ease-in-out infinite alternate;
+    }
+    .orb--cyan { width: 500px; height: 500px; background: rgba(0,229,255,0.035); top: -15%; right: -10%; }
+    .orb--green { width: 400px; height: 400px; background: rgba(0,255,102,0.025); bottom: 0; left: -5%; animation-delay: -5s; }
+    @keyframes orbFloat { from { transform: translateY(0); } to { transform: translateY(-30px); } }
+
+    /* ── Main Container ── */
+    .quiz-wrap {
+      max-width: 820px; margin: 0 auto; padding: 30px 20px 60px;
+      position: relative; z-index: 1;
+    }
+
+    /* ── Page Header ── */
+    .quiz-hero {
+      text-align: center; margin-bottom: 30px;
+    }
+    .quiz-hero-tag {
+      display: inline-block;
+      font-family: 'Fira Code', monospace; font-size: 0.78rem;
+      color: var(--neon-cyan); letter-spacing: 2px;
+      padding: 4px 12px; border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 20px; margin-bottom: 14px;
+    }
+    .quiz-hero h1 {
+      font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 800;
+      color: #fff; margin-bottom: 10px;
+    }
+    .quiz-hero p { color: #94a3b8; font-size: 1rem; max-width: 600px; margin: 0 auto; }
+
+    /* ── Filter Tabs ── */
+    .quiz-filters {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      justify-content: center; margin-bottom: 28px;
+    }
+    .quiz-filter-btn {
+      padding: 7px 16px;
+      font-family: 'Fira Code', monospace; font-size: 0.82rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px; color: #94a3b8; cursor: pointer;
+      transition: all 0.25s;
+    }
+    .quiz-filter-btn:hover, .quiz-filter-btn.active {
+      border-color: var(--neon-cyan); color: var(--neon-cyan);
+      background: rgba(0,229,255,0.06);
+    }
+
+    /* ── Score Bar ── */
+    .quiz-scorebar {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(10,10,24,0.85);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 14px 20px; margin-bottom: 24px;
+    }
+    .qs-item { text-align: center; }
+    .qs-value {
+      font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800;
+    }
+    .qs-label { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: rgba(148,163,184,0.5); letter-spacing:1px; }
+    .qs-value.score-val { color: var(--neon-cyan); }
+    .qs-value.correct-val { color: var(--neon-green); }
+    .qs-value.wrong-val { color: var(--neon-red); }
+    .qs-value.streak-val { color: var(--neon-orange); }
+
+    /* ── Quiz Card ── */
+    .quiz-card {
+      background: rgba(10,10,24,0.85);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 26px;
+      margin-bottom: 18px;
+      transition: border-color 0.3s;
+    }
+    .quiz-card-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 16px; gap: 10px;
+    }
+    .quiz-cat-badge {
+      font-family: 'Fira Code', monospace; font-size: 0.7rem;
+      padding: 3px 10px; border-radius: 12px; white-space: nowrap;
+    }
+    .badge-recon { background: rgba(0,229,255,0.1); color: var(--neon-cyan); border: 1px solid rgba(0,229,255,0.2); }
+    .badge-exploit { background: rgba(255,0,85,0.08); color: #ff6b9d; border: 1px solid rgba(255,0,85,0.2); }
+    .badge-tools { background: rgba(155,89,255,0.1); color: var(--neon-purple); border: 1px solid rgba(155,89,255,0.2); }
+    .badge-logic { background: rgba(255,154,86,0.1); color: var(--neon-orange); border: 1px solid rgba(255,154,86,0.2); }
+    .badge-xss { background: rgba(0,255,102,0.08); color: var(--neon-green); border: 1px solid rgba(0,255,102,0.2); }
+    .quiz-diff {
+      font-family: 'Fira Code', monospace; font-size: 0.68rem;
+      padding: 3px 10px; border-radius: 12px;
+    }
+    .diff-easy { background: rgba(0,255,102,0.08); color: var(--neon-green); }
+    .diff-medium { background: rgba(255,154,86,0.08); color: var(--neon-orange); }
+    .diff-hard { background: rgba(255,0,85,0.08); color: var(--neon-red); }
+    .quiz-question {
+      font-size: 1.02rem; font-weight: 600; color: #fff;
+      line-height: 1.6; margin-bottom: 16px;
+    }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-opt {
+      padding: 12px 16px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px; cursor: pointer; font-size: 0.92rem;
+      color: #94a3b8; display: flex; align-items: flex-start; gap: 12px;
+      transition: all 0.2s; line-height: 1.5;
+      background: rgba(255,255,255,0.01);
+    }
+    .quiz-opt:hover:not(.disabled) {
+      border-color: rgba(0,229,255,0.25); color: #e2e8f0;
+      background: rgba(0,229,255,0.04);
+    }
+    .quiz-opt.correct {
+      border-color: var(--neon-green) !important;
+      background: rgba(0,255,102,0.06) !important; color: #e2e8f0 !important;
+    }
+    .quiz-opt.wrong {
+      border-color: var(--neon-red) !important;
+      background: rgba(255,0,85,0.06) !important; color: #e2e8f0 !important;
+    }
+    .quiz-opt.disabled { pointer-events: none; }
+    .opt-letter {
+      font-family: 'Fira Code', monospace; font-size: 0.8rem; font-weight: 700;
+      min-width: 22px; height: 22px;
+      border: 1px solid currentColor; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .quiz-explanation {
+      display: none; margin-top: 14px;
+      padding: 14px 16px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-left: 3px solid var(--neon-cyan);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem; color: #94a3b8; line-height: 1.7;
+    }
+    .quiz-explanation strong { color: var(--neon-cyan); }
+    .quiz-explanation.show { display: block; }
+    .quiz-explanation .tip-cmd {
+      display: block; margin-top: 8px;
+      font-family: 'Fira Code', monospace; font-size: 0.82rem;
+      color: var(--neon-green); background: rgba(0,0,0,0.3);
+      padding: 6px 10px; border-radius: 4px;
+    }
+
+    /* ── Results Banner ── */
+    .quiz-results {
+      display: none; text-align: center;
+      background: rgba(10,10,24,0.9);
+      border: 1px solid rgba(0,229,255,0.15);
+      border-radius: 12px; padding: 30px;
+      margin-bottom: 24px;
+    }
+    .quiz-results.show { display: block; }
+    .res-trophy { font-size: 3rem; margin-bottom: 10px; }
+    .res-title { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; color: #fff; }
+    .res-sub { color: #94a3b8; margin-top: 8px; }
+    .res-pct { font-family: 'Outfit', sans-serif; font-size: 3.5rem; font-weight: 800; color: var(--neon-cyan); margin: 10px 0; }
+    .res-actions { display: flex; gap: 12px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+    .btn-reset, .btn-home {
+      padding: 11px 24px; border-radius: 8px; cursor: pointer;
+      font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 700;
+      transition: all 0.3s; border: 2px solid;
+    }
+    .btn-reset {
+      background: rgba(0,229,255,0.08); border-color: rgba(0,229,255,0.3);
+      color: var(--neon-cyan);
+    }
+    .btn-reset:hover { background: rgba(0,229,255,0.15); border-color: var(--neon-cyan); }
+    .btn-home {
+      background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1);
+      color: #94a3b8; text-decoration: none; display: inline-block;
+    }
+    .btn-home:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+
+    @media (max-width: 600px) {
+      .quiz-hero h1 { font-size: 1.8rem; }
+      .quiz-scorebar { flex-wrap: wrap; gap: 12px; justify-content: center; }
+      .quiz-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="bg-orbs">
+    <div class="orb orb--cyan"></div>
+    <div class="orb orb--green"></div>
+  </div>
+
+  <nav class="quiz-nav">
+    <a href="index.html" class="quiz-back">← Back to Terminal</a>
+    <div class="header-logo">
+      <span class="logo-bracket">&lt;</span>HunterOS<span class="logo-bracket">/&gt;</span>
+    </div>
+  </nav>
+
+  <div class="quiz-wrap">
+    <div class="quiz-hero">
+      <div class="quiz-hero-tag">// DAILY CHALLENGE</div>
+      <h1>Bug Bounty Quiz 🏆</h1>
+      <p>اختبر معلوماتك في Bug Bounty والـ Offensive Security. جاوب واتعلم من الشرح!</p>
+    </div>
+
+    <div class="quiz-filters" id="quizFilters">
+      <button class="quiz-filter-btn active" data-cat="all">🎯 الكل</button>
+      <button class="quiz-filter-btn" data-cat="recon">🌐 Recon</button>
+      <button class="quiz-filter-btn" data-cat="exploit">💉 Exploitation</button>
+      <button class="quiz-filter-btn" data-cat="tools">🔧 Tools</button>
+      <button class="quiz-filter-btn" data-cat="logic">🧠 Logic</button>
+      <button class="quiz-filter-btn" data-cat="xss">⚡ XSS &amp; Injection</button>
+    </div>
+
+    <div class="quiz-scorebar">
+      <div class="qs-item"><div class="qs-value score-val" id="scoreDisp">0</div><div class="qs-label">SCORE</div></div>
+      <div class="qs-item"><div class="qs-value correct-val" id="correctDisp">0</div><div class="qs-label">CORRECT</div></div>
+      <div class="qs-item"><div class="qs-value wrong-val" id="wrongDisp">0</div><div class="qs-label">WRONG</div></div>
+      <div class="qs-item"><div class="qs-value streak-val" id="streakDisp">0</div><div class="qs-label">STREAK 🔥</div></div>
+      <div class="qs-item"><div class="qs-value" id="totalDisp" style="color:#fff;">0</div><div class="qs-label">ANSWERED</div></div>
+    </div>
+
+    <div class="quiz-results" id="quizResults">
+      <div class="res-trophy" id="resTrophy">🏆</div>
+      <div class="res-title" id="resTitle">Quiz Complete!</div>
+      <div class="res-pct" id="resPct">0%</div>
+      <div class="res-sub" id="resSub">Keep practicing to reach 100%!</div>
+      <div class="res-actions">
+        <button class="btn-reset" onclick="resetQuiz()">🔄 Try Again</button>
+        <a href="index.html" class="btn-home">🏠 Back to Terminal</a>
+      </div>
+    </div>
+
+    <div id="quizContainer"></div>
+  </div>
+
+  <script>
+  const QUESTIONS = [
+    {
+      id: 1, cat: 'recon', diff: 'easy',
+      question: 'لديك 800 Subdomains حية، ما أول 3 خطوات تقوم بها للفحص الفعال؟',
+      options: [
+        'تشغيل Nuclei على جميع المنافذ لتوفير الوقت.',
+        'فرز النطاقات وتصنيفها (Categorize) ثم فحص CNAME للـ 404s ثم port scan للمنافذ الحساسة.',
+        'تشغيل FFUF على كافة المسارات دفعة واحدة.',
+        'تشغيل sqlmap على كل رابط متاح.'
+      ],
+      correct: 1,
+      explanation: '<strong>المنهجية الصحيحة:</strong> دايماً تبدأ بالتصنيف — افرز الـ 800 subdomain بالـ tech stack، حدد الأولويات (scope جديد؟ admin panels؟)، افحص CNAME لاكتشاف Subdomain Takeover، ثم port scan للمنافذ الحساسة (8080, 8443, 9200, etc).',
+      tip: 'httpx -l subs.txt -sc -td -cl -title | sort | uniq'
+    },
+    {
+      id: 2, cat: 'exploit', diff: 'medium',
+      question: 'اكتشفت Open Redirect على موقع يستخدم OAuth2. ما خطورة هذا الاكتشاف؟',
+      options: [
+        'لا خطورة، Open Redirect غير ضار وحده.',
+        'خطر منخفض، يمكن تصنيفه P4 فقط.',
+        'خطر عالي جداً — يمكن استخدامه لسرقة access_token عبر redirect_uri manipulation.',
+        'خطر متوسط فقط إذا كان يمكن تغيير الـ domain.'
+      ],
+      correct: 2,
+      explanation: '<strong>Open Redirect + OAuth = Critical!</strong> في OAuth2، الـ redirect_uri المفتوحة تسمح للمهاجم بتوجيه الـ access_token إلى موقع خارجي. هذه من أقوى Chain vulnerabilities في Bug Bounty وتُصنَّف P1 في معظم البرامج.',
+      tip: '// Chain: /oauth/authorize?redirect_uri=https://evil.com → سرقة token'
+    },
+    {
+      id: 3, cat: 'tools', diff: 'easy',
+      question: 'ما الأمر الصحيح لاستخدام subfinder لاكتشاف النطاقات الفرعية بشكل شامل مع حفظ النتائج؟',
+      options: [
+        'subfinder -u target.com -save all.txt',
+        'subfinder -d target.com -all -recursive -o subs.txt',
+        'subfinder --domain target.com --output subs.txt',
+        'subfinder -t target.com -r -out subs.txt'
+      ],
+      correct: 1,
+      explanation: '<strong>subfinder -d -all -recursive</strong> هو الأمر الصحيح. الـ flag <code>-all</code> يُفعّل جميع مصادر البيانات، والـ <code>-recursive</code> يبحث في النطاقات الفرعية بشكل متكرر للحصول على أعمق نتائج.',
+      tip: 'subfinder -d target.com -all -recursive -o subs.txt | wc -l'
+    },
+    {
+      id: 4, cat: 'xss', diff: 'medium',
+      question: 'في أي حالة يكون Stored XSS أخطر من Reflected XSS؟',
+      options: [
+        'في أي حالة، هما نفس الخطورة دائماً.',
+        'عندما يراه مدير النظام أو موظفو الدعم الفني — يؤدي لـ Session Hijacking لحسابات ذات صلاحيات عالية.',
+        'Reflected XSS دائماً أخطر لأنه يصعب اكتشافه.',
+        'Stored XSS أخطر فقط إذا كان في نموذج تسجيل.'
+      ],
+      correct: 1,
+      explanation: '<strong>Stored XSS في لوحة الإدارة = Critical!</strong> إذا كان الـ payload مخزن في مكان يراه الـ Admin (مثل تذاكر الدعم أو التعليقات)، فيمكن سرقة Session الأدمن وتنفيذ أوامر بصلاحياته الكاملة. هذه حالة Account Takeover كاملة.',
+      tip: '// Target: Support Tickets, Admin Comments, User Profiles'
+    },
+    {
+      id: 5, cat: 'logic', diff: 'hard',
+      question: 'وجدت API endpoint يستقبل: {"user_id": 123, "role": "user"}. ما أول ما تحاول تعديله؟',
+      options: [
+        'تغيير user_id فقط لأرقام عشوائية.',
+        'إضافة حقول غير معروفة مثل {"admin": true} مع تغيير role إلى "admin".',
+        'إرسال request فارغ لاختبار الـ validation.',
+        'تشفير الـ JSON وإرساله مرة أخرى.'
+      ],
+      correct: 1,
+      explanation: '<strong>Mass Assignment Vulnerability!</strong> دائماً جرّب إضافة حقول غير معلنة مثل: "role":"admin", "is_admin":true, "verified":true, "account_type":"premium". كثير من الـ APIs تقبل هذه الحقول وتمرّرها مباشرة لقاعدة البيانات دون تصفية.',
+      tip: '{"user_id": 123, "role": "admin", "is_admin": true, "verified": true}'
+    },
+    {
+      id: 6, cat: 'recon', diff: 'medium',
+      question: 'ما الفرق الأساسي بين Passive Recon و Active Recon في Bug Bounty؟',
+      options: [
+        'لا فرق، كلاهما يصل لنفس المعلومات.',
+        'Passive = جمع معلومات دون الاتصال بالهدف (OSINT). Active = إرسال requests مباشرة للهدف.',
+        'Passive أبطأ وActive أسرع فقط.',
+        'Passive للـ subdomains فقط وActive للـ vulnerabilities فقط.'
+      ],
+      correct: 1,
+      explanation: '<strong>Passive vs Active:</strong> في Passive تستخدم مصادر خارجية (Shodan, Censys, crt.sh, Archive.org) دون أي تواصل مع الهدف. في Active تُرسل requests فعلية. أهمية التمييز: بعض البرامج تحظر Active scanning خارج scope.',
+      tip: 'passive: curl "https://crt.sh/?q=%.target.com&output=json" | jq .[].name_value'
+    },
+    {
+      id: 7, cat: 'exploit', diff: 'hard',
+      question: 'وجدت SSRF في endpoint يتصل بـ internal services. ما أول الـ targets الداخلية تحاول الوصول إليها؟',
+      options: [
+        '192.168.1.1 فقط — الـ router الداخلي.',
+        'http://localhost:80 فقط.',
+        'AWS Metadata (169.254.169.254)، internal services (localhost, 127.x.x.x)، وCloud metadata endpoints.',
+        'قاعدة البيانات مباشرة على port 3306.'
+      ],
+      correct: 2,
+      explanation: '<strong>SSRF Priority Order:</strong> 1) Cloud Metadata: http://169.254.169.254/latest/meta-data/ (AWS Keys!) 2) Internal services: http://localhost:8080, :9200 (Elasticsearch) 3) GCP: http://metadata.google.internal 4) Azure: http://169.254.169.254/metadata/instance',
+      tip: 'curl -s "http://169.254.169.254/latest/meta-data/iam/security-credentials/"'
+    },
+    {
+      id: 8, cat: 'tools', diff: 'easy',
+      question: 'ما الأداة الأمثل لاستخراج الـ Endpoints والـ Secrets من ملفات JavaScript؟',
+      options: [
+        'Burp Suite فقط — يكفي للـ JS analysis.',
+        'LinkFinder + JSluice + Secret Finder معاً — لأن كل أداة لها نقاط قوة مختلفة.',
+        'grep فقط مع keywords يدوياً.',
+        'Nuclei فقط مع template js-exposures.'
+      ],
+      correct: 1,
+      explanation: '<strong>JS Analysis Arsenal:</strong> LinkFinder يستخرج URLs والـ endpoints. JSluice يُنشئ structural map للكود. SecretFinder يبحث عن API keys وTokens. الجمع بينهم = تغطية كاملة.',
+      tip: 'python3 linkfinder.py -i https://target.com/app.js -o cli'
+    },
+    {
+      id: 9, cat: 'logic', diff: 'medium',
+      question: 'ما هو IDOR وكيف تميّز بين IDOR حقيقي وـ False Positive؟',
+      options: [
+        'IDOR = Injection Danger in Open Request. False Positive = حين يعطي نفس البيانات.',
+        'IDOR = Insecure Direct Object Reference. هو حقيقي فقط إذا وصلت لبيانات user آخر دون صلاحية مباشرة.',
+        'IDOR حقيقي دائماً إذا تغيّر الـ ID في URL.',
+        'IDOR وFalse Positive لا فرق بينهما عملياً.'
+      ],
+      correct: 1,
+      explanation: '<strong>IDOR الحقيقي:</strong> يجب إثبات وصولك لبيانات/إجراءات خاصة بحساب آخر. الـ False Positive: تغيير ID يعطي 403 أو نفس بيانات حسابك. للإثبات: أنشئ حسابين وجرّب الوصول لبيانات الحساب الثاني من الأول.',
+      tip: '// Test: Account A reads Account B private data → Valid IDOR!'
+    },
+    {
+      id: 10, cat: 'xss', diff: 'hard',
+      question: 'ما الفرق بين XSS وCSRF وكيف تُميّز أيهما تستغل؟',
+      options: [
+        'هما نفس الثغرة بأسماء مختلفة.',
+        'XSS = تنفيذ JS في متصفح الضحية لسرقة Session. CSRF = تنفيذ actions باسم الضحية دون علمه. استخدم XSS حين لا يوجد CSRF Token وCSRF حين يمكن تزوير الطلبات.',
+        'CSRF أقوى دائماً من XSS.',
+        'XSS للـ frontend فقط وCSRF للـ backend فقط.'
+      ],
+      correct: 1,
+      explanation: '<strong>XSS vs CSRF:</strong> XSS: تحكم كامل في متصفح الضحية — تقرأ cookies، ترسل requests بـ credentials. CSRF: تجبر الضحية على إجراء action محدد. إذا وجدت XSS Stored في تطبيق بـ CSRF protection ← استخدم XSS لتجاوز الحماية!',
+      tip: '// XSS Chain: steal CSRF token → perform privileged action'
+    },
+    {
+      id: 11, cat: 'recon', diff: 'easy',
+      question: 'ما هو الـ HTTP Status Code الذي يشير إلى احتمال Subdomain Takeover؟',
+      options: [
+        '200 OK — الصفحة تعمل بشكل طبيعي.',
+        '403 Forbidden — الصفحة محمية.',
+        '404 Not Found على subdomain مع CNAME يشير لخدمة خارجية (GitHub Pages, S3, Heroku).',
+        '500 Internal Server Error.'
+      ],
+      correct: 2,
+      explanation: '<strong>Subdomain Takeover Signs:</strong> CNAME يشير لـ GitHub Pages/S3/Heroku + 404 = خدمة غير مُعيَّنة يمكن أخذها! تحقق بـ <code>can-i-take-over-xyz</code> list وسجّل على الخدمة المستهدفة.',
+      tip: 'for sub in $(cat subs.txt); do dig CNAME $sub; done | grep -i "github\|heroku\|s3"'
+    },
+    {
+      id: 12, cat: 'exploit', diff: 'medium',
+      question: 'وجدت SQL Injection، ما ترتيب خطوات الاستغلال الصحيح؟',
+      options: [
+        'تشغيل sqlmap مباشرة بكل flags للسرعة.',
+        'أولاً التحقق اليدوي (single quote)، ثم تحديد نوع الـ injection، ثم استخراج database schema، ثم sqlmap بالـ config الصحيح.',
+        'محاولة استخراج /etc/passwd مباشرة.',
+        'Report الثغرة مباشرة دون استغلال.'
+      ],
+      correct: 1,
+      explanation: '<strong>SQLi Methodology:</strong> 1) اختبار يدوي: `\'' OR 1=1--` 2) تحديد النوع (Error/Union/Blind/Time-based) 3) استخراج DB schema: information_schema.tables 4) sqlmap مع الـ parameters الصحيحة.',
+      tip: 'sqlmap -u "https://target.com/page?id=1" --dbs --batch --level=3'
+    },
+    {
+      id: 13, cat: 'tools', diff: 'medium',
+      question: 'ما الفرق الرئيسي بين httpx وcurl في Bug Bounty Recon؟',
+      options: [
+        'لا فرق، كلاهما يفعل نفس الشيء.',
+        'httpx مُصمَّم للـ bulk scanning لآلاف المنافذ مع tech detection. curl لاختبار فردي يدوي.',
+        'curl أسرع دائماً.',
+        'httpx يستخدم فقط مع Nuclei.'
+      ],
+      correct: 1,
+      explanation: '<strong>httpx vs curl:</strong> httpx يمكنه فحص آلاف URLs معاً بـ concurrency عالية، يكشف التقنيات، status codes، titles، ويدعم تصفية النتائج. curl للاختبار الدقيق المفرد والـ debugging.',
+      tip: 'cat subs.txt | httpx -sc -td -cl -title -mc 200,301,302 -o live_hosts.txt'
+    },
+    {
+      id: 14, cat: 'logic', diff: 'hard',
+      question: 'ما هو Race Condition Bug وما أفضل طريقة لاستغلاله؟',
+      options: [
+        'هو خطأ في سرعة الاستجابة فقط.',
+        'استغلال فترة زمنية بين التحقق والتنفيذ (TOCTOU). يُستغل بإرسال requests متزامنة متعددة في نفس اللحظة.',
+        'يحدث فقط في الـ APIs.',
+        'هو نفس Buffer Overflow.'
+      ],
+      correct: 1,
+      explanation: '<strong>Race Condition (TOCTOU):</strong> Time-of-Check vs Time-of-Use. مثال كلاسيكي: استخدام كود خصم مرتين بإرسال requestين في نفس الـ millisecond قبل أن يُسجَّل الأول. الاستغلال: Burp Suite Turbo Intruder أو HTTP/2 Single Packet Attack.',
+      tip: '// Burp: Send to Turbo Intruder → use race_single_packet_attack.py'
+    },
+    {
+      id: 15, cat: 'xss', diff: 'medium',
+      question: 'كيف تتجاوز CSP (Content Security Policy) إذا كانت تسمح بـ \'unsafe-inline\'؟',
+      options: [
+        'لا يمكن تجاوز CSP نهائياً.',
+        '\'unsafe-inline\' يعني XSS الكلاسيكي يعمل مباشرة! CSP بـ unsafe-inline تساوي لا CSP.',
+        'يجب استخدام eval() فقط.',
+        '\'unsafe-inline\' تحمي من XSS وتسمح بـ CSS فقط.'
+      ],
+      correct: 1,
+      explanation: '<strong>CSP Bypass:</strong> \'unsafe-inline\' يُبطل حماية CSP ضد XSS الكلاسيكي. حتى مع CSP صارمة، يمكن البحث عن script-src يسمح بـ JSONP endpoints أو CDNs ذات payloads مخزنة.',
+      tip: '// Check: curl -I https://target.com | grep -i content-security-policy'
+    },
+    {
+      id: 16, cat: 'recon', diff: 'hard',
+      question: 'كيف تكتشف الـ Origin IP لموقع خلف Cloudflare؟',
+      options: [
+        'لا يمكن اكتشافه أبداً خلف Cloudflare.',
+        'ping فقط.',
+        'البحث في DNS History (SecurityTrails)، Shodan، Certificate Transparency، وSubdomain Enumeration لإيجاد subdomains قديمة بدون CDN.',
+        'استخدام traceroute فقط.'
+      ],
+      correct: 2,
+      explanation: '<strong>Cloudflare Bypass Techniques:</strong> 1) SecurityTrails/ViewDNS لـ historical DNS 2) crt.sh للبحث في SSL certificates القديمة 3) Shodan: `ssl.cert.subject.cn:target.com` 4) Subdomains قديمة (mail., staging., dev.) قد تكشف الـ real IP',
+      tip: 'shodan search "ssl.cert.subject.cn:target.com" | grep IP'
+    },
+    {
+      id: 17, cat: 'exploit', diff: 'easy',
+      question: 'ما هو الـ Payload الأبسط لاختبار Server-Side Template Injection (SSTI)؟',
+      options: [
+        '\'1 OR 1=1--',
+        '<script>alert(1)</script>',
+        '{{7*7}} أو ${7*7} — إذا أعطى 49 فالـ SSTI موجود!',
+        '; ls -la'
+      ],
+      correct: 2,
+      explanation: '<strong>SSTI Detection:</strong> الـ payload الرياضي هو أسرع طريقة للكشف. {{7*7}} يعمل مع Jinja2/Twig. ${7*7} مع Thymeleaf. إذا ظهر 49 في الـ response = RCE محتمل! ثم جرب: {{config}}, {{self.__class__.__mro__}}',
+      tip: '{{7*7}} → {{7*\'7\'}} → {{config.items()}} → RCE!'
+    },
+    {
+      id: 18, cat: 'tools', diff: 'hard',
+      question: 'ما هو الاستخدام الصحيح لـ Nuclei لتجنب الـ False Positives وتوفير الوقت؟',
+      options: [
+        'تشغيل nuclei -l targets.txt فقط بدون أي options.',
+        'تشغيله على كل الـ templates دفعة واحدة على جميع الأهداف.',
+        'تحديد templates محددة (cves, exposed-panels, vulnerabilities) مع -severity critical,high وتجنب templates الـ information.',
+        'استخدامه فقط مع port scanning.'
+      ],
+      correct: 2,
+      explanation: '<strong>Nuclei Best Practices:</strong> استخدم: `-t cves/,exposed-panels/,vulnerabilities/ -severity critical,high -rate-limit 50`. تجنب `-t all` لأنه يُنتج آلاف الـ FPs. أضف `-stats` لمتابعة التقدم.',
+      tip: 'nuclei -l live.txt -t cves/ -t exposed-panels/ -severity critical,high -rl 50 -o results.txt'
+    },
+    {
+      id: 19, cat: 'logic', diff: 'medium',
+      question: 'ما هي أخطر ثغرة في JWT يجب البحث عنها أولاً؟',
+      options: [
+        'استخدام HS256 بدلاً من RS256.',
+        'Algorithm Confusion (alg:none) وRSA to HMAC Confusion — تسمح بتزوير أي token.',
+        'انتهاء صلاحية التوقيع.',
+        'طول الـ secret key القصير فقط.'
+      ],
+      correct: 1,
+      explanation: '<strong>JWT Vulnerabilities Priority:</strong> 1) alg:none - قبول token بدون توقيع 2) HMAC/RSA Confusion - استخدام المفتاح العام للتوقيع 3) Weak secret (brute force) 4) Missing expiry. استخدم jwt_tool لاختبار كل هذه الحالات تلقائياً.',
+      tip: 'python3 jwt_tool.py <token> -X a -X s -X n'
+    },
+    {
+      id: 20, cat: 'recon', diff: 'medium',
+      question: 'ما الفائدة من Google Dorks في Bug Bounty؟',
+      options: [
+        'لا فائدة منها، البرامج تمنعها.',
+        'اكتشاف ملفات حساسة مكشوفة (config, backup, git)، login panels، وأخطاء مكشوفة دون الاتصال بالهدف مباشرة.',
+        'لإيجاد SQL Injection فقط.',
+        'تستخدم فقط لمعرفة IP الهدف.'
+      ],
+      correct: 1,
+      explanation: '<strong>Google Dorks Power:</strong> site:target.com ext:sql OR ext:env OR ext:bak → ملفات حساسة. site:target.com inurl:admin → لوحات إدارة. site:target.com "Index of /" → Directory listing. intext:"SQL syntax" site:target.com → SQL Errors',
+      tip: 'site:target.com ext:env OR ext:git OR ext:bak OR ext:sql'
+    }
+  ];
+
+  let score = 0, correct = 0, wrong = 0, streak = 0, answered = 0;
+  let currentCat = 'all';
+  let answeredIds = new Set();
+
+  function renderCards(cat) {
+    const container = document.getElementById('quizContainer');
+    container.innerHTML = '';
+    const filtered = cat === 'all' ? QUESTIONS : QUESTIONS.filter(q => q.cat === cat);
+
+    filtered.forEach(q => {
+      const letters = ['A', 'B', 'C', 'D'];
+      const catLabel = {recon:'🌐 Recon', exploit:'💉 Exploit', tools:'🔧 Tools', logic:'🧠 Logic', xss:'⚡ XSS'}[q.cat] || q.cat;
+      const diffLabel = {easy:'🟢 Easy', medium:'🟠 Medium', hard:'🔴 Hard'}[q.diff] || q.diff;
+      const diffClass = 'diff-' + q.diff;
+      const catClass = 'badge-' + q.cat;
+      const isAnswered = answeredIds.has(q.id);
+
+      const opts = q.options.map((opt, i) => {
+        let cls = '';
+        if (isAnswered) {
+          if (i === q.correct) cls = 'correct';
+          else cls = 'wrong';
+        }
+        return `<div class="quiz-opt ${cls} ${isAnswered ? 'disabled' : ''}" onclick="answer(${q.id}, ${i}, ${q.correct})" id="opt-${q.id}-${i}">
+          <span class="opt-letter">${letters[i]}</span><span>${opt}</span>
+        </div>`;
+      }).join('');
+
+      const explanationShow = isAnswered ? 'show' : '';
+      const tipHtml = q.tip ? `<code class="tip-cmd">${q.tip}</code>` : '';
+
+      const card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.id = `card-${q.id}`;
+      card.innerHTML = `
+        <div class="quiz-card-header">
+          <span class="quiz-cat-badge ${catClass}">${catLabel}</span>
+          <span class="quiz-diff ${diffClass}">${diffLabel}</span>
+        </div>
+        <div class="quiz-question">${q.question}</div>
+        <div class="quiz-options">${opts}</div>
+        <div class="quiz-explanation ${explanationShow}" id="exp-${q.id}">
+          ${q.explanation} ${tipHtml}
+        </div>`;
+      container.appendChild(card);
+    });
+  }
+
+  function answer(qId, chosen, correct_idx) {
+    if (answeredIds.has(qId)) return;
+    answeredIds.add(qId);
+
+    const q = QUESTIONS.find(q => q.id === qId);
+    const opts = document.querySelectorAll(`#card-${qId} .quiz-opt`);
+    opts.forEach((el, i) => {
+      el.classList.add('disabled');
+      if (i === correct_idx) el.classList.add('correct');
+      else if (i === chosen && chosen !== correct_idx) el.classList.add('wrong');
+    });
+
+    const exp = document.getElementById(`exp-${qId}`);
+    if (exp) exp.classList.add('show');
+
+    answered++;
+    const pts = {easy:10, medium:20, hard:30}[q.diff] || 10;
+    if (chosen === correct_idx) {
+      correct++;
+      streak++;
+      score += pts + (streak > 2 ? 5 : 0);
+    } else {
+      wrong++;
+      streak = 0;
+    }
+    updateScorebar();
+
+    if (answered === (currentCat === 'all' ? QUESTIONS.length : QUESTIONS.filter(x => x.cat === currentCat).length)) {
+      showResults();
+    }
+  }
+
+  function updateScorebar() {
+    document.getElementById('scoreDisp').textContent = score;
+    document.getElementById('correctDisp').textContent = correct;
+    document.getElementById('wrongDisp').textContent = wrong;
+    document.getElementById('streakDisp').textContent = streak;
+    document.getElementById('totalDisp').textContent = answered;
+  }
+
+  function showResults() {
+    const total = currentCat === 'all' ? QUESTIONS.length : QUESTIONS.filter(q => q.cat === currentCat).length;
+    const pct = Math.round((correct / total) * 100);
+    const trophy = pct >= 90 ? '🏆' : pct >= 70 ? '🥈' : pct >= 50 ? '🥉' : '💪';
+    const title = pct >= 90 ? 'Elite Hacker!' : pct >= 70 ? 'Good Hunter!' : pct >= 50 ? 'Keep Practicing!' : 'Study More!';
+    const sub = pct >= 90 ? 'أنت جاهز للصيد الحقيقي!' : pct >= 70 ? 'مستوى جيد، استمر!' : 'راجع الشرح وأعد المحاولة.';
+    document.getElementById('resTrophy').textContent = trophy;
+    document.getElementById('resTitle').textContent = title;
+    document.getElementById('resPct').textContent = pct + '%';
+    document.getElementById('resSub').textContent = `${correct}/${total} إجابات صحيحة — ${sub}`;
+    document.getElementById('quizResults').classList.add('show');
+    document.getElementById('quizResults').scrollIntoView({behavior: 'smooth'});
+  }
+
+  function resetQuiz() {
+    score = 0; correct = 0; wrong = 0; streak = 0; answered = 0;
+    answeredIds = new Set();
+    updateScorebar();
+    document.getElementById('quizResults').classList.remove('show');
+    renderCards(currentCat);
+  }
+
+  document.querySelectorAll('.quiz-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.quiz-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCat = btn.dataset.cat;
+      score = 0; correct = 0; wrong = 0; streak = 0; answered = 0;
+      answeredIds = new Set();
+      updateScorebar();
+      document.getElementById('quizResults').classList.remove('show');
+      renderCards(currentCat);
+    });
+  });
+
+  renderCards('all');
+  </script>
+</body>
+</html>
+"""
+
+OUT_DIR = r"D:\abdo_portfolio\main\templates\main"
+with open(os.path.join(OUT_DIR, "quiz.html"), "w", encoding="utf-8") as f:
+    f.write(QUIZ_HTML)
+print("quiz.html created")
