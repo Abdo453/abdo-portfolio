@@ -307,6 +307,7 @@ html_content = r'''<!DOCTYPE html>
   </div>
 
   <script>
+    try {
     // --- Engine State ---
     let unlockedLevels = ['l1'];
     let pyodide = null;
@@ -462,6 +463,7 @@ html_content = r'''<!DOCTYPE html>
     // --- Initialize Monaco Editor ---
     require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' }});
     require(['vs/editor/editor.main'], function() {
+      try {
       buildCurriculumUI();
       const initialData = allLevels.find(l => l.id === currentLevelId);
       
@@ -479,6 +481,7 @@ html_content = r'''<!DOCTYPE html>
       
       switchLevel(currentLevelId);
       initPyodide();
+      } catch (e) { alert("REQUIRE ERROR: " + e.message + "\n" + e.stack); }
     });
 
     async function executePython() {
@@ -522,7 +525,10 @@ html_content = r'''<!DOCTYPE html>
     function copyEditorCode() {
       if(editor) { navigator.clipboard.writeText(editor.getValue()); }
     }
-
+    
+    } catch (e) {
+      alert("CRITICAL ERROR: " + e.message + "\n" + e.stack);
+    }
   </script>
 </body>
 </html>
