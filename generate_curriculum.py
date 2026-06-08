@@ -1,11 +1,13 @@
-<!DOCTYPE html>
+import codecs
+
+html_content = r'''<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Python for Hackers | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/static/main/css/style.css">
   
   <!-- CodeMirror -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
@@ -823,3 +825,9 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
   </script>
 </body>
 </html>
+'''
+
+with codecs.open(r'D:\abdo_portfolio\main\templates\main\python_for_hackers.html', 'w', 'utf-8') as f:
+    f.write(html_content)
+
+print("Comprehensive curriculum generated!")
