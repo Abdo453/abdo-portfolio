@@ -3668,27 +3668,27 @@
         <!-- TOOLS -->
         <p class="os-section-label">🔧 Tools</p>
         <div class="tool-cards-row">
-          <div class="tool-card-mini" onclick="triggerTerminalSim('subfinder -d target.com')" style="cursor:pointer">
+          <div class="tool-card-mini" onclick="showToolInfo('subfinder', 'أداة سريعة جداً تعتمد على المصادر المفتوحة (OSINT) لجمع النطاقات الفرعية دون الاتصال المباشر بالهدف (Passive).')" style="cursor:pointer">
             <div class="tool-name">subfinder</div>
             <div class="tool-tag">Passive OSINT — أسرع وأوسع تغطية</div>
           </div>
-          <div class="tool-card-mini" onclick="triggerTerminalSim('amass enum -d target.com')" style="cursor:pointer">
+          <div class="tool-card-mini" onclick="showToolInfo('amass', 'أداة قوية وعميقة تقوم ببحث مكثف وشامل (Passive & Active) ومحاولة تخمين النطاقات المخفية.')" style="cursor:pointer">
             <div class="tool-name">amass</div>
             <div class="tool-tag">Deep OSINT + DNS brute — الأشمل والأبطأ</div>
           </div>
-          <div class="tool-card-mini" onclick="triggerTerminalSim('assetfinder target.com')" style="cursor:pointer">
+          <div class="tool-card-mini" onclick="showToolInfo('assetfinder', 'أداة خفيفة وسريعة تركز على استخراج النطاقات من شهادات التشفير (crt.sh).')" style="cursor:pointer">
             <div class="tool-name">assetfinder</div>
             <div class="tool-tag">crt.sh + Facebook CT — سريع</div>
           </div>
-          <div class="tool-card-mini" onclick="triggerTerminalSim('httpx -l subs.txt')" style="cursor:pointer">
+          <div class="tool-card-mini" onclick="showToolInfo('httpx', 'أداة سريعة للتأكد من النطاقات الحية (Live) وتحديد التكنولوجيا المستخدمة (Tech Detect) وحالة السيرفر (Status Code).')" style="cursor:pointer">
             <div class="tool-name">httpx</div>
             <div class="tool-tag">Live check + tech + status codes</div>
           </div>
-          <div class="tool-card-mini" onclick="triggerTerminalSim('nuclei -u target.com')" style="cursor:pointer">
+          <div class="tool-card-mini" onclick="showToolInfo('nuclei', 'أداة فحص تعتمد على قوالب (Templates) لاكتشاف الثغرات المعروفة (CVEs) وثغرات الـ Takeover بسهولة.')" style="cursor:pointer">
             <div class="tool-name">nuclei</div>
             <div class="tool-tag">Takeover templates + CVEs</div>
           </div>
-          <div class="tool-card-mini" onclick="triggerTerminalSim('naabu -host target.com')" style="cursor:pointer">
+          <div class="tool-card-mini" onclick="showToolInfo('naabu', 'أداة Port Scanner سريعة جداً لاكتشاف المنافذ المفتوحة غير المعيارية على السيرفرات.')" style="cursor:pointer">
             <div class="tool-name">naabu</div>
             <div class="tool-tag">Port scan — منافذ غير معيارية</div>
           </div>
@@ -3711,7 +3711,7 @@ cat subfinder.txt amass.txt assetfinder.txt gau.txt | sort -u > all_subs.txt
 echo "[*] Total unique: $(wc -l < all_subs.txt)"</div>
             <div class="cmd-ui-bottom">
               <button class="cmd-btn" onclick="copyText('subfinder -d target.com -all -recursive -silent -o subfinder.txt\namass enum -passive -d target.com -o amass.txt\nassetfinder --subs-only target.com > assetfinder.txt\ncat subfinder.txt amass.txt assetfinder.txt | sort -u > all_subs.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('subfinder -d target.com')">▶ Simulate</button>
+              <button class="cmd-btn run-btn" onclick="showToolInfo('subfinder', 'أداة سريعة جداً تعتمد على المصادر المفتوحة (OSINT) لجمع النطاقات الفرعية دون الاتصال المباشر بالهدف (Passive).')">▶ Simulate</button>
             </div>
           </div>
           <div class="expected-output">
@@ -3742,7 +3742,7 @@ grep -E "\[200\]|\[403\]|\[301\]" alive.txt > targets.txt
 echo "Live hosts: $(wc -l < alive.txt)"</div>
             <div class="cmd-ui-bottom">
               <button class="cmd-btn" onclick="copyText('httpx -l all_subs.txt -status-code -title -tech-detect -ip -o alive.txt\ngrep -E \"\\[200\\]|\\[403\\]|\\[301\\]\" alive.txt > targets.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('httpx -l subs.txt')">▶ Simulate</button>
+              <button class="cmd-btn run-btn" onclick="showToolInfo('httpx', 'أداة سريعة للتأكد من النطاقات الحية (Live) وتحديد التكنولوجيا المستخدمة (Tech Detect) وحالة السيرفر (Status Code).')">▶ Simulate</button>
             </div>
           </div>
           <div class="expected-output">
