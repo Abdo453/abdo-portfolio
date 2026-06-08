@@ -291,12 +291,28 @@
         <button class="cat-btn" onclick="startQuiz('all')">🎯 الكل (ميكس شامل)</button>
         <button class="cat-btn" onclick="startQuiz('oscp')">🛡️ OSCP & Pentesting</button>
         <button class="cat-btn" onclick="startQuiz('ceh')">🎓 CEH & Security+</button>
-        <button class="cat-btn" onclick="startQuiz('bugbounty')">💰 Bug Bounty (Advanced)</button>
+        <button class="cat-btn" onclick="showSubcats()">💰 Bug Bounty (Advanced)</button>
         <button class="cat-btn" onclick="startQuiz('recon')">🌐 Web Recon</button>
         <button class="cat-btn" onclick="startQuiz('exploit')">💉 Web Exploitation</button>
         <button class="cat-btn" onclick="startQuiz('general')">🧠 General Info</button>
         </div>
     </div>
+
+    <div id="subcatScreen" style="display: none; text-align: center; margin-top: 40px;">
+      <h1>Bug Bounty Paths 🎯</h1>
+      <p style="font-size: 1.2rem; color: #94a3b8; margin-bottom: 30px;">اختر المسار الدقيق للتحدي:</p>
+      <div>
+        <button class="cat-btn" onclick="startQuiz('bb_recon')">🔍 Recon & Asset Discovery</button>
+        <button class="cat-btn" onclick="startQuiz('bb_web')">🌐 Web Vulns (XSS, SQLi..)</button>
+        <button class="cat-btn" onclick="startQuiz('bb_api')">🔌 API & Logic Bugs</button>
+        <button class="cat-btn" onclick="startQuiz('bb_cloud')">☁️ Cloud Security</button>
+        <button class="cat-btn" onclick="showSubcats()">🔥 ميكس Bug Bounty شامل</button>
+      </div>
+      <div style="margin-top: 30px;">
+        <button class="cat-btn" onclick="goBackToMainCats()" style="background: transparent; border-color: #64748b; color: #94a3b8;">🔙 العودة للأقسام الرئيسية</button>
+      </div>
+    </div>
+
 
     <!-- 2. Main Quiz App -->
     <div id="quizApp" style="display: none;">
@@ -896,6 +912,66 @@ const ALL_QUESTIONS = [
     "correct": 1,
     "explanation": "<strong>Sandboxing:</strong> يستخدم بكثرة في تحليل الـ Malware (مثل Cuckoo Sandbox) لتشغيل الفيروس في بيئة افتراضية ومراقبة سلوكه بأمان.",
     "tip": "Use Windows Sandbox for quick safe execution."
+  },
+{
+    "id": 501,
+    "cat": "bb_recon",
+    "diff": "medium",
+    "question": "أثناء مرحلة الـ Recon، استخدمت أداة Amass ووجدت Subdomain يرجع رسالة (NXDOMAIN). ما هي الخطوة التالية الأكثر منطقية للبحث عن ثغرات؟",
+    "options": [
+      "تخطي النطاق لأنه غير موجود.",
+      "البحث عن ثغرة Subdomain Takeover عبر فحص الـ CNAME Records السابقة.",
+      "محاولة عمل Port Scanning باستخدام Nmap.",
+      "محاولة استغلال ثغرة SQL Injection."
+    ],
+    "correct": 1,
+    "explanation": "<strong>Subdomain Takeover:</strong> عندما يرجع النطاق NXDOMAIN (غير موجود)، فهذا مؤشر قوي على أن الـ Subdomain ربما كان مربوطاً بخدمة خارجية (مثل S3 أو GitHub Pages) وتم مسحها، مما يتيح لك الاستيلاء عليه إذا سجلت نفس الاسم في الخدمة الخارجية.",
+    "tip": "Always check CNAMEs of NXDOMAIN subdomains."
+  },
+  {
+    "id": 502,
+    "cat": "bb_web",
+    "diff": "hard",
+    "question": "وجدت ثغرة XSS ولكن التطبيق يستخدم Content Security Policy (CSP) يمنع 'unsafe-inline'. ما هي الطريقة الأفضل لتجاوز (Bypass) هذه الحماية وتنفيذ الـ Payload؟",
+    "options": [
+      "استخدام eval() داخل الـ Payload.",
+      "تغيير حروف الـ Payload مثل <sCrIpT>.",
+      "البحث عن ثغرة في أحد الـ Domains المسموح بها في الـ script-src (مثل JSONP Endpoints أو CDNs غير آمنة).",
+      "لا يمكن تجاوز الـ CSP نهائياً في هذه الحالة."
+    ],
+    "correct": 2,
+    "explanation": "<strong>CSP Bypass:</strong> إذا كان الـ script-src يسمح بنطاقات معينة (Whitelist)، يمكنك البحث داخل هذه النطاقات عن JSONP endpoints أو ثغرات تعيد لك كود JS، وبذلك سيعتبره الـ CSP كوداً موثوقاً لأنه قادم من نطاق مسموح.",
+    "tip": "Use Google to find open JSONP endpoints on whitelisted domains."
+  },
+  {
+    "id": 503,
+    "cat": "bb_api",
+    "diff": "medium",
+    "question": "تطبيق يعتمد على GraphQL، كيف يمكنك استخراج شكل قاعدة البيانات (Schema) إذا لم تكن موثقة؟",
+    "options": [
+      "استخدام SQLmap على الـ endpoint.",
+      "إرسال استعلام Introspection (مثل __schema) إلى الـ endpoint.",
+      "محاولة تحميل ملف schema.xml من الـ root.",
+      "الـ Schema دائماً مخفية ولا يمكن الوصول إليها إلا بصلاحيات Admin."
+    ],
+    "correct": 1,
+    "explanation": "<strong>GraphQL Introspection:</strong> استعلامات الـ Introspection هي ميزة أساسية في GraphQL تسمح للعميل بسؤال السيرفر عن الهيكل الكامل للـ Schema (الـ Types, Queries, Mutations). غالباً ما ينسى المطورون إغلاقها في بيئة الـ Production.",
+    "tip": "Query: { __schema { types { name } } }"
+  },
+  {
+    "id": 504,
+    "cat": "bb_cloud",
+    "diff": "easy",
+    "question": "أثناء البحث في AWS، وجدت ملف Backup بامتداد .bak مرفوع على S3 Bucket مفتوح للجميع (Public). ماذا تسمى هذه الثغرة الشائعة؟",
+    "options": [
+      "S3 Bucket Misconfiguration (Insecure Storage).",
+      "Server-Side Request Forgery (SSRF).",
+      "Cross-Origin Resource Sharing (CORS) Bypass.",
+      "Command Injection."
+    ],
+    "correct": 0,
+    "explanation": "<strong>Cloud Storage Misconfig:</strong> ترك الـ S3 Buckets مفتوحة للصلاحيات العامة (Public Read/Write) هو من أشهر أخطاء الـ Cloud Security ويؤدي إلى تسريب بيانات حساسة جداً.",
+    "tip": "Use tools like 'cloud_enum' to find public buckets."
   }
 ];
 
@@ -910,11 +986,25 @@ const ALL_QUESTIONS = [
     let isAnswered = false;
 
     // Helpers
-    const getCatLabel = (cat) => ({'recon':'🌐 Recon', 'exploit':'💉 Exploit', 'tools':'🔧 Tools', 'logic':'🧠 Logic', 'xss':'⚡ XSS', 'oscp':'🛡️ OSCP', 'ceh':'🎓 CEH', 'bugbounty':'💰 Bug Bounty', 'general':'🧠 General Info'})[cat] || cat;
+    const getCatLabel = (cat) => ({'recon':'🌐 Recon', 'exploit':'💉 Exploit', 'tools':'🔧 Tools', 'logic':'🧠 Logic', 'xss':'⚡ XSS', 'oscp':'🛡️ OSCP', 'ceh':'🎓 CEH', 'bugbounty':'💰 Bug Bounty', 'general':'🧠 General Info', 'bb_recon':'🔍 BB Recon', 'bb_web':'🌐 BB Web', 'bb_api':'🔌 BB API', 'bb_cloud':'☁️ BB Cloud'})[cat] || cat;
     const getDiffLabel = (diff) => ({'easy':'🟢 Easy', 'medium':'🟠 Medium', 'hard':'🔴 Hard'})[diff] || diff;
 
+    
+    function showSubcats() {
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('subcatScreen').style.display = 'block';
+    }
+    
+    function goBackToMainCats() {
+      document.getElementById('subcatScreen').style.display = 'none';
+      document.getElementById('startScreen').style.display = 'block';
+    }
+    
     function startQuiz(cat) {
       document.getElementById('startScreen').style.display = 'none';
+      const subcatEl = document.getElementById('subcatScreen');
+      if(subcatEl) subcatEl.style.display = 'none';
+
       document.getElementById('quizApp').style.display = 'block';
       document.getElementById('exitNavBtn').style.display = 'inline-block';
       
