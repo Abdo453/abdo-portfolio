@@ -596,7 +596,7 @@ html_content = r"""<!DOCTYPE html>
         question: 'ما هو الـ Payload الأبسط لاختبار Server-Side Template Injection (SSTI)؟',
         options: [
           "'1 OR 1=1--",
-          "<script>alert(1)</script>",
+          "<script>alert(1)<\\/script>",
           "\\x7B\\x7B7*7}} أو ${7*7} — إذا أعطى 49 فالـ SSTI موجود!",
           "; ls -la"
         ],
