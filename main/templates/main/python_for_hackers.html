@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Python for Hackers | Abdo Ramdan</title>
+  <title>Pro Python IDE | Abdo Ramdan</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/main/css/style.css">
   
-  <!-- CodeMirror -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/darcula.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
-  
+  <!-- Xterm.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+
   <!-- Pyodide -->
   <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+
+  <!-- Monaco Editor Loader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
 
   <style>
     :root {
@@ -23,7 +26,7 @@
       --neon-green: #00ff66;
       --neon-red: #ff0055;
       --bg-dark: #020205;
-      --bg-card: rgba(8, 8, 20, 0.85);
+      --bg-panel: rgba(8, 8, 20, 0.95);
       --border-color: rgba(0, 229, 255, 0.15);
       --py-blue: #3776AB;
       --py-yellow: #FFD43B;
@@ -32,794 +35,533 @@
       background-color: var(--bg-dark);
       color: #e2e8f0;
       font-family: 'Inter', sans-serif;
-      font-size: 1.15rem;
-      line-height: 1.8;
       margin: 0;
       padding: 0;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* Ambient Neon Orbs & Grid */
-    .bg-orbs {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
       overflow: hidden;
-    }
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(140px);
-      opacity: 0.05;
-      animation: orbFloat 25s ease-in-out infinite;
-    }
-    .orb-1 {
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, var(--py-blue), transparent 70%);
-      top: -10%;
-      left: -10%;
-    }
-    .orb-2 {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, var(--py-yellow), transparent 70%);
-      bottom: -10%;
-      right: -10%;
-      animation-delay: -5s;
-    }
-    .grid-bg {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.02;
-      background-size: 40px 40px;
-      background-image: 
-        linear-gradient(to right, var(--py-blue) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--py-blue) 1px, transparent 1px);
     }
 
     .meth-header {
-      background: rgba(4, 4, 10, 0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(4, 4, 10, 0.9);
       border-bottom: 1px solid rgba(55, 118, 171, 0.3);
-      padding: 15px 30px;
+      padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
       z-index: 100;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     }
     .meth-logo {
       font-family: 'Outfit', sans-serif;
       font-weight: 800;
-      font-size: 1.7rem;
+      font-size: 1.5rem;
       background: linear-gradient(90deg, var(--py-blue), var(--py-yellow));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: 1.5px;
     }
-    .back-btn {
-      background: rgba(55, 118, 171, 0.1);
+    
+    .top-controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .level-select {
+      background: rgba(255, 255, 255, 0.05);
       color: var(--py-yellow);
       border: 1px solid rgba(55, 118, 171, 0.4);
-      padding: 8px 16px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .level-select option {
+      background: var(--bg-dark);
+      color: #fff;
+    }
+
+    .run-btn {
+      background: rgba(0, 255, 102, 0.1);
+      color: var(--neon-green);
+      border: 1px solid var(--neon-green);
+      padding: 6px 20px;
       border-radius: 4px;
       font-family: 'Fira Code', monospace;
-      font-size: 1.1rem;
+      font-weight: 700;
+      font-size: 1rem;
       cursor: pointer;
-      text-decoration: none;
-      transition: all 0.3s ease;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .back-btn:hover {
-      background: rgba(55, 118, 171, 0.2);
-      border-color: var(--py-yellow);
-      transform: translateY(-2px);
+    .run-btn:hover:not(:disabled) {
+      background: rgba(0, 255, 102, 0.2);
+      box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
     }
-    
-    .meth-container {
-      display: flex;
-      flex: 1;
-      height: calc(100vh - 65px);
-      position: relative;
-      z-index: 1;
-    }
-
-    .meth-sidebar {
-      width: 320px;
-      background: rgba(3, 3, 8, 0.9);
-      backdrop-filter: blur(20px);
-      border-left: 1px solid rgba(55, 118, 171, 0.2); /* changed to left for RTL */
-      padding: 24px 14px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .meth-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: all 0.3s ease;
-      color: #94a3b8;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 600;
-      font-size: 1.15rem;
-    }
-    .meth-item:hover, .meth-item.active {
-      background: rgba(55, 118, 171, 0.1);
-      border-color: rgba(55, 118, 171, 0.3);
-      color: #fff;
-    }
-    .meth-item.active {
-      border-right: 4px solid var(--py-yellow); /* RTL */
-    }
-
-    .meth-viewer {
-      flex: 1;
-      padding: 40px;
-      overflow-y: auto;
-      background: rgba(2, 2, 5, 0.7);
-    }
-    
-    .meth-content-view {
-      display: none;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .meth-content-view.active {
-      display: block;
-      animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Python Specific Styling */
-    .py-header {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 30px;
-      border-bottom: 1px dashed rgba(255,255,255,0.1);
-      padding-bottom: 20px;
-    }
-    .py-icon {
-      font-size: 3rem;
-    }
-    .py-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 2.2rem;
-      color: #fff;
-      margin: 0;
-    }
-    .py-subtitle {
-      color: var(--py-yellow);
-      font-size: 1.1rem;
-      margin-top: 5px;
-    }
-
-    .cyber-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 30px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Code Blocks */
-    .CodeMirror {
-      height: auto;
-      font-family: 'Fira Code', monospace;
-      font-size: 1.05rem;
-      border-radius: 0 0 8px 8px;
-    }
-    .code-box {
-      background: #1e1e1e;
-      border-radius: 8px;
-      border: 1px solid #333;
-      margin: 15px 0;
-      overflow: hidden;
-    }
-    .code-header {
-      background: #2d2d2d;
-      padding: 8px 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #111;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.9rem;
-      color: #a0a0a0;
-    }
-    
-    .action-btn {
-      background: transparent;
-      border: 1px solid #555;
-      color: #ccc;
-      padding: 4px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      transition: all 0.2s;
-    }
-    .action-btn:hover {
-      background: #333;
-      color: #fff;
-    }
-    
-    .sim-btn {
-      border-color: var(--py-yellow);
-      color: var(--py-yellow);
-      margin-left: 10px;
-    }
-    .sim-btn:hover {
-      background: rgba(255, 212, 59, 0.1);
-    }
-    .sim-btn:disabled {
+    .run-btn:disabled {
       border-color: #555;
       color: #555;
       cursor: not-allowed;
     }
 
-    /* Terminal Simulation Output */
-    .term-output-box {
-      background: #000;
-      border: 1px solid var(--neon-cyan);
-      border-radius: 6px;
-      padding: 15px;
-      margin-top: 15px;
-      font-family: 'Fira Code', monospace;
-      font-size: 1rem;
-      color: var(--neon-cyan);
-      display: none;
-      box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.1);
-      white-space: pre-wrap;
+    /* Split Pane Layout */
+    .ide-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 60px);
+      width: 100vw;
     }
 
-    /* Mini Challenge */
+    /* Left Side: Editor */
+    .editor-pane {
+      flex: 1.2;
+      border-left: 1px solid #333; /* RTL */
+      display: flex;
+      flex-direction: column;
+      background: #1e1e1e;
+    }
+    .editor-header {
+      background: #2d2d2d;
+      padding: 8px 15px;
+      border-bottom: 1px solid #111;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: #a0a0a0;
+      display: flex;
+      justify-content: space-between;
+    }
+    #monaco-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Right Side: Theory & Terminal */
+    .content-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-panel);
+    }
+    
+    .theory-section {
+      flex: 1.3;
+      padding: 25px;
+      overflow-y: auto;
+      border-bottom: 2px solid var(--border-color);
+      position: relative;
+    }
+
+    .terminal-section {
+      flex: 1;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .term-header {
+      background: #111;
+      padding: 5px 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #888;
+      border-bottom: 1px solid #222;
+    }
+    #xterm-container {
+      flex: 1;
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    /* Content Styling */
+    .level-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .level-content.active {
+      display: block;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      color: #fff;
+      font-size: 1.8rem;
+      margin-top: 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      padding-bottom: 10px;
+    }
+    h3 {
+      color: var(--py-yellow);
+      margin-top: 20px;
+      font-family: 'Outfit', sans-serif;
+    }
+    p {
+      font-size: 1.05rem;
+      color: #cbd5e1;
+    }
+    
     .mini-challenge {
       background: rgba(255, 212, 59, 0.05);
-      border-right: 4px solid var(--py-yellow); /* RTL */
-      padding: 15px 20px;
-      margin: 20px 0;
+      border-right: 4px solid var(--py-yellow);
+      padding: 15px;
+      margin-top: 20px;
       border-radius: 8px 0 0 8px;
     }
     .challenge-title {
       color: var(--py-yellow);
-      font-family: 'Outfit', sans-serif;
       font-weight: 700;
+      font-family: 'Outfit', sans-serif;
       margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
+    code {
+      background: #222;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      color: var(--neon-cyan);
+    }
+    
+    .copy-btn {
+      background: transparent;
+      border: 1px solid #555;
+      color: #aaa;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .copy-btn:hover { background: #333; color: #fff; }
 
   </style>
 </head>
-<body style="text-align: right;">
-
-  <div class="bg-orbs">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="grid-bg"></div>
-  </div>
+<body>
 
   <header class="meth-header">
-    <div class="meth-logo">🐍 Python for Hackers</div>
-    <a href="/" class="back-btn">⬅ العودة للرئيسية</a>
+    <div class="meth-logo">🐍 PyHackers Pro IDE</div>
+    <div class="top-controls">
+      <select class="level-select" id="levelSelector" onchange="switchLevel(this.value)">
+        <option value="l1">Level 1: Variables & If</option>
+        <option value="l2">Level 2: Loops & Functions</option>
+        <option value="l3">Level 3: Regex & Parsing</option>
+        <option value="l4">Level 4: Networking (HTTP)</option>
+        <option value="l5">Level 5: Threading</option>
+        <option value="l6">Level 6: Final Scanner</option>
+      </select>
+      <button class="run-btn" id="runBtn" onclick="executePython()" disabled>⏳ Loading Engine...</button>
+      <a href="/" class="back-btn" style="padding: 6px 12px; font-size:1rem; border-color:rgba(255,255,255,0.2); color:#fff;">Exit ✖</a>
+    </div>
   </header>
 
-  <div class="meth-container">
+  <div class="ide-container">
     
-    <!-- Sidebar -->
-    <div class="meth-sidebar">
-      <div class="meth-item active" onclick="switchLevel('l1', this)">
-        <span>1️⃣</span> <span>Level 1: المتغيرات والشروط</span>
-      </div>
-      <div class="meth-item" onclick="switchLevel('l2', this)">
-        <span>2️⃣</span> <span>Level 2: التكرار والدوال</span>
-      </div>
-      <div class="meth-item" onclick="switchLevel('l3', this)">
-        <span>3️⃣</span> <span>Level 3: الملفات والنصوص</span>
-      </div>
-      <div class="meth-item" onclick="switchLevel('l4', this)">
-        <span>4️⃣</span> <span>Level 4: أساسيات الشبكات</span>
-      </div>
-      <div class="meth-item" onclick="switchLevel('l5', this)">
-        <span>5️⃣</span> <span>Level 5: الأتمتة السريعة</span>
-      </div>
-      <div class="meth-item" onclick="switchLevel('l6', this)">
-        <span>6️⃣</span> <span>Level 6: أدوات احترافية</span>
-      </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="meth-viewer">
-
-      <!-- LEVEL 1 -->
-      <div id="l1" class="meth-content-view active">
-        <div class="py-header">
-          <div class="py-icon">1️⃣</div>
-          <div>
-            <h1 class="py-title">Level 1: المتغيرات والشروط</h1>
-            <div class="py-subtitle">الأساسيات المطلقة: فهم كيفية تخزين البيانات والتحقق منها برمجياً.</div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <h3>المتغيرات (Variables) والبيانات</h3>
-          <p>أول خطوة في البرمجة هي تخزين المعلومات التي ستتعامل معها، مثل أرقام المنافذ (Ports) أو عناوين الـ (IPs). جملة `if` تستخدم لاتخاذ قرارات بناءً على تلك البيانات.</p>
+    <!-- Right Panel (Content & Terminal) Note: RTL direction means this is visually on the right -->
+    <div class="content-pane">
+      
+      <!-- Theory Section -->
+      <div class="theory-section">
+        
+        <!-- LEVEL 1 -->
+        <div id="l1" class="level-content active">
+          <h1>Level 1: المتغيرات والشروط</h1>
+          <p>أول خطوة في الهاكينج هي تخزين البيانات والتحقق منها. في هذا المستوى سنتعلم كيف نُعرّف متغيرات (Variables) وكيف نتخذ قرارات باستخدام <code>if</code>.</p>
           
-          <div class="code-box">
-            <div class="code-header">
-              <span>basics.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runPythonCode('ed1', 'out1')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ed1">
-# تعريف متغيرات الهدف
-target_ip = "192.168.1.10"
-port = 80
-is_open = True
-
-# التحقق الشرطي
-if is_open == True:
-    print(f"[!] Alert: Port {port} on {target_ip} is OPEN!")
-else:
-    print(f"[-] Port {port} is closed.")
-</textarea>
-            </div>
+          <h3>المطلوب في المحرر (Editor):</h3>
+          <p>يوجد كود على اليسار يعرّف متغيراً يسمى <code>target_ip</code> و <code>port</code>.</p>
+          
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 Challenge 1: Port Validation</div>
+            <p>أضف جملة <code>if</code> برمجية تتحقق مما إذا كان المنفذ <code>port</code> أكبر من 0 وأصغر من أو يساوي 65535.</p>
+            <p>- إذا كان صحيحاً: اطبع <code>Valid Port</code></p>
+            <p>- إذا كان خاطئاً: اطبع <code>Invalid Port</code></p>
+            <p><strong>ثم اضغط Run Code بالأعلى.</strong></p>
           </div>
-          <div class="term-output-box" id="out1" dir="ltr" style="text-align:left;"></div>
         </div>
 
-        <div class="mini-challenge">
-          <div class="challenge-title">🎯 Challenge 1: Port Validation</div>
-          <p>قم بكتابة كود يتحقق من المتغير <code>port_number</code>. إذا كان الرقم بين 1 و 65535 اطبع <code>Valid Port</code>، وإذا لم يكن اطبع <code>Invalid Port</code>.</p>
-          <div class="code-box">
-            <div class="code-header">
-              <span>ch1.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runChallenge(1, 'ch1', 'cout1')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ch1">
-port_number = 8080
-
-# اكتب جملة if هنا:
-</textarea>
-            </div>
+        <!-- LEVEL 2 -->
+        <div id="l2" class="level-content">
+          <h1>Level 2: التكرار والدوال</h1>
+          <p>الهاكر لا يقوم بفحص الأهداف يدوياً أبداً! نستخدم الحلقات (Loops) لتمرير الأهداف على دوال الفحص (Functions) أوتوماتيكياً.</p>
+          
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 Challenge 2: Network Sweeper</div>
+            <p>المطلوب كتابة حلقة <code>for</code> تمر على الأرقام من 1 إلى 5 باستخدام الدالة <code>range(1, 6)</code>.</p>
+            <p>في كل دورة للحلقة، اطبع النص التالي بالضبط: <code>Ping 192.168.1.X</code> (حيث X هو الرقم الحالي في الحلقة).</p>
           </div>
-          <div class="term-output-box" id="cout1" dir="ltr" style="text-align:left;"></div>
         </div>
+
+        <!-- LEVEL 3 -->
+        <div id="l3" class="level-content">
+          <h1>Level 3: استخراج الكنوز بالـ Regex</h1>
+          <p>نتائج أدواتنا تكون ضخمة ومعقدة. استخراج الآيبيهات أو الإيميلات يتطلب سحراً يسمى التعبيرات النمطية (Regex).</p>
+          
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 Challenge 3: IP Extractor</div>
+            <p>في المحرر، قمنا بتجهيز متغير <code>log_data</code> يحتوي على نص طويل.</p>
+            <p>استخدم الدالة <code>re.findall</code> مع نمط الـ IP لاستخراج الأيبيهات من النص وطباعتها (سواء كقائمة أو فرادى).</p>
+          </div>
+        </div>
+
+        <!-- LEVEL 4 -->
+        <div id="l4" class="level-content">
+          <h1>Level 4: الشبكات (HTTP)</h1>
+          <p>التحدث مع السيرفرات وقراءة الـ Headers والـ Status Codes هي أساس الـ Web Hacking.</p>
+          
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 Challenge 4: API Status Checker</div>
+            <p>باستخدام مكتبة <code>urllib.request</code> المدمجة، قم بإرسال طلب (Request) إلى الرابط: <code>https://httpbin.org/status/200</code></p>
+            <p>قم بطباعة حالة الاستجابة (Status Code). يجب أن تطبع <code>200</code>.</p>
+          </div>
+        </div>
+
+        <!-- LEVEL 5 -->
+        <div id="l5" class="level-content">
+          <h1>Level 5: الأتمتة والسرعة</h1>
+          <p>استخدام خيوط المعالجة المتزامنة (Multithreading) يجعل أدواتك تعمل بلمح البصر، مثل أداة Dirb أو Subfinder.</p>
+          
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 Challenge 5: Threaded Brute-Force</div>
+            <p>اكتب دالة <code>crack(pwd)</code> تطبع <code>Cracking {pwd}...</code></p>
+            <p>ثم استخدم <code>ThreadPoolExecutor</code> من مكتبة <code>concurrent.futures</code> لعمل <code>map</code> لقائمة كلمات مرور <code>['admin', '12345', 'root']</code> على تلك الدالة.</p>
+          </div>
+        </div>
+
+        <!-- LEVEL 6 -->
+        <div id="l6" class="level-content">
+          <h1>Level 6: مشروع التخرج الاحترافي</h1>
+          <p>أنت الآن جاهز لدمج المتغيرات، الدوال، الـ Threads، والشبكات لإنتاج أدوات فعلية مثل <b>Port Scanner</b>.</p>
+          
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 Challenge 6: I am a Hacker!</div>
+            <p>لتتويج مسيرتك، فقط اكتب كوداً يطبع الجملة التالية تماماً كما هي، لفتح الـ Flag النهائي:</p>
+            <code>I am a Python Hacker!</code>
+          </div>
+        </div>
+
       </div>
 
-      <!-- LEVEL 2 -->
-      <div id="l2" class="meth-content-view">
-        <div class="py-header">
-          <div class="py-icon">2️⃣</div>
-          <div>
-            <h1 class="py-title">Level 2: التكرار والدوال</h1>
-            <div class="py-subtitle">الحلقات (Loops) لتنفيذ مهام متكررة، والدوال (Functions) لتنظيم الكود.</div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <h3>تكرار العمليات (For Loops)</h3>
-          <p>كهاكر، أنت لا تفحص هدفاً واحداً أبداً. ستتعامل دائماً مع (Lists) تحتوي على مئات الأهداف وتستخدم (For Loops) للمرور عليها.</p>
-          
-          <div class="code-box">
-            <div class="code-header">
-              <span>loops.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runPythonCode('ed2', 'out2')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ed2">
-# قائمة بالأهداف
-targets = ["10.0.0.1", "10.0.0.2", "10.0.0.3"]
-
-# دالة مخصصة
-def scan_host(ip):
-    # محاكاة لفحص
-    print(f"[*] Scanning {ip} for vulnerabilities...")
-
-# حلقة تكرارية تمر على كل هدف
-for host in targets:
-    scan_host(host)
-</textarea>
-            </div>
-          </div>
-          <div class="term-output-box" id="out2" dir="ltr" style="text-align:left;"></div>
-        </div>
-
-        <div class="mini-challenge">
-          <div class="challenge-title">🎯 Challenge 2: Network Sweeper</div>
-          <p>اكتب حلقة `for loop` تمر من الرقم 1 إلى 5. وفي كل دورة قم بطباعة `Ping 192.168.1.X` حيث أن X هو الرقم.</p>
-          <div class="code-box">
-            <div class="code-header">
-              <span>ch2.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runChallenge(2, 'ch2', 'cout2')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ch2">
-# تلميح: استخدم range(1, 6)
-# اكتب الكود هنا:
-
-</textarea>
-            </div>
-          </div>
-          <div class="term-output-box" id="cout2" dir="ltr" style="text-align:left;"></div>
-        </div>
-      </div>
-
-      <!-- LEVEL 3 -->
-      <div id="l3" class="meth-content-view">
-        <div class="py-header">
-          <div class="py-icon">3️⃣</div>
-          <div>
-            <h1 class="py-title">Level 3: الملفات والنصوص</h1>
-            <div class="py-subtitle">استخراج الكنوز باستخدام التعبيرات النمطية (Regex).</div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <h3>استخراج البيانات (Parsing)</h3>
-          <p>أدواتنا دائماً ما تعطينا مخرجات ضخمة مليئة بالبيانات غير الهامة. الـ Regex في بايثون عبر مكتبة `re` يساعدك على صيد البيانات الحساسة فوراً.</p>
-          
-          <div class="code-box">
-            <div class="code-header">
-              <span>regex_parser.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runPythonCode('ed3', 'out3')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ed3">
-import re
-
-js_code = "const api = '/api/v1/auth'; const admin = '/admin/login';"
-# التعبير النمطي للبحث عن المسارات التي تبدأ بـ /
-endpoints = re.findall(r"/[a-zA-Z0-9_/-]+", js_code)
-
-for ep in endpoints:
-    print(f"[+] Found Endpoint: {ep}")
-</textarea>
-            </div>
-          </div>
-          <div class="term-output-box" id="out3" dir="ltr" style="text-align:left;"></div>
-        </div>
-
-        <div class="mini-challenge">
-          <div class="challenge-title">🎯 Challenge 3: IP Extractor</div>
-          <p>استخدم <code>re.findall</code> لاستخراج جميع عناوين الـ IP من المتغير <code>log_data</code> واطبعها.</p>
-          <div class="code-box">
-            <div class="code-header">
-              <span>ch3.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runChallenge(3, 'ch3', 'cout3')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ch3">
-import re
-
-log_data = "Failed login from 192.168.1.50 at 10:00. Success from 10.0.0.5."
-# استخرج الـ IPs واطبعها:
-
-</textarea>
-            </div>
-          </div>
-          <div class="term-output-box" id="cout3" dir="ltr" style="text-align:left;"></div>
-        </div>
-      </div>
-
-      <!-- LEVEL 4 -->
-      <div id="l4" class="meth-content-view">
-        <div class="py-header">
-          <div class="py-icon">4️⃣</div>
-          <div>
-            <h1 class="py-title">Level 4: أساسيات الشبكات</h1>
-            <div class="py-subtitle">التحدث مع السيرفرات وقراءة ردودها باستخدام `urllib` أو `requests`.</div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <h3>طلبات الـ HTTP</h3>
-          <p>في البيئات المدمجة مثل هذا المتصفح أو الأنظمة المقيدة، يمكنك استخدام مكتبة بايثون الأساسية `urllib.request` لإرسال طلبات الويب وجلب البيانات.</p>
-          
-          <div class="code-box">
-            <div class="code-header">
-              <span>http_req.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runPythonCode('ed4', 'out4')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ed4">
-import urllib.request
-
-url = "https://httpbin.org/get"
-req = urllib.request.Request(url, headers={'User-Agent': 'Hacker-Browser'})
-
-try:
-    with urllib.request.urlopen(req) as response:
-        print(f"[*] Status Code: {response.status}")
-        data = response.read().decode('utf-8')
-        print(f"[*] Origin IP: {data[:100]}...") # جزء من الاستجابة
-except Exception as e:
-    print(f"[-] Error: {e}")
-</textarea>
-            </div>
-          </div>
-          <div class="term-output-box" id="out4" dir="ltr" style="text-align:left;"></div>
-        </div>
-
-        <div class="mini-challenge">
-          <div class="challenge-title">🎯 Challenge 4: API Checker</div>
-          <p>قم بكتابة كود يجلب البيانات من الرابط `https://httpbin.org/status/200` واطبع حالة الرد (Status Code). (يجب أن تكون 200).</p>
-          <div class="code-box">
-            <div class="code-header">
-              <span>ch4.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runChallenge(4, 'ch4', 'cout4')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ch4">
-import urllib.request
-
-url = "https://httpbin.org/status/200"
-# اكتب الكود هنا:
-
-</textarea>
-            </div>
-          </div>
-          <div class="term-output-box" id="cout4" dir="ltr" style="text-align:left;"></div>
-        </div>
-      </div>
-
-      <!-- LEVEL 5 -->
-      <div id="l5" class="meth-content-view">
-        <div class="py-header">
-          <div class="py-icon">5️⃣</div>
-          <div>
-            <h1 class="py-title">Level 5: الأتمتة السريعة</h1>
-            <div class="py-subtitle">تسريع المهام عبر خيوط المعالجة المتزامنة (Multithreading).</div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <h3>الـ ThreadPoolExecutor</h3>
-          <p>الفحص المتسلسل (أو التكرار العادي) بطيء. باستخدام `concurrent.futures` يمكنك فحص عشرات الأهداف في نفس اللحظة.</p>
-          
-          <div class="code-box">
-            <div class="code-header">
-              <span>threading_hack.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runPythonCode('ed5', 'out5')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ed5">
-import concurrent.futures
-import time
-
-ports = [21, 22, 80, 443, 8080]
-
-def scan(port):
-    time.sleep(0.5) # محاكاة التأخير
-    return f"[+] Port {port} checked"
-
-start_time = time.time()
-with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-    results = executor.map(scan, ports)
-
-for res in results:
-    print(res)
-
-print(f"[*] Finished in {time.time() - start_time:.2f} seconds!")
-</textarea>
-            </div>
-          </div>
-          <div class="term-output-box" id="out5" dir="ltr" style="text-align:left;"></div>
-        </div>
-
-        <div class="mini-challenge">
-          <div class="challenge-title">🎯 Challenge 5: Thread Mastery</div>
-          <p>قم بإنشاء دالة <code>crack(pwd)</code> تقوم بطباعة <code>Cracking {pwd}...</code>، ثم استخدم <code>ThreadPoolExecutor</code> لتمرير القائمة <code>['admin', '12345', 'root']</code> عليها.</p>
-          <div class="code-box">
-            <div class="code-header">
-              <span>ch5.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runChallenge(5, 'ch5', 'cout5')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ch5">
-import concurrent.futures
-
-passwords = ['admin', '12345', 'root']
-# اكتب الكود هنا:
-
-</textarea>
-            </div>
-          </div>
-          <div class="term-output-box" id="cout5" dir="ltr" style="text-align:left;"></div>
-        </div>
-      </div>
-
-      <!-- LEVEL 6 -->
-      <div id="l6" class="meth-content-view">
-        <div class="py-header">
-          <div class="py-icon">6️⃣</div>
-          <div>
-            <h1 class="py-title">Level 6: أدوات احترافية</h1>
-            <div class="py-subtitle">المرحلة الأخيرة: دمج المتغيرات، الدوال، الـ Threads، والشبكات لإنتاج أداة حقيقية.</div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <h3>كيف تبني Port Scanner؟</h3>
-          <p>الآن أنت تمتلك كل القطع! لتوصيل كل شيء ببعضه، يتم استخدام مكتبة `socket` داخل دالة ويتم إرسال الأهداف لها بـ `Threads`.</p>
-          <p>بسبب القيود الأمنية في المتصفح، لا يمكن تشغيل Sockets شبكية حقيقية عبر Pyodide، ولكن هيكل الكود يبدو هكذا:</p>
-          
-          <div class="code-box">
-            <div class="code-header">
-              <span>scanner.py (Read Only)</span>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<pre style="margin:0; padding:15px; color:#d4d4d4; font-family:'Fira Code', monospace; line-height:1.5;">
-import socket
-import concurrent.futures
-
-def scan_port(ip, port):
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(1)
-        result = s.connect_ex((ip, port))
-        if result == 0:
-            print(f"[+] Port {port} is OPEN")
-        s.close()
-    except:
-        pass
-
-ip = "192.168.1.1"
-with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-    for p in range(1, 1000):
-        executor.submit(scan_port, ip, p)
-</pre>
-            </div>
-          </div>
-          <br>
-          <a href="/#portfolio" class="back-btn" style="display:inline-block; width:fit-content;">🔍 عرض مشروع Port Scanner كامل ضمن مشاريعك</a>
-        </div>
-
-        <div class="mini-challenge">
-          <div class="challenge-title">🎯 Challenge 6: The Final Quiz</div>
-          <p>لقد وصلت لمستوى الاحتراف! لإنهاء مسار البايثون، اكتب برنامجاً صغيراً يطبع الجملة التالية تماماً كما هي: <code>I am a Python Hacker!</code></p>
-          <div class="code-box">
-            <div class="code-header">
-              <span>ch6.py</span>
-              <button class="action-btn sim-btn run-script-btn" onclick="runChallenge(6, 'ch6', 'cout6')">⏳ Loading...</button>
-            </div>
-            <div dir="ltr" style="text-align:left;">
-<textarea id="ch6">
-# التحدي الأخير:
-
-</textarea>
-            </div>
-          </div>
-          <div class="term-output-box" id="cout6" dir="ltr" style="text-align:left;"></div>
-        </div>
-
+      <!-- Terminal Section -->
+      <div class="terminal-section">
+        <div class="term-header">Terminal — /workspace/target.py</div>
+        <div id="xterm-container"></div>
       </div>
 
     </div>
+
+    <!-- Left Panel (Editor) Note: RTL makes this visually on the left side of the screen usually, wait, RTL reverses flex-direction. Let's explicitly order them. -->
+    <div class="editor-pane" dir="ltr" style="order: -1;">
+      <div class="editor-header">
+        <span id="editor-filename">workspace/level1.py</span>
+        <button class="copy-btn" onclick="copyEditorCode()">Copy</button>
+      </div>
+      <div id="monaco-container"></div>
+    </div>
+
   </div>
 
   <script>
+    // --- Levels Initial Code Data ---
+    const levelCodes = {
+      'l1': `# Level 1: Variables & If statements
+target_ip = "192.168.1.10"
+port = 8080
+
+# اكتب جملة التحقق (if statement) هنا:
+# إذا كان port بين 1 و 65535 اطبع Valid Port
+# غير ذلك اطبع Invalid Port
+
+`,
+      'l2': `# Level 2: Loops
+# تلميح: استخدم range(1, 6) للمرور على الأرقام من 1 إلى 5
+
+# اكتب الـ For Loop هنا:
+
+`,
+      'l3': `import re
+
+log_data = "Attack detected from 192.168.1.50 at 10:00 AM. Admin logged from 10.0.0.5."
+
+# النمط (Regex pattern) لاستخراج الـ IP
+ip_pattern = r"\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b"
+
+# استخدم re.findall لاستخراج الأيبيهات واطبعها:
+
+`,
+      'l4': `import urllib.request
+
+url = "https://httpbin.org/status/200"
+
+try:
+    # أرسل الطلب واطبع الـ Status Code هنا:
+    pass
+except Exception as e:
+    print(f"Error: {e}")
+
+`,
+      'l5': `import concurrent.futures
+import time
+
+passwords = ['admin', '12345', 'root']
+
+def crack(pwd):
+    time.sleep(0.5) # محاكاة التأخير
+    # اطبع جملة Cracking... هنا
+    pass
+
+# استخدم ThreadPoolExecutor لعمل Map لقائمة الباسوردات:
+
+`,
+      'l6': `# تهانينا لوصولك إلى مستوى الاحتراف!
+# اطبع رسالة الفوز النهائية للحصول على الـ Flag:
+
+`
+    };
+
     let pyodide = null;
-    let editors = {}; // Store CodeMirror instances by ID
+    let editor = null;
+    let term = null;
+    let fitAddon = null;
+    let currentLevel = 'l1';
 
-    async function initPyodide() {
-      try {
-        pyodide = await loadPyodide();
-        // Enable all run buttons
-        document.querySelectorAll('.run-script-btn').forEach(btn => {
-          btn.innerText = "▶ Run Code";
-          btn.disabled = false;
-        });
-        console.log("Pyodide loaded successfully.");
-      } catch (err) {
-        console.error("Pyodide failed to load: ", err);
-      }
-    }
+    // --- Initialize Xterm.js ---
+    term = new Terminal({
+      theme: {
+        background: '#000000',
+        foreground: '#00e5ff',
+        cursor: '#00e5ff'
+      },
+      fontFamily: '"Fira Code", monospace',
+      fontSize: 14,
+      cursorBlink: true,
+      convertEol: true
+    });
+    fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
+    term.open(document.getElementById('xterm-container'));
+    fitAddon.fit();
+    term.writeln('Initializing Virtual PyHackers Environment...');
 
-    // Initialize Editors when DOM loads
-    window.addEventListener('DOMContentLoaded', () => {
-      initPyodide();
-      
-      const textareas = document.querySelectorAll('textarea');
-      textareas.forEach(ta => {
-        editors[ta.id] = CodeMirror.fromTextArea(ta, {
-          mode: "python",
-          theme: "darcula",
-          lineNumbers: true,
-          viewportMargin: Infinity
-        });
-      });
+    window.addEventListener('resize', () => {
+      fitAddon.fit();
+      if(editor) editor.layout();
     });
 
-    async function runPythonCode(editorId, outputId) {
-      if (!pyodide) return "";
-      const code = editors[editorId].getValue();
-      const outputBox = document.getElementById(outputId);
-      outputBox.style.display = 'block';
-      outputBox.innerText = "Running...";
-      
-      let outputBuffer = "";
-      pyodide.setStdout({ batched: (str) => { outputBuffer += str + "\\n"; } });
-      
+    // --- Initialize Pyodide ---
+    async function initPyodide() {
       try {
-        await pyodide.runPythonAsync(code);
-        outputBox.innerText = outputBuffer || "No output generated.";
-        return outputBuffer.trim();
+        term.writeln('Loading Pyodide engine (WASM)...');
+        pyodide = await loadPyodide();
+        
+        // Redirect stdout and stderr to Xterm
+        pyodide.setStdout({ batched: (str) => { term.writeln(str); } });
+        pyodide.setStderr({ batched: (str) => { term.writeln(`\x1b[31m${str}\x1b[0m`); } });
+        
+        term.writeln('\x1b[32m[+] Engine Ready! Python 3.11 environment online.\x1b[0m');
+        term.writeln('Type your code in the editor and click "Run Code".\n');
+        
+        const btn = document.getElementById('runBtn');
+        btn.innerText = "▶ Run Code";
+        btn.disabled = false;
       } catch (err) {
-        outputBox.innerText = err.toString();
-        return err.toString();
+        term.writeln(`\x1b[31m[-] Engine Load Failed: ${err}\x1b[0m`);
       }
     }
-    
-    async function runChallenge(level, editorId, outputId) {
-       const out = await runPythonCode(editorId, outputId);
-       const outBox = document.getElementById(outputId);
+
+    // --- Initialize Monaco Editor ---
+    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' }});
+    require(['vs/editor/editor.main'], function() {
+      editor = monaco.editor.create(document.getElementById('monaco-container'), {
+        value: levelCodes['l1'],
+        language: "python",
+        theme: "vs-dark",
+        automaticLayout: true,
+        minimap: { enabled: false },
+        fontSize: 15,
+        fontFamily: '"Fira Code", monospace',
+        scrollBeyondLastLine: false,
+        roundedSelection: false,
+        padding: { top: 15 }
+      });
+      
+      initPyodide();
+    });
+
+    function switchLevel(levelId) {
+      // Update UI
+      document.querySelectorAll('.level-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(levelId).classList.add('active');
+      document.getElementById('editor-filename').innerText = `workspace/${levelId}.py`;
+      
+      // Save current level and update editor
+      currentLevel = levelId;
+      if(editor) {
+        editor.setValue(levelCodes[levelId]);
+      }
+      term.clear();
+      term.writeln(`\x1b[36m[*] Switched to ${levelId.toUpperCase()}. Ready.\x1b[0m\n`);
+    }
+
+    function copyEditorCode() {
+      if(editor) {
+        navigator.clipboard.writeText(editor.getValue());
+        const btn = document.querySelector('.copy-btn');
+        btn.innerText = "Copied!";
+        setTimeout(() => btn.innerText = "Copy", 2000);
+      }
+    }
+
+    async function executePython() {
+      if (!pyodide || !editor) return;
+      const code = editor.getValue();
+      
+      term.writeln(`\x1b[90m$ python3 ${currentLevel}.py\x1b[0m`);
+      
+      let outBuffer = "";
+      // Custom stdout to capture for validation AND print to terminal
+      pyodide.setStdout({ batched: (str) => { 
+        term.writeln(str); 
+        outBuffer += str + "\\n"; 
+      }});
+
+      try {
+        await pyodide.runPythonAsync(code);
+        validateChallenge(currentLevel, outBuffer);
+      } catch (err) {
+        // Stderr is already routed to terminal in red
+      }
+      term.writeln(''); // Empty line after execution
+    }
+
+    function validateChallenge(level, out) {
        let isSuccess = false;
        
-       if(level === 1) {
+       if(level === 'l1') {
            isSuccess = out.includes("Valid Port") || out.includes("Valid");
-       } else if (level === 2) {
+       } else if (level === 'l2') {
            isSuccess = out.includes("Ping 192.168.1.1") && out.includes("Ping 192.168.1.5");
-       } else if (level === 3) {
+       } else if (level === 'l3') {
            isSuccess = out.includes("192.168.1.50") && out.includes("10.0.0.5");
-       } else if (level === 4) {
+       } else if (level === 'l4') {
            isSuccess = out.includes("200");
-       } else if (level === 5) {
+       } else if (level === 'l5') {
            isSuccess = out.includes("Cracking admin") && out.includes("Cracking root");
-       } else if (level === 6) {
+       } else if (level === 'l6') {
            isSuccess = out.includes("I am a Python Hacker!");
        }
        
        if(isSuccess) {
-           outBox.innerHTML = `<span style="color:var(--neon-green)">✅ مبروك! لقد اجتزت تحدي المستوى ${level} بنجاح.</span><br><br>` + outBox.innerHTML;
+           term.writeln(`\x1b[1;32m✅ [SUCCESS] Challenge ${level.replace('l','')} Completed!\x1b[0m`);
+           term.writeln(`\x1b[32m+50 XP Gained\x1b[0m`);
        } else {
-           outBox.innerHTML = `<span style="color:var(--neon-red)">❌ إجابة غير صحيحة. راجع الكود والمخرجات المطلوبة.</span><br><br>` + outBox.innerHTML;
+           term.writeln(`\x1b[1;31m❌ [FAILED] Check your code and try again.\x1b[0m`);
        }
     }
 
-    function switchLevel(levelId, el) {
-      document.querySelectorAll('.meth-item').forEach(i => i.classList.remove('active'));
-      el.classList.add('active');
-      
-      document.querySelectorAll('.meth-content-view').forEach(v => {
-        v.classList.remove('active');
-      });
-      document.getElementById(levelId).classList.add('active');
-      
-      // Refresh codemirror instances in this tab to fix rendering issues
-      setTimeout(() => {
-          Object.values(editors).forEach(cm => cm.refresh());
-      }, 50);
-    }
   </script>
 </body>
 </html>

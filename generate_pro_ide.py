@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+import codecs
+
+html_content = r'''<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -6,7 +8,7 @@
   <title>Pro Python IDE | Abdo Ramdan</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/static/main/css/style.css">
   
   <!-- Xterm.js -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
@@ -565,3 +567,9 @@ def crack(pwd):
   </script>
 </body>
 </html>
+'''
+
+with codecs.open(r'D:\abdo_portfolio\main\templates\main\python_for_hackers.html', 'w', 'utf-8') as f:
+    f.write(html_content)
+
+print("Pro IDE curriculum generated!")
