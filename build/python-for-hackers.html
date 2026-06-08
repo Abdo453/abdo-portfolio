@@ -218,6 +218,14 @@
       overflow: hidden;
     }
 
+    
+    /* CodeMirror adjustments */
+    .CodeMirror {
+      height: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 1.05rem;
+    }
+
     /* Code Blocks */
     .code-box {
       background: #1e1e1e;
@@ -308,6 +316,14 @@
     }
 
   </style>
+
+  <!-- CodeMirror -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/darcula.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+  <!-- Pyodide -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
 </head>
 <body dir="rtl" style="text-align: right;">
 
@@ -362,7 +378,7 @@
               <span>strings_hack.py</span>
               <div>
                 <button class="action-btn" onclick="copyCode('code1')">Copy</button>
-                <button class="action-btn sim-btn" onclick="simulate('out1')">▶ Simulate</button>
+                <button class="action-btn sim-btn" onclick="runPythonCode('editor1', 'out1')" id="runBtn1" disabled>⏳ Loading Python...</button>
               </div>
             </div>
             <div class="code-content" id="code1" dir="ltr" style="text-align:left;">
