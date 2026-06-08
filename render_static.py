@@ -73,3 +73,9 @@ images_dest = os.path.join(build_dir, 'images')
 if os.path.exists(images_src):
     shutil.copytree(images_src, images_dest, dirs_exist_ok=True)
     print(f"Copied Images to {images_dest}")
+
+js_src = os.path.join(project_dir, 'main', 'static', 'main', 'js')
+js_dest = os.path.join(build_dir, 'js')
+if os.path.exists(js_src):
+    shutil.copytree(js_src, js_dest, dirs_exist_ok=True)
+    print(f"Copied JS to {js_dest}")

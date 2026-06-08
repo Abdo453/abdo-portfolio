@@ -19,6 +19,9 @@
   <!-- Monaco Editor Loader -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
 
+  <!-- Curriculum Database -->
+  <script src="/js/curriculum.js"></script>
+
   <style>
     :root {
       --neon-cyan: #00e5ff;
@@ -80,6 +83,7 @@
       font-size: 1rem;
       outline: none;
       cursor: pointer;
+      max-width: 300px;
     }
     .level-select option {
       background: var(--bg-dark);
@@ -117,12 +121,12 @@
     /* Split Pane Layout */
     .ide-container {
       display: flex;
-      flex-direction: row; /* Right to Left flow by default due to dir="rtl" */
+      flex-direction: row; 
       height: calc(100vh - 60px);
       width: 100vw;
     }
 
-    /* Theory & Terminal Pane (Visually on the Right in RTL) */
+    /* Theory & Terminal Pane */
     .content-pane {
       width: 45%;
       display: flex;
@@ -158,7 +162,7 @@
       overflow: hidden;
     }
 
-    /* Editor Pane (Visually on the Left in RTL) */
+    /* Editor Pane */
     .editor-pane {
       width: 55%;
       display: flex;
@@ -174,38 +178,26 @@
       color: #a0a0a0;
       display: flex;
       justify-content: space-between;
-      direction: ltr; /* keep file path left-to-right */
+      direction: ltr; 
     }
     #monaco-container {
       flex: 1;
       width: 100%;
       height: 100%;
+      position: relative;
     }
 
     /* Mobile Responsiveness */
     @media (max-width: 950px) {
       body { overflow-y: auto; }
-      .ide-container {
-        flex-direction: column;
-        height: auto;
-        min-height: calc(100vh - 60px);
-      }
+      .ide-container { flex-direction: column; height: auto; min-height: calc(100vh - 60px); }
       .content-pane { width: 100%; height: auto; min-height: 50vh; border-left: none; }
       .editor-pane { width: 100%; height: 60vh; }
       .theory-section { flex: none; height: auto; }
       .terminal-section { flex: none; height: 30vh; }
     }
 
-    /* Content Styling */
-    .level-content {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-    .level-content.active {
-      display: block;
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+    /* Dynamic Content Styling */
     h1 {
       font-family: 'Outfit', sans-serif;
       color: #fff;
@@ -214,11 +206,7 @@
       border-bottom: 1px dashed rgba(255,255,255,0.1);
       padding-bottom: 10px;
     }
-    p {
-      font-size: 1.05rem;
-      color: #cbd5e1;
-      line-height: 1.8;
-    }
+    p { font-size: 1.05rem; color: #cbd5e1; line-height: 1.8; }
     
     .mini-challenge {
       background: rgba(255, 212, 59, 0.05);
@@ -255,21 +243,31 @@
       backdrop-filter: blur(5px);
       display: none;
     }
+    
+    /* Reset Button */
+    .reset-btn {
+      background: transparent;
+      border: 1px solid #ff0055;
+      color: #ff0055;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      margin-left: 10px;
+    }
+    .reset-btn:hover { background: rgba(255,0,85,0.1); }
 
   </style>
 </head>
 <body>
 
   <header class="meth-header">
-    <div class="meth-logo">🐍 PyHackers Pro IDE</div>
+    <div class="meth-logo">🐍 PyHackers Engine</div>
     <div class="top-controls">
+      <button class="reset-btn" onclick="resetProgress()" title="مسح التقدم والعودة للصفر">Reset Progress</button>
       <select class="level-select" id="levelSelector" onchange="switchLevel(this.value)">
-        <option value="l1">Level 1: أول كود 🔓</option>
-        <option value="l2" disabled>Level 2: المتغيرات 🔒</option>
-        <option value="l3" disabled>Level 3: التكرار 🔒</option>
-        <option value="l4" disabled>Level 4: استخراج البيانات 🔒</option>
-        <option value="l5" disabled>Level 5: طلبات الويب 🔒</option>
-        <option value="l6" disabled>Level 6: مشروع التخرج 🔒</option>
+        <!-- Options injected by JS Engine -->
       </select>
       <button class="run-btn" id="runBtn" onclick="executePython()" disabled>⏳ Loading...</button>
       <a href="/" class="back-btn" style="padding: 6px 12px; font-size:1rem; border:1px solid rgba(255,255,255,0.2); color:#fff; text-decoration:none; border-radius:4px;">Exit ✖</a>
@@ -278,102 +276,25 @@
 
   <div class="ide-container">
     
-    <!-- Right Panel: Content & Terminal (45%) -->
+    <!-- Right Panel: Content & Terminal -->
     <div class="content-pane">
-      
-      <!-- Theory Section -->
       <div class="theory-section" id="theory-box">
-        
-        <!-- LEVEL 1 -->
-        <div id="l1" class="level-content active">
-          <h1>Level 1: مرحباً بالعالم (أول كود)</h1>
-          <p>كما قالت منصات البرمجة العالمية (مثل Codecademy)، لا يمكنك الجري قبل أن تمشي. وأول خطوة في البرمجة هي أن تجعل الكمبيوتر "يتحدث".</p>
-          <p>في لغة بايثون، نستخدم أمر الطباعة <code>print()</code> لإظهار النصوص على الشاشة.</p>
-          
-          <div class="mini-challenge">
-            <div class="challenge-title">🎯 التحدي (مطلوب للعبور)</div>
-            <p>لا يمكنك المرور للمستوى التالي دون اجتياز هذا التحدي!</p>
-            <p>اكتب كود بايثون يقوم بطباعة العبارة التالية بالضبط: <br><code>Hello Hacker</code></p>
-            <p>ثم اضغط على <b>Run Code</b>. إذا كان صحيحاً سيُفتح المستوى التالي!</p>
-          </div>
-        </div>
-
-        <!-- LEVEL 2 -->
-        <div id="l2" class="level-content">
-          <h1>Level 2: المتغيرات (Variables)</h1>
-          <p>رائع! الآن أنت تعرف كيف تطبع. الخطوة الثانية هي "الذاكرة". كيف نخزن الآيبيهات والبورتات؟</p>
-          <p>المتغير هو صندوق نضع فيه قيمة لكي نستخدمها لاحقاً. مثلاً: <code>port = 80</code></p>
-          
-          <div class="mini-challenge">
-            <div class="challenge-title">🎯 التحدي (مطلوب للعبور)</div>
-            <p>لدينا متغير اسمه <code>target_ip</code> يحتوي على قيمة <code>127.0.0.1</code>.</p>
-            <p>قم بطباعة قيمة هذا المتغير باستخدام <code>print</code>.</p>
-          </div>
-        </div>
-
-        <!-- LEVEL 3 -->
-        <div id="l3" class="level-content">
-          <h1>Level 3: التكرار (Loops)</h1>
-          <p>الهاكر لا يفحص هدفاً واحداً. لحسن الحظ، البرمجة تتيح لنا تكرار الأوامر مئات المرات بـ 3 أسطر فقط باستخدام <code>for loop</code>.</p>
-          <p>دالة <code>range(1, 6)</code> تعطينا الأرقام من 1 إلى 5.</p>
-          
-          <div class="mini-challenge">
-            <div class="challenge-title">🎯 التحدي (مطلوب للعبور)</div>
-            <p>اكتب حلقة تكرارية تمر من 1 إلى 5. وفي كل دورة، اطبع الجملة التالية (مع استبدال X بالرقم الحالي):<br><code>Ping 192.168.1.X</code></p>
-          </div>
-        </div>
-
-        <!-- LEVEL 4 -->
-        <div id="l4" class="level-content">
-          <h1>Level 4: استخراج البيانات (Regex)</h1>
-          <p>مخرجات أدوات الفحص تكون ضخمة ومزعجة. استخدم التعبيرات النمطية (Regular Expressions) عبر مكتبة <code>re</code> لصيد ما تريده فقط (مثل الآيبيهات).</p>
-          
-          <div class="mini-challenge">
-            <div class="challenge-title">🎯 التحدي (مطلوب للعبور)</div>
-            <p>يوجد متغير <code>log_data</code> يحتوي على نص طويل. استخدم <code>re.findall</code> مع نمط الـ IP لاستخراج العناوين وطباعتها.</p>
-          </div>
-        </div>
-
-        <!-- LEVEL 5 -->
-        <div id="l5" class="level-content">
-          <h1>Level 5: طلبات الويب (HTTP)</h1>
-          <p>التحدث مع الـ APIs وسحب البيانات يتم عن طريق إرسال طلبات ويب (Web Requests).</p>
-          
-          <div class="mini-challenge">
-            <div class="challenge-title">🎯 التحدي (مطلوب للعبور)</div>
-            <p>باستخدام مكتبة <code>urllib.request</code>، أرسل طلباً للرابط <code>https://httpbin.org/status/200</code>، وقم بطباعة الحالة (Status Code) الخاصة بالرد.</p>
-          </div>
-        </div>
-
-        <!-- LEVEL 6 -->
-        <div id="l6" class="level-content">
-          <h1>Level 6: مشروع التخرج</h1>
-          <p>لقد دمجنا لك كل ما سبق: متغيرات، تكرار، دوال، واتصال بالشبكات، لبناء <b>Port Scanner</b> كامل!</p>
-          
-          <div class="mini-challenge">
-            <div class="challenge-title">🎯 التحدي النهائي</div>
-            <p>اقرأ كود الـ Port Scanner بتمعن لتفهم كيف يعمل. ثم أضف سطر طباعة في النهاية يطبع:<br><code>I am a Python Hacker!</code></p>
-            <p>لتحصل على المكافأة النهائية!</p>
-          </div>
-        </div>
-
+        <!-- Theory injected by JS Engine -->
+        <h1 style="color:#aaa;">Loading Engine...</h1>
       </div>
-
-      <!-- Terminal Section -->
       <div class="terminal-section">
-        <div class="term-header" id="term-header-title">Terminal — /workspace/level1.py</div>
+        <div class="term-header" id="term-header-title">Terminal — /workspace/script.py</div>
         <div id="xterm-container"></div>
       </div>
-
     </div>
 
-    <!-- Left Panel: Editor (55%) -->
+    <!-- Left Panel: Editor -->
     <div class="editor-pane" dir="ltr">
       <div class="editor-header">
-        <span id="editor-filename">workspace/level1.py</span>
+        <span id="editor-filename">workspace/script.py</span>
         <button class="copy-btn" style="background:transparent; border:1px solid #555; color:#aaa; cursor:pointer;" onclick="copyEditorCode()">Copy</button>
       </div>
-      <div id="monaco-container" style="position:relative;">
+      <div id="monaco-container">
         <div class="locked-overlay" id="editor-lock">
           <div>🔒 المستوى مغلق</div>
           <div style="font-size:1rem; color:#aaa; margin-top:10px;">عليك اجتياز التحدي السابق أولاً!</div>
@@ -384,72 +305,32 @@
   </div>
 
   <script>
-    // --- Levels Initial Code Data ---
-    const levelCodes = {
-      'l1': `# Level 1: أمر الطباعة
-# استخدم الأمر print لطباعة الجملة المطلوبة
-
-print("اكتب هنا")
-`,
-      'l2': `# Level 2: المتغيرات
-
-target_ip = "127.0.0.1"
-
-# اطبع قيمة المتغير target_ip:
-
-`,
-      'l3': `# Level 3: التكرار
-
-# تلميح: for i in range(1, 6):
-# اكتب الحلقة التكرارية هنا:
-
-`,
-      'l4': `import re
-
-log_data = "Attack detected from 192.168.1.50 at 10:00 AM. Admin logged from 10.0.0.5."
-
-# النمط (Regex pattern) لاستخراج الـ IP
-ip_pattern = r"\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b"
-
-# استخدم re.findall لاستخراج الأيبيهات من log_data باستخدام ip_pattern واطبعها:
-
-`,
-      'l5': `import urllib.request
-
-url = "https://httpbin.org/status/200"
-
-try:
-    # أرسل الطلب باستخدام urllib.request.urlopen واطبع الـ status (response.status)
-    pass
-except Exception as e:
-    print(f"Error: {e}")
-
-`,
-      'l6': `import socket
-
-def scan_port(ip, port):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(0.5)
-    # محاكاة لفحص بورت وهمي (لا تستخدمه على شبكات حقيقية بدون إذن)
-    if port == 80:
-        print(f"[+] Port {port} is OPEN")
-    s.close()
-
-# فحص البورتات من 79 إلى 81
-for p in range(79, 82):
-    scan_port("127.0.0.1", p)
-
-# اكتب الجملة النهائية للحصول على الاعتماد:
-`
-    };
-
-    // Progression System
+    // --- Engine State ---
     let unlockedLevels = ['l1'];
     let pyodide = null;
     let editor = null;
     let term = null;
     let fitAddon = null;
-    let currentLevel = 'l1';
+    let currentLevelId = 'l1';
+    let allLevels = []; // Flat array of level objects for easy access
+
+    // --- Load Progress ---
+    const savedProgress = localStorage.getItem('pyhackers_unlocked');
+    if (savedProgress) {
+        try {
+            const parsed = JSON.parse(savedProgress);
+            if(Array.isArray(parsed) && parsed.length > 0) {
+                unlockedLevels = parsed;
+            }
+        } catch(e) {}
+    }
+
+    function resetProgress() {
+        if(confirm("هل أنت متأكد أنك تريد مسح تقدمك والعودة للمستوى الأول؟")) {
+            localStorage.removeItem('pyhackers_unlocked');
+            location.reload();
+        }
+    }
 
     // --- Initialize Xterm.js ---
     term = new Terminal({
@@ -470,29 +351,114 @@ for p in range(79, 82):
       if(editor) editor.layout();
     });
 
+    // --- Build Dropdown & Flat Array ---
+    function buildCurriculumUI() {
+        const selector = document.getElementById('levelSelector');
+        selector.innerHTML = '';
+        allLevels = [];
+        
+        if(typeof window.pythonCurriculum === 'undefined') {
+            term.writeln('\x1b[31m[-] Error: curriculum.js not loaded. Check file paths.\x1b[0m');
+            return;
+        }
+
+        window.pythonCurriculum.forEach(chapter => {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = chapter.chapter;
+            
+            chapter.levels.forEach(level => {
+                allLevels.push(level); // add to flat array
+                
+                const opt = document.createElement('option');
+                opt.value = level.id;
+                
+                let isUnlocked = unlockedLevels.includes(level.id);
+                opt.innerText = \`\${level.title} \${isUnlocked ? '🔓' : '🔒'}\`;
+                if(!isUnlocked) opt.disabled = true;
+                
+                optgroup.appendChild(opt);
+            });
+            selector.appendChild(optgroup);
+        });
+        
+        // Select the highest unlocked level
+        currentLevelId = unlockedLevels[unlockedLevels.length - 1];
+        selector.value = currentLevelId;
+    }
+
+    // --- Load Level Content ---
+    function switchLevel(levelId) {
+        const levelData = allLevels.find(l => l.id === levelId);
+        if(!levelData) return;
+        
+        if(!unlockedLevels.includes(levelId)) {
+            document.getElementById('editor-lock').style.display = 'flex';
+        } else {
+            document.getElementById('editor-lock').style.display = 'none';
+        }
+
+        currentLevelId = levelId;
+        document.getElementById('theory-box').innerHTML = levelData.theory;
+        document.getElementById('editor-filename').innerText = \`workspace/\${levelId}.py\`;
+        document.getElementById('term-header-title').innerText = \`Terminal — /workspace/\${levelId}.py\`;
+        
+        if(editor) {
+            editor.setValue(levelData.initialCode);
+        }
+        term.clear();
+        term.writeln(\`\x1b[36m[*] Loaded \${levelId}.py\x1b[0m\\n\`);
+    }
+
+    // --- Unlock Logic ---
+    function unlockNextLevel(currentId) {
+        const idx = allLevels.findIndex(l => l.id === currentId);
+        if(idx >= 0 && idx < allLevels.length - 1) {
+            const nextLevel = allLevels[idx+1];
+            if(!unlockedLevels.includes(nextLevel.id)) {
+                unlockedLevels.push(nextLevel.id);
+                localStorage.setItem('pyhackers_unlocked', JSON.stringify(unlockedLevels));
+                
+                // Update UI Dropdown
+                const opt = document.querySelector(\`option[value="\${nextLevel.id}"]\`);
+                if(opt) {
+                    opt.disabled = false;
+                    opt.innerText = opt.innerText.replace('🔒', '🔓');
+                }
+                
+                term.writeln(\`\\n\x1b[1;33m[!] UNLOCKED: \${nextLevel.title} 🔓\x1b[0m\`);
+                term.writeln(\`\x1b[33mSelect it from the dropdown menu above to continue.\x1b[0m\`);
+            }
+        } else if (idx === allLevels.length - 1) {
+            term.writeln(\`\\n\x1b[1;35m🎉 CONGRATULATIONS! You have completed the entire curriculum!\x1b[0m\`);
+        }
+    }
+
     // --- Initialize Pyodide ---
     async function initPyodide() {
       try {
         pyodide = await loadPyodide();
         pyodide.setStdout({ batched: (str) => { term.writeln(str); } });
-        pyodide.setStderr({ batched: (str) => { term.writeln(`\x1b[31m${str}\x1b[0m`); } });
+        pyodide.setStderr({ batched: (str) => { term.writeln(\`\x1b[31m\${str}\x1b[0m\`); } });
         
         term.writeln('\x1b[32m[+] Python 3.11 Engine Loaded.\x1b[0m');
-        term.writeln('\x1b[33m[!] Read the challenge on the right, write code on the left, and click "Run Code".\x1b[0m\n');
+        term.writeln('\x1b[33m[!] Read the challenge on the right, write code on the left, and click "Run Code".\x1b[0m\\n');
         
         const btn = document.getElementById('runBtn');
         btn.innerText = "▶ Run Code";
         btn.disabled = false;
       } catch (err) {
-        term.writeln(`\x1b[31m[-] Engine Load Failed: ${err}\x1b[0m`);
+        term.writeln(\`\x1b[31m[-] Engine Load Failed: \${err}\x1b[0m\`);
       }
     }
 
     // --- Initialize Monaco Editor ---
     require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' }});
     require(['vs/editor/editor.main'], function() {
+      buildCurriculumUI();
+      const initialData = allLevels.find(l => l.id === currentLevelId);
+      
       editor = monaco.editor.create(document.getElementById('monaco-container'), {
-        value: levelCodes['l1'],
+        value: initialData ? initialData.initialCode : "",
         language: "python",
         theme: "vs-dark",
         automaticLayout: true,
@@ -502,58 +468,20 @@ for p in range(79, 82):
         scrollBeyondLastLine: false,
         padding: { top: 15 }
       });
+      
+      switchLevel(currentLevelId);
       initPyodide();
     });
 
-    function switchLevel(levelId) {
-      if(!unlockedLevels.includes(levelId)) {
-          // If trying to access locked level
-          document.getElementById('editor-lock').style.display = 'flex';
-      } else {
-          document.getElementById('editor-lock').style.display = 'none';
-      }
-
-      // Update UI
-      document.querySelectorAll('.level-content').forEach(el => el.classList.remove('active'));
-      document.getElementById(levelId).classList.add('active');
-      document.getElementById('editor-filename').innerText = `workspace/${levelId}.py`;
-      document.getElementById('term-header-title').innerText = `Terminal — /workspace/${levelId}.py`;
-      
-      // Save current level and update editor
-      currentLevel = levelId;
-      if(editor) {
-        editor.setValue(levelCodes[levelId]);
-      }
-      term.clear();
-      term.writeln(`\x1b[36m[*] Loaded ${levelId}.py\x1b[0m\n`);
-    }
-
-    function unlockNextLevel(currentLvl) {
-        const levels = ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'];
-        const idx = levels.indexOf(currentLvl);
-        if(idx >= 0 && idx < levels.length - 1) {
-            const nextLvl = levels[idx+1];
-            if(!unlockedLevels.includes(nextLvl)) {
-                unlockedLevels.push(nextLvl);
-                const opt = document.querySelector(`option[value="${nextLvl}"]`);
-                opt.disabled = false;
-                opt.innerText = opt.innerText.replace('🔒', '🔓');
-                
-                term.writeln(`\x1b[1;33m[!] UNLOCKED: ${nextLvl.toUpperCase()} 🔓\x1b[0m`);
-                term.writeln(`\x1b[33mSelect it from the dropdown menu above to continue.\x1b[0m`);
-            }
-        }
-    }
-
     async function executePython() {
       if (!pyodide || !editor) return;
-      if (!unlockedLevels.includes(currentLevel)) {
-          term.writeln(`\x1b[31m[-] Cannot run locked level!\x1b[0m`);
+      if (!unlockedLevels.includes(currentLevelId)) {
+          term.writeln(\`\x1b[31m[-] Cannot run locked level!\x1b[0m\`);
           return;
       }
 
       const code = editor.getValue();
-      term.writeln(`\x1b[90m$ python3 ${currentLevel}.py\x1b[0m`);
+      term.writeln(\`\x1b[90m$ python3 \${currentLevelId}.py\x1b[0m\`);
       
       let outBuffer = "";
       pyodide.setStdout({ batched: (str) => { 
@@ -563,37 +491,24 @@ for p in range(79, 82):
 
       try {
         await pyodide.runPythonAsync(code);
-        validateChallenge(currentLevel, outBuffer);
+        
+        // Dynamic Validation
+        const levelData = allLevels.find(l => l.id === currentLevelId);
+        if(levelData && levelData.validate) {
+            const isSuccess = levelData.validate(outBuffer);
+            if(isSuccess) {
+                term.writeln(\`\x1b[1;32m✅ [SUCCESS] Challenge Passed!\x1b[0m\`);
+                term.writeln(\`\x1b[32m+50 XP\x1b[0m\`);
+                unlockNextLevel(currentLevelId);
+            } else {
+                term.writeln(\`\x1b[1;31m❌ [FAILED] Incorrect output. Read the challenge again.\x1b[0m\`);
+            }
+        }
+        
       } catch (err) {
         // Stderr is routed automatically
       }
       term.writeln(''); 
-    }
-
-    function validateChallenge(level, out) {
-       let isSuccess = false;
-       
-       if(level === 'l1') {
-           isSuccess = out.includes("Hello Hacker");
-       } else if (level === 'l2') {
-           isSuccess = out.includes("127.0.0.1");
-       } else if (level === 'l3') {
-           isSuccess = out.includes("Ping 192.168.1.1") && out.includes("Ping 192.168.1.5");
-       } else if (level === 'l4') {
-           isSuccess = out.includes("192.168.1.50") && out.includes("10.0.0.5");
-       } else if (level === 'l5') {
-           isSuccess = out.includes("200");
-       } else if (level === 'l6') {
-           isSuccess = out.includes("I am a Python Hacker!");
-       }
-       
-       if(isSuccess) {
-           term.writeln(`\x1b[1;32m✅ [SUCCESS] Challenge Passed!\x1b[0m`);
-           term.writeln(`\x1b[32m+50 XP\x1b[0m`);
-           unlockNextLevel(level);
-       } else {
-           term.writeln(`\x1b[1;31m❌ [FAILED] Incorrect output. Try again.\x1b[0m`);
-       }
     }
 
     function copyEditorCode() {
