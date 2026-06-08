@@ -10,6 +10,7 @@ def scan_templates():
         ('main/about.html', 'about.html', ''),
         ('main/quiz.html', 'quiz.html', ''),
         ('main/methodology.html', 'methodology.html', ''),
+        ('main/python_for_hackers.html', 'python-for-hackers.html', ''),
         ('main/bug_bounty_writeups.html', 'bug-bounty-writeups.html', ''),
         ('main/profile.html', 'profile.html', ''),
     ]

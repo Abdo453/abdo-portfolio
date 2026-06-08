@@ -6,6 +6,7 @@ app_name = 'main'
 urlpatterns = [
     path('', views.home, name='home'),
     path('methodology.html', views.methodology, name='methodology'),
+    path('python-for-hackers.html', views.python_for_hackers, name='python_for_hackers'),
     path('bug-bounty-writeups.html', views.bug_bounty_writeups, name='bug_bounty_writeups'),
     path('vulnerabilities/<str:page>', views.academy_vuln, name='vuln_page'),
     path('labs/<str:page>', views.academy_lab, name='lab_page'),

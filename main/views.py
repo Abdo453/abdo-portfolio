@@ -2092,3 +2092,6 @@ def academy_writeup(request, page):
     except TemplateDoesNotExist:
         raise Http404
 
+
+def python_for_hackers(request):
+    return render(request, 'main/python_for_hackers.html', get_portfolio_context())
