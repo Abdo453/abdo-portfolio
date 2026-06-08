@@ -149,11 +149,13 @@
     .diff-medium { background: rgba(255,154,86,0.08); color: var(--neon-orange); }
     .diff-hard { background: rgba(255,0,85,0.08); color: var(--neon-red); }
     .quiz-question {
+      direction: rtl; text-align: right;
       font-size: 1.02rem; font-weight: 600; color: #fff;
       line-height: 1.6; margin-bottom: 16px;
     }
     .quiz-options { display: flex; flex-direction: column; gap: 8px; }
     .quiz-opt {
+      direction: rtl; text-align: right;
       padding: 12px 16px;
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 8px; cursor: pointer; font-size: 0.92rem;
@@ -182,6 +184,7 @@
       flex-shrink: 0; margin-top: 1px;
     }
     .quiz-explanation {
+      direction: rtl; text-align: right;
       display: none; margin-top: 14px;
       padding: 14px 16px;
       background: rgba(0,0,0,0.3);
@@ -285,7 +288,7 @@
       </div>
     </div>
 
-    <div id="quizContainer"></div>
+    <div id="quizContainer" dir="rtl" style="text-align: right;"></div>
   </div>
 
   <script>
@@ -504,12 +507,12 @@
       options: [
         '\'1 OR 1=1--',
         '<script>alert(1)</script>',
-        '{&#123;7*7}} أو ${7*7} — إذا أعطى 49 فالـ SSTI موجود!',
+        '\x7B\x7B7*7}} أو ${7*7} — إذا أعطى 49 فالـ SSTI موجود!',
         '; ls -la'
       ],
       correct: 2,
-      explanation: '<strong>SSTI Detection:</strong> الـ payload الرياضي هو أسرع طريقة للكشف. {&#123;7*7}} يعمل مع Jinja2/Twig. ${7*7} مع Thymeleaf. إذا ظهر 49 في الـ response = RCE محتمل! ثم جرب: {&#123;config}}, {&#123;self.__class__.__mro__}}',
-      tip: '{&#123;7*7}} → {&#123;7*\'7\'}} → {&#123;config.items()}} → RCE!'
+      explanation: '<strong>SSTI Detection:</strong> الـ payload الرياضي هو أسرع طريقة للكشف. \x7B\x7B7*7}} يعمل مع Jinja2/Twig. ${7*7} مع Thymeleaf. إذا ظهر 49 في الـ response = RCE محتمل! ثم جرب: \x7B\x7Bconfig}}, \x7B\x7Bself.__class__.__mro__}}',
+      tip: '\x7B\x7B7*7}} → \x7B\x7B7*\'7\'}} → \x7B\x7Bconfig.items()}} → RCE!'
     },
     {
       id: 18, cat: 'tools', diff: 'hard',
