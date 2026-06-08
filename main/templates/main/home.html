@@ -5941,9 +5941,9 @@
       if (input) setTimeout(function() { input.focus(); }, 100);
     }
 
-    let gameLevel = 1;
-    let gameScore = 0;
-    let flagsCaptured = [];
+    let gameLevel = parseInt(localStorage.getItem('gameLevel')) || 1;
+    let gameScore = parseInt(localStorage.getItem('gameScore')) || 0;
+    let flagsCaptured = JSON.parse(localStorage.getItem('flagsCaptured')) || [];
     let waitingForZipPassword = false;
     let inLabEnv = false;
 
@@ -6066,7 +6066,14 @@
     }
 
     // Initialize HUD states
+    function saveProgress() {
+      localStorage.setItem('gameLevel', gameLevel);
+      localStorage.setItem('gameScore', gameScore);
+      localStorage.setItem('flagsCaptured', JSON.stringify(flagsCaptured));
+    }
+
     function updateHUD() {
+      saveProgress();
       document.getElementById('hudLevel').innerText = `${gameLevel} / 4`;
       document.getElementById('hudScore').innerText = `${gameScore} XP`;
       document.getElementById('hudFlags').innerText = `${flagsCaptured.length} / 4`;
