@@ -21,8 +21,8 @@ html_content = r'''<!DOCTYPE html>
   <!-- Monaco Editor Loader -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
 
-  <!-- Curriculum Database -->
-  <script src="/static/main/js/curriculum.js"></script>
+  <!-- Curriculum Database (v=2 to bust cache) -->
+  <script src="/static/main/js/curriculum.js?v=2"></script>
 
   <style>
     :root {
@@ -383,8 +383,14 @@ html_content = r'''<!DOCTYPE html>
             selector.appendChild(optgroup);
         });
         
-        // Select the highest unlocked level
+        // Validate and Select the highest unlocked level
         currentLevelId = unlockedLevels[unlockedLevels.length - 1];
+        if(!allLevels.find(l => l.id === currentLevelId)) {
+            // Invalid data from old version detected
+            unlockedLevels = ['l1'];
+            currentLevelId = 'l1';
+            localStorage.setItem('pyhackers_unlocked', JSON.stringify(unlockedLevels));
+        }
         selector.value = currentLevelId;
     }
 
