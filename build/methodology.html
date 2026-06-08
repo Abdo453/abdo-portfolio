@@ -3111,7 +3111,7 @@
 
       <!-- ═══════ REDESIGN V2: Next Phase CTA ═══════ -->
       <div class="rd-next-cta" id="rd-next-cta" style="display:none;">
-        <a href="javascript:void(0)" class="rd-next-btn" onclick="openMethPhase('p4')">
+        <a href="javascript:void(0)" class="rd-next-btn" onclick="clickPipelineNode('p4')">
           ▶ Next Phase: JavaScript Analysis →
         </a>
       </div>
@@ -3489,31 +3489,31 @@
 
         <!-- ═══════ Visual Pipeline Flowchart ═══════ -->
         <div class="pipeline-flowchart" id="rd-pipeline">
-          <div class="pipe-node" onclick="openMethPhase('p0')" title="Subdomain Enumeration">
+          <div class="pipe-node" onclick="clickPipelineNode('p_matrix')" title="Scope & Matrix">
             <div class="pipe-node-icon">🔍</div>
             <div class="pipe-node-label">Scope</div>
             <div class="pipe-node-sub">Define targets</div>
           </div>
           <div class="pipe-arrow">→</div>
-          <div class="pipe-node" onclick="openMethPhase('p0')" title="Recon Phase">
+          <div class="pipe-node" onclick="clickPipelineNode('p0')" title="Subdomains & Recon">
             <div class="pipe-node-icon">🌐</div>
             <div class="pipe-node-label">Recon</div>
             <div class="pipe-node-sub">Subdomains</div>
           </div>
           <div class="pipe-arrow">→</div>
-          <div class="pipe-node" onclick="openMethPhase('p6')" title="Directory Discovery">
+          <div class="pipe-node" onclick="clickPipelineNode('p6')" title="Directory Discovery">
             <div class="pipe-node-icon">📂</div>
             <div class="pipe-node-label">Discovery</div>
             <div class="pipe-node-sub">Dirs & JS</div>
           </div>
           <div class="pipe-arrow">→</div>
-          <div class="pipe-node" onclick="openMethPhase('p7')" title="Vulnerability Testing">
+          <div class="pipe-node" onclick="clickPipelineNode('p7')" title="Vulnerabilities">
             <div class="pipe-node-icon">💉</div>
             <div class="pipe-node-label">Exploit</div>
             <div class="pipe-node-sub">XSS, SQLi</div>
           </div>
           <div class="pipe-arrow">→</div>
-          <div class="pipe-node" onclick="openMethPhase('p17')" title="Reporting">
+          <div class="pipe-node" onclick="clickPipelineNode('p_writeups')" title="Reporting">
             <div class="pipe-node-icon">📋</div>
             <div class="pipe-node-label">Report</div>
             <div class="pipe-node-sub">Write & Submit</div>
@@ -6847,6 +6847,14 @@ Content-Type: application/json
         };
       }
     })();
+
+    function clickPipelineNode(phaseId) {
+      if (typeof openMethPhase === 'function') {
+        openMethPhase(phaseId);
+        var viewer = document.querySelector('.meth-viewer');
+        if (viewer) viewer.scrollTop = 0;
+      }
+    }
 
     // Init redesign features on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', function() {
