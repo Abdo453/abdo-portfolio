@@ -285,6 +285,7 @@ for p in range(79, 82):
 `,
         validate: (out) => out.includes("I am a Python Hacker!")
       }
+    ]
   },
   {
     chapter: "Chapter 6: File Handling (التعامل مع الملفات)",
