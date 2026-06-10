@@ -618,9 +618,9 @@ for p in range(79, 82):
           <p>الرموز مثل القوس أو المسافة تُحظر أحياناً في الروابط. الحل هو ترميزها. نستخدم <code>urllib.parse.quote()</code>.</p>
           <div class="mini-challenge">
             <div class="challenge-title">🎯 التحدي المطلوب</div>
-            <p>قم بترميز الـ Payload التالي: <code><script>alert(1)</script></code> واطبعه.</p>
+            <p>قم بترميز الـ Payload التالي: <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> واطبعه.</p>
           </div>`,
-        initialCode: `import urllib.parse\n\npayload = "<script>alert(1)</script>"\n\n# قم بترميزه واطبعه\n`,
+        initialCode: `import urllib.parse\n\npayload = "&lt;script&gt;alert(1)&lt;/script&gt;"\n\n# قم بترميزه واطبعه\n`,
         validate: (out) => out.includes("%3Cscript%3Ealert%281%29%3C/script%3E") || out.includes("%3Cscript%3Ealert(1)%3C/script%3E")
       },
       {
