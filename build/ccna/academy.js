@@ -136,6 +136,57 @@ Data → Segment → Packet → Frame → Bits
                 `
             },
             {
+                id: "lesson1_6",
+                title: "1.6. نموذج TCP/IP بالتفصيل",
+                content: `
+                    <h1>نموذج TCP/IP (The TCP/IP Model)</h1>
+                    <p>نموذج TCP/IP (ويعرف أحياناً بنموذج وزارة الدفاع الأمريكية DoD) هو النموذج <strong>العملي والفعلي</strong> المستخدم في شبكة الإنترنت اليوم. تم تطويره في السبعينيات ليكون أكثر بساطة ومرونة من نموذج OSI.</p>
+
+                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
+                        <h3 style="color: var(--success);">طبقات نموذج TCP/IP (4 طبقات)</h3>
+                        <ol>
+                            <li><strong>Application (التطبيقات):</strong> تدمج طبقات (Application, Presentation, Session) من نموذج OSI. تتعامل مع بروتوكولات مستوى المستخدم مثل HTTP, DNS, FTP, SMTP.</li>
+                            <li><strong>Transport (النقل):</strong> نفس طبقة النقل في OSI. توفر اتصالاً من طرف إلى طرف باستخدام TCP (موثوق) أو UDP (غير موثوق سريع).</li>
+                            <li><strong>Internet (الإنترنت):</strong> تعادل طبقة Network في OSI. وظيفتها الأساسية التوجيه (Routing) وتحديد عناوين الـ IP.</li>
+                            <li><strong>Network Access (الوصول للشبكة):</strong> تدمج طبقتي (Data Link, Physical) من OSI. تتعامل مع العتاد الفيزيائي، الكابلات، وعناوين الماك (MAC Addresses).</li>
+                        </ol>
+                    </div>
+
+                    <h2>المقارنة المباشرة: OSI مقابل TCP/IP</h2>
+                    <table style="width:100%; border-collapse: collapse; margin-top: 15px; text-align: right;">
+                        <tr style="background: rgba(88,166,255,0.1); border-bottom: 1px solid var(--border);">
+                            <th style="padding: 10px; width: 40%;">نموذج OSI (النظري)</th>
+                            <th style="padding: 10px; width: 40%;">نموذج TCP/IP (العملي)</th>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">7. Application<br>6. Presentation<br>5. Session</td>
+                            <td style="padding: 10px; font-weight: bold; color: var(--accent);">4. Application</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">4. Transport</td>
+                            <td style="padding: 10px; font-weight: bold; color: var(--success);">3. Transport</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">3. Network</td>
+                            <td style="padding: 10px; font-weight: bold; color: #ffb020;">2. Internet</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">2. Data Link<br>1. Physical</td>
+                            <td style="padding: 10px; font-weight: bold; color: var(--danger);">1. Network Access (أو Link)</td>
+                        </tr>
+                    </table>
+
+                    <div class="concept-box" style="margin-top: 20px;">
+                        <h3>لماذا انتصر TCP/IP على OSI؟</h3>
+                        <ul>
+                            <li><strong>البساطة:</strong> 4 طبقات أسهل في البرمجة والتطبيق من 7 طبقات.</li>
+                            <li><strong>مجاني ومفتوح:</strong> تم تطويره بتمويل حكومي (ARPANET) وكان متاحاً للجامعات مجاناً، بينما OSI كان يتبع منظمة ISO وتطلب شراء مستندات المعايير.</li>
+                            <li><strong>البروتوكولات أولاً:</strong> في TCP/IP تم برمجة البروتوكولات (مثل IP و TCP) أولاً ثم وُضع النموذج لوصفها، بينما OSI وضع النموذج النظري أولاً ثم حاول صنع بروتوكولات تناسبه (والتي كانت معقدة جداً).</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
                 id: "lesson2",
                 title: "2. أجهزة الشبكة الأساسية",
                 content: `
