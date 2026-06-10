@@ -911,11 +911,29 @@ function renderSidebar() {
     const toc = document.getElementById('tocPanel');
     toc.innerHTML = '';
     
-    academyData.forEach(chapter => {
+    academyData.forEach((chapter, index) => {
+        const chapterDiv = document.createElement('div');
+        
         const title = document.createElement('div');
         title.className = 'chapter-title';
-        title.innerText = chapter.chapter;
-        toc.appendChild(title);
+        title.innerHTML = `<span>${chapter.chapter}</span> <span class="arrow">▼</span>`;
+        
+        const lessonsContainer = document.createElement('div');
+        lessonsContainer.className = 'chapter-lessons';
+        
+        // Open the first chapter by default
+        if(index === 0) {
+            lessonsContainer.classList.add('active');
+            title.querySelector('.arrow').innerText = '▲';
+        }
+
+        title.onclick = () => {
+            const isActive = lessonsContainer.classList.contains('active');
+            lessonsContainer.classList.toggle('active');
+            title.querySelector('.arrow').innerText = isActive ? '▼' : '▲';
+        };
+
+        chapterDiv.appendChild(title);
         
         chapter.lessons.forEach(lesson => {
             const btn = document.createElement('button');
@@ -923,8 +941,11 @@ function renderSidebar() {
             btn.id = 'btn-' + lesson.id;
             btn.innerText = lesson.title;
             btn.onclick = () => loadLesson(lesson.id);
-            toc.appendChild(btn);
+            lessonsContainer.appendChild(btn);
         });
+        
+        chapterDiv.appendChild(lessonsContainer);
+        toc.appendChild(chapterDiv);
     });
 }
 
