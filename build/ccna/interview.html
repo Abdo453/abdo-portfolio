@@ -31,41 +31,24 @@
     <div class="interview-container">
         <h2 style="text-align: center; margin-bottom: 30px; color: #fff;">أهم 50 سؤال لمقابلات مهندس الشبكات (CCNA)</h2>
         
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">1. ما هو الفرق بين הـ TCP والـ UDP؟ <span>+</span></div>
-            <div class="faq-answer">
-                الـ <strong>TCP</strong> هو بروتوكول موثوق (Reliable) يضمن وصول البيانات باستخدام عملية הـ 3-Way Handshake، ويقوم بإعادة إرسال الحزم الضائعة (مناسب للويب والإيميل).<br>
-                الـ <strong>UDP</strong> سريع جداً ولكنه غير موثوق (Connectionless)، لا يضمن الوصول ولا يرتب الحزم (مناسب للفيديو والصوت والألعاب).
+        <div class="faq-item" style="padding: 20px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 20px; background: var(--bg-color);">
+            <div class="faq-question" style="font-size: 1.3rem; margin-bottom: 15px; font-weight: bold; color: #fff;">1. لديك VLAN 10 و VLAN 20 ولا يوجد اتصال بينهما. كيف تبدأ التشخيص؟</div>
+            
+            <button class="btn btn-next" onclick="document.getElementById('hint1').style.display = 'block'; this.style.display='none';">أظهر تلميح (Hint)</button>
+            
+            <div id="hint1" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255, 176, 32, 0.1); border-left: 4px solid #ffb020; border-radius: 4px; color: #c9d1d9;">
+                <p><strong>تلميح:</strong> الـ VLANs تعمل في الطبقة الثانية (Data Link). هل يمكن لجهازين في شبكتين مختلفتين التواصل دون جهاز يعمل في الطبقة الثالثة (Network)؟</p>
+                <button class="btn btn-finish" style="margin-top: 10px;" onclick="document.getElementById('ans1').style.display = 'block'; this.style.display='none';">أظهر الإجابة الكاملة</button>
             </div>
-        </div>
 
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">2. ما هي وظيفة הـ ARP؟ <span>+</span></div>
-            <div class="faq-answer">
-                الـ <strong>ARP (Address Resolution Protocol)</strong> يقوم بترجمة عنوان הـ IP (الطبقة الثالثة) إلى عنوان הـ MAC (الطبقة الثانية) لكي يتمكن السويتش من توجيه الإطار (Frame) للجهاز الصحيح داخل الشبكة المحلية.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">3. اشرح مفهوم الـ VLAN ولماذا نستخدمه؟ <span>+</span></div>
-            <div class="faq-answer">
-                الـ <strong>VLAN (Virtual Local Area Network)</strong> هو تقسيم منطقي للسويتش الواحد إلى عدة شبكات وهمية معزولة.<br>
-                نستخدمه لـ: 1) تقليل حجم رسائل البث (Broadcast Domain). 2) زيادة الأمان بعزل الأقسام. 3) تسهيل الإدارة بغض النظر عن الموقع الجغرافي للموظف.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">4. ما هو الفرق بين הـ Hub والـ Switch؟ <span>+</span></div>
-            <div class="faq-answer">
-                الـ <strong>Hub</strong> يعمل في الطبقة الأولى (Physical)، ولا يفهم العناوين، بل يقوم بنسخ أي رسالة تصل إليه ويرسلها لجميع المنافذ (Flooding).<br>
-                الـ <strong>Switch</strong> يعمل في الطبقة الثانية (Data Link)، ويمتلك ذاكرة تُسمى MAC Table، فيقوم بتوجيه الرسالة للمنفذ المطلوب فقط.
-            </div>
-        </div>
-        
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFaq(this)">5. ما هو הـ Default Gateway؟ <span>+</span></div>
-            <div class="faq-answer">
-                هو بوابة الخروج من الشبكة المحلية (غالباً يكون הـ IP الخاص بالراوتر). إذا أراد جهازك إرسال بيانات إلى شبكة أخرى (أو للإنترنت)، فإنه يرسلها أولاً للـ Default Gateway ليتكفل هو بتوجيهها.
+            <div id="ans1" style="display: none; margin-top: 15px; padding: 15px; background: rgba(46, 160, 67, 0.1); border-left: 4px solid var(--success); border-radius: 4px; color: #fff; line-height: 1.8;">
+                <p><strong>الإجابة النموذجية (Troubleshooting Approach):</strong></p>
+                <ol>
+                    <li>أولاً، سأتحقق من أن الـ PCs في كلا الـ VLANs يملكون Default Gateway صحيح.</li>
+                    <li>ثانياً، للاتصال بين VLANs مختلفة نحتاج إلى (Inter-VLAN Routing) باستخدام راوتر (Router-on-a-Stick) أو سويتش طبقة ثالثة (L3 Switch).</li>
+                    <li>لو استخدمنا راوتر، سأتأكد من أن الـ Sub-interfaces تم إنشاؤها وتغليفها (encapsulation dot1Q) برقم الـ VLAN الصحيح.</li>
+                    <li>سأتأكد أن المنفذ الواصل بين السويتش والراوتر يعمل كـ Trunk port للسماح بمرور الـ VLANs.</li>
+                </ol>
             </div>
         </div>
     </div>

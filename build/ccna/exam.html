@@ -109,12 +109,13 @@
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('examScreen').style.display = 'block';
             
-            // Shuffle and select 10 questions
-            selectedQuestions = questionBank.sort(() => 0.5 - Math.random()).slice(0, 10);
+            // Shuffle and select 100 questions for the final exam
+            selectedQuestions = questionBank.sort(() => 0.5 - Math.random()).slice(0, 100);
             
             renderQuestion();
             
-            // Start Timer
+            // Start Timer (90 Minutes)
+            timeLeft = 90 * 60;
             timerInterval = setInterval(() => {
                 timeLeft--;
                 let m = Math.floor(timeLeft / 60);

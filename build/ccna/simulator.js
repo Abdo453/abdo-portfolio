@@ -451,6 +451,13 @@ window.loadPhase = function(val) {
         runningConfig: '',
         isLinux: currentLevel.isLinux || false
     };
+
+    // Load initial broken state for Troubleshooting labs if provided
+    if (currentLevel.initialState) {
+        // Deep copy the initial state properties into routerState
+        Object.assign(routerState, JSON.parse(JSON.stringify(currentLevel.initialState)));
+    }
+
     currentInput = '';
 
     if(term) {

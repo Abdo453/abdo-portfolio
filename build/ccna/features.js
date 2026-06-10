@@ -118,64 +118,66 @@ function initSearch() {
     });
 }
 
-/* --- Progress Tracking --- */
-function getCompletedLessons() {
-    return JSON.parse(localStorage.getItem('ccna_completed_lessons') || '[]');
-}
-
-function toggleLessonComplete(lessonId) {
-    let completed = getCompletedLessons();
-    const index = completed.indexOf(lessonId);
-    if (index === -1) {
-        completed.push(lessonId);
-    } else {
-        completed.splice(index, 1);
-    }
-    localStorage.setItem('ccna_completed_lessons', JSON.stringify(completed));
-    updateProgressBar();
-    updateSidebarIcons();
-    
-    // Update button visually
-    const btn = document.getElementById('markCompleteBtn');
-    if (btn) {
-        if (index === -1) { // It was added
-            btn.className = 'mark-complete-btn completed';
-            btn.innerHTML = '☑ مكتمل (انقر للتراجع)';
-        } else {
-            btn.className = 'mark-complete-btn';
-            btn.innerHTML = '☐ تحديد كدرس مكتمل';
-        }
-    }
-}
-
+/* --- Progress Tracking (Granular) --- */
 function appendCompletionButton(lessonId) {
     const articleBody = document.getElementById('articleBody');
     if (!articleBody) return;
 
     // Remove old button if exists
-    const oldBtn = document.getElementById('markCompleteBtn');
+    const oldBtn = document.getElementById('granularProgressContainer');
     if (oldBtn) oldBtn.remove();
 
-    const completed = getCompletedLessons();
-    const isCompleted = completed.includes(lessonId);
+    if (typeof getLessonProgress !== 'function') return; // Progress script not loaded
 
-    const btn = document.createElement('button');
-    btn.id = 'markCompleteBtn';
-    btn.className = isCompleted ? 'mark-complete-btn completed' : 'mark-complete-btn';
-    btn.innerHTML = isCompleted ? '☑ مكتمل (انقر للتراجع)' : '☐ تحديد كدرس مكتمل';
-    btn.onclick = () => toggleLessonComplete(lessonId);
+    const p = getLessonProgress(lessonId);
 
-    articleBody.appendChild(btn);
+    const container = document.createElement('div');
+    container.id = 'granularProgressContainer';
+    container.style.marginTop = '40px';
+    container.style.padding = '20px';
+    container.style.background = 'var(--panel-bg)';
+    container.style.border = '1px solid var(--border)';
+    container.style.borderRadius = '8px';
+
+    container.innerHTML = `
+        <h3 style="color: var(--accent); margin-bottom: 15px;">نسبة إنجازك في هذا الدرس:</h3>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <label style="cursor: pointer; font-size: 1.1rem; color: ${p.theory ? 'var(--success)' : '#c9d1d9'};">
+                <input type="checkbox" ${p.theory ? 'checked' : ''} onchange="toggleLessonMetric('${lessonId}', 'theory')"> النظري 📖
+            </label>
+            <label style="cursor: pointer; font-size: 1.1rem; color: ${p.quiz ? 'var(--success)' : '#c9d1d9'};">
+                <input type="checkbox" ${p.quiz ? 'checked' : ''} onchange="toggleLessonMetric('${lessonId}', 'quiz')"> الاختبار ❓
+            </label>
+            <label style="cursor: pointer; font-size: 1.1rem; color: ${p.lab ? 'var(--success)' : '#c9d1d9'};">
+                <input type="checkbox" ${p.lab ? 'checked' : ''} onchange="toggleLessonMetric('${lessonId}', 'lab')"> اللاب العملي 💻
+            </label>
+            <label style="cursor: pointer; font-size: 1.1rem; color: ${p.interview ? 'var(--success)' : '#c9d1d9'};">
+                <input type="checkbox" ${p.interview ? 'checked' : ''} onchange="toggleLessonMetric('${lessonId}', 'interview')"> المقابلة 💼
+            </label>
+        </div>
+    `;
+
+    articleBody.appendChild(container);
 }
 
 function updateProgressBar() {
-    if (typeof academyData === 'undefined') return;
+    if (typeof academyData === 'undefined' || typeof getLessonProgress !== 'function') return;
     
-    let totalLessons = 0;
-    academyData.forEach(ch => totalLessons += ch.lessons.length);
+    let totalMetrics = 0;
+    let completedMetrics = 0;
+
+    academyData.forEach(ch => {
+        ch.lessons.forEach(l => {
+            totalMetrics += 4; // theory, quiz, lab, interview
+            const p = getLessonProgress(l.id);
+            if (p.theory) completedMetrics++;
+            if (p.quiz) completedMetrics++;
+            if (p.lab) completedMetrics++;
+            if (p.interview) completedMetrics++;
+        });
+    });
     
-    const completed = getCompletedLessons().length;
-    const percentage = totalLessons === 0 ? 0 : Math.round((completed / totalLessons) * 100);
+    const percentage = totalMetrics === 0 ? 0 : Math.round((completedMetrics / totalMetrics) * 100);
     
     const bar = document.getElementById('topProgressBar');
     const txt = document.getElementById('topProgressText');
@@ -184,20 +186,27 @@ function updateProgressBar() {
 }
 
 function updateSidebarIcons() {
-    const completed = getCompletedLessons();
+    if (typeof getLessonProgress !== 'function') return;
+
     document.querySelectorAll('.lesson-btn').forEach(btn => {
         const id = btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
         if (id) {
-            // Remove old icon
+            const p = getLessonProgress(id);
+            const isFullyCompleted = p.theory && p.quiz && p.lab && p.interview;
+            const isPartiallyCompleted = p.theory || p.quiz || p.lab || p.interview;
+
             const oldIcon = btn.querySelector('.lesson-status-icon');
             if (oldIcon) oldIcon.remove();
 
             const iconSpan = document.createElement('span');
             iconSpan.className = 'lesson-status-icon';
             
-            if (completed.includes(id)) {
+            if (isFullyCompleted) {
                 iconSpan.innerText = '☑ ';
                 iconSpan.style.color = 'var(--success)';
+            } else if (isPartiallyCompleted) {
+                iconSpan.innerText = '◐ ';
+                iconSpan.style.color = '#ffb020';
             } else {
                 iconSpan.innerText = '☐ ';
                 iconSpan.style.color = 'var(--text-main)';
@@ -207,13 +216,13 @@ function updateSidebarIcons() {
     });
 }
 
-/* --- Content Enrichment (Phase 2) --- */
+/* --- Content Enrichment (Phase 2 & 3) --- */
 function appendEnrichment(lessonId) {
     const articleBody = document.getElementById('articleBody');
-    if (!articleBody || typeof lessonEnrichment === 'undefined') return;
+    if (!articleBody || typeof quizzesData === 'undefined') return;
 
-    const data = lessonEnrichment[lessonId];
-    if (!data) return; // No enrichment data for this lesson yet
+    const data = quizzesData[lessonId];
+    if (!data) return; // No quizzes data for this lesson yet
 
     // Remove old enrichment if exists
     const oldEnr = document.getElementById('enrichmentSection');
@@ -222,45 +231,52 @@ function appendEnrichment(lessonId) {
     const enrichmentDiv = document.createElement('div');
     enrichmentDiv.id = 'enrichmentSection';
     enrichmentDiv.className = 'enrichment-section';
-    enrichmentDiv.innerHTML = `
-        <div class="enrichment-tabs">
-            <button class="enrichment-tab active" onclick="switchEnrichmentTab(this, 'summary-${lessonId}')">📝 الخلاصة</button>
-            <button class="enrichment-tab" onclick="switchEnrichmentTab(this, 'mistakes-${lessonId}')">⚠️ أخطاء شائعة</button>
-            <button class="enrichment-tab" onclick="switchEnrichmentTab(this, 'quiz-${lessonId}')">❓ اختبار سريع</button>
-        </div>
-        
-        <div id="summary-${lessonId}" class="enrichment-content active">
-            <h4>النقاط الرئيسية (Key Points):</h4>
-            <p>${data.summary}</p>
-        </div>
-        
-        <div id="mistakes-${lessonId}" class="enrichment-content">
-            <h4>أخطاء شائعة (Common Mistakes):</h4>
-            <p>${data.mistakes}</p>
-        </div>
-        
-        <div id="quiz-${lessonId}" class="enrichment-content">
-            <h4>اختبر فهمك:</h4>
-            ${data.quiz.map((q, idx) => `
-                <div class="quiz-question" id="quiz-${lessonId}-q${idx}">
-                    <p style="font-weight: bold; margin-bottom: 10px;">س${idx + 1}: ${q.q}</p>
-                    <div class="quiz-options">
-                        ${q.options.map((opt, optIdx) => `
-                            <label class="quiz-option" style="display: block; margin-bottom: 8px; cursor: pointer;">
-                                <input type="radio" name="quiz-${lessonId}-q${idx}" value="${optIdx}">
-                                <span>${opt}</span>
-                            </label>
-                        `).join('')}
-                    </div>
-                    <button class="quiz-check-btn" onclick="checkQuizAnswer('${lessonId}', ${idx}, ${q.answer})" style="margin-top: 10px; padding: 5px 10px; background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer;">تحقق من الإجابة</button>
-                    <div class="quiz-feedback" id="feedback-${lessonId}-q${idx}" style="margin-top: 5px; font-weight: bold;"></div>
+    
+    // Build tabs based on available quiz levels
+    let tabsHtml = '';
+    let contentHtml = '';
+    const levels = ['easy', 'medium', 'hard', 'scenario'];
+    const levelNames = {'easy': '🟢 سهل', 'medium': '🟡 متوسط', 'hard': '🔴 صعب', 'scenario': '🕵️ سيناريو عملي'};
+    let first = true;
+
+    levels.forEach(level => {
+        if (data[level] && data[level].length > 0) {
+            tabsHtml += `<button class="enrichment-tab ${first ? 'active' : ''}" onclick="switchEnrichmentTab(this, 'quiz-${lessonId}-${level}')">${levelNames[level]}</button>`;
+            
+            contentHtml += `
+                <div id="quiz-${lessonId}-${level}" class="enrichment-content ${first ? 'active' : ''}">
+                    <h4>${levelNames[level]}:</h4>
+                    ${data[level].map((q, idx) => `
+                        <div class="quiz-question" id="quiz-${lessonId}-${level}-q${idx}">
+                            <p style="font-weight: bold; margin-bottom: 10px; font-size: 1.1rem;">س${idx + 1}: ${q.q}</p>
+                            <div class="quiz-options">
+                                ${q.options.map((opt, optIdx) => `
+                                    <label class="quiz-option" style="display: block; margin-bottom: 8px; cursor: pointer; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                                        <input type="radio" name="quiz-${lessonId}-${level}-q${idx}" value="${optIdx}">
+                                        <span>${opt}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                            <button class="quiz-check-btn" onclick="checkNewQuizAnswer('${lessonId}', '${level}', ${idx}, ${q.correct}, this)" style="margin-top: 10px; padding: 8px 15px; background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">تحقق من الإجابة</button>
+                            <div class="quiz-feedback" id="feedback-${lessonId}-${level}-q${idx}" style="margin-top: 10px; font-weight: bold; display: none; padding: 10px; border-radius: 5px;"></div>
+                        </div>
+                    `).join('<hr style="border-color: var(--border); margin: 25px 0;">')}
                 </div>
-            `).join('<hr style="border-color: var(--border); margin: 15px 0;">')}
+            `;
+            first = false;
+        }
+    });
+
+    enrichmentDiv.innerHTML = `
+        <h2 style="margin-top: 40px; border-bottom: 2px solid var(--border); padding-bottom: 10px;">🧠 اختبر فهمك للدرس</h2>
+        <div class="enrichment-tabs">
+            ${tabsHtml}
         </div>
+        ${contentHtml}
     `;
 
-    // Append it before the mark complete button if it exists, otherwise at the end
-    const markBtn = document.getElementById('markCompleteBtn');
+    // Append it before the granular progress container if it exists
+    const markBtn = document.getElementById('granularProgressContainer');
     if (markBtn) {
         articleBody.insertBefore(enrichmentDiv, markBtn);
     } else {
@@ -277,9 +293,11 @@ window.switchEnrichmentTab = function(btn, targetId) {
     document.getElementById(targetId).classList.add('active');
 };
 
-window.checkQuizAnswer = function(lessonId, qIdx, correctIdx) {
-    const selected = document.querySelector(`input[name="quiz-${lessonId}-q${qIdx}"]:checked`);
-    const feedback = document.getElementById(`feedback-${lessonId}-q${qIdx}`);
+window.checkNewQuizAnswer = function(lessonId, level, qIdx, correctIdx, btn) {
+    const selected = document.querySelector(`input[name="quiz-${lessonId}-${level}-q${qIdx}"]:checked`);
+    const feedback = document.getElementById(`feedback-${lessonId}-${level}-q${qIdx}`);
+    feedback.style.display = 'block';
+    
     if (!selected) {
         feedback.innerHTML = '<span style="color:var(--warning)">الرجاء اختيار إجابة أولاً.</span>';
         return;
@@ -287,6 +305,7 @@ window.checkQuizAnswer = function(lessonId, qIdx, correctIdx) {
     
     if (parseInt(selected.value) === correctIdx) {
         feedback.innerHTML = '<span style="color:var(--success)">✅ إجابة صحيحة، ممتاز!</span>';
+        btn.style.display = 'none'; // Hide button on success
     } else {
         feedback.innerHTML = '<span style="color:var(--danger)">❌ إجابة خاطئة، حاول مرة أخرى.</span>';
     }
