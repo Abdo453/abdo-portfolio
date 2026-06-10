@@ -145,5 +145,148 @@ window.ccnaCurriculum = [
                 }
             }
         ]
+    },
+    {
+        phase: "الدفعة الثانية: Routing & Layer 3",
+        levels: [
+            {
+                id: "lab11",
+                title: "Lab 11: التوجيه الثابت (Static Route)",
+                theory: `<h2>ربط الشبكات غير المتصلة مباشرة</h2>
+                <p>التوجيه الثابت هو أأمن وأسرع أنواع التوجيه للشبكات الصغيرة. لتعليم الراوتر مساراً جديداً نكتب:</p>
+                <p><code>ip route [Network] [Subnet_Mask] [Next_Hop_IP]</code></p>`,
+                challengeText: "أضف مساراً ثابتاً للشبكة 10.0.0.0 قناع 255.0.0.0 عبر الـ IP التالي 192.168.1.2",
+                validate: function(state) {
+                    if (state.routes) {
+                        for(let r of state.routes) {
+                            if (r.network === "10.0.0.0" && r.mask === "255.0.0.0" && r.nextHop === "192.168.1.2") return true;
+                        }
+                    }
+                    return false;
+                }
+            },
+            {
+                id: "lab12",
+                title: "Lab 12: المسار الافتراضي (Default Route)",
+                theory: `<h2>مخرج الطوارئ (الإنترنت)</h2>
+                <p>المسار الافتراضي يُستخدم لتوجيه أي بيانات لا يعرف الراوتر وجهتها نحو الإنترنت (Gateway of Last Resort).</p>
+                <p><code>ip route 0.0.0.0 0.0.0.0 [Next_Hop_IP]</code></p>`,
+                challengeText: "أضف مساراً افتراضياً عبر الـ IP التالي 8.8.8.8",
+                validate: function(state) {
+                    if (state.routes) {
+                        for(let r of state.routes) {
+                            if (r.network === "0.0.0.0" && r.mask === "0.0.0.0" && r.nextHop === "8.8.8.8") return true;
+                        }
+                    }
+                    return false;
+                }
+            },
+            {
+                id: "lab13",
+                title: "Lab 13: المسار الاحتياطي العائم (Floating Static Route)",
+                theory: `<h2>المسار الاحتياطي</h2>
+                <p>ماذا لو انقطع الكابل الأساسي؟ يمكننا وضع مسار احتياطي عبر كابل أبطأ. نفعل ذلك بجعل قيمة الـ (AD) أعلى من 1.</p>
+                <p><code>ip route 10.0.0.0 255.0.0.0 192.168.2.2 10</code></p>`,
+                challengeText: "أضف مساراً احتياطياً لشبكة 10.0.0.0 (255.0.0.0) عبر 192.168.2.2 واجعل الـ AD بقيمة 10.",
+                validate: function(state) {
+                    if (state.routes) {
+                        for(let r of state.routes) {
+                            if (r.network === "10.0.0.0" && r.nextHop === "192.168.2.2" && r.ad === "10") return true;
+                        }
+                    }
+                    return false;
+                }
+            },
+            {
+                id: "lab14",
+                title: "Lab 14: تفعيل بروتوكول RIP",
+                theory: `<h2>أقدم بروتوكولات التوجيه</h2>
+                <p>يستخدم بروتوكول RIP لتبادل جداول التوجيه تلقائياً بين الراوترات. لابد من تفعيل الإصدار 2 ليدعم الـ VLSM.</p>
+                <p><code>router rip</code><br><code>version 2</code><br><code>network 192.168.1.0</code></p>`,
+                challengeText: "فعّل بروتوكول RIP الإصدار 2، وأعلن عن الشبكة 192.168.1.0.",
+                validate: function(state) {
+                    return state.currentProtocol === "rip" && state.rip && state.rip.version === "2" && state.rip.networks.some(n => n.net === "192.168.1.0");
+                }
+            },
+            {
+                id: "lab15",
+                title: "Lab 15: تفعيل OSPF",
+                theory: `<h2>بروتوكول OSPF (Area 0)</h2>
+                <p>الـ OSPF هو الأكثر استخداماً عالمياً. يحتاج لـ Process ID ولتحديد الـ Area ولـ Wildcard Mask بدلاً من الـ Subnet.</p>
+                <p><code>router ospf 1</code><br><code>network 10.1.1.0 0.0.0.255 area 0</code></p>`,
+                challengeText: "فعّل OSPF برقم عملية 1، وأعلن عن شبكة 10.1.1.0 (Wildcard 0.0.0.255) في Area 0.",
+                validate: function(state) {
+                    if (state.ospf && state.ospf.pid === "1") {
+                        return state.ospf.networks.some(n => n.net === "10.1.1.0" && n.wildcard === "0.0.0.255" && n.area === "0");
+                    }
+                    return false;
+                }
+            },
+            {
+                id: "lab16",
+                title: "Lab 16: تعيين بصمة الراوتر (Router ID)",
+                theory: `<h2>هوية الراوتر في الـ OSPF</h2>
+                <p>لمنع تعارض الأسماء، يُفضّل تحديد Router ID يدوياً لكل راوتر في عملية الـ OSPF لضمان استقرار الشبكة في انتخاب الـ DR.</p>
+                <p><code>router-id 1.1.1.1</code></p>`,
+                challengeText: "أنت داخل الـ OSPF حالياً. قم بتحديد الـ Router ID الخاص بك ليكون 1.1.1.1",
+                validate: function(state) {
+                    return state.ospf && state.ospf.routerId === "1.1.1.1";
+                }
+            },
+            {
+                id: "lab17",
+                title: "Lab 17: تفعيل EIGRP",
+                theory: `<h2>بروتوكول EIGRP الخاص بسيسكو</h2>
+                <p>يعتمد على رقم (Autonomous System - AS) يجب أن يكون متطابقاً بين جميع الراوترات لتتحدث معاً.</p>
+                <p><code>router eigrp 100</code><br><code>network 172.16.0.0 0.0.255.255</code></p>`,
+                challengeText: "فعّل EIGRP برقم AS هو 100، وأعلن عن شبكة 172.16.0.0 بالوايلد كارد 0.0.255.255.",
+                validate: function(state) {
+                    if (state.eigrp && state.eigrp.as === "100") {
+                        return state.eigrp.networks.some(n => n.net === "172.16.0.0" && n.wildcard === "0.0.255.255");
+                    }
+                    return false;
+                }
+            },
+            {
+                id: "lab18",
+                title: "Lab 18: Router-on-a-stick",
+                theory: `<h2>جعل الراوتر يفهم الـ VLANs</h2>
+                <p>الراوتر عادة لا يفهم الـ Tags الخاصة بالـ VLAN. للربط بين VLANs متعددة عبر كابل واحد، ندخل على الـ Sub-interface ونُفعّل الـ Dot1Q.</p>
+                <p><code>interface f0/0.10</code><br><code>encapsulation dot1Q 10</code></p>`,
+                challengeText: "ادخل للمنفذ الفرعي f0/0.10 وفعّل تغليف dot1Q للـ VLAN رقم 10.",
+                validate: function(state) {
+                    let intf = state.interfaces && state.interfaces["f0/0.10"];
+                    return intf && intf.encapsulation === "dot1Q" && intf.encapsulationVlan === "10";
+                }
+            },
+            {
+                id: "lab19",
+                title: "Lab 19: ☠️ هجوم المسار المزيف (Route Injection)",
+                isLinux: true,
+                theory: `<h2>اختبار الاختراق: التلاعب بالتوجيه</h2>
+                <p>إذا لم يقم مهندس الشبكة بتفعيل كلمات سر للـ OSPF (Authentication)، يمكن للهكر من جهاز Kali إرسال LSA وهمية ليعلن نفسه كـ Default Gateway ويسرق الترافيك.</p>
+                <p>لدينا أداة بايثون جاهزة اسمها <code>route-injector</code> سنستخدمها لحقن مسار مزيف.</p>`,
+                challengeText: "استخدم الأمر <code>route-injector --protocol ospf --target 192.168.1.1 --inject 0.0.0.0</code>",
+                validate: function(state) {
+                    return state.lastPing && state.lastPing.includes("route-injector --protocol ospf --target 192.168.1.1 --inject 0.0.0.0");
+                }
+            },
+            {
+                id: "lab20",
+                title: "Lab 20: إصلاح الاختراق (Troubleshooting)",
+                theory: `<h2>الإنقاذ في وقت الطوارئ</h2>
+                <p>اكتشفت الشركة الهجوم الذي تم في Lab 19! الترافيك يتجه للهاكر بدلاً من الإنترنت عبر 192.168.1.1.</p>
+                <p>الحل السريع: اكتب مساراً ثابتاً يوجه كل شيء للإنترنت عبر الراوتر الآمن (10.10.10.1) بقيمة AD = 1 ليطغى على مسار الـ OSPF (الذي يمتلك AD 110).</p>`,
+                challengeText: "أضف مساراً افتراضياً (0.0.0.0 0.0.0.0) عبر الـ IP الآمن 10.10.10.1 مع وضع AD=1",
+                validate: function(state) {
+                    if (state.routes) {
+                        for(let r of state.routes) {
+                            if (r.network === "0.0.0.0" && r.mask === "0.0.0.0" && r.nextHop === "10.10.10.1" && r.ad === "1") return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+        ]
     }
 ];

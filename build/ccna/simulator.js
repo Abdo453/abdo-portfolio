@@ -25,6 +25,7 @@ function getPrompt() {
     else if (routerState.mode === 'config') suffix = '(config)#';
     else if (routerState.mode === 'config-vlan') suffix = '(config-vlan)#';
     else if (routerState.mode === 'config-if') suffix = '(config-if)#';
+    else if (routerState.mode === 'config-router') suffix = '(config-router)#';
     
     return `${routerState.hostname}${suffix}`;
 }
@@ -96,6 +97,10 @@ function processCommand(cmd) {
         } else if (mainCmd === 'ssh') {
             term.writeln('admin@' + (parts[1] || 'target') + ' password: ');
             routerState.lastSsh = cmd;
+        } else if (mainCmd === 'route-injector') {
+            term.writeln('Injecting LSA packets into OSPF process...');
+            term.writeln('Success! Target routing table poisoned.');
+            routerState.lastPing = cmd; // Storing here for simplicity in validation
         } else {
             term.writeln('bash: ' + mainCmd + ': command not found');
         }
@@ -117,6 +122,7 @@ function processCommand(cmd) {
     else if (mainCmd === 'exit') {
         if (routerState.mode === 'config-vlan') routerState.mode = 'config';
         else if (routerState.mode === 'config-if') routerState.mode = 'config';
+        else if (routerState.mode === 'config-router') routerState.mode = 'config';
         else if (routerState.mode === 'config') routerState.mode = 'priv';
         else if (routerState.mode === 'priv') routerState.mode = 'user';
     }
@@ -146,9 +152,51 @@ function processCommand(cmd) {
     else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'route' && routerState.mode === 'config') {
         if (parts[2] && parts[3] && parts[4]) {
             if (!routerState.routes) routerState.routes = [];
-            routerState.routes.push({ network: parts[2], mask: parts[3], nextHop: parts[4] });
+            let r = { network: parts[2], mask: parts[3], nextHop: parts[4] };
+            if (parts[5]) r.ad = parts[5]; // Administrative Distance (for floating static)
+            routerState.routes.push(r);
         } else {
             term.writeln('% Incomplete command.');
+        }
+    }
+    else if (mainCmd === 'router' && routerState.mode === 'config') {
+        if (parts[1]?.toLowerCase() === 'ospf') {
+            routerState.mode = 'config-router';
+            routerState.currentProtocol = 'ospf';
+            if (!routerState.ospf) routerState.ospf = { pid: parts[2], networks: [] };
+        } else if (parts[1]?.toLowerCase() === 'eigrp') {
+            routerState.mode = 'config-router';
+            routerState.currentProtocol = 'eigrp';
+            if (!routerState.eigrp) routerState.eigrp = { as: parts[2], networks: [] };
+        } else if (parts[1]?.toLowerCase() === 'rip') {
+            routerState.mode = 'config-router';
+            routerState.currentProtocol = 'rip';
+            if (!routerState.rip) routerState.rip = { networks: [], version: 1 };
+        }
+    }
+    else if (mainCmd === 'router-id' && routerState.mode === 'config-router') {
+        if (routerState.currentProtocol === 'ospf') routerState.ospf.routerId = parts[1];
+        else if (routerState.currentProtocol === 'eigrp') routerState.eigrp.routerId = parts[1];
+    }
+    else if (mainCmd === 'network' && routerState.mode === 'config-router') {
+        if (routerState.currentProtocol === 'ospf') {
+            if (parts[1] && parts[2] && parts[3]?.toLowerCase() === 'area' && parts[4]) {
+                routerState.ospf.networks.push({ net: parts[1], wildcard: parts[2], area: parts[4] });
+            }
+        } else if (routerState.currentProtocol === 'eigrp') {
+            routerState.eigrp.networks.push({ net: parts[1], wildcard: parts[2] || null });
+        } else if (routerState.currentProtocol === 'rip') {
+            routerState.rip.networks.push({ net: parts[1] });
+        }
+    }
+    else if (mainCmd === 'version' && routerState.mode === 'config-router' && routerState.currentProtocol === 'rip') {
+        routerState.rip.version = parts[1];
+    }
+    else if (mainCmd === 'encapsulation' && routerState.mode === 'config-if') {
+        if (parts[1]?.toLowerCase() === 'dot1q' && parts[2]) {
+            let intf = routerState.interfaces[routerState.currentIf];
+            intf.encapsulation = 'dot1Q';
+            intf.encapsulationVlan = parts[2];
         }
     }
     else if ((mainCmd === 'interface' || mainCmd === 'int') && routerState.mode === 'config') {
