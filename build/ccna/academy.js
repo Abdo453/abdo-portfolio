@@ -606,85 +606,152 @@ Data → Segment → Packet → Frame → Bits
         lessons: [
             {
                 id: "lesson5_1",
-                title: "1. ترجمة العناوين (NAT)",
+                title: "1. تشريح الـ NAT الجراحي (Network Address Translation)",
                 content: `
-                    <h1>Network Address Translation (NAT)</h1>
-                    <p>بما أن عناوين الـ IPv4 العامة (Public) نفدت، نستخدم الـ NAT في الراوتر ليقوم بترجمة عناوين أجهزتنا الداخلية (Private) إلى عنوان عام واحد (Public) للوصول للإنترنت.</p>
+                    <h1>خداع العالم الخارجي (NAT & PAT)</h1>
+                    <p>بسبب الكارثة الهندسية لانتهاء عناوين IPv4، تم اختراع الـ NAT كحل مؤقت (أصبح دائماً). الراوتر يقوم بعملية جراحية لكل حزمة بيانات (Packet) تمر من خلاله، حيث يمسح عنوانك الداخلي (Private) ويكتب عنوانه العام (Public) بدلاً منه.</p>
 
-                    <div class="concept-box">
-                        <h3>PAT (Port Address Translation) أو Overload</h3>
-                        <p>هو النوع الأكثر استخداماً، يسمح لآلاف الأجهزة في الشبكة المحلية باستخدام <strong>IP عام واحد فقط</strong> للوصول للإنترنت، حيث يفرق الراوتر بينهم باستخدام أرقام المنافذ (Ports).</p>
+                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
+                        <h3 style="color: var(--success);">جدول الترجمة الداخلي (NAT Table)</h3>
+                        <p>المهندس يجب أن يعرف المصطلحات الأربعة في جدول الراوتر:</p>
+                        <ul>
+                            <li><strong>Inside Local:</strong> عنوان جهازك الحقيقي (مثلاً 192.168.1.5).</li>
+                            <li><strong>Inside Global:</strong> العنوان العام (Public) الذي يخرج به الراوتر للإنترنت.</li>
+                            <li><strong>Outside Local / Global:</strong> عنوان سيرفر جوجل (أو الوجهة).</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">الـ PAT (Port Address Translation) - سحر المنافذ</h3>
+                        <p>كيف لآلاف الأجهزة في الشركة أن تخرج للإنترنت بـ <strong>IP عام واحد فقط</strong>؟<br>
+                        الراوتر يقوم بتغيير عنوان الـ IP <em>ورقم المنفذ (Source Port)</em> معاً! يسجل في جدوله: "الجهاز 192.168.1.5 خرج بورت 2000، سأعطيه الـ IP العام الخاص بي وأعطيه بورت 55001". عندما يعود الرد للراوتر على بورت 55001، ينظر في جدوله ويعرف فوراً أن هذا الرد يخص الجهاز الأول!</p>
+                        <p><em>ملاحظة أمنية:</em> الـ NAT يعمل كجدار حماية خفي (Pseudo-Firewall) لأن الإنترنت الخارجي لا يستطيع رؤية أجهزتك الداخلية مباشرة ولا يمكنه بدء الاتصال بها (إلا لو قمت بعمل Port Forwarding).</p>
                     </div>
                 `
             },
             {
                 id: "lesson5_2",
-                title: "2. قوائم التحكم (ACL)",
+                title: "2. هندسة قوائم التحكم (ACL & Wildcard Masks)",
                 content: `
-                    <h1>Access Control List (ACL)</h1>
-                    <p>هي قواعد تُكتب على الراوتر للسماح (Permit) أو المنع (Deny) لمرور بيانات معينة. تعمل كجدار حماية بسيط (Firewall).</p>
+                    <h1>Access Control List (ACL) - حرس الحدود</h1>
+                    <p>الـ ACL هي قلب الحماية في شبكات سيسكو. هي قائمة من الشروط (Rules) يقرأها الراوتر من الأعلى للأسفل (Top-Down). بمجرد أن يجد شرطاً ينطبق على البيانات، يُنفذه <strong>ويتوقف عن قراءة باقي القائمة!</strong></p>
                     
-                    <ul>
-                        <li><strong style="color:var(--danger);">Standard ACL:</strong> تمنع أو تسمح بناءً على عنوان المرسل (Source IP) فقط. (أرقامها 1-99).</li>
-                        <li><strong style="color:var(--success);">Extended ACL:</strong> متقدمة جداً، تمنع بناءً على المرسل، والمستقبل، ونوع الخدمة (مثل منع الـ HTTP فقط والسماح بالـ Ping). (أرقامها 100-199).</li>
-                    </ul>
+                    <div class="concept-box">
+                        <h3>سر الـ Wildcard Mask (قناع العكس)</h3>
+                        <p>في الـ ACL لا نستخدم الـ Subnet Mask، بل نستخدم الـ Wildcard Mask (الذي يطابق الـ 0 ويهمل الـ 1).<br>
+                        مثال هندسي: إذا أردت منع شبكة <code>192.168.1.0</code>، سيكون الـ Subnet هو <code>255.255.255.0</code>، أما الـ Wildcard سيكون <code>0.0.0.255</code>. (يمكنك حسابه ببساطة بطرح الـ Subnet من 255.255.255.255).</p>
+                    </div>
+
+                    <div class="concept-box" style="border-color: var(--danger); background: rgba(248, 81, 73, 0.05);">
+                        <h3 style="color: var(--danger);">الرفض الضمني (Implicit Deny) - الكابوس!</h3>
+                        <p>قاعدة ذهبية: في نهاية أي قائمة ACL (حتى لو لم تراها) يوجد شرط غير مكتوب يقول: <em>"امنع كل شيء آخر" (Deny Any)</em>. إذا نسيت كتابة (Permit Any) في نهاية القائمة، سيقوم الراوتر بقطع الإنترنت عن الشركة بأكملها!</p>
+                        
+                        <h3>أنواع الـ ACL:</h3>
+                        <ul>
+                            <li><strong>Standard (1-99):</strong> غبية نوعاً ما. تمنع أو تسمح بناءً على الـ Source IP فقط. (تُوضع دائماً بالقرب من الهدف).</li>
+                            <li><strong>Extended (100-199):</strong> ذكية ودقيقة. تمنع بناءً على (المرسل، المستقبل، البروتوكول TCP/UDP، ورقم البورت 80/443). (تُوضع بالقرب من المصدر لتوفير الـ Bandwidth).</li>
+                        </ul>
+                    </div>
                 `
             }
         ]
     },
     {
-        chapter: "المرحلة السادسة: أمن الشبكات (Security)",
+        chapter: "المرحلة السادسة: أمن الشبكات (Cybersecurity Fundamentals)",
         lessons: [
             {
                 id: "lesson6_1",
-                title: "1. أمان المنافذ (Port Security)",
+                title: "1. حماية الطبقة الثانية (Layer 2 Security)",
                 content: `
-                    <h1>أمان المنافذ في السويتش</h1>
-                    <p>حتى لا يقوم أي شخص غريب بفصل كابل طابعة وتركيب جهازه الخاص لاختراق الشبكة، نستخدم الـ Port Security.</p>
-                    <p>نقوم بربط المنفذ بـ MAC Address محدد. إذا تم توصيل جهاز مختلف، يتخذ السويتش أحد الإجراءات التالية:</p>
-                    <ul>
-                        <li><strong>Protect:</strong> يتجاهل بيانات الغريب بهدوء.</li>
-                        <li><strong>Restrict:</strong> يتجاهل البيانات ويُرسل إنذاراً للمدير.</li>
-                        <li><strong style="color:var(--danger);">Shutdown:</strong> يغلق المنفذ تماماً فوراً.</li>
-                    </ul>
+                    <h1>تأمين السويتشات من الهجمات الداخلية</h1>
+                    <p>أغلب الاختراقات تأتي من الداخل (موظف ساخط أو هكر دخل المبنى). הסويتش الافتراضي يثق في الجميع، وعلينا إيقاف هذه الثقة العمياء.</p>
+                    
+                    <div class="concept-box">
+                        <h3>1. Port Security & CAM Overflow</h3>
+                        <p>الهكر يقوم بهجوم (MAC Flooding) ويرسل آلاف الـ MAC الوهمية لملء ذاكرة السويتش (CAM Table). عندما تمتلىء الذاكرة، يتحول السويتش لـ Hub غبي ويرسل البيانات لكل المنافذ ليتجسس عليها الهكر! <br>
+                        <strong>الحل:</strong> تفعيل <code>Port Security</code> لتحديد عدد الـ MAC المسموحة لكل بورت (مثلاً جهاز واحد). إذا تم التجاوز، يتم إغلاق البورت (Shutdown).</p>
+                    </div>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">2. DHCP Snooping & ARP Inspection</h3>
+                        <ul>
+                            <li><strong>DHCP Spoofing:</strong> الهكر يوصل جهازه ويوزع IP وأرقام Gateway مزيفة للأجهزة ليصبح هو "الوسيط" (Man-in-the-Middle). <em>الحل: DHCP Snooping، الذي يجعل السويتش يرفض أي رد DHCP إلا من بورت السيرفر الموثوق (Trusted Port).</em></li>
+                            <li><strong>ARP Spoofing:</strong> الهكر يرسل رسائل يخدع بها الكمبيوتر والراوتر ليقول "أنا الراوتر". <em>الحل: Dynamic ARP Inspection (DAI) الذي يفحص كل رسالة ARP ويقارنها بقاعدة بيانات الـ DHCP ليتأكد من صحتها.</em></li>
+                        </ul>
+                    </div>
                 `
             },
             {
                 id: "lesson6_2",
-                title: "2. الشبكات الخاصة الافتراضية (VPN)",
+                title: "2. التشفير وهندسة الـ VPN (IPsec)",
                 content: `
-                    <h1>Virtual Private Network (VPN)</h1>
-                    <p>هل تعمل من المنزل وتريد الدخول لسيرفرات الشركة بأمان عبر الإنترنت غير الآمن؟ هنا يأتي دور الـ VPN.</p>
-                    <p>يقوم بإنشاء <strong>نفق مشفر (Encrypted Tunnel)</strong> عبر الإنترنت لحماية بياناتك من التجسس (Man-in-the-Middle).</p>
-                    <ul>
-                        <li><strong>Site-to-Site:</strong> ربط فرعين لشركة عبر الإنترنت بشكل دائم.</li>
-                        <li><strong>Remote Access:</strong> ربط كمبيوتر موظف من منزله بشبكة الشركة (باستخدام برامج مثل Cisco AnyConnect).</li>
-                    </ul>
+                    <h1>حماية البيانات في قنوات الإنترنت المظلمة (VPN & Cryptography)</h1>
+                    <p>الـ VPN ليس مجرد تغيير للـ IP. في الشركات، هو بناء نفق عسكري مشفر (IPsec Tunnel) لربط فروع الشركة عبر الإنترنت العام.</p>
+                    
+                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
+                        <h3 style="color: var(--success);">أعمدة التشفير (CIA Triad)</h3>
+                        <ul>
+                            <li><strong>السرية (Confidentiality):</strong> التشفير باستخدام خوارزميات التناظر (Symmetric) مثل AES (سريعة للبيانات)، أو اللاتناظر (Asymmetric) مثل RSA (بطيئة لكن آمنة لتبادل المفاتيح).</li>
+                            <li><strong>النزاهة (Integrity):</strong> التأكد أن البيانات لم تتغير في الطريق. نستخدم الـ Hashing (مثل SHA-256) الذي يصنع بصمة رقمية لا يمكن التلاعب بها.</li>
+                            <li><strong>المصادقة (Authentication):</strong> كيف نثبت أن الطرف الآخر هو حقاً فرع الشركة؟ باستخدام كلمات السر (PSK) أو الشهادات الرقمية (Certificates).</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box" style="border-color: var(--accent); background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: var(--accent);">هندسة الـ IPsec</h3>
+                        <p>بروتوكول IPsec معقد ويعمل على مرحلتين (IKE Phases):</p>
+                        <ol>
+                            <li><strong>IKE Phase 1:</strong> يتفاوض الراوتران لإنشاء نفق "إداري" آمن لنقل المفاتيح فقط.</li>
+                            <li><strong>IKE Phase 2:</strong> يتم إنشاء نفق "البيانات" الفعلي (ببروتوكول ESP). بروتوكول ESP يقوم بتشفير الـ IP Packet بالكامل ثم يضع فوقها IP Header جديد لتمويه العناوين الأصلية للشركة!</li>
+                        </ol>
+                    </div>
                 `
             }
         ]
     },
     {
-        chapter: "المرحلة السابعة: الأتمتة (Automation)",
+        chapter: "المرحلة السابعة: الأتمتة والـ SDN (Automation)",
         lessons: [
             {
                 id: "lesson7_1",
-                title: "1. الأتمتة وبرمجة الشبكات",
+                title: "1. الانفصال المعماري: SDN (Software-Defined Networking)",
                 content: `
-                    <h1>مستقبل الشبكات: Automation & SDN</h1>
-                    <p>الطريقة التقليدية لإدارة 500 راوتر هي الدخول عليهم واحداً تلو الآخر لكتابة الأوامر! هذا مضيعة للوقت ومعرض للخطأ البشري.</p>
+                    <h1>ثورة التفكير: فصل العقل عن العضلات</h1>
+                    <p>في الراوترات الكلاسيكية، كل راوتر كان يمتلك عقله الخاص (Control Plane للـ OSPF/Routing) وعضلاته (Data Plane لتمرير البيانات). في شبكات العملاقة، هذا يجعل الإدارة مستحيلة.</p>
 
-                    <div class="concept-box" style="border-color: #58a6ff; background: rgba(88, 166, 255, 0.05);">
-                        <h3 style="color: #58a6ff;">الشبكات المعرفة برمجياً (SDN)</h3>
-                        <p>في الـ SDN، نقوم بفصل عقل الراوتر (Control Plane) عن عضلاته التي تنقل البيانات (Data Plane). نضع العقل في سيرفر مركزي يُسمى <strong>Controller (مثل Cisco DNA)</strong>. من خلال هذا السيرفر، ندير جميع راوترات الشركة بضغطة زر واحدة!</p>
+                    <div class="concept-box">
+                        <h3>الشبكات المعرفة برمجياً (SDN)</h3>
+                        <p>تم نزع "العقل" من جميع الراوترات ووضعه في سيرفر مركزي عملاق يُسمى <strong>SDN Controller (مثل Cisco DNA Center)</strong>. الراوترات أصبحت مجرد "عضلات" غبية تنفذ أوامر الـ Controller.</p>
+                        <ul>
+                            <li><strong>Southbound APIs:</strong> لغة التخاطب بين الـ Controller والراوترات/السويتشات (مثل بروتوكولات OpenFlow أو NETCONF أو SSH).</li>
+                            <li><strong>Northbound APIs:</strong> لغة التخاطب بين الـ Controller والمبرمج! (عادة تكون REST APIs). يمكنك كتابة سكربت بايثون صغير يعطي أمراً للـ Controller ليقوم بتغيير باسورد 500 راوتر في ثانية واحدة.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: "lesson7_2",
+                title: "2. لغات الأتمتة (Python, Ansible, JSON)",
+                content: `
+                    <h1>البنية التحتية ككود (Infrastructure as Code - IaC)</h1>
+                    <p>المهندس الحديث لا يحفظ الأوامر (CLI) فقط، بل يبرمج الشبكة.</p>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">صيغ البيانات (Data Formats)</h3>
+                        <p>عندما يسألك الـ Controller عن حالة الشبكة، لا يرد بنص عادي، بل يرد بـ Data Structure يسهل برمجتها:</p>
+                        <ul>
+                            <li><strong>JSON:</strong> لغة الويب، تعتمد على (Key-Value) وتستخدم الأقواس <code>{}</code>. (مثال: <code>{"hostname": "Router1", "ip": "10.0.0.1"}</code>).</li>
+                            <li><strong>YAML:</strong> تستخدم المسافات (Indentation) بدلاً من الأقواس، وهي لغة الـ Ansible المفضلة.</li>
+                        </ul>
                     </div>
 
-                    <h2>أدوات الأتمتة</h2>
-                    <ul>
-                        <li><strong>Ansible:</strong> أداة تعتمد على ملفات YAML لدفع الإعدادات لمئات الأجهزة في ثوانٍ.</li>
-                        <li><strong>Python:</strong> لغة البرمجة الأساسية في الشبكات اليوم، نستخدم مكتبات مثل <code>Netmiko</code> للدخول على الأجهزة وتغيير الإعدادات عبر سكربتات.</li>
-                        <li><strong>REST APIs:</strong> واجهات برمجية للتخاطب مع الأجهزة ببيانات بصيغة JSON بدل التخاطب بالـ CLI.</li>
-                    </ul>
+                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
+                        <h3 style="color: var(--success);">الأسلحة البرمجية:</h3>
+                        <ul>
+                            <li><strong>Python (Netmiko/Nornir):</strong> مكتبات في بايثون تقوم بالدخول الآلي للراوترات عبر SSH وتكتب الأوامر بدلاً منك.</li>
+                            <li><strong>Ansible:</strong> أداة قوية جداً (Agentless). تكتب ملف YAML يصف "الحالة المطلوبة" للشبكة (مثلاً: أريد VLAN 10 موجودة في كل السويتشات). الـ Ansible يتولى الباقي بفضل ميزة <em>Idempotency (تجنب تكرار التغيير إذا كان الوضع صحيحاً)</em>.</li>
+                        </ul>
+                    </div>
                 `
             }
         ]
