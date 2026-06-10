@@ -20,19 +20,74 @@ const academyData = [
 
                     <h2>أنواع الشبكات حسب المساحة الجغرافية:</h2>
                     
+                    <pre style="background: #0d1117; padding: 15px; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; color: #58a6ff;">
+[PC]---[Switch]---[Router]==========[ISP]==========[Router]---[Switch]---[PC]
+        LAN        ←――――――――――――→  WAN (Internet)  ←――――――――――――→       LAN
+                    </pre>
+
                     <h3>1. شبكة الـ LAN (Local Area Network)</h3>
                     <p>هي الشبكة المحلية. تغطي مساحة صغيرة مثل مكتب، منزل، أو مبنى واحد. تتميز بسرعتها العالية وسهولة إدارتها.</p>
-                    <p><em>مثال:</em> أجهزة الكمبيوتر المتصلة بـ Switch داخل معمل المدرسة.</p>
 
                     <h3>2. شبكة الـ WAN (Wide Area Network)</h3>
                     <p>هي الشبكة الواسعة. تربط بين مدن أو دول مختلفة. أبطأ من الـ LAN وتعتمد على مزودي خدمة الإنترنت (ISPs) وشركات الاتصالات.</p>
-                    <p><em>مثال:</em> ربط فرع بنك في القاهرة بفرع آخر في دبي، أو الإنترنت نفسه (أكبر شبكة WAN في العالم).</p>
 
                     <h3>3. شبكة الـ MAN (Metropolitan Area Network)</h3>
                     <p>تغطي مساحة متوسطة مثل مدينة أو حرم جامعي ضخم. وهي أكبر من الـ LAN وأصغر من الـ WAN.</p>
 
-                    <h3>4. شبكة الـ WLAN (Wireless LAN)</h3>
-                    <p>نفس فكرة الـ LAN ولكنها بدون كابلات (لاسلكية - Wi-Fi). تعتمد على الـ Access Points لربط الأجهزة (مثل شبكة الواي فاي في المنزل).</p>
+                    <h3>جدول مقارنة سريع</h3>
+                    <table style="width:100%; border-collapse: collapse; margin-top: 15px; text-align: right;">
+                        <tr style="background: rgba(88,166,255,0.1); border-bottom: 1px solid var(--border);">
+                            <th style="padding: 10px;">النوع</th>
+                            <th style="padding: 10px;">المساحة</th>
+                            <th style="padding: 10px;">السرعة</th>
+                            <th style="padding: 10px;">التكلفة</th>
+                            <th style="padding: 10px;">التحكم</th>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px; color: var(--accent);">LAN</td>
+                            <td style="padding: 10px;">مبنى/منزل</td>
+                            <td style="padding: 10px;">عالية جداً</td>
+                            <td style="padding: 10px;">منخفضة</td>
+                            <td style="padding: 10px;">كامل (أنت تديرها)</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px; color: #ffb020;">MAN</td>
+                            <td style="padding: 10px;">مدينة/حرم جامعي</td>
+                            <td style="padding: 10px;">متوسطة</td>
+                            <td style="padding: 10px;">متوسطة</td>
+                            <td style="padding: 10px;">مشترك</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; color: var(--danger);">WAN</td>
+                            <td style="padding: 10px;">دول/قارات</td>
+                            <td style="padding: 10px;">متغيرة (حسب الـ ISP)</td>
+                            <td style="padding: 10px;">عالية</td>
+                            <td style="padding: 10px;">مزود الخدمة (ISP)</td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                id: "lesson1_5",
+                title: "1.5. نموذج OSI (The OSI Model)",
+                content: `
+                    <h1>النموذج المرجعي (OSI Model)</h1>
+                    <p>نموذج الـ OSI هو خريطة تخيلية تتكون من 7 طبقات تشرح كيف تنتقل البيانات من جهازك (مثلاً عند فتح موقع) عبر الكابلات حتى تصل للسيرفر.</p>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">الطبقات السبعة (من فوق لتحت)</h3>
+                        <ol>
+                            <li><strong style="color:var(--accent);">Application (التطبيقات):</strong> البرامج والمتصفحات (HTTP, DNS).</li>
+                            <li><strong>Presentation (التقديم):</strong> تشفير البيانات وضغطها وتحديد صيغتها (JPEG, SSL).</li>
+                            <li><strong>Session (الجلسة):</strong> فتح وإدارة وإغلاق الاتصال بين الجهازين.</li>
+                            <li><strong style="color:var(--success);">Transport (النقل):</strong> تقطيع البيانات ونقلها عبر TCP (موثوق) أو UDP (سريع). وتعتمد على منافذ الـ Ports.</li>
+                            <li><strong style="color:var(--danger);">Network (الشبكة):</strong> تحديد المسار (Routing) بناءً على عناوين الـ IP. (هنا يعمل الراوتر).</li>
+                            <li><strong>Data Link (ربط البيانات):</strong> نقل البيانات محلياً بناءً على الـ MAC Address. (هنا يعمل السويتش).</li>
+                            <li><strong>Physical (الفيزيائية):</strong> تحويل البيانات إلى إشارات كهربائية أو ضوئية تسير في الكابلات.</li>
+                        </ol>
+                    </div>
+
+                    <p><em>نصيحة للحفظ (من أسفل لأعلى):</em> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</p>
                 `
             },
             {
