@@ -334,6 +334,98 @@ Data → Segment → Packet → Frame → Bits
                 `
             },
             {
+                id: "lesson2_2_5",
+                title: "2.5. شرح تفصيلي للـ IPv4 Subnetting",
+                content: `
+                    <h1>كيف تحسب الـ Subnetting في ثوانٍ؟</h1>
+                    <p>الـ Subnetting هو الكابوس الذي يواجه مهندسي الشبكات المبتدئين، لكنه في الحقيقة عبارة عن لعبة رياضية بسيطة تعتمد على مبدأ <strong>"الاستلاف"</strong> من قسم الـ Host لصالح قسم الـ Network.</p>
+
+                    <div class="concept-box" style="border-color: var(--accent); background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: var(--accent);">الرقم السحري (Magic Number / Block Size)</h3>
+                        <p>هذا الرقم هو سر الـ Subnetting. وهو ببساطة مقدار القفزة بين كل شبكة والشبكة التي تليها.</p>
+                        <p><strong>القاعدة:</strong> الرقم السحري = <code>256 - قيمة الـ Subnet Mask في المقطع الأخير الممتلئ</code>.</p>
+                    </div>
+
+                    <h2>مثال عملي خطوة بخطوة</h2>
+                    <p>لدينا الشبكة <code>192.168.1.0</code> بـ قناع <code>/26</code> (وهو يعادل <code>255.255.255.192</code>). كيف نقسمها؟</p>
+                    
+                    <ol>
+                        <li><strong>الرقم السحري:</strong> <code>256 - 192 = 64</code>. (إذن حجم كل شبكة هو 64 عنوان).</li>
+                        <li><strong>تحديد الشبكات:</strong> نبدأ من 0 ونقفز بمقدار 64.
+                            <ul>
+                                <li>الشبكة الأولى: <code>192.168.1.0</code></li>
+                                <li>الشبكة الثانية: <code>192.168.1.64</code></li>
+                                <li>الشبكة الثالثة: <code>192.168.1.128</code></li>
+                                <li>الشبكة الرابعة: <code>192.168.1.192</code></li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">3 أرقام مهمة في كل شبكة</h3>
+                        <ul>
+                            <li><strong>عنوان الشبكة (Network ID):</strong> أول رقم (يُستخدم لتعريف الشبكة ولا يمكن إعطاؤه لجهاز).</li>
+                            <li><strong>عنوان البث (Broadcast ID):</strong> آخر رقم قبل الشبكة التالية بواحد (يُستخدم لإرسال رسالة للجميع ولا يُعطى لجهاز).</li>
+                            <li><strong>العناوين المتاحة (Usable Hosts):</strong> الأرقام التي بينهما. (تُعطى للكمبيوترات والراوترات).</li>
+                        </ul>
+                    </div>
+
+                    <h3>تطبيق على الشبكة الأولى من المثال (192.168.1.0):</h3>
+                    <ul>
+                        <li><strong>Network ID:</strong> <code>192.168.1.0</code></li>
+                        <li><strong>القفزة التالية:</strong> <code>192.168.1.64</code></li>
+                        <li><strong>Broadcast ID:</strong> <code>192.168.1.63</code> (رقم قبل القفزة التالية مباشرة)</li>
+                        <li><strong>النطاق المتاح للأجهزة:</strong> من <code>192.168.1.1</code> إلى <code>192.168.1.62</code>. (إذن كل شبكة تعطينا 62 جهاز فعلي).</li>
+                    </ul>
+
+                    <h2>جدول سريع للـ CIDR المشهورة (Class C)</h2>
+                    <table style="width:100%; border-collapse: collapse; margin-top: 15px; text-align: center;">
+                        <tr style="background: rgba(88,166,255,0.1); border-bottom: 1px solid var(--border);">
+                            <th style="padding: 10px;">الـ CIDR</th>
+                            <th style="padding: 10px;">الـ Subnet Mask</th>
+                            <th style="padding: 10px;">الرقم السحري (القفزة)</th>
+                            <th style="padding: 10px;">عدد الشبكات الناتجة</th>
+                            <th style="padding: 10px;">أجهزة لكل شبكة</th>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">/24</td>
+                            <td style="padding: 10px;">255.255.255.0</td>
+                            <td style="padding: 10px;">256</td>
+                            <td style="padding: 10px;">1</td>
+                            <td style="padding: 10px;">254</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">/25</td>
+                            <td style="padding: 10px;">255.255.255.128</td>
+                            <td style="padding: 10px;">128</td>
+                            <td style="padding: 10px;">2</td>
+                            <td style="padding: 10px;">126</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">/26</td>
+                            <td style="padding: 10px;">255.255.255.192</td>
+                            <td style="padding: 10px;">64</td>
+                            <td style="padding: 10px;">4</td>
+                            <td style="padding: 10px;">62</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">/27</td>
+                            <td style="padding: 10px;">255.255.255.224</td>
+                            <td style="padding: 10px;">32</td>
+                            <td style="padding: 10px;">8</td>
+                            <td style="padding: 10px;">30</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">/30</td>
+                            <td style="padding: 10px;">255.255.255.252</td>
+                            <td style="padding: 10px;">4</td>
+                            <td style="padding: 10px;">64</td>
+                            <td style="padding: 10px;">2 (يُستخدم لربط راوترين فقط)</td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
                 id: "lesson2_3",
                 title: "3. بروتوكولات النقل (TCP vs UDP)",
                 content: `
