@@ -1017,8 +1017,8 @@ for p in range(79, 82):
             <div class="challenge-title">🎯 التحدي المطلوب</div>
             <p>لديك القائمة <code>payloads</code>. اكتشف أي واحد فيهم يحتوي على كلمة <code>alert</code> واطبعه.</p>
           </div>`,
-        initialCode: `payloads = ["<svg onload=1>", "<script>alert(1)</script>", "<b>hello</b>"]\n\n# اكتب Loop يبحث عن الـ payload الذي يحتوي على كلمة alert واطبعه\n`,
-        validate: (out) => out.includes("<script>alert(1)</script>") && !out.includes("<b>")
+        initialCode: `payloads = ["<svg onload=1>", "<script>alert(1)<\/script>", "<b>hello</b>"]\n\n# اكتب Loop يبحث عن الـ payload الذي يحتوي على كلمة alert واطبعه\n`,
+        validate: (out) => out.includes("<script>alert(1)<\/script>") && !out.includes("<b>")
       }
     ]
   },
