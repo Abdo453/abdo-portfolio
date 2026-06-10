@@ -278,8 +278,8 @@ window.switchEnrichmentTab = function(btn, targetId) {
 };
 
 window.checkQuizAnswer = function(lessonId, qIdx, correctIdx) {
-    const selected = document.querySelector(\`input[name="quiz-\${lessonId}-q\${qIdx}"]:checked\`);
-    const feedback = document.getElementById(\`feedback-\${lessonId}-q\${qIdx}\`);
+    const selected = document.querySelector(`input[name="quiz-${lessonId}-q${qIdx}"]:checked`);
+    const feedback = document.getElementById(`feedback-${lessonId}-q${qIdx}`);
     if (!selected) {
         feedback.innerHTML = '<span style="color:var(--warning)">الرجاء اختيار إجابة أولاً.</span>';
         return;
