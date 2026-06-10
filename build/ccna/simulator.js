@@ -56,23 +56,27 @@ function initTerminal() {
     term.writeln('Press RETURN to get started.');
     term.write('\r\n' + getPrompt());
 
-    term.onKey(e => {
-        const ev = e.domEvent;
-        const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey;
-
-        if (ev.keyCode === 13) { // Enter
-            term.write('\r\n');
-            processCommand(currentInput.trim());
-            currentInput = '';
-            term.write(getPrompt());
-        } else if (ev.keyCode === 8) { // Backspace
-            if (term._core.buffer.x > getPrompt().length) {
-                currentInput = currentInput.slice(0, -1);
-                term.write('\b \b');
-            }
-        } else if (printable) {
-            currentInput += e.key;
-            term.write(e.key);
+    term.onData(e => {
+        switch (e) {
+            case '\r': // Enter
+                term.write('\r\n');
+                processCommand(currentInput.trim());
+                currentInput = '';
+                term.write(getPrompt());
+                break;
+            case '\u007F': // Backspace (DEL)
+            case '\b': // Backspace
+                if (currentInput.length > 0) {
+                    currentInput = currentInput.slice(0, -1);
+                    term.write('\b \b');
+                }
+                break;
+            default:
+                // Handle printable characters (including Arabic/unicode)
+                if ((e >= String.fromCharCode(0x20) && e <= String.fromCharCode(0x7E)) || e >= '\u00a0') {
+                    currentInput += e;
+                    term.write(e);
+                }
         }
     });
 }
