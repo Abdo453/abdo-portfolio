@@ -226,6 +226,86 @@ const academyData = [
                 `
             }
         ]
+    },
+    {
+        chapter: "المرحلة الثالثة: أجهزة Cisco (الطبقة الثانية)",
+        lessons: [
+            {
+                id: "lesson3_1",
+                title: "1. أساسيات أنظمة Cisco IOS",
+                content: `
+                    <h1>نظام التشغيل Cisco IOS</h1>
+                    <p>أجهزة سيسكو (الراوترات والسويتشات) تعمل بنظام تشغيل يُسمى <strong>IOS (Internetwork Operating System)</strong>. يتم التعامل معه بالكامل عبر سطر الأوامر (CLI).</p>
+                    
+                    <h2>أوضاع التشغيل الأساسية (Modes)</h2>
+                    <div class="concept-box">
+                        <h3>1. User EXEC Mode (وضع المستخدم)</h3>
+                        <p>الشكل: <code>Router></code></p>
+                        <p>وضع محدود جداً، يسمح لك فقط ببعض أوامر الفحص البسيطة مثل <code>ping</code>. لا يمكنك تغيير أي إعدادات هنا.</p>
+                    </div>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">2. Privileged EXEC Mode (وضع الامتيازات)</h3>
+                        <p>الشكل: <code>Router#</code></p>
+                        <p>يتم الدخول إليه بكتابة الأمر <code>enable</code>. هنا يمكنك عرض جميع إعدادات الجهاز باستخدام أوامر <code>show</code> (مثل <code>show running-config</code>) وحفظ الإعدادات، لكن لا يمكنك تعديل التكوين.</p>
+                    </div>
+
+                    <div class="concept-box" style="border-color: var(--danger); background: rgba(248, 81, 73, 0.05);">
+                        <h3 style="color: var(--danger);">3. Global Configuration Mode (وضع الإعداد العام)</h3>
+                        <p>الشكل: <code>Router(config)#</code></p>
+                        <p>يتم الدخول إليه بكتابة <code>configure terminal</code> من وضع الامتيازات. هذا هو المكان الذي نقوم فيه بتغيير اسم الجهاز (<code>hostname</code>) وإعداد كلمات المرور وتكوين الشبكة الفعلي.</p>
+                    </div>
+                `
+            },
+            {
+                id: "lesson3_2",
+                title: "2. الشبكات الوهمية (VLANs)",
+                content: `
+                    <h1>الشبكات المحلية الوهمية (Virtual LANs)</h1>
+                    <p>في الوضع الطبيعي، كل المنافذ (Ports) في السويتش تنتمي لشبكة واحدة (Broadcast Domain واحد). لكن ماذا لو أردنا فصل قسم "الحسابات" عن قسم "الموارد البشرية" وهم متصلون بنفس السويتش الفعلي؟</p>
+                    
+                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
+                        <h3 style="color: var(--success);">الحل: الـ VLAN</h3>
+                        <p>تقوم الـ VLAN بتقسيم السويتش الفعلي الواحد إلى عدة سويتشات <em>وهمية</em> (Logical Switches). الأجهزة في VLAN 10 لا يمكنها التحدث مع الأجهزة في VLAN 20 إلا بوجود راوتر!</p>
+                        <ul>
+                            <li><strong>VLAN 1:</strong> هي الشبكة الافتراضية، جميع المنافذ تكون تابعة لها عند شراء السويتش.</li>
+                            <li><strong>Access Port:</strong> هو المنفذ الذي يتم توصيل جهاز كمبيوتر به، وينتمي لـ VLAN واحدة فقط.</li>
+                        </ul>
+                        <p><em>الأمر لإنشاء VLAN:</em><br><code>Switch(config)# vlan 10<br>Switch(config-vlan)# name Accounting</code></p>
+                    </div>
+                `
+            },
+            {
+                id: "lesson3_3",
+                title: "3. الـ Trunking وبروتوكول 802.1Q",
+                content: `
+                    <h1>منافذ العبور (Trunk Ports)</h1>
+                    <p>إذا كان لدينا قسم للحسابات (VLAN 10) يمتد عبر <strong>سويتشين مختلفين</strong> (مبنيين مختلفين)، كيف نجعل بيانات VLAN 10 تعبر الكابل الذي يربط السويتشين؟</p>
+
+                    <div class="concept-box">
+                        <h3>منفذ الـ Trunk</h3>
+                        <p>الـ Access Port ينقل بيانات VLAN واحدة فقط (لأجهزة الكمبيوتر). أما الـ <strong>Trunk Port</strong> فهو يُستخدم لربط سويتش بسويتش آخر، ويسمح بمرور بيانات <em>جميع الـ VLANs</em> عبر كابل واحد.</p>
+                        
+                        <h3>كيف يعرف السويتش المستقبل أن هذه البيانات تابعة لـ VLAN 10 أو 20؟</h3>
+                        <p>هنا يأتي دور بروتوكول <strong>802.1Q</strong> (ويُعرف بـ Dot1q). يقوم هذا البروتوكول بوضع <em>علامة (Tag)</em> على البيانات قبل إرسالها عبر الـ Trunk، ليكتب عليها رقم الـ VLAN، فيستلمها السويتش الآخر ويوجهها للمنفذ الصحيح.</p>
+                    </div>
+                `
+            },
+            {
+                id: "lesson3_4",
+                title: "4. بروتوكول الشجرة الممتدة (STP)",
+                content: `
+                    <h1>Spanning Tree Protocol (STP)</h1>
+                    <p>في الشبكات الحساسة، نقوم بتوصيل السويتشات ببعضها بأكثر من كابل لتجنب انقطاع الخدمة (Redundancy). ولكن هذا الكابل الإضافي قد يصنع حلقة مفرغة (Loop) للبيانات، مما يؤدي إلى انهيار الشبكة بالكامل بسبب ما يُعرف بـ Broadcast Storm!</p>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">كيف يحل الـ STP المشكلة؟</h3>
+                        <p>يعمل بروتوكول STP أوتوماتيكياً لاكتشاف هذه الحلقات. إذا وجد كابلين يؤديان لنفس المكان، فإنه يقوم بـ <strong>إغلاق (Block) أحدهما منطقياً</strong> (يظل متصلاً لكن لا ينقل بيانات).</p>
+                        <p>إذا انقطع الكابل الأساسي، يقوم الـ STP فوراً بفتح الكابل الاحتياطي الذي كان مغلقاً لتعود الشبكة للعمل بدون أي حلقة مفرغة.</p>
+                    </div>
+                `
+            }
+        ]
     }
 ];
 
