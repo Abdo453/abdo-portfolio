@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CCNA Exam Simulator - محاكي الامتحانات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="features.css">
+    <style>
+        body { overflow: auto; padding: 20px; }
+        .exam-container { max-width: 800px; margin: 20px auto; background: var(--panel-bg); padding: 30px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .exam-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 20px; margin-bottom: 30px; }
+        .exam-timer { font-size: 1.5rem; font-family: 'Fira Code', monospace; color: var(--danger); font-weight: bold; }
+        .question-block { display: none; }
+        .question-block.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .question-text { font-size: 1.3rem; color: var(--accent); margin-bottom: 20px; line-height: 1.6; }
+        .option-label { display: block; background: var(--bg-color); padding: 15px; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 1.1rem; }
+        .option-label:hover { border-color: var(--accent); background: rgba(88, 166, 255, 0.05); }
+        .option-label input { margin-left: 10px; transform: scale(1.2); }
+        .exam-controls { display: flex; justify-content: space-between; margin-top: 30px; }
+        .btn { padding: 12px 25px; border: none; border-radius: 6px; font-family: 'Tajawal', sans-serif; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        .btn-next { background: var(--accent); color: #fff; }
+        .btn-next:hover { background: var(--accent-hover); }
+        .btn-finish { background: var(--success); color: #fff; }
+        .btn-start { background: var(--accent); color: #fff; width: 100%; padding: 15px; font-size: 1.3rem; margin-top: 20px; }
+        .result-screen { text-align: center; display: none; }
+        .result-score { font-size: 4rem; color: var(--success); margin: 20px 0; font-family: 'Fira Code', monospace; }
+        .review-list { text-align: right; margin-top: 30px; }
+        .review-item { background: var(--bg-color); padding: 15px; margin-bottom: 10px; border-radius: 6px; border-right: 5px solid var(--danger); }
+        .review-item.correct { border-right-color: var(--success); }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Cisco CCNA Academy</h1>
+            <span class="subtitle">محاكي الامتحان الشامل (Exam Mode)</span>
+        </div>
+        <div class="nav-buttons">
+            <a href="academy.html" class="top-btn">🔙 العودة للدروس</a>
+        </div>
+    </header>
+
+    <div class="exam-container">
+        <!-- Start Screen -->
+        <div id="startScreen">
+            <h2 style="text-align: center; color: var(--accent); margin-bottom: 20px;">استعد للاختبار النهائي 🚀</h2>
+            <p style="font-size: 1.2rem; line-height: 1.8; text-align: center; color: #c9d1d9;">
+                هذا المحاكي سيولد لك <strong>10 أسئلة عشوائية</strong> من بنك أسئلة الـ CCNA.<br>
+                لديك <strong>10 دقائق</strong> فقط للإجابة.<br>
+                لا يمكنك التراجع للسؤال السابق، لذا ركز جيداً!
+            </p>
+            <button class="btn btn-start" onclick="startExam()">ابدأ الامتحان الآن</button>
+        </div>
+
+        <!-- Exam Screen -->
+        <div id="examScreen" style="display: none;">
+            <div class="exam-header">
+                <div>السؤال: <span id="qCurrent">1</span> / <span id="qTotal">10</span></div>
+                <div class="exam-timer" id="timerDisplay">10:00</div>
+            </div>
+            
+            <div id="questionContainer"></div>
+
+            <div class="exam-controls">
+                <div></div> <!-- Spacer -->
+                <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">التالي ❯</button>
+                <button class="btn btn-finish" id="finishBtn" style="display: none;" onclick="finishExam()">إنهاء الامتحان ✔</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="resultScreen" class="result-screen">
+            <h2 id="resultMsg">انتهى الامتحان!</h2>
+            <div class="result-score" id="scoreDisplay">0%</div>
+            <p id="scoreComment" style="font-size: 1.2rem; color: #c9d1d9;"></p>
+            <button class="btn btn-start" style="width: auto; padding: 10px 30px; margin-top: 20px;" onclick="location.reload()">إعادة الامتحان</button>
+            
+            <h3 style="margin-top: 40px; text-align: right; color: var(--accent);">مراجعة الأخطاء:</h3>
+            <div id="reviewContainer" class="review-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const questionBank = [
+            { q: "أي من العناوين التالية يمثل عنوان بث (Broadcast) في شبكة 192.168.1.0/24؟", options: ["192.168.1.0", "192.168.1.1", "192.168.1.254", "192.168.1.255"], answer: 3 },
+            { q: "ما هي قيمة הـ Administrative Distance (AD) لبروتوكول OSPF؟", options: ["90", "110", "120", "1"], answer: 1 },
+            { q: "أي بروتوكول يستخدم لترجمة العناوين الخاصة (Private) إلى عامة (Public) للوصول للإنترنت؟", options: ["DHCP", "DNS", "NAT", "ARP"], answer: 2 },
+            { q: "ما هو الـ Port الافتراضي لبروتوكول SSH؟", options: ["21", "22", "23", "80"], answer: 1 },
+            { q: "في أي طبقة من نموذج OSI يعمل الـ Router؟", options: ["Data Link", "Network", "Transport", "Application"], answer: 1 },
+            { q: "أي من الأوامر التالية يحفظ الإعدادات في ذاكرة NVRAM؟", options: ["copy running-config startup-config", "write memory", "كلاهما صحيح", "لا شيء مما سبق"], answer: 2 },
+            { q: "كيف تمنع هجوم VLAN Hopping؟", options: ["إغلاق المنافذ غير المستخدمة", "تغيير הـ Native VLAN وتفعيل DTP", "إيقاف DTP (switchport nonegotiate) وتغيير הـ Native VLAN", "استخدام Port Security"], answer: 2 },
+            { q: "أي بروتوكول يعمل على منع الـ Loops في شبكات Layer 2؟", options: ["OSPF", "STP", "CDP", "HSRP"], answer: 1 },
+            { q: "ما هو نوع كابل הـ Fiber المستخدم لمسافات تتجاوز 10 كيلومتر؟", options: ["Multi-mode", "Single-mode", "Coaxial", "UTP"], answer: 1 },
+            { q: "ما وظيفة הـ Default Gateway؟", options: ["توزيع הـ IPs", "توجيه البيانات خارج الشبكة المحلية", "حماية الشبكة من الفيروسات", "الترجمة بين الـ MAC والـ IP"], answer: 1 },
+            { q: "أي من رسائل הـ DHCP تُرسل من السيرفر كعرض مبدئي לعنوان IP؟", options: ["Discover", "Offer", "Request", "Acknowledge"], answer: 1 },
+            { q: "ما هو الأمر المستخدم لرؤية جدول التوجيه (Routing Table) في سيسكو؟", options: ["show ip route", "show ip interface brief", "show mac address-table", "show running-config"], answer: 0 }
+        ];
+
+        let selectedQuestions = [];
+        let currentIdx = 0;
+        let userAnswers = [];
+        let timerInterval;
+        let timeLeft = 600; // 10 minutes
+
+        function startExam() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('examScreen').style.display = 'block';
+            
+            // Shuffle and select 10 questions
+            selectedQuestions = questionBank.sort(() => 0.5 - Math.random()).slice(0, 10);
+            
+            renderQuestion();
+            
+            // Start Timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                document.getElementById('timerDisplay').innerText = \`\${m < 10 ? '0'+m : m}:\${s < 10 ? '0'+s : s}\`;
+                if (timeLeft <= 0) finishExam();
+            }, 1000);
+        }
+
+        function renderQuestion() {
+            const q = selectedQuestions[currentIdx];
+            document.getElementById('qCurrent').innerText = currentIdx + 1;
+            document.getElementById('qTotal').innerText = selectedQuestions.length;
+            
+            let html = \`
+                <div class="question-block active">
+                    <div class="question-text">\${q.q}</div>
+                    \${q.options.map((opt, i) => \`
+                        <label class="option-label">
+                            <input type="radio" name="examQ" value="\${i}"> \${opt}
+                        </label>
+                    \`).join('')}
+                </div>
+            \`;
+            document.getElementById('questionContainer').innerHTML = html;
+
+            if (currentIdx === selectedQuestions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('finishBtn').style.display = 'block';
+            }
+        }
+
+        function nextQuestion() {
+            const selected = document.querySelector('input[name="examQ"]:checked');
+            if (!selected) { alert("يجب اختيار إجابة!"); return; }
+            
+            userAnswers.push(parseInt(selected.value));
+            currentIdx++;
+            renderQuestion();
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+            const selected = document.querySelector('input[name="examQ"]:checked');
+            if (selected && userAnswers.length === currentIdx) {
+                userAnswers.push(parseInt(selected.value));
+            } else if (userAnswers.length === currentIdx) {
+                userAnswers.push(-1); // No answer given for last
+            }
+
+            document.getElementById('examScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+
+            let score = 0;
+            let reviewHtml = '';
+
+            selectedQuestions.forEach((q, i) => {
+                const isCorrect = userAnswers[i] === q.answer;
+                if (isCorrect) score++;
+                
+                reviewHtml += \`
+                    <div class="review-item \${isCorrect ? 'correct' : ''}">
+                        <p><strong>س\${i+1}:</strong> \${q.q}</p>
+                        <p style="color: var(--success);">الجواب الصحيح: \${q.options[q.answer]}</p>
+                        \${!isCorrect ? \`<p style="color: var(--danger);">إجابتك: \${userAnswers[i] >= 0 ? q.options[userAnswers[i]] : 'لم تجب'}</p>\` : ''}
+                    </div>
+                \`;
+            });
+
+            const percent = Math.round((score / selectedQuestions.length) * 100);
+            document.getElementById('scoreDisplay').innerText = percent + '%';
+            document.getElementById('reviewContainer').innerHTML = reviewHtml;
+
+            const comment = document.getElementById('scoreComment');
+            if (percent >= 80) comment.innerText = "أداء أسطوري! أنت جاهز لامتحان سيسكو الحقيقي.";
+            else if (percent >= 50) comment.innerText = "أداء جيد، لكنك بحاجة لمراجعة بعض الدروس.";
+            else comment.innerText = "لا تستسلم! أعد قراءة الدروس النظري وجرب مرة أخرى.";
+        }
+    </script>
+    <script src="features.js"></script>
+</body>
+</html>

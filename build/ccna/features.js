@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof originalRender === 'function') {
         window.renderLesson = function(lessonId) {
             originalRender(lessonId);
+            if (typeof appendEnrichment === 'function') appendEnrichment(lessonId);
             appendCompletionButton(lessonId);
             updateSidebarIcons();
         };
@@ -205,3 +206,88 @@ function updateSidebarIcons() {
         }
     });
 }
+
+/* --- Content Enrichment (Phase 2) --- */
+function appendEnrichment(lessonId) {
+    const articleBody = document.getElementById('articleBody');
+    if (!articleBody || typeof lessonEnrichment === 'undefined') return;
+
+    const data = lessonEnrichment[lessonId];
+    if (!data) return; // No enrichment data for this lesson yet
+
+    // Remove old enrichment if exists
+    const oldEnr = document.getElementById('enrichmentSection');
+    if (oldEnr) oldEnr.remove();
+
+    const enrichmentDiv = document.createElement('div');
+    enrichmentDiv.id = 'enrichmentSection';
+    enrichmentDiv.className = 'enrichment-section';
+    enrichmentDiv.innerHTML = `
+        <div class="enrichment-tabs">
+            <button class="enrichment-tab active" onclick="switchEnrichmentTab(this, 'summary-${lessonId}')">📝 الخلاصة</button>
+            <button class="enrichment-tab" onclick="switchEnrichmentTab(this, 'mistakes-${lessonId}')">⚠️ أخطاء شائعة</button>
+            <button class="enrichment-tab" onclick="switchEnrichmentTab(this, 'quiz-${lessonId}')">❓ اختبار سريع</button>
+        </div>
+        
+        <div id="summary-${lessonId}" class="enrichment-content active">
+            <h4>النقاط الرئيسية (Key Points):</h4>
+            <p>${data.summary}</p>
+        </div>
+        
+        <div id="mistakes-${lessonId}" class="enrichment-content">
+            <h4>أخطاء شائعة (Common Mistakes):</h4>
+            <p>${data.mistakes}</p>
+        </div>
+        
+        <div id="quiz-${lessonId}" class="enrichment-content">
+            <h4>اختبر فهمك:</h4>
+            ${data.quiz.map((q, idx) => `
+                <div class="quiz-question" id="quiz-${lessonId}-q${idx}">
+                    <p style="font-weight: bold; margin-bottom: 10px;">س${idx + 1}: ${q.q}</p>
+                    <div class="quiz-options">
+                        ${q.options.map((opt, optIdx) => `
+                            <label class="quiz-option" style="display: block; margin-bottom: 8px; cursor: pointer;">
+                                <input type="radio" name="quiz-${lessonId}-q${idx}" value="${optIdx}">
+                                <span>${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button class="quiz-check-btn" onclick="checkQuizAnswer('${lessonId}', ${idx}, ${q.answer})" style="margin-top: 10px; padding: 5px 10px; background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer;">تحقق من الإجابة</button>
+                    <div class="quiz-feedback" id="feedback-${lessonId}-q${idx}" style="margin-top: 5px; font-weight: bold;"></div>
+                </div>
+            `).join('<hr style="border-color: var(--border); margin: 15px 0;">')}
+        </div>
+    `;
+
+    // Append it before the mark complete button if it exists, otherwise at the end
+    const markBtn = document.getElementById('markCompleteBtn');
+    if (markBtn) {
+        articleBody.insertBefore(enrichmentDiv, markBtn);
+    } else {
+        articleBody.appendChild(enrichmentDiv);
+    }
+}
+
+window.switchEnrichmentTab = function(btn, targetId) {
+    const section = btn.closest('.enrichment-section');
+    section.querySelectorAll('.enrichment-tab').forEach(t => t.classList.remove('active'));
+    section.querySelectorAll('.enrichment-content').forEach(c => c.classList.remove('active'));
+    
+    btn.classList.add('active');
+    document.getElementById(targetId).classList.add('active');
+};
+
+window.checkQuizAnswer = function(lessonId, qIdx, correctIdx) {
+    const selected = document.querySelector(\`input[name="quiz-\${lessonId}-q\${qIdx}"]:checked\`);
+    const feedback = document.getElementById(\`feedback-\${lessonId}-q\${qIdx}\`);
+    if (!selected) {
+        feedback.innerHTML = '<span style="color:var(--warning)">الرجاء اختيار إجابة أولاً.</span>';
+        return;
+    }
+    
+    if (parseInt(selected.value) === correctIdx) {
+        feedback.innerHTML = '<span style="color:var(--success)">✅ إجابة صحيحة، ممتاز!</span>';
+    } else {
+        feedback.innerHTML = '<span style="color:var(--danger)">❌ إجابة خاطئة، حاول مرة أخرى.</span>';
+    }
+};

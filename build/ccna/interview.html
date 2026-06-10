@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CCNA Interview Questions - أسئلة المقابلات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="features.css">
+    <style>
+        body { overflow: auto; padding: 20px; }
+        .interview-container { max-width: 900px; margin: 40px auto; background: var(--panel-bg); padding: 30px; border-radius: 8px; border: 1px solid var(--border); }
+        .faq-item { margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .faq-question { font-size: 1.2rem; color: var(--accent); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question:hover { color: #fff; }
+        .faq-answer { display: none; margin-top: 10px; color: #c9d1d9; line-height: 1.8; background: var(--bg-color); padding: 15px; border-radius: 6px; }
+        .faq-answer.active { display: block; }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Cisco CCNA Academy</h1>
+            <span class="subtitle">أسئلة المقابلات الوظيفية</span>
+        </div>
+        <div class="nav-buttons">
+            <a href="academy.html" class="top-btn">🔙 العودة للدروس</a>
+        </div>
+    </header>
+
+    <div class="interview-container">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #fff;">أهم 50 سؤال لمقابلات مهندس الشبكات (CCNA)</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">1. ما هو الفرق بين הـ TCP والـ UDP؟ <span>+</span></div>
+            <div class="faq-answer">
+                الـ <strong>TCP</strong> هو بروتوكول موثوق (Reliable) يضمن وصول البيانات باستخدام عملية הـ 3-Way Handshake، ويقوم بإعادة إرسال الحزم الضائعة (مناسب للويب والإيميل).<br>
+                الـ <strong>UDP</strong> سريع جداً ولكنه غير موثوق (Connectionless)، لا يضمن الوصول ولا يرتب الحزم (مناسب للفيديو والصوت والألعاب).
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">2. ما هي وظيفة הـ ARP؟ <span>+</span></div>
+            <div class="faq-answer">
+                الـ <strong>ARP (Address Resolution Protocol)</strong> يقوم بترجمة عنوان הـ IP (الطبقة الثالثة) إلى عنوان הـ MAC (الطبقة الثانية) لكي يتمكن السويتش من توجيه الإطار (Frame) للجهاز الصحيح داخل الشبكة المحلية.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">3. اشرح مفهوم الـ VLAN ولماذا نستخدمه؟ <span>+</span></div>
+            <div class="faq-answer">
+                الـ <strong>VLAN (Virtual Local Area Network)</strong> هو تقسيم منطقي للسويتش الواحد إلى عدة شبكات وهمية معزولة.<br>
+                نستخدمه لـ: 1) تقليل حجم رسائل البث (Broadcast Domain). 2) زيادة الأمان بعزل الأقسام. 3) تسهيل الإدارة بغض النظر عن الموقع الجغرافي للموظف.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">4. ما هو الفرق بين הـ Hub والـ Switch؟ <span>+</span></div>
+            <div class="faq-answer">
+                الـ <strong>Hub</strong> يعمل في الطبقة الأولى (Physical)، ولا يفهم العناوين، بل يقوم بنسخ أي رسالة تصل إليه ويرسلها لجميع المنافذ (Flooding).<br>
+                الـ <strong>Switch</strong> يعمل في الطبقة الثانية (Data Link)، ويمتلك ذاكرة تُسمى MAC Table، فيقوم بتوجيه الرسالة للمنفذ المطلوب فقط.
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">5. ما هو הـ Default Gateway؟ <span>+</span></div>
+            <div class="faq-answer">
+                هو بوابة الخروج من الشبكة المحلية (غالباً يكون הـ IP الخاص بالراوتر). إذا أراد جهازك إرسال بيانات إلى شبكة أخرى (أو للإنترنت)، فإنه يرسلها أولاً للـ Default Gateway ليتكفل هو بتوجيهها.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFaq(el) {
+            const answer = el.nextElementSibling;
+            const icon = el.querySelector('span');
+            if (answer.classList.contains('active')) {
+                answer.classList.remove('active');
+                icon.innerText = '+';
+            } else {
+                answer.classList.add('active');
+                icon.innerText = '-';
+            }
+        }
+    </script>
+    <script src="features.js"></script>
+</body>
+</html>
