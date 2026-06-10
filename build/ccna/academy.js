@@ -834,6 +834,9 @@ Data → Segment → Packet → Frame → Bits
                 title: "1. هندسة الوايرلس (WLC & CAPWAP)",
                 content: `
                     <h1>إدارة 1000 نقطة وصول (Access Point)</h1>
+                    <div style="background: rgba(255, 176, 32, 0.1); border-right: 4px solid #ffb020; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+                        <strong>⚠️ ملاحظة هامة:</strong> المراحل التالية (10، 11، 12) تُكمل مسار CCNA 200-301 وتُضيف محتوى إضافي يربطك بالأمن السيبراني. هي ليست جزءاً من منهج امتحان CCNA الرسمي، لكنها <strong>الجسر الذهبي</strong> لمن يريد الانتقال من هندسة الشبكات إلى الاختراق الأخلاقي.
+                    </div>
                     <p>في الشركات الكبرى، الأكسس بوينت (AP) تكون غبية (Lightweight)، لا يتم إعدادها فردياً. يتم ربطها بجهاز مركزي يسمى <strong>WLC (Wireless LAN Controller)</strong>.</p>
                     <ul>
                         <li>يتم بناء نفق مشفر يسمى <strong>CAPWAP</strong> بين الـ AP والـ WLC.</li>

@@ -16,6 +16,10 @@ let routerState = {
 };
 
 function getPrompt() {
+    if (routerState.isLinux) {
+        return `\x1b[31mroot@kali\x1b[0m:\x1b[34m~\x1b[0m# `;
+    }
+
     let suffix = '>';
     if (routerState.mode === 'priv') suffix = '#';
     else if (routerState.mode === 'config') suffix = '(config)#';
@@ -75,17 +79,38 @@ function initTerminal() {
 function processCommand(cmd) {
     if (!cmd) return;
 
-    let parts = cmd.toLowerCase().split(' ');
-    let mainCmd = parts[0];
+    let parts = cmd.trim().split(/\s+/); // Handle multiple spaces
+    let mainCmd = parts[0].toLowerCase();
+    
+    // Support Attacker PC mode (Linux)
+    if (routerState.isLinux) {
+        if (mainCmd === 'nmap') {
+            term.writeln('Starting Nmap 7.93 ( https://nmap.org )');
+            routerState.lastNmap = cmd; // Save command for validation
+            if (cmd.includes('-sS')) term.writeln('Stealth SYN scan initiated...');
+            setTimeout(() => { term.writeln('Host is up. Ports: 22/tcp, 80/tcp.'); checkChallenge(); }, 1000);
+        } else if (mainCmd === 'ping') {
+            term.writeln('PING ' + (parts[1] || 'target') + ' 56(84) bytes of data.');
+            term.writeln('64 bytes from target: icmp_seq=1 ttl=64 time=0.03 ms');
+            routerState.lastPing = cmd;
+        } else if (mainCmd === 'ssh') {
+            term.writeln('admin@' + (parts[1] || 'target') + ' password: ');
+            routerState.lastSsh = cmd;
+        } else {
+            term.writeln('bash: ' + mainCmd + ': command not found');
+        }
+        checkChallenge();
+        return;
+    }
 
-    // Basic Command Parser
+    // Basic Command Parser (Cisco IOS)
     if (mainCmd === 'enable' || mainCmd === 'en') {
         if (routerState.mode === 'user') routerState.mode = 'priv';
     } 
     else if (mainCmd === 'disable') {
         if (routerState.mode === 'priv') routerState.mode = 'user';
     }
-    else if ((mainCmd === 'configure' && parts[1] === 'terminal') || cmd.toLowerCase() === 'conf t') {
+    else if ((mainCmd === 'configure' && parts[1]?.toLowerCase() === 'terminal') || cmd.toLowerCase() === 'conf t') {
         if (routerState.mode === 'priv') routerState.mode = 'config';
         else term.writeln('% Error: Must be in privileged mode.');
     }
@@ -118,7 +143,7 @@ function processCommand(cmd) {
             }
         }
     }
-    else if (mainCmd === 'ip' && parts[1] === 'route' && routerState.mode === 'config') {
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'route' && routerState.mode === 'config') {
         if (parts[2] && parts[3] && parts[4]) {
             if (!routerState.routes) routerState.routes = [];
             routerState.routes.push({ network: parts[2], mask: parts[3], nextHop: parts[4] });
@@ -129,27 +154,51 @@ function processCommand(cmd) {
     else if ((mainCmd === 'interface' || mainCmd === 'int') && routerState.mode === 'config') {
         if (parts[1]) {
             routerState.mode = 'config-if';
-            routerState.currentIf = parts[1];
+            routerState.currentIf = parts[1].toLowerCase(); // e.g. f0/1 or range
             if (!routerState.interfaces) routerState.interfaces = {};
-            if (!routerState.interfaces[parts[1]]) {
-                routerState.interfaces[parts[1]] = {};
+            if (!routerState.interfaces[routerState.currentIf]) {
+                routerState.interfaces[routerState.currentIf] = {};
             }
         }
     }
     else if (mainCmd === 'switchport' && routerState.mode === 'config-if') {
         let intf = routerState.interfaces[routerState.currentIf];
-        if (parts[1] === 'mode' && parts[2] === 'access') {
-            intf.mode = 'access';
-        } else if (parts[1] === 'port-security') {
+        if (parts[1]?.toLowerCase() === 'mode') {
+            if (parts[2]?.toLowerCase() === 'access') intf.mode = 'access';
+            if (parts[2]?.toLowerCase() === 'trunk') intf.mode = 'trunk';
+        } else if (parts[1]?.toLowerCase() === 'access' && parts[2]?.toLowerCase() === 'vlan') {
+            intf.accessVlan = parts[3];
+        } else if (parts[1]?.toLowerCase() === 'trunk' && parts[2]?.toLowerCase() === 'native' && parts[3]?.toLowerCase() === 'vlan') {
+            intf.nativeVlan = parts[4];
+        } else if (parts[1]?.toLowerCase() === 'port-security') {
             if (!parts[2]) {
                 intf.portSecurityEnabled = true;
-            } else if (parts[2] === 'violation' && parts[3]) {
-                intf.violation = parts[3];
+            } else if (parts[2]?.toLowerCase() === 'violation' && parts[3]) {
+                intf.violation = parts[3].toLowerCase();
+            } else if (parts[2]?.toLowerCase() === 'mac-address' && parts[3]) {
+                intf.macAddress = parts[3]; // e.g. sticky
+            } else if (parts[2]?.toLowerCase() === 'maximum' && parts[3]) {
+                intf.maximumMacs = parts[3];
             }
         }
     }
+    else if (mainCmd === 'spanning-tree' && routerState.mode === 'config') {
+        if (parts[1]?.toLowerCase() === 'vlan' && parts[3]?.toLowerCase() === 'root') {
+            if (!routerState.stpConfig) routerState.stpConfig = {};
+            routerState.stpConfig[parts[2]] = parts[4]?.toLowerCase(); // e.g. primary
+        }
+    }
+    else if (mainCmd === 'channel-group' && routerState.mode === 'config-if') {
+        if (parts[2]?.toLowerCase() === 'mode') {
+            let intf = routerState.interfaces[routerState.currentIf];
+            intf.channelGroup = parts[1];
+            intf.channelMode = parts[3]?.toLowerCase(); // e.g. active
+        }
+    }
     else if (mainCmd === 'show' && routerState.mode !== 'user') {
-        term.writeln('Showing output (simulated)...');
+        if (parts[1]?.toLowerCase() === 'vlan') term.writeln('VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Fa0/1, Fa0/2...\n10   Accounting                       active');
+        else if (parts[1]?.toLowerCase() === 'mac') term.writeln('Mac Address Table\n-------------------------------------------\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----');
+        else term.writeln('Showing output (simulated)...');
     }
     else {
         term.writeln('% Invalid input detected at \'^\' marker.');
@@ -207,8 +256,15 @@ window.loadPhase = function(val) {
     document.getElementById('statusBox').classList.remove('success');
 
     // Reset Router State for new level
-    routerState.mode = 'user';
-    routerState.hostname = 'Router';
+    routerState = {
+        hostname: 'Router',
+        mode: 'user',
+        interfaces: {},
+        runningConfig: '',
+        isLinux: currentLevel.isLinux || false
+    };
+    currentInput = '';
+
     if(term) {
         term.writeln('\r\n\x1b[36m--- Level Loaded: ' + currentLevel.title + ' ---\x1b[0m');
         term.write(getPrompt());

@@ -1,106 +1,147 @@
 window.ccnaCurriculum = [
     {
-        phase: "المرحلة الأولى: أساسيات الشبكات",
+        phase: "الدفعة الأولى: Switching & Layer 2 Security",
         levels: [
             {
-                id: "p1_l1",
-                title: "مقدمة واجهة سيسكو (Cisco CLI)",
-                theory: `<h2>التعرف على سيسكو CLI</h2>
-                <p>تستخدم أجهزة سيسكو نظام تشغيل يسمى IOS. يحتوي النظام على أوضاع (Modes) مختلفة للصلاحيات:</p>
-                <ul>
-                    <li><code>Router></code> User EXEC Mode (صلاحيات محدودة للرؤية فقط)</li>
-                    <li><code>Router#</code> Privileged EXEC Mode (صلاحيات أوسع لرؤية الإعدادات)</li>
-                    <li><code>Router(config)#</code> Global Configuration Mode (صلاحيات تعديل النظام بالكامل)</li>
-                </ul>
-                <p>للإنتقال للمستوى الأعلى نستخدم أمر <code>enable</code>، وللدخول لوضع الإعدادات نستخدم <code>configure terminal</code>.</p>`,
-                challengeText: "قم بالدخول إلى وضع الإعدادات Global Configuration Mode.",
+                id: "lab1",
+                title: "Lab 1: الأساسيات وتسمية الجهاز",
+                theory: `<h2>تجهيز السويتش</h2>
+                <p>كل جهاز في الشبكة يجب أن يكون له اسم مميز. قبل أي إعدادات متقدمة، يجب تغيير اسم السويتش الافتراضي.</p>
+                <p><strong>الأوامر المطلوبة:</strong><br>
+                <code>enable</code> للوصول لوضع المدير.<br>
+                <code>configure terminal</code> للوصول لوضع الإعدادات.<br>
+                <code>hostname [NAME]</code> لتغيير الاسم.</p>`,
+                challengeText: "قم بتغيير اسم السويتش من Router (أو Switch) إلى SW1.",
                 validate: function(state) {
-                    return state.mode === "config";
+                    return state.hostname === "SW1";
                 }
             },
             {
-                id: "p1_l2",
-                title: "تغيير اسم الراوتر",
-                theory: `<h2>تغيير اسم الجهاز (Hostname)</h2>
-                <p>من المهم جداً في الشبكات الكبيرة تمييز كل جهاز باسمه بدلاً من الاسم الافتراضي Router.</p>
-                <p>يتم ذلك من خلال وضع الـ Configuration Mode باستخدام الأمر:<br>
-                <code>hostname [NAME]</code></p>`,
-                challengeText: "قم بتغيير اسم الراوتر ليصبح R1.",
+                id: "lab2",
+                title: "Lab 2: إنشاء الـ VLANs",
+                theory: `<h2>تقسيم الشبكة وهمياً (VLAN)</h2>
+                <p>لدينا قسم للمبيعات (Sales) وقسم للإدارة (Admin). يجب فصلهما أمنياً باستخدام الـ VLANs.</p>
+                <p><strong>الأوامر:</strong><br>
+                <code>vlan 10</code> ثم <code>name Sales</code><br>
+                <code>vlan 20</code> ثم <code>name Admin</code></p>`,
+                challengeText: "أنشئ VLAN 10 وسمّها Sales، وأنشئ VLAN 20 وسمّها Admin.",
                 validate: function(state) {
-                    return state.hostname === "R1";
+                    let v10 = state.vlans && state.vlans["10"] && state.vlans["10"].name === "Sales";
+                    let v20 = state.vlans && state.vlans["20"] && state.vlans["20"].name === "Admin";
+                    return v10 && v20;
                 }
-            }
-        ]
-    },
-    {
-        phase: "المرحلة الثالثة: أجهزة Cisco (الطبقة الثانية)",
-        levels: [
+            },
             {
-                id: "p3_l1",
-                title: "إنشاء شبكة وهمية (VLAN)",
-                theory: `<h2>الشبكات المحلية الوهمية (VLANs)</h2>
-                <p>تستخدم الـ VLANs لتقسيم السويتش الواحد إلى عدة سويتشات وهمية لأغراض الأمان وتقليل الـ Broadcast.</p>
-                <p>لإنشاء VLAN جديدة، ندخل أولاً لوضع الإعدادات (Global Configuration) ثم نكتب:</p>
-                <ul>
-                    <li><code>vlan [NUMBER]</code> : لإنشاء الـ VLAN والدخول لوضع إعدادها.</li>
-                    <li><code>name [NAME]</code> : لتسمية الـ VLAN.</li>
-                </ul>`,
-                challengeText: "قم بإنشاء VLAN رقم 10 وسمّها Accounting.",
-                validate: function(state) {
-                    if (state.vlans && state.vlans["10"] && state.vlans["10"].name === "Accounting") {
-                        return true;
-                    }
-                    return false;
-                }
-            }
-        ]
-    },
-    {
-        phase: "المرحلة الرابعة: التوجيه (Routing)",
-        levels: [
-            {
-                id: "p4_l1",
-                title: "التوجيه الثابت (Static Route)",
-                theory: `<h2>التوجيه الثابت (Static Route)</h2>
-                <p>يُستخدم التوجيه الثابت لتعريف الراوتر بمسار شبكة غير متصلة به مباشرة.</p>
-                <p>لإضافة مسار ثابت، نستخدم الأمر التالي في وضع الإعدادات:</p>
-                <code>ip route [Network] [Subnet_Mask] [Next_Hop_IP]</code>`,
-                challengeText: "قم بإضافة مسار ثابت للشبكة 10.0.0.0 (Mask 255.0.0.0) عبر الـ IP التالي 192.168.1.1",
-                validate: function(state) {
-                    if (state.routes) {
-                        for(let r of state.routes) {
-                            if (r.network === "10.0.0.0" && r.mask === "255.0.0.0" && r.nextHop === "192.168.1.1") {
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                }
-            }
-        ]
-    },
-    {
-        phase: "المرحلة السادسة: أمن الشبكات (Security)",
-        levels: [
-            {
-                id: "p6_l1",
-                title: "تفعيل أمان المنافذ (Port Security)",
-                theory: `<h2>أمان المنافذ في السويتش</h2>
-                <p>لمنع توصيل أجهزة غير مصرح بها على السويتش، نفعل الـ Port Security.</p>
-                <p>الخطوات:</p>
-                <ul>
-                    <li>ندخل على المنفذ: <code>interface f0/1</code></li>
-                    <li>نحوله لوضع Access: <code>switchport mode access</code></li>
-                    <li>نفعل الأمان: <code>switchport port-security</code></li>
-                    <li>نحدد الإجراء عند المخالفة: <code>switchport port-security violation shutdown</code></li>
-                </ul>`,
-                challengeText: "ادخل على المنفذ f0/1، وقم بتفعيل أمان المنافذ، مع ضبط الإجراء لـ shutdown.",
+                id: "lab3",
+                title: "Lab 3: منافذ الوصول (Access Ports)",
+                theory: `<h2>ربط الأجهزة بالـ VLANs</h2>
+                <p>الآن يجب إخبار السويتش بأن المنفذ f0/1 يخص المبيعات (VLAN 10).</p>
+                <p><strong>الأوامر:</strong><br>
+                <code>interface f0/1</code><br>
+                <code>switchport mode access</code><br>
+                <code>switchport access vlan 10</code></p>`,
+                challengeText: "قم بتحويل المنفذ f0/1 إلى وضع Access واربطه بـ VLAN 10.",
                 validate: function(state) {
                     let intf = state.interfaces && state.interfaces["f0/1"];
-                    if (intf && intf.mode === "access" && intf.portSecurityEnabled && intf.violation === "shutdown") {
-                        return true;
-                    }
-                    return false;
+                    return intf && intf.mode === "access" && intf.accessVlan === "10";
+                }
+            },
+            {
+                id: "lab4",
+                title: "Lab 4: الروابط المجمعة (Trunk Ports)",
+                theory: `<h2>ربط السويتشات ببعضها (Trunking)</h2>
+                <p>إذا أردنا أن تعبر بيانات VLAN 10 و VLAN 20 عبر كابل واحد إلى السويتش الآخر، يجب تحويل المنفذ إلى Trunk.</p>
+                <p><strong>الأوامر:</strong><br>
+                <code>interface g0/1</code><br>
+                <code>switchport mode trunk</code></p>`,
+                challengeText: "ادخل على المنفذ g0/1 وقم بتحويله إلى Trunk.",
+                validate: function(state) {
+                    let intf = state.interfaces && state.interfaces["g0/1"];
+                    return intf && intf.mode === "trunk";
+                }
+            },
+            {
+                id: "lab5",
+                title: "Lab 5: أمان الـ Native VLAN",
+                theory: `<h2>إغلاق ثغرة VLAN Hopping</h2>
+                <p>الـ Native VLAN الافتراضية هي 1، مما يشكل خطراً أمنياً لأنها تعبر كابل الـ Trunk بدون تشفير (Untagged). الهكر يستغل ذلك لاختراق الشبكة.</p>
+                <p>الحل: تغييرها لرقم مهمل (مثلاً 99).</p>
+                <p><strong>الأوامر:</strong><br>
+                <code>interface g0/1</code><br>
+                <code>switchport trunk native vlan 99</code></p>`,
+                challengeText: "قم بتغيير الـ Native VLAN على المنفذ g0/1 لتصبح 99.",
+                validate: function(state) {
+                    let intf = state.interfaces && state.interfaces["g0/1"];
+                    return intf && intf.nativeVlan === "99";
+                }
+            },
+            {
+                id: "lab6",
+                title: "Lab 6: أمان المنافذ (Port Security)",
+                theory: `<h2>منع الغرباء من الاتصال</h2>
+                <p>لحماية منفذ مدير الشركة (f0/2) من أن يقوم شخص بفصل كابله وتوصيل لابتوب اختراق، سنستخدم Port Security لكي يُغلق المنفذ فوراً في حال المخالفة.</p>
+                <p><strong>الأوامر:</strong><br>
+                <code>switchport port-security</code><br>
+                <code>switchport port-security violation shutdown</code></p>`,
+                challengeText: "في المنفذ f0/2، فعّل الـ Port Security واجعل الـ Violation هو shutdown.",
+                validate: function(state) {
+                    let intf = state.interfaces && state.interfaces["f0/2"];
+                    return intf && intf.portSecurityEnabled && intf.violation === "shutdown";
+                }
+            },
+            {
+                id: "lab7",
+                title: "Lab 7: حماية من الـ MAC Flooding",
+                theory: `<h2>تحديد عدد الأجهزة (Maximum MACs)</h2>
+                <p>الهكر يقوم بإرسال آلاف عناوين الـ MAC الوهمية لإسقاط السويتش (MAC Flooding Attack). لمنع ذلك، نحدد أقصى عدد للأجهزة المسموحة على المنفذ بـ 2 فقط.</p>
+                <p><strong>الأوامر:</strong><br>
+                <code>interface f0/3</code><br>
+                <code>switchport port-security maximum 2</code></p>`,
+                challengeText: "ادخل للمنفذ f0/3 وحدد الـ Maximum لعدد الـ MACs بـ 2.",
+                validate: function(state) {
+                    let intf = state.interfaces && state.interfaces["f0/3"];
+                    return intf && intf.maximumMacs === "2";
+                }
+            },
+            {
+                id: "lab8",
+                title: "Lab 8: منع الدوران (Spanning Tree)",
+                theory: `<h2>اختيار الملك (Root Bridge)</h2>
+                <p>بروتوكول STP يمنع دوران البيانات للما لا نهاية (Loop). السويتش صاحب الأولوية الأقل يصبح الملك (Root) وتتجه كل البيانات إليه.</p>
+                <p><strong>الأمر (من وضع Config):</strong><br>
+                <code>spanning-tree vlan 10 root primary</code></p>`,
+                challengeText: "اجعل هذا السويتش هو الأساسي (Root Primary) لـ VLAN 10.",
+                validate: function(state) {
+                    return state.stpConfig && state.stpConfig["10"] === "primary";
+                }
+            },
+            {
+                id: "lab9",
+                title: "Lab 9: تجميع الروابط (EtherChannel)",
+                theory: `<h2>مضاعفة السرعة وتوفير التكرار</h2>
+                <p>إذا قمنا بتوصيل كابلين بين سويتشين، فإن STP سيغلق واحداً. لتشغيل الاثنين معاً ككابل واحد سريع، نستخدم EtherChannel عبر بروتوكول LACP (العالمي).</p>
+                <p><strong>الأوامر:</strong><br>
+                <code>interface f0/4</code><br>
+                <code>channel-group 1 mode active</code></p>`,
+                challengeText: "ادخل على المنفذ f0/4 واجمعه في القناة رقم 1 باستخدام وضع active.",
+                validate: function(state) {
+                    let intf = state.interfaces && state.interfaces["f0/4"];
+                    return intf && intf.channelGroup === "1" && intf.channelMode === "active";
+                }
+            },
+            {
+                id: "lab10",
+                title: "Lab 10: ☠️ هجوم الاستطلاع الأول (Reconnaissance)",
+                isLinux: true,
+                theory: `<h2>اختبار الاختراق: من سطر أوامر Linux</h2>
+                <p>لقد انتقلت الآن من شاشة إعدادات الراوتر إلى <strong>شاشة لابتوب Kali Linux الخاص بالهكر.</strong><br>
+                أول خطوة لأي مختبر اختراق (Pentester) هي الاستطلاع لمعرفة البورتات المفتوحة في أجهزة الشبكة التي صممناها.</p>
+                <p><strong>الأمر:</strong><br>
+                استخدم أداة <code>nmap</code> لفحص بصمة السيرفر الهدف بصمت (Stealth Scan):<br>
+                <code>nmap -sS 192.168.1.100</code></p>`,
+                challengeText: "استخدم أمر nmap -sS لفحص الـ IP الهدف 192.168.1.100 من جهاز الهكر.",
+                validate: function(state) {
+                    return state.lastNmap && state.lastNmap.includes("nmap -sS 192.168.1.100");
                 }
             }
         ]
