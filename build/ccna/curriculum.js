@@ -54,5 +54,55 @@ window.ccnaCurriculum = [
                 }
             }
         ]
+    },
+    {
+        phase: "المرحلة الرابعة: التوجيه (Routing)",
+        levels: [
+            {
+                id: "p4_l1",
+                title: "التوجيه الثابت (Static Route)",
+                theory: `<h2>التوجيه الثابت (Static Route)</h2>
+                <p>يُستخدم التوجيه الثابت لتعريف الراوتر بمسار شبكة غير متصلة به مباشرة.</p>
+                <p>لإضافة مسار ثابت، نستخدم الأمر التالي في وضع الإعدادات:</p>
+                <code>ip route [Network] [Subnet_Mask] [Next_Hop_IP]</code>`,
+                challengeText: "قم بإضافة مسار ثابت للشبكة 10.0.0.0 (Mask 255.0.0.0) عبر الـ IP التالي 192.168.1.1",
+                validate: function(state) {
+                    if (state.routes) {
+                        for(let r of state.routes) {
+                            if (r.network === "10.0.0.0" && r.mask === "255.0.0.0" && r.nextHop === "192.168.1.1") {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        ]
+    },
+    {
+        phase: "المرحلة السادسة: أمن الشبكات (Security)",
+        levels: [
+            {
+                id: "p6_l1",
+                title: "تفعيل أمان المنافذ (Port Security)",
+                theory: `<h2>أمان المنافذ في السويتش</h2>
+                <p>لمنع توصيل أجهزة غير مصرح بها على السويتش، نفعل الـ Port Security.</p>
+                <p>الخطوات:</p>
+                <ul>
+                    <li>ندخل على المنفذ: <code>interface f0/1</code></li>
+                    <li>نحوله لوضع Access: <code>switchport mode access</code></li>
+                    <li>نفعل الأمان: <code>switchport port-security</code></li>
+                    <li>نحدد الإجراء عند المخالفة: <code>switchport port-security violation shutdown</code></li>
+                </ul>`,
+                challengeText: "ادخل على المنفذ f0/1، وقم بتفعيل أمان المنافذ، مع ضبط الإجراء لـ shutdown.",
+                validate: function(state) {
+                    let intf = state.interfaces && state.interfaces["f0/1"];
+                    if (intf && intf.mode === "access" && intf.portSecurityEnabled && intf.violation === "shutdown") {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        ]
     }
 ];

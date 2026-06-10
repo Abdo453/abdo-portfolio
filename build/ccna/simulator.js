@@ -20,6 +20,7 @@ function getPrompt() {
     if (routerState.mode === 'priv') suffix = '#';
     else if (routerState.mode === 'config') suffix = '(config)#';
     else if (routerState.mode === 'config-vlan') suffix = '(config-vlan)#';
+    else if (routerState.mode === 'config-if') suffix = '(config-if)#';
     
     return `${routerState.hostname}${suffix}`;
 }
@@ -90,6 +91,7 @@ function processCommand(cmd) {
     }
     else if (mainCmd === 'exit') {
         if (routerState.mode === 'config-vlan') routerState.mode = 'config';
+        else if (routerState.mode === 'config-if') routerState.mode = 'config';
         else if (routerState.mode === 'config') routerState.mode = 'priv';
         else if (routerState.mode === 'priv') routerState.mode = 'user';
     }
@@ -113,6 +115,36 @@ function processCommand(cmd) {
             let vlanName = cmd.substring(5).trim(); // Keep exact casing
             if (routerState.currentVlan && routerState.vlans[routerState.currentVlan]) {
                 routerState.vlans[routerState.currentVlan].name = vlanName;
+            }
+        }
+    }
+    else if (mainCmd === 'ip' && parts[1] === 'route' && routerState.mode === 'config') {
+        if (parts[2] && parts[3] && parts[4]) {
+            if (!routerState.routes) routerState.routes = [];
+            routerState.routes.push({ network: parts[2], mask: parts[3], nextHop: parts[4] });
+        } else {
+            term.writeln('% Incomplete command.');
+        }
+    }
+    else if ((mainCmd === 'interface' || mainCmd === 'int') && routerState.mode === 'config') {
+        if (parts[1]) {
+            routerState.mode = 'config-if';
+            routerState.currentIf = parts[1];
+            if (!routerState.interfaces) routerState.interfaces = {};
+            if (!routerState.interfaces[parts[1]]) {
+                routerState.interfaces[parts[1]] = {};
+            }
+        }
+    }
+    else if (mainCmd === 'switchport' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        if (parts[1] === 'mode' && parts[2] === 'access') {
+            intf.mode = 'access';
+        } else if (parts[1] === 'port-security') {
+            if (!parts[2]) {
+                intf.portSecurityEnabled = true;
+            } else if (parts[2] === 'violation' && parts[3]) {
+                intf.violation = parts[3];
             }
         }
     }
