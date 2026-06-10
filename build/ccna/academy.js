@@ -340,183 +340,122 @@ Data → Segment → Packet → Frame → Bits
         lessons: [
             {
                 id: "lesson2_1",
-                title: "1. عناوين الشبكة (IPv4 & IPv6)",
+                title: "1. بروتوكول الإنترنت وعناوينه (IPv4 & IPv6 Deep Dive)",
                 content: `
-                    <h1>بروتوكول الإنترنت (IP)</h1>
-                    <p>عنوان الـ IP هو الرقم التعريفي لأي جهاز متصل بالشبكة، وبدونه لا يمكن للأجهزة التخاطب مع بعضها. تماماً كأرقام الهواتف.</p>
+                    <h1>تشريح بروتوكول الإنترنت (IP Protocol)</h1>
+                    <p>بروتوكول الـ IP هو العمود الفقري لطبقة الـ Network. وظيفته هي العنونة (Addressing) وتحديد المسار (Routing). لكنه بروتوكول <strong>Best-Effort</strong> (يبذل قصارى جهده) ولا يضمن وصول البيانات (هذه وظيفة TCP).</p>
 
                     <div class="concept-box">
-                        <h3>الإصدار الرابع (IPv4)</h3>
-                        <p>يتكون من 32 بت، ويُكتب على شكل 4 مقاطع (Octets) تفصلها نقطة. مثال: <strong>192.168.1.10</strong></p>
-                        <p>بسبب التطور وزيادة عدد الأجهزة، أوشكت عناوين الـ IPv4 على الانتهاء (حوالي 4.3 مليار عنوان فقط).</p>
+                        <h3>تشريح هيكل الـ IPv4 Header</h3>
+                        <p>عندما تغلف البيانات بـ IP Packet، يضاف إليها Header حجمه 20 Byte يحتوي على حقول هندسية دقيقة:</p>
                         <ul>
-                            <li><strong>Public IP:</strong> عنوان عام يُستخدم للوصول للإنترنت.</li>
-                            <li><strong>Private IP:</strong> عنوان محلي داخل شبكتك (مثل 192.168.x.x) لا يمكن تصفح الإنترنت به مباشرة (يحتاج للـ NAT).</li>
+                            <li><strong>Version:</strong> يحدد هل هو IPv4 أم IPv6 (قيمته هنا 4).</li>
+                            <li><strong>TTL (Time to Live):</strong> حقل أمني بحجم 8-bit. قيمته تبدأ برقم (مثلاً 255) وتقل بمقدار 1 مع كل راوتر (Hop) يمر عليه. إذا وصل لـ 0، يُدمر الراوتر الحزمة ليمنع الـ Routing Loops (الدوران اللانهائي).</li>
+                            <li><strong>Source & Destination IP:</strong> عناوين المصدر والوجهة (32-bit لكل منهما).</li>
+                            <li><strong>Protocol:</strong> يحدد ما بداخل الـ IP (مثال: 6 تعني TCP، 17 تعني UDP، 1 تعني ICMP).</li>
+                            <li><strong>Fragmentation (التقطيع):</strong> إذا كان حجم الحزمة أكبر من سعة الكابل (MTU 1500 Bytes)، يتم تقطيعها لأجزاء صغيرة وتُعطى أرقام تسلسلية لتتجمع في الوجهة.</li>
                         </ul>
                     </div>
 
                     <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
-                        <h3 style="color: #ffb020;">الإصدار السادس (IPv6)</h3>
-                        <p>هو الحل لمشكلة نفاد العناوين. يتكون من 128 بت ويُكتب بالنظام السداسي عشري (Hexadecimal). مثال:</p>
-                        <code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code>
-                        <p>يوفر عدداً لا نهائياً تقريباً من العناوين!</p>
+                        <h3 style="color: #ffb020;">الجيل القادم: IPv6 (المعمارية المتقدمة)</h3>
+                        <p>صُمم لحل مشكلة نفاد عناوين IPv4. طوله 128-bit، أي أنه يوفر 340 <em>أندشيليون</em> عنوان (رقم مكون من 36 صفراً!).</p>
+                        <ul>
+                            <li><strong>كتابته:</strong> يُكتب بالنظام السداسي عشري (Hexadecimal). يمكن اختصار الأصفار المتتالية بعلامة <code>::</code> مرة واحدة فقط.</li>
+                            <li><strong>لا يحتاج لـ DHCP (غالباً):</strong> بفضل خاصية <em>SLAAC</em> (Stateless Address Autoconfiguration)، يستطيع الجهاز توليد عنوان IPv6 لنفسه بناءً على الـ MAC Address الخاص به!</li>
+                            <li><strong>لا يوجد Broadcast:</strong> تم إلغاء رسائل البث المزعجة واستبدالها بـ Multicast و Anycast.</li>
+                        </ul>
                     </div>
                 `
             },
             {
                 id: "lesson2_2",
-                title: "2. تقسيم الشبكات (Subnetting)",
+                title: "2. هندسة الـ Subnetting و VLSM",
                 content: `
-                    <h1>مقدمة في الـ Subnetting</h1>
-                    <p>الـ Subnetting هو عملية تقسيم شبكة كبيرة (تحتوي على عدد هائل من الـ IPs) إلى شبكات فرعية أصغر. لماذا؟</p>
-                    <ul>
-                        <li><strong>توفير العناوين:</strong> لكي لا نهدر عناوين الـ IP.</li>
-                        <li><strong>الأمان:</strong> فصل أقسام الشركة عن بعضها (قسم الحسابات معزول عن قسم المبيعات).</li>
-                        <li><strong>تقليل الزحام:</strong> تقليل الـ Broadcast Domain وتسريع الشبكة.</li>
-                    </ul>
-
-                    <div class="concept-box">
-                        <h3>قناع الشبكة (Subnet Mask)</h3>
-                        <p>هو رقم يُحدد أي جزء من عنوان الـ IP يُمثل "الشبكة" وأي جزء يُمثل "الجهاز" (Host).<br>
-                        مثال: <code>255.255.255.0</code> أو <code>/24</code> (يعني أول 3 أرقام للشبكة، والرقم الأخير للجهاز).</p>
-                    </div>
-
-                    <p><em>💡 نصيحة: الـ Subnetting يحتاج إلى تدريب يومي بالورقة والقلم، وسنوفر لك تمارين عليه لاحقاً في المحاكي!</em></p>
-                `
-            },
-            {
-                id: "lesson2_2_5",
-                title: "2.5. شرح تفصيلي للـ IPv4 Subnetting",
-                content: `
-                    <h1>كيف تحسب الـ Subnetting في ثوانٍ؟</h1>
-                    <p>الـ Subnetting هو الكابوس الذي يواجه مهندسي الشبكات المبتدئين، لكنه في الحقيقة عبارة عن لعبة رياضية بسيطة تعتمد على مبدأ <strong>"الاستلاف"</strong> من قسم الـ Host لصالح قسم الـ Network.</p>
+                    <h1>تقطيع الشبكات المتقدم (Subnetting & VLSM)</h1>
+                    <p>في الشركات الكبرى، لا نستخدم قناع الشبكة الافتراضي (Classful). بل نستخدم هندسة الـ <strong>VLSM (Variable Length Subnet Mask)</strong> لتقسيم الشبكة الرئيسية إلى شبكات فرعية <em>مختلفة الأحجام</em> لتجنب هدر عناوين الـ IP.</p>
 
                     <div class="concept-box" style="border-color: var(--accent); background: rgba(88, 166, 255, 0.05);">
-                        <h3 style="color: var(--accent);">الرقم السحري (Magic Number / Block Size)</h3>
-                        <p>هذا الرقم هو سر الـ Subnetting. وهو ببساطة مقدار القفزة بين كل شبكة والشبكة التي تليها.</p>
-                        <p><strong>القاعدة:</strong> الرقم السحري = <code>256 - قيمة الـ Subnet Mask في المقطع الأخير الممتلئ</code>.</p>
-                    </div>
-
-                    <h2>مثال عملي خطوة بخطوة</h2>
-                    <p>لدينا الشبكة <code>192.168.1.0</code> بـ قناع <code>/26</code> (وهو يعادل <code>255.255.255.192</code>). كيف نقسمها؟</p>
-                    
-                    <ol>
-                        <li><strong>الرقم السحري:</strong> <code>256 - 192 = 64</code>. (إذن حجم كل شبكة هو 64 عنوان).</li>
-                        <li><strong>تحديد الشبكات:</strong> نبدأ من 0 ونقفز بمقدار 64.
-                            <ul>
-                                <li>الشبكة الأولى: <code>192.168.1.0</code></li>
-                                <li>الشبكة الثانية: <code>192.168.1.64</code></li>
-                                <li>الشبكة الثالثة: <code>192.168.1.128</code></li>
-                                <li>الشبكة الرابعة: <code>192.168.1.192</code></li>
-                            </ul>
-                        </li>
-                    </ol>
-
-                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
-                        <h3 style="color: #ffb020;">3 أرقام مهمة في كل شبكة</h3>
+                        <h3 style="color: var(--accent);">السر الرياضي: معادلات مهندس الشبكات</h3>
                         <ul>
-                            <li><strong>عنوان الشبكة (Network ID):</strong> أول رقم (يُستخدم لتعريف الشبكة ولا يمكن إعطاؤه لجهاز).</li>
-                            <li><strong>عنوان البث (Broadcast ID):</strong> آخر رقم قبل الشبكة التالية بواحد (يُستخدم لإرسال رسالة للجميع ولا يُعطى لجهاز).</li>
-                            <li><strong>العناوين المتاحة (Usable Hosts):</strong> الأرقام التي بينهما. (تُعطى للكمبيوترات والراوترات).</li>
+                            <li><strong>لمعرفة عدد الشبكات الناتجة:</strong> نستخدم معادلة <code>2^s</code> (حيث s هي عدد البتات المستلفة من قسم الـ Host لصالح الـ Network).</li>
+                            <li><strong>لمعرفة عدد الأجهزة في كل شبكة:</strong> نستخدم معادلة <code>(2^h) - 2</code> (حيث h هي عدد بتات الـ Host المتبقية). ونطرح 2 لأننا لا نستطيع استخدام عنوان الشبكة وعنوان البث.</li>
                         </ul>
                     </div>
 
-                    <h3>تطبيق على الشبكة الأولى من المثال (192.168.1.0):</h3>
-                    <ul>
-                        <li><strong>Network ID:</strong> <code>192.168.1.0</code></li>
-                        <li><strong>القفزة التالية:</strong> <code>192.168.1.64</code></li>
-                        <li><strong>Broadcast ID:</strong> <code>192.168.1.63</code> (رقم قبل القفزة التالية مباشرة)</li>
-                        <li><strong>النطاق المتاح للأجهزة:</strong> من <code>192.168.1.1</code> إلى <code>192.168.1.62</code>. (إذن كل شبكة تعطينا 62 جهاز فعلي).</li>
-                    </ul>
-
-                    <h2>جدول سريع للـ CIDR المشهورة (Class C)</h2>
-                    <table style="width:100%; border-collapse: collapse; margin-top: 15px; text-align: center;">
-                        <tr style="background: rgba(88,166,255,0.1); border-bottom: 1px solid var(--border);">
-                            <th style="padding: 10px;">الـ CIDR</th>
-                            <th style="padding: 10px;">الـ Subnet Mask</th>
-                            <th style="padding: 10px;">الرقم السحري (القفزة)</th>
-                            <th style="padding: 10px;">عدد الشبكات الناتجة</th>
-                            <th style="padding: 10px;">أجهزة لكل شبكة</th>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 10px;">/24</td>
-                            <td style="padding: 10px;">255.255.255.0</td>
-                            <td style="padding: 10px;">256</td>
-                            <td style="padding: 10px;">1</td>
-                            <td style="padding: 10px;">254</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 10px;">/25</td>
-                            <td style="padding: 10px;">255.255.255.128</td>
-                            <td style="padding: 10px;">128</td>
-                            <td style="padding: 10px;">2</td>
-                            <td style="padding: 10px;">126</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 10px;">/26</td>
-                            <td style="padding: 10px;">255.255.255.192</td>
-                            <td style="padding: 10px;">64</td>
-                            <td style="padding: 10px;">4</td>
-                            <td style="padding: 10px;">62</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 10px;">/27</td>
-                            <td style="padding: 10px;">255.255.255.224</td>
-                            <td style="padding: 10px;">32</td>
-                            <td style="padding: 10px;">8</td>
-                            <td style="padding: 10px;">30</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 10px;">/30</td>
-                            <td style="padding: 10px;">255.255.255.252</td>
-                            <td style="padding: 10px;">4</td>
-                            <td style="padding: 10px;">64</td>
-                            <td style="padding: 10px;">2 (يُستخدم لربط راوترين فقط)</td>
-                        </tr>
-                    </table>
+                    <h2>مثال هندسي (VLSM): تصميم شبكة شركة</h2>
+                    <p>لديك الشبكة <code>192.168.1.0 /24</code>، والشركة بها 3 أقسام: قسم (أ) يحتاج 60 جهاز، قسم (ب) يحتاج 25 جهاز، والراوترات تحتاج 2 جهاز فقط للربط بينها.</p>
+                    
+                    <ol>
+                        <li><strong>قسم (أ) - 60 جهاز:</strong> نحتاج 6 بتات للـ Host لأن (2^6 - 2 = 62 جهاز). إذن الـ Mask سيكون <code>/26</code>. (الشبكة: 192.168.1.0/26).</li>
+                        <li><strong>قسم (ب) - 25 جهاز:</strong> نحتاج 5 بتات لأن (2^5 - 2 = 30 جهاز). نأخذ الشبكة التالية ونعطيها Mask <code>/27</code>. (الشبكة: 192.168.1.64/27).</li>
+                        <li><strong>ربط الراوترات (Point-to-Point):</strong> الراوترات تحتاج عنوانين فقط. نحتاج بتّين للـ Host (2^2 - 2 = 2). إذن الـ Mask الأفضل هو <code>/30</code> لعدم هدر العناوين! (الشبكة: 192.168.1.96/30).</li>
+                    </ol>
+                    <p><em>بهذه الهندسة (VLSM)، وفرنا عشرات العناوين التي كانت ستُهدر لو استخدمنا Subnet Mask واحداً للشركة كلها.</em></p>
                 `
             },
             {
                 id: "lesson2_3",
-                title: "3. بروتوكولات النقل (TCP vs UDP)",
+                title: "3. بروتوكولات النقل المتقدمة (TCP / UDP)",
                 content: `
-                    <h1>كيف تنتقل البيانات؟ (Transport Layer)</h1>
-                    <p>عند إرسال البيانات عبر الشبكة، تُستخدم طريقتان أساسيتان للنقل:</p>
+                    <h1>الغوص في طبقة النقل (Transport Layer)</h1>
+                    <p>طبقة النقل هي المسؤولة عن تقسيم البيانات (Segmentation)، وتحديد التطبيق المستهدف عبر <strong>أرقام المنافذ (Ports)</strong>. تعمل هذه الطبقة ببروتوكولين رئيسيين:</p>
 
                     <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
-                        <h3 style="color: var(--success);">1. بروتوكول الـ TCP (الموثوق)</h3>
-                        <p>يعتمد على التأكد من وصول البيانات بالكامل وبنفس الترتيب. إذا سقطت حزمة (Packet)، يطلب إعادة إرسالها.</p>
+                        <h3 style="color: var(--success);">1. TCP: الموثوقية المعمارية (Reliable & Connection-Oriented)</h3>
+                        <p>بروتوكول TCP لا يرسل حرفاً واحداً قبل أن يتأكد أن الطرف الآخر مستعد. يتميز بالآتي:</p>
                         <ul>
-                            <li>يستخدم تقنية المصافحة الثلاثية <strong>Three-Way Handshake</strong> قبل بدء الاتصال (SYN, SYN-ACK, ACK).</li>
-                            <li><strong>استخداماته:</strong> تصفح الويب (HTTP/HTTPS)، إرسال الإيميلات، تحميل الملفات (أي شيء يحتاج دقة 100%).</li>
+                            <li><strong>المصافحة الثلاثية (3-Way Handshake):</strong>
+                                <ol>
+                                    <li>جهازك يرسل <code>SYN</code> (طلب تزامن/اتصال).</li>
+                                    <li>السيرفر يرد بـ <code>SYN-ACK</code> (موافق ومستعد).</li>
+                                    <li>جهازك يرد بـ <code>ACK</code> (تأكيد الاستلام وبدء نقل البيانات).</li>
+                                </ol>
+                            </li>
+                            <li><strong>الأرقام التسلسلية (Sequence Numbers):</strong> يطبع TCP رقماً متسلسلاً على كل قطعة بيانات لتتجمع بنفس الترتيب في الوجهة حتى لو وصلت مقلوبة.</li>
+                            <li><strong>النافذة المنزلقة (Sliding Window):</strong> آلية ذكية للتحكم بالتدفق (Flow Control). إذا كان السيرفر أسرع من جهازك، يقوم جهازك بتقليل "حجم النافذة" ليخبر السيرفر بإبطاء سرعة الإرسال حتى لا تضيع البيانات (Drop).</li>
                         </ul>
                     </div>
 
                     <div class="concept-box" style="border-color: var(--danger); background: rgba(248, 81, 73, 0.05);">
-                        <h3 style="color: var(--danger);">2. بروتوكول الـ UDP (السريع)</h3>
-                        <p>يرسل البيانات بأقصى سرعة ممكنة <strong>بدون التأكد</strong> من وصولها! لا يوجد به إعادة إرسال ولا مصافحة.</p>
+                        <h3 style="color: var(--danger);">2. UDP: السرعة المجردة (Fast & Connectionless)</h3>
+                        <p>بروتوكول UDP لا يقوم بأي مصافحة، ولا يحتوي على أرقام تسلسلية، ولا نوافذ منزلقة، ولا يعيد إرسال البيانات الضائعة. حجم الـ Header الخاص به هو 8 Bytes فقط (مقابل 20 Bytes للـ TCP).</p>
                         <ul>
-                            <li><strong>استخداماته:</strong> البث المباشر (Live Streaming)، الألعاب الأونلاين، مكالمات الصوت والفيديو. (لأن السرعة هنا أهم من الدقة.. لا يهم إذا ضاعت لقطة قصيرة من الفيديو، المهم ألا يتوقف البث).</li>
+                            <li><strong>الهدف:</strong> أقصى سرعة ممكنة (Low Latency).</li>
+                            <li><strong>الاستخدامات:</strong> الـ VoIP (مكالمات الصوت)، الـ IPTV، والألعاب (Gaming). تأخير الصوت أسوأ من ضياع كلمة واحدة!</li>
                         </ul>
                     </div>
                 `
             },
             {
                 id: "lesson2_4",
-                title: "4. طبقة التطبيقات (Application Layer)",
+                title: "4. خدمات طبقة التطبيقات (DNS & DHCP)",
                 content: `
-                    <h1>خدمات التطبيقات المشهورة</h1>
-                    <p>هي البروتوكولات التي نستخدمها في حياتنا اليومية وتتفاعل مع البرامج المتصفحات:</p>
+                    <h1>خدمات البنية التحتية (Application Layer Services)</h1>
+                    <p>في شبكات المؤسسات (Enterprise)، لا يمكن للمهندس الاستغناء عن فهم كيف تعمل هذه الخدمات خلف الكواليس.</p>
 
-                    <ul>
-                        <li><strong style="color:var(--accent);">DNS (Domain Name System):</strong> دليلك في الإنترنت. يترجم الأسماء مثل <code>google.com</code> إلى أرقام IP، لأن الكمبيوتر لا يفهم الأسماء. يعمل على بورت 53 (UDP).</li>
-                        <br>
-                        <li><strong style="color:var(--accent);">DHCP (Dynamic Host Configuration Protocol):</strong> السيرفر المريح. يقوم بتوزيع عناوين الـ IP على الأجهزة في شبكتك أوتوماتيكياً (بمجرد اتصالك بالواي فاي، هو من يعطيك الـ IP). يعمل على بورت 67/68.</li>
-                        <br>
-                        <li><strong style="color:var(--accent);">HTTP / HTTPS:</strong> بروتوكولات تصفح المواقع. الـ HTTPS هو النسخة المشفرة والآمنة (بورت 443).</li>
-                        <br>
-                        <li><strong style="color:var(--accent);">SSH (Secure Shell):</strong> يستخدم للتحكم وإدارة الأجهزة والراوترات عن بُعد بشكل <strong>مشفر</strong> (بورت 22). وهو بديل بروتوكول Telnet القديم والخطير.</li>
-                    </ul>
+                    <div class="concept-box">
+                        <h3>1. تشريح الـ DHCP (Dynamic Host Configuration Protocol)</h3>
+                        <p>يعمل على البورتات 67 و 68 (UDP). عندما تقوم بتوصيل كابل الشبكة، يحصل جهازك على IP من السيرفر عبر عملية تسمى <strong>D.O.R.A</strong>:</p>
+                        <ol>
+                            <li><strong>Discover (اكتشاف):</strong> جهازك يرسل رسالة Broadcast للشبكة يصرخ فيها: "هل يوجد DHCP سيرفر هنا؟".</li>
+                            <li><strong>Offer (عرض):</strong> السيرفر يرد برسالة Unicast يعرض فيها: "نعم أنا هنا، ما رأيك في الـ IP 192.168.1.50؟".</li>
+                            <li><strong>Request (طلب):</strong> جهازك يرد بـ Broadcast ليخبر السيرفر والجميع: "أنا أوافق وأطلب حجز هذا الـ IP لي".</li>
+                            <li><strong>Acknowledge (تأكيد):</strong> السيرفر يسجل الـ IP باسم الـ MAC Address الخاص بك، ويرسل لك رسالة التأكيد ومعها الـ Gateway والـ DNS.</li>
+                        </ol>
+                    </div>
+
+                    <div class="concept-box" style="border-color: var(--accent); background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: var(--accent);">2. هندسة الـ DNS (Domain Name System)</h3>
+                        <p>يعمل على بورت 53. هو دليل الهاتف للإنترنت (يترجم الأسماء المفهومة للبشر إلى أرقام IP يفهمها الراوتر). المهندس يجب أن يعرف أنواع السجلات (DNS Records):</p>
+                        <ul>
+                            <li><strong>A Record:</strong> يربط اسم الموقع (مثال abc.com) بـ IPv4.</li>
+                            <li><strong>AAAA Record:</strong> يربط الاسم بـ IPv6.</li>
+                            <li><strong>CNAME Record:</strong> يربط اسماً باسم آخر (Alias). (مثال: توجيه www.abc.com ليعمل نفس عمل abc.com).</li>
+                            <li><strong>MX Record:</strong> يحدد سيرفر البريد الإلكتروني (Mail Server) الخاص بالشركة لكي تصل الإيميلات.</li>
+                        </ul>
+                        <p><em>ملاحظة:</em> الـ DNS يستخدم بروتوكول UDP في الترجمة العادية للسرعة، ويستخدم TCP عندما يقوم السيرفر بنقل قاعدة بياناته لسيرفر DNS احتياطي (Zone Transfer).</p>
+                    </div>
                 `
             }
         ]
