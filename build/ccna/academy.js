@@ -1176,11 +1176,9 @@ window.renderLesson = function(id) {
                 const article = document.getElementById('articleBody');
                 if(!article) return;
                 article.style.opacity = '0';
-                setTimeout(() => {
-                    article.innerHTML = less.content;
-                    article.style.transition = 'opacity 0.3s ease';
-                    article.style.opacity = '1';
-                }, 150);
+                article.innerHTML = less.content;
+                article.style.transition = 'opacity 0.3s ease';
+                article.style.opacity = '1';
                 return;
             }
         }
