@@ -378,75 +378,11 @@ const academyData = [
                 `
             },
 
-            {
-                id: "lesson4",
-                title: "4. الكابلات والألياف وسرعة نقل البيانات",
-                content: `
-                    <h1>شرايين الشبكة (Network Media & Cabling)</h1>
-                    <p>اختيار الكابل الخاطئ يقتل أداء أسرع راوتر في العالم. دعونا نتعمق في الطبقة الفيزيائية.</p>
-                    
-                    <div class="concept-box">
-                        <h3>1. الكابلات المجدولة النحاسية (UTP)</h3>
-                        <p>تُسمى Unshielded Twisted Pair. يتم لف كل سلكين حول بعضهما لإلغاء التشويش الكهرومغناطيسي المتبادل (Crosstalk).</p>
-                        <ul>
-                            <li><strong>Cat5e:</strong> يدعم سرعة 1 Gbps (المعيار الأدنى حالياً).</li>
-                            <li><strong>Cat6:</strong> يدعم سرعة 10 Gbps (لمسافة 55 متر فقط)، ويمتلك عازل بلاستيكي بالمنتصف لمنع التشويش.</li>
-                            <li><strong>Cat6a:</strong> يدعم 10 Gbps (لمسافة 100 متر كاملة).</li>
-                        </ul>
-                        <p><em>ملاحظة هندسية:</em> نستخدم معيار <strong>T568B</strong> لترتيب الألوان داخل رأس الـ RJ-45 (برتقالي أبيض، برتقالي، أخضر أبيض، أزرق، أزرق أبيض، أخضر، بني أبيض، بني).</p>
-                    </div>
-
-                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
-                        <h3 style="color: #ffb020;">2. الألياف الضوئية (Fiber Optics)</h3>
-                        <p>تنقل الضوء (Laser أو LED) بدلاً من الكهرباء، لذا فهي منيعة تماماً ضد التشويش الكهرومغناطيسي (EMI). وتنقسم إلى:</p>
-                        <ul>
-                            <li><strong>SMF (Single-Mode Fiber):</strong> قلب زجاجي رفيع جداً (9 مايكرون). ينقل شعاع ليزر <em>واحد</em>. يستخدم للمسافات الشاسعة (بين المدن والمحيطات) ويصل لـ 100 كيلومتر وأكثر. مكلف جداً.</li>
-                            <li><strong>MMF (Multi-Mode Fiber):</strong> قلب أوسع (50 مايكرون). ينقل عدة أشعة ضوئية (LED) ترتد بالداخل. يستخدم لمسافات قصيرة (داخل المبنى المكون من عدة طوابق) لمسافة 500 متر تقريباً. أرخص من SMF.</li>
-                        </ul>
-                        <p><strong>أشهر واصلاتها (Connectors):</strong> LC (حديث وصغير) و SC (مربع وأقدم).</p>
-                    </div>
-
-                    <h2>مصطلحات قياس كفاءة النقل (The Speed Myth)</h2>
-                    <table style="width:100%; border-collapse: collapse; margin-top: 15px; text-align: right;">
-                        <tr style="background: rgba(88,166,255,0.1); border-bottom: 1px solid var(--border);">
-                            <th style="padding: 10px;">المصطلح</th>
-                            <th style="padding: 10px;">المعنى الهندسي الحقيقي</th>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 10px; font-weight: bold; color: var(--accent);">Bandwidth (عرض النطاق)</td>
-                            <td style="padding: 10px;">السعة <em>النظرية القصوى</em> للكابل في ظروف مثالية (مثال: 1000 Mbps).</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 10px; font-weight: bold; color: #ffb020;">Throughput (الإنتاجية)</td>
-                            <td style="padding: 10px;">السرعة <em>الفعلية</em> لنقل البيانات (التي تشمل حجم البيانات + حجم الـ Headers الخاصة بالشبكة).</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px; font-weight: bold; color: var(--success);">Goodput (الإنتاجية الصافية)</td>
-                            <td style="padding: 10px;">سرعة نقل <em>ملفك الصافي فقط</em> (بعد خصم كل رسائل التحكم والـ Headers وإعادة الإرسال). وهي السرعة التي تراها أمامك عند تحميل فيلم!</td>
-                        </tr>
-                    </table>
-                `
-            },
-            {
-                id: "lesson5",
-                title: "Placeholder lesson5",
-                content: `<h1>قريباً</h1>`
-            },
-            {
-                id: "lesson6",
-                title: "Placeholder lesson6",
-                content: `<h1>قريباً</h1>`
-            },
-            {
-                id: "lesson7",
-                title: "Placeholder lesson7",
-                content: `<h1>قريباً</h1>`
-            },
-            {
-                id: "lesson8",
-                title: "Placeholder lesson8",
-                content: `<h1>قريباً</h1>`
-            },
+            
+            
+            
+            
+            ,
         ]
     },
     {
@@ -857,24 +793,326 @@ R1(config-if)# standby 1 preempt</code></pre>
         ]
     },,
     {
-        chapter: "Domain 4: IP Services",
+        chapter: "Domain 4: IP Services (خدمات الشبكة)",
         lessons: [
-            { id: "serv_dhcp", title: "DHCP", content: `<h1>قريباً</h1>` },
-            { id: "serv_nat", title: "NAT & PAT", content: `<h1>قريباً</h1>` }
+            {
+                id: "serv_dhcp",
+                title: "1. بروتوكول DHCP (توزيع العناوين آلياً)",
+                content: `
+                    <h1>بروتوكول DHCP (Dynamic Host Configuration Protocol)</h1>
+                    <p>في الشبكات القديمة، كان مهندس الشبكة يمر على كل جهاز كمبيوتر ليضع له IP و Subnet Mask و Gateway يدوياً. أما اليوم، يتم استخدام سيرفر DHCP لتوزيع هذه الإعدادات على آلاف الأجهزة آلياً في ثوانٍ.</p>
+                    
+                    <div class="concept-box" style="border-color: #58a6ff; background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: #58a6ff;">عملية DORA</h3>
+                        <p>عندما تقوم بتوصيل كابل الشبكة أو الـ Wi-Fi، كيف يحصل جهازك على IP؟ تتم عملية تسمى <strong>DORA</strong> (كلها رسائل Broadcast في الطبقة الثانية):</p>
+                        <ol>
+                            <li><strong>Discover (D):</strong> جهازك يصرخ في الشبكة: "هل هناك أي سيرفر DHCP هنا؟ أحتاج إلى IP!"</li>
+                            <li><strong>Offer (O):</strong> السيرفر يرد: "نعم أنا هنا، ما رأيك في الـ IP (192.168.1.50)؟"</li>
+                            <li><strong>Request (R):</strong> جهازك يرد: "موافق، أرجو تأكيد حجز هذا الـ IP لي."</li>
+                            <li><strong>Acknowledge (A):</strong> السيرفر يرد: "تم الحجز لك لمدة معينة (Lease Time)."</li>
+                        </ol>
+                    </div>
+
+                    <h2>مشكلة הـ DHCP Relay Agent</h2>
+                    <p>رسائل الـ DORA تعتمد على الـ <strong>Broadcast</strong>. ونحن نعلم أن الراوتر <strong>يمنع مرور الـ Broadcast</strong>. فماذا لو كان سيرفر הـ DHCP في مبنى، والموظفين في مبنى آخر يفصل بينهما راوتر؟ الموظفون لن يحصلوا على IP!</p>
+                    <p><strong>الحل:</strong> نقوم بتحويل الراوتر الوسيط إلى <code>DHCP Relay Agent</code> ليقوم باستلام صراخ המوظفين (Broadcast) وتحويله لرسالة مباشرة (Unicast) إلى السيرفر.</p>
+                    <pre><code>R1(config-if)# ip helper-address 10.1.1.100</code></pre>
+                    <p><em>(حيث 10.1.1.100 هو عنوان سيرفر הـ DHCP).</em></p>
+
+                    <h2>إعداد راوتر سيسكو كـ DHCP Server</h2>
+                    <p>يمكننا جعل الراوتر نفسه هو من يوزع الآيبيهات للمكاتب الصغيرة:</p>
+                    <pre><code>R1(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.10
+R1(config)# ip dhcp pool STAFF
+R1(dhcp-config)# network 192.168.1.0 255.255.255.0
+R1(dhcp-config)# default-router 192.168.1.1
+R1(dhcp-config)# dns-server 8.8.8.8</code></pre>
+                    <p><em>ملاحظة: أمر excluded-address يمنع توزيع الآيبيهات من 1 إلى 10 لأننا قد نستخدمها للسيرفرات الثابتة والراوتر نفسه.</em></p>
+                `
+            },
+            {
+                id: "serv_nat",
+                title: "2. بروتوكول NAT و PAT (ترجمة العناوين)",
+                content: `
+                    <h1>NAT (Network Address Translation)</h1>
+                    <p>في تسعينيات القرن الماضي، أدرك العالم أن عناوين <strong>IPv4</strong> (والتي يبلغ عددها 4.3 مليار) ستنفد قريباً. فكان الحل المؤقت والعبقري هو اختراع הـ NAT.</p>
+                    <p>تم تقسيم الـ IP إلى قسمين:</p>
+                    <ul>
+                        <li><strong>Private IP:</strong> آيبيهات مجانية ومكررة في كل منازل وشركات العالم (مثل 192.168.1.0). <strong>يُمنع منعاً باتاً</strong> أن تخرج للإنترنت.</li>
+                        <li><strong>Public IP:</strong> آيبيهات حقيقية تُشترى من شركات الاتصالات وهي فريدة لا تتكرر، وتستخدم للتصفح عبر الإنترنت.</li>
+                    </ul>
+                    <p><strong>وظيفة الـ NAT:</strong> عندما يحاول جهازك (Private IP) فتح جوجل، يقوم راوتر الشركة بترجمة عنوانه إلى (Public IP) قبل أن يخرجه للإنترنت، وعندما يعود الرد من جوجل، يترجمه الراوتر مجدداً إلى الـ Private IP ليوصله لجهازك!</p>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">أنواع הـ NAT</h3>
+                        <ol>
+                            <li><strong>Static NAT (ترجمة ثابتة 1-to-1):</strong> ربط Public IP واحد بـ Private IP واحد للأبد. يُستخدم للسيرفرات (Web Servers) التي يجب أن يصل إليها الناس من خارج الشركة.<br>
+                            <code>ip nat inside source static 192.168.1.50 200.1.1.50</code></li>
+                            <li><strong>Dynamic NAT:</strong> الشركة تشتري 10 Public IPs، وتملك 100 موظف. أول 10 موظفين يفتحون الإنترنت يحصلون عليها، والـ 90 الباقون ينتظرون حتى ينتهي الأولون! (غير عملي وضعيف).</li>
+                            <li><strong>PAT (Port Address Translation / NAT Overload):</strong> هو المستخدم في كل مكان اليوم (حتى راوتر منزلك). يسمح لـ 65,000 موظف بتصفح الإنترنت باستخدام <strong>Public IP واحد فقط!</strong> كيف؟ يفرق الراوتر بينهم باستخدام <strong>رقم الـ Port</strong> الخاص بكل موظف.</li>
+                        </ol>
+                    </div>
+
+                    <h2>إعداد الـ PAT (NAT Overload)</h2>
+                    <p>1- نحدد من المسموح لهم بالإنترنت باستخدام ACL:</p>
+                    <pre><code>R1(config)# access-list 1 permit 192.168.1.0 0.0.0.255</code></pre>
+                    <p>2- نخبر الراوتر بترجمة هذه الـ ACL باستخدام الـ IP الموجود على منفذ الخروج (مثلاً G0/1) وتفعيل الـ Overload:</p>
+                    <pre><code>R1(config)# ip nat inside source list 1 interface g0/1 overload</code></pre>
+                    <p>3- نحدد المنفذ الداخلي (G0/0) والخارجي (G0/1):</p>
+                    <pre><code>R1(config)# interface g0/0
+R1(config-if)# ip nat inside
+R1(config)# interface g0/1
+R1(config-if)# ip nat outside</code></pre>
+                `
+            },
+            {
+                id: "serv_dns_ntp",
+                title: "3. بروتوكولات DNS و NTP",
+                content: `
+                    <h1>بروتوكول DNS (Domain Name System)</h1>
+                    <p>البشر يفضلون حفظ الأسماء (مثل google.com)، بينما الكمبيوترات والراوترات تتواصل بالأرقام (IP Addresses). الـ DNS هو بمثابة "دليل الهاتف" للإنترنت.</p>
+                    <ul>
+                        <li>عندما تكتب موقعاً، جهازك يرسل طلباً لـ DNS Server (غالباً بورت 53 UDP) يسأله: "ما هو הـ IP الخاص بـ google.com؟".</li>
+                        <li>فيرد السيرفر بالـ IP، ليتمكن جهازك من بناء הـ Packet والاتصال.</li>
+                    </ul>
+
+                    <h1>بروتوكول NTP (Network Time Protocol)</h1>
+                    <p>الـ NTP يُستخدم لمزامنة الوقت والتاريخ (Time Synchronization) في جميع أجهزة الشبكة.</p>
+                    
+                    <div class="concept-box" style="border-color: var(--danger); background: rgba(248, 81, 73, 0.05);">
+                        <h3 style="color: var(--danger);">لماذا مزامنة الوقت أمر بالغ الأهمية أمنياً؟</h3>
+                        <ol>
+                            <li><strong>تحليل السجلات (Log Analysis):</strong> إذا حدث اختراق، سيقوم المحقق الرقمي (Forensic) بجمع السجلات من السويتشات والراوترات والفايروال لمعرفة مسار الهاكر. إذا كان كل جهاز يحمل وقتاً مختلفاً، فسيستحيل تتبع الجريمة بشكل زمني صحيح (Correlation).</li>
+                            <li><strong>الشهادات الرقمية (Certificates & SSL):</strong> المتصفحات سترفض فتح المواقع إذا كان وقت جهازك أقدم أو أحدث بكثير من صلاحية شهادة הـ SSL للموقع.</li>
+                            <li><strong>بروتوكولات التشفير (VPN/IPsec):</strong> قد تفشل الجيرة في بروتوكولات التشفير إذا كان الفارق الزمني كبيراً بين الراوترات.</li>
+                        </ol>
+                    </div>
+
+                    <h2>مستويات הـ NTP (Stratum Levels)</h2>
+                    <p>الـ NTP يعمل بنظام الطبقات (Stratum) لبيان مدى دقة الساعات:</p>
+                    <ul>
+                        <li><strong>Stratum 0:</strong> الساعات الذرية وأقمار הـ GPS (عالية الدقة جداً، ولكن لا يمكن للكمبيوترات الاتصال بها مباشرة عبر الشبكة).</li>
+                        <li><strong>Stratum 1:</strong> السيرفرات المتصلة مباشرة بـ Stratum 0. (السيرفرات المركزية في العالم).</li>
+                        <li><strong>Stratum 2:</strong> سيرفرات الشركات الكبرى التي تأخذ وقتها من Stratum 1، وهكذا.</li>
+                        <li>كلما زاد الرقم، قلت الدقة. (أقصى رقم مسموح للـ Stratum هو 15، والرقم 16 يعني أن الوقت غير موثوق).</li>
+                    </ul>
+
+                    <p><strong>أمر إعداد הـ NTP على راوتر سيسكو لجعله يأخذ الوقت من سيرفر 10.1.1.5:</strong></p>
+                    <pre><code>R1(config)# ntp server 10.1.1.5</code></pre>
+                `
+            }
         ]
-    },
+    },,
     {
-        chapter: "Domain 5: Security Fundamentals",
+        chapter: "Domain 5: Security Fundamentals (أساسيات الأمن)",
         lessons: [
-            { id: "sec_acl", title: "Access Control Lists (ACL)", content: `<h1>قريباً</h1>` },
-            { id: "sec_portsec", title: "Port Security", content: `<h1>قريباً</h1>` }
+            {
+                id: "sec_attacks",
+                title: "1. التهديدات والهجمات الشبكية (Network Attacks)",
+                content: `
+                    <h1>ما هي التهديدات التي تواجه الشبكات؟</h1>
+                    <p>أمن الشبكات لا يقتصر على وضع Firewall على الحافة، بل يجب حماية البنية التحتية من الداخل (الراوترات والسويتشات). الهاكر قد يكون موظفاً ناقماً أو شخصاً اخترق جهاز أحد الموظفين.</p>
+
+                    <div class="concept-box" style="border-color: #f85149; background: rgba(248, 81, 73, 0.05);">
+                        <h3 style="color: #f85149;">1. هجمات حجب الخدمة (DoS & DDoS)</h3>
+                        <p><strong>الهدف:</strong> إسقاط الخدمة عن المستخدمين الشرعيين.</p>
+                        <ul>
+                            <li><strong>DoS (Denial of Service):</strong> هجوم من جهاز واحد. مثال: إرسال آلاف رسائل الـ Ping (Ping of Death) أو إغراق السيرفر بطلبات SYN (SYN Flood) لتعليق الذاكرة.</li>
+                            <li><strong>DDoS (Distributed DoS):</strong> הهاكر يستخدم آلاف الأجهزة المخترقة (Botnet) حول العالم للهجوم على نفس السيرفر في نفس اللحظة، مما يتسبب في انهيار السيرفر فوراً.</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">2. هجمات انتحال الشخصية (Spoofing & Man-in-the-Middle)</h3>
+                        <p>الهاكر يخدع أجهزة الشبكة ليعتقدوا أنه هو البوابة (Gateway) ليتمكن من اعتراض كلمات المرور:</p>
+                        <ul>
+                            <li><strong>ARP Spoofing:</strong> الهاكر يرسل رسائل ARP وهمية لكل الموظفين يخبرهم: "الـ IP الخاص بالراوتر أصبح يمتلك الـ MAC Address الخاص بي!". وبذلك تمر كل بيانات الموظفين عبر جهاز הهاكر أولاً (MitM).</li>
+                            <li><strong>MAC Spoofing:</strong> الهاكر يغير الـ MAC Address الخاص بجهازه ليتطابق مع MAC Address لجهاز مسموح له بالدخول (مثل كمبيوتر المدير) لتجاوز الحماية.</li>
+                            <li><strong>IP Spoofing:</strong> تزوير عنوان הـ IP المصدر في הـ Packet ليبدو وكأنه قادم من جهاز موثوق داخل الشركة.</li>
+                        </ul>
+                    </div>
+
+                    <div class="concept-box" style="border-color: #58a6ff; background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: #58a6ff;">3. هجمات הـ DHCP</h3>
+                        <p>بما أن رسائل DHCP تعتمد على الـ Broadcast بدون أي توثيق، فهي عرضة لهجومين خطيرين:</p>
+                        <ul>
+                            <li><strong>DHCP Starvation:</strong> הهاكر يرسل آلاف الطلبات المزيفة بـ MAC Addresses عشوائية ليجعل سيرفر الـ DHCP يستنفد كل الآيبيهات لديه. النتيجة: لا يمكن لأي موظف جديد الحصول على IP!</li>
+                            <li><strong>Rogue DHCP Server:</strong> הهاكر يقوم بتشغيل سيرفر DHCP خاص به داخل الشركة. عندما يطلب موظف IP، يرد الهاكر أسرع من السيرفر الحقيقي، ويعطي الموظف IP و Gateway تشير إلى جهاز الهاكر. (Man-in-the-Middle)!</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: "sec_acl",
+                title: "2. قوائم التحكم في الوصول (ACLs)",
+                content: `
+                    <h1>ما هي הـ ACL؟</h1>
+                    <p>الـ Access Control List هي بمثابة "حارس الأمن" الواقف على بوابات الراوتر (Interfaces). تستخدم للسماح (Permit) أو حظر (Deny) مرور البيانات بناءً على شروط نحددها نحن.</p>
+
+                    <h2>أنواع הـ ACLs في سيسكو</h2>
+                    <p>تنقسم إلى نوعين رئيسيين:</p>
+                    
+                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
+                        <h3 style="color: var(--success);">1. Standard ACL (أرقامها 1-99)</h3>
+                        <p>تستطيع تصفية البيانات بناءً على <strong>عنوان المصدر (Source IP) فقط</strong>. ولا تفهم أي شيء عن הـ Ports أو الخدمات.</p>
+                        <p><strong>القاعدة الذهبية:</strong> يجب تطبيقها <strong>أقرب ما يمكن إلى الوجهة (Destination)</strong>. لكي لا نحظر جهازاً من الشبكة بأكملها بدلاً من حظره من سيرفر معين.</p>
+                        <pre><code>R1(config)# access-list 10 deny 192.168.1.50
+R1(config)# access-list 10 permit any</code></pre>
+                        <p><em>(يحظر הـ IP رقم 50 فقط، ويسمح للبقية).</em></p>
+                    </div>
+
+                    <div class="concept-box" style="border-color: #d29922; background: rgba(210, 153, 34, 0.05);">
+                        <h3 style="color: #d29922;">2. Extended ACL (أرقامها 100-199)</h3>
+                        <p>ذكية جداً! تصفّي البيانات بناءً على: المصدر (Source)، الوجهة (Destination)، البروتوكول (TCP/UDP)، ورقم البورت (مثل 80 للويب أو 22 للـ SSH).</p>
+                        <p><strong>القاعدة الذهبية:</strong> يجب تطبيقها <strong>أقرب ما يمكن إلى المصدر (Source)</strong>. حتى نوقف البيانات الممنوعة فوراً بدلاً من السماح لها باستهلاك كابلات الراوترات ثم رميها في النهاية!</p>
+                        <pre><code>R1(config)# access-list 100 deny tcp host 192.168.1.50 host 10.1.1.100 eq 80
+R1(config)# access-list 100 permit ip any any</code></pre>
+                        <p><em>(يمنع الـ IP رقم 50 من تصفح موقع الويب الموجود على السيرفر 100، ويسمح بأي شيء آخر).</em></p>
+                    </div>
+
+                    <h2>قواعد بالغة الأهمية في الـ ACL</h2>
+                    <ol>
+                        <li><strong>Implicit Deny (الرفض الضمني):</strong> في نهاية أي ACL تقوم بكتابتها، يوجد سطر مخفي يرفض كل شيء <code>deny any</code>. إذا لم تكتب <code>permit</code> في النهاية، سيتم حظر الشبكة بالكامل!</li>
+                        <li><strong>ترتيب الأسطر:</strong> الراوتر يقرأ الـ ACL من أعلى إلى أسفل (Top-Down). بمجرد أن يتطابق شرط، يتوقف الراوتر عن قراءة باقي الأسطر وينفذ الأمر. يجب دائماً كتابة الشروط المحددة (Specific) في الأعلى، والشروط العامة في الأسفل.</li>
+                        <li><strong>اتجاه التطبيق (In/Out):</strong> يجب تطبيق الـ ACL على منفذ الراوتر وتحديد اتجاهها (In للبيانات الداخلة للراوتر، Out للبيانات الخارجة منه).
+                        <pre><code>R1(config-if)# ip access-group 100 in</code></pre>
+                        </li>
+                    </ol>
+                `
+            },
+            {
+                id: "sec_portsec",
+                title: "3. أمن الطبقة الثانية (Layer 2 Security)",
+                content: `
+                    <h1>تأمين السويتشات من الداخل</h1>
+                    <p>أغلب هجمات الاختراق تتم من الطبقة الثانية (الربط المباشر بالسويتش). يجب أن نمنع أي شخص من فصل كابل الطابعة وتوصيله باللابتوب الخاص به للتسلل للشبكة!</p>
+
+                    <div class="concept-box" style="border-color: #58a6ff; background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: #58a6ff;">1. حماية المنافذ (Port Security)</h3>
+                        <p>تقوم هذه الميزة بإجبار منفذ السويتش على قبول MAC Address واحد فقط (أو عدد نحدده). إذا حاول أي جهاز آخر إرسال بيانات عبر نفس المنفذ، يتخذ السويتش رد فعل فورياً.</p>
+                        <p><strong>طرق تعلم الـ MAC:</strong></p>
+                        <ul>
+                            <li><strong>Static:</strong> كتابة الـ MAC يدوياً (مُتعب جداً).</li>
+                            <li><strong>Sticky:</strong> السويتش يحفظ أول MAC Address يراه على المنفذ ويلصقه في الـ Configuration تلقائياً.</li>
+                        </ul>
+                        <p><strong>ردود الفعل (Violations):</strong></p>
+                        <ul>
+                            <li><strong>Protect:</strong> يرمي بيانات الهاكر المجهول بصمت، ولا يخبر الإدارة.</li>
+                            <li><strong>Restrict:</strong> يرمي البيانات ويرسل إشعاراً (Syslog) للإدارة، ويزيد عداد المخالفات.</li>
+                            <li><strong>Shutdown (الافتراضي):</strong> بمجرد دخول MAC غريب، يُغلق المنفذ بالكامل (يصبح لونه أحمر err-disabled) ولن يفتح إلا بتدخل مهندس الشبكة يدوياً.</li>
+                        </ul>
+                        <pre><code>SW1(config-if)# switchport port-security
+SW1(config-if)# switchport port-security mac-address sticky
+SW1(config-if)# switchport port-security violation shutdown</code></pre>
+                    </div>
+
+                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
+                        <h3 style="color: var(--success);">2. DHCP Snooping (منع سيرفرات DHCP المزيفة)</h3>
+                        <p>لمنع هجوم Rogue DHCP، نقوم بتفعيل DHCP Snooping على السويتش. هذه الميزة تقسم منافذ السويتش إلى:</p>
+                        <ul>
+                            <li><strong>Untrusted Ports (غير موثوقة):</strong> هي جميع منافذ الموظفين. السويتش <strong>سيرفض</strong> أي رسالة (DHCP Offer أو ACK) تأتي منها. (بذلك يمنع الهاكر من توزيع آيبيهات).</li>
+                            <li><strong>Trusted Ports (موثوقة):</strong> هو المنفذ الوحيد المتصل بسيرفر הـ DHCP الحقيقي أو الراوتر. السويتش سيسمح بتمرير הـ Offers منه.</li>
+                        </ul>
+                        <pre><code>SW1(config)# ip dhcp snooping
+SW1(config)# ip dhcp snooping vlan 10
+SW1(config)# interface g0/1   (هذا منفذ السيرفر الحقيقي)
+SW1(config-if)# ip dhcp snooping trust</code></pre>
+                    </div>
+
+                    <div class="concept-box" style="border-color: #d29922; background: rgba(210, 153, 34, 0.05);">
+                        <h3 style="color: #d29922;">3. Dynamic ARP Inspection (DAI)</h3>
+                        <p>لمنع هجوم ARP Spoofing (تسميم الـ ARP)، تعتمد تقنية DAI على قاعدة بيانات DHCP Snooping (التي تحتوي على الـ MAC والـ IP لكل موظف موثوق). السويتش سيقوم بتفتيش كل رسالة ARP، وإذا وجد أن الهاكر يدّعي أنه يملك IP لا يخصه، فإنه يسقط الرسالة فوراً.</p>
+                    </div>
+                `
+            }
         ]
-    },
+    },,
     {
-        chapter: "Domain 6: Automation & Programmability",
+        chapter: "Domain 6: Automation & Programmability (برمجة وأتمتة الشبكات)",
         lessons: [
-            { id: "auto_json", title: "JSON & REST APIs", content: `<h1>قريباً</h1>` },
-            { id: "auto_sdn", title: "SDN & Cisco DNA Center", content: `<h1>قريباً</h1>` }
+            {
+                id: "auto_json",
+                title: "1. البيانات (JSON و XML) وواجهات برمجة التطبيقات (REST APIs)",
+                content: `
+                    <h1>مرحباً بك في عصر الشبكات المبرمجة</h1>
+                    <p>في الماضي، كان مهندس الشبكات يدخل لكل راوتر يدوياً عبر SSH لكتابة الأوامر (CLI). ماذا لو كان لدينا 1000 راوتر؟ هنا ظهرت الحاجة للأتمتة (Automation) لبرمجة الشبكة بالكامل من مكان واحد باستخدام لغات البرمجة (مثل Python).</p>
+
+                    <div class="concept-box" style="border-color: #58a6ff; background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: #58a6ff;">1. صيغ البيانات (Data Formats)</h3>
+                        <p>لكي تفهم أجهزة الشبكات الأوامر البرمجية، يجب تنسيق البيانات بصيغة يتفق عليها البشر والآلات. لدينا 3 صيغ رئيسية:</p>
+                        <ul>
+                            <li><strong>JSON (JavaScript Object Notation):</strong> الأشهر والأكثر استخداماً حالياً. تعتمد على نظام (مفتاح: قيمة) وتشبه قواميس بايثون. سهلة جداً للقراءة البشرية وتستخدم بكثرة مع الـ REST APIs.</li>
+                            <li><strong>XML (eXtensible Markup Language):</strong> تعتمد على التاجات (Tags) مثل HTML. دقيقة جداً لكنها معقدة وتستهلك مساحة كبيرة. تستخدم مع بروتوكولات مثل NETCONF.</li>
+                            <li><strong>YAML (YAML Ain't Markup Language):</strong> الأسهل للقراءة البشرية، تعتمد كلياً على المسافات الفارغة (Indentation). تستخدم في أدوات الأتمتة مثل Ansible.</li>
+                        </ul>
+                    </div>
+
+                    <h2>مثال على JSON</h2>
+                    <pre><code>{
+  "interface": "GigabitEthernet0/1",
+  "ip_address": "192.168.1.1",
+  "enabled": true
+}</code></pre>
+
+                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
+                        <h3 style="color: var(--success);">2. الـ REST APIs</h3>
+                        <p>الـ API هو وسيط (نادل) ينقل طلبك إلى السيرفر (المطبخ) ويعود لك بالنتيجة. الـ REST هو أشهر هندسة لبناء الـ APIs ويعتمد كلياً على بروتوكول HTTP (الويب).</p>
+                        <p><strong>أوامر הـ HTTP (Verbs) المستخدمة مع الـ REST API:</strong></p>
+                        <ul>
+                            <li><strong>GET:</strong> قراءة/جلب بيانات من الراوتر (مثل: عرض الـ Routing Table). (لا يغير شيئاً).</li>
+                            <li><strong>POST:</strong> إنشاء شيء جديد (مثل: إضافة مسار جديد).</li>
+                            <li><strong>PUT:</strong> استبدال أو تعديل شيء موجود.</li>
+                            <li><strong>PATCH:</strong> تعديل جزئي لشيء موجود.</li>
+                            <li><strong>DELETE:</strong> مسح شيء (مثل: مسح مسار من الراوتر).</li>
+                        </ul>
+                    </div>
+
+                    <h2>الـ HTTP Status Codes (ردود السيرفر)</h2>
+                    <p>بعد إرسال طلب הـ REST API، يرد عليك جهاز الشبكة برقم:</p>
+                    <ul>
+                        <li><strong>2xx (مثل 200 OK):</strong> نجاح الطلب.</li>
+                        <li><strong>4xx (مثل 400 Bad Request أو 401 Unauthorized أو 404 Not Found):</strong> خطأ من جهتك (الكود خاطئ أو لا تملك صلاحية).</li>
+                        <li><strong>5xx (مثل 500 Internal Server Error):</strong> خطأ في السيرفر أو الراوتر نفسه.</li>
+                    </ul>
+                `
+            },
+            {
+                id: "auto_sdn",
+                title: "2. الشبكات المعرفة بالبرمجيات (SDN) و Cisco DNA Center",
+                content: `
+                    <h1>ما هي הـ SDN (Software-Defined Networking)؟</h1>
+                    <p>في الراوترات العادية (التقليدية)، كل راوتر يمتلك "عقلاً" و"عضلات" بداخله:</p>
+                    <ul>
+                        <li><strong>عقل الراوتر (Control Plane):</strong> هو الجزء الذي يفكر ويبني جدول التوجيه (مثل OSPF).</li>
+                        <li><strong>عضلات الراوتر (Data Plane):</strong> هو الجزء الذي ينفذ ويقوم بتمرير الـ Packets بناءً على أوامر العقل.</li>
+                    </ul>
+                    <p>هذا يعني أن الإدارة لا مركزية، وكل راوتر يتخذ قراره بنفسه. في الـ <strong>SDN</strong>، قمنا بفصل "العقل" عن "العضلات"!</p>
+                    
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">بنية הـ SDN (المتحكم المركزي)</h3>
+                        <p>في הـ SDN، يتم سحب "العقل" (Control Plane) من جميع الراوترات والسويتشات، ووضعه في سيرفر مركزي ذكي يسمى <strong>SDN Controller</strong>. وتصبح أجهزة الشبكة مجرد "عضلات" غبية (Data Plane) تنفذ أوامر المتحكم فقط.</p>
+                        <p><strong>المزايا:</strong> إدارة الشبكة بأكملها (آلاف الأجهزة) من شاشة واحدة بدلاً من الدخول لكل جهاز بمفرده.</p>
+                    </div>
+
+                    <h2>المسارات (APIs) في بنية הـ SDN</h2>
+                    <ul>
+                        <li><strong>Southbound APIs:</strong> اللغة التي يستخدمها المتحكم المركزي (Controller) للتحدث وإعطاء الأوامر للأجهزة (الراوترات والسويتشات). (مثل بروتوكولات OpenFlow، NETCONF، RESTCONF).</li>
+                        <li><strong>Northbound APIs:</strong> اللغة التي تستخدمها أنت كمهندس (أو السكريبتات الخاصة بك) لإعطاء الأوامر للمتحكم المركزي نفسه. (وهي غالباً REST APIs).</li>
+                    </ul>
+
+                    <div class="concept-box" style="border-color: var(--danger); background: rgba(248, 81, 73, 0.05);">
+                        <h3 style="color: var(--danger);">Cisco DNA Center (SDA)</h3>
+                        <p>هو تطبيق סيسكو הرسمي لـ SDN في شبكات الشركات (Enterprise/Campus). هو بمثابة عقل الشبكة المركزي.</p>
+                        <p>يعتمد הـ DNA Center على مبدأ <strong>Intent-Based Networking (الشبكات الموجهة بالنوايا)</strong>: أي أنك تخبر الـ DNA Center بنيتك (مثلاً: "أريد عزل كاميرات المراقبة عن أجهزة الموظفين")، وهو بدوره يقوم بترجمة هذه النية إلى آلاف الأوامر (QoS, ACLs, VLANs) ويوزعها على כל הסויتشات آلياً!</p>
+                    </div>
+
+                    <h2>أدوات إدارة التهيئة (Configuration Management Tools)</h2>
+                    <p>تستخدم لبرمجة الأجهزة التقليدية التي لا تدعم SDN بشكل كامل. أشهرها:</p>
+                    <ul>
+                        <li><strong>Ansible:</strong> لا يحتاج لبرنامج وسيط (Agentless). يعتمد على الـ SSH وصيغة YAML البسيطة. يستخدم نمط الـ Push (يدفع الإعدادات للأجهزة).</li>
+                        <li><strong>Puppet & Chef:</strong> يحتاجان لبرنامج وسيط (Agent) ويعتمدان على لغة Ruby ونمط الـ Pull.</li>
+                    </ul>
+                `
+            }
         ]
     }
 ];
