@@ -72,7 +72,7 @@ const academyData = [
                 title: "1.5. نموذج OSI (The OSI Model)",
                 content: `
                     <h1>النموذج المرجعي (OSI Model)</h1>
-                    <p>نموذج الـ OSI هو خريطة تخيلية تتكون من 7 طبقات تشرح كيف تنتقل البيانات من جهازك (مثلاً عند فتح موقع) عبر الكابلات حتى تصل للسيرفر.</p>
+                    <p>نموذج OSI هو <strong>نموذج مرجعي نظري</strong> طورته منظمة ISO عام 1984 لوصف كيفية اتصال الأجهزة المختلفة ببعضها عبر الشبكة.</p>
 
                     <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
                         <h3 style="color: #ffb020;">الطبقات السبعة (من فوق لتحت)</h3>
@@ -87,7 +87,52 @@ const academyData = [
                         </ol>
                     </div>
 
-                    <p><em>نصيحة للحفظ (من أسفل لأعلى):</em> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</p>
+                    <h2>تفصيل الطبقات والمقارنة مع TCP/IP</h2>
+                    <table style="width:100%; border-collapse: collapse; margin-top: 15px; text-align: right;">
+                        <tr style="background: rgba(88,166,255,0.1); border-bottom: 1px solid var(--border);">
+                            <th style="padding: 10px;">طبقة OSI</th>
+                            <th style="padding: 10px;">طبقة TCP/IP المقابلة</th>
+                            <th style="padding: 10px;">الوظيفة</th>
+                            <th style="padding: 10px;">الأجهزة/البروتوكولات</th>
+                            <th style="padding: 10px;">وحدة البيانات (PDU)</th>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">7. Application<br>6. Presentation<br>5. Session</td>
+                            <td style="padding: 10px; color: var(--accent);">Application</td>
+                            <td style="padding: 10px;">واجهة التطبيقات، التشفير، إدارة الجلسات</td>
+                            <td style="padding: 10px;">HTTP, DNS, FTP, SSL, NetBIOS</td>
+                            <td style="padding: 10px;">Data</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">4. Transport</td>
+                            <td style="padding: 10px; color: var(--success);">Transport</td>
+                            <td style="padding: 10px;">النقل الموثوق والتحكم في التدفق</td>
+                            <td style="padding: 10px;">TCP, UDP</td>
+                            <td style="padding: 10px;">Segment / Datagram</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 10px;">3. Network</td>
+                            <td style="padding: 10px; color: #ffb020;">Internet</td>
+                            <td style="padding: 10px;">التوجيه والعناوين المنطقية</td>
+                            <td style="padding: 10px;">Router, IP, ICMP, OSPF</td>
+                            <td style="padding: 10px;">Packet</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">2. Data Link<br>1. Physical</td>
+                            <td style="padding: 10px; color: var(--danger);">Network Access</td>
+                            <td style="padding: 10px;">الوصول للوسط ونقل الإشارات</td>
+                            <td style="padding: 10px;">Switch, Hub, Cables, MAC, Ethernet</td>
+                            <td style="padding: 10px;">Frame / Bits</td>
+                        </tr>
+                    </table>
+
+                    <h2>عملية التغليف (Encapsulation)</h2>
+                    <pre style="background: #0d1117; padding: 15px; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; color: #58a6ff;">
+Data → Segment → Packet → Frame → Bits
+(7)    (4)       (3)      (2)     (1)
+                    </pre>
+
+                    <p><em>نصيحة للحفظ (من أعلى لأسفل):</em> <strong>A</strong>ll <strong>P</strong>eople <strong>S</strong>eem <strong>T</strong>o <strong>N</strong>eed <strong>D</strong>ata <strong>P</strong>rocessing</p>
                 `
             },
             {
