@@ -26,6 +26,8 @@ function getPrompt() {
     else if (routerState.mode === 'config-vlan') suffix = '(config-vlan)#';
     else if (routerState.mode === 'config-if') suffix = '(config-if)#';
     else if (routerState.mode === 'config-router') suffix = '(config-router)#';
+    else if (routerState.mode === 'config-dhcp') suffix = '(dhcp-config)#';
+    else if (routerState.mode === 'config-line') suffix = '(config-line)#';
     
     return `${routerState.hostname}${suffix}`;
 }
@@ -127,6 +129,8 @@ function processCommand(cmd) {
         if (routerState.mode === 'config-vlan') routerState.mode = 'config';
         else if (routerState.mode === 'config-if') routerState.mode = 'config';
         else if (routerState.mode === 'config-router') routerState.mode = 'config';
+        else if (routerState.mode === 'config-dhcp') routerState.mode = 'config';
+        else if (routerState.mode === 'config-line') routerState.mode = 'config';
         else if (routerState.mode === 'config') routerState.mode = 'priv';
         else if (routerState.mode === 'priv') routerState.mode = 'user';
     }
@@ -162,6 +166,74 @@ function processCommand(cmd) {
         } else {
             term.writeln('% Incomplete command.');
         }
+    }
+    else if (mainCmd === 'ipv6' && parts[1]?.toLowerCase() === 'route' && routerState.mode === 'config') {
+        if (!routerState.ipv6Routes) routerState.ipv6Routes = [];
+        routerState.ipv6Routes.push({ network: parts[2], nextHop: parts[3] });
+    }
+    else if (mainCmd === 'ipv6' && parts[1]?.toLowerCase() === 'unicast-routing' && routerState.mode === 'config') {
+        routerState.ipv6Routing = true;
+    }
+    else if (mainCmd === 'access-list' && routerState.mode === 'config') {
+        if (!routerState.acls) routerState.acls = {};
+        let aclNum = parts[1];
+        if (!routerState.acls[aclNum]) routerState.acls[aclNum] = [];
+        routerState.acls[aclNum].push({ action: parts[2]?.toLowerCase(), target: parts[3], wildcard: parts[4] || null });
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'nat' && parts[2]?.toLowerCase() === 'inside' && routerState.mode === 'config') {
+        if (!routerState.nat) routerState.nat = [];
+        if (parts[3]?.toLowerCase() === 'source' && parts[4]?.toLowerCase() === 'static') {
+            routerState.nat.push({ type: 'static', inside: parts[5], outside: parts[6] });
+        } else if (parts[3]?.toLowerCase() === 'source' && parts[4]?.toLowerCase() === 'list') {
+            routerState.nat.push({ type: 'overload', list: parts[5], poolOrIf: parts[7] });
+        }
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'dhcp' && parts[2]?.toLowerCase() === 'pool' && routerState.mode === 'config') {
+        routerState.mode = 'config-dhcp';
+        routerState.currentDhcp = parts[3];
+        if (!routerState.dhcp) routerState.dhcp = {};
+        routerState.dhcp[parts[3]] = {};
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'dhcp' && parts[2]?.toLowerCase() === 'snooping' && routerState.mode === 'config') {
+        if (parts[3]?.toLowerCase() === 'vlan') routerState.dhcpSnoopingVlan = parts[4];
+        else routerState.dhcpSnoopingEnabled = true;
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'arp' && parts[2]?.toLowerCase() === 'inspection' && routerState.mode === 'config') {
+        if (parts[3]?.toLowerCase() === 'vlan') routerState.arpInspectionVlan = parts[4];
+    }
+    else if (mainCmd === 'network' && routerState.mode === 'config-dhcp') {
+        routerState.dhcp[routerState.currentDhcp].network = parts[1];
+        routerState.dhcp[routerState.currentDhcp].mask = parts[2];
+    }
+    else if (mainCmd === 'default-router' && routerState.mode === 'config-dhcp') {
+        routerState.dhcp[routerState.currentDhcp].defaultRouter = parts[1];
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'domain-name' && routerState.mode === 'config') {
+        routerState.domainName = parts[2];
+    }
+    else if (mainCmd === 'crypto' && parts[1]?.toLowerCase() === 'key' && routerState.mode === 'config') {
+        routerState.cryptoKey = true;
+        term.writeln('% Generating 1024 bit RSA keys, keys will be non-exportable...[OK]');
+    }
+    else if (mainCmd === 'logging' && routerState.mode === 'config') {
+        routerState.syslog = parts[1];
+    }
+    else if (mainCmd === 'ntp' && parts[1]?.toLowerCase() === 'server' && routerState.mode === 'config') {
+        routerState.ntp = parts[2];
+    }
+    else if (mainCmd === 'line' && parts[1]?.toLowerCase() === 'vty' && routerState.mode === 'config') {
+        routerState.mode = 'config-line';
+        if (!routerState.lineVty) routerState.lineVty = {};
+    }
+    else if (mainCmd === 'transport' && parts[1]?.toLowerCase() === 'input' && parts[2]?.toLowerCase() === 'ssh' && routerState.mode === 'config-line') {
+        routerState.lineVty.ssh = true;
+    }
+    else if (mainCmd === 'login' && parts[1]?.toLowerCase() === 'local' && routerState.mode === 'config-line') {
+        routerState.lineVty.loginLocal = true;
+    }
+    else if (mainCmd === 'username' && routerState.mode === 'config') {
+        if (!routerState.users) routerState.users = {};
+        routerState.users[parts[1]] = true;
     }
     else if (mainCmd === 'router' && routerState.mode === 'config') {
         if (parts[1]?.toLowerCase() === 'ospf') {
@@ -209,9 +281,39 @@ function processCommand(cmd) {
             routerState.currentIf = parts[1].toLowerCase(); // e.g. f0/1 or range
             if (!routerState.interfaces) routerState.interfaces = {};
             if (!routerState.interfaces[routerState.currentIf]) {
-                routerState.interfaces[routerState.currentIf] = {};
+                routerState.interfaces[routerState.currentIf] = { shutdown: true }; // Default to shutdown
             }
         }
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'address' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        intf.ip = parts[2];
+        intf.mask = parts[3];
+    }
+    else if (mainCmd === 'ipv6' && parts[1]?.toLowerCase() === 'address' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        intf.ipv6 = parts[2];
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'access-group' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        intf.accessGroup = { acl: parts[2], direction: parts[3]?.toLowerCase() };
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'nat' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        intf.nat = parts[2]?.toLowerCase();
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'dhcp' && parts[2]?.toLowerCase() === 'snooping' && parts[3]?.toLowerCase() === 'trust' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        intf.dhcpTrust = true;
+    }
+    else if (mainCmd === 'ip' && parts[1]?.toLowerCase() === 'arp' && parts[2]?.toLowerCase() === 'inspection' && parts[3]?.toLowerCase() === 'trust' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        intf.arpTrust = true;
+    }
+    else if (mainCmd === 'no' && parts[1]?.toLowerCase() === 'shutdown' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        intf.shutdown = false;
+        term.writeln(`\n%LINK-3-UPDOWN: Interface ${routerState.currentIf}, changed state to up`);
     }
     else if (mainCmd === 'switchport' && routerState.mode === 'config-if') {
         let intf = routerState.interfaces[routerState.currentIf];
@@ -248,8 +350,16 @@ function processCommand(cmd) {
         }
     }
     else if (mainCmd === 'show' && routerState.mode !== 'user') {
-        if (parts[1]?.toLowerCase() === 'vlan') term.writeln('VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Fa0/1, Fa0/2...\n10   Accounting                       active');
-        else if (parts[1]?.toLowerCase() === 'mac') term.writeln('Mac Address Table\n-------------------------------------------\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----');
+        routerState.lastShow = cmd;
+        let p1 = parts[1]?.toLowerCase();
+        let p2 = parts[2]?.toLowerCase();
+        
+        if (p1 === 'vlan') term.writeln('VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Fa0/1, Fa0/2...\n10   Accounting                       active');
+        else if (p1 === 'mac') term.writeln('Mac Address Table\n-------------------------------------------\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----');
+        else if (p1 === 'ip' && p2 === 'route') term.writeln('Gateway of last resort is not set\n\n     10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks\nC       10.10.10.0/24 is directly connected, GigabitEthernet0/0\nS       192.168.1.0/24 [1/0] via 10.10.10.2');
+        else if (p1 === 'ip' && p2 === 'interface') term.writeln('Interface              IP-Address      OK? Method Status                Protocol\nGigabitEthernet0/0     192.168.1.1     YES manual up                    up\nFastEthernet0/1        unassigned      YES unset  up                    down');
+        else if (p1 === 'port-security') term.writeln('Secure Port  MaxSecureAddr  CurrentAddr  SecurityViolation  Security Action\n               (Count)       (Count)          (Count)\n---------------------------------------------------------------------------\n      Fa0/1              1          0                  0         Shutdown');
+        else if (p1 === 'running-config') term.writeln('Building configuration...\n\nCurrent configuration : 1563 bytes\n!\nversion 15.1\n!\nhostname ' + routerState.hostname + '\n!\n! (Showing simulated configuration...)\n!');
         else term.writeln('Showing output (simulated)...');
     }
     else {
