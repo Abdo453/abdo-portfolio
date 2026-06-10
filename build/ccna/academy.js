@@ -361,6 +361,151 @@ const academyData = [
                 `
             }
         ]
+    },
+    {
+        chapter: "المرحلة الرابعة: التوجيه (Routing)",
+        lessons: [
+            {
+                id: "lesson4_1",
+                title: "1. أساسيات التوجيه (Routing Fundamentals)",
+                content: `
+                    <h1>مفهوم التوجيه (Routing)</h1>
+                    <p>التوجيه هو عملية تحديد أفضل مسار لإرسال البيانات (Packets) من شبكة المصدر إلى شبكة الوجهة باستخدام الراوتر.</p>
+                    
+                    <div class="concept-box">
+                        <h3>جدول التوجيه (Routing Table)</h3>
+                        <p>الراوتر يمتلك جدولاً (مثل خريطة جوجل) يحتوي على:</p>
+                        <ul>
+                            <li><strong>الشبكة الوجهة (Destination Network):</strong> الشبكة التي نريد الوصول إليها.</li>
+                            <li><strong>المحطة التالية (Next-Hop):</strong> عنوان الراوتر المجاور الذي سيسلمنا للوجهة.</li>
+                            <li><strong>واجهة الخروج (Interface):</strong> الكابل الذي ستخرج منه البيانات.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: "lesson4_2",
+                title: "2. التوجيه الثابت (Static Routing)",
+                content: `
+                    <h1>التوجيه الثابت (Static)</h1>
+                    <p>هو مسار يقوم مهندس الشبكات بكتابته يدوياً في الراوتر. مفيد للشبكات الصغيرة، لكنه متعب في الشبكات الكبيرة لأنه لا يتأقلم إذا انقطع الكابل.</p>
+                    
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">المسار الافتراضي (Default Route)</h3>
+                        <p>يُكتب بالصيغة <code>0.0.0.0/0</code>، ويعني: "إذا لم تعرف أين تذهب هذه البيانات، أرسلها إلى هذا المسار". يُستخدم عادة للاتصال بالإنترنت.</p>
+                    </div>
+                `
+            },
+            {
+                id: "lesson4_3",
+                title: "3. بروتوكولات التوجيه الديناميكي",
+                content: `
+                    <h1>التوجيه الديناميكي (Dynamic)</h1>
+                    <p>هنا تتبادل الراوترات المعلومات أوتوماتيكياً لبناء خريطة الشبكة بدون تدخل يدوي.</p>
+
+                    <h2>OSPF (Open Shortest Path First)</h2>
+                    <ul>
+                        <li>يعتمد على حالة الوصلة (Link-State).</li>
+                        <li>سريع جداً في اكتشاف التغييرات.</li>
+                        <li>يستخدم خوارزمية Dijkstra لاختيار أقصر مسار بناءً على الـ Cost (السرعة).</li>
+                    </ul>
+
+                    <h2>EIGRP</h2>
+                    <ul>
+                        <li>بروتوكول خاص بسيسكو (Cisco Proprietary).</li>
+                        <li>يستخدم معادلة معقدة تعتمد على الـ Bandwidth والـ Delay.</li>
+                    </ul>
+                `
+            }
+        ]
+    },
+    {
+        chapter: "المرحلة الخامسة: خدمات الشبكة (IP Services)",
+        lessons: [
+            {
+                id: "lesson5_1",
+                title: "1. ترجمة العناوين (NAT)",
+                content: `
+                    <h1>Network Address Translation (NAT)</h1>
+                    <p>بما أن عناوين الـ IPv4 العامة (Public) نفدت، نستخدم الـ NAT في الراوتر ليقوم بترجمة عناوين أجهزتنا الداخلية (Private) إلى عنوان عام واحد (Public) للوصول للإنترنت.</p>
+
+                    <div class="concept-box">
+                        <h3>PAT (Port Address Translation) أو Overload</h3>
+                        <p>هو النوع الأكثر استخداماً، يسمح لآلاف الأجهزة في الشبكة المحلية باستخدام <strong>IP عام واحد فقط</strong> للوصول للإنترنت، حيث يفرق الراوتر بينهم باستخدام أرقام المنافذ (Ports).</p>
+                    </div>
+                `
+            },
+            {
+                id: "lesson5_2",
+                title: "2. قوائم التحكم (ACL)",
+                content: `
+                    <h1>Access Control List (ACL)</h1>
+                    <p>هي قواعد تُكتب على الراوتر للسماح (Permit) أو المنع (Deny) لمرور بيانات معينة. تعمل كجدار حماية بسيط (Firewall).</p>
+                    
+                    <ul>
+                        <li><strong style="color:var(--danger);">Standard ACL:</strong> تمنع أو تسمح بناءً على عنوان المرسل (Source IP) فقط. (أرقامها 1-99).</li>
+                        <li><strong style="color:var(--success);">Extended ACL:</strong> متقدمة جداً، تمنع بناءً على المرسل، والمستقبل، ونوع الخدمة (مثل منع الـ HTTP فقط والسماح بالـ Ping). (أرقامها 100-199).</li>
+                    </ul>
+                `
+            }
+        ]
+    },
+    {
+        chapter: "المرحلة السادسة: أمن الشبكات (Security)",
+        lessons: [
+            {
+                id: "lesson6_1",
+                title: "1. أمان المنافذ (Port Security)",
+                content: `
+                    <h1>أمان المنافذ في السويتش</h1>
+                    <p>حتى لا يقوم أي شخص غريب بفصل كابل طابعة وتركيب جهازه الخاص لاختراق الشبكة، نستخدم الـ Port Security.</p>
+                    <p>نقوم بربط المنفذ بـ MAC Address محدد. إذا تم توصيل جهاز مختلف، يتخذ السويتش أحد الإجراءات التالية:</p>
+                    <ul>
+                        <li><strong>Protect:</strong> يتجاهل بيانات الغريب بهدوء.</li>
+                        <li><strong>Restrict:</strong> يتجاهل البيانات ويُرسل إنذاراً للمدير.</li>
+                        <li><strong style="color:var(--danger);">Shutdown:</strong> يغلق المنفذ تماماً فوراً.</li>
+                    </ul>
+                `
+            },
+            {
+                id: "lesson6_2",
+                title: "2. الشبكات الخاصة الافتراضية (VPN)",
+                content: `
+                    <h1>Virtual Private Network (VPN)</h1>
+                    <p>هل تعمل من المنزل وتريد الدخول لسيرفرات الشركة بأمان عبر الإنترنت غير الآمن؟ هنا يأتي دور الـ VPN.</p>
+                    <p>يقوم بإنشاء <strong>نفق مشفر (Encrypted Tunnel)</strong> عبر الإنترنت لحماية بياناتك من التجسس (Man-in-the-Middle).</p>
+                    <ul>
+                        <li><strong>Site-to-Site:</strong> ربط فرعين لشركة عبر الإنترنت بشكل دائم.</li>
+                        <li><strong>Remote Access:</strong> ربط كمبيوتر موظف من منزله بشبكة الشركة (باستخدام برامج مثل Cisco AnyConnect).</li>
+                    </ul>
+                `
+            }
+        ]
+    },
+    {
+        chapter: "المرحلة السابعة: الأتمتة (Automation)",
+        lessons: [
+            {
+                id: "lesson7_1",
+                title: "1. الأتمتة وبرمجة الشبكات",
+                content: `
+                    <h1>مستقبل الشبكات: Automation & SDN</h1>
+                    <p>الطريقة التقليدية لإدارة 500 راوتر هي الدخول عليهم واحداً تلو الآخر لكتابة الأوامر! هذا مضيعة للوقت ومعرض للخطأ البشري.</p>
+
+                    <div class="concept-box" style="border-color: #58a6ff; background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: #58a6ff;">الشبكات المعرفة برمجياً (SDN)</h3>
+                        <p>في الـ SDN، نقوم بفصل عقل الراوتر (Control Plane) عن عضلاته التي تنقل البيانات (Data Plane). نضع العقل في سيرفر مركزي يُسمى <strong>Controller (مثل Cisco DNA)</strong>. من خلال هذا السيرفر، ندير جميع راوترات الشركة بضغطة زر واحدة!</p>
+                    </div>
+
+                    <h2>أدوات الأتمتة</h2>
+                    <ul>
+                        <li><strong>Ansible:</strong> أداة تعتمد على ملفات YAML لدفع الإعدادات لمئات الأجهزة في ثوانٍ.</li>
+                        <li><strong>Python:</strong> لغة البرمجة الأساسية في الشبكات اليوم، نستخدم مكتبات مثل <code>Netmiko</code> للدخول على الأجهزة وتغيير الإعدادات عبر سكربتات.</li>
+                        <li><strong>REST APIs:</strong> واجهات برمجية للتخاطب مع الأجهزة ببيانات بصيغة JSON بدل التخاطب بالـ CLI.</li>
+                    </ul>
+                `
+            }
+        ]
     }
 ];
 
