@@ -4,67 +4,80 @@ const academyData = [
         lessons: [
             {
                 id: "lesson1",
-                title: "1. ما هي الشبكات؟ وأنواعها",
+                title: "1. ما هي الشبكة ومكوناتها؟ (تعمق كامل)",
                 content: `
-                    <h1>مفهوم الشبكات (What is a Network?)</h1>
-                    <p>الشبكة ببساطة هي جهازي كمبيوتر أو أكثر متصلين ببعضهم البعض بهدف <strong>مشاركة الموارد (Resources)</strong> مثل الملفات، الطابعات، أو الاتصال بالإنترنت.</p>
+                    <h1>مفهوم الشبكات المعمّق (Network Deep Dive)</h1>
+                    <p>الشبكة ليست مجرد سلك يربط جهازين، بل هي بنية تحتية معقدة صُممت لضمان نقل البيانات بأمان وسرعة وموثوقية.</p>
                     
                     <div class="concept-box">
-                        <h3>لماذا نحتاج الشبكات؟</h3>
+                        <h3>1. المكونات الأساسية لأي شبكة (Network Components)</h3>
+                        <p>أي شبكة في العالم (سواء شبكة منزلك أو شبكة Google) تتكون من 3 عناصر رئيسية:</p>
                         <ul>
-                            <li><strong>مشاركة الموارد:</strong> تخيل شركة بها 50 موظف، بدلاً من شراء 50 طابعة، نشتري طابعة واحدة ونربطها بالشبكة!</li>
-                            <li><strong>التواصل السريع:</strong> إرسال الإيميلات والمحادثات.</li>
-                            <li><strong>الوصول للبيانات المركزية:</strong> حفظ ملفات الشركة على سيرفر واحد (File Server) يصل إليه الجميع.</li>
+                            <li><strong>الأجهزة الطرفية (End Devices):</strong> هي الأجهزة التي يتعامل معها المستخدم النهائي، وهي التي تُرسل أو تستقبل البيانات. (أمثلة: الكمبيوتر، الهواتف الذكية، الطابعات، الخوادم / Servers، كاميرات المراقبة IP).</li>
+                            <li><strong>الأجهزة الوسيطة (Intermediary Devices):</strong> هي أجهزة البنية التحتية التي تربط الأجهزة الطرفية ببعضها وتوجه البيانات في المسار الصحيح. (أمثلة: المحول / Switch، الموجه / Router، جدار الحماية / Firewall، أجهزة البث اللاسلكي / Access Points).</li>
+                            <li><strong>وسائط النقل (Network Media):</strong> هي القنوات التي تسافر عبرها البيانات، سواء كانت مادية أو هوائية. (أمثلة: الكابلات النحاسية UTP، كابلات الألياف الضوئية Fiber Optics، أمواج الراديو اللاسلكية / Wireless Frequencies).</li>
                         </ul>
                     </div>
 
-                    <h2>أنواع الشبكات حسب المساحة الجغرافية:</h2>
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">2. الخصائص والمعايير السبعة لتقييم الشبكة (Network Characteristics)</h3>
+                        <p>في هندسة الشبكات، لا نهتم فقط بأن الجهازين متصلان، بل نهتم بجودة الاتصال عبر 7 معايير رئيسية:</p>
+                        <ol>
+                            <li><strong>الطوبولوجيا (Topology):</strong> كيف يتم ترتيب الأجهزة ماديًا (Physical) ومنطقيًا (Logical).</li>
+                            <li><strong>السرعة (Speed):</strong> معدل نقل البيانات ويُقاس عادة بالبت في الثانية (bps).</li>
+                            <li><strong>التكلفة (Cost):</strong> الميزانية المطلوبة لإنشاء وصيانة الشبكة (الألياف الضوئية أغلى من النحاس).</li>
+                            <li><strong>الأمان (Security):</strong> حماية البيانات من السرقة أو التعديل أثناء النقل.</li>
+                            <li><strong>التواجدية (Availability):</strong> مدى احتمالية أن تكون الشبكة تعمل عندما تحتاجها. (نستهدف دائماً 99.999% وهو ما يُسمى بالخمس تسعات).</li>
+                            <li><strong>القابلية للتوسع (Scalability):</strong> مدى سهولة إضافة أجهزة أو فروع جديدة للشبكة دون إبطائها أو تغيير تصميمها.</li>
+                            <li><strong>الموثوقية (Reliability):</strong> قدرة الشبكة على إصلاح نفسها تلقائياً في حالة تعطل أحد المسارات (Redundancy).</li>
+                        </ol>
+                    </div>
+
+                    <h2>3. أنواع الشبكات (تعمق جغرافي)</h2>
                     
-                    <pre style="background: #0d1117; padding: 15px; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; color: #58a6ff;">
-[PC]---[Switch]---[Router]==========[ISP]==========[Router]---[Switch]---[PC]
-        LAN        ←――――――――――――→  WAN (Internet)  ←――――――――――――→       LAN
-                    </pre>
+                    <h3>1. شبكة المنطقة المحلية (LAN - Local Area Network)</h3>
+                    <ul>
+                        <li><strong>نطاقها:</strong> تغطي مساحة جغرافية صغيرة جداً (غرفة، مكتب، مبنى واحد).</li>
+                        <li><strong>ملكيتها:</strong> عادة ما تكون مملوكة ومُدارة بالكامل من قبل شخص واحد أو قسم IT داخل الشركة.</li>
+                        <li><strong>السرعة:</strong> عالية جداً (من 100 Mbps إلى 10 Gbps وأكثر) لأن الكابلات قصيرة.</li>
+                        <li><strong>التقنية الأشهر:</strong> تعتمد بنسبة 99% على معيار <code>Ethernet</code> (IEEE 802.3).</li>
+                    </ul>
 
-                    <h3>1. شبكة الـ LAN (Local Area Network)</h3>
-                    <p>هي الشبكة المحلية. تغطي مساحة صغيرة مثل مكتب، منزل، أو مبنى واحد. تتميز بسرعتها العالية وسهولة إدارتها.</p>
+                    <h3>2. شبكة المنطقة الواسعة (WAN - Wide Area Network)</h3>
+                    <ul>
+                        <li><strong>نطاقها:</strong> تربط بين شبكات LAN متباعدة جغرافياً (بين مدن أو قارات).</li>
+                        <li><strong>ملكيتها:</strong> لا تمتلك الشركة كابلات الـ WAN، بل تستأجرها من مزودي خدمة الاتصالات (ISPs) مثل Vodafone أو STC.</li>
+                        <li><strong>السرعة:</strong> غالباً تكون أبطأ من الـ LAN وأكثر تكلفة بكثير.</li>
+                        <li><strong>التقنية الأشهر:</strong> تعتمد على تقنيات مثل MPLS و Leased Lines و مؤخراً SD-WAN.</li>
+                    </ul>
 
-                    <h3>2. شبكة الـ WAN (Wide Area Network)</h3>
-                    <p>هي الشبكة الواسعة. تربط بين مدن أو دول مختلفة. أبطأ من الـ LAN وتعتمد على مزودي خدمة الإنترنت (ISPs) وشركات الاتصالات.</p>
+                    <h3>3. شبكة المنطقة اللاسلكية (WLAN - Wireless LAN)</h3>
+                    <ul>
+                        <li>هي نسخة لاسلكية من الـ LAN، تتيح للأجهزة الاتصال بالشبكة المحلية باستخدام موجات الراديو بدلاً من الكابلات النحاسية.</li>
+                        <li><strong>التقنية الأشهر:</strong> معيار <code>Wi-Fi</code> (IEEE 802.11).</li>
+                    </ul>
 
-                    <h3>3. شبكة الـ MAN (Metropolitan Area Network)</h3>
-                    <p>تغطي مساحة متوسطة مثل مدينة أو حرم جامعي ضخم. وهي أكبر من الـ LAN وأصغر من الـ WAN.</p>
+                    <h3>4. شبكة منطقة التخزين (SAN - Storage Area Network)</h3>
+                    <ul>
+                        <li>شبكة مخصصة وعالية السرعة جداً.</li>
+                        <li><strong>وظيفتها:</strong> لا تستخدم لتصفح الإنترنت للموظفين، بل تستخدم لربط <em>الخوادم (Servers)</em> بأجهزة تخزين عملاقة (Storage Arrays) لتبادل البيانات دون إرهاق شبكة الـ LAN العادية.</li>
+                        <li><strong>التقنية الأشهر:</strong> Fiber Channel و iSCSI.</li>
+                    </ul>
 
-                    <h3>جدول مقارنة سريع</h3>
-                    <table style="width:100%; border-collapse: collapse; margin-top: 15px; text-align: right;">
-                        <tr style="background: rgba(88,166,255,0.1); border-bottom: 1px solid var(--border);">
-                            <th style="padding: 10px;">النوع</th>
-                            <th style="padding: 10px;">المساحة</th>
-                            <th style="padding: 10px;">السرعة</th>
-                            <th style="padding: 10px;">التكلفة</th>
-                            <th style="padding: 10px;">التحكم</th>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 10px; color: var(--accent);">LAN</td>
-                            <td style="padding: 10px;">مبنى/منزل</td>
-                            <td style="padding: 10px;">عالية جداً</td>
-                            <td style="padding: 10px;">منخفضة</td>
-                            <td style="padding: 10px;">كامل (أنت تديرها)</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 10px; color: #ffb020;">MAN</td>
-                            <td style="padding: 10px;">مدينة/حرم جامعي</td>
-                            <td style="padding: 10px;">متوسطة</td>
-                            <td style="padding: 10px;">متوسطة</td>
-                            <td style="padding: 10px;">مشترك</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 10px; color: var(--danger);">WAN</td>
-                            <td style="padding: 10px;">دول/قارات</td>
-                            <td style="padding: 10px;">متغيرة (حسب الـ ISP)</td>
-                            <td style="padding: 10px;">عالية</td>
-                            <td style="padding: 10px;">مزود الخدمة (ISP)</td>
-                        </tr>
-                    </table>
+                    <h3>5. شبكة المنطقة الشخصية (PAN) و شبكة المنطقة المدنية (MAN)</h3>
+                    <ul>
+                        <li><strong>PAN:</strong> شبكة صغيرة جداً حول شخص واحد (مسافة أمتار قليلة). مثال: ربط سماعة البلوتوث بالهاتف، أو ساعة أبل بالآيفون.</li>
+                        <li><strong>MAN:</strong> شبكة تغطي مدينة كاملة (أكبر من LAN وأصغر من WAN). مثال: ربط فروع بنك داخل نفس المدينة بكابلات ألياف ضوئية.</li>
+                    </ul>
+
+                    <div class="concept-box" style="border-color: var(--danger); background: rgba(248, 81, 73, 0.05);">
+                        <h3 style="color: var(--danger);">4. مصطلحات الوصول للمعلومات (Intranet vs Extranet vs Internet)</h3>
+                        <ul>
+                            <li><strong>الإنترانت (Intranet):</strong> شبكة الشركة <em>الداخلية المغلقة</em>. لا يمكن الدخول إليها إلا للموظفين فقط. (مثال: نظام الإجازات الداخلي للشركة).</li>
+                            <li><strong>الإكسترانت (Extranet):</strong> هي إنترانت للشركة، ولكننا فتحنا باباً صغيراً آمناً للموردين أو الشركاء الخارجيين للدخول لجزء محدد من بياناتنا (مثال: نظام يتيح للموردين رؤية مخزون الشركة لإرسال بضاعة جديدة).</li>
+                            <li><strong>الإنترنت (Internet):</strong> شبكة الشبكات العالمية، متاحة للجمهور (Public)، وتتكون من ملايين الـ LANs والـ WANs المرتبطة ببعضها البعض.</li>
+                        </ul>
+                    </div>
                 `
             },
             {
