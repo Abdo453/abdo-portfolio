@@ -1172,12 +1172,12 @@ for p in range(79, 82):
         id: "l75",
         title: "تزييف الدي إن إس (DNS Spoofing)",
         theory: `<h1>Level 75: توجيه الضحية</h1>
-          <p>عندما يطلب الضحية `google.com`، يمكنك عبر Scapy الرد بحزمة DNS مزيفة توجهه لسيرفر الاختراق الخاص بك.</p>
+          <p>عندما يطلب الضحية <code><code>google.com</code></code>، يمكنك عبر Scapy الرد بحزمة DNS مزيفة توجهه لسيرفر الاختراق الخاص بك.</p>
           <div class="mini-challenge">
             <div class="challenge-title">🎯 التحدي المطلوب</div>
-            <p>لديك قاموس DNS. غيّر قيمة الـ IP لـ <code>google.com</code> لتصبح <code>"10.0.0.1"</code> ثم اطبع القاموس.</p>
+            <p>لديك قاموس DNS. غيّر قيمة الـ IP لـ <code><code>google.com</code></code> لتصبح <code>"10.0.0.1"</code> ثم اطبع القاموس.</p>
           </div>`,
-        initialCode: `dns_records = {"google.com": "142.250.190.46"}\n\n# غير الـ IP واطبع القاموس\n`,
+        initialCode: `dns_records = {"<code>google.com</code>": "142.250.190.46"}\n\n# غير الـ IP واطبع القاموس\n`,
         validate: (out) => out.includes("10.0.0.1")
       }
     ]
