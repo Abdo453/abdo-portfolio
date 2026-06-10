@@ -189,7 +189,9 @@ function updateSidebarIcons() {
     if (typeof getLessonProgress !== 'function') return;
 
     document.querySelectorAll('.lesson-btn').forEach(btn => {
-        const id = btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        const onclickAttr = btn.getAttribute('onclick');
+        const matchResult = onclickAttr ? onclickAttr.match(/'([^']+)'/) : null;
+        const id = matchResult ? matchResult[1] : null;
         if (id) {
             const p = getLessonProgress(id);
             const isFullyCompleted = p.theory && p.quiz && p.lab && p.interview;
