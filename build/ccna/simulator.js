@@ -19,6 +19,7 @@ function getPrompt() {
     let suffix = '>';
     if (routerState.mode === 'priv') suffix = '#';
     else if (routerState.mode === 'config') suffix = '(config)#';
+    else if (routerState.mode === 'config-vlan') suffix = '(config-vlan)#';
     
     return `${routerState.hostname}${suffix}`;
 }
@@ -88,12 +89,31 @@ function processCommand(cmd) {
         else term.writeln('% Error: Must be in privileged mode.');
     }
     else if (mainCmd === 'exit') {
-        if (routerState.mode === 'config') routerState.mode = 'priv';
+        if (routerState.mode === 'config-vlan') routerState.mode = 'config';
+        else if (routerState.mode === 'config') routerState.mode = 'priv';
         else if (routerState.mode === 'priv') routerState.mode = 'user';
     }
     else if (mainCmd === 'hostname' && routerState.mode === 'config') {
         if (parts[1]) {
             routerState.hostname = parts[1]; // Case sensitive for hostname
+        }
+    }
+    else if (mainCmd === 'vlan' && routerState.mode === 'config') {
+        if (parts[1]) {
+            routerState.mode = 'config-vlan';
+            if (!routerState.vlans) routerState.vlans = {};
+            routerState.currentVlan = parts[1];
+            if (!routerState.vlans[parts[1]]) {
+                routerState.vlans[parts[1]] = { name: `VLAN${parts[1]}` };
+            }
+        }
+    }
+    else if (mainCmd === 'name' && routerState.mode === 'config-vlan') {
+        if (parts[1]) {
+            let vlanName = cmd.substring(5).trim(); // Keep exact casing
+            if (routerState.currentVlan && routerState.vlans[routerState.currentVlan]) {
+                routerState.vlans[routerState.currentVlan].name = vlanName;
+            }
         }
     }
     else if (mainCmd === 'show' && routerState.mode !== 'user') {

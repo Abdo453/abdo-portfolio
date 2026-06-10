@@ -31,5 +31,28 @@ window.ccnaCurriculum = [
                 }
             }
         ]
+    },
+    {
+        phase: "المرحلة الثالثة: أجهزة Cisco (الطبقة الثانية)",
+        levels: [
+            {
+                id: "p3_l1",
+                title: "إنشاء شبكة وهمية (VLAN)",
+                theory: `<h2>الشبكات المحلية الوهمية (VLANs)</h2>
+                <p>تستخدم الـ VLANs لتقسيم السويتش الواحد إلى عدة سويتشات وهمية لأغراض الأمان وتقليل الـ Broadcast.</p>
+                <p>لإنشاء VLAN جديدة، ندخل أولاً لوضع الإعدادات (Global Configuration) ثم نكتب:</p>
+                <ul>
+                    <li><code>vlan [NUMBER]</code> : لإنشاء الـ VLAN والدخول لوضع إعدادها.</li>
+                    <li><code>name [NAME]</code> : لتسمية الـ VLAN.</li>
+                </ul>`,
+                challengeText: "قم بإنشاء VLAN رقم 10 وسمّها Accounting.",
+                validate: function(state) {
+                    if (state.vlans && state.vlans["10"] && state.vlans["10"].name === "Accounting") {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        ]
     }
 ];
