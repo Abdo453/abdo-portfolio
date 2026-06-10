@@ -107,6 +107,18 @@ function processCommand(cmd) {
             term.writeln('Injecting LSA packets into OSPF process...');
             term.writeln('Success! Target routing table poisoned.');
             routerState.lastPing = cmd; // Storing here for simplicity in validation
+        } else if (mainCmd === 'curl') {
+            term.writeln('{"interfaces": {"GigabitEthernet0/0": {"ip": "192.168.1.1", "status": "up"}}}');
+            routerState.lastCurl = cmd;
+        } else if (mainCmd === 'hydra') {
+            term.writeln('Hydra v9.1 (c) 2020 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.');
+            term.writeln('Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at ' + new Date().toISOString());
+            setTimeout(() => { term.writeln('[22][ssh] host: 192.168.1.1   login: admin   password: cisco\n1 of 1 target successfully completed, 1 valid password found'); checkChallenge(); }, 1500);
+            routerState.lastHydra = cmd;
+        } else if (mainCmd === 'hping3') {
+            term.writeln('HPING 192.168.1.1 (eth0 192.168.1.1): S set, 40 headers + 0 data bytes');
+            term.writeln('hping in flood mode, no replies will be shown');
+            routerState.lastHping = cmd;
         } else {
             term.writeln('bash: ' + mainCmd + ': command not found');
         }
@@ -173,6 +185,11 @@ function processCommand(cmd) {
     }
     else if (mainCmd === 'ipv6' && parts[1]?.toLowerCase() === 'unicast-routing' && routerState.mode === 'config') {
         routerState.ipv6Routing = true;
+    }
+    else if (mainCmd === 'no' && parts[1]?.toLowerCase() === 'access-list' && routerState.mode === 'config') {
+            let aclNum = parts[2];
+            if (routerState.acls && routerState.acls[aclNum]) delete routerState.acls[aclNum];
+            term.writeln(`% Access list ${aclNum} deleted.`);
     }
     else if (mainCmd === 'access-list' && routerState.mode === 'config') {
         if (!routerState.acls) routerState.acls = {};
@@ -249,6 +266,15 @@ function processCommand(cmd) {
             routerState.currentProtocol = 'rip';
             if (!routerState.rip) routerState.rip = { networks: [], version: 1 };
         }
+    }
+    else if (mainCmd === 'no' && parts[1]?.toLowerCase() === 'router' && routerState.mode === 'config') {
+        if (parts[2]?.toLowerCase() === 'ospf') {
+            if (routerState.ospf && routerState.ospf.pid === parts[3]) delete routerState.ospf;
+            term.writeln(`% OSPF process ${parts[3]} deleted.`);
+        }
+    }
+    else if (mainCmd === 'access-class' && routerState.mode === 'config-line') {
+        routerState.lineVty.accessClass = { acl: parts[1], direction: parts[2]?.toLowerCase() };
     }
     else if (mainCmd === 'router-id' && routerState.mode === 'config-router') {
         if (routerState.currentProtocol === 'ospf') routerState.ospf.routerId = parts[1];

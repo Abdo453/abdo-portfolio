@@ -483,5 +483,157 @@ window.ccnaCurriculum = [
                 }
             }
         ]
+    },
+    {
+        phase: "الدفعة الرابعة: Advanced Protocols & Cybersecurity Bridge",
+        levels: [
+            {
+                id: "lab31",
+                title: "Lab 31: خطأ في التوجيه (Troubleshooting OSPF)",
+                theory: `<h2>اكتشاف الأخطاء (Troubleshooting)</h2>
+                <p>في الحياة العملية، لن تبني شبكات من الصفر دائماً، بل ستصلح أخطاء الآخرين. الراوترات هنا لا تتواصل بسبب خطأ في تكوين الـ OSPF.</p>
+                <p><strong>التحدي:</strong><br>
+                يوجد OSPF 1 قديم يمنع الاتصال. احذفه بأمر <code>no router ospf 1</code>.<br>
+                ثم قم بإنشائه بشكل صحيح: <code>router ospf 10</code> ثم <code>network 10.0.0.0 0.255.255.255 area 0</code>.</p>`,
+                challengeText: "احذف OSPF 1، وأنشئ OSPF 10 لشبكة 10.0.0.0 (Wildcard: 0.255.255.255) في Area 0.",
+                validate: function(state) {
+                    let oldDeleted = state.ospf && state.ospf.pid !== "1";
+                    let newCreated = state.ospf && state.ospf.pid === "10" && state.ospf.networks.some(n => n.net === "10.0.0.0" && n.area === "0");
+                    return oldDeleted && newCreated;
+                }
+            },
+            {
+                id: "lab32",
+                title: "Lab 32: إصلاح قائمة التحكم (ACL Misconfiguration)",
+                theory: `<h2>عندما يمنع الأمان العمل!</h2>
+                <p>تذكر دائماً أن هناك <strong>Implicit Deny</strong> مخفية في نهاية أي قائمة تحكم. القائمة الحالية رقم 100 تمنع كل شيء عن طريق الخطأ.</p>
+                <p><strong>التحدي:</strong><br>
+                احذف القائمة الخاطئة: <code>no access-list 100</code><br>
+                أعد كتابتها للسماح بمرور الـ Web فقط: <code>access-list 100 permit tcp any any eq 80</code>.</p>`,
+                challengeText: "احذف القائمة 100 القديمة، وأنشئ 100 جديدة تسمح بـ tcp من أي لأي بالبورت 80.",
+                validate: function(state) {
+                    let acl = state.acls && state.acls["100"];
+                    return acl && acl.some(r => r.action === "permit" && r.target === "tcp any any eq 80");
+                }
+            },
+            {
+                id: "lab33",
+                title: "Lab 33: أتمتة الشبكات (Automation & RESTCONF)",
+                isLinux: true,
+                theory: `<h2>المستقبل: الشبكات المبرمجة</h2>
+                <p>في CCNA 200-301، يجب أن تفهم أن الراوترات الحديثة تملك واجهات API المبرمجة (RESTCONF). بدلاً من Telnet والـ CLI، نستخرج البيانات بصيغة JSON!</p>
+                <p><strong>وضع الـ Linux (Pentester / DevOps):</strong><br>
+                استخدم أداة <code>curl</code> لإرسال طلب HTTP GET للراوتر.</p>`,
+                challengeText: "في شاشة اللينكس، استخدم الأمر curl لجلب البيانات.",
+                validate: function(state) {
+                    return state.lastCurl && state.lastCurl.includes("curl");
+                }
+            },
+            {
+                id: "lab34",
+                title: "Lab 34: ☠️ الاستطلاع العميق (Nmap Deep Scan)",
+                isLinux: true,
+                theory: `<h2>جسر الأمن السيبراني (Red Team)</h2>
+                <p>الآن أنت المخترق. قبل أي هجوم، يجب أن تعرف بالضبط منافذ السيرفر وإصداراتها. فحص Nmap السريع غير كافٍ.</p>
+                <p><strong>الأمر:</strong><br>
+                سنستخدم فحص الـ Versioning (V):<br>
+                <code>nmap -sV 192.168.1.1</code></p>`,
+                challengeText: "اكتب nmap -sV 192.168.1.1 لمعرفة إصدار الخدمات المفتوحة.",
+                validate: function(state) {
+                    return state.lastNmap && state.lastNmap.includes("nmap -sV 192.168.1.1");
+                }
+            },
+            {
+                id: "lab35",
+                title: "Lab 35: ☠️ كسر كلمات المرور (Hydra Brute-Force)",
+                isLinux: true,
+                theory: `<h2>اكتشافنا خدمة SSH!</h2>
+                <p>بفضل Nmap، عرفنا أن بورت 22 (SSH) مفتوح على راوتر الشركة. سنقوم بتخمين الباسورد (Brute Force) باستخدام أداة THC Hydra.</p>
+                <p><strong>الأمر:</strong><br>
+                <code>hydra -l admin -P passwords.txt ssh://192.168.1.1</code></p>`,
+                challengeText: "استخدم hydra لكسر كلمة سر اليوزر admin للخدمة ssh://192.168.1.1.",
+                validate: function(state) {
+                    return state.lastHydra && state.lastHydra.includes("hydra -l admin");
+                }
+            },
+            {
+                id: "lab36",
+                title: "Lab 36: ☠️ الدخول الفعلي وتخطي الحماية (Access)",
+                isLinux: true,
+                theory: `<h2>الباسورد هو "cisco"!</h2>
+                <p>الآن بعد أن نجح هيدرا بكشف كلمة السر (cisco)، سنقوم بتسجيل الدخول الفعلي للراوتر باستخدام الـ SSH من جهاز الـ Linux.</p>
+                <p><strong>الأمر:</strong><br>
+                <code>ssh admin@192.168.1.1</code></p>`,
+                challengeText: "اتصل بالراوتر عن طريق ssh admin@192.168.1.1",
+                validate: function(state) {
+                    return state.lastSsh && state.lastSsh.includes("ssh admin@192.168.1.1");
+                }
+            },
+            {
+                id: "lab37",
+                title: "Lab 37: ☠️ هجوم حجب الخدمة (Network DoS)",
+                isLinux: true,
+                theory: `<h2>إسقاط الشبكة! (SYN Flood)</h2>
+                <p>في حال فشل الاختراق، الهكر يلجأ لتعطيل الخدمة وإسقاط السيرفر (Denial of Service) عن طريق إغراقه بآلاف الحزم المزيفة.</p>
+                <p><strong>الأمر (أداة hping3):</strong><br>
+                <code>hping3 --flood 192.168.1.1</code></p>`,
+                challengeText: "نفذ الهجوم hping3 --flood 192.168.1.1 لإغراق الراوتر.",
+                validate: function(state) {
+                    return state.lastHping && state.lastHping.includes("hping3 --flood");
+                }
+            },
+            {
+                id: "lab38",
+                title: "Lab 38: 🛡️ الاستجابة للحوادث (Blue Team: Mitigation)",
+                theory: `<h2>ارتداء قبعة المدافع!</h2>
+                <p>الشركة تتعرض لهجوم DoS! الـ IP الخاص بالهاكر هو 10.0.0.66. ادخل سريعاً لإعداد الراوتر لإيقافه في الطبقة الثالثة.</p>
+                <p><strong>التحدي:</strong><br>
+                1- أنشئ Standard ACL رقم 10 لمنعه: <code>access-list 10 deny 10.0.0.66</code><br>
+                2- اسمح للبقية: <code>access-list 10 permit any</code><br>
+                3- ادخل لـ <code>interface f0/0</code> وطبقها للدخول: <code>ip access-group 10 in</code>.</p>`,
+                challengeText: "احظر 10.0.0.66، واسمح للبقية باستخدام ACL 10 وطبقها in على f0/0.",
+                validate: function(state) {
+                    let acl = state.acls && state.acls["10"];
+                    let hasDeny = acl && acl.some(r => r.action === "deny" && r.target === "10.0.0.66");
+                    let hasPermit = acl && acl.some(r => r.action === "permit" && r.target === "any");
+                    let intf = state.interfaces && state.interfaces["f0/0"];
+                    let applied = intf && intf.accessGroup && intf.accessGroup.acl === "10" && intf.accessGroup.direction === "in";
+                    return hasDeny && hasPermit && applied;
+                }
+            },
+            {
+                id: "lab39",
+                title: "Lab 39: 🛡️ تأمين الإدارة (Control Plane Policing)",
+                theory: `<h2>منع الدخول المستقبلي للوحة التحكم</h2>
+                <p>الهاكر استخدم هيدرا للوصول للـ SSH لأن بورت 22 مفتوح للجميع. الصح هندسياً أن يقتصر فتحه على الـ IP الخاص بمدير الشبكة فقط (192.168.1.5).</p>
+                <p><strong>التحدي:</strong><br>
+                أنشئ <code>access-list 5 permit 192.168.1.5</code><br>
+                ادخل لـ <code>line vty 0 4</code><br>
+                طبق القائمة لحماية الوصول باستخدام <code>access-class 5 in</code>.</p>`,
+                challengeText: "أنشئ ACL 5 تسمح لـ 192.168.1.5، وطبقها على خطوط vty باستخدام access-class 5 in.",
+                validate: function(state) {
+                    let acl = state.acls && state.acls["5"] && state.acls["5"].some(r => r.action === "permit" && r.target === "192.168.1.5");
+                    let applied = state.lineVty && state.lineVty.accessClass && state.lineVty.accessClass.acl === "5";
+                    return acl && applied;
+                }
+            },
+            {
+                id: "lab40",
+                title: "Lab 40: 🛡️ الزعيم النهائي (The Ultimate Fix)",
+                theory: `<h2>الإنقاذ الشامل للشركة!</h2>
+                <p>هذا هو الاختبار النهائي لمكتسباتك! الشركة مهلهلة أمنياً من الطبقة الثانية. يجب عليك إغلاق البورت المتبقي للهاكر، وإيقاف VLAN Hopping، وتأمين البورتات.</p>
+                <p><strong>التحدي المزدوج:</strong><br>
+                1- ادخل لـ <code>interface f0/10</code>، وأغلقه نهائياً بـ <code>shutdown</code>.<br>
+                2- ادخل لـ <code>interface g0/1</code>، وغير الـ Native VLAN لـ 99 لمنع الـ Double Tagging.<br>
+                3- في نفس المنفذ g0/1، حدد أنه <code>switchport mode trunk</code> للتأكيد.</p>`,
+                challengeText: "أغلق f0/10. وفي g0/1 اجعله trunk وغير الـ native vlan إلى 99.",
+                validate: function(state) {
+                    let f10 = state.interfaces && state.interfaces["f0/10"] && state.interfaces["f0/10"].shutdown === true;
+                    let g1 = state.interfaces && state.interfaces["g0/1"];
+                    let g1Ok = g1 && g1.mode === "trunk" && g1.nativeVlan === "99";
+                    return f10 && g1Ok;
+                }
+            }
+        ]
     }
 ];
