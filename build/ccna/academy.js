@@ -1030,86 +1030,103 @@ R1(config)# access-list 100 deny icmp 192.168.1.0 0.0.0.255 host 10.0.0.5</code>
         lessons: [
             {
                 id: "auto_json",
-                title: "1. البيانات (JSON و XML) وواجهات برمجة التطبيقات (REST APIs)",
+                title: "1. البيانات المنظمة (JSON, XML, YAML)",
                 content: `
-                    <h1>مرحباً بك في عصر الشبكات المبرمجة</h1>
-                    <p>في الماضي، كان مهندس الشبكات يدخل لكل راوتر يدوياً عبر SSH لكتابة الأوامر (CLI). ماذا لو كان لدينا 1000 راوتر؟ هنا ظهرت الحاجة للأتمتة (Automation) لبرمجة الشبكة بالكامل من مكان واحد باستخدام لغات البرمجة (مثل Python).</p>
-
-                    <div class="concept-box" style="border-color: #58a6ff; background: rgba(88, 166, 255, 0.05);">
-                        <h3 style="color: #58a6ff;">1. صيغ البيانات (Data Formats)</h3>
-                        <p>لكي تفهم أجهزة الشبكات الأوامر البرمجية، يجب تنسيق البيانات بصيغة يتفق عليها البشر والآلات. لدينا 3 صيغ رئيسية:</p>
+                    <h1>Data Formats: JSON, XML, YAML</h1>
+                    <p>في عالم الأتمتة (Automation)، نحن لا نستخدم سطر الأوامر (CLI) البشري المعتاد لبرمجة ألف راوتر. بدلاً من ذلك، نستخدم برامج وسكربتات. لكي تفهم البرامج بعضها البعض، يجب أن تتبادل البيانات بصيغ "مُهيكلة" وواضحة للحاسوب.</p>
+                    
+                    <h2>1. صيغة JSON (JavaScript Object Notation)</h2>
+                    <p>هي الصيغة الأكثر استخداماً اليوم في الـ APIs (خاصة REST APIs). تعتمد على فكرة <strong>(Key: Value) المفتاح والقيمة</strong>.</p>
+                    <div class="concept-box" style="border-color: #f7df1e; background: rgba(247, 223, 30, 0.05);">
+                        <h3 style="color: #d29922;">خصائص JSON:</h3>
                         <ul>
-                            <li><strong>JSON (JavaScript Object Notation):</strong> الأشهر والأكثر استخداماً حالياً. تعتمد على نظام (مفتاح: قيمة) وتشبه قواميس بايثون. سهلة جداً للقراءة البشرية وتستخدم بكثرة مع الـ REST APIs.</li>
-                            <li><strong>XML (eXtensible Markup Language):</strong> تعتمد على التاجات (Tags) مثل HTML. دقيقة جداً لكنها معقدة وتستهلك مساحة كبيرة. تستخدم مع بروتوكولات مثل NETCONF.</li>
-                            <li><strong>YAML (YAML Ain't Markup Language):</strong> الأسهل للقراءة البشرية، تعتمد كلياً على المسافات الفارغة (Indentation). تستخدم في أدوات الأتمتة مثل Ansible.</li>
+                            <li>تُحاط الأقواس المتعرجة <code>{}</code> لتمثيل كائن (Object).</li>
+                            <li>تُحاط الأقواس المربعة <code>[]</code> لتمثيل مصفوفة/قائمة (Array).</li>
+                            <li>يجب وضع النصوص (Strings) والمفاتيح (Keys) داخل <strong>علامات تنصيص مزدوجة <code>" "</code></strong>.</li>
                         </ul>
-                    </div>
-
-                    <h2>مثال على JSON</h2>
-                    <pre><code>{
-  "interface": "GigabitEthernet0/1",
+                        <strong>مثال:</strong>
+<pre><code>{
+  "interface": "GigabitEthernet0/0",
   "ip_address": "192.168.1.1",
-  "enabled": true
+  "status": "up"
 }</code></pre>
-
-                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
-                        <h3 style="color: var(--success);">2. الـ REST APIs</h3>
-                        <p>الـ API هو وسيط (نادل) ينقل طلبك إلى السيرفر (المطبخ) ويعود لك بالنتيجة. الـ REST هو أشهر هندسة لبناء الـ APIs ويعتمد كلياً على بروتوكول HTTP (الويب).</p>
-                        <p><strong>أوامر הـ HTTP (Verbs) المستخدمة مع الـ REST API:</strong></p>
-                        <ul>
-                            <li><strong>GET:</strong> قراءة/جلب بيانات من الراوتر (مثل: عرض الـ Routing Table). (لا يغير شيئاً).</li>
-                            <li><strong>POST:</strong> إنشاء شيء جديد (مثل: إضافة مسار جديد).</li>
-                            <li><strong>PUT:</strong> استبدال أو تعديل شيء موجود.</li>
-                            <li><strong>PATCH:</strong> تعديل جزئي لشيء موجود.</li>
-                            <li><strong>DELETE:</strong> مسح شيء (مثل: مسح مسار من الراوتر).</li>
-                        </ul>
                     </div>
 
-                    <h2>الـ HTTP Status Codes (ردود السيرفر)</h2>
-                    <p>بعد إرسال طلب הـ REST API، يرد عليك جهاز الشبكة برقم:</p>
-                    <ul>
-                        <li><strong>2xx (مثل 200 OK):</strong> نجاح الطلب.</li>
-                        <li><strong>4xx (مثل 400 Bad Request أو 401 Unauthorized أو 404 Not Found):</strong> خطأ من جهتك (الكود خاطئ أو لا تملك صلاحية).</li>
-                        <li><strong>5xx (مثل 500 Internal Server Error):</strong> خطأ في السيرفر أو الراوتر نفسه.</li>
-                    </ul>
+                    <h2>2. صيغة XML (eXtensible Markup Language)</h2>
+                    <p>تشبه لغة الـ HTML التي تُبنى بها المواقع. تعتمد على <strong>الوسوم (Tags)</strong>. هي صيغة قديمة وتستهلك مساحة كبيرة ولكنها مدعومة في كل الأنظمة القديمة.</p>
+                    <div class="concept-box" style="border-color: #0066cc; background: rgba(0, 102, 204, 0.05);">
+                        <h3 style="color: #0066cc;">خصائص XML:</h3>
+                        <ul>
+                            <li>يجب أن يحتوي كل وسم بداية <code>&lt;tag&gt;</code> على وسم نهاية <code>&lt;/tag&gt;</code>.</li>
+                            <li>البيانات توضع بين الوسمين.</li>
+                        </ul>
+                        <strong>مثال:</strong>
+<pre><code>&lt;interface&gt;
+  &lt;name&gt;GigabitEthernet0/0&lt;/name&gt;
+  &lt;ip_address&gt;192.168.1.1&lt;/ip_address&gt;
+  &lt;status&gt;up&lt;/status&gt;
+&lt;/interface&gt;</code></pre>
+                    </div>
+
+                    <h2>3. صيغة YAML (YAML Ain't Markup Language)</h2>
+                    <p>هي المفضلة لدى البشر والمهندسين لسهولة قراءتها وكتابتها. تستخدم بشكل مكثف في أدوات الأتمتة مثل <strong>Ansible</strong>.</p>
+                    <div class="concept-box" style="border-color: #cb171e; background: rgba(203, 23, 30, 0.05);">
+                        <h3 style="color: #cb171e;">خصائص YAML:</h3>
+                        <ul>
+                            <li><strong>لا توجد أقواس!</strong> تعتمد كلياً على <strong>المسافات البادئة (Indentation)</strong> لتحديد هيكل البيانات. (خطأ مسافة واحدة يدمر الملف).</li>
+                            <li>تستخدم الشرطة <code>-</code> لتمثيل عناصر القائمة (Array).</li>
+                        </ul>
+                        <strong>مثال:</strong>
+<pre><code>interface: GigabitEthernet0/0
+ip_address: 192.168.1.1
+status: up
+protocols:
+  - OSPF
+  - BGP</code></pre>
+                    </div>
                 `
             },
             {
                 id: "auto_sdn",
-                title: "2. الشبكات المعرفة بالبرمجيات (SDN) و Cisco DNA Center",
+                title: "2. الشبكات المعرفة برمجياً (SDN & REST APIs)",
                 content: `
-                    <h1>ما هي הـ SDN (Software-Defined Networking)؟</h1>
-                    <p>في الراوترات العادية (التقليدية)، كل راوتر يمتلك "عقلاً" و"عضلات" بداخله:</p>
-                    <ul>
-                        <li><strong>عقل الراوتر (Control Plane):</strong> هو الجزء الذي يفكر ويبني جدول التوجيه (مثل OSPF).</li>
-                        <li><strong>عضلات الراوتر (Data Plane):</strong> هو الجزء الذي ينفذ ويقوم بتمرير الـ Packets بناءً على أوامر العقل.</li>
-                    </ul>
-                    <p>هذا يعني أن الإدارة لا مركزية، وكل راوتر يتخذ قراره بنفسه. في الـ <strong>SDN</strong>، قمنا بفصل "العقل" عن "العضلات"!</p>
-                    
-                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
-                        <h3 style="color: #ffb020;">بنية הـ SDN (المتحكم المركزي)</h3>
-                        <p>في הـ SDN، يتم سحب "العقل" (Control Plane) من جميع الراوترات والسويتشات، ووضعه في سيرفر مركزي ذكي يسمى <strong>SDN Controller</strong>. وتصبح أجهزة الشبكة مجرد "عضلات" غبية (Data Plane) تنفذ أوامر المتحكم فقط.</p>
-                        <p><strong>المزايا:</strong> إدارة الشبكة بأكملها (آلاف الأجهزة) من شاشة واحدة بدلاً من الدخول لكل جهاز بمفرده.</p>
+                    <h1>Software Defined Networking (SDN)</h1>
+                    <p>في الشبكات التقليدية، كل راوتر أو سويتش يتخذ قرارات التوجيه بنفسه، ولديه شاشة إعدادات منفصلة. هذا يعني أنك لتحديث 100 راوتر، يجب أن تدخل عليها واحداً تلو الآخر!</p>
+                    <p>في الـ <strong>SDN</strong>، نقوم بفصل <strong>العقل المفكر (Control Plane)</strong> عن <strong>العضلات التي تنقل البيانات (Data Plane)</strong>. نأخذ كل العقول من الراوترات ونضعها في خادم مركزي يسمى <strong>SDN Controller</strong> (مثل Cisco DNA Center).</p>
+
+                    <div class="concept-box" style="border-color: var(--accent); background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: var(--accent);">مكونات الـ SDN (Southbound vs Northbound)</h3>
+                        <ul>
+                            <li><strong>Southbound APIs:</strong> لغة التخاطب بين الـ Controller والمرتزقة تحته (الراوترات والسويتشات). من أشهر البروتوكولات المستخدمة هنا: OpenFlow و NETCONF.</li>
+                            <li><strong>Northbound APIs:</strong> لغة التخاطب بين الـ Controller وبين التطبيقات التي يبرمجها مهندس الشبكة فوقه. تستخدم عادة الـ <strong>REST APIs</strong>.</li>
+                        </ul>
                     </div>
 
-                    <h2>المسارات (APIs) في بنية הـ SDN</h2>
+                    <h2>واجهات برمجة التطبيقات (REST APIs)</h2>
+                    <p>هي طريقة تواصل البرامج مع بعضها عبر شبكة الويب (HTTP). إذا أردت من تطبيقك أن يطلب من الـ Controller إضافة VLAN، سترسل له طلب HTTP. للـ REST APIs أربع طرق رئيسية (CRUD):</p>
                     <ul>
-                        <li><strong>Southbound APIs:</strong> اللغة التي يستخدمها المتحكم المركزي (Controller) للتحدث وإعطاء الأوامر للأجهزة (الراوترات والسويتشات). (مثل بروتوكولات OpenFlow، NETCONF، RESTCONF).</li>
-                        <li><strong>Northbound APIs:</strong> اللغة التي تستخدمها أنت كمهندس (أو السكريبتات الخاصة بك) لإعطاء الأوامر للمتحكم المركزي نفسه. (وهي غالباً REST APIs).</li>
+                        <li><strong>GET (Read):</strong> لجلب البيانات (مثل عرض حالة المنافذ).</li>
+                        <li><strong>POST (Create):</strong> لإنشاء شيء جديد (مثل إضافة VLAN جديدة).</li>
+                        <li><strong>PUT/PATCH (Update):</strong> لتعديل شيء موجود (مثل تغيير IP لمنفذ).</li>
+                        <li><strong>DELETE (Delete):</strong> لمسح شيء (مثل حذف مسار توجيه).</li>
                     </ul>
 
-                    <div class="concept-box" style="border-color: var(--danger); background: rgba(248, 81, 73, 0.05);">
-                        <h3 style="color: var(--danger);">Cisco DNA Center (SDA)</h3>
-                        <p>هو تطبيق סيسكو הرسمي لـ SDN في شبكات الشركات (Enterprise/Campus). هو بمثابة عقل الشبكة المركزي.</p>
-                        <p>يعتمد הـ DNA Center على مبدأ <strong>Intent-Based Networking (الشبكات الموجهة بالنوايا)</strong>: أي أنك تخبر الـ DNA Center بنيتك (مثلاً: "أريد عزل كاميرات المراقبة عن أجهزة الموظفين")، وهو بدوره يقوم بترجمة هذه النية إلى آلاف الأوامر (QoS, ACLs, VLANs) ويوزعها على כל הסויتشات آلياً!</p>
+                    <h2>أكواد الرد (HTTP Status Codes)</h2>
+                    <p>عندما ترسل طلب REST API، يرد عليك السيرفر بكود يوضح حالة الطلب:</p>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>2xx (نجاح):</strong> مثل 200 OK (تمت العملية بنجاح) أو 201 Created (تم إنشاء الـ VLAN).</li>
+                        <li><strong>4xx (خطأ من العميل):</strong> مثل 400 Bad Request (طلبك مكتوب بصيغة خاطئة)، 401 Unauthorized (كلمة المرور خاطئة)، 404 Not Found (الملف أو الرابط غير موجود).</li>
+                        <li><strong>5xx (خطأ من السيرفر):</strong> مثل 500 Internal Server Error (السيرفر نفسه انهار أو واجه مشكلة برمجية).</li>
+                    </ul>
+
+                    <div class="concept-box" style="border-color: #28a745; background: rgba(40, 167, 69, 0.05);">
+                        <h3 style="color: #28a745;">أدوات إدارة التكوين (Configuration Management)</h3>
+                        <p>لأتمتة آلاف الأجهزة دفعة واحدة دون Controller، نستخدم أدوات مثل:</p>
+                        <ul>
+                            <li><strong>Ansible:</strong> لا يحتاج لتنصيب برنامج على الراوتر (Agentless)، يستخدم الـ SSH و لغة YAML. مفضل جداً لدى مهندسي الشبكات.</li>
+                            <li><strong>Puppet و Chef:</strong> تحتاج لتنصيب Agent على الأجهزة، تستخدم لغة Ruby.</li>
+                        </ul>
                     </div>
-
-                    <h2>أدوات إدارة التهيئة (Configuration Management Tools)</h2>
-                    <p>تستخدم لبرمجة الأجهزة التقليدية التي لا تدعم SDN بشكل كامل. أشهرها:</p>
-                    <ul>
-                        <li><strong>Ansible:</strong> لا يحتاج لبرنامج وسيط (Agentless). يعتمد على الـ SSH وصيغة YAML البسيطة. يستخدم نمط الـ Push (يدفع الإعدادات للأجهزة).</li>
-                        <li><strong>Puppet & Chef:</strong> يحتاجان لبرنامج وسيط (Agent) ويعتمدان على لغة Ruby ونمط الـ Pull.</li>
-                    </ul>
                 `
             }
         ]

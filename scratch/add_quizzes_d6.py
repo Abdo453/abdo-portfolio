@@ -1,107 +1,171 @@
-import os
+import re
 
 quizzes_file = r'D:\abdo_portfolio\build\ccna\quizzes.js'
 with open(quizzes_file, 'r', encoding='utf-8') as f:
-    quizzes_content = f.read()
+    content = f.read()
 
-new_quizzes = """
+auto_json_quizzes = """
     "auto_json": {
         "easy": [
             {
-                q: "أي صيغة بيانات (Data Format) أصبحت هي المعيار الأساسي لتبادل البيانات في הـ REST APIs بسبب سهولة قراءتها للبشر والآلات؟",
-                options: ["XML", "JSON", "YAML", "HTML"],
-                correct: 1,
-                explanation: "الـ JSON يعتمد على فكرة (مفتاح: قيمة) وهو مدعوم بشكل هائل في لغات البرمجة والـ Web APIs."
+                "q": "أي من صيغ البيانات التالية تعتمد بشكل كلي على المسافات البادئة (Indentation) ولا تستخدم أقواساً؟",
+                "options": [
+                    "JSON",
+                    "XML",
+                    "YAML",
+                    "HTML"
+                ],
+                "answer": 2,
+                "explanation": "YAML هي الصيغة الوحيدة التي تعتمد على المسافات لتنظيم البيانات، وهي المفضلة لدى مهندسي الشبكات لسهولة قراءتها."
             },
             {
-                q: "ما هو الفعل (HTTP Verb) المستخدم في הـ REST API لجلب أو قراءة البيانات من الراوتر دون تغييرها؟",
-                options: ["POST", "PUT", "PATCH", "GET"],
-                correct: 3,
-                explanation: "الـ GET يُستخدم دائماً للاستعلام وقراءة البيانات، بينما POST للإنشاء، وPUT/PATCH للتعديل."
+                "q": "في صيغة JSON، أي رمز يُستخدم لتعريف مصفوفة/قائمة (Array)؟",
+                "options": [
+                    "{ } الأقواس المتعرجة",
+                    "[ ] الأقواس المربعة",
+                    "< > وسوم البداية والنهاية",
+                    "- علامة الشرطة"
+                ],
+                "answer": 1,
+                "explanation": "الأقواس المربعة [] تُستخدم في JSON للدلالة على الـ Array، بينما الأقواس المتعرجة {} تُستخدم للدلالة على الـ Object."
             }
         ],
         "medium": [
             {
-                q: "إذا تلقيت الرد `401 Unauthorized` من הـ REST API الخاص براوتر سيسكو، ماذا يعني هذا الرمز (HTTP Status Code)؟",
-                options: ["الراوتر مُطفأ", "المسار غير موجود أو مكتوب بشكل خاطئ", "أنت لم تقم بإرسال بيانات المصادقة (Username/Password) الصحيحة", "الطلب تم بنجاح ولكن البيانات فارغة"],
-                correct: 2,
-                explanation: "الرموز التي تبدأ بـ 4 (4xx) تعني خطأ من العميل (أنت)، و 401 تحديداً تعني أنك تفشل في المصادقة (Authentication)."
+                "q": "أي من الخصائص التالية يميز لغة XML عن JSON و YAML؟",
+                "options": [
+                    "استخدام مفهوم Key:Value حصراً",
+                    "استخدام الوسوم (Tags) مع ضرورة إغلاقها",
+                    "عدم الحاجة لأي علامات تنصيص",
+                    "مدمجة افتراضياً في لغة بايثون"
+                ],
+                "answer": 1,
+                "explanation": "XML تعتمد على وسوم تشبه HTML، مثل <name>Ahmed</name>، وهو ما يجعلها أطول وأكبر حجماً من بقية الصيغ."
             },
             {
-                q: "ما هو الفرق الرئيسي بين JSON و XML؟",
-                options: ["XML أسهل في القراءة من JSON", "JSON يعتمد على הـ Tags مثل HTML، بينما XML يعتمد على المسافات", "JSON خفيف وسهل البرمجة، بينما XML أكثر تعقيداً ويعتمد على הـ Tags ويستهلك مساحة أكبر", "JSON يستخدم في סيسكو فقط"],
-                correct: 2,
-                explanation: "XML دقيق لكنه مليء بـ <tags> تجعل حجم البيانات أكبر وقراءتها أصعب مقارنة بـ JSON البسيط المعتمد على الأقواس {}."
+                "q": "إذا وجدت كوداً يبدأ بـ { \"interfaces\": [ \"g0/0\", \"g0/1\" ] }، فما هي صيغة هذا الكود؟",
+                "options": [
+                    "YAML",
+                    "Python",
+                    "JSON",
+                    "XML"
+                ],
+                "answer": 2,
+                "explanation": "وجود الأقواس المتعرجة وعلامات التنصيص المزدوجة حول المفاتيح والنصوص يؤكد أنها صيغة JSON."
             }
         ],
         "hard": [
             {
-                q: "في صيغة JSON، كيف تُمثّل المصفوفة (Array أو List) التي تحتوي على مجموعة من القيم؟",
-                options: ["بين أقواس معقوفة {}", "بين أقواس مربعة []", "بين أقواس عادية ()", "داخل تاجات <>"],
-                correct: 1,
-                explanation: "في JSON، الـ Object يُكتب داخل {}، بينما الـ Array (مجموعة من القيم) يُكتب داخل أقواس مربعة []."
+                "q": "عند كتابة سكريبت أتمتة (Automation Script)، واجهتك مشكلة أن السكريبت يفشل دائماً في قراءة ملف التكوين، رغم أن محتواه يبدو صحيحاً ولا توجد به أي أقواس مفقودة أو علامات تنصيص ناقصة. ما هي الصيغة التي تستخدمها على الأرجح؟",
+                "options": [
+                    "JSON",
+                    "XML",
+                    "YAML",
+                    "CSV"
+                ],
+                "answer": 2,
+                "explanation": "ملفات YAML حساسة جداً للمسافات (Space vs Tab). خطأ بسيط بمسافة واحدة يكسر الملف بأكمله، وهو أحد أصعب الأخطاء في اكتشافها بالعين المجردة."
             }
         ],
-        "scenario": [
-            {
-                q: "طلب منك مديرك كتابة سكريبت بايثون لإضافة مسار جديد (Static Route) في 100 راوتر. ما هو الـ HTTP Method الذي ستستخدمه في طلب الـ REST API لإنشاء هذا المورد الجديد؟",
-                options: ["GET", "POST", "DELETE", "OPTIONS"],
-                correct: 1,
-                explanation: "بما أننا سنقوم (بإنشاء) مورد جديد لم يكن موجوداً، فالأمر الصحيح هو POST."
-            }
-        ]
-    },
-    "auto_sdn": {
-        "easy": [
-            {
-                q: "في بنية الـ SDN (الشبكات المعرفة بالبرمجيات)، ما هما المستويان (Planes) اللذان يتم فصلهما عن بعضهما؟",
-                options: ["Management Plane و Security Plane", "Data Plane و Control Plane", "Physical Plane و Logical Plane", "Core Plane و Access Plane"],
-                correct: 1,
-                explanation: "فكرة הـ SDN الجوهرية هي فصل הـ Control Plane (عقل الراوتر الذي يفكر) عن הـ Data Plane (عضلات الراوتر التي تمرر البيانات)."
-            },
-            {
-                q: "ما هو الـ API المستخدم للتواصل بين الـ SDN Controller (المتحكم المركزي) والأجهزة العادية (الراوترات والسويتشات) في أسفل الشبكة؟",
-                options: ["Northbound API", "Southbound API", "Eastbound API", "Westbound API"],
-                correct: 1,
-                explanation: "الاتصال لأسفل (نحو الأجهزة لتوزيع الأوامر عليها) يسمى Southbound API."
-            }
-        ],
-        "medium": [
-            {
-                q: "أي أداة لإدارة التهيئة (Configuration Management) تعتمد على الـ SSH ولا تتطلب تثبيت أي برنامج وسيط (Agentless) على الراوترات؟",
-                options: ["Puppet", "Chef", "Ansible", "Cisco DNA Center"],
-                correct: 2,
-                explanation: "الـ Ansible مشهور جداً بأنه Agentless، ويكتفي فقط بتفعيل הـ SSH على الراوتر أو السويتش ليدخل ويبرمجه."
-            },
-            {
-                q: "ما هي بنية הـ (Intent-Based Networking) التي يقوم عليها הـ Cisco DNA Center؟",
-                options: ["برمجة כל منفذ يدوياً بواسطة المهندس", "المهندس يحدد النية والهدف العام للشبكة، والـ Controller يترجم ذلك إلى أوامر برمجية (CLI) وينفذها على آلاف الأجهزة ਆلیاں", "توجيه البيانات استناداً إلى הـ MAC Address", "استخدام الأقمار الصناعية للاتصال"],
-                correct: 1,
-                explanation: "الشبكات الموجهة بالنوايا تسمح لك بوضع سياسة (مثال: فصل الموظفين عن الزوار)، وتترك للبرنامج مهمة التفكير في كيفية تطبيق الـ ACLs والـ VLANs."
-            }
-        ],
-        "hard": [
-            {
-                q: "إذا كنت تريد كتابة סكريبت بايثون ليتحدث مع الـ SDN Controller (مثل Cisco DNA Center) لاستخراج إحصائيات الشبكة. أي نوع من الـ APIs ستستخدم؟",
-                options: ["Southbound API", "Northbound API", "NETCONF", "OpenFlow"],
-                correct: 1,
-                explanation: "أنت والتطبيقات المبرمجة תجلسون فوق الـ Controller. الاتصال من أعلى لأسفل نحو الـ Controller يُسمى Northbound API."
-            }
-        ],
-        "scenario": [
-            {
-                q: "في شبكة تقليدية مكونة من 50 راوتراً، جميعها تستخدم OSPF. تعطلت شبكة. أين يقع הـ Control Plane الذي سيتعامل مع هذا العطل؟",
-                options: ["في سيرفر مركزي للشركة", "في הـ Data Plane الخاص بكل راوتر", "موزعاً داخل كل راوتر من الـ 50 راوتراً", "في الـ Cloud"],
-                correct: 2,
-                explanation: "في الشبكات العادية، الـ Control Plane ليس مركزياً، بل هو موجود في (عقل) كل راوتر، حيث يفكر ويشغل خوارزمية SPF بنفسه."
-            }
-        ]
+        "scenario": {
+            "title": "قراءة ملف إعدادات",
+            "context": "طلب منك مديرك تحويل ملف تكوين (Configuration) مكتوب بصيغة تستخدم الوسوم <device> <ip>10.1.1.1</ip> </device> إلى صيغة أخرى يسهل على البشر قراءتها والتعديل عليها دون أقواس باستخدام برنامج Ansible.",
+            "question": "ما هي الصيغة الأصلية للملف، وإلى أي صيغة يجب أن تحوله؟",
+            "options": [
+                "الأصلية JSON، والهدف YAML",
+                "الأصلية XML، والهدف YAML",
+                "الأصلية YAML، والهدف JSON",
+                "الأصلية XML، والهدف JSON"
+            ],
+            "answer": 1,
+            "explanation": "استخدام الوسوم (Tags) يعني أن الصيغة الأصلية هي XML. والأداة Ansible تعتمد بشكل رئيسي على لغة YAML لأنها الأسهل قراءة للبشر ولا تستخدم أقواساً."
+        }
     },
 """
 
-quizzes_content = quizzes_content.replace('const quizzesData = {', 'const quizzesData = {\n' + new_quizzes)
+auto_sdn_quizzes = """
+    "auto_sdn": {
+        "easy": [
+            {
+                "q": "في معمارية الشبكات المعرفة برمجياً (SDN)، أين يتم اتخاذ قرارات التوجيه الذكية؟",
+                "options": [
+                    "داخل كل راوتر على حدة (Data Plane)",
+                    "في خادم مركزي يسمى הـ Controller (Control Plane)",
+                    "في منافذ السويتش (Access Ports)",
+                    "عند مزود خدمة الإنترنت (ISP)"
+                ],
+                "answer": 1,
+                "explanation": "الـ SDN يفصل عقل التفكير (Control Plane) ويضعه في الـ Controller المركزي، تاركاً للراوترات مهمة تمرير البيانات فقط (Data Plane)."
+            },
+            {
+                "q": "ما هي الطريقة في REST API التي نستخدمها لـ 'جلب أو قراءة' معلومات من السيرفر دون تعديلها؟",
+                "options": [
+                    "POST",
+                    "PUT",
+                    "DELETE",
+                    "GET"
+                ],
+                "answer": 3,
+                "explanation": "طريقة GET تُستخدم فقط لطلب وقراءة البيانات، مثل طلب حالة منافذ السويتش."
+            }
+        ],
+        "medium": [
+            {
+                "q": "ما هو دور الـ Southbound APIs في معمارية SDN؟",
+                "options": [
+                    "ربط التطبيقات (Applications) بالـ Controller",
+                    "ربط הـ Controller بالراوترات والسويتشات الفعلية",
+                    "ربط الشركة بالإنترنت",
+                    "تشفير قواعد البيانات"
+                ],
+                "answer": 1,
+                "explanation": "واجهات الـ Southbound (مثل OpenFlow أو NETCONF) هي لغة التخاطب بين القائد (الـ Controller) والجنود المنفذين (الراوترات والسويتشات)."
+            },
+            {
+                "q": "في ردود أفعال السيرفر (HTTP Status Codes)، ماذا يعني الكود 404؟",
+                "options": [
+                    "نجاح العملية (OK)",
+                    "إنشاء المورد بنجاح (Created)",
+                    "الصفحة أو المورد المطلوب غير موجود (Not Found)",
+                    "خطأ داخلي في السيرفر (Internal Server Error)"
+                ],
+                "answer": 2,
+                "explanation": "سلسلة הـ 4xx تدل على أخطاء من طرف العميل، و404 تحديداً تعني أنك تبحث عن مسار أو ملف غير موجود أصلاً في السيرفر."
+            }
+        ],
+        "hard": [
+            {
+                "q": "إذا أردت إنشاء (Create) إعدادات جديدة للـ VLAN على الـ Controller باستخدام REST API، فما هي الطريقة (Method) المناسبة؟ وما هو كود النجاح المتوقع استلامه؟",
+                "options": [
+                    "الطريقة GET، والرد 200",
+                    "الطريقة POST، والرد 201",
+                    "الطريقة PUT، والرد 404",
+                    "الطريقة DELETE، والرد 500"
+                ],
+                "answer": 1,
+                "explanation": "لإنشاء مورد جديد تُستخدم طريقة POST، وعندما ينجح السيرفر في إنشائه، يرد عادة بالكود 201 (Created) كدليل على نجاح عملية الإنشاء."
+            }
+        ],
+        "scenario": {
+            "title": "أتمتة الفروع بالكامل",
+            "context": "تم تكليفك بتغيير كلمة سر الـ SSH لـ 500 راوتر في 500 فرع حول العالم. شركتك لا تمتلك نظام SDN Controller مركزي. تريد أداة تقوم بذلك بضغطة زر دون أن تضطر لتنصيب أي برامج صغيرة (Agents) على تلك الراوترات.",
+            "question": "ما هي أداة الـ Configuration Management الأنسب لهذه المهمة؟",
+            "options": [
+                "Cisco DNA Center",
+                "Puppet",
+                "Chef",
+                "Ansible"
+            ],
+            "answer": 3,
+            "explanation": "أداة Ansible تتميز بأنها (Agentless)، أي لا تتطلب تنصيب برنامج خاص على الراوترات المستهدفة، وتعتمد فقط على اتصال SSH لتقوم بتنفيذ المهام عن بُعد بسهولة."
+        }
+    }
+"""
+
+content = re.sub(r'"auto_json":\s*\{\s*\},', auto_json_quizzes, content)
+content = re.sub(r'"auto_sdn":\s*\{\s*\}', auto_sdn_quizzes, content)
 
 with open(quizzes_file, 'w', encoding='utf-8') as f:
-    f.write(quizzes_content)
+    f.write(content)
 
-print("Domain 6 Quizzes injected successfully!")
+print("Domain 6 quizzes injected successfully!")
