@@ -382,8 +382,7 @@ const academyData = [
             
             
             
-            ,
-        ]
+            ]
     },
     {
         chapter: "Domain 2: Network Access",
@@ -633,9 +632,7 @@ const academyData = [
                         <p><em>أي اختلاف في هذه الشروط سيؤدي إلى فشل دمج الـ Port-Channel (حالة Suspended).</em></p>
                     </div>
                 `
-            },
-
-        ]
+            }]
     },
     {
         chapter: "Domain 3: IP Connectivity (التوجيه والمسارات)",
