@@ -10,130 +10,125 @@ domain5_lessons = """
         lessons: [
             {
                 id: "sec_attacks",
-                title: "1. التهديدات والهجمات الشبكية (Network Attacks)",
+                title: "1. أنواع الهجمات (Malware, Phishing, Spoofing)",
                 content: `
-                    <h1>ما هي التهديدات التي تواجه الشبكات؟</h1>
-                    <p>أمن الشبكات لا يقتصر على وضع Firewall على الحافة، بل يجب حماية البنية التحتية من الداخل (الراوترات والسويتشات). الهاكر قد يكون موظفاً ناقماً أو شخصاً اخترق جهاز أحد الموظفين.</p>
-
-                    <div class="concept-box" style="border-color: #f85149; background: rgba(248, 81, 73, 0.05);">
-                        <h3 style="color: #f85149;">1. هجمات حجب الخدمة (DoS & DDoS)</h3>
-                        <p><strong>الهدف:</strong> إسقاط الخدمة عن المستخدمين الشرعيين.</p>
+                    <h1>Security Threats & Vulnerabilities (التهديدات الأمنية)</h1>
+                    <p>في عالم الشبكات الحديث، لم يعد تأمين الشبكة مجرد خيار بل هو الضرورة القصوى. في هذا الدرس سنتعرف على أشهر الطرق التي يستخدمها المخترقون لاختراق الشبكات وكيفية التعرف عليها.</p>
+                    
+                    <div class="concept-box" style="border-color: #d73a49; background: rgba(215, 58, 73, 0.05);">
+                        <h3 style="color: #d73a49;">1. البرمجيات الخبيثة (Malware)</h3>
                         <ul>
-                            <li><strong>DoS (Denial of Service):</strong> هجوم من جهاز واحد. مثال: إرسال آلاف رسائل الـ Ping (Ping of Death) أو إغراق السيرفر بطلبات SYN (SYN Flood) لتعليق الذاكرة.</li>
-                            <li><strong>DDoS (Distributed DoS):</strong> הهاكر يستخدم آلاف الأجهزة المخترقة (Botnet) حول العالم للهجوم على نفس السيرفر في نفس اللحظة، مما يتسبب في انهيار السيرفر فوراً.</li>
+                            <li><strong>Viruses (الفيروسات):</strong> أكواد خبيثة تلتصق بملفات شرعية (مثل ملف Word) ولا تعمل إلا إذا قام المستخدم بفتح الملف.</li>
+                            <li><strong>Worms (الديدان):</strong> أخطر من الفيروسات لأنها <strong>تنتشر تلقائياً</strong> عبر الشبكة مستغلة الثغرات الأمنية دون الحاجة لتدخل المستخدم.</li>
+                            <li><strong>Ransomware (برامج الفدية):</strong> تقوم بتشفير ملفات الجهاز أو الشركة بالكامل، وتطلب دفع فدية (عادة بعملة رقمية) مقابل إعطائك مفتاح فك التشفير.</li>
+                            <li><strong>Trojans (أحصنة طروادة):</strong> برامج تبدو شرعية ومفيدة (مثل لعبة أو أداة مجانية) ولكنها تحتوي على باب خلفي (Backdoor) يسمح للمخترق بالتحكم بجهازك.</li>
                         </ul>
                     </div>
+
+                    <h2>2. هندسة العقول (Social Engineering)</h2>
+                    <p>هي عملية التلاعب بالبشر لجعلهم يكشفون عن معلومات سرية أو يقومون بأفعال ضارة، بدلاً من اختراق الأنظمة تقنياً.</p>
+                    <ul>
+                        <li><strong>Phishing (التصيد الاحتيالي):</strong> إرسال إيميل يبدو وكأنه من البنك أو مديرك يطلب منك إدخال كلمة المرور في موقع مزيف.</li>
+                        <li><strong>Spear Phishing:</strong> تصيد احتيالي ولكنه <strong>مخصص وموجه</strong> لشخص بعينه (مثل المدير المالي للشركة) بعد جمع معلومات عنه.</li>
+                        <li><strong>Baiting (الاستدراج):</strong> ترك "فلاشة" (USB Drive) ملغمة بالفيروسات في موقف سيارات الشركة، طمعاً في أن يلتقطها موظف فضولي ويضعها في حاسوب الشركة.</li>
+                    </ul>
 
                     <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
-                        <h3 style="color: #ffb020;">2. هجمات انتحال الشخصية (Spoofing & Man-in-the-Middle)</h3>
-                        <p>الهاكر يخدع أجهزة الشبكة ليعتقدوا أنه هو البوابة (Gateway) ليتمكن من اعتراض كلمات المرور:</p>
+                        <h3 style="color: #ffb020;">3. هجمات الشبكة (Network Attacks)</h3>
                         <ul>
-                            <li><strong>ARP Spoofing:</strong> الهاكر يرسل رسائل ARP وهمية لكل الموظفين يخبرهم: "الـ IP الخاص بالراوتر أصبح يمتلك الـ MAC Address الخاص بي!". وبذلك تمر كل بيانات الموظفين عبر جهاز הهاكر أولاً (MitM).</li>
-                            <li><strong>MAC Spoofing:</strong> الهاكر يغير الـ MAC Address الخاص بجهازه ليتطابق مع MAC Address لجهاز مسموح له بالدخول (مثل كمبيوتر المدير) لتجاوز الحماية.</li>
-                            <li><strong>IP Spoofing:</strong> تزوير عنوان הـ IP المصدر في הـ Packet ليبدو وكأنه قادم من جهاز موثوق داخل الشركة.</li>
-                        </ul>
-                    </div>
-
-                    <div class="concept-box" style="border-color: #58a6ff; background: rgba(88, 166, 255, 0.05);">
-                        <h3 style="color: #58a6ff;">3. هجمات הـ DHCP</h3>
-                        <p>بما أن رسائل DHCP تعتمد على الـ Broadcast بدون أي توثيق، فهي عرضة لهجومين خطيرين:</p>
-                        <ul>
-                            <li><strong>DHCP Starvation:</strong> הهاكر يرسل آلاف الطلبات المزيفة بـ MAC Addresses عشوائية ليجعل سيرفر الـ DHCP يستنفد كل الآيبيهات لديه. النتيجة: لا يمكن لأي موظف جديد الحصول على IP!</li>
-                            <li><strong>Rogue DHCP Server:</strong> הهاكر يقوم بتشغيل سيرفر DHCP خاص به داخل الشركة. عندما يطلب موظف IP، يرد الهاكر أسرع من السيرفر الحقيقي، ويعطي الموظف IP و Gateway تشير إلى جهاز الهاكر. (Man-in-the-Middle)!</li>
+                            <li><strong>Spoofing (الانتحال):</strong> تزوير هوية. مثلاً (MAC Spoofing) تغيير الـ MAC Address لجهازك ليبدو كجهاز شخص آخر، أو (IP Spoofing) لتزوير مصدر الرسالة.</li>
+                            <li><strong>Denial of Service - DoS (حجب الخدمة):</strong> إغراق السيرفر أو الراوتر بملايين الطلبات الوهمية حتى ينهار ولا يستطيع خدمة المستخدمين الحقيقيين. إذا تم الهجوم من أجهزة متعددة وموزعة يسمى <strong>DDoS</strong>.</li>
+                            <li><strong>Man-in-the-Middle (رجل في المنتصف):</strong> المخترق يضع نفسه بين جهازك والسيرفر. أنت تعتقد أنك تتحدث مع السيرفر، والسيرفر يعتقد أنه يتحدث معك، والمخترق يرى ويقرأ كل البيانات بينكما!</li>
                         </ul>
                     </div>
                 `
             },
             {
                 id: "sec_acl",
-                title: "2. قوائم التحكم في الوصول (ACLs)",
+                title: "2. قوائم التحكم في الوصول (Access Control Lists - ACL)",
                 content: `
-                    <h1>ما هي הـ ACL؟</h1>
-                    <p>الـ Access Control List هي بمثابة "حارس الأمن" الواقف على بوابات الراوتر (Interfaces). تستخدم للسماح (Permit) أو حظر (Deny) مرور البيانات بناءً على شروط نحددها نحن.</p>
+                    <h1>Access Control Lists (ACLs)</h1>
+                    <p>قوائم التحكم في الوصول (ACL) هي الأداة الأساسية في راوترات سيسكو لتطبيق الـ <strong>Security Policies (سياسات الأمان)</strong>. هي عبارة عن قائمة من الشروط التي تُخبر الراوتر: "إذا جاءت رسالة بهذا الشكل، اسمح لها بالمرور (Permit)، وإذا كانت بشكل آخر، امنعها (Deny)".</p>
 
-                    <h2>أنواع הـ ACLs في سيسكو</h2>
-                    <p>تنقسم إلى نوعين رئيسيين:</p>
-                    
-                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
-                        <h3 style="color: var(--success);">1. Standard ACL (أرقامها 1-99)</h3>
-                        <p>تستطيع تصفية البيانات بناءً على <strong>عنوان المصدر (Source IP) فقط</strong>. ولا تفهم أي شيء عن הـ Ports أو الخدمات.</p>
-                        <p><strong>القاعدة الذهبية:</strong> يجب تطبيقها <strong>أقرب ما يمكن إلى الوجهة (Destination)</strong>. لكي لا نحظر جهازاً من الشبكة بأكملها بدلاً من حظره من سيرفر معين.</p>
-                        <pre><code>R1(config)# access-list 10 deny 192.168.1.50
+                    <h2>أنواع הـ ACL في سيسكو</h2>
+                    <div class="concept-box" style="border-color: var(--accent); background: rgba(88, 166, 255, 0.05);">
+                        <h3 style="color: var(--accent);">1. Standard ACL (من 1 إلى 99)</h3>
+                        <p>هذا النوع بسيط جداً ولكنه غبي قليلاً. هو ينظر فقط إلى <strong>الـ Source IP (عنوان المرسل)</strong>. لا يهتم أين تذهب الرسالة ولا نوعها (تصفح، بينج، إيميل).</p>
+                        <p><strong>القاعدة الذهبية:</strong> يتم تطبيقه <strong>أقرب ما يمكن إلى الهدف (Destination)</strong> لكي لا نمنع المرسل من الوصول لشبكات أخرى بالخطأ.</p>
+                        <p><strong>مثال:</strong> منع الجهاز 10.1.1.5 من الوصول للشبكة بالكامل:</p>
+                        <pre><code>R1(config)# access-list 10 deny host 10.1.1.5
 R1(config)# access-list 10 permit any</code></pre>
-                        <p><em>(يحظر הـ IP رقم 50 فقط، ويسمح للبقية).</em></p>
                     </div>
 
                     <div class="concept-box" style="border-color: #d29922; background: rgba(210, 153, 34, 0.05);">
-                        <h3 style="color: #d29922;">2. Extended ACL (أرقامها 100-199)</h3>
-                        <p>ذكية جداً! تصفّي البيانات بناءً على: المصدر (Source)، الوجهة (Destination)، البروتوكول (TCP/UDP)، ورقم البورت (مثل 80 للويب أو 22 للـ SSH).</p>
-                        <p><strong>القاعدة الذهبية:</strong> يجب تطبيقها <strong>أقرب ما يمكن إلى المصدر (Source)</strong>. حتى نوقف البيانات الممنوعة فوراً بدلاً من السماح لها باستهلاك كابلات الراوترات ثم رميها في النهاية!</p>
-                        <pre><code>R1(config)# access-list 100 deny tcp host 192.168.1.50 host 10.1.1.100 eq 80
-R1(config)# access-list 100 permit ip any any</code></pre>
-                        <p><em>(يمنع الـ IP رقم 50 من تصفح موقع الويب الموجود على السيرفر 100، ويسمح بأي شيء آخر).</em></p>
+                        <h3 style="color: #d29922;">2. Extended ACL (من 100 إلى 199)</h3>
+                        <p>هذا النوع ذكي وقوي. يمكنه الفلترة بناءً على:</p>
+                        <ul>
+                            <li>Source IP (عنوان المرسل)</li>
+                            <li>Destination IP (عنوان الهدف)</li>
+                            <li>Protocol (TCP, UDP, ICMP)</li>
+                            <li>Port Number (80 لصفحات الويب، 21 للـ FTP، إلخ...)</li>
+                        </ul>
+                        <p><strong>القاعدة الذهبية:</strong> يتم تطبيقه <strong>أقرب ما يمكن إلى المرسل (Source)</strong> لكي نمنع الرسائل المرفوضة من استهلاك الباندويث عبر الشبكة.</p>
+                        <p><strong>مثال:</strong> السماح لشبكة 192.168.1.0 بتصفح الويب (منفذ 80) فقط نحو السيرفر 10.0.0.5، ومنعها من عمل Ping:</p>
+                        <pre><code>R1(config)# access-list 100 permit tcp 192.168.1.0 0.0.0.255 host 10.0.0.5 eq 80
+R1(config)# access-list 100 deny icmp 192.168.1.0 0.0.0.255 host 10.0.0.5</code></pre>
                     </div>
 
-                    <h2>قواعد بالغة الأهمية في الـ ACL</h2>
-                    <ol>
-                        <li><strong>Implicit Deny (الرفض الضمني):</strong> في نهاية أي ACL تقوم بكتابتها، يوجد سطر مخفي يرفض كل شيء `deny any`. إذا لم تكتب `permit` في النهاية، سيتم حظر الشبكة بالكامل!</li>
-                        <li><strong>ترتيب الأسطر:</strong> الراوتر يقرأ الـ ACL من أعلى إلى أسفل (Top-Down). بمجرد أن يتطابق شرط، يتوقف الراوتر عن قراءة باقي الأسطر وينفذ الأمر. يجب دائماً كتابة الشروط المحددة (Specific) في الأعلى، والشروط العامة في الأسفل.</li>
-                        <li><strong>اتجاه التطبيق (In/Out):</strong> يجب تطبيق الـ ACL على منفذ الراوتر وتحديد اتجاهها (In للبيانات الداخلة للراوتر، Out للبيانات الخارجة منه).
-                        <pre><code>R1(config-if)# ip access-group 100 in</code></pre>
-                        </li>
-                    </ol>
+                    <h2>الـ Implicit Deny (المنع الضمني)</h2>
+                    <p>قاعدة قاتلة يقع فيها المبتدئون: <strong>في نهاية كل ACL توجد قاعدة مخفية تمنع كل شيء (Deny Any)</strong>. إذا أنشأت قائمة لتمنع شخصاً واحداً ولم تكتب بعدها <code>permit any</code>، فإن الراوتر سيمنع كل الناس من المرور!</p>
                 `
             },
             {
                 id: "sec_portsec",
-                title: "3. أمن الطبقة الثانية (Layer 2 Security)",
+                title: "3. حماية المنافذ (Port Security) وتقنيات التشفير",
                 content: `
-                    <h1>تأمين السويتشات من الداخل</h1>
-                    <p>أغلب هجمات الاختراق تتم من الطبقة الثانية (الربط المباشر بالسويتش). يجب أن نمنع أي شخص من فصل كابل الطابعة وتوصيله باللابتوب الخاص به للتسلل للشبكة!</p>
+                    <h1>حماية منافذ السويتش (Port Security)</h1>
+                    <p>أغلب الاختراقات في الشركات لا تأتي من الإنترنت، بل من شخص دخل مبنى الشركة ووضع كابلاً في "فيشة" الحائط (Switch Port). تقنية <strong>Port Security</strong> تمنع ذلك عن طريق تحديد <strong>أي الأجهزة (عناوين الـ MAC) مسموح لها بالدخول من هذا المنفذ.</strong></p>
 
-                    <div class="concept-box" style="border-color: #58a6ff; background: rgba(88, 166, 255, 0.05);">
-                        <h3 style="color: #58a6ff;">1. حماية المنافذ (Port Security)</h3>
-                        <p>تقوم هذه الميزة بإجبار منفذ السويتش على قبول MAC Address واحد فقط (أو عدد نحدده). إذا حاول أي جهاز آخر إرسال بيانات عبر نفس المنفذ، يتخذ السويتش رد فعل فورياً.</p>
-                        <p><strong>طرق تعلم الـ MAC:</strong></p>
+                    <h2>إعدادات الـ Port Security</h2>
+                    <p>لكي نطبق الحماية على المنفذ f0/1 ونسمح لجهاز واحد فقط (مثال: جهاز الموظف أحمد) بالعمل عليه:</p>
+                    <ol>
+                        <li><strong>تحويل المنفذ لـ Access:</strong> الحماية لا تعمل على الـ Trunk.
+                        <pre><code>SW1(config-if)# switchport mode access</code></pre>
+                        </li>
+                        <li><strong>تفعيل الخدمة:</strong>
+                        <pre><code>SW1(config-if)# switchport port-security</code></pre>
+                        </li>
+                        <li><strong>تحديد العدد الأقصى المسموح (Maximum):</strong> جهاز واحد فقط.
+                        <pre><code>SW1(config-if)# switchport port-security maximum 1</code></pre>
+                        </li>
+                        <li><strong>حفظ عنوان الـ MAC (Sticky):</strong> بدلاً من أن أكتب رقم הـ MAC يدوياً، أمر Sticky يجعل السويتش يسجل أول MAC يراه على المنفذ ويحفظه في إعداداته ليصبح هو الـ MAC الشرعي الوحيد!
+                        <pre><code>SW1(config-if)# switchport port-security mac-address sticky</code></pre>
+                        </li>
+                    </ol>
+
+                    <div class="concept-box" style="border-color: #d73a49; background: rgba(215, 58, 73, 0.05);">
+                        <h3 style="color: #d73a49;">ماذا لو جاء شخص غريب بكابل آخر؟ (Violation Modes)</h3>
+                        <p>هناك 3 ردود أفعال للسويتش عند اكتشاف MAC غريب:</p>
                         <ul>
-                            <li><strong>Static:</strong> كتابة الـ MAC يدوياً (مُتعب جداً).</li>
-                            <li><strong>Sticky:</strong> السويتش يحفظ أول MAC Address يراه على المنفذ ويلصقه في الـ Configuration تلقائياً.</li>
+                            <li><strong>1. Shutdown (وهو الافتراضي):</strong> يغلق المنفذ تماماً ويتحول لحالة (err-disable). لا يفتح إلا بتدخل المهندس شخصياً (بكتابة shutdown ثم no shutdown). يسجل تنبيهاً.</li>
+                            <li><strong>2. Restrict:</strong> لا يغلق المنفذ بالكامل، بل يمنع بيانات المخترق فقط، ويسمح للموظف الشرعي بالعمل، ولكنه يسجل تنبيهاً لمدير الشبكة.</li>
+                            <li><strong>3. Protect:</strong> مثل Restrict يمنع بيانات المخترق بصمت، ولكن <strong>دون أن يسجل أي تنبيه!</strong> (غير مفضل أمنياً).</li>
                         </ul>
-                        <p><strong>ردود الفعل (Violations):</strong></p>
-                        <ul>
-                            <li><strong>Protect:</strong> يرمي بيانات الهاكر المجهول بصمت، ولا يخبر الإدارة.</li>
-                            <li><strong>Restrict:</strong> يرمي البيانات ويرسل إشعاراً (Syslog) للإدارة، ويزيد عداد المخالفات.</li>
-                            <li><strong>Shutdown (الافتراضي):</strong> بمجرد دخول MAC غريب، يُغلق المنفذ بالكامل (يصبح لونه أحمر err-disabled) ولن يفتح إلا بتدخل مهندس الشبكة يدوياً.</li>
-                        </ul>
-                        <pre><code>SW1(config-if)# switchport port-security
-SW1(config-if)# switchport port-security mac-address sticky
-SW1(config-if)# switchport port-security violation shutdown</code></pre>
                     </div>
 
-                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
-                        <h3 style="color: var(--success);">2. DHCP Snooping (منع سيرفرات DHCP المزيفة)</h3>
-                        <p>لمنع هجوم Rogue DHCP، نقوم بتفعيل DHCP Snooping على السويتش. هذه الميزة تقسم منافذ السويتش إلى:</p>
-                        <ul>
-                            <li><strong>Untrusted Ports (غير موثوقة):</strong> هي جميع منافذ الموظفين. السويتش <strong>سيرفض</strong> أي رسالة (DHCP Offer أو ACK) تأتي منها. (بذلك يمنع الهاكر من توزيع آيبيهات).</li>
-                            <li><strong>Trusted Ports (موثوقة):</strong> هو المنفذ الوحيد المتصل بسيرفر הـ DHCP الحقيقي أو الراوتر. السويتش سيسمح بتمرير הـ Offers منه.</li>
-                        </ul>
-                        <pre><code>SW1(config)# ip dhcp snooping
-SW1(config)# ip dhcp snooping vlan 10
-SW1(config)# interface g0/1   (هذا منفذ السيرفر الحقيقي)
-SW1(config-if)# ip dhcp snooping trust</code></pre>
-                    </div>
-
-                    <div class="concept-box" style="border-color: #d29922; background: rgba(210, 153, 34, 0.05);">
-                        <h3 style="color: #d29922;">3. Dynamic ARP Inspection (DAI)</h3>
-                        <p>لمنع هجوم ARP Spoofing (تسميم الـ ARP)، تعتمد تقنية DAI على قاعدة بيانات DHCP Snooping (التي تحتوي على الـ MAC والـ IP لكل موظف موثوق). السويتش سيقوم بتفتيش كل رسالة ARP، وإذا وجد أن الهاكر يدّعي أنه يملك IP لا يخصه، فإنه يسقط الرسالة فوراً.</p>
-                    </div>
+                    <h2>أساسيات التشفير والـ VPN (Cryptography)</h2>
+                    <p>عندما نرسل بيانات حساسة (مثل كلمات مرور أو أرقام فيزا) عبر الإنترنت، لا يجب أن تُرسل كنصوص واضحة (Clear Text) وإلا سيقرؤها أي شخص يقوم بـ (Man-in-the-Middle). نحتاج للتشفير.</p>
+                    <ul>
+                        <li><strong>التشفير (Encryption):</strong> تحويل البيانات لطلاسم. يستخدم لـ <strong>السرية (Confidentiality)</strong>. أشهر البروتوكولات: AES.</li>
+                        <li><strong>الهاش (Hashing):</strong> معادلة رياضية (ذات اتجاه واحد) تُنتج بصمة فريدة للملف. إذا تغير حرف واحد بالملف تتغير البصمة بالكامل. نستخدمه لـ <strong>النزاهة (Integrity)</strong> للتأكد أن الملف لم يُعدّل في الطريق. أشهر بروتوكولاته: SHA-256 و MD5.</li>
+                        <li><strong>VPN (Virtual Private Network):</strong> شبكة وهمية تستخدم التشفير (مثل IPsec) لإنشاء "نفق آمن" عبر الإنترنت، لربط فرعين ببعضهما كأنهما متصلان بكابل مباشر ومحمي.</li>
+                    </ul>
                 `
             }
         ]
-    },
+    }
 """
 
 new_content = re.sub(
-    r'\{\s*chapter:\s*"Domain 5: Security Fundamentals".*?\]\s*\},',
-    domain5_lessons.strip() + ',',
+    r'\{\s*chapter:\s*"Domain 5: Security Fundamentals \(أساسيات الأمن\)".*?\]\s*\}',
+    domain5_lessons.strip(),
     content,
     flags=re.DOTALL
 )
@@ -141,4 +136,4 @@ new_content = re.sub(
 with open(academy_file, 'w', encoding='utf-8') as f:
     f.write(new_content)
 
-print("Domain 5 injected into academy.js successfully!")
+print("Domain 5 injected successfully into academy.js!")
