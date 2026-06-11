@@ -1,4 +1,8 @@
-// CCNA Labs Curriculum (Expanded)
+import os
+
+labs_file = r'D:\abdo_portfolio\build\ccna\labs.js'
+
+labs_content = """// CCNA Labs Curriculum (Expanded)
 
 window.ccnaCurriculum = [
     {
@@ -185,3 +189,9 @@ window.ccnaCurriculum = [
         ]
     }
 ];
+"""
+
+with open(labs_file, 'w', encoding='utf-8') as f:
+    f.write(labs_content)
+
+print("labs.js fully expanded!")

@@ -1,4 +1,6 @@
-const interviewsData = [
+import json
+
+interviews_data = [
     {
         "category": "Layer 2 & Switching (السويتشات والطبقة الثانية)",
         "questions": [
@@ -79,4 +81,11 @@ const interviewsData = [
             }
         ]
     }
-];
+]
+
+js_content = f"const interviewsData = {json.dumps(interviews_data, ensure_ascii=False, indent=4)};\n"
+
+with open(r'D:\\abdo_portfolio\\build\\ccna\\interviews.js', 'w', encoding='utf-8') as f:
+    f.write(js_content)
+
+print("interviews.js generated successfully!")

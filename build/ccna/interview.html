@@ -28,44 +28,68 @@
         </div>
     </header>
 
+    
     <div class="interview-container">
-        <h2 style="text-align: center; margin-bottom: 30px; color: #fff;">أهم 50 سؤال لمقابلات مهندس الشبكات (CCNA)</h2>
-        
-        <div class="faq-item" style="padding: 20px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 20px; background: var(--bg-color);">
-            <div class="faq-question" style="font-size: 1.3rem; margin-bottom: 15px; font-weight: bold; color: #fff;">1. لديك VLAN 10 و VLAN 20 ولا يوجد اتصال بينهما. كيف تبدأ التشخيص؟</div>
-            
-            <button class="btn btn-next" onclick="document.getElementById('hint1').style.display = 'block'; this.style.display='none';">أظهر تلميح (Hint)</button>
-            
-            <div id="hint1" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255, 176, 32, 0.1); border-left: 4px solid #ffb020; border-radius: 4px; color: #c9d1d9;">
-                <p><strong>تلميح:</strong> الـ VLANs تعمل في الطبقة الثانية (Data Link). هل يمكن لجهازين في شبكتين مختلفتين التواصل دون جهاز يعمل في الطبقة الثالثة (Network)؟</p>
-                <button class="btn btn-finish" style="margin-top: 10px;" onclick="document.getElementById('ans1').style.display = 'block'; this.style.display='none';">أظهر الإجابة الكاملة</button>
-            </div>
-
-            <div id="ans1" style="display: none; margin-top: 15px; padding: 15px; background: rgba(46, 160, 67, 0.1); border-left: 4px solid var(--success); border-radius: 4px; color: #fff; line-height: 1.8;">
-                <p><strong>الإجابة النموذجية (Troubleshooting Approach):</strong></p>
-                <ol>
-                    <li>أولاً، سأتحقق من أن الـ PCs في كلا الـ VLANs يملكون Default Gateway صحيح.</li>
-                    <li>ثانياً، للاتصال بين VLANs مختلفة نحتاج إلى (Inter-VLAN Routing) باستخدام راوتر (Router-on-a-Stick) أو سويتش طبقة ثالثة (L3 Switch).</li>
-                    <li>لو استخدمنا راوتر، سأتأكد من أن الـ Sub-interfaces تم إنشاؤها وتغليفها (encapsulation dot1Q) برقم الـ VLAN الصحيح.</li>
-                    <li>سأتأكد أن المنفذ الواصل بين السويتش والراوتر يعمل كـ Trunk port للسماح بمرور الـ VLANs.</li>
-                </ol>
-            </div>
-        </div>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #fff;">أهم أسئلة المقابلات الشخصية (CCNA)</h2>
+        <div id="interviewsRoot"></div>
     </div>
 
+    </div>
+
+    
+    <script src="interviews.js?v=14"></script>
     <script>
         function toggleFaq(el) {
             const answer = el.nextElementSibling;
-            const icon = el.querySelector('span');
             if (answer.classList.contains('active')) {
                 answer.classList.remove('active');
-                icon.innerText = '+';
             } else {
                 answer.classList.add('active');
-                icon.innerText = '-';
             }
         }
+        
+        function renderInterviews() {
+            const root = document.getElementById('interviewsRoot');
+            if(!root || typeof interviewsData === 'undefined') return;
+            
+            let html = '';
+            let qIndex = 1;
+            
+            interviewsData.forEach((category, cIdx) => {
+                html += `<h3 style="color: var(--accent); margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px;">${category.category}</h3>`;
+                
+                category.questions.forEach((q, qIdx) => {
+                    const hintId = `hint_${cIdx}_${qIdx}`;
+                    const ansId = `ans_${cIdx}_${qIdx}`;
+                    html += `
+                        <div class="faq-item" style="padding: 20px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 20px; background: var(--bg-color);">
+                            <div class="faq-question" style="font-size: 1.2rem; margin-bottom: 15px; font-weight: bold; color: #fff;">${qIndex}. ${q.q}</div>
+                            
+                            <button class="btn btn-next" onclick="document.getElementById('${hintId}').style.display = 'block'; this.style.display='none';">تلميح (Hint)</button>
+                            
+                            <div id="${hintId}" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255, 176, 32, 0.1); border-left: 4px solid #ffb020; border-radius: 4px; color: #c9d1d9;">
+                                <p><strong>تلميح:</strong> ${q.hint}</p>
+                                <button class="btn btn-finish" style="margin-top: 10px;" onclick="document.getElementById('${ansId}').style.display = 'block'; this.style.display='none';">إظهار الإجابة الكاملة</button>
+                            </div>
+
+                            <div id="${ansId}" style="display: none; margin-top: 15px; padding: 15px; background: rgba(46, 160, 67, 0.1); border-left: 4px solid var(--success); border-radius: 4px; color: #fff; line-height: 1.8;">
+                                <strong>الإجابة النموذجية:</strong>
+                                <div style="margin-top: 10px;">${q.ans}</div>
+                            </div>
+                        </div>
+                    `;
+                    qIndex++;
+                });
+            });
+            
+            root.innerHTML = html;
+        }
+        
+        window.onload = () => {
+            renderInterviews();
+        };
     </script>
-    <script src="features.js"></script>
+    <script src="features.js?v=14"></script>
 </body>
 </html>
+
