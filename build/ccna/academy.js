@@ -1175,10 +1175,7 @@ window.renderLesson = function(id) {
             if(less.id === id) {
                 const article = document.getElementById('articleBody');
                 if(!article) return;
-                article.style.opacity = '0';
                 article.innerHTML = less.content;
-                article.style.transition = 'opacity 0.3s ease';
-                article.style.opacity = '1';
                 return;
             }
         }
