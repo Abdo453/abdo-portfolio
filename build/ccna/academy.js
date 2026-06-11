@@ -791,7 +791,7 @@ R1(config-if)# standby 1 preempt</code></pre>
                 `
             }
         ]
-    },,
+    },
     {
         chapter: "Domain 4: IP Services (خدمات الشبكة)",
         lessons: [
@@ -901,7 +901,7 @@ R1(config-if)# ip nat outside</code></pre>
                 `
             }
         ]
-    },,
+    },
     {
         chapter: "Domain 5: Security Fundamentals (أساسيات الأمن)",
         lessons: [
@@ -1025,7 +1025,7 @@ SW1(config-if)# ip dhcp snooping trust</code></pre>
                 `
             }
         ]
-    },,
+    },
     {
         chapter: "Domain 6: Automation & Programmability (برمجة وأتمتة الشبكات)",
         lessons: [
