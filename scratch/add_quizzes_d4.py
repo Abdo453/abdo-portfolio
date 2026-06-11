@@ -1,136 +1,252 @@
-import os
+import re
 
 quizzes_file = r'D:\abdo_portfolio\build\ccna\quizzes.js'
 with open(quizzes_file, 'r', encoding='utf-8') as f:
-    quizzes_content = f.read()
+    content = f.read()
 
-new_quizzes = """
+# Replace empty placeholder for serv_dhcp
+serv_dhcp_quizzes = """
     "serv_dhcp": {
         "easy": [
             {
-                q: "ما هي رسالة הـ Broadcast الأولى التي يرسلها جهاز الكمبيوتر للبحث عن سيرفر DHCP؟",
-                options: ["DHCP Request", "DHCP Discover", "DHCP Offer", "DHCP ACK"],
-                correct: 1,
-                explanation: "أول خطوة في عملية DORA هي رسالة Discover التي تُرسل כـ Broadcast للبحث عن أي سيرفر DHCP متاح."
+                "q": "ما هو اختصار بروتوكول DHCP؟",
+                "options": [
+                    "Dynamic Host Configuration Protocol",
+                    "Data Host Control Protocol",
+                    "Dynamic Hardware Control Protocol",
+                    "Data Handling Computer Protocol"
+                ],
+                "answer": 0,
+                "explanation": "يرمز DHCP إلى Dynamic Host Configuration Protocol وهو المسؤول عن التوزيع الديناميكي لعناوين الشبكة."
             },
             {
-                q: "إذا كان سيرفر הـ DHCP في شبكة، والمستخدمون في شبكة أخرى يفصل بينهما راوتر، ما هي الميزة التي يجب تفعيلها على الراوتر لكي يعبر طلب הـ DHCP؟",
-                options: ["NAT Overload", "DHCP Snooping", "DHCP Relay Agent (ip helper-address)", "Port Security"],
-                correct: 2,
-                explanation: "الراوتر يمنع الـ Broadcast، ولأن طلب DHCP هو Broadcast، نحتاج لتفعيل DHCP Relay Agent ليقوم الراوتر بتحويله لـ Unicast وإرساله للسيرفر."
+                "q": "أي من رسائل DORA الأربعة هي رسالة Broadcast من الكمبيوتر للبحث عن الخادم؟",
+                "options": [
+                    "Offer",
+                    "Request",
+                    "Discover",
+                    "Acknowledge"
+                ],
+                "answer": 2,
+                "explanation": "رسالة Discover هي الرسالة الأولى وتُرسل كـ Broadcast للبحث عن أي سيرفر DHCP في الشبكة."
             }
         ],
         "medium": [
             {
-                q: "ما هو الغرض من أمر `ip dhcp excluded-address 192.168.1.1 192.168.1.10` على راوتر سيسكو؟",
-                options: ["مسح هذه العناوين من الشبكة", "توزيع هذه العناوين بشكل حصري للمدراء", "منع سيرفر الـ DHCP من توزيع هذه العناوين للأجهزة، لكي يتم استخدامها كـ Static IP للسيرفرات والراوتر", "حظر هذه العناوين من الإنترنت"],
-                correct: 2,
-                explanation: "أمر excluded-address يضمن أن الـ DHCP لن يقوم بتوزيع هذه العناوين لأي كمبيوتر، وذلك لتجنب حدوث IP Conflict مع الأجهزة الثابتة كالطابعات والسيرفرات."
-            }
-        ],
-        "hard": [
-            {
-                q: "في رسالة DHCP Offer، على أي مستوى (Layer) وفي أي بروتوكول يتم تحديد הـ IP المقترح للجهاز؟",
-                options: ["Layer 2 (Ethernet Header)", "Layer 3 (IP Header)", "Layer 4 (TCP Header)", "Layer 7 (Application / DHCP Payload)"],
-                correct: 3,
-                explanation: "الـ IP المقترح (Your IP) يُرسل كبيانات (Payload) في طبقة التطبيقات داخل حزمة الـ DHCP، وليس في الـ IP Header، لأن الكمبيوتر لم يمتلك IP بشكل رسمي بعد."
-            }
-        ],
-        "scenario": [
-            {
-                q: "قمت ببرمجة سيرفر DHCP على ਰਾوتر. لكنك لاحظت أن جميع أجهزة الموظفين استلمت IP و Subnet Mask، ولكنهم غير قادرين على تصفح الإنترنت أو الوصول لأي شبكة أخرى. ما هو الإعداد الناقص غالباً في برمجة الـ DHCP Pool؟",
-                options: ["dns-server", "default-router", "network", "domain-name"],
-                correct: 1,
-                explanation: "للوصول لأي شبكة خارج شبكتهم المحلية، يحتاج الموظفون لمعرفة الـ Default Gateway الخاص بهم. يتم توزيعه في הـ DHCP عبر الأمر default-router."
-            }
-        ]
-    },
-    "serv_nat": {
-        "easy": [
-            {
-                q: "ما هو البروتوكول الذي يحل مشكلة نقص عناوين IPv4 عن طريق ترجمة العناوين الخاصة (Private) إلى عناوين عامة (Public)؟",
-                options: ["DHCP", "DNS", "NAT", "NTP"],
-                correct: 2,
-                explanation: "NAT يقوم بترجمة الـ Private IP إلى Public IP لكي تتمكن من الوصول للإنترنت."
+                "q": "ما هو الأمر المستخدم لمنع الراوتر من توزيع عناوين معينة (مثل عنوان الراوتر نفسه)؟",
+                "options": [
+                    "ip dhcp exclude 192.168.1.1",
+                    "ip dhcp excluded-address 192.168.1.1",
+                    "ip dhcp avoid 192.168.1.1",
+                    "ip dhcp block 192.168.1.1"
+                ],
+                "answer": 1,
+                "explanation": "الأمر الصحيح في سيسكو لاستثناء عنوان أو نطاق من العناوين هو ip dhcp excluded-address."
             },
             {
-                q: "أي نوع من الـ NAT يسمح لآلاف الموظفين بمشاركة عنوان Public IP واحد فقط للوصول للإنترنت؟",
-                options: ["Static NAT", "Dynamic NAT", "PAT (NAT Overload)", "NAT-T"],
-                correct: 2,
-                explanation: "الـ PAT أو الـ NAT Overload يعتمد على استخدام أرقام الـ Ports للتفريق بين جلسات الموظفين، مما يسمح بمشاركة Public IP واحد."
-            }
-        ],
-        "medium": [
-            {
-                q: "متى نضطر لاستخدام הـ Static NAT بدلاً من הـ PAT في الشبكة؟",
-                options: ["عندما نريد إخراج 100 موظف للإنترنت", "عندما يكون لدينا سيرفر ويب داخلي (Web Server) ويجب أن يتمكن زوار الإنترنت من الدخول إليه", "عندما نريد توزيع הـ IP آلياً", "عندما نريد تسريع تصفح الإنترنت"],
-                correct: 1,
-                explanation: "الـ Static NAT (1-to-1) يستخدم لربط Public IP ثابت بـ Private IP ثابت، وهو ضروري للسيرفرات التي تحتاج لاستقبال اتصالات من الخارج."
+                "q": "ما هي المشكلة التي يحلها الـ DHCP Relay Agent؟",
+                "options": [
+                    "بطء استجابة الـ DHCP",
+                    "منع الراوتر لرسائل הـ Broadcast من العبور لشبكة أخرى",
+                    "نفاذ عناوين الـ IP المتاحة في الـ Pool",
+                    "توزيع عناوين DNS خاطئة"
+                ],
+                "answer": 1,
+                "explanation": "رسالة Discover تكون Broadcast، والراوتر يمنع الـ Broadcast من العبور. الـ Relay Agent (ip helper-address) يحولها إلى Unicast لتصل للسيرفر في الشبكة الأخرى."
             }
         ],
         "hard": [
             {
-                q: "إذا استخدمت أمر `ip nat inside source list 1 interface g0/1 overload`، ماذا يعني `list 1`؟",
-                options: ["رقم الواجهة", "رقم הـ VLAN", "رقم הـ Access Control List (ACL) التي تحدد من المسموح لهم بالخروج للإنترنت", "رقم مجموعة הـ HSRP"],
-                correct: 2,
-                explanation: "list 1 تشير إلى Standard ACL تم إنشاؤها مسبقاً لتحديد نطاق الـ Private IPs المسموح لها بالترجمة (NAT) والخروج للإنترنت."
+                "q": "أين يتم كتابة أمر 'ip helper-address 10.1.1.5' لكي يعمل بشكل صحيح كـ Relay Agent؟",
+                "options": [
+                    "في وضع Global Configuration (R1(config)#)",
+                    "داخل إعدادات الـ DHCP Pool",
+                    "على الـ Interface المواجهة لسيرفر الـ DHCP",
+                    "على الـ Interface المواجهة للكمبيوترات (Clients)"
+                ],
+                "answer": 3,
+                "explanation": "يجب وضع الأمر على المنفذ (Interface) المواجه لأجهزة الموظفين لكي يستلم رسالة الـ Broadcast منهم ويحولها لـ Unicast نحو السيرفر."
             }
         ],
-        "scenario": [
-            {
-                q: "قمت ببرمجة PAT لموظفي الشركة. برمجت الـ Pool، والـ ACL، وربطتهما معاً بـ overload. ومع ذلك، الموظفون لا زالوا يفشلون في الاتصال بالإنترنت. ما هي الخطوة التي غالباً نسيتها؟",
-                options: ["إعطاء الموظفين Public IPs", "تحديد `ip nat inside` على المنفذ الداخلي للراوتر، و `ip nat outside` على منفذ الإنترنت", "إغلاق منافذ الراوتر بـ shutdown", "تفعيل OSPF"],
-                correct: 1,
-                explanation: "من شروط الـ NAT الأساسية هو الدخول للمنافذ (Interfaces) وتحديد من هو المنفذ الداخلي (inside) ومن هو المنفذ الخارجي (outside) المتجه للإنترنت."
-            }
-        ]
-    },
-    "serv_dns_ntp": {
-        "easy": [
-            {
-                q: "ما هو الغرض من بروتوكول DNS؟",
-                options: ["ترجمة الـ IP إلى MAC Address", "توزيع הـ IP للموظفين", "مزامنة وقت أجهزة الشبكة", "ترجمة أسماء المواقع (مثل google.com) إلى عناوين IP"],
-                correct: 3,
-                explanation: "البشر لا يستطيعون حفظ كل الآيبيهات، لذلك DNS يترجم الأسماء المفهومة إلى أرقام IP يفهمها الراوتر."
-            },
-            {
-                q: "ما هو الغرض من بروتوكول NTP في بيئة سيسكو؟",
-                options: ["إنشاء مسارات آمنة (VPN)", "مزامنة الوقت والتاريخ (Time Synchronization) بشكل دقيق بين جميع أجهزة الشبكة", "تسريع أداء السويتشات", "ترجمة عناوين הـ NAT"],
-                correct: 1,
-                explanation: "NTP هو Network Time Protocol ويستخدم لمزامنة الساعات، وهو مهم جداً للأمن والسجلات الرقمية (Logs)."
-            }
-        ],
-        "medium": [
-            {
-                q: "ماذا يمثل مصطلح Stratum في بروتوكول NTP؟",
-                options: ["سرعة خط הـ Internet", "عدد الراوترات في المسار", "مستوى دقة الوقت (الـ Stratum 1 هو الأكثر دقة لارتباطه مباشرة بمصادر Stratum 0)", "نوع تشفير كلمات المرور"],
-                correct: 2,
-                explanation: "الـ Stratum يحدد بعد السيرفر عن المصدر الأصلي للوقت (مثل الساعات الذرية). وكلما زاد الرقم، قلت الدقة."
-            }
-        ],
-        "hard": [
-            {
-                q: "لماذا يعتبر وقت الراوتر (NTP Time) مهماً جداً لتحقيقات الأمن السيبراني (Forensics)؟",
-                options: ["لأنه يمنع הـ Malware من الدخول", "لأنه يزيد من سرعة الـ CPU", "لأنه يوفر تسلسلاً زمنياً دقيقاً (Correlation) لسجلات הـ Logs المأخوذة من عدة أجهزة لتتبع الجريمة", "لا توجد له أهمية أمنية"],
-                correct: 2,
-                explanation: "إذا كانت أجهزة الشبكة غير متزامنة الوقت، لا يمكن لمحلل הـ SOC تحديد تسلسل مسار الهاكر داخل الشركة وتطابق السجلات (Logs)."
-            }
-        ],
-        "scenario": [
-            {
-                q: "تحاول الدخول إلى موقع HTTPS آمن، فظهر لك المتصفح رسالة خطأ (Certificate Error / Your Clock is Behind). ما هو البروتوكول الذي كان سيعالج هذه المشكلة إن كان مفعلاً على جهازك؟",
-                options: ["DNS", "DHCP", "NAT", "NTP"],
-                correct: 3,
-                explanation: "الشهادات الرقمية (SSL/TLS Certificates) لها مدة صلاحية تعتمد على التاريخ. إذا كان تاريخ جهازك خاطئاً، سيتم رفض الشهادة. الـ NTP كان سيضبط وقتك تلقائياً."
-            }
-        ]
+        "scenario": {
+            "title": "مشكلة في الـ Relay",
+            "context": "قمت بإعداد سيرفر DHCP مركزي للشركة في الفرع الرئيسي (IP: 10.0.0.100). الموظفون في شبكة VLAN 20 (الـ Gateway الخاص بها هو g0/1.20 على الراوتر) لا يحصلون على عناوين IP.",
+            "question": "ما هو الإعداد الناقص والمكان الصحيح لكتابته لحل المشكلة؟",
+            "options": [
+                "كتابة ip helper-address 10.0.0.100 داخل الـ VLAN 20 على السويتش.",
+                "كتابة ip helper-address 10.0.0.100 داخل الـ sub-interface g0/1.20 على الراوتر.",
+                "كتابة ip dhcp relay 10.0.0.100 على الفتحة g0/1 الرئيسية.",
+                "كتابة ip route 0.0.0.0 0.0.0.0 10.0.0.100 على الراوتر."
+            ],
+            "answer": 1,
+            "explanation": "الـ Gateway لأجهزة الـ VLAN هو الـ sub-interface على الراوتر. لذلك يجب الدخول إليه وتطبيق ip helper-address لتحويل الـ Broadcast إلى سيرفر الـ DHCP."
+        }
     },
 """
 
-# Inject without introducing literal backslash-n
-quizzes_content = quizzes_content.replace('const quizzesData = {', 'const quizzesData = {\n' + new_quizzes)
+serv_nat_quizzes = """
+    "serv_nat": {
+        "easy": [
+            {
+                "q": "ما هي الفائدة الأساسية من الـ NAT؟",
+                "options": [
+                    "تشفير البيانات وحمايتها من الاختراق",
+                    "ترجمة العناوين الخاصة (Private) إلى عناوين عامة (Public) للوصول للإنترنت",
+                    "توزيع عناوين IP على الأجهزة ديناميكياً",
+                    "منع الفيروسات من دخول الشبكة"
+                ],
+                "answer": 1,
+                "explanation": "بروتوكول NAT (Network Address Translation) صُنع أساساً لترجمة العناوين الخاصة إلى عامة للتمكن من التصفح، مما حل أزمة نفاذ عناوين IPv4."
+            },
+            {
+                "q": "في مصطلحات سيسكو للـ NAT، ماذا يمثل الـ 'Inside Local'؟",
+                "options": [
+                    "العنوان الخاص (Private) لجهاز الكمبيوتر داخل الشركة",
+                    "العنوان العام (Public) للراوتر على الإنترنت",
+                    "عنوان سيرفر جوجل الذي نتصفحه",
+                    "العنوان الخاص (Private) لراوتر مزود الخدمة"
+                ],
+                "answer": 0,
+                "explanation": "Inside تعني أنه خاص بنا داخلياً، و Local تعني العنوان كما نراه نحن (أي الـ Private IP)."
+            }
+        ],
+        "medium": [
+            {
+                "q": "أي نوع من الـ NAT يسمح لمئات الموظفين بالخروج للإنترنت باستخدام عنوان Public IP واحد فقط؟",
+                "options": [
+                    "Static NAT",
+                    "Dynamic NAT",
+                    "PAT (NAT Overload)",
+                    "Reverse NAT"
+                ],
+                "answer": 2,
+                "explanation": "الـ PAT (Port Address Translation) أو NAT Overload يعتمد على رقم المنفذ (Port) ليفرق بين اتصالات الأجهزة المختلفة، مما يسمح لأكثر من 65 ألف اتصال بالمشاركة في IP عام واحد."
+            },
+            {
+                "q": "في سطر الأوامر: ip nat inside source list 1 interface s0/0/0 overload، ما هو دور 'list 1'؟",
+                "options": [
+                    "قائمة أرقام المنافذ (Ports) المسموح بها",
+                    "هي Access List تحدد العناوين الداخلية المسموح لها بالترجمة والخروج للإنترنت",
+                    "رقم الـ VLAN الداخلية",
+                    "رقم سرعة الإنترنت المسموحة للموظفين"
+                ],
+                "answer": 1,
+                "explanation": "نستخدم الـ ACL (Access Control List) لتحديد أي الـ Subnets يُسمح بمرورها عبر الـ NAT للحصول على ترجمة."
+            }
+        ],
+        "hard": [
+            {
+                "q": "إذا كان لديك سيرفر ويب (Web Server) داخل الشركة (IP 192.168.1.100) وتريد أن يصل إليه العملاء من الإنترنت عبر عنوانك العام (200.1.1.5)، ما هو نوع הـ NAT المطلوب؟",
+                "options": [
+                    "NAT Overload (PAT)",
+                    "Dynamic NAT",
+                    "Static NAT",
+                    "Policy NAT"
+                ],
+                "answer": 2,
+                "explanation": "السيرفرات تتطلب ربطاً ثابتاً لا يتغير (1 to 1 Mapping) لكي يستطيع الناس من الخارج الاتصال به دائماً عبر نفس العنوان العام الثابت، وهذا هو Static NAT."
+            }
+        ],
+        "scenario": {
+            "title": "الإنترنت مقطوع!",
+            "context": "قمت بعمل كل إعدادات الـ NAT وقمت بتفعيل Overload وربطه بالـ ACL الصحيحة. لكن الموظفين ما زالوا لا يستطيعون تصفح الإنترنت.",
+            "question": "ما هي الخطوة التي غالباً ينسى المهندسون الجدد القيام بها لتفعيل הـ NAT بشكل كامل؟",
+            "options": [
+                "إنشاء DNS Server داخلي",
+                "الدخول على كل جهاز كمبيوتر وتفعيل خيار NAT في الويندوز",
+                "الدخول على منافذ الراوتر (Interfaces) وتحديد من هو الـ ip nat inside ومن هو الـ ip nat outside",
+                "كتابة أمر ip routing"
+            ],
+            "answer": 2,
+            "explanation": "لا يكفي كتابة قاعدة הـ NAT فقط. يجب أن تخبر الراوتر أي فتحة موجهة للداخل (ip nat inside) وأي فتحة موجهة للإنترنت (ip nat outside) لكي يعرف في أي اتجاه سيقوم بالترجمة."
+        }
+    },
+"""
+
+serv_dns_ntp_quizzes = """
+    "serv_dns_ntp": {
+        "easy": [
+            {
+                "q": "ما هي وظيفة الـ DNS؟",
+                "options": [
+                    "توزيع عناوين IP تلقائياً",
+                    "ترجمة العناوين الخاصة إلى عامة",
+                    "ترجمة أسماء النطاقات (مثل google.com) إلى عناوين IP",
+                    "مزامنة الوقت والتاريخ في الشبكة"
+                ],
+                "answer": 2,
+                "explanation": "الـ DNS هو بمثابة دليل الهاتف، يُترجم الأسماء البشرية المفهومة إلى عناوين IP تفهمها الحواسيب والراوترات."
+            },
+            {
+                "q": "ما هي وظيفة الـ NTP؟",
+                "options": [
+                    "تسريع نقل البيانات في الشبكة",
+                    "مزامنة الوقت (Time Synchronization) عبر جميع أجهزة الشبكة",
+                    "ترجمة أرقام المنافذ",
+                    "التحكم في جدار الحماية"
+                ],
+                "answer": 1,
+                "explanation": "الـ Network Time Protocol يُستخدم لضمان أن جميع الأجهزة (سويتشات، راوترات، سيرفرات) تمتلك نفس الوقت والتاريخ بالثانية."
+            }
+        ],
+        "medium": [
+            {
+                "q": "ما هو الأمر المستخدم لتعريف راوتر سيسكو بخادم הـ DNS الخارجي؟",
+                "options": [
+                    "ip dns-server 8.8.8.8",
+                    "ip name-server 8.8.8.8",
+                    "dns set 8.8.8.8",
+                    "server-dns 8.8.8.8"
+                ],
+                "answer": 1,
+                "explanation": "أمر إعداد الـ DNS على الراوتر هو ip name-server."
+            },
+            {
+                "q": "كيف نتأكد من أن राوتر سيسكو قد قام بمزامنة وقته بنجاح مع سيرفر הـ NTP؟",
+                "options": [
+                    "باستخدام أمر show clock فقط",
+                    "باستخدام أمر show ntp status و show ntp associations",
+                    "الوقت يظهر تلقائياً كرسالة Broadcast",
+                    "من خلال وميض لمبة الـ SYNC في الراوتر"
+                ],
+                "answer": 1,
+                "explanation": "أوامر show ntp associations و status تُظهر تفاصيل الاتصال بسيرفر הـ NTP وتؤكد حالة التزامن (يظهر رمز * بجوار السيرفر المُعتمد)."
+            }
+        ],
+        "hard": [
+            {
+                "q": "لماذا تعتبر مزامنة الوقت (NTP) أمراً بالغ الأهمية من الناحية الأمنية (Security) في شبكات المؤسسات؟",
+                "options": [
+                    "لأن الهاكرز لا يستطيعون اختراق الراوترات إذا كان الوقت مضبوطاً",
+                    "من أجل دقة سجلات الأحداث (Logs) وصلاحية شهادات التشفير (Certificates)",
+                    "لأن الأنظمة تعمل بشكل أسرع في النهار مقارنة بالليل",
+                    "لمنع وصول الموظفين للإنترنت بعد ساعات العمل بشكل تلقائي"
+                ],
+                "answer": 1,
+                "explanation": "التحقيق الجنائي الرقمي يعتمد على Logs مترابطة زمنياً، وشهادات الأمان (مثل SSL/TLS و IPsec) تعتمد كلياً على الوقت لتحديد فترة صلاحيتها ورفضها إذا كان الوقت خاطئاً."
+            }
+        ],
+        "scenario": {
+            "title": "استكشاف أخطاء הـ NTP",
+            "context": "قمت بتكوين ntp server 10.1.1.5 على الراوتر. بعد 5 دقائق كتبت أمر show ntp status ووجدت أن الـ Clock is unsynchronized. السيرفر 10.1.1.5 يرد على الـ Ping بشكل سليم.",
+            "question": "ما هو السبب الأكثر احتمالاً لهذه المشكلة؟",
+            "options": [
+                "أمر ntp server يتطلب إعادة تشغيل الراوتر ليعمل",
+                "الراوتر يحتاج إلى IP Helper Address",
+                "سيرفر הـ NTP يرفض الطلب لأن الراوتر لم يقدم الـ NTP Authentication (الرقم السري) المطلوب",
+                "الـ Ping لا يعني أن الـ IP يعمل"
+            ],
+            "answer": 2,
+            "explanation": "إذا كانت إمكانية الوصول موجودة (Ping ينجح) ومع ذلك يفشل التزامن، فغالباً السيرفر يحمي نفسه بإعدادات مصادقة (Authentication) ويطلب مفتاح أمان (Key) لكي يمنحك الوقت."
+        }
+    }
+"""
+
+content = re.sub(r'"serv_dhcp":\s*\{\s*\},', serv_dhcp_quizzes, content)
+content = re.sub(r'"serv_nat":\s*\{\s*\},', serv_nat_quizzes, content)
+content = re.sub(r'"serv_dns_ntp":\s*\{\s*\}', serv_dns_ntp_quizzes, content)
 
 with open(quizzes_file, 'w', encoding='utf-8') as f:
-    f.write(quizzes_content)
+    f.write(content)
 
-print("Domain 4 Quizzes injected successfully!")
+print("Domain 4 quizzes injected successfully!")
