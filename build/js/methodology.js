@@ -745,6 +745,10 @@
       const isChecked = item.classList.contains('checked');
       localStorage.setItem('bb_check_' + phaseId + '_' + index, isChecked ? '1' : '0');
       updateChecklistProgress(phaseId);
+      
+      if (isChecked && typeof addGamiXP === 'function') {
+        addGamiXP(10); // Add 10 XP per checklist item
+      }
     }
 
     function updateChecklistProgress(phaseId) {
@@ -1153,6 +1157,9 @@
       if (el.classList.contains('checked')) {
         localStorage.setItem('rd_check_' + idx, '1');
         box.textContent = '✓';
+        if (typeof addGamiXP === 'function') {
+          addGamiXP(10); // Add 10 XP per checklist item
+        }
       } else {
         localStorage.removeItem('rd_check_' + idx);
         box.textContent = '';
@@ -1443,3 +1450,95 @@
       div.innerHTML = htmlString.trim();
       return div.firstElementChild || div.firstChild;
     }
+
+// ==========================================
+// 🎮 HUNTER OS GAMIFICATION ENGINE
+// ==========================================
+
+const GAMI_RANKS = [
+  { name: 'Script Kiddie 👶', min: 0 },
+  { name: 'Junior Hunter 🔍', min: 100 },
+  { name: 'Bug Hunter 🕵️', min: 250 },
+  { name: 'Senior Hunter 🎯', min: 500 },
+  { name: 'Elite Hacker 🥷', min: 1000 },
+  { name: '0day God 🐉', min: 2500 }
+];
+
+let currentXP = parseInt(localStorage.getItem('hunteros_xp') || '0');
+
+function addGamiXP(amount) {
+  currentXP += amount;
+  localStorage.setItem('hunteros_xp', currentXP);
+  updateGamiUI();
+  
+  showXpFloatAnimation(amount);
+}
+
+function updateGamiUI() {
+  const xpEl = document.getElementById('gamiXp');
+  const rankEl = document.getElementById('gamiRank');
+  const fillEl = document.getElementById('gamiBarFill');
+  const nextEl = document.getElementById('gamiNextLevel');
+  
+  if (!xpEl || !rankEl || !fillEl) return;
+  
+  xpEl.textContent = currentXP + ' XP';
+  
+  let currentRank = GAMI_RANKS[0];
+  let nextRank = GAMI_RANKS[1];
+  
+  for (let i = 0; i < GAMI_RANKS.length; i++) {
+    if (currentXP >= GAMI_RANKS[i].min) {
+      currentRank = GAMI_RANKS[i];
+      nextRank = GAMI_RANKS[i + 1] || null;
+    }
+  }
+  
+  rankEl.textContent = currentRank.name;
+  
+  if (nextRank) {
+    const xpNeeded = nextRank.min - currentRank.min;
+    const xpProgress = currentXP - currentRank.min;
+    const pct = Math.min(100, Math.round((xpProgress / xpNeeded) * 100));
+    fillEl.style.width = pct + '%';
+    nextEl.textContent = `Next Rank: ${nextRank.name.replace(/ .*/, '')} (${nextRank.min} XP)`;
+  } else {
+    fillEl.style.width = '100%';
+    nextEl.textContent = 'MAX LEVEL REACHED 🏆';
+  }
+}
+
+function showXpFloatAnimation(amount) {
+  const gamiTracker = document.querySelector('.gamification-tracker');
+  if (!gamiTracker) return;
+  
+  const floater = document.createElement('div');
+  floater.textContent = '+' + amount + ' XP';
+  floater.style.position = 'absolute';
+  floater.style.right = '20px';
+  floater.style.top = '10px';
+  floater.style.color = 'var(--neon-green)';
+  floater.style.fontWeight = 'bold';
+  floater.style.fontFamily = "'Fira Code', monospace";
+  floater.style.textShadow = '0 0 10px rgba(0, 255, 102, 0.8)';
+  floater.style.transition = 'all 1s ease-out';
+  floater.style.opacity = '1';
+  floater.style.transform = 'translateY(0) scale(1)';
+  floater.style.zIndex = '100';
+  
+  gamiTracker.style.position = 'relative';
+  gamiTracker.appendChild(floater);
+  
+  requestAnimationFrame(() => {
+    floater.style.transform = 'translateY(-30px) scale(1.2)';
+    floater.style.opacity = '0';
+  });
+  
+  setTimeout(() => {
+    if (floater.parentNode) floater.parentNode.removeChild(floater);
+  }, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  updateGamiUI();
+});
