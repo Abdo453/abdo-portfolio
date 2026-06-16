@@ -2170,7 +2170,7 @@
       border-top: 1px solid rgba(0, 229, 255, 0.15);
       padding: 10px 16px;
       z-index: 50;
-      margin-top: 20px;
+      margin-top: auto;
     }
     .rd-quickref-toggle {
       display: flex;
@@ -6964,6 +6964,12 @@ Content-Type: application/json
           }
         }
         floatingSections.remove();
+        
+        // Ensure Quick Reference stays at the bottom for sticky positioning
+        var quickRef = document.getElementById('rdQuickRef');
+        if (quickRef) {
+          viewer.appendChild(quickRef);
+        }
       }
 
       // Animate stat counters
