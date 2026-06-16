@@ -1281,17 +1281,19 @@
       // ── Move floating rd-sections into meth-viewer ──
       var floatingSections = document.getElementById('rd-floating-sections');
       var viewer = document.querySelector('.meth-viewer');
-      if (floatingSections && viewer) {
-        // Move each child before the first phase content view
-        var firstPhase = viewer.querySelector('.meth-content-view');
-        while (floatingSections.firstChild) {
-          if (firstPhase) {
-            viewer.insertBefore(floatingSections.firstChild, firstPhase);
-          } else {
-            viewer.appendChild(floatingSections.firstChild);
+      
+      if (viewer) {
+        if (floatingSections) {
+          var firstPhase = viewer.querySelector('.meth-content-view');
+          while (floatingSections.firstChild) {
+            if (firstPhase) {
+              viewer.insertBefore(floatingSections.firstChild, firstPhase);
+            } else {
+              viewer.appendChild(floatingSections.firstChild);
+            }
           }
+          floatingSections.remove();
         }
-        floatingSections.remove();
         
         // Ensure Quick Reference stays at the bottom for sticky positioning
         var quickRef = document.getElementById('rdQuickRef');

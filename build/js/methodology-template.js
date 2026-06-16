@@ -95,7 +95,17 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
 
-    // Prepend to viewer
+    // Append extra HTML if it's the recon phase
+    if (phase.id === 'p0_new' && MethodologyData.reconHtml) {
+      // Create a wrapper for the extracted HTML to match the style
+      phaseDiv.innerHTML += `
+        <div class="phase-extra-content" style="margin-top: 30px;">
+          ${MethodologyData.reconHtml}
+        </div>
+      `;
+    }
+
+    // Append to wrapper
     if (viewer) viewer.insertBefore(phaseDiv, viewer.firstChild);
   });
 
@@ -159,6 +169,15 @@ function injectLabs() {
     </div>
     ${labsHtml}
   `;
+
+  // Append Real Case Study
+  if (MethodologyData.caseStudyHtml) {
+    labsDiv.innerHTML += `
+      <div class="labs-case-study" style="margin-top: 40px; border-top: 1px dashed rgba(255,0,85,0.3); padding-top: 30px;">
+        ${MethodologyData.caseStudyHtml}
+      </div>
+    `;
+  }
 
   viewer.appendChild(labsDiv);
 
