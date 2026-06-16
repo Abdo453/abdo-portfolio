@@ -252,6 +252,12 @@ function processCommand(cmd) {
         if (!routerState.users) routerState.users = {};
         routerState.users[parts[1]] = true;
     }
+    else if (mainCmd === 'cdp' && parts[1]?.toLowerCase() === 'run' && routerState.mode === 'config') {
+        routerState.cdpGlobal = true;
+    }
+    else if (mainCmd === 'lldp' && parts[1]?.toLowerCase() === 'run' && routerState.mode === 'config') {
+        routerState.lldpGlobal = true;
+    }
     else if (mainCmd === 'router' && routerState.mode === 'config') {
         if (parts[1]?.toLowerCase() === 'ospf') {
             routerState.mode = 'config-router';
@@ -362,6 +368,15 @@ function processCommand(cmd) {
             }
         }
     }
+    else if (mainCmd === 'channel-group' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        intf.channelGroup = parts[1];
+        if (parts[2]?.toLowerCase() === 'mode') intf.channelGroupMode = parts[3]?.toLowerCase();
+    }
+    else if (mainCmd === 'cdp' && parts[1]?.toLowerCase() === 'enable' && routerState.mode === 'config-if') {
+        let intf = routerState.interfaces[routerState.currentIf];
+        intf.cdpEnabled = true;
+    }
     else if (mainCmd === 'spanning-tree' && routerState.mode === 'config') {
         if (parts[1]?.toLowerCase() === 'vlan' && parts[3]?.toLowerCase() === 'root') {
             if (!routerState.stpConfig) routerState.stpConfig = {};
@@ -386,6 +401,7 @@ function processCommand(cmd) {
         else if (p1 === 'ip' && p2 === 'interface') term.writeln('Interface              IP-Address      OK? Method Status                Protocol\nGigabitEthernet0/0     192.168.1.1     YES manual up                    up\nFastEthernet0/1        unassigned      YES unset  up                    down');
         else if (p1 === 'port-security') term.writeln('Secure Port  MaxSecureAddr  CurrentAddr  SecurityViolation  Security Action\n               (Count)       (Count)          (Count)\n---------------------------------------------------------------------------\n      Fa0/1              1          0                  0         Shutdown');
         else if (p1 === 'running-config') term.writeln('Building configuration...\n\nCurrent configuration : 1563 bytes\n!\nversion 15.1\n!\nhostname ' + routerState.hostname + '\n!\n! (Showing simulated configuration...)\n!');
+        else if (p1 === 'cdp' && p2 === 'neighbors') term.writeln('Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge\n                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone, ...\n\nDevice ID        Local Intrfce     Holdtme    Capability  Platform  Port ID\nSwitch1          Fas 0/0           120             S I      2960      Fas 0/1');
         else term.writeln('Showing output (simulated)...');
     }
     else {
