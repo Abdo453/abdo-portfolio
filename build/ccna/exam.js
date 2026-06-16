@@ -168,7 +168,7 @@ function finishExam() {
             <div class="review-item ${isCorrect ? 'correct' : ''}">
                 <p><strong>س${i+1} [${q.domain}]:</strong> ${q.q}</p>
                 <p style="color: var(--success);">الجواب الصحيح: ${q.options[q.correct]}</p>
-                ${!isCorrect ? \`<p style="color: var(--danger);">إجابتك: ${userAnswers[i] >= 0 ? q.options[userAnswers[i]] : 'لم تجب'}</p>\` : ''}
+                ${!isCorrect ? `<p style="color: var(--danger);">إجابتك: ${userAnswers[i] >= 0 ? q.options[userAnswers[i]] : 'لم تجب'}</p>` : ''}
             </div>
         `;
     });
@@ -181,7 +181,7 @@ function finishExam() {
     let certHtml = '';
     if (percent >= 80) {
         comment.innerText = "أداء أسطوري! أنت جاهز لامتحان سيسكو الحقيقي.";
-        certHtml = \`<button class="btn btn-finish" style="margin-top: 15px; font-size: 1.2rem; padding: 15px 30px;" onclick="generateCertificate(\${percent})">🎓 استخراج شهادة النجاح</button>\`;
+        certHtml = `<button class="btn btn-finish" style="margin-top: 15px; font-size: 1.2rem; padding: 15px 30px;" onclick="generateCertificate(${percent})">🎓 استخراج شهادة النجاح</button>`;
     } else if (percent >= 50) {
         comment.innerText = "أداء جيد، لكنك بحاجة لمراجعة بعض الدروس.";
     } else {
@@ -196,17 +196,17 @@ function finishExam() {
         let stats = domainStats[dom];
         let p = Math.round((stats.correct / stats.total) * 100);
         let color = p >= 80 ? 'var(--success)' : (p >= 50 ? '#d29922' : 'var(--danger)');
-        weaknessHtml += \`
+        weaknessHtml += `
             <div style="margin-bottom: 10px; text-align: right;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                    <span>\${dom}</span>
-                    <span style="color: \${color}; font-weight: bold;">\${p}% (\${stats.correct}/\${stats.total})</span>
+                    <span>${dom}</span>
+                    <span style="color: ${color}; font-weight: bold;">${p}% (${stats.correct}/${stats.total})</span>
                 </div>
                 <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 5px; height: 10px; overflow: hidden;">
-                    <div style="width: \${p}%; height: 100%; background: \${color};"></div>
+                    <div style="width: ${p}%; height: 100%; background: ${color};"></div>
                 </div>
             </div>
-        \`;
+        `;
     }
     weaknessHtml += '</div>';
     
@@ -220,12 +220,12 @@ function generateCertificate(score) {
     const date = new Date().toLocaleDateString('en-GB');
     const certWindow = window.open('', '_blank');
     
-    certWindow.document.write(\`
+    certWindow.document.write(`
         <!DOCTYPE html>
         <html lang="ar" dir="rtl">
         <head>
             <meta charset="UTF-8">
-            <title>شهادة إتمام - \${studentName}</title>
+            <title>شهادة إتمام - ${studentName}</title>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
                 body { margin: 0; padding: 0; background: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Cairo', sans-serif; }
@@ -247,18 +247,18 @@ function generateCertificate(score) {
         </head>
         <body>
             <div class="cert-container">
-                <div class="score-badge">\${score}%</div>
+                <div class="score-badge">${score}%</div>
                 <div class="cert-inner">
                     <div class="logo">Cisco CCNA Academy</div>
                     <h1>شهادة إجتياز بتفوق</h1>
                     <h2>يُشهد بأن المتدرب</h2>
-                    <div class="student-name">\${studentName}</div>
+                    <div class="student-name">${studentName}</div>
                     <div class="desc">
                         قد اجتاز بنجاح امتحان المحاكاة الشامل لشهادة (CCNA 200-301) المعتمد من الأكاديمية،<br>
                         وأظهر كفاءة ممتازة في أساسيات الشبكات، التوجيه، التبديل، والأمن السيبراني.
                     </div>
                     <div class="footer">
-                        <div class="signature">التاريخ: \${date}</div>
+                        <div class="signature">التاريخ: ${date}</div>
                         <div class="signature">المدير الأكاديمي</div>
                     </div>
                 </div>
@@ -268,6 +268,6 @@ function generateCertificate(score) {
             </script>
         </body>
         </html>
-    \`);
+    `);
     certWindow.document.close();
 }
