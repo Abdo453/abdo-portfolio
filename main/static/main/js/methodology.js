@@ -46,6 +46,10 @@
 
       // Track visited phases (progress tracker)
       markVisitedSafe(phaseId);
+
+      // Generate phase TOC and breadcrumb
+      generatePhaseTOC(phaseId, activeContent);
+      generateBreadcrumb(phaseId);
     }
 
     // Switch Vuln Database Tabs
@@ -1236,4 +1240,206 @@
       // Open quick ref by default
       var qr = document.getElementById('rdQuickRef');
       if (qr) qr.classList.add('open');
+      // Generate TOC for default phase
+      var defaultContent = document.getElementById('meth-content-p0');
+      if (defaultContent) {
+        generatePhaseTOC('p0', defaultContent);
+        generateBreadcrumb('p0');
+      }
     });
+
+    // ============================================================
+    // PHASE TOC GENERATOR — Auto-builds table of contents
+    // ============================================================
+    var _tocScrollHandler = null;
+
+    function getCategoryForPhase(phaseId) {
+      var catMap = {
+        'cat-recon': ['p0','p2','p1','p_matrix'],
+        'cat-discover': ['p6','p4','p16','p_graphql','p5','p3'],
+        'cat-vuln': ['p7','p8','p9','p_ssti','p_xxe','p10','p11','p12','p14','p13','p15'],
+        'cat-automation': ['p17','p_payloads','p18','p_writeups','p19'],
+        'cat-scenarios': ['p_scen_rce','p_scen_idor','p_scen_takeover']
+      };
+      var catNames = {
+        'cat-recon': 'Core Recon',
+        'cat-discover': 'Web Discovery',
+        'cat-vuln': 'Vulnerabilities',
+        'cat-automation': 'Pipelines & Labs',
+        'cat-scenarios': 'Hacker Scenarios'
+      };
+      for (var cat in catMap) {
+        if (catMap[cat].indexOf(phaseId) !== -1) return catNames[cat] || cat;
+      }
+      return 'Methodology';
+    }
+
+    function getPhaseTitle(phaseId) {
+      var contentEl = document.getElementById('meth-content-' + phaseId);
+      if (!contentEl) return phaseId;
+      var h1 = contentEl.querySelector('.phase-module-title') || contentEl.querySelector('.hero-title') || contentEl.querySelector('h1') || contentEl.querySelector('h2');
+      if (h1) return h1.textContent.trim().replace(/^#+\s*/, '');
+      return phaseId;
+    }
+
+    function generatePhaseTOC(phaseId, contentEl) {
+      if (!contentEl) return;
+
+      // Remove any existing TOC
+      var oldToc = contentEl.querySelector('.phase-toc');
+      if (oldToc) oldToc.remove();
+
+      // Find all sections: os-section-label, card-header h3, h2
+      var sections = [];
+      var elements = contentEl.querySelectorAll('.os-section-label, .card-header h3, .phase-module-header, .info-duo, .if-nothing-box, .expected-output, .lab-box');
+      var seen = {};
+      var stepCount = 0;
+
+      elements.forEach(function(el) {
+        var text = '';
+        if (el.classList.contains('os-section-label')) {
+          text = el.textContent.trim();
+        } else if (el.classList.contains('phase-module-header')) {
+          text = 'Overview';
+        } else if (el.classList.contains('info-duo')) {
+          text = 'What & Goal';
+        } else if (el.classList.contains('if-nothing-box')) {
+          var title = el.querySelector('.if-nothing-title');
+          text = title ? title.textContent.trim() : 'If Nothing Found';
+        } else if (el.classList.contains('expected-output')) {
+          return; // skip these
+        } else if (el.classList.contains('lab-box')) {
+          var labHeader = el.querySelector('.lab-header h3, .lab-header');
+          text = labHeader ? labHeader.textContent.trim() : 'Lab';
+        } else {
+          text = el.textContent.trim();
+        }
+
+        if (!text || text.length > 80) return;
+        if (seen[text]) return;
+        seen[text] = true;
+        stepCount++;
+
+        // Add anchor ID
+        var anchorId = 'phase-toc-' + phaseId + '-' + stepCount;
+        el.id = anchorId;
+        el.classList.add('section-anchor');
+
+        sections.push({ id: anchorId, text: text, step: stepCount });
+      });
+
+      if (sections.length < 2) return; // Don't show TOC for tiny phases
+
+      // Count total steps (cmd-ui-box elements)
+      var totalSteps = contentEl.querySelectorAll('.cmd-ui-box').length;
+
+      // Build TOC HTML
+      var phaseTitle = getPhaseTitle(phaseId);
+      var category = getCategoryForPhase(phaseId);
+      var tocHtml = '<div class="phase-toc">';
+      tocHtml += '<div class="phase-toc-title">\u{1F4D1} IN THIS SECTION</div>';
+      tocHtml += '<button class="phase-toc-toggle" onclick="this.parentElement.classList.toggle(\'collapsed\'); this.textContent = this.parentElement.classList.contains(\'collapsed\') ? \'+ show\' : \'\u2212 hide\';">\u2212 hide</button>';
+      tocHtml += '<ul class="phase-toc-list">';
+
+      sections.forEach(function(s) {
+        tocHtml += '<li class="phase-toc-item" data-target="' + s.id + '" onclick="scrollToPhaseSection(\'' + s.id + '\')">';
+        tocHtml += '<span class="toc-step-num">' + s.step + '</span>';
+        tocHtml += '<span>' + s.text + '</span>';
+        tocHtml += '</li>';
+      });
+
+      tocHtml += '</ul></div>';
+
+      // Insert TOC after the phase-module-header
+      var header = contentEl.querySelector('.phase-module-header');
+      if (header && header.nextSibling) {
+        header.parentNode.insertBefore(createElementFromHTML(tocHtml), header.nextSibling);
+      } else if (header) {
+        contentEl.appendChild(createElementFromHTML(tocHtml));
+      } else {
+        var firstChild = contentEl.firstElementChild;
+        if (firstChild) {
+          contentEl.insertBefore(createElementFromHTML(tocHtml), firstChild.nextSibling);
+        }
+      }
+
+      // Setup scroll spy
+      setupScrollSpy(contentEl, sections);
+    }
+
+    function generateBreadcrumb(phaseId) {
+      var viewer = document.querySelector('.meth-viewer');
+      if (!viewer) return;
+
+      var oldBc = viewer.querySelector('.phase-breadcrumb');
+      if (oldBc) oldBc.remove();
+
+      var category = getCategoryForPhase(phaseId);
+      var title = getPhaseTitle(phaseId);
+      var contentEl = document.getElementById('meth-content-' + phaseId);
+      var totalSteps = contentEl ? contentEl.querySelectorAll('.cmd-ui-box').length : 0;
+
+      var bcHtml = '<div class="phase-breadcrumb">';
+      bcHtml += '<span class="bc-category">' + category + '</span>';
+      bcHtml += '<span class="bc-separator">\u203A</span>';
+      bcHtml += '<span class="bc-phase">' + title + '</span>';
+      if (totalSteps > 0) {
+        bcHtml += '<span class="bc-step-count">' + totalSteps + ' steps</span>';
+      }
+      bcHtml += '</div>';
+
+      var phaseContent = document.getElementById('meth-content-' + phaseId);
+      if (phaseContent) {
+        phaseContent.insertBefore(createElementFromHTML(bcHtml), phaseContent.firstChild);
+      }
+    }
+
+    function scrollToPhaseSection(anchorId) {
+      var el = document.getElementById(anchorId);
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function setupScrollSpy(contentEl, sections) {
+      // Remove old handler
+      if (_tocScrollHandler) {
+        document.querySelector('.meth-viewer') &&
+          document.querySelector('.meth-viewer').removeEventListener('scroll', _tocScrollHandler);
+      }
+
+      var viewer = document.querySelector('.meth-viewer');
+      if (!viewer) return;
+
+      _tocScrollHandler = function() {
+        var scrollTop = viewer.scrollTop;
+        var activeId = null;
+
+        for (var i = sections.length - 1; i >= 0; i--) {
+          var el = document.getElementById(sections[i].id);
+          if (el) {
+            var rect = el.getBoundingClientRect();
+            if (rect.top <= 150) {
+              activeId = sections[i].id;
+              break;
+            }
+          }
+        }
+
+        var tocItems = contentEl.querySelectorAll('.phase-toc-item');
+        tocItems.forEach(function(item) {
+          if (item.getAttribute('data-target') === activeId) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      };
+
+      viewer.addEventListener('scroll', _tocScrollHandler);
+    }
+
+    function createElementFromHTML(htmlString) {
+      var div = document.createElement('div');
+      div.innerHTML = htmlString.trim();
+      return div.firstElementChild || div.firstChild;
+    }

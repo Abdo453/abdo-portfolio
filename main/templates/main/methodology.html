@@ -317,6 +317,7 @@
       <div class="hunt-info">
         <div class="hunt-target-label">🎯 Active Hunt</div>
         <div class="hunt-target-name" id="huntTargetDisplay">No active session</div>
+        <div class="hunt-session-meta" id="huntSessionMeta" style="display:none;"></div>
         <div class="hunt-phases-row" id="huntPhasesRow">
           <div class="hunt-phase-chip pending">🌍 Recon</div>
           <div class="hunt-phase-chip pending">⚙️ JS</div>
@@ -346,6 +347,18 @@
         <label class="shunt-label">// TARGET DOMAIN</label>
         <input class="shunt-input" id="shuntTargetInput" placeholder="example.com" type="text"
                onkeydown="if(event.key==='Enter') shuntNextStep(1)">
+        <div class="shunt-scope-grid">
+          <div>
+            <label class="shunt-label">// IN-SCOPE ASSETS</label>
+            <textarea class="shunt-input shunt-textarea" id="shuntScopeInput" placeholder="*.example.com&#10;api.example.com"></textarea>
+          </div>
+          <div>
+            <label class="shunt-label">// OUT-OF-SCOPE / LIMITS</label>
+            <textarea class="shunt-input shunt-textarea" id="shuntOutScopeInput" placeholder="No DoS&#10;No social engineering"></textarea>
+          </div>
+        </div>
+        <label class="shunt-label">// SESSION NOTES</label>
+        <textarea class="shunt-input shunt-textarea" id="shuntNotesInput" placeholder="Program policy notes, rate limits, test account, or proof requirements"></textarea>
         <div class="shunt-btns">
           <button class="hunt-btn primary" onclick="shuntNextStep(1)" style="flex:1; padding:12px;">Continue →</button>
           <button class="hunt-btn" onclick="closeStartHuntModal()" style="padding:12px 14px; border-color:rgba(255,255,255,0.1); color:#64748b;">✕</button>
@@ -353,12 +366,20 @@
       </div>
       <!-- Step 2: Program Type -->
       <div id="shunt-step-2" style="display:none;">
-        <div class="shunt-title">📋 Program Type</div>
+        <div class="shunt-title">Program Type & Authorization</div>
+        <div class="shunt-safety-box">
+          <strong>Authorized testing only.</strong><br>
+          Confirm that this target is inside a bug bounty/VDP scope, an internal assessment you own, or a private lab. Keep testing within the listed scope and avoid destructive checks unless explicitly allowed.
+        </div>
         <div class="shunt-options">
           <div class="shunt-option" onclick="selectProgram('bug_bounty', this)">🏆 Bug Bounty — HackerOne, Bugcrowd</div>
           <div class="shunt-option" onclick="selectProgram('vdp', this)">📋 VDP — Vulnerability Disclosure Program</div>
           <div class="shunt-option" onclick="selectProgram('internal', this)">🔒 Internal / Pentest</div>
         </div>
+        <label class="shunt-check">
+          <input type="checkbox" id="shuntAuthCheck">
+          <span>I have authorization for this target and I will respect the in-scope and out-of-scope rules.</span>
+        </label>
         <button class="hunt-btn" onclick="shuntBackStep()" style="border-color:rgba(255,255,255,0.1); color:#64748b;">← Back</button>
       </div>
       <!-- Step 3: Summary + Confirm -->
