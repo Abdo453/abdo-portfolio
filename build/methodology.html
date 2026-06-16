@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=10">
-  <link rel="stylesheet" href="css/methodology.css?v=10">
+  <link rel="stylesheet" href="css/style.css?v=11">
+  <link rel="stylesheet" href="css/methodology.css?v=11">
 
   
 
@@ -398,7 +398,23 @@
         </div>
       </div>
 
-      <!-- Category 5: Hacker Scenarios -->
+      <!-- Category 5: Threat Intel & Dark Web -->
+      <div class="sidebar-category">
+        <div class="category-title" onclick="toggleCategory('cat-intel')">
+          <span>👁️ THREAT INTEL & OSINT</span>
+          <span>▼</span>
+        </div>
+        <div class="category-items" id="cat-intel">
+          <div class="meth-item" id="meth-ef-p_darkweb" onclick="openMethPhase('p_darkweb')" data-search="dark web deep web tor hidden services osint">
+            <span>🕸️</span> <span>Dark Web OSINT</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_darkweb', '🕸️ Dark Web OSINT')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p_leaks" onclick="openMethPhase('p_leaks')" data-search="data leaks breach hunting credentials ransomware">
+            <span>🩸</span> <span>Data Leaks Hunting</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_leaks', '🩸 Data Leaks Hunting')">★</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 6: Hacker Scenarios -->
       <div class="sidebar-category">
         <div class="category-title" onclick="toggleCategory('cat-scenarios')">
           <span>🎬 HACKER SCENARIOS</span>
@@ -2766,6 +2782,101 @@ Content-Type: application/json
           ✅ Mark Phase Complete — Simulated Shell Done → Proceed to LFI to RCE Scenario
         </button>
 </div>
+
+      <!-- Phase 20: Dark Web OSINT -->
+      <div class="meth-content-view" id="meth-content-p_darkweb" style="display: none; --tool-color: #6366f1;">
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🕸️</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Dark Web & Deep Web OSINT</h2>
+            <p class="phase-module-tagline">استكشاف المواقع المحظورة، ومتابعة مدونات عصابات الفدية وأسواق الهاكرز (0-Day OSINT)</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ Ongoing</span>
+              <span class="badge-difficulty bg-high">Elite Recon</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🌐 The Dark Web (اقتحام المواقع المحظورة)</h3></div>
+          <p>أكبر الاختراقات لا تبدأ بثغرة برمجية، بل بكلمة مرور مسربة لموظف (Initial Access). للوصول لهذه التسريبات، يجب أن تغوص في شبكة Tor والإنترنت المظلم:</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>Ransomware Blogs (مدونات الفدية):</strong> عصابات الهاكرز (مثل LockBit و BlackBasta) تنشر الكود المصدري (Source Code) وقواعد البيانات للشركات التي ترفض الدفع. ابحث فيها عن مفاتيح AWS و API Keys مخفية.</li>
+            <li>✔ <strong>Dark Web Search Engines:</strong> استخدم متصفح Tor ومحركات مثل <code>Ahmia.fi</code> و <code>Excavator</code> للبحث داخل نطاقات <code>.onion</code> المحظورة عن اسم الشركة المستهدفة.</li>
+            <li>✔ <strong>Initial Access Brokers (سماسرة الاختراق):</strong> مراقبة منتديات الهاكرز الروسية (مثل XSS و Exploit.in) لمعرفة ما إذا كان هناك من يبيع وصولاً (RDP/VPN) للشركة المستهدفة.</li>
+          </ul>
+        </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_darkweb" onclick="markPhaseComplete('p_darkweb','p_leaks')">
+          ✅ Mark Phase Complete — Dark Web OSINT Done → Proceed
+        </button>
+      </div>
+
+      <!-- Phase 21: Data Leaks Hunting -->
+      <div class="meth-content-view" id="meth-content-p_leaks" style="display: none; --tool-color: #eab308;">
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🩸</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Data Leaks & Breaches Hunting</h2>
+            <p class="phase-module-tagline">تتبع قواعد البيانات المسربة واصطياد كلمات المرور الصريحة (Cleartext Passwords)</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 1-3 Hours</span>
+              <span class="badge-difficulty bg-high">Critical</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>💧 Data Leak Tracking (تتبع التسريبات)</h3></div>
+          <p>لا تستخدم مواقع ضعيفة مثل HaveIBeenPwned لأنها تخفي كلمة المرور. استخدم أسلحة المحترفين:</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الأداة / الموقع</th>
+                <th>الوظيفة الاستخباراتية (Intel)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>IntelligenceX (intelx.io)</strong></td>
+                <td>محرك بحث مرعب يبحث في الدارك ويب وقواعد البيانات المسربة (COMB). فقط ضع إيميل الموظف أو اسم الشركة وسيجلب لك الملفات المسربة بالكامل.</td>
+              </tr>
+              <tr>
+                <td><strong>DeHashed.com</strong></td>
+                <td>أقوى محرك للبحث عن الاختراقات. يعطيك كلمة المرور بصيغتها النصية الصريحة (Cleartext) لأي موظف تم اختراق حسابه في أي موقع آخر (مثل LinkedIn القديم).</td>
+              </tr>
+              <tr>
+                <td><strong>TruffleHog / Gitleaks</strong></td>
+                <td>أدوات مسح تاريخ الـ GitHub لاصطياد أي Token أو مفتاح سري تم رفعه بالخطأ وحذفه لاحقاً.</td>
+              </tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ OSINT CLI Arsenal (البحث عبر التيرمينال)</h3></div>
+          <p>أداة <code>h8mail</code> للبحث عن كلمات المرور المسربة عبر الـ Terminal من قواعد بيانات متعددة (يتطلب API Keys):</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">h8mail -t "admin@target.com" -c config.ini</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('h8mail -t \"admin@target.com\" -c config.ini', this)">📋 Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Uber Full Company Takeover (2022)</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تم اختراق شركة أوبر بالكامل (AWS، و Slack، و HackerOne الخاص بهم).</p>
+          <p><strong>الاستغلال (Exploitation):</strong> المهاجم لم يستخدم ثغرة برمجية 0-Day!<br>1. اشترى المهاجم كلمة مرور مسربة لمقاول يعمل في أوبر من الدارك ويب.<br>2. سجل دخولاً للـ VPN، واستغل إرهاق المصادقة (MFA Fatigue) حتى وافق الموظف بالخطأ.<br>3. داخل الشبكة، وجد سكربت PowerShell يضم كلمة مرور مدير النظام (Admin Credentials) كنص صريح!<br>النتيجة: سيطرة كاملة.</p>
+          <p><strong>الدرس المستفاد:</strong> <span class="text-neon-cyan">التسريبات والمصادر المفتوحة (OSINT) هي أخطر سلاح لتدمير أقوى الشركات.</span></p>
+        </div>
+      
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_leaks" onclick="markPhaseComplete('p_leaks','p_scen_rce')">
+          ✅ Mark Phase Complete — Data Leaks Hunting Done → Proceed
+        </button>
+      </div>
 
       <!-- Scenario 1: LFI to RCE via Log Poisoning -->
       <div class="meth-content-view" id="meth-content-p_scen_rce" style="display: none; --tool-color: #ff3366;">
