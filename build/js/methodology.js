@@ -747,7 +747,7 @@
       updateChecklistProgress(phaseId);
       
       if (isChecked && typeof addGamiXP === 'function') {
-        addGamiXP(10); // Add 10 XP per checklist item
+        addGamiXP(10, phaseId); // Add 10 XP and check badges
       }
     }
 
@@ -1463,15 +1463,36 @@ const GAMI_RANKS = [
   { name: 'Elite Hacker 🥷', min: 1000 },
   { name: '0day God 🐉', min: 2500 }
 ];
+const GAMI_BADGES = {
+  p0: { id: 'b_recon', icon: '🌐', title: 'Recon Master', required: 9 },
+  p2: { id: 'b_tech', icon: '🖥️', title: 'Tech Profiler', required: 2 },
+  p1: { id: 'b_port', icon: '📡', title: 'Port Scanner', required: 2 }
+};
 
 let currentXP = parseInt(localStorage.getItem('hunteros_xp') || '0');
 
-function addGamiXP(amount) {
+function addGamiXP(amount, phaseId) {
   currentXP += amount;
   localStorage.setItem('hunteros_xp', currentXP);
   updateGamiUI();
-  
   showXpFloatAnimation(amount);
+  
+  let oldRank = localStorage.getItem('hunteros_rank') || GAMI_RANKS[0].name;
+  let newRank = getGamiRank().name;
+  if (oldRank !== newRank) {
+    localStorage.setItem('hunteros_rank', newRank);
+    shootConfetti();
+  }
+
+  if (phaseId) checkBadges(phaseId);
+}
+
+function getGamiRank() {
+  let rank = GAMI_RANKS[0];
+  for (let i = 0; i < GAMI_RANKS.length; i++) {
+    if (currentXP >= GAMI_RANKS[i].min) rank = GAMI_RANKS[i];
+  }
+  return rank;
 }
 
 function updateGamiUI() {
@@ -1484,17 +1505,11 @@ function updateGamiUI() {
   
   xpEl.textContent = currentXP + ' XP';
   
-  let currentRank = GAMI_RANKS[0];
-  let nextRank = GAMI_RANKS[1];
-  
-  for (let i = 0; i < GAMI_RANKS.length; i++) {
-    if (currentXP >= GAMI_RANKS[i].min) {
-      currentRank = GAMI_RANKS[i];
-      nextRank = GAMI_RANKS[i + 1] || null;
-    }
-  }
+  let currentRank = getGamiRank();
+  let nextRank = GAMI_RANKS[GAMI_RANKS.indexOf(currentRank) + 1] || null;
   
   rankEl.textContent = currentRank.name;
+  localStorage.setItem('hunteros_rank', currentRank.name);
   
   if (nextRank) {
     const xpNeeded = nextRank.min - currentRank.min;
@@ -1539,6 +1554,112 @@ function showXpFloatAnimation(amount) {
   }, 1000);
 }
 
+function updateStreak() {
+  const streakEl = document.getElementById('gamiStreak');
+  if (!streakEl) return;
+  
+  let lastLogin = localStorage.getItem('hunteros_last_login');
+  let currentStreak = parseInt(localStorage.getItem('hunteros_streak') || '0');
+  
+  const today = new Date().toDateString();
+  
+  if (lastLogin !== today) {
+    if (lastLogin) {
+      let lastDate = new Date(lastLogin);
+      let diffTime = Math.abs(new Date() - lastDate);
+      let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 1) {
+        currentStreak++;
+      } else if (diffDays > 1) {
+        currentStreak = 1;
+      }
+    } else {
+      currentStreak = 1;
+    }
+    localStorage.setItem('hunteros_last_login', today);
+    localStorage.setItem('hunteros_streak', currentStreak);
+  }
+  
+  streakEl.textContent = `🔥 ${currentStreak} Days`;
+  if (currentStreak > 3) streakEl.style.boxShadow = '0 0 10px rgba(255,152,0,0.5)';
+}
+
+function checkBadges(phaseId) {
+  const badgeDef = GAMI_BADGES[phaseId];
+  if (!badgeDef) return;
+  
+  let checkedCount = 0;
+  for (let i = 0; i < badgeDef.required; i++) {
+    if (localStorage.getItem('bb_check_' + phaseId + '_' + i) === '1') {
+      checkedCount++;
+    }
+  }
+  
+  let unlockedStr = localStorage.getItem('hunteros_badges') || '';
+  let unlockedList = unlockedStr ? unlockedStr.split(',') : [];
+  
+  if (checkedCount === badgeDef.required && !unlockedList.includes(badgeDef.id)) {
+    unlockedList.push(badgeDef.id);
+    localStorage.setItem('hunteros_badges', unlockedList.join(','));
+    renderBadges();
+    shootConfetti();
+  }
+}
+
+function renderBadges() {
+  const wrap = document.getElementById('gamiBadgesWrap');
+  if (!wrap) return;
+  
+  let unlockedStr = localStorage.getItem('hunteros_badges') || '';
+  let unlockedList = unlockedStr ? unlockedStr.split(',') : [];
+  
+  wrap.innerHTML = '';
+  
+  for (const key in GAMI_BADGES) {
+    const badge = GAMI_BADGES[key];
+    if (unlockedList.includes(badge.id)) {
+      const el = document.createElement('div');
+      el.className = 'gami-badge unlocked';
+      el.textContent = badge.icon + ' ' + badge.title;
+      wrap.appendChild(el);
+    }
+  }
+}
+
+function shootConfetti() {
+  const colors = ['#00e5ff', '#b026ff', '#00ff66', '#ff5983'];
+  for (let i = 0; i < 50; i++) {
+    const conf = document.createElement('div');
+    conf.style.position = 'fixed';
+    conf.style.left = Math.random() * 100 + 'vw';
+    conf.style.top = '-10px';
+    conf.style.width = Math.random() * 8 + 4 + 'px';
+    conf.style.height = Math.random() * 8 + 4 + 'px';
+    conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    conf.style.zIndex = '9999';
+    conf.style.pointerEvents = 'none';
+    
+    document.body.appendChild(conf);
+    
+    const duration = Math.random() * 2 + 2;
+    const keyframes = [
+      { transform: 'translateY(0) rotate(0deg)' },
+      { transform: `translateY(100vh) rotate(${Math.random() * 720}deg)` }
+    ];
+    
+    const animation = conf.animate(keyframes, {
+      duration: duration * 1000,
+      easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+    });
+    
+    animation.onfinish = () => conf.remove();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   updateGamiUI();
+  updateStreak();
+  renderBadges();
 });

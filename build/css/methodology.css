@@ -901,6 +901,39 @@
       text-align: right;
     }
 
+    .gami-streak {
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #ff9800;
+      background: rgba(255, 152, 0, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 152, 0, 0.3);
+    }
+    .gami-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 3px 6px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #cbd5e1;
+      cursor: help;
+      transition: all 0.3s;
+    }
+    .gami-badge.unlocked {
+      background: rgba(176, 38, 255, 0.15);
+      border-color: rgba(176, 38, 255, 0.5);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(176, 38, 255, 0.3);
+      animation: pulse-badge 2s infinite;
+    }
+    @keyframes pulse-badge {
+      0% { box-shadow: 0 0 5px rgba(176, 38, 255, 0.2); }
+      50% { box-shadow: 0 0 15px rgba(176, 38, 255, 0.6); }
+      100% { box-shadow: 0 0 5px rgba(176, 38, 255, 0.2); }
+    }
+
     /* ===== BOOKMARK SYSTEM ===== */
     .meth-item {
       position: relative;
@@ -1190,6 +1223,71 @@
     .fill-speed { background: #00e5ff; box-shadow: 0 0 5px #00e5ff; }
     .fill-depth { background: #b026ff; box-shadow: 0 0 5px #b026ff; }
     .fill-stealth { background: #00ff66; box-shadow: 0 0 5px #00ff66; }
+
+    /* ===== PREMIUM MAC TERMINAL BLOCKS ===== */
+    .cmd-box {
+      background: rgba(8, 8, 14, 0.85) !important;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 10px !important;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+      position: relative;
+    }
+    .cmd-box::before {
+      content: "";
+      display: block;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1;
+    }
+    .cmd-box::after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff5f56;
+      box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+      z-index: 2;
+    }
+    .cmd-ui-top {
+      padding: 45px 15px 15px 15px !important;
+      font-family: 'Fira Code', monospace !important;
+      color: #cdd6f4 !important;
+      font-size: 0.95rem !important;
+      position: relative;
+      z-index: 2;
+      line-height: 1.6;
+    }
+    .cmd-ui-bot {
+      background: rgba(0, 0, 0, 0.3) !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.03) !important;
+      padding: 10px 15px !important;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .cmd-ui-bot button {
+      background: rgba(255,255,255,0.05) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      color: #94a3b8 !important;
+      border-radius: 6px !important;
+      transition: all 0.2s !important;
+    }
+    .cmd-ui-bot button:hover {
+      background: rgba(255,255,255,0.1) !important;
+      color: #fff !important;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1) !important;
+    }
 
     /* Table Responsive Wrapper */
     .table-wrapper {
