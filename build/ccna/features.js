@@ -6,17 +6,31 @@ document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     injectFeaturesUI();
     initSearch();
+    initKeyboardShortcuts();
+    initScrollToTop();
     updateProgressBar();
     
     // Listen for lesson loading in academy.js
-    // We override or hook into the render logic
     const originalRender = window.renderLesson;
     if (typeof originalRender === 'function') {
         window.renderLesson = function(lessonId) {
+            // Trigger fade animation by re-rendering content
+            const article = document.getElementById('articleBody');
+            if (article) {
+                article.style.animation = 'none';
+                article.offsetHeight; // force reflow
+                article.style.animation = '';
+            }
+
             originalRender(lessonId);
             if (typeof appendEnrichment === 'function') appendEnrichment(lessonId);
             appendCompletionButton(lessonId);
+            appendLessonNavArrows(lessonId);
             updateSidebarIcons();
+
+            // Scroll content to top on lesson switch
+            const panel = document.getElementById('contentPanel');
+            if (panel) panel.scrollTo({ top: 0, behavior: 'smooth' });
         };
         // Initial call
         setTimeout(() => updateSidebarIcons(), 500);
@@ -50,6 +64,10 @@ function injectFeaturesUI() {
     modal.id = 'searchModal';
     modal.innerHTML = `
         <div class="search-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="color:#8b949e; font-size:0.85rem;"><span class="kbd-hint">Ctrl+K</span> لفتح البحث</span>
+                <span style="color:#8b949e; font-size:0.85rem;"><span class="kbd-hint">Esc</span> للإغلاق</span>
+            </div>
             <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن درس، مصطلح، أو بروتوكول...">
             <div class="search-results" id="searchResults"></div>
         </div>
@@ -308,7 +326,143 @@ window.checkNewQuizAnswer = function(lessonId, level, qIdx, correctIdx, btn) {
     if (parseInt(selected.value) === correctIdx) {
         feedback.innerHTML = '<span style="color:var(--success)">✅ إجابة صحيحة، ممتاز!</span>';
         btn.style.display = 'none'; // Hide button on success
+
+        // Auto-track quiz progress
+        if (typeof updateLessonProgress === 'function') {
+            updateLessonProgress(lessonId, 'quiz', true);
+        }
+
+        // Check if all quiz questions in this level are answered
+        checkAllQuizzesAnswered(lessonId, level);
     } else {
         feedback.innerHTML = '<span style="color:var(--danger)">❌ إجابة خاطئة، حاول مرة أخرى.</span>';
     }
 };
+
+/* --- Check if all quizzes in a level are answered --- */
+function checkAllQuizzesAnswered(lessonId, level) {
+    const allBtns = document.querySelectorAll(`#quiz-${lessonId}-${level} .quiz-check-btn`);
+    const allHidden = Array.from(allBtns).every(b => b.style.display === 'none');
+    if (allHidden && allBtns.length > 0) {
+        // All questions answered - show completion message
+        const section = document.getElementById(`quiz-${lessonId}-${level}`);
+        if (section && !section.querySelector('.quiz-complete-msg')) {
+            const msg = document.createElement('div');
+            msg.className = 'quiz-complete-msg';
+            msg.style.cssText = 'text-align:center; padding:15px; margin-top:15px; background:rgba(63,185,80,0.1); border:1px solid var(--success); border-radius:8px; color:var(--success); font-weight:bold;';
+            msg.innerHTML = '🎉 أجبت على جميع الأسئلة بنجاح!';
+            section.appendChild(msg);
+        }
+    }
+}
+
+/* --- Keyboard Shortcuts --- */
+function initKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // Ctrl+K or Cmd+K — Open search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            const modal = document.getElementById('searchModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.getElementById('searchInput').focus();
+            }
+        }
+
+        // Escape — Close search modal
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('searchModal');
+            if (modal && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // Arrow Left/Right — Navigate between lessons (only if not in input)
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.altKey && e.key === 'ArrowLeft') {
+            e.preventDefault();
+            navigateLesson('next');
+        }
+        if (e.altKey && e.key === 'ArrowRight') {
+            e.preventDefault();
+            navigateLesson('prev');
+        }
+    });
+}
+
+/* --- Navigate to next/prev lesson --- */
+function navigateLesson(direction) {
+    if (typeof academyData === 'undefined' || typeof renderLesson !== 'function') return;
+
+    // Flatten all lessons
+    const allLessons = [];
+    academyData.forEach(ch => ch.lessons.forEach(l => allLessons.push(l)));
+
+    // Find current lesson
+    const activeBtn = document.querySelector('.lesson-btn.active');
+    if (!activeBtn) return;
+    const onclickAttr = activeBtn.getAttribute('onclick');
+    const match = onclickAttr ? onclickAttr.match(/'([^']+)'/) : null;
+    const currentId = match ? match[1] : null;
+    if (!currentId) return;
+
+    const idx = allLessons.findIndex(l => l.id === currentId);
+    if (idx === -1) return;
+
+    const newIdx = direction === 'next' ? idx + 1 : idx - 1;
+    if (newIdx >= 0 && newIdx < allLessons.length) {
+        renderLesson(allLessons[newIdx].id);
+    }
+}
+
+/* --- Scroll to Top Button --- */
+function initScrollToTop() {
+    const btn = document.createElement('button');
+    btn.className = 'scroll-top-btn';
+    btn.innerHTML = '↑';
+    btn.title = 'العودة للأعلى';
+    btn.onclick = () => {
+        const panel = document.getElementById('contentPanel');
+        if (panel) panel.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    document.body.appendChild(btn);
+
+    const panel = document.getElementById('contentPanel');
+    if (panel) {
+        panel.addEventListener('scroll', () => {
+            if (panel.scrollTop > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+    }
+}
+
+/* --- Lesson Navigation Arrows (Prev/Next) --- */
+function appendLessonNavArrows(lessonId) {
+    if (typeof academyData === 'undefined') return;
+    const articleBody = document.getElementById('articleBody');
+    if (!articleBody) return;
+
+    const allLessons = [];
+    academyData.forEach(ch => ch.lessons.forEach(l => allLessons.push(l)));
+    const idx = allLessons.findIndex(l => l.id === lessonId);
+    if (idx === -1) return;
+
+    const prevLesson = idx > 0 ? allLessons[idx - 1] : null;
+    const nextLesson = idx < allLessons.length - 1 ? allLessons[idx + 1] : null;
+
+    const navDiv = document.createElement('div');
+    navDiv.className = 'lesson-nav-arrows';
+    navDiv.innerHTML = `
+        <button class="lesson-nav-btn" ${!prevLesson ? 'disabled' : ''} onclick="${prevLesson ? `renderLesson('${prevLesson.id}')` : ''}">
+            → ${prevLesson ? prevLesson.title.substring(0, 30) : 'لا يوجد'}
+        </button>
+        <button class="lesson-nav-btn" ${!nextLesson ? 'disabled' : ''} onclick="${nextLesson ? `renderLesson('${nextLesson.id}')` : ''}">
+            ${nextLesson ? nextLesson.title.substring(0, 30) : 'لا يوجد'} ←
+        </button>
+    `;
+    articleBody.appendChild(navDiv);
+}
