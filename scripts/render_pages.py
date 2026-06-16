@@ -63,6 +63,7 @@ def fix_static_paths(html, css_prefix=''):
     html = html.replace('/static/main/css/academy.css', css_prefix + 'css/academy.css')
     html = html.replace('/static/main/css/style.css', css_prefix + 'css/style.css')
     html = html.replace('/static/main/css/python.css', css_prefix + 'css/python.css')
+    html = html.replace('/static/main/css/methodology.css', css_prefix + 'css/methodology.css')
     html = html.replace('/static/main/js/', css_prefix + 'js/')
     html = html.replace('/static/main/images/', css_prefix + 'images/')
     html = html.replace('/static/main/', css_prefix)
