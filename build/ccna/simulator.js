@@ -466,7 +466,7 @@ window.loadPhase = function(val) {
     }
 };
 
-window.onload = () => {
+window.addEventListener('load', () => {
     buildUI();
     initTerminal();
-};
+});

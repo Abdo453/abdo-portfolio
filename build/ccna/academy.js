@@ -1198,9 +1198,9 @@ window.renderLesson = function(id) {
     }
 };
 
-window.onload = () => {
+window.addEventListener('load', () => {
     renderSidebar();
-    if(academyData[0] && academyData[0].lessons[0]) {
+    if(typeof academyData !== 'undefined' && academyData[0] && academyData[0].lessons[0]) {
         window.renderLesson(academyData[0].lessons[0].id);
     }
-};
+});
