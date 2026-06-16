@@ -22,18 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const li = document.createElement('li');
     li.style.marginBottom = '5px';
     const a = document.createElement('a');
-    a.href = '#' + phase.id;
-    a.id = phase.sidebarId;
+    a.href = '#';
+    a.id = 'meth-ef-' + phase.id;
+    a.className = 'meth-item';
     a.innerText = phase.title;
     a.style.cssText = `display:block; padding:8px 12px; color:#94a3b8; text-decoration:none; border-radius:4px; transition:all 0.3s; border-left: 3px solid transparent;`;
     a.onmouseover = () => { a.style.background = 'rgba(255,255,255,0.05)'; a.style.color = '#fff'; };
     a.onmouseout = () => { a.style.background = 'transparent'; a.style.color = '#94a3b8'; };
     a.onclick = (e) => {
       e.preventDefault();
-      // Hide all phases
-      document.querySelectorAll('.meth-content-view').forEach(p => p.style.display = 'none');
-      // Show this phase
-      document.getElementById(phase.id).style.display = 'block';
+      if(typeof openMethPhase === 'function') openMethPhase(phase.id);
     };
     li.appendChild(a);
     newPhasesList.appendChild(li);
@@ -41,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Create the Phase View
     const phaseDiv = document.createElement('div');
     phaseDiv.className = 'meth-content-view';
-    phaseDiv.id = phase.id;
+    phaseDiv.id = 'meth-content-' + phase.id;
     phaseDiv.style.display = index === 0 ? 'block' : 'none'; // Show first by default
     phaseDiv.style.setProperty('--tool-color', phase.color);
     
@@ -128,7 +126,7 @@ function injectLabs() {
 
   const labsDiv = document.createElement('div');
   labsDiv.className = 'meth-content-view';
-  labsDiv.id = 'labs-scenarios-view';
+  labsDiv.id = 'meth-content-labs_scenarios_view';
   labsDiv.style.display = 'none';
   labsDiv.style.setProperty('--tool-color', '#ff0055');
 
@@ -170,13 +168,14 @@ function injectLabs() {
     const li = document.createElement('li');
     li.style.marginTop = '5px';
     const a = document.createElement('a');
-    a.href = '#labs-scenarios-view';
+    a.href = '#';
+    a.id = 'meth-ef-labs_scenarios_view';
+    a.className = 'meth-item';
     a.innerText = '⚔️ Labs & Scenarios';
     a.style.cssText = `display:block; padding:8px 12px; color:#ff0055; font-weight:bold; background: rgba(255, 0, 85, 0.1); text-decoration:none; border-radius:4px; border: 1px solid rgba(255, 0, 85, 0.3);`;
     a.onclick = (e) => {
       e.preventDefault();
-      document.querySelectorAll('.meth-content-view').forEach(p => p.style.display = 'none');
-      document.getElementById('labs-scenarios-view').style.display = 'block';
+      if(typeof openMethPhase === 'function') openMethPhase('labs_scenarios_view');
     };
     li.appendChild(a);
     sidebarNav.appendChild(li);
@@ -189,7 +188,7 @@ function injectDecisionMatrix() {
 
   const matrixDiv = document.createElement('div');
   matrixDiv.className = 'meth-content-view';
-  matrixDiv.id = 'decision-matrix-view';
+  matrixDiv.id = 'meth-content-decision_matrix_view';
   matrixDiv.style.display = 'none';
   matrixDiv.style.setProperty('--tool-color', '#f59e0b');
 
@@ -235,13 +234,14 @@ function injectDecisionMatrix() {
     const li = document.createElement('li');
     li.style.marginTop = '15px';
     const a = document.createElement('a');
-    a.href = '#decision-matrix-view';
+    a.href = '#';
+    a.id = 'meth-ef-decision_matrix_view';
+    a.className = 'meth-item';
     a.innerText = '🧠 Decision Matrix';
     a.style.cssText = `display:block; padding:8px 12px; color:#f59e0b; font-weight:bold; background: rgba(245, 158, 11, 0.1); text-decoration:none; border-radius:4px; border: 1px solid rgba(245, 158, 11, 0.3);`;
     a.onclick = (e) => {
       e.preventDefault();
-      document.querySelectorAll('.meth-content-view').forEach(p => p.style.display = 'none');
-      document.getElementById('decision-matrix-view').style.display = 'block';
+      if(typeof openMethPhase === 'function') openMethPhase('decision_matrix_view');
     };
     li.appendChild(a);
     sidebarNav.appendChild(li);
