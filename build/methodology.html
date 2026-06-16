@@ -2896,7 +2896,10 @@
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
   </div>
-  <div class="grid-bg">
+  <div class="grid-bg"></div>
+
+  <!-- ═══════ REDESIGN V2: Floating Sections (injected into meth-viewer via JS) ═══════ -->
+  <div id="rd-floating-sections" style="display:none;">
       <!-- ═══════ REDESIGN V2: Tools Comparison Grid ═══════ -->
       <div class="cyber-card" id="rd-tools-grid" style="display:none; --tool-color: #00e5ff;">
         <div class="card-header"><h3>🔧 Tools Comparison</h3></div>
@@ -3124,7 +3127,7 @@
         </div>
       </div>
 
-    </div>
+  </div><!-- end rd-floating-sections -->
 
   <!-- Quick Jump Modal (Ctrl+K) -->
   <div class="quick-jump-overlay" id="quickJumpOverlay" onclick="closeQuickJump(event)">
@@ -6919,6 +6922,22 @@ Content-Type: application/json
 
     // Init redesign features on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', function() {
+      // ── Move floating rd-sections into meth-viewer ──
+      var floatingSections = document.getElementById('rd-floating-sections');
+      var viewer = document.querySelector('.meth-viewer');
+      if (floatingSections && viewer) {
+        // Move each child before the first phase content view
+        var firstPhase = viewer.querySelector('.meth-content-view');
+        while (floatingSections.firstChild) {
+          if (firstPhase) {
+            viewer.insertBefore(floatingSections.firstChild, firstPhase);
+          } else {
+            viewer.appendChild(floatingSections.firstChild);
+          }
+        }
+        floatingSections.remove();
+      }
+
       // Animate stat counters
       setTimeout(animateCounters, 400);
       // Init checklist
