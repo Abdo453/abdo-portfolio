@@ -458,10 +458,10 @@ function appendLessonNavArrows(lessonId) {
     navDiv.className = 'lesson-nav-arrows';
     navDiv.innerHTML = `
         <button class="lesson-nav-btn" ${!prevLesson ? 'disabled' : ''} onclick="${prevLesson ? `renderLesson('${prevLesson.id}')` : ''}">
-            → ${prevLesson ? prevLesson.title.substring(0, 30) : 'لا يوجد'}
+            <span style="margin-left: 10px; font-size: 1.2rem;">❮</span> ${prevLesson ? prevLesson.title.substring(0, 30) : 'الدرس السابق'}
         </button>
         <button class="lesson-nav-btn" ${!nextLesson ? 'disabled' : ''} onclick="${nextLesson ? `renderLesson('${nextLesson.id}')` : ''}">
-            ${nextLesson ? nextLesson.title.substring(0, 30) : 'لا يوجد'} ←
+            ${nextLesson ? nextLesson.title.substring(0, 30) : 'الدرس التالي'} <span style="margin-right: 10px; font-size: 1.2rem;">❯</span>
         </button>
     `;
     articleBody.appendChild(navDiv);
