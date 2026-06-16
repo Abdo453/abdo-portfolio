@@ -3102,9 +3102,9 @@
 
       <!-- ═══════ REDESIGN V2: Next Phase CTA ═══════ -->
       <div class="rd-next-cta" id="rd-next-cta" style="display:none;">
-        <a href="javascript:void(0)" class="rd-next-btn" onclick="clickPipelineNode('p4')">
+        <button class="rd-next-btn" onclick="clickPipelineNode('p4')">
           ▶ Next Phase: JavaScript Analysis →
-        </a>
+        </button>
       </div>
 
       <!-- ═══════ REDESIGN V2: Quick Reference Sticky Bar ═══════ -->
@@ -6726,6 +6726,68 @@ Content-Type: application/json
     });
 
   
+    // =============================================
+    // REDESIGN V2 — showToolInfo (Tool Inspector)
+    // =============================================
+    // Creates a floating tooltip-panel showing tool details
+    // Called from tool cards and ▶ Simulate buttons on Phase 0
+
+    var _toolInfoPanel = null;
+
+    function showToolInfo(toolName, description) {
+      // Remove existing panel
+      if (_toolInfoPanel) { _toolInfoPanel.remove(); _toolInfoPanel = null; }
+
+      var simOutputs = {
+        subfinder: 'subfinder -d target.com -all -silent\n[info] Starting Subfinder v2.6.2...\n[info] Querying 24 passive sources...\napi.target.com\ndev.target.com        ← HOT 🎯\nstaging.target.com    ← HOT 🎯\nadmin.target.com      ← HOT 🎯\nassets.target.com\n[+] Total: 5 subdomains found.',
+        httpx:     'httpx -l subs.txt -status-code -title -tech-detect\nhttps://api.target.com      [200] [API Portal] [Node.js, Nginx]\nhttps://dev.target.com      [200] [DevEnv] [PHP/8.1, Nginx]  ← TEST\nhttps://admin.target.com    [403] [Forbidden] [Apache]        ← BYPASS?\nhttps://old.target.com      [404] Not Found                   ← CHECK CNAME\n[+] 4 alive hosts.',
+        nuclei:    'nuclei -l alive.txt -t takeovers/ -t cves/\n[cve-2021-41773] [critical] https://target.com/cgi-bin/..\n[git-core-leak]  [high]     https://target.com/.git/config\n[takeover-azure] [medium]   https://staging.target.com\n[+] 1 critical, 1 high, 1 medium found.',
+        naabu:     'naabu -l alive.txt -top-ports 1000\nhttps://api.target.com:443\nhttps://api.target.com:8443\nhttps://dev.target.com:9200   ← Elasticsearch!\nhttps://dev.target.com:6379   ← Redis!\n[+] Non-standard ports found: 9200, 6379',
+        amass:     'amass enum -passive -d target.com\n[info] OWASP Amass v3.23.2...\napi.target.com\ndev-portal.target.com\nauth.target.com\n[+] 3 subdomains (passive mode).',
+        assetfinder: 'assetfinder --subs-only target.com\napi.target.com\nstatus.target.com\nblog.target.com\n[+] 3 subdomains via crt.sh.'
+      };
+
+      var output = simOutputs[toolName] || ('[*] ' + toolName + '\n' + description);
+
+      var panel = document.createElement('div');
+      panel.style.cssText = [
+        'position:fixed', 'bottom:20px', 'right:20px', 'z-index:9999',
+        'width:480px', 'max-width:94vw',
+        'background:#04040a', 'border:1px solid rgba(0,229,255,0.3)',
+        'border-radius:10px', 'box-shadow:0 0 30px rgba(0,229,255,0.15)',
+        'font-family:Fira Code,monospace', 'font-size:0.85rem',
+        'animation:fadeIn 0.2s ease', 'overflow:hidden'
+      ].join(';');
+
+      panel.innerHTML = [
+        '<div style="background:rgba(0,229,255,0.06);border-bottom:1px solid rgba(0,229,255,0.15);',
+        'padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">',
+        '<span style="color:#00e5ff;font-weight:700;">🛠 ' + toolName + ' — Simulator</span>',
+        '<button onclick="this.closest(\'div[style]\').remove()" ',
+        'style="background:none;border:none;color:rgba(148,163,184,0.6);cursor:pointer;font-size:1rem;">✕</button>',
+        '</div>',
+        '<div style="padding:8px 14px 4px;color:rgba(148,163,184,0.7);font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);">',
+        description,
+        '</div>',
+        '<div style="padding:14px;color:#00ff66;white-space:pre-wrap;line-height:1.7;max-height:220px;overflow-y:auto;">',
+        output,
+        '</div>',
+        '<div style="padding:8px 14px;border-top:1px solid rgba(255,255,255,0.04);display:flex;gap:8px;">',
+        '<button onclick="triggerTerminalSim(\'' + toolName + ' -d target.com\')" ',
+        'style="background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.25);color:#00e5ff;',
+        'padding:6px 12px;border-radius:4px;cursor:pointer;font-family:Fira Code,monospace;font-size:0.78rem;">',
+        '▶ Run in Terminal</button>',
+        '<button onclick="this.closest(\'div[style]\').remove()" ',
+        'style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;',
+        'padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.78rem;">Close</button>',
+        '</div>'
+      ].join('');
+
+      document.body.appendChild(panel);
+      _toolInfoPanel = panel;
+      setTimeout(function() { if (panel.parentNode) panel.remove(); }, 12000);
+    }
+
     // =============================================
     // REDESIGN V2 — New Interactive Sections
     // =============================================
