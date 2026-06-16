@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=9">
-  <link rel="stylesheet" href="css/methodology.css?v=9">
+  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/methodology.css?v=10">
 
   
 
@@ -2172,27 +2172,44 @@ exiftool -Comment="&lt;?php system(\$_GET['cmd']); ?&gt;" innocent_image.jpg
 
       <!-- Phase 12: Race Conditions -->
       <div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #f43f5e;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">⚡</span> Race Conditions</h2>
-          <p class="hero-tagline">استغلال العمليات المتزامنة في معالجة طلبات الويب لتخطي حدود الاستخدام</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">⚡</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Race Conditions (Single-Packet Attacks)</h2>
+            <p class="phase-module-tagline">أخطر تقنيات استغلال التزامن: خداع السيرفر في أجزاء من المايكروثانية</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 2-4 Hours</span>
+              <span class="badge-difficulty bg-high">Elite</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>⚙️ Multi-request attack scenario</h3></div>
-          <p>إرسال طلبات متزامنة بكوبونات الخصم أو سحب المبالغ المالية بأجزاء من المايكروثانية باستخدام Burp Suite Turbo Intruder.</p>
+          <div class="card-header"><h3>⚙️ The HTTP/2 Single-Packet Attack (جديد!)</h3></div>
+          <p>السيرفرات الحديثة و الجدار الناري (WAF) يمنعون إرسال طلبات متزامنة عادية (Jittering). لكن بفضل أبحاث (James Kettle)، نقوم الآن بإرسال <strong>30 طلباً دُفعة واحدة داخل حزمة شبكة واحدة (Single TCP Packet)</strong> عبر بروتوكول HTTP/2.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top"><span class="text-secondary"># الخطوات داخل Burp Suite:</span>
+1. أرسل الطلب (مثال: استخدام كوبون خصم أو تحويل بنكي) إلى Repeater.
+2. كرر الطلب 30 مرة (Ctrl+R).
+3. ضعهم في مجموعة واحدة (Group).
+4. من خيارات الإرسال، اختر: 
+   "Send group in parallel (single-packet attack)"</div>
+          </div>
+          <p class="text-neon-cyan mt-3"><strong>النتيجة:</strong> السيرفر يعالج 30 طلب تحويل مالي في ذات المايكروثانية، محولاً 10$ إلى 300$ قبل أن يتمكن من تحديث الرصيد الحقيقي!</p>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Shopify double coupon discount</h3></div>
-          <p><strong>الوصف (Scenario):</strong> التلاعب بالعمليات المتزامنة لاستخدام كوبون خصم وحيد الاستعمال عدة مرات.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> إرسال 50 طلباً متزامناً بالمايكروثانية باستخدام Burp Suite Turbo Intruder، مما جعل قاعدة البيانات تقبل الكود مكرراً.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Starbucks Unlimited Gift Cards</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تطبيق ستاربكس يتيح تحويل الرصيد من بطاقة هدايا لأخرى.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> الباحث قام بإرسال 15 طلب متزامن لنقل رصيد بطاقة (5$) إلى بطاقة أخرى. التطبيق نقل الـ 5$ خمس عشرة مرة قبل أن يصفر البطاقة الأولى!</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$15,000 (Critical)</span></p>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p12" onclick="markPhaseComplete('p12','p14')">
-          ✅ Mark Phase Complete — Race Conditions Done → Proceed to JWT Hacking
+          ✅ Mark Phase Complete — Race Conditions Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase 14: JWT Hacking -->
       <div class="meth-content-view" id="meth-content-p14" style="display: none; --tool-color: #d946ef;">
@@ -2279,57 +2296,115 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
 
       <!-- Phase 13: OAuth & Sessions -->
       <div class="meth-content-view" id="meth-content-p13" style="display: none; --tool-color: #8b5cf6;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔐</span> OAuth Redirects & Session Flaws</h2>
-          <p class="hero-tagline">فحص آليات تسجيل الدخول الموحد وثغرات تخطي التحقق</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🔐</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Web Cache Poisoning & Deception</h2>
+            <p class="phase-module-tagline">اختراق سيرفرات التخزين المؤقت (Cloudflare / Akamai) لسرقة الجلسات</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 3-6 Hours</span>
+              <span class="badge-difficulty bg-high">Elite</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ OAuth redirects issues</h3></div>
-          <p>التعديل على بارامتر <code>redirect_uri</code> لإرسال رمز التفويض (Authorization Code) إلى موقع خارجي يملكه المهاجم وسرقة حساب المستخدم.</p>
+          <div class="card-header"><h3>🛡️ Web Cache Deception (WCD) - الخداع الصامت</h3></div>
+          <p>السيرفرات السحابية تقوم بتخزين الملفات الثابتة (مثل `.css` و `.png`) لتقليل الضغط. يمكننا خداعها لتخزين معلومات الضحية الحساسة كأنها ملف ثابت!</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top"><span class="text-secondary"># الخطوة 1: نرسل هذا الرابط للضحية:</span>
+https://target.com/api/profile/me/non-existent.css
+
+<span class="text-secondary"># الخطوة 2: ماذا سيحدث؟</span>
+1. الخادم سيتجاهل .css ويرجع معلومات الضحية (Account Data).
+2. الـ Cloudflare سيقرأ الامتداد (.css) فيقوم بـ Caching للمعلومات السرية علناً!
+
+<span class="text-secondary"># الخطوة 3:</span>
+المهاجم يزور نفس الرابط، وسيقوم Cloudflare بتسليمه حساب الضحية!</div>
+          </div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: OAuth Redirect URI Hijack</h3></div>
-          <p><strong>الوصف (Scenario):</strong> سرقة رموز التوثيق بتعديل رابط التوجيه (redirect_uri) في طلب المصادقة.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> توجيه الرابط لنطاق فرعي خارجي يسيطر عليه المهاجم لاستلام التوكنز وتخطي الحماية كاملة.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,000</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ Web Cache Poisoning (التسميم)</h3></div>
+          <p>نقوم بتسميم الصفحة الرئيسية للموقع لجميع الزوار باستخدام الـ Unkeyed Headers (التي يتجاهلها نظام الكاش).</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">GET / HTTP/1.1
+Host: target.com
+X-Forwarded-Host: evil.com</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('X-Forwarded-Host: evil.com', this)">📋 Copy Header</button>
+            </div>
+          </div>
+          <p style="margin-top: 10px; font-size: 0.9em; color: #94a3b8;">إذا انعكست <code>evil.com</code> داخل كود الـ JS في الصفحة الرئيسية، سيتم حفظها في الكاش لجميع زوار الموقع، مما يؤدي لاختراق الآلاف في لحظة.</p>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Discord ATO via Cache Deception</h3></div>
+          <p><strong>الوصف (Scenario):</strong> ثغرة في منصة ضخمة أدت لسرقة جلسات المستخدمين (Tokens).</p>
+          <p><strong>الاستغلال (Exploitation):</strong> المهاجم أرسل رابطاً ينتهي بـ <code>%2e%2e%2f%2e%2e%2f%2e%2e%2fstyle.css</code> إلى ضحية. عندما فتحه الضحية، قام كاش Cloudflare بحفظ الـ Session Token الخاصة بالضحية في ملف الـ CSS العام. المهاجم فتح الرابط وسرق الحساب!</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$8,000</span></p>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p13" onclick="markPhaseComplete('p13','p15')">
-          ✅ Mark Phase Complete — OAuth & Sessions Done → Proceed to Cloud Security
+          ✅ Mark Phase Complete — Cache Hacking Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase 15: Cloud Security -->
       <div class="meth-content-view" id="meth-content-p15" style="display: none; --tool-color: #0ea5e9;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">☁️</span> Cloud Security OSINT</h2>
-          <p class="hero-tagline">استكشاف أخطاء التكوين في خوادم AWS و Azure و GCP</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>📂 AWS Bucket access</h3></div>
-          <p>التحقق من الصلاحيات والوصول للملفات المفتوحة بشكل غير آمن:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">aws s3 ls s3://target-bucket/ --no-sign-request</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('aws s3 ls s3://target-bucket/ --no-sign-request', this)">📋 Copy</button>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">💰</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Elite Business Logic & OAuth Exploits</h2>
+            <p class="phase-module-tagline">تخطي القيود المالية، خداع البوابات، واختطاف الحسابات (Pre-ATO)</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 3-6 Hours</span>
+              <span class="badge-difficulty bg-high">Legendary</span>
             </div>
           </div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Unsecured S3 Bucket exposes documents</h3></div>
-          <p><strong>الوصف (Scenario):</strong> مستودع تخزين S3 تابع للشركة يحتوي على مستندات العملاء وفواتيرهم متاحاً للعامة دون توثيق.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> سحب كامل محتويات الدليل وقراءة ملفات الـ PDF والنسخ الاحتياطية المسربة.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📂 Financial Logic Bypasses (اختراق المدفوعات)</h3></div>
+          <p>لا تبحث عن RCE دائماً. أكبر المكافآت تأتي من كسر منطق الشركة المالي:</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>Negative Values:</strong> ماذا لو وضعت كمية السلعة بالسالب؟ <code>{"product_id": 99, "qty": -5}</code>. في بعض الأنظمة القديمة، هذا يزيد رصيدك بدلاً من خصمه!</li>
+            <li>✔ <strong>Floating Point Rounding:</strong> بعض بوابات الدفع لا تستطيع قراءة الفواصل بدقة. حاول شحن رصيدك بـ <code>$0.00000000001</code>. النظام قد يعتمد المعاملة (لأنها أكبر من 0) ويعطيك رصيداً أو ميزة الـ Premium مجاناً.</li>
+            <li>✔ <strong>Currency Array Bypass:</strong> تغيير عملة الشراء من مصفوفة: <code>currency[]=USD&currency[]=EUR</code>. هذا يُربك الـ Backend ويجعله يحاسبك بسعر أرخص العملات.</li>
+          </ul>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ Pre-Account Takeover (اختطاف الحسابات مسبقاً)</h3></div>
+          <p>واحدة من أندر الثغرات المكتشفة وتأتي بمكافآت خيالية:</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top"><span class="text-secondary"># الخطوة 1: التسجيل كـ Attacker</span>
+المهاجم ينشئ حساباً جديداً باستخدام إيميل الضحية (admin@target.com) لكن بكلمة مرور خاصة به (لا يهم أنه لا يستطيع تأكيد الإيميل).
+
+<span class="text-secondary"># الخطوة 2: OAuth Login</span>
+يقوم المهاجم بربط هذا الحساب بحسابه الشخصي في Google أو Apple عبر (SSO/OAuth).
+
+<span class="text-secondary"># الخطوة 3: الضحية ينضم</span>
+الضحية الحقيقي (المدير) ينشئ حساباً بنفس الإيميل ويؤكده! يقوم النظام الأوتوماتيكي **بدمج الحسابين**.
+
+<span class="text-secondary"># الخطوة 4: الاختراق الكامل</span>
+المهاجم الآن يضغط على "Login with Google" ويدخل مباشرة إلى حساب الضحية بكامل صلاحياته!</div>
+          </div>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Multi-Million Dollar Pre-ATO</h3></div>
+          <p><strong>الوصف (Scenario):</strong> منصة تداول عملات رقمية ضخمة تدمج الحسابات التي تحمل نفس الإيميل دون التأكد من مصادقة الـ OAuth.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> المهاجم طبق السيناريو المذكور أعلاه على حيتان العملات الرقمية (Whales). بمجرد أن يسجل الضحية في المنصة ويودع أمواله، يقوم المهاجم بتسجيل الدخول وسحب العملات.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$50,000 (Maximum Bounty)</span></p>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p15" onclick="markPhaseComplete('p15','p17')">
-          ✅ Mark Phase Complete — Cloud Security Done → Proceed to Automation Pipelines
+          ✅ Mark Phase Complete — Elite Logic Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase 17: Automation Pipelines -->
       <div class="meth-content-view" id="meth-content-p17" style="display: none; --tool-color: #10b981;">
