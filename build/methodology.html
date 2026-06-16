@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=13">
-  <link rel="stylesheet" href="css/methodology.css?v=13">
+  <link rel="stylesheet" href="css/style.css?v=14">
+  <link rel="stylesheet" href="css/methodology.css?v=14">
 
   
 
@@ -410,6 +410,9 @@
           </div>
           <div class="meth-item" id="meth-ef-p_leaks" onclick="openMethPhase('p_leaks')" data-search="data leaks breach hunting credentials ransomware">
             <span>🩸</span> <span>Data Leaks Hunting</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_leaks', '🩸 Data Leaks Hunting')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p_apt" onclick="openMethPhase('p_apt')" data-search="apt nation state zero day broker pegasus nso group cyber warfare c2">
+            <span>🛰️</span> <span>APT & Cyber Warfare</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_apt', '🛰️ APT & Cyber Warfare')">★</button>
           </div>
         </div>
       </div>
@@ -2938,8 +2941,76 @@ Content-Type: application/json
         </div>
       
         <!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p_leaks" onclick="markPhaseComplete('p_leaks','p_scen_rce')">
-          ✅ Mark Phase Complete — Data Leaks Hunting Done → Proceed
+        <button class="mark-complete-btn" id="complete-btn-p_leaks" onclick="markPhaseComplete('p_leaks','p_apt')">
+          ✅ Mark Phase Complete — Data Leaks Hunting Done → Proceed to APT
+        </button>
+      </div>
+
+      <!-- Phase 22: APT & Cyber Warfare -->
+      <div class="meth-content-view" id="meth-content-p_apt" style="display: none; --tool-color: #ff0055;">
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🛰️</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">APT & Cyber Warfare Intelligence</h2>
+            <p class="phase-module-tagline">تتبع جيوش الهاكرز الحكومية (Nation-State)، برمجيات التجسس العسكرية (Pegasus)، وأسواق الـ 0-Day</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ God-Tier</span>
+              <span class="badge-difficulty bg-high">Cyber Warfare</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🥷 Advanced Persistent Threats (تعقب أشباح الدول)</h3></div>
+          <p>الهاكرز المدعومون من الدول (APTs) لا يتركون أثراً كبيراً، ولكن يمكن اصطيادهم عبر تتبع البنية التحتية القيادية (Command & Control - C2):</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>C2 Tracking (تعقب خوادم التحكم):</strong> استخدام محركات مثل <code>Censys</code> و <code>Shodan</code> للبحث عن بصمات برمجيات مثل (Cobalt Strike) أو (Sliver) المخبأة خلف سيرفرات بريئة. <br><code style="font-size:0.85rem; color:#ffaa00;">Shodan Query: "HTTP/1.1 404 Not Found" hash:"-2007783223" (Cobalt Strike JARM)</code></li>
+            <li>✔ <strong>BGP Hijacking:</strong> كيف تقوم دول باختطاف مسارات الإنترنت (BGP Routing) لتحويل ترافيك دولة بأكملها للتجسس عليه قبل إيصاله للوجهة الصحيحة.</li>
+            <li>✔ <strong>Supply Chain Attacks:</strong> اختراق الموردين (مثل كارثة SolarWinds). الهاكر لم يخترق أهداف الحكومة مباشرة، بل اخترق الشركة التي تورد لهم برامج التحديث، ووضع الـ Malware في التحديث الرسمي!</li>
+          </ul>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>💼 The 0-Day Brokers (سماسرة الأسلحة السيبرانية)</h3></div>
+          <p>هل سألت نفسك يوماً: لمن تُباع الثغرات التي تخترق الآيفون بصمت (Zero-Click)؟</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الجهة / الشركة</th>
+                <th>دورها في سوق الحرب السيبرانية</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Zerodium / Crowdfense</strong></td>
+                <td>شركات تشتري ثغرات الـ 0-Day من الهاكرز المستقلين بملايين الدولارات (تصل لـ 3$ مليون لثغرة آيفون Zero-Click) لبيعها للوكالات الحكومية حصراً.</td>
+              </tr>
+              <tr>
+                <td><strong>NSO Group (Pegasus)</strong></td>
+                <td>يصنعون أسلحة تجسس سيبرانية (Cyber Weapons). نظام Pegasus يمكنه اختراق أي هاتف بمجرد إرسال رسالة iMessage (دون أن يضغط الضحية على أي شيء)، ثم يمسح الرسالة ويسحب كل محتويات الهاتف.</td>
+              </tr>
+              <tr>
+                <td><strong>Dark Web Exploit Forums</strong></td>
+                <td>أسواق سوداء لبيع ثغرات أقل خطورة بأسعار تتراوح بين 10,000$ إلى 100,000$ للمافيا وعصابات الفدية.</td>
+              </tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">☢️</span> Case Study: Stuxnet (أول سلاح دمار شامل سيبراني)</h3></div>
+          <p><strong>الهدف:</strong> المفاعلات النووية الإيرانية (نطنز).</p>
+          <p><strong>الاستغلال (The Weapon):</strong><br>
+          1. المفاعل لم يكن متصلاً بالإنترنت إطلاقاً (Air-Gapped).<br>
+          2. الاستخبارات الأمريكية والإسرائيلية قاموا بتصميم دودة برمجية (Stuxnet) تستخدم **أربع ثغرات 0-Day** في نفس الوقت لنظام Windows.<br>
+          3. تم تسريب الدودة عبر فلاشة (USB) زرعها عميل سري أو مهندس غافل.<br>
+          4. الدودة لم تدمر أجهزة الكمبيوتر! بل بحثت عن أجهزة التحكم الصناعية (Siemens PLC) التي تتحكم في أجهزة الطرد المركزي النووية، وقامت بزيادة سرعتها حتى دمرت نفسها فيزيائياً، بينما كانت الشاشات تخبر المهندسين أن كل شيء يعمل بشكل طبيعي!</p>
+          <p><strong>الدرس المستفاد:</strong> <span class="text-neon-cyan">الهاكرز الآن لا يسرقون البيانات فقط.. بل يفجرون المنشآت الحساسة!</span></p>
+        </div>
+
+        <!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p_apt" onclick="markPhaseComplete('p_apt','p_scen_rce')">
+          ✅ Mark Phase Complete — APT & Cyber Warfare Done → Proceed to Scenarios
         </button>
       </div>
 
