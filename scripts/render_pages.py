@@ -2,7 +2,7 @@
 import os
 
 def scan_templates():
-    project_dir = os.path.dirname(os.path.abspath(__file__))
+    project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     templates_dir = os.path.join(project_dir, 'main', 'templates', 'main')
     
     pages = [
@@ -50,7 +50,7 @@ def scan_templates():
     return pages
 
 def scan_books():
-    project_dir = os.path.dirname(os.path.abspath(__file__))
+    project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     books_dir = os.path.join(project_dir, 'main', 'templates', 'main', 'books')
     books = []
     if os.path.exists(books_dir):

@@ -6809,80 +6809,41 @@
     }
 
     function simulateTerminal(cmd) {
-      // If terminal not initialized, switch to labs tab to initialize it first
-      if (!terminalInitialized) {
-        switchTab('labs');
-        // Wait for terminal to boot, then run
-        const waitAndRun = setInterval(() => {
-          if (terminalInitialized) {
-            clearInterval(waitAndRun);
-            _runTerminalCmd(cmd);
-          }
-        }, 200);
-        // Timeout after 5s
-        setTimeout(() => clearInterval(waitAndRun), 5000);
-        return;
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Executing demo...`, 'text-neon-cyan');
+        setTimeout(() => printLineToTerminal(`$ ${cmd}`, 'text-primary'), 300);
+        setTimeout(() => printLineToTerminal(`Initializing connection... OK`, 'text-secondary'), 800);
+        setTimeout(() => printLineToTerminal(`[+] Target acquired. Running payload.`, 'text-neon-cyan'), 1200);
+        setTimeout(() => printLineToTerminal(`[+] Execution complete. Review logs.`, 'text-neon-green'), 2000);
       }
-      _runTerminalCmd(cmd);
-    }
-
-    function _runTerminalCmd(cmd) {
-      printLineToTerminal(`\n[info] Executing demo...`, 'text-neon-cyan');
-      setTimeout(() => printLineToTerminal(`$ ${cmd}`, 'text-primary'), 300);
-      setTimeout(() => printLineToTerminal(`Initializing connection... OK`, 'text-secondary'), 800);
-      setTimeout(() => printLineToTerminal(`[+] Target acquired. Running payload.`, 'text-neon-cyan'), 1200);
-      setTimeout(() => printLineToTerminal(`[+] Execution complete. Review logs.`, 'text-neon-green'), 2000);
-
-      // Scroll to terminal
+      
+      // Scroll to top terminal
       const termEl = document.getElementById('terminalOutput');
-      if (termEl) termEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (termEl) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
     function openTool(toolId) {
-      // Try direct academy explorer first
+      // This function needs to find which folder the tool belongs to and trigger the clicks
+      // But since we are displaying the tool directly, we can just call the open function
+      // Assuming all tools are rendered, let's look for the folder
       const toolElement = document.getElementById('ti-' + toolId);
       if (toolElement) {
+        // Find parent folder id, it's stored in a data attribute ideally, but here we can just 
+        // simulate the user clicking on the tool element.
+        // Wait, 'ti-' + toolId is the sidebar item.
         const parentList = toolElement.closest('.tools-list');
         if (parentList) {
           const folderId = parentList.id.replace('tools-', '');
           openExplorerFolder(folderId);
-          setTimeout(() => openExplorerTool(toolId), 100);
-          return;
+          setTimeout(() => {
+            openExplorerTool(toolId);
+          }, 100);
         }
-      }
-
-      // Try bug bounty explorer as fallback
-      const bbTool = document.getElementById('bb-ti-' + toolId);
-      if (bbTool) {
-        switchTab('academy');
-        setTimeout(() => openBBToolDirect(toolId), 150);
-        return;
-      }
-
-      // Tool not found in either explorer — show feedback
-      if (terminalInitialized) {
-        printLineToTerminal(`\n[warn] Tool '${toolId}' not mapped yet. Use the Academy Explorer to search manually.`, 'text-neon-orange');
       } else {
-        // Show a toast notification
-        _showToast(`🔍 Tool "${toolId}" — use Academy Explorer to find it`);
+        if(terminalInitialized) printLineToTerminal(`\n[error] Tool ${toolId} not found in path.`, 'text-neon-red');
       }
-    }
-
-    function _showToast(msg) {
-      let toast = document.getElementById('_kiroToast');
-      if (!toast) {
-        toast = document.createElement('div');
-        toast.id = '_kiroToast';
-        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);' +
-          'background:#0a0a14;border:1px solid rgba(0,229,255,0.3);color:#e2e8f0;' +
-          'padding:10px 20px;border-radius:8px;font-family:Fira Code,monospace;font-size:0.85rem;' +
-          'z-index:9999;box-shadow:0 0 20px rgba(0,229,255,0.15);transition:opacity 0.3s;';
-        document.body.appendChild(toast);
-      }
-      toast.textContent = msg;
-      toast.style.opacity = '1';
-      clearTimeout(toast._timer);
-      toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
     }
 
     // ── Bug Bounty Explorer Navigation ──
@@ -7056,37 +7017,20 @@
     function syncPlaybookProgress() {
       const visited = JSON.parse(localStorage.getItem('meth_visited') || '[]');
       const bookmarks = JSON.parse(localStorage.getItem('meth_bookmarks') || '[]');
-      const totalPhases = 26;
-      const count = visited.length;
-      const pct = Math.min(Math.round((count / totalPhases) * 100), 100);
-
-      // Update sidebar playbook progress widget
+      
+      // Update playbook progress widget
       const progressWidget = document.getElementById('sidebarProgressWidget');
       if (progressWidget) {
         progressWidget.style.display = 'block';
         const fill = document.getElementById('sidebarPlaybookProgressFill');
         const text = document.getElementById('sidebarPlaybookProgressText');
+        const totalPhases = 26;
+        const count = visited.length;
+        const pct = Math.min(Math.round((count / totalPhases) * 100), 100);
         if (fill) fill.style.width = pct + '%';
         if (text) text.textContent = `${count} / ${totalPhases} (${pct}%)`;
       }
-
-      // Sync dashProgressFill (dashboard widget) with methodology progress
-      const dashFill = document.getElementById('dashProgressFill');
-      const dashPct  = document.getElementById('dashProgressPct');
-      if (dashFill) dashFill.style.width = pct + '%';
-      if (dashPct)  dashPct.textContent  = pct + '%';
-
-      // Sync hudProgressFill (sidebar Lab Console) — use lab flags for this one
-      const labData = JSON.parse(localStorage.getItem('labProgress') || '{}');
-      const totalFlags = 4;
-      let solvedFlags = 0;
-      Object.values(labData).forEach(v => { if (v) solvedFlags++; });
-      const labPct = Math.round((solvedFlags / totalFlags) * 100);
-      const hudFill = document.getElementById('hudProgressFill');
-      if (hudFill) hudFill.style.width = labPct + '%';
-      const hudFlagsEl = document.getElementById('hudFlags');
-      if (hudFlagsEl) hudFlagsEl.textContent = `${solvedFlags} / ${totalFlags}`;
-
+      
       // Update bookmarks widget
       const bookmarksWidget = document.getElementById('sidebarBookmarksWidget');
       const list = document.getElementById('sidebarBookmarksList');

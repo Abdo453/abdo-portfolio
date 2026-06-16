@@ -7,7 +7,8 @@ import django
 
 # Set up Django environment
 os.environ['DJANGO_SETTINGS_MODULE'] = 'portfolio_site.settings'
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, project_root)
 django.setup()
 
 from django.template.loader import render_to_string
@@ -19,7 +20,7 @@ factory = RequestFactory()
 request = factory.get('/')
 context = get_portfolio_context()
 
-project_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = project_root
 build_dir = os.path.join(project_dir, 'build')
 os.makedirs(build_dir, exist_ok=True)
 
