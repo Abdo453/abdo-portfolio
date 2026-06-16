@@ -109,18 +109,21 @@
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('examScreen').style.display = 'block';
             
-            // Shuffle and select 100 questions for the final exam
-            selectedQuestions = questionBank.sort(() => 0.5 - Math.random()).slice(0, 100);
+            // Shuffle and select 10 random questions
+            selectedQuestions = [...questionBank].sort(() => 0.5 - Math.random()).slice(0, 10);
             
             renderQuestion();
             
-            // Start Timer (90 Minutes)
-            timeLeft = 90 * 60;
+            // Start Timer (10 Minutes)
+            timeLeft = 10 * 60;
             timerInterval = setInterval(() => {
                 timeLeft--;
                 let m = Math.floor(timeLeft / 60);
                 let s = timeLeft % 60;
-                document.getElementById('timerDisplay').innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+                const display = document.getElementById('timerDisplay');
+                display.innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+                // Turn red in last 2 minutes
+                if (timeLeft <= 120) display.style.color = '#ff0055';
                 if (timeLeft <= 0) finishExam();
             }, 1000);
         }

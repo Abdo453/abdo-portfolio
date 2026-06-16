@@ -6,6 +6,30 @@ let currentLevel = null;
 let term;
 let fitAddon;
 let currentInput = '';
+let commandHistory = [];
+let historyIndex = -1;
+
+// All valid IOS commands for Tab Completion
+const IOS_COMMANDS = {
+    user:   ['enable', 'exit', 'logout', 'ping', 'show version', 'show ?'],
+    priv:   ['configure terminal', 'conf t', 'disable', 'exit', 'ping', 'reload',
+             'show ip route', 'show ip interface brief', 'show running-config',
+             'show startup-config', 'show version', 'show vlan', 'show interfaces',
+             'show mac address-table', 'show cdp neighbors', 'show cdp neighbors detail',
+             'show ip ospf', 'show ip ospf neighbor', 'show ip protocols',
+             'show port-security', 'show ip dhcp binding', 'show ip nat translations',
+             'show spanning-tree', 'show etherchannel summary', 'show ip bgp',
+             'copy running-config startup-config', 'write memory', 'write erase',
+             'debug ip ospf events', 'undebug all'],
+    config: ['hostname', 'interface', 'int', 'ip route', 'ipv6 route', 'ipv6 unicast-routing',
+             'router ospf', 'router eigrp', 'router rip', 'no router ospf',
+             'vlan', 'spanning-tree', 'access-list', 'no access-list',
+             'ip access-list', 'ip dhcp pool', 'ip dhcp excluded-address',
+             'ip nat inside source', 'ip domain-name', 'ip domain lookup',
+             'crypto key generate rsa', 'username', 'enable secret', 'service password-encryption',
+             'logging', 'ntp server', 'line vty', 'line console', 'banner motd',
+             'cdp run', 'lldp run', 'no cdp run', 'no lldp run', 'exit', 'end'],
+};
 
 // Cisco Router State
 let routerState = {
@@ -62,6 +86,11 @@ function initTerminal() {
         switch (e) {
             case '\r': // Enter
                 term.write('\r\n');
+                if (currentInput.trim()) {
+                    commandHistory.unshift(currentInput.trim());
+                    if (commandHistory.length > 50) commandHistory.pop();
+                    historyIndex = -1;
+                }
                 processCommand(currentInput.trim());
                 currentInput = '';
                 term.write(getPrompt());
@@ -73,14 +102,64 @@ function initTerminal() {
                     term.write('\b \b');
                 }
                 break;
+            case '\t': // Tab completion
+                handleTabCompletion();
+                break;
+            case '\u001b[A': // Arrow Up
+                if (commandHistory.length > 0) {
+                    historyIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
+                    replaceCurrentInput(commandHistory[historyIndex]);
+                }
+                break;
+            case '\u001b[B': // Arrow Down
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    replaceCurrentInput(commandHistory[historyIndex]);
+                } else if (historyIndex === 0) {
+                    historyIndex = -1;
+                    replaceCurrentInput('');
+                }
+                break;
+            case '\u0003': // Ctrl+C
+                term.write('^C\r\n');
+                currentInput = '';
+                term.write(getPrompt());
+                break;
+            case '\u0005': // Ctrl+E (end of line — IOS behavior)
+                break;
             default:
-                // Handle printable characters (including Arabic/unicode)
                 if ((e >= String.fromCharCode(0x20) && e <= String.fromCharCode(0x7E)) || e >= '\u00a0') {
                     currentInput += e;
                     term.write(e);
                 }
         }
     });
+}
+
+function replaceCurrentInput(newInput) {
+    // Clear current line and write new input
+    term.write('\r' + getPrompt() + ' '.repeat(currentInput.length + 5) + '\r' + getPrompt() + newInput);
+    currentInput = newInput;
+}
+
+function handleTabCompletion() {
+    const input = currentInput.trim().toLowerCase();
+    if (!input) return;
+
+    const modeKey = routerState.mode.startsWith('config') ? 'config' : routerState.mode;
+    const candidates = (IOS_COMMANDS[modeKey] || IOS_COMMANDS['priv'])
+        .filter(cmd => cmd.toLowerCase().startsWith(input));
+
+    if (candidates.length === 1) {
+        // Complete the command
+        const completion = candidates[0];
+        replaceCurrentInput(completion);
+    } else if (candidates.length > 1) {
+        // Show options
+        term.write('\r\n');
+        candidates.forEach(c => term.write('  ' + c + '\r\n'));
+        term.write(getPrompt() + currentInput);
+    }
 }
 
 function processCommand(cmd) {
@@ -394,18 +473,229 @@ function processCommand(cmd) {
         routerState.lastShow = cmd;
         let p1 = parts[1]?.toLowerCase();
         let p2 = parts[2]?.toLowerCase();
+        let p3 = parts[3]?.toLowerCase();
         
-        if (p1 === 'vlan') term.writeln('VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Fa0/1, Fa0/2...\n10   Accounting                       active');
-        else if (p1 === 'mac') term.writeln('Mac Address Table\n-------------------------------------------\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----');
-        else if (p1 === 'ip' && p2 === 'route') term.writeln('Gateway of last resort is not set\n\n     10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks\nC       10.10.10.0/24 is directly connected, GigabitEthernet0/0\nS       192.168.1.0/24 [1/0] via 10.10.10.2');
-        else if (p1 === 'ip' && p2 === 'interface') term.writeln('Interface              IP-Address      OK? Method Status                Protocol\nGigabitEthernet0/0     192.168.1.1     YES manual up                    up\nFastEthernet0/1        unassigned      YES unset  up                    down');
-        else if (p1 === 'port-security') term.writeln('Secure Port  MaxSecureAddr  CurrentAddr  SecurityViolation  Security Action\n               (Count)       (Count)          (Count)\n---------------------------------------------------------------------------\n      Fa0/1              1          0                  0         Shutdown');
-        else if (p1 === 'running-config') term.writeln('Building configuration...\n\nCurrent configuration : 1563 bytes\n!\nversion 15.1\n!\nhostname ' + routerState.hostname + '\n!\n! (Showing simulated configuration...)\n!');
-        else if (p1 === 'cdp' && p2 === 'neighbors') term.writeln('Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge\n                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone, ...\n\nDevice ID        Local Intrfce     Holdtme    Capability  Platform  Port ID\nSwitch1          Fas 0/0           120             S I      2960      Fas 0/1');
-        else term.writeln('Showing output (simulated)...');
+        if (p1 === 'version') {
+            term.writeln('Cisco IOS Software, Version 15.1(4)M4, RELEASE SOFTWARE (fc1)');
+            term.writeln('Technical Support: http://www.cisco.com/techsupport');
+            term.writeln('ROM: System Bootstrap, Version 15.1(4)M4');
+            term.writeln(`${routerState.hostname} uptime is 0 days, 0 hours, 1 minute`);
+            term.writeln('cisco 1941 (revision 1.0) with 491520K/32768K bytes of memory.');
+            term.writeln('1 FastEthernet interface, 2 GigabitEthernet interfaces');
+        }
+        else if (p1 === 'vlan') {
+            let vlanLines = 'VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Fa0/1, Fa0/2, Fa0/3';
+            if (routerState.vlans) {
+                Object.entries(routerState.vlans).forEach(([id, v]) => {
+                    vlanLines += `\n${id.padEnd(4)} ${v.name.padEnd(33)} active`;
+                });
+            }
+            term.writeln(vlanLines);
+        }
+        else if (p1 === 'mac' && p2 === 'address-table') {
+            term.writeln('Mac Address Table\n-------------------------------------------\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n   1    aabb.cc00.0100    DYNAMIC     Gi0/0\n   1    aabb.cc00.0200    DYNAMIC     Gi0/1');
+        }
+        else if (p1 === 'ip' && p2 === 'route') {
+            let routeOut = 'Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, O - OSPF, IA - OSPF inter area\n\nGateway of last resort is not set\n';
+            if (routerState.routes && routerState.routes.length > 0) {
+                routerState.routes.forEach(r => {
+                    const ad = r.ad ? `[${r.ad}/0]` : '[1/0]';
+                    routeOut += `\nS    ${r.network}/${r.mask} ${ad} via ${r.nextHop}`;
+                });
+            }
+            if (routerState.ospf && routerState.ospf.networks && routerState.ospf.networks.length > 0) {
+                routerState.ospf.networks.forEach(n => {
+                    routeOut += `\nO    ${n.net} [110/2] via (OSPF neighbor), 00:00:05, GigabitEthernet0/0`;
+                });
+            }
+            if (!routerState.routes?.length && !routerState.ospf?.networks?.length) {
+                routeOut += '\n     (no routes configured)';
+            }
+            term.writeln(routeOut);
+        }
+        else if (p1 === 'ip' && p2 === 'interface' && p3 === 'brief') {
+            let ifOut = 'Interface              IP-Address      OK? Method Status                Protocol\n';
+            const defaultIfs = { 'gigabitethernet0/0': null, 'gigabitethernet0/1': null, 'fastethernet0/0': null };
+            const allIfs = Object.assign({}, defaultIfs, routerState.interfaces);
+            Object.entries(allIfs).forEach(([name, cfg]) => {
+                const ip = cfg?.ip || 'unassigned';
+                const status = cfg?.shutdown === false ? 'up' : 'administratively down';
+                const proto = cfg?.shutdown === false && cfg?.ip ? 'up' : 'down';
+                ifOut += `${name.padEnd(22)} ${ip.padEnd(15)} YES manual ${status.padEnd(22)} ${proto}\n`;
+            });
+            term.writeln(ifOut);
+        }
+        else if (p1 === 'interfaces') {
+            const ifName = parts[2];
+            const cfg = ifName ? routerState.interfaces[ifName.toLowerCase()] : null;
+            if (cfg || ifName) {
+                const status = cfg?.shutdown === false ? 'up' : 'down';
+                term.writeln(`${ifName || 'GigabitEthernet0/0'} is ${status}, line protocol is ${status}`);
+                term.writeln(`  Hardware is Gigabit Ethernet, address is aabb.cc${Math.floor(Math.random()*9000+1000)}`);
+                if (cfg?.ip) term.writeln(`  Internet address is ${cfg.ip}/${cfg.mask || '24'}`);
+                else term.writeln('  Internet protocol processing disabled');
+                term.writeln('  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec');
+            } else {
+                term.writeln('GigabitEthernet0/0 is administratively down, line protocol is down');
+            }
+        }
+        else if (p1 === 'port-security') {
+            if (p2 === 'interface') {
+                const ifName = parts[3]?.toLowerCase();
+                const cfg = routerState.interfaces[ifName];
+                if (cfg?.portSecurityEnabled) {
+                    term.writeln(`Port Security              : Enabled`);
+                    term.writeln(`Port Status                : Secure-up`);
+                    term.writeln(`Violation Mode             : ${cfg.violation || 'Shutdown'}`);
+                    term.writeln(`Maximum MAC Addresses      : ${cfg.maximumMacs || 1}`);
+                    term.writeln(`Total MAC Addresses        : 0`);
+                    term.writeln(`Security Violation Count   : 0`);
+                } else {
+                    term.writeln(`Port Security is not enabled on interface ${ifName || 'unknown'}.`);
+                }
+            } else {
+                term.writeln('Secure Port  MaxSecureAddr  CurrentAddr  SecurityViolation  Security Action\n               (Count)       (Count)          (Count)\n---------------------------------------------------------------------------');
+                Object.entries(routerState.interfaces).forEach(([name, cfg]) => {
+                    if (cfg.portSecurityEnabled) {
+                        term.writeln(`      ${name.substring(0,6)}              ${cfg.maximumMacs||1}          0                  0         ${cfg.violation||'Shutdown'}`);
+                    }
+                });
+            }
+        }
+        else if (p1 === 'running-config') {
+            let cfg = `Building configuration...\n\nCurrent configuration :\n!\nversion 15.1\nservice timestamps debug datetime msec\nservice timestamps log datetime msec\n!\nhostname ${routerState.hostname}\n!`;
+            if (routerState.users) Object.keys(routerState.users).forEach(u => { cfg += `\nusername ${u} privilege 15 secret 5 $1$xxxx`; });
+            if (routerState.domainName) cfg += `\nip domain-name ${routerState.domainName}`;
+            if (routerState.ospf) cfg += `\nrouter ospf ${routerState.ospf.pid}\n router-id ${routerState.ospf.routerId || '1.1.1.1'}`;
+            if (routerState.ntp) cfg += `\nntp server ${routerState.ntp}`;
+            if (routerState.syslog) cfg += `\nlogging ${routerState.syslog}`;
+            if (routerState.routes) routerState.routes.forEach(r => { cfg += `\nip route ${r.network} ${r.mask} ${r.nextHop}${r.ad ? ' '+r.ad : ''}`; });
+            Object.entries(routerState.interfaces).forEach(([name, c]) => {
+                cfg += `\ninterface ${name}`;
+                if (c.ip) cfg += `\n ip address ${c.ip} ${c.mask}`;
+                if (!c.shutdown) cfg += '\n no shutdown';
+                else cfg += '\n shutdown';
+            });
+            cfg += '\n!\nend';
+            term.writeln(cfg);
+        }
+        else if (p1 === 'startup-config') {
+            term.writeln('startup-config is not present');
+        }
+        else if (p1 === 'ip' && p2 === 'ospf' && p3 === 'neighbor') {
+            if (routerState.ospf) {
+                term.writeln('Neighbor ID     Pri   State           Dead Time   Address         Interface');
+                term.writeln('2.2.2.2           1   FULL/DR         00:00:33    10.0.0.2        GigabitEthernet0/0');
+            } else {
+                term.writeln('% OSPF is not configured.');
+            }
+        }
+        else if (p1 === 'ip' && p2 === 'ospf') {
+            if (routerState.ospf) {
+                term.writeln(` Routing Process "ospf ${routerState.ospf.pid}" with ID ${routerState.ospf.routerId || '1.1.1.1'}`);
+                term.writeln(' Start time: 00:00:05.000, Time elapsed: 00:00:30.000');
+                term.writeln(' Supports only single TOS(TOS0) routes');
+                term.writeln(' Number of areas in this router is 1. 1 normal 0 stub 0 nssa');
+            } else {
+                term.writeln('% OSPF is not configured.');
+            }
+        }
+        else if (p1 === 'ip' && p2 === 'protocols') {
+            let proto = 'Routing Protocol is "connected"\n';
+            if (routerState.ospf) proto += `\nRouting Protocol is "ospf ${routerState.ospf.pid}"\n  Outgoing update filter list for all interfaces is not set\n  Incoming update filter list for all interfaces is not set\n  Router ID ${routerState.ospf.routerId || '1.1.1.1'}`;
+            if (routerState.eigrp) proto += `\nRouting Protocol is "eigrp ${routerState.eigrp.as}"`;
+            if (routerState.rip) proto += `\nRouting Protocol is "rip"\n  Sending updates every 30 seconds`;
+            term.writeln(proto);
+        }
+        else if (p1 === 'ip' && p2 === 'dhcp' && p3 === 'binding') {
+            term.writeln('IP address       Client-ID/              Lease expiration        Type\n                 Hardware address\n192.168.1.100    0100.5079.6668.00       Mar 01 2026 00:00 AM    Automatic');
+        }
+        else if (p1 === 'ip' && p2 === 'nat' && p3 === 'translations') {
+            if (routerState.nat && routerState.nat.length > 0) {
+                term.writeln('Pro Inside global      Inside local       Outside local      Outside global');
+                routerState.nat.forEach(n => {
+                    if (n.type === 'static') term.writeln(`--- ${n.outside}        ${n.inside}          ---                ---`);
+                    else term.writeln('tcp 203.0.113.1:1025  192.168.1.10:1025  8.8.8.8:80         8.8.8.8:80');
+                });
+            } else {
+                term.writeln('% NAT is not configured.');
+            }
+        }
+        else if (p1 === 'spanning-tree') {
+            term.writeln('VLAN0001\n  Spanning tree enabled protocol ieee\n  Root ID    Priority    32769\n             Address     aabb.cc00.0100\n             This bridge is the root\n  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)\n             Address     aabb.cc00.0100');
+        }
+        else if (p1 === 'etherchannel' && p2 === 'summary') {
+            term.writeln('Flags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         LACP      Gi0/1(P)    Gi0/2(P)');
+        }
+        else if (p1 === 'cdp' && p2 === 'neighbors') {
+            if (p3 === 'detail') {
+                term.writeln('-------------------------\nDevice ID: Switch1\nEntry address(es):\n  IP address: 192.168.1.2\nPlatform: cisco WS-C2960,  Capabilities: Switch IGMP\nInterface: GigabitEthernet0/0,  Port ID (outgoing port): FastEthernet0/1\nHoldtime : 120 sec\nVersion :\nCisco IOS Software, Version 12.2(55)SE9\nNative VLAN: 1\nDuplex: full');
+            } else {
+                term.writeln('Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge\n                  S - Switch, H - Host, I - IGMP, r - Repeater\n\nDevice ID        Local Intrfce     Holdtme    Capability  Platform  Port ID\nSwitch1          Gig 0/0           120             S I      2960      Fas 0/1');
+            }
+        }
+        else if (p1 === '?') {
+            const cmds = IOS_COMMANDS[routerState.mode.startsWith('config') ? 'config' : routerState.mode] || [];
+            cmds.forEach(c => term.writeln('  ' + c));
+        }
+        else {
+            term.writeln('% Unrecognized show command. Try: show ip route, show ip interface brief, show running-config, show version, show ?');
+        }
+    }
+    else if (mainCmd === 'copy') {
+        if (parts[1]?.toLowerCase() === 'running-config' && parts[2]?.toLowerCase() === 'startup-config') {
+            term.writeln('Destination filename [startup-config]? ');
+            setTimeout(() => { term.writeln('Building configuration...\n[OK]'); checkChallenge(); }, 500);
+            routerState.savedConfig = true;
+        } else {
+            term.writeln('% Invalid copy command.');
+        }
+    }
+    else if ((mainCmd === 'write') && (parts[1]?.toLowerCase() === 'memory' || parts[1]?.toLowerCase() === 'mem' || !parts[1])) {
+        if (routerState.mode === 'priv') {
+            term.writeln('Building configuration...\n[OK]');
+            routerState.savedConfig = true;
+        } else {
+            term.writeln('% Error: Must be in privileged EXEC mode.');
+        }
+    }
+    else if (mainCmd === 'ping') {
+        const target = parts[1] || '1.1.1.1';
+        term.writeln(`Type escape sequence to abort.`);
+        term.writeln(`Sending 5, 100-byte ICMP Echos to ${target}, timeout is 2 seconds:`);
+        setTimeout(() => {
+            term.writeln('!!!!!');
+            term.writeln(`Success rate is 100 percent (5/5), round-trip min/avg/max = 1/2/4 ms`);
+            routerState.lastPing = cmd;
+            checkChallenge();
+        }, 800);
+    }
+    else if (mainCmd === '?' || (mainCmd === 'show' && parts[1] === '?')) {
+        const modeKey = routerState.mode.startsWith('config') ? 'config' : routerState.mode;
+        const cmds = IOS_COMMANDS[modeKey] || [];
+        cmds.forEach(c => term.writeln('  ' + c));
+    }
+    else if (mainCmd === 'end') {
+        routerState.mode = 'priv';
+    }
+    else if (mainCmd === 'do' && routerState.mode.startsWith('config')) {
+        // 'do show ...' from config mode
+        const subCmd = parts.slice(1).join(' ');
+        const savedMode = routerState.mode;
+        routerState.mode = 'priv';
+        processCommand(subCmd);
+        routerState.mode = savedMode;
+        return;
     }
     else {
-        term.writeln('% Invalid input detected at \'^\' marker.');
+        // More realistic IOS error messages
+        const modeHint = routerState.mode === 'user'
+            ? '(run `enable` to enter privileged mode)'
+            : routerState.mode === 'priv'
+            ? '(try `show ?` or `configure terminal`)'
+            : '(try `?` to see available commands)';
+        term.writeln(`                           ^`);
+        term.writeln(`% Invalid input detected at '^' marker. ${modeHint}`);
     }
 
     checkChallenge();
@@ -470,14 +760,21 @@ window.loadPhase = function(val) {
 
     // Load initial broken state for Troubleshooting labs if provided
     if (currentLevel.initialState) {
-        // Deep copy the initial state properties into routerState
         Object.assign(routerState, JSON.parse(JSON.stringify(currentLevel.initialState)));
     }
 
     currentInput = '';
+    commandHistory = [];
+    historyIndex = -1;
 
-    if(term) {
-        term.writeln('\r\n\x1b[36m--- Level Loaded: ' + currentLevel.title + ' ---\x1b[0m');
+    if (term) {
+        term.clear();
+        term.writeln('\x1b[36m╔══════════════════════════════════════════════════╗\x1b[0m');
+        term.writeln('\x1b[36m║  Cisco IOS Software, Version 15.1(4)M4           ║\x1b[0m');
+        term.writeln('\x1b[36m╚══════════════════════════════════════════════════╝\x1b[0m');
+        term.writeln('\x1b[33mLevel: ' + currentLevel.title + '\x1b[0m');
+        term.writeln('\x1b[90mTip: Use Tab for completion, ↑↓ for history, ? for help\x1b[0m');
+        term.writeln('');
         term.write(getPrompt());
     }
 };

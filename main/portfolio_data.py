@@ -149,7 +149,7 @@ def get_portfolio_context():
                 'color_theme': '#00e5ff',
                 'tools': [
                     {
-                        'id': 'subfinder', 'images': ['category_recon.png'], 'images': ['category_recon.png'], 'images': ['category_recon.png'],
+                        'id': 'subfinder', 'images': ['category_recon.png'],
                         'name': 'subfinder',
                         'icon': '🛠️',
                         'difficulty': 'Easy',
@@ -177,7 +177,7 @@ def get_portfolio_context():
                         'related_tools': ['amass', 'assetfinder', 'httpx']
                     },
                     {
-                        'id': 'amass', 'images': ['tool_amass_1.png', 'tool_amass_2.png'], 'images': ['tool_amass_1.png', 'tool_amass_2.png'], 'images': ['tool_amass_1.png', 'tool_amass_2.png'],
+                        'id': 'amass', 'images': ['tool_amass_1.png', 'tool_amass_2.png'],
                         'name': 'amass',
                         'icon': '🛡️',
                         'difficulty': 'Intermediate',
@@ -203,7 +203,7 @@ def get_portfolio_context():
                         'related_tools': ['subfinder', 'dnsx', 'assetfinder']
                     },
                     {
-                        'id': 'assetfinder', 'images': ['tool_assetfinder.png'], 'images': ['category_recon.png'], 'images': ['category_recon.png'],
+                        'id': 'assetfinder', 'images': ['category_recon.png'],
                         'name': 'assetfinder',
                         'icon': '⚡',
                         'difficulty': 'Easy',
@@ -228,7 +228,7 @@ def get_portfolio_context():
                         'related_tools': ['subfinder', 'amass']
                     },
                     {
-                        'id': 'chaos', 'images': ['tool_chaos.png'], 'images': ['category_recon.png'], 'images': ['category_recon.png'],
+                        'id': 'chaos', 'images': ['category_recon.png'],
                         'name': 'chaos',
                         'icon': '🌪️',
                         'difficulty': 'Intermediate',
@@ -261,7 +261,7 @@ def get_portfolio_context():
                 'color_theme': '#9b59ff',
                 'tools': [
                     {
-                        'id': 'katana', 'images': ['tool_katana_1.png', 'tool_katana_2.png'], 'images': ['tool_katana_1.png', 'tool_katana_2.png'], 'images': ['tool_katana_1.png', 'tool_katana_2.png'],
+                        'id': 'katana', 'images': ['tool_katana_1.png', 'tool_katana_2.png'],
                         'name': 'katana',
                         'icon': '⚔️',
                         'difficulty': 'Intermediate',
@@ -288,7 +288,7 @@ def get_portfolio_context():
                         'related_tools': ['hakrawler', 'gospider', 'linkfinder']
                     },
                     {
-                        'id': 'hakrawler', 'images': ['tool_hakrawler.png'], 'images': ['category_crawling.png'], 'images': ['category_crawling.png'],
+                        'id': 'hakrawler', 'images': ['category_crawling.png'],
                         'name': 'hakrawler',
                         'icon': '🐾',
                         'difficulty': 'Easy',
@@ -313,7 +313,7 @@ def get_portfolio_context():
                         'related_tools': ['katana', 'gospider']
                     },
                     {
-                        'id': 'gospider', 'images': ['tool_gospider.png'], 'images': ['category_crawling.png'], 'images': ['category_crawling.png'],
+                        'id': 'gospider', 'images': ['category_crawling.png'],
                         'name': 'gospider',
                         'icon': '🕸️',
                         'difficulty': 'Intermediate',
@@ -347,7 +347,7 @@ def get_portfolio_context():
                 'color_theme': '#ffb020',
                 'tools': [
                     {
-                        'id': 'gau', 'images': ['tool_gau_1.png'], 'images': ['tool_gau_1.png', 'tool_gau_2.png', 'tool_gau_3.png'], 'images': ['tool_gau_1.png', 'tool_gau_2.png', 'tool_gau_3.png'],
+                        'id': 'gau', 'images': ['tool_gau_1.png', 'tool_gau_2.png', 'tool_gau_3.png'],
                         'name': 'gau',
                         'icon': '📜',
                         'difficulty': 'Easy',
@@ -374,7 +374,7 @@ def get_portfolio_context():
                         'related_tools': ['waybackurls', 'waymore']
                     },
                     {
-                        'id': 'waybackurls', 'images': ['tool_gau_2.png'], 'images': ['category_historical.png'], 'images': ['category_historical.png'],
+                        'id': 'waybackurls', 'images': ['category_historical.png'],
                         'name': 'waybackurls',
                         'icon': '🕰️',
                         'difficulty': 'Easy',
@@ -399,7 +399,7 @@ def get_portfolio_context():
                         'related_tools': ['gau', 'waymore']
                     },
                     {
-                        'id': 'waymore', 'images': ['tool_gau_3.png'], 'images': ['category_historical.png'], 'images': ['category_historical.png'],
+                        'id': 'waymore', 'images': ['category_historical.png'],
                         'name': 'waymore',
                         'icon': '🌐',
                         'difficulty': 'Intermediate',
@@ -433,7 +433,7 @@ def get_portfolio_context():
                 'color_theme': '#ff0055',
                 'tools': [
                     {
-                        'id': 'ffuf', 'images': ['tool_dir_1.png'], 'images': ['tool_dir_1.png', 'tool_dir_2.png'], 'images': ['tool_dir_1.png', 'tool_dir_2.png'],
+                        'id': 'ffuf', 'images': ['tool_dir_1.png', 'tool_dir_2.png'],
                         'name': 'ffuf',
                         'icon': '⚡',
                         'difficulty': 'Beginner',
@@ -461,7 +461,7 @@ def get_portfolio_context():
                         'related_tools': ['feroxbuster', 'gobuster', 'dirsearch']
                     },
                     {
-                        'id': 'feroxbuster', 'images': ['tool_dir_2.png'], 'images': ['tool_dir_1.png', 'tool_dir_2.png'], 'images': ['tool_dir_1.png', 'tool_dir_2.png'],
+                        'id': 'feroxbuster', 'images': ['tool_dir_1.png', 'tool_dir_2.png'],
                         'name': 'feroxbuster',
                         'icon': '🦀',
                         'difficulty': 'Intermediate',
@@ -487,7 +487,7 @@ def get_portfolio_context():
                         'related_tools': ['ffuf', 'gobuster']
                     },
                     {
-                        'id': 'gobuster', 'images': ['tool_gobuster.png'], 'images': ['tool_dir_1.png', 'tool_dir_2.png'], 'images': ['tool_dir_1.png', 'tool_dir_2.png'],
+                        'id': 'gobuster', 'images': ['tool_dir_1.png', 'tool_dir_2.png'],
                         'name': 'gobuster',
                         'icon': '👻',
                         'difficulty': 'Beginner',
@@ -513,7 +513,7 @@ def get_portfolio_context():
                         'related_tools': ['ffuf', 'dirsearch']
                     },
                     {
-                        'id': 'dirsearch', 'images': ['category_dir.png'], 'images': ['tool_dir_1.png', 'tool_dir_2.png'], 'images': ['tool_dir_1.png', 'tool_dir_2.png'],
+                        'id': 'dirsearch', 'images': ['tool_dir_1.png', 'tool_dir_2.png'],
                         'name': 'dirsearch',
                         'icon': '🔎',
                         'difficulty': 'Beginner',
@@ -546,7 +546,7 @@ def get_portfolio_context():
                 'color_theme': '#00ff66',
                 'tools': [
                     {
-                        'id': 'arjun', 'images': ['tool_param_1.png'], 'images': ['tool_param_1.png', 'tool_param_2.png', 'tool_param_3.png'], 'images': ['tool_param_1.png', 'tool_param_2.png', 'tool_param_3.png'],
+                        'id': 'arjun', 'images': ['tool_param_1.png', 'tool_param_2.png', 'tool_param_3.png'],
                         'name': 'arjun',
                         'icon': '🎯',
                         'difficulty': 'Intermediate',
@@ -572,7 +572,7 @@ def get_portfolio_context():
                         'related_tools': ['paramspider']
                     },
                     {
-                        'id': 'paramspider', 'images': ['tool_param_2.png'], 'images': ['tool_param_1.png', 'tool_param_2.png', 'tool_param_3.png'], 'images': ['tool_param_1.png', 'tool_param_2.png', 'tool_param_3.png'],
+                        'id': 'paramspider', 'images': ['tool_param_1.png', 'tool_param_2.png', 'tool_param_3.png'],
                         'name': 'paramspider',
                         'icon': '🕷️',
                         'difficulty': 'Easy',
@@ -605,7 +605,7 @@ def get_portfolio_context():
                 'color_theme': '#ff00d4',
                 'tools': [
                     {
-                        'id': 'linkfinder', 'images': ['tool_js_2.png'], 'images': ['tool_js_1.png', 'tool_js_2.png', 'tool_js_3.png'], 'images': ['tool_js_1.png', 'tool_js_2.png', 'tool_js_3.png'],
+                        'id': 'linkfinder', 'images': ['tool_js_1.png', 'tool_js_2.png', 'tool_js_3.png'],
                         'name': 'linkfinder',
                         'icon': '🔗',
                         'difficulty': 'Intermediate',
@@ -631,7 +631,7 @@ def get_portfolio_context():
                         'related_tools': ['secretfinder', 'xnLinkFinder']
                     },
                     {
-                        'id': 'secretfinder', 'images': ['tool_js_3.png'], 'images': ['tool_js_1.png', 'tool_js_2.png', 'tool_js_3.png'], 'images': ['tool_js_1.png', 'tool_js_2.png', 'tool_js_3.png'],
+                        'id': 'secretfinder', 'images': ['tool_js_1.png', 'tool_js_2.png', 'tool_js_3.png'],
                         'name': 'secretfinder',
                         'icon': '🔑',
                         'difficulty': 'Easy',
@@ -664,7 +664,7 @@ def get_portfolio_context():
                 'color_theme': '#ff3300',
                 'tools': [
                     {
-                        'id': 'nuclei', 'images': ['tool_vuln_1.png'], 'images': ['tool_vuln_1.png', 'tool_vuln_2.png', 'tool_vuln_3.png'], 'images': ['tool_vuln_1.png', 'tool_vuln_2.png', 'tool_vuln_3.png'],
+                        'id': 'nuclei', 'images': ['tool_vuln_1.png', 'tool_vuln_2.png', 'tool_vuln_3.png'],
                         'name': 'nuclei',
                         'icon': '☢️',
                         'difficulty': 'Intermediate',
@@ -691,7 +691,7 @@ def get_portfolio_context():
                         'related_tools': ['dalfox', 'sqlmap']
                     },
                     {
-                        'id': 'dalfox', 'images': ['tool_vuln_2.png'], 'images': ['tool_vuln_1.png', 'tool_vuln_2.png', 'tool_vuln_3.png'], 'images': ['tool_vuln_1.png', 'tool_vuln_2.png', 'tool_vuln_3.png'],
+                        'id': 'dalfox', 'images': ['tool_vuln_1.png', 'tool_vuln_2.png', 'tool_vuln_3.png'],
                         'name': 'dalfox',
                         'icon': '🦊',
                         'difficulty': 'Intermediate',
@@ -717,7 +717,7 @@ def get_portfolio_context():
                         'related_tools': ['arjun', 'paramspider']
                     },
                     {
-                        'id': 'sqlmap', 'images': ['tool_vuln_3.png'], 'images': ['tool_vuln_1.png', 'tool_vuln_2.png', 'tool_vuln_3.png'], 'images': ['tool_vuln_1.png', 'tool_vuln_2.png', 'tool_vuln_3.png'],
+                        'id': 'sqlmap', 'images': ['tool_vuln_1.png', 'tool_vuln_2.png', 'tool_vuln_3.png'],
                         'name': 'sqlmap',
                         'icon': '💉',
                         'difficulty': 'Intermediate',
