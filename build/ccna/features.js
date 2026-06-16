@@ -2,7 +2,7 @@
    FEATURES JS (Dark Mode, Progress, Search)
    ============================ */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('ccnaDataReady', () => {
     initTheme();
     injectFeaturesUI();
     initSearch();

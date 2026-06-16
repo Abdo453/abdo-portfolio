@@ -1,54 +1,56 @@
 /* ============================
-   FEATURES CSS (Dark Mode, Progress, Search)
+   FEATURES CSS (Premium Upgrade)
    ============================ */
 
-/* Light Theme Variables */
+/* Light Theme Variables (Modernized) */
 [data-theme="light"] {
-    --bg-color: #f6f8fa;
-    --panel-bg: #ffffff;
-    --text-main: #24292f;
-    --accent: #0969da;
-    --success: #2da44e;
-    --warning: #bf8700;
-    --danger: #cf222e;
-    --border: #d0d7de;
+    --bg-color: #f8fafc;
+    --panel-bg: rgba(255, 255, 255, 0.85);
+    --text-main: #0f172a;
+    --accent: #0284c7;
+    --accent-glow: rgba(2, 132, 199, 0.2);
+    --success: #059669;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --border: rgba(148, 163, 184, 0.3);
 }
 
-/* Progress Bar */
+/* Progress Bar Premium */
 .progress-container {
     width: 100%;
-    background-color: rgba(48, 54, 61, 0.5);
-    height: 6px;
+    background-color: rgba(15, 23, 42, 0.4);
+    backdrop-filter: var(--glass-blur);
+    height: 5px;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 9999;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, var(--success), #56d364, var(--accent));
+    background: linear-gradient(90deg, var(--accent), var(--success));
     width: 0%;
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 0 3px 3px 0;
-    box-shadow: 0 0 8px rgba(63, 185, 80, 0.4);
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 15px var(--accent-glow);
 }
 
 .progress-text {
     position: fixed;
-    top: 8px;
-    right: 15px;
+    top: 10px;
+    right: 20px;
     font-size: 11px;
-    font-weight: bold;
+    font-weight: 700;
     color: var(--success);
     z-index: 9999;
     background: var(--panel-bg);
-    padding: 2px 8px;
-    border-radius: 10px;
+    backdrop-filter: var(--glass-blur);
+    padding: 4px 10px;
+    border-radius: 12px;
     border: 1px solid var(--border);
     font-family: 'Fira Code', monospace;
-    opacity: 0.9;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 /* Navbar extra buttons */
@@ -62,300 +64,278 @@
     background: transparent;
     border: none;
     color: var(--text-main);
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: all 0.3s ease;
+    padding: 8px;
+    border-radius: 50%;
 }
 
 .icon-btn:hover {
     color: var(--accent);
+    background: rgba(0, 210, 255, 0.1);
+    transform: rotate(15deg) scale(1.1);
 }
 
-/* Search Modal */
+/* Search Modal Premium */
 .search-modal {
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(8px);
     z-index: 10000;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 10vh;
+    padding-top: 12vh;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .search-modal.active {
     display: flex;
+    opacity: 1;
 }
 
 .search-content {
     background: var(--panel-bg);
+    backdrop-filter: var(--glass-blur);
     width: 90%;
-    max-width: 600px;
-    border-radius: 8px;
+    max-width: 650px;
+    border-radius: 16px;
     border: 1px solid var(--border);
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 25px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transform: translateY(-20px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-modal.active .search-content {
+    transform: translateY(0);
 }
 
 .search-input {
     width: 100%;
-    padding: 12px 15px;
-    font-size: 1.1rem;
+    padding: 15px 20px;
+    font-size: 1.2rem;
     font-family: 'Tajawal', sans-serif;
-    background: var(--bg-color);
+    background: rgba(2, 6, 23, 0.5);
     color: var(--text-main);
-    border: 1px solid var(--accent);
-    border-radius: 6px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
     outline: none;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px var(--accent-glow);
 }
 
 .search-results {
-    max-height: 300px;
+    max-height: 350px;
     overflow-y: auto;
 }
 
 .search-item {
-    padding: 12px;
+    padding: 15px;
     border-bottom: 1px solid var(--border);
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
     color: var(--text-main);
     text-decoration: none;
     display: block;
+    border-radius: 8px;
+    margin-bottom: 5px;
 }
 
 .search-item:hover {
-    background: var(--bg-color);
+    background: rgba(0, 210, 255, 0.08);
     color: var(--accent);
+    transform: translateX(-5px);
 }
 
 .search-item-chapter {
-    font-size: 0.8rem;
-    color: #8b949e;
-    margin-bottom: 4px;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    font-family: 'Outfit', sans-serif;
 }
 
 /* Mark as Complete Button */
 .mark-complete-btn {
     display: block;
     width: 100%;
-    padding: 15px;
-    margin-top: 30px;
-    background: transparent;
+    padding: 16px;
+    margin-top: 35px;
+    background: rgba(16, 185, 129, 0.05);
     border: 2px dashed var(--success);
     color: var(--success);
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-family: 'Tajawal', sans-serif;
-    font-weight: bold;
-    border-radius: 8px;
+    font-weight: 700;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mark-complete-btn:hover {
-    background: rgba(45, 164, 78, 0.1);
+    background: rgba(16, 185, 129, 0.15);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    transform: translateY(-2px);
 }
 
 .mark-complete-btn.completed {
-    background: var(--success);
+    background: linear-gradient(90deg, var(--success), #059669);
     color: #fff;
     border-style: solid;
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
 }
 
 .lesson-status-icon {
     float: left;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
-/* Enrichment Tabs (Phase 2) */
+/* Enrichment Tabs */
 .enrichment-section {
-    margin-top: 40px;
-    border-top: 2px solid var(--border);
-    padding-top: 20px;
+    margin-top: 45px;
+    border-top: 1px solid var(--border);
+    padding-top: 25px;
 }
 
 .enrichment-tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
 }
 
 .enrichment-tab {
-    padding: 10px 15px;
-    background: var(--bg-color);
+    padding: 10px 18px;
+    background: rgba(15, 23, 42, 0.6);
     color: var(--text-main);
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-family: 'Tajawal', sans-serif;
-    font-weight: bold;
-    transition: all 0.2s;
+    font-weight: 700;
+    transition: all 0.3s ease;
 }
 
 .enrichment-tab:hover {
-    background: rgba(88, 166, 255, 0.1);
+    background: rgba(0, 210, 255, 0.1);
+    border-color: var(--accent);
+    transform: translateY(-2px);
 }
 
 .enrichment-tab.active {
     background: var(--accent);
-    color: #fff;
+    color: #000;
     border-color: var(--accent);
+    box-shadow: 0 4px 15px var(--accent-glow);
 }
 
 .enrichment-content {
     display: none;
-    background: var(--panel-bg);
-    border: 1px solid var(--border);
-    padding: 20px;
-    border-radius: 8px;
-    line-height: 1.8;
+    animation: fadeIn 0.4s ease forwards;
 }
 
 .enrichment-content.active {
     display: block;
 }
 
-.enrichment-content h4 {
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Quiz UI */
+.quiz-level-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.quiz-level-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.quiz-level-btn.active {
+    background: var(--accent);
+    color: #000;
+}
+
+.quiz-question {
+    background: rgba(255,255,255,0.02);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+}
+
+.quiz-question h4 {
     color: var(--accent);
     margin-bottom: 15px;
+    font-size: 1.1rem;
 }
 
-/* ============================
-   IMPROVEMENTS: Animations, Transitions, Scroll-to-Top
-   ============================ */
-
-/* Smooth content transitions */
-.content-article {
-    animation: fadeSlideIn 0.35s ease-out;
-}
-
-@keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Scroll to Top Button */
-.scroll-top-btn {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    font-size: 1.3rem;
-    cursor: pointer;
-    z-index: 999;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    transition: all 0.3s ease;
-    opacity: 0.85;
-}
-
-.scroll-top-btn:hover {
-    opacity: 1;
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(88, 166, 255, 0.4);
-}
-
-.scroll-top-btn.visible {
-    display: flex;
-}
-
-/* Active sidebar lesson highlight */
-.lesson-btn.active {
-    background: rgba(88, 166, 255, 0.15) !important;
-    border-color: var(--accent) !important;
-    color: var(--accent) !important;
-    font-weight: bold;
-    border-right: 3px solid var(--accent);
-    box-shadow: inset -3px 0 8px rgba(88, 166, 255, 0.05);
-}
-
-/* Quiz option improved styling */
 .quiz-option {
     display: block;
-    margin-bottom: 8px;
-    cursor: pointer;
     padding: 12px 15px;
-    background: rgba(255,255,255,0.03);
+    background: rgba(15, 23, 42, 0.4);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    line-height: 1.5;
-}
-
-.quiz-option:hover {
-    background: rgba(88, 166, 255, 0.08);
-    border-color: var(--accent);
-}
-
-.quiz-option:has(input:checked) {
-    background: rgba(88, 166, 255, 0.15);
-    border-color: var(--accent);
-}
-
-/* Completion celebration */
-@keyframes celebratePulse {
-    0%   { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.4); }
-    70%  { box-shadow: 0 0 0 15px rgba(63, 185, 80, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0); }
-}
-
-.progress-container.celebrate .progress-bar {
-    animation: celebratePulse 1s ease-out;
-}
-
-/* Keyboard shortcut hint */
-.kbd-hint {
-    display: inline-block;
-    background: var(--bg-color);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 1px 6px;
-    font-size: 0.75rem;
-    font-family: 'Fira Code', monospace;
-    color: #8b949e;
-    margin-right: 5px;
-}
-
-/* Smooth scroll for content panel */
-.content-panel {
-    scroll-behavior: smooth;
-}
-
-/* Lesson navigation arrows */
-.lesson-nav-arrows {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 25px;
-    padding-top: 15px;
-    border-top: 1px solid var(--border);
-}
-
-.lesson-nav-btn {
-    padding: 10px 18px;
-    background: var(--panel-bg);
-    color: var(--accent);
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
+    margin-bottom: 10px;
     cursor: pointer;
-    font-family: 'Tajawal', sans-serif;
-    font-size: 1rem;
     transition: all 0.2s;
 }
 
-.lesson-nav-btn:hover:not(:disabled) {
-    background: rgba(88, 166, 255, 0.1);
+.quiz-option:hover {
+    background: rgba(0, 210, 255, 0.05);
     border-color: var(--accent);
 }
 
-.lesson-nav-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
+.quiz-option.selected {
+    background: rgba(0, 210, 255, 0.15);
+    border-color: var(--accent);
+}
+
+.quiz-option.correct {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.quiz-option.wrong {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.quiz-submit-btn {
+    padding: 12px 25px;
+    background: linear-gradient(90deg, var(--accent), #0284c7);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.quiz-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--accent-glow);
 }
