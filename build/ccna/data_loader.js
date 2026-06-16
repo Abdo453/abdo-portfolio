@@ -11,19 +11,22 @@ async function loadCcnaData() {
         console.log("Fetching CCNA Data...");
         
         // Fetch all JSON files in parallel
-        const [lessonsRes, labsRes, quizzesRes] = await Promise.all([
+        const [lessonsRes, labsRes, quizzesRes, interviewsRes] = await Promise.all([
             fetch('data/lessons.json'),
             fetch('data/labs.json'),
-            fetch('data/quizzes.json')
+            fetch('data/quizzes.json'),
+            fetch('data/interviews.json')
         ]);
         
         if (!lessonsRes.ok) throw new Error("Failed to load lessons.json");
         if (!labsRes.ok) throw new Error("Failed to load labs.json");
         if (!quizzesRes.ok) throw new Error("Failed to load quizzes.json");
+        if (!interviewsRes.ok) throw new Error("Failed to load interviews.json");
         
         window.academyData = await lessonsRes.json();
         const labsData = await labsRes.json();
         window.quizzesData = await quizzesRes.json();
+        window.interviewsData = await interviewsRes.json();
         
         // Convert validate strings back to functions for labs
         labsData.forEach(phase => {

@@ -1,12 +1,70 @@
 [
     {
-        "lessonId": "lesson1",
+        "category": "1. أسئلة الـ HR (الفخاخ النفسية)",
         "questions": [
             {
-                "q": "What is the difference between a Router and a Switch?",
-                "ideal": "A router operates at Layer 3 to route packets between different networks using IP addresses, while a switch operates at Layer 2 to forward frames within the same network using MAC addresses.",
-                "junior": "Router connects networks, switch connects devices.",
-                "mistakes": "Saying a switch works with IP addresses or a router connects to the internet only."
+                "q": "Why do you want to leave your current job? (ليه عايز تسيب شغلك الحالي؟)",
+                "ideal": "أبحث عن فرصة تتيح لي التعامل مع بيئات عمل أكبر (Enterprise scale) وتقنيات أحدث لتطوير مهاراتي كـ Network Engineer، وشركتكم معروفة بالبنية التحتية القوية.",
+                "trap": "إياك أن تذم في مديرك القديم أو تقول 'عشان المرتب ضعيف'. هذا يعطي انطباعاً بأنك غير ولاء ومادي.",
+                "short": "ركز على 'التطور التقني' وليس 'الهروب من الشركة القديمة'."
+            },
+            {
+                "q": "What is your biggest weakness? (إيه أكبر نقطة ضعف عندك؟)",
+                "ideal": "أحياناً أندمج جداً في عمل Troubleshooting لمشكلة معينة لدرجة أنني أنسى الوقت، ولكني تداركت هذا وبدأت أضع Timebox لكل مشكلة (مثلاً 15 دقيقة) وإذا لم تحل أقوم بتصعيدها (Escalation) للمستوى الأعلى.",
+                "trap": "لا تقل 'أنا مثالي' ولا تقل ضعفاً كارثياً مثل 'بتعصب بسرعة' أو 'مبعرفش اشتغل تحت ضغط'.",
+                "short": "اذكر نقطة ضعف حقيقية وضعيفة التأثير، واشرح كيف تعالجها."
+            },
+            {
+                "q": "Where do you see yourself in 5 years? (شايف نفسك فين بعد 5 سنين؟)",
+                "ideal": "أرى نفسي كـ Senior Network Engineer أو كـ Network Architect، وأكون قد حصلت على شهادة الـ CCNP وربما الـ CCIE، وأساهم في تصميم شبكات الشركة وليس فقط إدارتها.",
+                "trap": "لا تقل 'مكانك يا فندم' (غرور)، ولا تقل 'عايز أفتح مشروعي الخاص' (يعني هتمشي وتطير).",
+                "short": "أظهر طموحك الفني واربطه بالبقاء في الشركة لفترة طويلة."
+            }
+        ]
+    },
+    {
+        "category": "2. الأساسيات الفنية (Technical Basics)",
+        "questions": [
+            {
+                "q": "ما الفرق بين الـ Router والـ Switch من حيث الـ Broadcast؟",
+                "ideal": "الـ Switch يعتبر Broadcast Domain واحد (ما لم نقسمه بـ VLANs)، ويمرر أي رسالة Broadcast لكل الأجهزة. بينما الـ Router يوقف رسائل הـ Broadcast ولا يمررها، فكل منفذ فيه يعتبر Broadcast Domain مستقل.",
+                "trap": "القول بأن السويتش يمنع البث، أو عدم ربط الإجابة بمصطلح Broadcast Domain.",
+                "short": "الراوتر يوقف الـ Broadcast، السويتش بيمرره."
+            },
+            {
+                "q": "لماذا نستخدم الـ VLANs في الشبكات؟",
+                "ideal": "لثلاثة أسباب رئيسية: 1. الأمان (Security) لفصل الأقسام عن بعضها. 2. الأداء (Performance) لتقسيم الـ Broadcast Domain وتقليل الإزعاج. 3. تقليل التكلفة (Cost) لأننا نقسم سويتش واحد فيزيائي لعدة سويتشات منطقية.",
+                "trap": "الاكتفاء بقول 'عشان ننظم الشبكة'. إجابة سطحية جداً.",
+                "short": "Security, Performance (Reduce Broadcast), and Cost."
+            },
+            {
+                "q": "ما الفرق بين TCP و UDP ومتى نستخدم كل منهما؟",
+                "ideal": "الـ TCP هو Connection-oriented يضمن وصول البيانات (Reliable) ويستخدم في تصفح الويب (HTTP) والـ SSH. بينما الـ UDP هو Connectionless سريع جداً ولكنه لا يضمن الوصول، ويستخدم في الـ VoIP (الصوت) والـ Video Streaming.",
+                "trap": "القول بأن الـ UDP سيء لأنه يضيع البيانات. في الحقيقة في مكالمات الصوت نحتاج السرعة، وإذا ضاعت حزمة صوتية (Packet) لا نريد إعادة إرسالها لتجنب التقطيع.",
+                "short": "TCP = موثوق وبطيء (Web/SSH). UDP = سريع وغير موثوق (Voice/Video)."
+            }
+        ]
+    },
+    {
+        "category": "3. سيناريوهات عميقة (Deep Scenarios)",
+        "questions": [
+            {
+                "q": "موظف يشتكي أنه لا يستطيع الوصول للإنترنت، ما هي خطواتك كـ NOC للمشكلة؟",
+                "ideal": "1. أبدأ بـ Ping على الـ Loopback (127.0.0.1) للتأكد من كرت الشبكة. \n2. ثم Ping على الـ IP الخاص به.\n3. ثم Ping على الـ Default Gateway (الراوتر) للتأكد من الاتصال الداخلي.\n4. إذا نجح، أعمل Ping على 8.8.8.8 للتأكد من وصول الإنترنت للراوتر.\n5. إذا نجح، أعمل Ping على google.com للتأكد من أن مشكلة الـ DNS ليست هي السبب.",
+                "trap": "أن تقول 'هعمل ريستارت للراوتر' أو تبدأ المشكلة من عند السيرفر وليس من الـ End User.",
+                "short": "ابدأ من الأسفل للأعلى: Loopback -> Gateway -> 8.8.8.8 -> DNS."
+            },
+            {
+                "q": "لدينا Switch به 24 جهاز، وجميعهم يواجهون بطء شديد جداً، ما هو أول شيء تتحقق منه؟",
+                "ideal": "أتحقق من وجود (Switching Loop / Broadcast Storm). سأستخدم أمر `show spanning-tree` أو `show interfaces` لأرى كمية حزم الـ Broadcast. وغالباً سأجد منفذاً تم توصيله بالخطأ أو أن הـ STP معطل.",
+                "trap": "أن تقول 'أشوف سرعة النت'.. البطء في السويتش المحلي غالباً بسبب Loop وليس الإنترنت.",
+                "short": "ابحث عن Broadcast Storm وتأكد من الـ Spanning Tree."
+            },
+            {
+                "q": "لاحظت أن راوتر OSPF لا يرى جاره (Neighbor)، ما هي الأسباب المحتملة؟",
+                "ideal": "هناك عدة شروط ليتم بناء الـ Adjacency: 1. يجب أن يكونوا في نفس الـ Subnet. 2. نفس رقم الـ Area. 3. نفس الـ Hello/Dead Timers. 4. عدم تطابق كلمات المرور (Authentication). 5. مشكلة في הـ MTU.",
+                "trap": "أن تذكر سبب واحد فقط كأن تقول 'الكابل مفصول'. المقابل يريد أن يرى فهمك لبروتوكول الـ OSPF.",
+                "short": "Subnet, Area, Timers, Authentication, MTU."
             }
         ]
     }
