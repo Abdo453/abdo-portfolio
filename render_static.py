@@ -62,7 +62,7 @@ for book in BOOKS:
 css_src = os.path.join(project_dir, 'main', 'static', 'main', 'css')
 css_dest_dir = os.path.join(build_dir, 'css')
 os.makedirs(css_dest_dir, exist_ok=True)
-for css_file in ('style.css', 'academy.css'):
+for css_file in ('style.css', 'academy.css', 'python.css'):
     src = os.path.join(css_src, css_file)
     if os.path.exists(src):
         shutil.copy(src, os.path.join(css_dest_dir, css_file))
