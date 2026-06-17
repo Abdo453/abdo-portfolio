@@ -3323,17 +3323,20 @@ file:///etc/passwd</div>
       </div>
 
       <!-- Terminal Simulation Modal -->
-      <div class="terminal-overlay" id="terminal-overlay">
-        <div class="terminal-window">
-          <div class="terminal-header">
-            <span class="terminal-btn close" onclick="closeTerminal()"></span>
-            <span class="terminal-btn min"></span>
-            <span class="terminal-btn max"></span>
-            <span class="terminal-title">root@apt-server:~#</span>
-          </div>
-          <div class="terminal-body" id="terminal-output"></div>
-        </div>
+      <div class="terminal-overlay" id="terminal-overlay" onclick="if(event.target===this) closeTerminal()">
+  <div class="terminal-window" dir="ltr" style="text-align: left; direction: ltr;">
+    <div class="terminal-header" style="display: flex; align-items: center; width: 100%;">
+      <div class="terminal-dots">
+        <span class="dot close" onclick="closeTerminal()"></span>
+        <span class="dot minimize"></span>
+        <span class="dot maximize"></span>
       </div>
+      <div class="terminal-title" style="flex-grow: 1; text-align: center;">root@kali:~</div>
+      <div style="cursor:pointer; color:#ff4444; font-weight:bold; padding-right:10px; font-family: sans-serif;" onclick="closeTerminal()">✖ Close</div>
+    </div>
+    <div class="terminal-body" id="terminal-output" dir="ltr" style="text-align: left; direction: ltr;"></div>
+  </div>
+</div>
 </div><!-- Popup Modal structure for alert testing -->
   <div class="popup-overlay" id="popupOverlay"></div>
   <div class="popup-modal" id="popupModal">

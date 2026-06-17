@@ -82,17 +82,18 @@ function launchAcademySim(scriptId) {
   if(!overlay) {
     // Inject overlay if not present
     const overlayHtml = `
-      <div class="terminal-overlay" id="terminal-overlay">
-        <div class="terminal-window">
-          <div class="terminal-header">
+      <div class="terminal-overlay" id="terminal-overlay" onclick="if(event.target===this) closeAcademySim()">
+        <div class="terminal-window" dir="ltr" style="text-align: left; direction: ltr;">
+          <div class="terminal-header" style="display: flex; align-items: center; width: 100%;">
             <div class="terminal-dots">
               <span class="dot close" onclick="closeAcademySim()"></span>
               <span class="dot minimize"></span>
               <span class="dot maximize"></span>
             </div>
-            <div class="terminal-title">root@kali:~</div>
+            <div class="terminal-title" style="flex-grow: 1; text-align: center;">root@kali:~</div>
+            <div style="cursor:pointer; color:#ff4444; font-weight:bold; padding-right:10px; font-family: sans-serif;" onclick="closeAcademySim()">✖ Close</div>
           </div>
-          <div class="terminal-body" id="terminal-output"></div>
+          <div class="terminal-body" id="terminal-output" dir="ltr" style="text-align: left; direction: ltr;"></div>
         </div>
       </div>
     `;
