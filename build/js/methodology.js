@@ -2114,3 +2114,183 @@ function closeTerminal() {
   if (currentTypingInterval) clearInterval(currentTypingInterval);
   if (printLineTimeout) clearTimeout(printLineTimeout);
 }
+
+
+
+// ==========================================
+// AUTOMATION ASSISTANT FEATURES
+// ==========================================
+
+// 1. Persistent Checklists (LocalStorage)
+function saveChecklistState() {
+  const checkboxes = document.querySelectorAll('.checklist-item');
+  const state = {};
+  checkboxes.forEach((item, index) => {
+    // Generate a unique ID based on the onclick attribute if an ID doesn't exist
+    let uid = item.getAttribute('onclick');
+    if (uid) {
+      state[uid] = item.classList.contains('completed');
+    }
+  });
+  localStorage.setItem('hunter_checklist_state', JSON.stringify(state));
+}
+
+function loadChecklistState() {
+  const savedState = localStorage.getItem('hunter_checklist_state');
+  if (savedState) {
+    const state = JSON.parse(savedState);
+    const checkboxes = document.querySelectorAll('.checklist-item');
+    checkboxes.forEach((item) => {
+      let uid = item.getAttribute('onclick');
+      if (uid && state[uid]) {
+        item.classList.add('completed');
+        const box = item.querySelector('.check-box');
+        if(box) box.textContent = '✓';
+      }
+    });
+  }
+}
+
+// Override existing toggleCheck to add save functionality
+const originalToggleCheck = window.toggleCheck;
+window.toggleCheck = function(element, listId, index) {
+  if (originalToggleCheck) {
+    originalToggleCheck(element, listId, index);
+  } else {
+    // Fallback if original doesn't exist
+    element.classList.toggle('completed');
+    const box = element.querySelector('.check-box');
+    if (element.classList.contains('completed')) {
+      box.textContent = '✓';
+    } else {
+      box.textContent = '';
+    }
+  }
+  saveChecklistState();
+};
+
+// 2. Report Generator
+window.generateReport = function() {
+  const modal = document.getElementById('reportModal');
+  const textarea = document.getElementById('reportContent');
+  
+  // Count completed tasks
+  const completedTasks = document.querySelectorAll('.checklist-item.completed');
+  let completedText = "";
+  completedTasks.forEach(task => {
+    const label = task.querySelector('.check-label');
+    if(label) completedText += `- [x] ${label.innerText}\n`;
+  });
+
+  if (completedText === "") {
+    completedText = "- [ ] (No methodology steps completed yet. Complete checklists to auto-populate here)\n";
+  }
+
+  const template = `## Title: [Vulnerability Name] on [target.com]
+
+## Description:
+I have discovered a [vulnerability type] vulnerability affecting the \`[endpoint]\`. 
+
+## Reconnaissance & Methodology Steps Taken:
+${completedText}
+
+## Steps To Reproduce:
+1. Navigate to \`https://target.com\`
+2. [Action step]
+3. Observe that [Result]
+
+## Impact:
+[Describe how an attacker can exploit this and what the business impact is].
+
+## Remediation:
+[Provide mitigation advice].
+`;
+
+  textarea.value = template;
+  modal.style.display = 'flex';
+};
+
+// 3. Dynamic One-Liner Generator
+window.generateOneLiner = function() {
+  const domain = document.getElementById('targetDomainInput').value || 'example.com';
+  const useSub = document.getElementById('chkSubfinder').checked;
+  const useAmass = document.getElementById('chkAmass').checked;
+  const useHttpx = document.getElementById('chkHttpx').checked;
+  const useNuclei = document.getElementById('chkNuclei').checked;
+  
+  let cmd = "";
+  
+  if (useSub && useAmass) {
+    cmd += `subfinder -d ${domain} -all -silent > subs.txt && amass enum -passive -d ${domain} >> subs.txt && sort -u subs.txt > unique.txt`;
+  } else if (useSub) {
+    cmd += `subfinder -d ${domain} -all -silent > unique.txt`;
+  } else if (useAmass) {
+    cmd += `amass enum -passive -d ${domain} > unique.txt`;
+  } else {
+    cmd += `echo ${domain} > unique.txt`;
+  }
+  
+  if (useHttpx) {
+    cmd += ` && cat unique.txt | httpx -silent -status-code -title > alive.txt`;
+  }
+  
+  if (useNuclei && useHttpx) {
+    cmd += ` && nuclei -l alive.txt -t cves/`;
+  } else if (useNuclei && !useHttpx) {
+    cmd += ` && nuclei -l unique.txt -t cves/`;
+  }
+  
+  const outputEl = document.getElementById('oneLinerOutput');
+  if (outputEl) outputEl.innerText = cmd;
+};
+
+// 4. Universal Copy Buttons Injector
+function injectCopyButtons() {
+  const codeBlocks = document.querySelectorAll('.cmd-ui-top');
+  codeBlocks.forEach(block => {
+    // Check if it already has a bottom box with a copy button
+    const parent = block.parentElement;
+    const hasBottom = parent.querySelector('.cmd-ui-bottom');
+    
+    if (!hasBottom) {
+      // Create it!
+      const bottomDiv = document.createElement('div');
+      bottomDiv.className = 'cmd-ui-bottom';
+      bottomDiv.innerHTML = `<button class="cmd-btn" onclick="copyText(this.parentElement.previousElementSibling.innerText, this)">📋 Copy</button>`;
+      parent.appendChild(bottomDiv);
+      // Ensure the parent is a flex column or block
+      parent.style.display = 'flex';
+      parent.style.flexDirection = 'column';
+    }
+  });
+}
+
+// 5. Theme Toggle (Light/Dark)
+window.toggleTheme = function() {
+  const isLight = document.body.classList.contains('light-mode');
+  if (isLight) {
+    document.body.classList.remove('light-mode');
+    localStorage.setItem('hunter_theme', 'dark');
+    document.getElementById('themeToggleBtn').innerText = '☀️';
+  } else {
+    document.body.classList.add('light-mode');
+    localStorage.setItem('hunter_theme', 'light');
+    document.getElementById('themeToggleBtn').innerText = '🌙';
+  }
+};
+
+function loadTheme() {
+  const theme = localStorage.getItem('hunter_theme');
+  if (theme === 'light') {
+    document.body.classList.add('light-mode');
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) btn.innerText = '🌙';
+  }
+}
+
+// Ensure init functions run on load
+window.addEventListener('DOMContentLoaded', () => {
+  loadChecklistState();
+  loadTheme();
+  setTimeout(injectCopyButtons, 500); // slight delay to ensure UI is parsed
+});
