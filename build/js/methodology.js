@@ -2294,3 +2294,97 @@ window.addEventListener('DOMContentLoaded', () => {
   loadTheme();
   setTimeout(injectCopyButtons, 500); // slight delay to ensure UI is parsed
 });
+
+
+
+// ==========================================
+// ACADEMY DASHBOARD FEATURES
+// ==========================================
+
+// 1. Reading Progress Bar
+window.addEventListener('scroll', () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  const progressBar = document.getElementById('reading-progress-bar');
+  if (progressBar) progressBar.style.width = scrolled + '%';
+});
+
+// 2. Animated Counters
+function animateCounters() {
+  const counters = document.querySelectorAll('.stat-number');
+  const speed = 200; // The lower the slower
+  
+  counters.forEach(counter => {
+    const target = +counter.getAttribute('data-target');
+    const updateCount = () => {
+      const count = +counter.innerText;
+      const inc = target / speed;
+      if (count < target) {
+        counter.innerText = Math.ceil(count + inc);
+        setTimeout(updateCount, 15);
+      } else {
+        counter.innerText = target + (target > 50 ? '+' : '');
+      }
+    };
+    updateCount();
+  });
+}
+
+// 3. Achievement System Update
+function updateAchievements() {
+  // Total checklists in the entire methodology
+  const totalTasks = document.querySelectorAll('.checklist-item').length || 1;
+  const completedTasks = document.querySelectorAll('.checklist-item.completed').length;
+  
+  const progressPercent = Math.min(100, Math.round((completedTasks / totalTasks) * 100));
+  
+  const rankBadge = document.getElementById('userRankBadge');
+  const rankTitle = document.getElementById('userRankTitle');
+  const rankDesc = document.getElementById('userRankDesc');
+  const rankProgress = document.getElementById('userRankProgress');
+  
+  if (!rankBadge) return;
+  
+  rankProgress.style.width = progressPercent + '%';
+  
+  if (completedTasks === 0) {
+    rankBadge.innerText = '🥚';
+    rankTitle.innerText = 'Rank: Observer';
+    rankDesc.innerText = 'أنت تراقب فقط! ابدأ بتحديد المهام المنجزة لترفع تصنيفك.';
+  } else if (completedTasks < 10) {
+    rankBadge.innerText = '🥉';
+    rankTitle.innerText = 'Rank: Script Kiddie';
+    rankDesc.innerText = 'بداية جيدة! أكمل المزيد من مهام الاستطلاع للوصول للمستوى التالي.';
+  } else if (completedTasks < 30) {
+    rankBadge.innerText = '🥈';
+    rankTitle.innerText = 'Rank: Bug Hunter';
+    rankDesc.innerText = 'أنت الآن صائد ثغرات معتمد. واصل تعميق بحثك لاصطياد ثغرات حرجة.';
+  } else if (completedTasks < 60) {
+    rankBadge.innerText = '🥇';
+    rankTitle.innerText = 'Rank: Advanced Hacker';
+    rankDesc.innerText = 'مستوى متقدم! أنت تتقن ربط الثغرات المتقدمة.';
+  } else {
+    rankBadge.innerText = '💎';
+    rankTitle.innerText = 'Rank: Elite Pentester';
+    rankDesc.innerText = 'أسطورة! لقد أتممت منهجية الاختراق بالكامل.';
+  }
+}
+
+// Hook updateAchievements into loadChecklistState and toggleCheck
+const oldLoadChecklistState = window.loadChecklistState;
+window.loadChecklistState = function() {
+  if (oldLoadChecklistState) oldLoadChecklistState();
+  updateAchievements();
+};
+
+const oldToggleCheck2 = window.toggleCheck;
+window.toggleCheck = function(element, listId, index) {
+  if (oldToggleCheck2) oldToggleCheck2(element, listId, index);
+  updateAchievements();
+};
+
+// Initialize Counters on load
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(animateCounters, 500);
+});

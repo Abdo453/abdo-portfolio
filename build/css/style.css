@@ -3745,3 +3745,227 @@ body.light-theme .meta-badge {
 /* CLS Fixes */
 .profile-avatar { aspect-ratio: 1/1; min-height: 120px; }
 .tab-pane { min-height: 60vh; }
+
+
+/* --- UX/UI OVERHAUL --- */
+
+/* 1. Active State Animation */
+@keyframes activePulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 243, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+}
+
+.meth-sidebar .meth-item.active {
+  background: rgba(0, 243, 255, 0.1);
+  border-left: 4px solid var(--neon-cyan);
+  animation: activePulse 2s infinite;
+  transform: translateX(5px);
+  transition: all 0.3s ease;
+}
+
+/* 2. Consistent Spacing */
+.cyber-card {
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+}
+.phase-module-header {
+  margin-bottom: 30px;
+}
+
+/* 3. Interactive Vertical Timeline */
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 40px 0;
+  padding-left: 30px;
+}
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--neon-cyan), var(--neon-purple), var(--neon-red));
+  border-radius: 4px;
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+.timeline-node {
+  position: relative;
+  margin-bottom: 30px;
+  padding: 15px 20px;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.timeline-node:hover {
+  transform: translateX(10px);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+}
+.timeline-node::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: var(--surface-color);
+  border: 3px solid var(--neon-cyan);
+  border-radius: 50%;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+.timeline-node:hover::before {
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+.timeline-node h4 {
+  margin: 0 0 5px 0;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+.timeline-node p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+
+/* =========================================
+   ACADEMY DASHBOARD & UI/UX ENHANCEMENTS
+   ========================================= */
+
+/* Animated Grid Background */
+body {
+  background-image: 
+    linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: -1px -1px;
+  animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+  from { background-position: 0 0; }
+  to { background-position: 30px 30px; }
+}
+
+/* Reading Progress Bar */
+#reading-progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  z-index: 9999;
+}
+#reading-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  transition: width 0.1s ease-out;
+}
+
+/* Stat Counters */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin: 30px 0;
+}
+.stat-card {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.stat-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 5px 15px rgba(0, 243, 255, 0.2);
+  border-color: var(--neon-cyan);
+}
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--neon-cyan);
+  margin-bottom: 5px;
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+}
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Achievement System */
+.achievement-panel {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.1), transparent);
+  border-left: 4px solid var(--neon-purple);
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+.rank-badge {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+}
+.rank-info h3 { margin: 0 0 5px 0; color: var(--neon-purple); }
+.rank-info p { margin: 0; color: var(--text-secondary); }
+
+/* Skill Tree */
+.skill-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 30px 0;
+}
+.skill-branch {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.skill-branch:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+}
+.skill-branch h4 { margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px; }
+.skill-nodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.skill-node {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  cursor: default;
+  transition: all 0.3s ease;
+}
+.skill-node:hover {
+  background: var(--neon-cyan);
+  color: #000;
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  transform: scale(1.1);
+}
