@@ -1206,9 +1206,9 @@
     var originalOpenMethPhase = typeof openMethPhase === 'function' ? openMethPhase : null;
 
     function showRdSections(phaseId) {
-      // Show hero + pipeline always
+      // Show hero + pipeline only on p0 (main page)
       var hero = document.getElementById('rd-hero-section');
-      if (hero) hero.style.display = 'block';
+      if (hero) hero.style.display = (phaseId === 'p0') ? 'block' : 'none';
 
       // Show bottom sections only on p0 (main page)
       RD_SECTIONS.forEach(function(id) {
@@ -1224,6 +1224,8 @@
         window.openMethPhase = function(id) {
           _origOpen(id);
           showRdSections(id);
+          var viewer = document.querySelector('.meth-viewer');
+          if (viewer) viewer.scrollTop = 0;
         };
       }
     })();
