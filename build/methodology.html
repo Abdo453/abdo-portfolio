@@ -392,6 +392,9 @@
           <div class="meth-item" id="meth-ef-p_writeups" onclick="openMethPhase('p_writeups')" data-search="writeups bug bounty reports real world hackerone">
             <span>📜</span> <span>Real Writeups</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_writeups', '📜 Real Writeups')">★</button>
           </div>
+          <div class="meth-item" id="meth-ef-p_reporting" onclick="openMethPhase('p_reporting')" data-search="reporting bug bounty hackerone triage report template">
+            <span>📝</span> <span>Bug Bounty Reporting</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_reporting', '📝 Bug Bounty Reporting')">★</button>
+          </div>
           <div class="meth-item" id="meth-ef-p19" onclick="openMethPhase('p19')" data-search="weaponized payload generator 0day bypass waf reverse shell">
             <span>☢️</span> <span>Payload Generator</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p19', '☢️ Payload Generator')">★</button>
           </div>
@@ -680,6 +683,8 @@
             <div class="cmd-ui-top">subfinder -d target.com -all -recursive -silent -o subfinder.txt
 amass enum -passive -d target.com -o amass.txt
 assetfinder --subs-only target.com > assetfinder.txt
+
+# استخراج الـ Hostnames من الروابط المؤرشفة (Extract Hostnames)
 gau target.com | grep -oP '(?<=://)[^/?]+' | sort -u > gau.txt
 
 # Merge & deduplicate all sources
@@ -795,6 +800,24 @@ https://cdn.target.com [301] → assets.cdn.net
           </ul>
         </div>
 
+        
+        <p class="os-section-label">🔗 Tool Links</p>
+        <div class="cyber-card">
+          <div class="card-header"><h3>📥 روابط التحميل المباشرة</h3></div>
+          <p>لتحميل أدوات الـ Recon الرسمية من GitHub:</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr><th>Tool</th><th>GitHub Repository</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Subfinder</strong></td><td><a href="https://github.com/projectdiscovery/subfinder" target="_blank" style="color:var(--neon-cyan);">projectdiscovery/subfinder</a></td></tr>
+              <tr><td><strong>Amass</strong></td><td><a href="https://github.com/owasp-amass/amass" target="_blank" style="color:var(--neon-cyan);">owasp-amass/amass</a></td></tr>
+              <tr><td><strong>httpx</strong></td><td><a href="https://github.com/projectdiscovery/httpx" target="_blank" style="color:var(--neon-cyan);">projectdiscovery/httpx</a></td></tr>
+              <tr><td><strong>gau</strong></td><td><a href="https://github.com/lc/gau" target="_blank" style="color:var(--neon-cyan);">lc/gau</a></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
         <!-- COMMON MISTAKES vs BEST PRACTICES -->
         <p class="os-section-label">⚠️ Common Mistakes vs Best Practices</p>
         <div class="cyber-card">
@@ -821,6 +844,29 @@ https://cdn.target.com [301] → assets.cdn.net
                 <li>gau + waybackurls للأرشيف التاريخي</li>
                 <li>Passive أولاً ← Active لاحقاً دائماً</li>
               </ul>
+            </div>
+          </div>
+        </div>
+
+        
+        <p class="os-section-label">⚠️ Common False Positives (نتائج كاذبة شائعة)</p>
+        <div class="cyber-card">
+          <div class="card-header"><h3>🕵️‍♂️ كيف تميز بين الثغرة والسراب؟</h3></div>
+          <p>ليس كل 404 يعنى Subdomain Takeover. انتبه للآتي:</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>404 on `admin.target.com`:</strong> قد يكون السيرفر موجوداً ولكنه يرد بـ 404 عمداً لإخفاء لوحة التحكم، تأكد من الـ CNAME!</li>
+            <li>✔ <strong>Timeouts:</strong> بعض الأدوات تسجل السيرفر كـ Offline بسبب حظر IP (WAF) وليس لأنه محذوف حقاً.</li>
+          </ul>
+          
+          <div class="terminal-window" dir="ltr" style="text-align: left; direction: ltr; margin-top: 15px;">
+            <div class="terminal-header">
+              <div class="terminal-dots"><span class="dot close"></span><span class="dot minimize"></span><span class="dot maximize"></span></div>
+              <div class="terminal-title">Output: False Positive Example</div>
+            </div>
+            <div class="terminal-body">
+              <div class="term-cmd">root@kali:~# dig admin.target.com CNAME</div>
+              <div class="term-warn">admin.target.com.    300    IN    CNAME    internal-router.target.local.</div>
+              <div class="term-err">; NXDOMAIN (Not vulnerable: points to internal non-resolvable domain, not a 3rd party service)</div>
             </div>
           </div>
         </div>
@@ -880,6 +926,10 @@ https://cdn.target.com [301] → assets.cdn.net
             <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',3)">
               <div class="check-box"></div>
               <div class="check-label">سجّلت dev / staging / admin subdomains للفحص اللاحق</div>
+            </li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',4)">
+              <div class="check-box"></div>
+              <div class="check-label">هل انتبهت لـ Rate Limiting؟ (لم أرسل طلبات عشوائية كثيفة تعرضني للحظر)</div>
             </li>
           </ul>
           <div class="tip-callout" style="margin:0;">
@@ -1052,8 +1102,8 @@ https://cdn.target.com [301] → assets.cdn.net
               <h4 style="margin:0 0 5px 0; font-family:'Outfit',sans-serif; font-size:1.25rem; color:#fff;">🧪 جاهز لتطبيق ما تعلمته?</h4>
               <p style="margin:0; font-size:0.95rem; color:var(--text-secondary);">اختبر مهاراتك في كشف النطاقات الفرعية الضعيفة واستغلال ثغرات الـ Takeover في المختبر التفاعلي.</p>
             </div>
-            <a href="index.html#labs" class="back-btn" style="white-space:nowrap;" onclick="localStorage.setItem('switch_tab_direct', 'labs')">
-              ▶ Launch Interactive Labs
+            <a href="index.html#labs" class="back-btn" style="white-space:nowrap; opacity:0.6; cursor:not-allowed;" onclick="event.preventDefault(); alert('يتم تطوير المختبرات التفاعلية حالياً! قريباً...');">
+              ▶ Launch Interactive Labs (قريباً)
             </a>
           </div>
         </div>
