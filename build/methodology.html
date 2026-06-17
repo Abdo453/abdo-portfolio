@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=16">
-  <link rel="stylesheet" href="css/methodology.css?v=16">
+  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/methodology.css?v=8">
 
   
 
@@ -438,6 +438,9 @@
           </div>
           <div class="meth-item" id="meth-ef-p_zeroclick" onclick="openMethPhase('p_zeroclick')" data-search="zero click rce imagemagick ffmpeg media shell">
             <span>👻</span> <span style="color: #ff0055;">Zero-Click RCE</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_zeroclick', '👻 Zero-Click RCE')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p_apt" onclick="openMethPhase('p_apt')" data-search="apt tracking red teaming 0-day fuzzing active directory">
+            <span>🥷</span> <span style="color: #ff0055;">APT & Red Teaming</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_apt', '🥷 APT & Red Teaming')">★</button>
           </div>
         </div>
       </div>
@@ -2857,6 +2860,45 @@ Content-Type: application/json
         </script>
       </div>
 
+      <!-- Phase 19: APT & Red Teaming -->
+      <div class="meth-content-view" id="meth-content-p_apt" style="display: none; --tool-color: #ff0000;">
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🥷</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">APT Tracking & Red Teaming</h2>
+            <p class="phase-module-tagline">أساليب الاختراق المتقدمة: التمركز، اختراق الـ Active Directory، والهجمات الموجهة (Red Team Tactics).</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 10+ Hours</span>
+              <span class="badge-difficulty bg-high">God-Tier</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🔥 Active Directory Annihilation</h3></div>
+          <p>بمجرد حصولك على موطئ قدم (Initial Access) في شبكة الشركة، يبدأ الرعب الحقيقي. هدفك هو الـ Domain Controller.</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>BloodHound & Sharphound:</strong> أداة تعتمد على الجراف (Graph Theory) لكشف العلاقات والثغرات الأمنية في الـ Active Directory. تظهر لك أقصر طريق للوصول إلى صلاحيات الـ Domain Admin.</li>
+            <li>✔ <strong>Kerberoasting:</strong> هجوم يستهدف حسابات الخدمات (Service Accounts). يمكنك استخراج التذاكر المشفرة (TGS) وكسرها اوفلاين باستخدام Hashcat للحصول على كلمات المرور.</li>
+            <li>✔ <strong>NTLM Relaying & Responder:</strong> التلاعب ببروتوكولات البث في الشبكات المحلية (LLMNR/NBT-NS) لسرقة الـ Hashes أو توجيهها لاختراق أجهزة أخرى بصلاحيات عالية.</li>
+          </ul>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3>☢️ 0-Day Discovery & Patch Diffing</h3></div>
+          <p>لا تنتظر الهاكرز لنشر الثغرات. اصنع ثغراتك بنفسك!</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>Patch Diffing:</strong> عندما تصدر مايكروسوفت أو أبل تحديثاً أمنياً، قم بتحميل النسخة القديمة والحديثة من ملفات الـ DLL، واستخدم أدوات مثل <strong>Ghidra</strong> أو <strong>BinDiff</strong> لمعرفة الأكواد التي تم تغييرها. الجزء المتغير هو مكان الثغرة! ابدأ في كتابة الـ Exploit الخاص بك (1-Day to 0-Day).</li>
+            <li>✔ <strong>Fuzzing Custom Protocols:</strong> استخدم <strong>AFL++</strong> أو <strong>Boofuzz</strong> لضخ بيانات عشوائية ومشوهة في تطبيقات سطح المكتب أو السيرفرات الخاصة بالشركة حتى تنهار (Crash). هذا الانهيار هو أول خطوة لاكتشاف ثغرات الـ Buffer Overflow والـ Memory Corruption.</li>
+          </ul>
+        </div>
+
+        <button class="hack-btn" onclick="launchAPT()">💻 Launch Live APT Simulation</button>
+        <button class="mark-complete-btn" id="complete-btn-p_apt" onclick="markPhaseComplete('p_apt','p_darkweb')" style="margin-top: 20px;">
+          ✅ Mark Phase Complete — APT Tactics Mastered → Proceed
+        </button>
+      </div>
+
       <!-- Phase 20: Dark Web OSINT -->
       <div class="meth-content-view" id="meth-content-p_darkweb" style="display: none; --tool-color: #6366f1;">
         <div class="phase-module-header">
@@ -3268,6 +3310,18 @@ file:///etc/passwd</div>
         </button>
       </div>
 
+      <!-- Terminal Simulation Modal -->
+      <div class="terminal-overlay" id="terminal-overlay">
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <span class="terminal-btn close" onclick="closeTerminal()"></span>
+            <span class="terminal-btn min"></span>
+            <span class="terminal-btn max"></span>
+            <span class="terminal-title">root@apt-server:~#</span>
+          </div>
+          <div class="terminal-body" id="terminal-output"></div>
+        </div>
+      </div>
 </div><!-- Popup Modal structure for alert testing -->
   <div class="popup-overlay" id="popupOverlay"></div>
   <div class="popup-modal" id="popupModal">
@@ -3276,7 +3330,7 @@ file:///etc/passwd</div>
     <button class="cmd-btn" onclick="closePopupModal()" style="margin-top:15px; border-color:#00ff66; color:#00ff66;">Close</button>
   </div>
 
-  <script src="js/methodology.js?v=4"></script>
+  <script src="js/methodology.js?v=8"></script>
 
 </body>
 </html>

