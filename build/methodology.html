@@ -312,6 +312,9 @@
           <div class="meth-item" id="meth-ef-p_manual" onclick="openMethPhase('p_manual')" data-search="manual analysis business logic happy path burp proxy">
             <span>🧠</span> <span>Manual Walkthrough</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_manual', '🧠 Manual Walkthrough')">★</button>
           </div>
+          <div class="meth-item" id="meth-ef-p_manual" onclick="openMethPhase('p_manual')" data-search="manual analysis business logic happy path burp proxy">
+            <span>🧠</span> <span>Manual Walkthrough</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_manual', '🧠 Manual Walkthrough')">★</button>
+          </div>
           <div class="meth-item" id="meth-ef-p6" onclick="openMethPhase('p6')" data-search="directory discovery ffuf gobuster dirsearch wordlist fuzzing">
             <span>📂</span> <span>Directory Discovery</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p6', '📂 Directory Discovery')">★</button>
           </div>
@@ -416,6 +419,9 @@
           </div>
           <div class="meth-item" id="meth-ef-p_leaks" onclick="openMethPhase('p_leaks')" data-search="data leaks breach hunting credentials ransomware">
             <span>🩸</span> <span>Data Leaks Hunting</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_leaks', '🩸 Data Leaks Hunting')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p_hash" onclick="openMethPhase('p_hash')" data-search="hash cracking hashcat john the ripper md5 bcrypt">
+            <span>🔓</span> <span>Hash Cracking Mastery</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_hash', '🔓 Hash Cracking Mastery')">★</button>
           </div>
           <div class="meth-item" id="meth-ef-p_apt" onclick="openMethPhase('p_apt')" data-search="apt nation state zero day broker pegasus nso group cyber warfare c2">
             <span>🛰️</span> <span>APT & Cyber Warfare</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_apt', '🛰️ APT & Cyber Warfare')">★</button>
@@ -1312,6 +1318,70 @@ Content-Type: application/json
           ✅ Mark Phase Complete — Decision Matrix Done → Proceed to Directory Discovery
         </button>
 </div>
+
+      
+      <!-- Phase: Manual Application Walkthrough -->
+      <div class="meth-content-view" id="meth-content-p_manual" style="display: none; --tool-color: #8b5cf6;">
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🧠</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Manual Walkthrough & Business Logic</h2>
+            <p class="phase-module-tagline">أهم مرحلة! الأدوات لا تفهم "المنطق التجاري"، عقلك هو أقوى أداة.</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ 1-3 Hours</span>
+              <span class="badge-difficulty" style="background:#8b5cf6; color:#fff;">Crucial Step</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🚶‍♂️ The Happy Path (المسار الطبيعي)</h3></div>
+          <p>قبل تشغيل أي أداة (مثل Burp Active Scan أو ffuf)، يجب أن تتصفح الموقع كمستخدم عادي وتسجل كل حركة:</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>قم بإنشاء 3 حسابات:</strong> (حساب Admin إن أمكن، وحساب User A، وحساب User B). هذا أساس لاختبار ثغرات IDOR و Privilege Escalation.</li>
+            <li>✔ <strong>اضغط على كل زر:</strong> لا تترك صفحة (Profile, Settings, Billing, Uploads) إلا وتزورها بينما Burp Suite يعمل في الخلفية (Proxy History).</li>
+            <li>✔ <strong>افهم دورة عمل الموقع (Business Logic):</strong> ما هو الهدف الأساسي للموقع؟ (شراء منتجات، حجز تذاكر، تحويل أموال؟). الثغرات الخطيرة دائماً تكون في الـ Core Feature.</li>
+          </ul>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🕵️‍♂️ الاستكشاف اليدوي المباشر (Direct Checks)</h3></div>
+          <p>هناك ملفات أساسية يجب أن تفحصها بيدك بمجرد فتح الهدف:</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead><tr><th>المسار / الملف</th><th>لماذا نفحصه يدوياً؟</th></tr></thead>
+            <tbody>
+              <tr><td><code>/robots.txt</code></td><td>يحتوي أحياناً على مسارات `/admin/` أو `/api/v1/` المخفية التي لا تريد الشركة من Google أرشفتها.</td></tr>
+              <tr><td><code>/sitemap.xml</code></td><td>خريطة كاملة للموقع، قد تكشف عن مسارات غير مرتبطة بالواجهة الرئيسية.</td></tr>
+              <tr><td><code>/.well-known/</code></td><td>مجلد حساس جداً، ابحث بداخله عن <code>security.txt</code> أو <code>apple-app-site-association</code> أو إعدادات OAuth.</td></tr>
+              <tr><td><code>Ctrl + U</code> (Source Code)</td><td>ابحث عن التعليقات <code>&lt;!-- --&gt;</code>، مفاتيح API، أو روابط مخفية لنسخ الـ Staging.</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">💡</span> Pro Tips: نصائح ذهبية للبحث اليدوي</h3></div>
+          <ul class="t-check-list">
+            <li>🔥 <strong>قاعدة الـ 403 Bypass:</strong> هل جربت الدخول إلى <code>/admin</code> وحصلت على 403؟ جرب <code>/admin/</code> أو <code>/admin.json</code> أو أضف Header <code>X-Forwarded-For: 127.0.0.1</code>! (ابحث دائماً عن طرق التخطي اليدوية).</li>
+            <li>🔥 <strong>تحليل الـ JavaScript:</strong> افتح الـ DevTools (F12) -> Sources -> اضغط <code>Ctrl + Shift + F</code> وابحث عن كلمات مثل <code>token</code>, <code>api_key</code>, <code>admin</code>, <code>hidden</code>.</li>
+            <li>🔥 <strong>العب في الـ Parameters:</strong> إذا رأيت رابطاً مثل <code>?user_id=105</code>، جرب تغييره يدوياً إلى <code>?user_id=106</code> (ثغرة IDOR واضحة!). إذا رأيت <code>role=user</code> غيرها إلى <code>role=admin</code>.</li>
+          </ul>
+        </div>
+        
+        <p class="os-section-label">🛑 When to Stop?</p>
+        <div class="stop-check-box">
+          <div class="stop-check-title">✅ هل أنهيت الفحص اليدوي؟</div>
+          <ul class="phase-checklist" id="checklist-p_manual-stop" style="margin:0 0 14px;">
+            <li class="checklist-item" onclick="toggleCheck(this,'p_manual-stop',0)"><div class="check-box"></div><div class="check-label">هل ملأت الـ Proxy History في Burp بكافة وظائف الموقع؟</div></li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p_manual-stop',1)"><div class="check-box"></div><div class="check-label">هل قمت بإنشاء حسابين على الأقل لتجربة الصلاحيات؟</div></li>
+            <li class="checklist-item" onclick="toggleCheck(this,'p_manual-stop',2)"><div class="check-box"></div><div class="check-label">هل قرأت robots.txt و Source Code للصفحة الرئيسية؟</div></li>
+          </ul>
+        </div>
+
+        <button class="mark-complete-btn" id="complete-btn-p_manual" onclick="markPhaseComplete('p_manual','p6')" style="margin-top: 20px;">
+          ✅ Mark Phase Complete — Manual Analysis Done → Proceed to Directory Discovery
+        </button>
+      </div>
+
 
       <!-- Phase 6: Directory Discovery -->
       <div class="meth-content-view" id="meth-content-p6" style="display: none; --tool-color: #00ff66;">
@@ -3058,6 +3128,73 @@ Content-Type: application/json
           ✅ Mark Phase Complete — Data Leaks Hunting Done → Proceed to APT
         </button>
       </div>
+
+      
+      <!-- Phase: Hash Cracking Mastery -->
+      <div class="meth-content-view" id="meth-content-p_hash" style="display: none; --tool-color: #f97316;">
+        <div class="phase-module-header">
+          <div class="phase-module-icon">🔓</div>
+          <div class="phase-module-meta">
+            <h2 class="phase-module-title">Hash Cracking Mastery</h2>
+            <p class="phase-module-tagline">كيف تحول الهاشات المشفرة التي تصطادها من قواعد البيانات إلى كلمات مرور صريحة باستخدام Hashcat.</p>
+            <div class="phase-meta-badges">
+              <span class="badge-time">⏱️ Offline Execution</span>
+              <span class="badge-difficulty bg-high">Advanced</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🔍 1. معرفة نوع الهاش (Identify the Hash)</h3></div>
+          <p>أول خطوة هي معرفة نوع التشفير (MD5, SHA1, Bcrypt, NTLM). لا تضيّع وقتك في التخمين:</p>
+          <div class="cmd-ui-box">
+            <div class="cmd-ui-top">hashid "21232f297a57a5a743894a0e4a801fc3"</div>
+            <div class="cmd-ui-bottom"><button class="cmd-btn" onclick="copyText('hashid \"21232f297a57a5a743894a0e4a801fc3\"', this)">📋 Copy</button></div>
+          </div>
+          <p class="note"><em>Pro Tip:</em> استخدم <code>hashcat --example-hashes | grep "Bcrypt"</code> للبحث عن شكل الهاش في قاعدة بيانات Hashcat ومعرفة رقم الـ Mode (مثل 3200).</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚙️ 2. استخدام Hashcat (الوحش الكاسر)</h3></div>
+          <p>أداة Hashcat تعتمد على الـ GPU (كارت الشاشة) لتخمين ملايين الباسوردات في الثانية. إليك أهم 3 أنواع للهجوم:</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead><tr><th>نوع الهجوم (Attack Mode)</th><th>الأمر البرمجي (Command)</th><th>متى تستخدمه؟</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Dictionary Attack (-a 0)</strong></td>
+                <td><code>hashcat -m 0 -a 0 hashes.txt rockyou.txt</code></td>
+                <td>عندما يكون لديك قائمة كلمات مرور شهيرة (Wordlist) وتريد تجربتها كما هي.</td>
+              </tr>
+              <tr>
+                <td><strong>Rule-based Attack 🌟</strong></td>
+                <td><code>hashcat -m 0 -a 0 hashes.txt rockyou.txt -r rules/best64.rule</code></td>
+                <td><strong>السلاح السري!</strong> يأخذ الـ Wordlist ويقوم بتحوير الكلمات (مثال: admin -> Admin@123) لاختراق كلمات المرور المعقدة.</td>
+              </tr>
+              <tr>
+                <td><strong>Mask Attack (-a 3)</strong></td>
+                <td><code>hashcat -m 0 -a 3 hashes.txt ?u?l?l?d?d?d</code></td>
+                <td>عندما تعرف نمطاً معيناً (Pattern). مثلاً: الحرف الأول كابيتال يليه حرفين سمول ثم 3 أرقام (مثل Ali123).</td>
+              </tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="cyber-card border-neon">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">💡</span> Pro Tips: تعمق في كسر الهاش</h3></div>
+          <ul class="t-check-list">
+            <li>🔥 <strong>لا تكسر الهاشات الضعيفة أوفلاين:</strong> جرب دائماً البحث عن الهاش في <code>CrackStation.net</code> أو <code>Hashes.org</code> أولاً قبل حرق كارت الشاشة الخاص بك!</li>
+            <li>🔥 <strong>تحسين السرعة (Optimization):</strong> أضف <code>-O -w 3</code> لأمر Hashcat لجعله يستغل كارت الشاشة لأقصى درجة وتجاهل التحذيرات (لكن راقب حرارة الكارت).</li>
+            <li>🔥 <strong>هجوم الـ OneRuleToRuleThemAll:</strong> هذه الـ Rule من أقوى القواعد الموجودة على GitHub لتحوير كلمات المرور. قم بتحميلها واستخدامها بدلاً من القواعد الافتراضية.</li>
+          </ul>
+        </div>
+        
+        <button class="hack-btn" onclick="launchSimulation('hashcat')">💻 Launch Live Hashcat Simulation</button>
+
+        <button class="mark-complete-btn" id="complete-btn-p_hash" onclick="markPhaseComplete('p_hash','p_apt')" style="margin-top: 20px;">
+          ✅ Mark Phase Complete — Hash Cracking Done → Proceed
+        </button>
+      </div>
+
 
       <!-- Phase 22: APT & Cyber Warfare -->
       <div class="meth-content-view" id="meth-content-p_apt" style="display: none; --tool-color: #ff0055;">
