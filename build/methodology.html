@@ -3479,10 +3479,16 @@ export AWS_SESSION_TOKEN="..."</div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>الفرق بين Active و Passive Sniffing</h3></div>
-          <ul>
-            <li><strong>Passive Sniffing (التنصت السلبي):</strong> يحدث في الشبكات القديمة التي تستخدم <code>Hubs</code>. الـ Hub يقوم ببث (Broadcast) أي بيانات يستقبلها لجميع الأجهزة المتصلة به. المهاجم هنا لا يحتاج لفعل أي شيء سوى تشغيل أداة التقاط (مثل Wireshark) في وضع الـ <code>Promiscuous Mode</code> وجمع البيانات بصمت تام.</li>
-            <li><strong>Active Sniffing (التنصت النشط):</strong> يحدث في الشبكات الحديثة التي تستخدم <code>Switches</code>. الـ Switch ذكي، يمتلك جدول (CAM Table) يربط كل عنوان MAC بمنفذ (Port) محدد، ويرسل البيانات للوجهة فقط. للتنصت هنا، يجب على المهاجم خداع الـ Switch أو الضحية (عبر هجمات مثل ARP Spoofing).</li>
-          </ul>
+          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Passive Sniffing (التنصت السلبي):</strong> يحدث في الشبكات القديمة التي تستخدم <code>Hubs</code>. الـ Hub يقوم ببث (Broadcast) أي بيانات يستقبلها لجميع الأجهزة المتصلة به. المهاجم هنا لا يحتاج لفعل أي شيء سوى تشغيل أداة التقاط (مثل Wireshark) في وضع الـ <code>Promiscuous Mode</code> وجمع البيانات بصمت تام.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">└── 📜</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Active Sniffing (التنصت النشط):</strong> يحدث في الشبكات الحديثة التي تستخدم <code>Switches</code>. الـ Switch ذكي، يمتلك جدول (CAM Table) يربط كل عنوان MAC بمنفذ (Port) محدد، ويرسل البيانات للوجهة فقط. للتنصت هنا، يجب على المهاجم خداع الـ Switch أو الضحية (عبر هجمات مثل ARP Spoofing).</span>
+  </div>
+</div>
         </div>
 
         <div class="cyber-card">
@@ -3580,41 +3586,92 @@ arpspoof -i eth0 -t &lt;Gateway_IP&gt; &lt;Victim_IP&gt;</code></pre>
         <div class="cyber-card">
           <div class="card-header"><h3>سيكولوجية الاستهداف (لماذا تنجح؟)</h3></div>
           <p>تعتمد هجمات الهندسة الاجتماعية على استغلال المشاعر الإنسانية الأساسية:</p>
-          <ul>
-            <li><strong>الخوف / الاستعجال (Urgency):</strong> "حسابك سيتم إغلاقه خلال 24 ساعة إذا لم تؤكد بياناتك".</li>
-            <li><strong>السلطة (Authority):</strong> انتحال شخصية المدير التنفيذي (CEO) أو جهة حكومية.</li>
-            <li><strong>الثقة (Trust):</strong> التظاهر كزميل عمل من قسم الـ IT يعرض المساعدة.</li>
-            <li><strong>الفضول (Curiosity):</strong> إرسال ملف بعنوان "كشوفات رواتب الموظفين 2024".</li>
-            <li><strong>الجشع (Greed):</strong> إيهام الضحية بربح جائزة مالية.</li>
-          </ul>
+          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>الخوف / الاستعجال (Urgency):</strong> "حسابك سيتم إغلاقه خلال 24 ساعة إذا لم تؤكد بياناتك".</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📜</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>السلطة (Authority):</strong> انتحال شخصية المدير التنفيذي (CEO) أو جهة حكومية.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 🧬</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>الثقة (Trust):</strong> التظاهر كزميل عمل من قسم الـ IT يعرض المساعدة.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 🕸️</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>الفضول (Curiosity):</strong> إرسال ملف بعنوان "كشوفات رواتب الموظفين 2024".</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">└── 🎛️</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>الجشع (Greed):</strong> إيهام الضحية بربح جائزة مالية.</span>
+  </div>
+</div>
         </div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>أنواع الهندسة الاجتماعية (تصنيف مفصل)</h3></div>
           
           <h4>1. Human-Based (الهجمات المعتمدة على التفاعل البشري المباشر)</h4>
-          <ul>
-            <li><strong>Impersonation (انتحال الشخصية):</strong> يتظاهر المهاجم بأنه فني صيانة إنترنت، عامل نظافة، أو موظف جديد ليدخل المبنى ويبدأ في زرع أجهزة أو سرقة أوراق.</li>
-            <li><strong>Tailgating / Piggybacking:</strong> الانتظار عند الباب المؤمن ببطاقة دخول، وعندما يفتح موظف الباب، يدخل المهاجم خلفه مباشرة بحجة أنه نسي بطاقته (أو يحمل صندوقاً ثقيلاً).</li>
-            <li><strong>Dumpster Diving:</strong> النزول حرفياً للبحث في سلة مهملات الشركة! الموظفون يتخلصون من جداول المواعيد، كلمات المرور المكتوبة على ورق (Sticky Notes)، ومخططات الشبكة بدون تمزيقها (Shredding).</li>
-            <li><strong>Shoulder Surfing:</strong> استراق النظر لشاشة الضحية في الكافيهات أو المواصلات أثناء كتابة كلمة المرور.</li>
-            <li><strong>Eavesdropping:</strong> التنصت على محادثات الموظفين السرية في الأماكن العامة.</li>
-          </ul>
+          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Impersonation (انتحال الشخصية):</strong> يتظاهر المهاجم بأنه فني صيانة إنترنت، عامل نظافة، أو موظف جديد ليدخل المبنى ويبدأ في زرع أجهزة أو سرقة أوراق.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📜</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Tailgating / Piggybacking:</strong> الانتظار عند الباب المؤمن ببطاقة دخول، وعندما يفتح موظف الباب، يدخل المهاجم خلفه مباشرة بحجة أنه نسي بطاقته (أو يحمل صندوقاً ثقيلاً).</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 🧬</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Dumpster Diving:</strong> النزول حرفياً للبحث في سلة مهملات الشركة! الموظفون يتخلصون من جداول المواعيد، كلمات المرور المكتوبة على ورق (Sticky Notes)، ومخططات الشبكة بدون تمزيقها (Shredding).</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 🕸️</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Shoulder Surfing:</strong> استراق النظر لشاشة الضحية في الكافيهات أو المواصلات أثناء كتابة كلمة المرور.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">└── 🎛️</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Eavesdropping:</strong> التنصت على محادثات الموظفين السرية في الأماكن العامة.</span>
+  </div>
+</div>
 
           <h4>2. Computer-Based (الهجمات المعتمدة على الأجهزة)</h4>
-          <ul>
-            <li><strong>Phishing (التصيد الاحتيالي):</strong> إرسال آلاف الإيميلات المزيفة عشوائياً تبدو كأنها من بنك أو فيسبوك.</li>
-            <li><strong>Spear Phishing (التصيد الموجه):</strong> تصيد دقيق جداً! المهاجم يجمع معلومات عن موظف محدد (اسمه، وظيفته، اسم مديره) ويرسل له إيميلاً مخصصاً بنسبة نجاح عالية جداً.</li>
-            <li><strong>Whaling (صيد الحيتان):</strong> Spear Phishing موجه لشخصية ذات منصب عالي جداً (مثل CEO أو CFO). غالباً يكون الهجوم أكثر تعقيداً واحترافية.</li>
-            <li><strong>Baiting (الاصطياد):</strong> المهاجم يترك فلاشة USB مصابة بفيروس في جراج الشركة مكتوب عليها "رواتب 2024". الموظف سيأخذها الفضول لفتحها على جهازه في الشركة.</li>
-            <li><strong>Watering Hole (حفرة الماء):</strong> بدلاً من مهاجمة الشركة مباشرة (حمايتها قوية)، يقوم المهاجم باختراق موقع ويب عادي (مثلاً موقع يطلب منه الموظفون وجبات الغداء) ويزرع فيه Malware ليصيب الموظفين عند زيارتهم له.</li>
-          </ul>
+          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Phishing (التصيد الاحتيالي):</strong> إرسال آلاف الإيميلات المزيفة عشوائياً تبدو كأنها من بنك أو فيسبوك.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📜</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Spear Phishing (التصيد الموجه):</strong> تصيد دقيق جداً! المهاجم يجمع معلومات عن موظف محدد (اسمه، وظيفته، اسم مديره) ويرسل له إيميلاً مخصصاً بنسبة نجاح عالية جداً.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 🧬</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Whaling (صيد الحيتان):</strong> Spear Phishing موجه لشخصية ذات منصب عالي جداً (مثل CEO أو CFO). غالباً يكون الهجوم أكثر تعقيداً واحترافية.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 🕸️</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Baiting (الاصطياد):</strong> المهاجم يترك فلاشة USB مصابة بفيروس في جراج الشركة مكتوب عليها "رواتب 2024". الموظف سيأخذها الفضول لفتحها على جهازه في الشركة.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">└── 🎛️</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Watering Hole (حفرة الماء):</strong> بدلاً من مهاجمة الشركة مباشرة (حمايتها قوية)، يقوم المهاجم باختراق موقع ويب عادي (مثلاً موقع يطلب منه الموظفون وجبات الغداء) ويزرع فيه Malware ليصيب الموظفين عند زيارتهم له.</span>
+  </div>
+</div>
 
           <h4>3. Mobile & Voice-Based</h4>
-          <ul>
-            <li><strong>Vishing (Voice Phishing):</strong> مكالمة هاتفية، المهاجم يدعي أنه موظف البنك ويطلب الـ OTP.</li>
-            <li><strong>Smishing (SMS Phishing):</strong> إرسال رسالة نصية قصيرة تحتوي على رابط خبيث (مثل: "طردك من البريد محتجز، ادفع الرسوم عبر الرابط").</li>
-          </ul>
+          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Vishing (Voice Phishing):</strong> مكالمة هاتفية، المهاجم يدعي أنه موظف البنك ويطلب الـ OTP.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">└── 📜</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Smishing (SMS Phishing):</strong> إرسال رسالة نصية قصيرة تحتوي على رابط خبيث (مثل: "طردك من البريد محتجز، ادفع الرسوم عبر الرابط").</span>
+  </div>
+</div>
         </div>
 
         <div class="cyber-card">
@@ -3762,10 +3819,16 @@ sudo setoolkit
         <div class="cyber-card">
           <div class="card-header"><h3>Network Level Hijacking (اختطاف جلسات TCP)</h3></div>
           <p>في هذا الهجوم، المهاجم يعترض اتصال قائم بين الضحية والخادم (مثلاً اتصال Telnet أو FTP).</p>
-          <ul>
-            <li><strong>Blind Hijacking:</strong> المهاجم يرسل أوامر للخادم منتحلاً شخصية الضحية، لكنه أعمى (لا يرى رد الخادم لأن الرد يذهب للضحية الحقيقية). يتطلب توقع أرقام Sequence Numbers.</li>
-            <li><strong>Active Hijacking (RST/Hijack):</strong> يقوم المهاجم بإسقاط الضحية من الاتصال عبر إرسال حزمة TCP RST (Reset)، ثم يتولى هو استكمال جلسة הـ TCP مع الخادم، مما يجعله يتحكم تحكماً كاملاً بالجلسة ويتلقى الردود.</li>
-          </ul>
+          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Blind Hijacking:</strong> المهاجم يرسل أوامر للخادم منتحلاً شخصية الضحية، لكنه أعمى (لا يرى رد الخادم لأن الرد يذهب للضحية الحقيقية). يتطلب توقع أرقام Sequence Numbers.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">└── 📜</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Active Hijacking (RST/Hijack):</strong> يقوم المهاجم بإسقاط الضحية من الاتصال عبر إرسال حزمة TCP RST (Reset)، ثم يتولى هو استكمال جلسة הـ TCP مع الخادم، مما يجعله يتحكم تحكماً كاملاً بالجلسة ويتلقى الردود.</span>
+  </div>
+</div>
         </div>
 
         <div class="cyber-card">
@@ -3796,12 +3859,24 @@ sudo setoolkit
 
         <div class="cyber-card">
           <div class="card-header"><h3>إجراءات الحماية المضادة (Countermeasures)</h3></div>
-          <ul>
-            <li><strong>HttpOnly Flag:</strong> تمنع الجافاسكريبت من الوصول للـ Cookies (تقتل هجوم הـ XSS المتعلق بالجلستات).</li>
-            <li><strong>Secure Flag:</strong> تجبر المتصفح على إرسال الـ Cookies عبر HTTPS فقط (تمنع Session Sniffing).</li>
-            <li><strong>تجديد الجلسة (Session Regeneration):</strong> يجب على الخادم تغيير معرّف الجلسة (Session ID) فور تسجيل الدخول بنجاح لمنع هجوم הـ Session Fixation.</li>
-            <li><strong>ربط الجلسة بخصائص المستخدم:</strong> ربط הـ Session بالـ IP الخاص بالمستخدم والـ User-Agent (متصفحه). إذا حاول المهاجم استخدام الكوكي من IP أو جهاز مختلف، يتم رفضه.</li>
-          </ul>
+          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>HttpOnly Flag:</strong> تمنع الجافاسكريبت من الوصول للـ Cookies (تقتل هجوم הـ XSS المتعلق بالجلستات).</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📜</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Secure Flag:</strong> تجبر المتصفح على إرسال الـ Cookies عبر HTTPS فقط (تمنع Session Sniffing).</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 🧬</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>تجديد الجلسة (Session Regeneration):</strong> يجب على الخادم تغيير معرّف الجلسة (Session ID) فور تسجيل الدخول بنجاح لمنع هجوم הـ Session Fixation.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">└── 🕸️</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>ربط الجلسة بخصائص المستخدم:</strong> ربط הـ Session بالـ IP الخاص بالمستخدم والـ User-Agent (متصفحه). إذا حاول المهاجم استخدام الكوكي من IP أو جهاز مختلف، يتم رفضه.</span>
+  </div>
+</div>
         </div>
       </div>
 
@@ -3913,11 +3988,20 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
 
           <h4>2. Web Server Misconfiguration (أخطاء الإعداد)</h4>
           <p>أكثر الثغرات شيوعاً في الخوادم! تحدث بسبب كسل مدير النظام أو ترك الإعدادات الافتراضية:</p>
-          <ul>
-            <li><strong>Directory Listing:</strong> السماح بعرض محتويات المجلد إذا غاب ملف `index.html`. المهاجم قد يرى مجلدات الـ Backups، الأكواد، أو ملفات الـ Config.</li>
-            <li><strong>Default Pages:</strong> ترك صفحات الديفولت (مثل صفحة Apache Tomcat الافتراضية) التي تحتوي على رابط للـ Manager App وكلمات المرور الافتراضية.</li>
-            <li><strong>Verbose Error Messages:</strong> عرض رسائل خطأ تفصيلية تكشف إصدار قاعدة البيانات والمسارات الحقيقية في السيرفر.</li>
-          </ul>
+          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Directory Listing:</strong> السماح بعرض محتويات المجلد إذا غاب ملف `index.html`. المهاجم قد يرى مجلدات الـ Backups، الأكواد، أو ملفات الـ Config.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">├── 📜</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Default Pages:</strong> ترك صفحات الديفولت (مثل صفحة Apache Tomcat الافتراضية) التي تحتوي على رابط للـ Manager App وكلمات المرور الافتراضية.</span>
+  </div>
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
+    <span style="white-space: pre; margin-right: 10px;">└── 🧬</span>
+    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Verbose Error Messages:</strong> عرض رسائل خطأ تفصيلية تكشف إصدار قاعدة البيانات والمسارات الحقيقية في السيرفر.</span>
+  </div>
+</div>
 
           <h4>3. HTTP Verb Tampering</h4>
           <p>بروتوكول HTTP يحتوي على دوال متعددة (GET, POST, OPTIONS, PUT, DELETE, TRACE). خوادم الويب القديمة أو سيئة الإعداد قد تترك دوال خطيرة مفعلة. 
