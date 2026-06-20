@@ -58,6 +58,11 @@ graph TD
         <h3>4. SNMP Walk</h3>
         <p>سحب بيانات الشجرة الكاملة (MIB tree) باستخدام سلسلة مجتمعية افتراضية:</p>
         <div class="cmd-ui-box">snmpwalk -v2c -c public TARGET_IP</div>
+    
+        <h3>5. Banner Grabbing (سحب البانر)</h3>
+        <p>لا تتجاهل الخطوة الأبسط! سحب الـ Banner يعطيك معلومات دقيقة عن إصدار الخدمة (مثل SSH, FTP, HTTP) والتي قد تكون مصابة بثغرات معروفة (CVEs). يمكنك استخدام Netcat أو cURL أو Telnet:</p>
+        <div class="cmd-ui-box">nc -nv TARGET_IP 22</div>
+        <div class="cmd-ui-box">curl -I http://TARGET_IP</div>
     </div>
 
     <div class="cyber-card">
@@ -85,6 +90,20 @@ graph TD
         
         <p>اكتشاف سلاسل Community Strings الخاصة بـ SNMP باستخدام أداة onesixtyone القوية والسريعة:</p>
         <div class="cmd-ui-box">onesixtyone -c dict.txt TARGET_IP</div>
+    </div>
+
+
+    <div class="cyber-card" style="border-left: 4px solid #bd93f9;">
+        <h2><i class="fas fa-link"></i> تكامل الأدوات (Tools Integration Pipeline)</h2>
+        <p>في بيئات العمل الحقيقية (Real-world Pentesting)، نادراً ما تستخدم أداة واحدة بشكل منفصل. إليك كيفية ربط مخرجات أدوات الاستكشاف مع أدوات الفحص:</p>
+        
+        <h3>السيناريو: من استكشاف النطاقات إلى فحص الثغرات</h3>
+        <ol style="line-height: 1.8;">
+            <li><strong>اكتشاف النطاقات:</strong> <code>subfinder -d target.com -all &gt; subs.txt</code></li>
+            <li><strong>تصفية النطاقات الحية (Live):</strong> <code>cat subs.txt | httpx -mc 200,301,403 &gt; live_subs.txt</code></li>
+            <li><strong>فحص الثغرات تلقائياً:</strong> <code>nuclei -l live_subs.txt -t cves/ -o nuclei_results.txt</code></li>
+        </ol>
+        <p><strong>لماذا هذا مهم؟</strong> هذا الـ Pipeline يوفر ساعات من الفحص اليدوي لنطاقات ميتة، ويوجه جهدك المباشر نحو الأهداف التي تتجاوب بالفعل مع الطلبات.</p>
     </div>
 
     <div class="cyber-card">
