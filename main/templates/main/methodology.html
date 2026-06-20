@@ -274,9 +274,11 @@
       
     </div>
     <div style="display: flex; align-items: center; gap: 12px;">
+      <button class="theme-toggle-btn" id="focusModeBtn" onclick="toggleFocusMode()" aria-label="Toggle Focus Mode" style="font-size: 1rem; width: auto; padding: 0 10px; border-radius: 4px;">📖 Focus</button>
       <button onclick="openQuickJump()" style="background: rgba(0,229,255,0.05); color: var(--neon-cyan); border: 1px solid rgba(0,229,255,0.2); padding: 7px 14px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='rgba(0,229,255,0.12)'" onmouseout="this.style.background='rgba(0,229,255,0.05)'">
         🔍 <span style="opacity:0.6; font-size:0.8rem;">Ctrl+K</span>
       </button>
+      <button class="theme-toggle-btn" id="batterySaverIcon" onclick="toggleBatterySaver()" aria-label="Toggle Battery Saver">⚡</button>
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Theme">🌙</button>
       <a href="index.html" class="back-btn">
         <span>⬅</span> Back to Terminal OS
@@ -3613,5 +3615,8 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
   <script src="{% static 'main/js/components.js' %}"></script>
   <script src="{% static 'main/js/methodology.js' %}"></script>
   <script src="{% static 'main/js/quiz_engine.js' %}"></script>
+  <button id="mobileFab" class="mobile-fab" onclick="openQuickJump()">
+    🔍
+  </button>
 </body>
 </html>

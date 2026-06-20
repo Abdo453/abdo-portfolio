@@ -1700,3 +1700,270 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // We need to call injectCompleteButton inside openMethPhase
+
+// ==========================================
+// Mobile UX Functions
+// ==========================================
+
+function toggleAccordion(btn) {
+  var card = btn.closest('.cyber-card');
+  if (card) {
+    if (card.classList.contains('expanded')) {
+      card.classList.remove('expanded');
+      btn.innerText = 'Show More ▼';
+    } else {
+      card.classList.add('expanded');
+      btn.innerText = 'Show Less ▲';
+    }
+      if (sections.length < 2) return; // Don't show TOC for tiny phases
+
+      // Count total steps (cmd-ui-box elements)
+      var totalSteps = contentEl.querySelectorAll('.cmd-ui-box').length;
+
+      // Build TOC HTML
+      var phaseTitle = getPhaseTitle(phaseId);
+      var category = getCategoryForPhase(phaseId);
+      var tocHtml = '<div class="phase-toc">';
+      tocHtml += '<div class="phase-toc-title">\u{1F4D1} IN THIS SECTION</div>';
+      tocHtml += '<button class="phase-toc-toggle" onclick="this.parentElement.classList.toggle(\'collapsed\'); this.textContent = this.parentElement.classList.contains(\'collapsed\') ? \'+ show\' : \'\u2212 hide\';">\u2212 hide</button>';
+      tocHtml += '<ul class="phase-toc-list">';
+
+      sections.forEach(function(s) {
+        tocHtml += '<li class="phase-toc-item" data-target="' + s.id + '" onclick="scrollToPhaseSection(\'' + s.id + '\')">';
+        tocHtml += '<span class="toc-step-num">' + s.step + '</span>';
+        tocHtml += '<span>' + s.text + '</span>';
+        tocHtml += '</li>';
+      });
+
+      tocHtml += '</ul></div>';
+
+      // Insert TOC after the phase-module-header
+      var header = contentEl.querySelector('.phase-module-header');
+      if (header && header.nextSibling) {
+        header.parentNode.insertBefore(createElementFromHTML(tocHtml), header.nextSibling);
+      } else if (header) {
+        contentEl.appendChild(createElementFromHTML(tocHtml));
+      } else {
+        var firstChild = contentEl.firstElementChild;
+        if (firstChild) {
+          contentEl.insertBefore(createElementFromHTML(tocHtml), firstChild.nextSibling);
+        }
+      }
+
+      // Setup scroll spy
+      setupScrollSpy(contentEl, sections);
+    }
+
+    function generateBreadcrumb(phaseId) {
+      var viewer = document.querySelector('.meth-viewer');
+      if (!viewer) return;
+
+      var oldBc = viewer.querySelector('.phase-breadcrumb');
+      if (oldBc) oldBc.remove();
+
+      var category = getCategoryForPhase(phaseId);
+      var title = getPhaseTitle(phaseId);
+      var contentEl = document.getElementById('meth-content-' + phaseId);
+      var totalSteps = contentEl ? contentEl.querySelectorAll('.cmd-ui-box').length : 0;
+
+      var bcHtml = '<div class="phase-breadcrumb">';
+      bcHtml += '<span class="bc-category">' + category + '</span>';
+      bcHtml += '<span class="bc-separator">\u203A</span>';
+      bcHtml += '<span class="bc-phase">' + title + '</span>';
+      if (totalSteps > 0) {
+        bcHtml += '<span class="bc-step-count">' + totalSteps + ' steps</span>';
+      }
+      bcHtml += '</div>';
+
+      var phaseContent = document.getElementById('meth-content-' + phaseId);
+      if (phaseContent) {
+        phaseContent.insertBefore(createElementFromHTML(bcHtml), phaseContent.firstChild);
+      }
+    }
+
+    function scrollToPhaseSection(anchorId) {
+      var el = document.getElementById(anchorId);
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function setupScrollSpy(contentEl, sections) {
+      // Remove old handler
+      if (_tocScrollHandler) {
+        document.querySelector('.meth-viewer') &&
+          document.querySelector('.meth-viewer').removeEventListener('scroll', _tocScrollHandler);
+      }
+
+      var viewer = document.querySelector('.meth-viewer');
+      if (!viewer) return;
+
+      _tocScrollHandler = function() {
+        var scrollTop = viewer.scrollTop;
+        var activeId = null;
+
+        for (var i = sections.length - 1; i >= 0; i--) {
+          var el = document.getElementById(sections[i].id);
+          if (el) {
+            var rect = el.getBoundingClientRect();
+            if (rect.top <= 150) {
+              activeId = sections[i].id;
+              break;
+            }
+          }
+        }
+
+        var tocItems = contentEl.querySelectorAll('.phase-toc-item');
+        tocItems.forEach(function(item) {
+          if (item.getAttribute('data-target') === activeId) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      };
+
+      viewer.addEventListener('scroll', _tocScrollHandler);
+    }
+
+    function createElementFromHTML(htmlString) {
+      var div = document.createElement('div');
+      div.innerHTML = htmlString.trim();
+      return div.firstElementChild || div.firstChild;
+    }
+
+
+// --- Phase 1: Progress Tracking Logic ---
+function updateGlobalProgress() {
+  var completedModules = JSON.parse(localStorage.getItem('meth_completed_modules') || '[]');
+  var totalModules = document.querySelectorAll('.meth-item').length;
+  if (totalModules === 0) return;
+  
+  var percentage = Math.round((completedModules.length / totalModules) * 100);
+  var fillEl = document.getElementById('global-progress-fill');
+  var textEl = document.getElementById('global-progress-text');
+  
+  if (fillEl) fillEl.style.width = percentage + '%';
+  if (textEl) textEl.textContent = percentage + '%';
+  
+  // Update sidebar checks
+  document.querySelectorAll('.meth-item').forEach(function(item) {
+    var phaseId = item.id.replace('meth-ef-', '');
+    if (completedModules.includes(phaseId)) {
+      if (!item.innerHTML.includes('✅')) {
+        item.innerHTML = '✅ ' + item.innerHTML;
+      }
+    }
+  });
+}
+
+function markModuleComplete(phaseId) {
+  var completedModules = JSON.parse(localStorage.getItem('meth_completed_modules') || '[]');
+  if (!completedModules.includes(phaseId)) {
+    completedModules.push(phaseId);
+    localStorage.setItem('meth_completed_modules', JSON.stringify(completedModules));
+    updateGlobalProgress();
+  }
+}
+
+function injectCompleteButton(phaseId) {
+  var activeContent = document.getElementById('meth-content-' + phaseId);
+  if (!activeContent) return;
+  
+  // Check if button already exists
+  if (activeContent.querySelector('.mark-complete-btn')) return;
+  
+  var completedModules = JSON.parse(localStorage.getItem('meth_completed_modules') || '[]');
+  var isCompleted = completedModules.includes(phaseId);
+  
+  var btnHtml = '<div style="text-align: center; margin-top: 40px; margin-bottom: 20px;">' +
+                '<button class="mark-complete-btn" style="background: ' + (isCompleted ? 'var(--success)' : 'var(--accent-primary)') + '; color: #fff; border: none; padding: 12px 24px; border-radius: 4px; font-family: var(--font-mono); cursor: pointer; transition: all 0.3s ease;" onclick="handleMarkComplete(\'' + phaseId + '\', this)">' +
+                (isCompleted ? '✅ COMPLETED' : 'MARK AS COMPLETE') +
+                '</button></div>';
+                
+  activeContent.insertAdjacentHTML('beforeend', btnHtml);
+}
+
+window.handleMarkComplete = function(phaseId, btn) {
+  markModuleComplete(phaseId);
+  btn.style.background = 'var(--success)';
+  btn.innerHTML = '✅ COMPLETED';
+};
+
+// Hook into existing events
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(updateGlobalProgress, 500); // Wait for DOM
+});
+
+// We need to call injectCompleteButton inside openMethPhase
+
+// ==========================================
+// Mobile UX Functions
+// ==========================================
+
+function toggleAccordion(btn) {
+  var card = btn.closest('.cyber-card');
+  if (card) {
+    if (card.classList.contains('expanded')) {
+      card.classList.remove('expanded');
+      btn.innerHTML = '📖 Read More';
+      // Scroll back to top of the card smoothly
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      card.classList.add('expanded');
+      btn.innerHTML = '📕 Show Less';
+    }
+  }
+}
+
+function toggleBatterySaver() {
+  var isSaver = document.body.classList.toggle('battery-saver');
+  localStorage.setItem('battery_saver', isSaver ? 'true' : 'false');
+  var icon = document.getElementById('batterySaverIcon');
+  if (icon) {
+    icon.innerText = isSaver ? '🔋' : '⚡';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Restore battery saver
+  var isSaver = localStorage.getItem('battery_saver') === 'true';
+  if (isSaver) {
+    document.body.classList.add('battery-saver');
+    var icon = document.getElementById('batterySaverIcon');
+    if (icon) icon.innerText = '🔋';
+  }
+
+  // Inject accordion button into long cards for mobile
+  if (window.innerWidth <= 900) {
+    document.querySelectorAll('.cyber-card').forEach(function(card) {
+      if (card.scrollHeight > 450) {
+        var btn = document.createElement('button');
+        btn.className = 'accordion-btn';
+        btn.innerHTML = '📖 Read More';
+        btn.onclick = function() { toggleAccordion(this); };
+        card.appendChild(btn);
+      }
+    });
+  }
+
+  // Floating Action Button Scroll Logic
+  var methViewer = document.querySelector('.meth-viewer');
+  var fab = document.getElementById('mobileFab');
+  if (methViewer && fab) {
+    methViewer.addEventListener('scroll', function() {
+      if (methViewer.scrollTop > 400) {
+        fab.classList.add('visible');
+      } else {
+        fab.classList.remove('visible');
+      }
+    });
+  }
+});
+
+function toggleFocusMode() {
+  var isFocus = document.body.classList.toggle('focus-mode');
+  var btn = document.getElementById('focusModeBtn');
+  if (btn) {
+    btn.innerHTML = isFocus ? '📖 Exit Focus' : '📖 Focus';
+  }
+}
