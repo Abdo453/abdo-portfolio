@@ -29,16 +29,6 @@
       const activeContent = document.getElementById('meth-content-' + phaseId);
       if (activeContent) activeContent.style.display = 'block';
 
-      // Hide or show the rd-hero-section (Bug Bounty top bar)
-      const rdHero = document.getElementById('rd-hero-section');
-      if (rdHero) {
-        if (phaseId.startsWith('mod') || phaseId === 'sys-hack') {
-          rdHero.style.display = 'none';
-        } else {
-          rdHero.style.display = 'block';
-        }
-      }
-
       // Close mobile sidebar if open
       const sidebar = document.querySelector('.meth-sidebar');
       if (sidebar && sidebar.classList.contains('active')) {
