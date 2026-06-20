@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=1781955461">
-  <link rel="stylesheet" href="css/methodology.css?v=1781955461">
+  <link rel="stylesheet" href="css/style.css?v=1781987663">
+  <link rel="stylesheet" href="css/methodology.css?v=1781987663">
 
   
 
@@ -4588,61 +4588,212 @@ aireplay-ng -0 10 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF wlan0mon</code></pre
 
 </div>
 
-      
-<!-- =======================================================
+      <!-- =======================================================
      CEH MODULE 20: CRYPTOGRAPHY
      ======================================================= -->
 <div class="meth-content-view" id="meth-content-mod20" style="display:none;" dir="rtl">
   
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🔐</span> Cryptography</h2>
-    <p class="hero-tagline">علم التشفير: التماثل، اللاتماثل، الـ PKI، وهجمات فك التشفير الرياضية.</p>
+    <h2 class="hero-title"><span class="hero-icon">🔐</span> Module 20: Cryptography</h2>
+    <p class="hero-tagline">فهم علم التشفير بشكل عملي ومبسط بعيداً عن التعقيد: أنواع التشفير، الـ Hashing، والتوقيع الرقمي.</p>
     <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-red);"></span> Module 20</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ffb86c;"></span> Module 20</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#50fa7b;"></span> Core Concepts</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🔏</span>
-      <h3>أنواع التشفير وخوارزمياته (Encryption Algorithms)</h3>
+  <!-- WHAT IS CRYPTOGRAPHY -->
+  <div class="cyber-card" style="border-top:3px solid #ffb86c;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ffb86c;">🔐 أولاً: يعني إيه Cryptography؟</h3>
+    </div>
+    <div style="padding-top:15px;">
+      <strong style="color:#ffb86c;">🧠 الفكرة الأساسية:</strong>
+      <p style="color:#aaa; font-size:0.9em;">إخفاء البيانات بحيث بس الشخص المسموح له يقدر يقراها.</p>
+      
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:15px; margin-bottom:20px;">
+        <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+          <h5 style="color:#50fa7b; margin-top:0;">🎯 الهدف من التشفير</h5>
+          <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+            <li>حماية البيانات من السرقة.</li>
+            <li>منع أي حد في النص يشوفها (Confidentiality).</li>
+            <li>تأمين الاتصالات والشبكات.</li>
+          </ul>
+        </div>
+      </div>
+
+      <strong style="color:#8be9fd;">🧩 مكونات عملية التشفير:</strong>
+      <ul style="color:#aaa; font-size:0.9em; margin-top:10px; padding-right: 20px; line-height: 1.8;">
+        <li><strong style="color:#f8f8f2;">1) Plaintext:</strong> النص العادي المفهوم (مثال: <code>hello</code>).</li>
+        <li><strong style="color:#f8f8f2;">2) Ciphertext:</strong> النص بعد عملية التشفير (مثال: <code>x7#@9!k</code>).</li>
+        <li><strong style="color:#ff5555;">3) Key (أهم حاجة 🔥):</strong> مفتاح التشفير وهو سر اللعبة كلها.</li>
+        <li><strong style="color:#f8f8f2;">4) Encryption:</strong> عملية تحويل النص العادي لنص مشفر.</li>
+        <li><strong style="color:#f8f8f2;">5) Decryption:</strong> عملية رجوع النص المشفر لشكله الطبيعي.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SYMMETRIC VS ASYMMETRIC -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:15px; margin-top:20px;">
+    
+    <!-- SYMMETRIC -->
+    <div class="cyber-card" style="border-top:3px solid #00bfff; margin:0;">
+      <div class="card-header">
+        <h3 style="margin:0; color:#00bfff;">1️⃣ Symmetric Encryption (المتماثل)</h3>
+      </div>
+      <div style="padding-top:15px;">
+        <strong style="color:#00bfff;">🧠 الفكرة:</strong>
+        <p style="color:#aaa; font-size:0.9em;">بنستخدم <strong>نفس المفتاح</strong> للتشفير وفك التشفير. (زي إنت وصاحبك متفقين على باسورد واحد).</p>
+        
+        <strong style="color:#50fa7b; display:block; margin-top:10px;">🔥 أشهر الخوارزميات:</strong>
+        <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+          <li><strong>AES:</strong> الأقوى والأكثر استخداماً حالياً.</li>
+          <li><strong>DES:</strong> قديم وضعيف وتم كسره.</li>
+        </ul>
+
+        <div style="margin-top:10px; background:rgba(255,85,85,0.05); border-left:3px solid #ff5555; padding:10px;">
+          <strong style="color:#ff5555; font-size:0.85em;">⚠️ المشكلة القاتلة:</strong>
+          <p style="color:#aaa; font-size:0.8em; margin:0;">لو المفتاح الوحيد ده اتسرب في النص.. التشفير انتهى ❌.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASYMMETRIC -->
+    <div class="cyber-card" style="border-top:3px solid #bd93f9; margin:0;">
+      <div class="card-header">
+        <h3 style="margin:0; color:#bd93f9;">2️⃣ Asymmetric Encryption (اللامتماثل)</h3>
+      </div>
+      <div style="padding-top:15px;">
+        <strong style="color:#bd93f9;">🧠 الفكرة:</strong>
+        <p style="color:#aaa; font-size:0.9em;">بنستخدم <strong>مفتاحين مختلفين</strong> لزيادة الأمان.</p>
+        
+        <strong style="color:#50fa7b; display:block; margin-top:10px;">🔑 الأنواع:</strong>
+        <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+          <li><strong>Public Key:</strong> متاح للجميع (للتشفير فقط). أي حد يقدر يبعتلك رسالة بيه.</li>
+          <li><strong>Private Key:</strong> معاك إنت بس (لفك التشفير). إنت الوحيد اللي تقدر تفك الرسالة.</li>
+        </ul>
+
+        <strong style="color:#ffb86c; display:block; margin-top:10px;">🔥 أشهر الخوارزميات:</strong>
+        <p style="color:#aaa; font-size:0.85em; margin:0;"><strong>RSA</strong> (يعتمد على معادلات رياضية معقدة للأعداد الأولية).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON & CRYPTANALYSIS -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
+    
+    <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+      <strong style="color:#f8f8f2; font-size:1.1em; display:block; margin-bottom:10px;">🧠 الفرق المهم جداً</strong>
+      <table class="meth-table" style="margin:0;">
+        <thead>
+          <tr>
+            <th>النوع</th>
+            <th>المفتاح</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Symmetric</strong></td><td>نفس المفتاح</td></tr>
+          <tr><td><strong>Asymmetric</strong></td><td>مفتاحين (Public / Private)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:rgba(0,0,0,0.3); border:1px solid #ff5555; border-radius:8px; padding:15px;">
+      <strong style="color:#ff5555; font-size:1.1em; display:block; margin-bottom:10px;">💣 Cryptanalysis (كسر التشفير)</strong>
+      <p style="color:#aaa; font-size:0.9em;"><strong>التعريف:</strong> محاولة فك التشفير واستخراج النص الأصلي <strong>بدون ما يكون معاك المفتاح.</strong></p>
+      <p style="color:#8be9fd; font-size:0.85em; margin:0;">👉 <strong>مثال:</strong> تحليل تكرار الحروف (Frequency Analysis) لكسر الشفرات الكلاسيكية.</p>
+    </div>
+
+  </div>
+
+  <!-- HASHING AND SIGNATURE -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b; margin-top:20px;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">🔐 Hashing (مهم جداً 🔥)</h3>
     </div>
     
-    <div class="rd-compare-grid">
-      <div class="rd-compare-col good" style="border-color: #00b4d8;">
-        <div class="rd-compare-title">التشفير المتماثل (Symmetric)</div>
-        <ul class="rd-compare-list">
-          <li>استخدام مفتاح واحد للتشفير وفك التشفير (سريع).</li>
-          <li><strong>AES:</strong> المعيار الذهبي الحالي، كتل بحجم 128-bit. النمط المفضل هو GCM لأمانه العالي.</li>
-          <li><strong>DES/3DES:</strong> قديم وضعيف ويجب تجنبه.</li>
-        </ul>
+    <div style="padding-top:15px; display:flex; flex-wrap:wrap; gap:15px;">
+      
+      <div style="flex:2; min-width:300px;">
+        <strong style="color:#50fa7b;">🧠 يعني إيه Hash؟</strong>
+        <p style="color:#aaa; font-size:0.9em;">تحويل البيانات (مهما كان حجمها) لقيمة ثابتة الطول <strong>من غير رجوع (One-way).</strong></p>
+        <div class="cmd-ui-box" style="font-size:0.8em; margin-top:10px; margin-bottom:10px;">password → 5f4dcc3b5aa765d61d8327deb882cf99</div>
+        <div style="background:rgba(255,85,85,0.1); border-left:3px solid #ff5555; padding:10px;">
+          <strong style="color:#ff5555; font-size:0.85em;">⚠️ خد بالك:</strong>
+          <p style="color:#aaa; font-size:0.8em; margin:0;">الـ Hash <strong>مش Encryption!</strong> التشفير ينفع تفكه، لكن الـ Hash مينفعش ترجعه للنص الأصلي بسهولة.</p>
+        </div>
       </div>
-      <div class="rd-compare-col good" style="border-color: #00e5a0;">
-        <div class="rd-compare-title">التشفير اللامتماثل (Asymmetric)</div>
-        <ul class="rd-compare-list">
-          <li>استخدام زوج من المفاتيح (Public & Private).</li>
-          <li><strong>RSA:</strong> يعتمد على الصعوبة في تحليل الأعداد الأولية (Factoring Primes).</li>
-          <li><strong>ECC:</strong> أمان قوي بمفاتيح صغيرة جداً، مثالي للموبايل والـ IoT.</li>
+
+      <div style="flex:1; min-width:200px; background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <strong style="color:#f1fa8c;">🧠 خصائص الـ Hash</strong>
+        <ul style="color:#aaa; font-size:0.85em; padding-right: 20px; margin-bottom:15px;">
+          <li>نفس الطول دائماً.</li>
+          <li>سريع الحساب.</li>
+          <li>مستحيل ترجعه للنص الأصلي.</li>
+          <li>صعب تلاقي تصادم (Collision).</li>
         </ul>
+        <strong style="color:#ffb86c;">🔥 أشهر الخوارزميات:</strong>
+        <p style="color:#aaa; font-size:0.85em; margin:0;">MD5, SHA-1, SHA-2, NTLM</p>
       </div>
+
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🧮</span>
-      <h3>خوارزميات التجزئة والهجمات الجانبية (Hashes & Attacks)</h3>
+  <!-- DIGITAL SIGNATURE & REAL WORLD -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
+    
+    <div class="cyber-card" style="border-top:3px solid #bd93f9; margin:0;">
+      <div class="card-header">
+        <h3 style="margin:0; color:#bd93f9;">✍️ Digital Signature (التوقيع الرقمي)</h3>
+      </div>
+      <div style="padding-top:15px;">
+        <strong style="color:#bd93f9;">🧠 الفكرة:</strong>
+        <p style="color:#aaa; font-size:0.9em;">تأكيد إثبات هوية المرسل وإن الرسالة من الشخص الحقيقي متعدلتش في النص.</p>
+        <strong style="color:#50fa7b; display:block; margin-top:10px;">🎯 الهدف الأساسي:</strong>
+        <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+          <li><strong>Authentication:</strong> إثبات الهوية.</li>
+          <li><strong>Integrity:</strong> سلامة البيانات وعدم تلاعب الهاكر بيها.</li>
+        </ul>
+      </div>
     </div>
-    <div class="cyber-card" style="--tool-color: #ffa502;">
-      <div class="card-header"><h4>Hash Algorithms</h4></div>
-      <p>دوال باتجاه واحد لضمان الـ Integrity. خوارزمية MD5 و SHA-1 تعتبر ضعيفة وعرضة لـ (Hash Collisions)، بينما SHA-2 و SHA-3 هما المعيار الآمن.</p>
+
+    <div class="cyber-card" style="border-top:3px solid #ff79c6; margin:0;">
+      <div class="card-header">
+        <h3 style="margin:0; color:#ff79c6;">🌐 ربط الكلام بالواقع (HTTPS)</h3>
+      </div>
+      <div style="padding-top:15px;">
+        <p style="color:#aaa; font-size:0.9em;">لما بتفتح موقع <code>HTTPS</code>، الاتصال بيتم إزاي؟</p>
+        <div style="background:#282a36; border:1px solid #44475a; border-radius:8px; padding:10px; font-family: monospace;">
+          <div style="color:#f8f8f2; font-size:0.85em;">1. المتصفح بيستخدم <span style="color:#ffb86c;">RSA (Asymmetric)</span> لتبادل مفتاح سري مع السيرفر بأمان.</div>
+          <div style="color:#f8f8f2; font-size:0.85em; margin-top:5px;">2. بعد التبادل، بيستخدموا المفتاح السري ده مع <span style="color:#50fa7b;">AES (Symmetric)</span> عشان يشفروا البيانات بسرعة.</div>
+        </div>
+        <strong style="color:#ff79c6; display:block; margin-top:10px; font-size:0.9em;">👉 الخلاصة: HTTPS = Asymmetric + Symmetric مع بعض 🔥</strong>
+      </div>
     </div>
-    <div class="cyber-card" style="--tool-color: #ff4757;">
-      <div class="card-header"><h4>Cryptanalysis Attacks (هجمات فك التشفير)</h4></div>
-      <p><strong>الهجمات الرياضية:</strong> (Known-Plaintext, Chosen-Ciphertext).<br>
-      <strong>الهجمات الجانبية (Side-Channel):</strong> تحليل وقت العمليات (Timing Attack) أو استهلاك الطاقة (Power Analysis) لمعرفة المفتاح.</p>
+
+  </div>
+
+  <!-- ULTIMATE SUMMARY -->
+  <div class="cyber-card" style="border-top:3px solid #f1fa8c; margin-top:20px;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#f1fa8c;">💡 خلاصة قوية جداً (The Final Summary)</h3>
     </div>
+    <table class="meth-table" style="margin-top:15px;">
+      <thead>
+        <tr>
+          <th>المفهوم (Concept)</th>
+          <th>الهدف والوظيفة (Purpose)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Encryption</strong></td><td style="color:#aaa;">حماية وسرية البيانات (Confidentiality).</td></tr>
+        <tr><td><strong>Symmetric</strong></td><td style="color:#50fa7b;">مفتاح واحد (سريع ومناسب للداتا الكبيرة).</td></tr>
+        <tr><td><strong>Asymmetric</strong></td><td style="color:#bd93f9;">مفتاحين (آمن ومناسب لتبادل المفاتيح).</td></tr>
+        <tr><td><strong>Hashing</strong></td><td style="color:#ffb86c;">حماية الباسوردات وضمان الـ Integrity (طريق ذو اتجاه واحد).</td></tr>
+        <tr><td><strong>Cryptanalysis</strong></td><td style="color:#ff5555;">كسر التشفير بدون المفتاح.</td></tr>
+        <tr><td><strong>Digital Signature</strong></td><td style="color:#8be9fd;">إثبات هوية المرسل (Authentication & Non-repudiation).</td></tr>
+      </tbody>
+    </table>
   </div>
 
 </div>
@@ -7861,7 +8012,7 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
         mermaid.initialize({ startOnLoad: false, theme: 'dark' });
     }
   </script>
-  <script src="js/methodology.js?v=1781955461"></script>
-  <script src="js/quiz_engine.js?v=1781955461"></script>
+  <script src="js/methodology.js?v=1781987663"></script>
+  <script src="js/quiz_engine.js?v=1781987663"></script>
 </body>
 </html>
