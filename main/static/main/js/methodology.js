@@ -547,16 +547,19 @@
       if (typeof Fuse !== 'undefined' && !window.methFuse) {
         var itemsArray = [];
         items.forEach(function(item) {
+          let catEl = item.closest('.sidebar-category');
+          let catName = catEl && catEl.querySelector('.category-title span') ? catEl.querySelector('.category-title span').innerText : '';
           itemsArray.push({
             id: item.id,
             title: item.textContent.trim(),
-            search: item.getAttribute('data-search') || ''
+            search: item.getAttribute('data-search') || '',
+            cat: catName
           });
         });
         window.methFuse = new Fuse(itemsArray, {
           includeScore: true,
           threshold: 0.4,
-          keys: ['title', 'search']
+          keys: ['title', 'search', 'cat']
         });
       }
       
@@ -584,7 +587,9 @@
         items.forEach(i => {
           const text = i.textContent.toLowerCase();
           const tags = (i.getAttribute('data-search') || '').toLowerCase();
-          if (text.includes(q) || tags.includes(q)) {
+          let catEl = i.closest('.sidebar-category');
+          let catName = catEl && catEl.querySelector('.category-title span') ? catEl.querySelector('.category-title span').innerText.toLowerCase() : '';
+          if (text.includes(q) || tags.includes(q) || catName.includes(q)) {
             i.style.display = 'block';
             visibleCount++;
             let catContainer = i.closest('.category-items');
