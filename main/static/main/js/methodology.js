@@ -448,30 +448,56 @@
     // ---- SIDEBAR SEARCH FILTER ----
     function filterSidebarItems(query) {
       const q = query.toLowerCase().trim();
-      const noResults = document.getElementById('searchNoResults');
-      let anyVisible = false;
-
-      document.querySelectorAll('.meth-item').forEach(item => {
-        const name   = (item.querySelector('span:nth-child(2)')?.textContent || '').toLowerCase();
-        const tags   = (item.getAttribute('data-search') || '').toLowerCase();
-        const match  = !q || name.includes(q) || tags.includes(q);
-        item.style.display = match ? '' : 'none';
-        if (match) anyVisible = true;
-      });
-
-      // Show/hide categories depending on whether children are visible
-      document.querySelectorAll('.sidebar-category').forEach(cat => {
-        const items = cat.querySelectorAll('.meth-item');
-        const hasVisible = [...items].some(i => i.style.display !== 'none');
-        cat.style.display = hasVisible ? '' : 'none';
-        // Auto-expand categories when searching
-        if (q) {
-          const catItems = cat.querySelector('.category-items');
-          if (catItems && hasVisible) catItems.style.maxHeight = '';
-        }
-      });
-
-      if (noResults) noResults.style.display = anyVisible ? 'none' : 'block';
+      const items = document.querySelectorAll('.meth-item');
+      
+      if (!q) {
+        items.forEach(i => i.style.display = 'block');
+        document.getElementById('searchNoResults').style.display = 'none';
+        return;
+      }
+      
+      if (typeof Fuse !== 'undefined' && !window.methFuse) {
+        var itemsArray = [];
+        items.forEach(function(item) {
+          itemsArray.push({
+            id: item.id,
+            title: item.textContent.trim(),
+            search: item.getAttribute('data-search') || ''
+          });
+        });
+        window.methFuse = new Fuse(itemsArray, {
+          includeScore: true,
+          threshold: 0.4,
+          keys: ['title', 'search']
+        });
+      }
+      
+      let visibleCount = 0;
+      if (window.methFuse) {
+        var results = window.methFuse.search(q);
+        var matchedIds = results.map(r => r.item.id);
+        items.forEach(i => {
+          if (matchedIds.includes(i.id)) {
+            i.style.display = 'block';
+            visibleCount++;
+          } else {
+            i.style.display = 'none';
+          }
+        });
+      } else {
+        // Fallback
+        items.forEach(i => {
+          const text = i.textContent.toLowerCase();
+          const tags = (i.getAttribute('data-search') || '').toLowerCase();
+          if (text.includes(q) || tags.includes(q)) {
+            i.style.display = 'block';
+            visibleCount++;
+          } else {
+            i.style.display = 'none';
+          }
+        });
+      }
+      document.getElementById('searchNoResults').style.display = visibleCount === 0 ? 'block' : 'none';
     }
 
     // ---- QUICK JUMP MODAL (Ctrl+K) ----

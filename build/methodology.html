@@ -19,6 +19,7 @@
     .quiz-option { display: block; width: 100%; text-align: left; background: #232838; border: 1px solid #333; color: #fff; padding: 12px; margin-top: 10px; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; }
     .quiz-option:hover:not(:disabled) { background: #2d3345; border-color: var(--accent-primary); }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
 </head>
 <body>
 
@@ -467,6 +468,26 @@
 
       <div class="search-no-results" id="searchNoResults">No phases match your search.</div>
       
+      
+      <!-- Category: REAL ASSESSMENTS -->
+      <div class="sidebar-category">
+        <div class="category-title" onclick="toggleCategory('cat-assess')">
+          <span style="color: #ffb86c;">📁 REAL ASSESSMENTS</span>
+          <span>▼</span>
+        </div>
+        <div class="category-items" id="cat-assess" style="display: block;">
+          <div class="meth-item" id="meth-ef-assess-htb" onclick="openMethPhase('assess-htb')" data-search="hackthebox htb writeup corporate">
+            🏴‍☠️ HTB: "Corporate"
+          </div>
+          <div class="meth-item" id="meth-ef-assess-bb" onclick="openMethPhase('assess-bb')" data-search="bug bounty report account takeover idor">
+            🐛 Bug Bounty: ATO
+          </div>
+          <div class="meth-item" id="meth-ef-assess-ad" onclick="openMethPhase('assess-ad')" data-search="active directory pentest zero to da">
+            👑 AD: Zero to DA
+          </div>
+        </div>
+      </div>
+
       <!-- Category 1: Recon & Footprinting -->
       <div class="sidebar-category">
         <div class="category-title" onclick="toggleCategory('cat-recon')">
