@@ -23,12 +23,6 @@
     function openMethPhase(phaseId) {
       if (!phaseId) return;
       
-      // Close mobile sidebar if it's open
-      const sidebar = document.querySelector('.meth-sidebar');
-      if (sidebar && sidebar.classList.contains('active')) {
-        sidebar.classList.remove('active');
-      }
-
       // Update sidebar active state
       document.querySelectorAll('.meth-item').forEach(function(item) {
         item.classList.remove('active');
