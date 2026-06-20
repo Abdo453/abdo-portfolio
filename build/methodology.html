@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=1781934774">
-  <link rel="stylesheet" href="css/methodology.css?v=1781934774">
+  <link rel="stylesheet" href="css/style.css?v=1781935077">
+  <link rel="stylesheet" href="css/methodology.css?v=1781935077">
 
   
 
@@ -1216,48 +1216,190 @@
 <div class="meth-content-view" id="meth-content-mod4" style="display:none;" dir="rtl">
   
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">📋</span> Enumeration</h2>
-    <p class="hero-tagline">مرحلة الاستجابة المباشرة: الكشف عن المستخدمين، المجموعات، والموارد المشتركة عبر الشبكة.</p>
+    <h2 class="hero-title"><span class="hero-icon">🧠</span> Module 4: Enumeration (التعداد)</h2>
+    <p class="hero-tagline">مرحلة سحب المعلومات الحساسة الحقيقية من الهدف. هنا تبدأ المعركة الحقيقية!</p>
     <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-orange);"></span> Module 04</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 04</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ff0055;"></span> Deep Extraction</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🧩</span>
-      <h3>بروتوكولات التعداد العميقة وأدواتها (Enumeration Protocols)</h3>
+  <div class="cyber-card" style="border-left: 4px solid #ff5555;">
+    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">⚡ أولاً: يعني إيه Enumeration؟</h3></div>
+    <p>هو إنك تعمل <strong>اتصال مباشر بالهدف وتسأله أسئلة (Queries)</strong> علشان يطلعلك بيانات 🎯</p>
+    
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 15px;">
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; flex: 1; min-width: 200px;">
+            <h4 style="color: #50fa7b; margin-top: 0;">📌 المعلومات المستهدفة:</h4>
+            <ul style="margin: 0; padding-right: 20px;">
+                <li>👤 Users (المستخدمين)</li>
+                <li>🔑 Passwords (كلمات المرور)</li>
+                <li>📁 Shares (المجلدات المشتركة)</li>
+                <li>⚙️ Services details (تفاصيل الخدمات)</li>
+            </ul>
+        </div>
+        <div style="background: rgba(255,85,85,0.1); padding: 15px; border-radius: 8px; flex: 1; min-width: 200px;">
+            <h4 style="color: #ff5555; margin-top: 0;">🔥 الفرق عن Scanning:</h4>
+            <ul style="margin: 0; padding-right: 20px;">
+                <li><strong>Scanning:</strong> “فيه إيه؟ الباب ده مفتوح؟”</li>
+                <li><strong>Enumeration:</strong> “هات التفاصيل الدقيقة! مين جوه؟”</li>
+            </ul>
+        </div>
     </div>
+  </div>
 
-    <div class="cyber-card" style="--tool-color: #00b4d8;">
-      <div class="card-header"><h4>1. تعداد NetBIOS & SMB</h4></div>
-      <p>يُستخدم في بيئة مايكروسوفت لاستخراج الحواسيب داخل الـ Domain والمجلدات المشتركة. منفذ 445 (SMB) من أخطر أهداف الاستكشاف لاستخراج الجلسات النشطة (Null Sessions) وسياسات الباسوردات.</p>
-      <div class="cmd-block">
-        <div class="cmd-header"><span class="cmd-lang">SMB Arsenal</span></div>
-        <pre><code># استخدام nbtstat لمعرفة أسماء الأجهزة
-nbtstat -A 192.168.1.5
+  <div class="cyber-card">
+    <div class="card-header"><h3 style="color: #8be9fd; margin: 0;">🧭 خطوات الاختراق (مهم تحفظها)</h3></div>
+    <div class="mermaid" style="text-align: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-top: 10px;">
+graph LR
+    A[Recon] --> B[Scanning]
+    B --> C((Enumeration 🔥))
+    C --> D[Gaining Access]
+    D --> E[Maintaining Access]
+    E --> F[Covering Tracks]
+    
+    style C fill:#ff5555,stroke:#fff,stroke-width:3px,color:#fff
+    style A fill:#44475a,stroke:#6272a4,color:#f8f8f2
+    style B fill:#44475a,stroke:#6272a4,color:#f8f8f2
+    style D fill:#50fa7b,stroke:#333,color:#000
+    style E fill:#f1fa8c,stroke:#333,color:#000
+    style F fill:#6272a4,stroke:#333,color:#fff
+    </div>
+  </div>
 
-# الأداة الأقوى لاستخراج كافة مستخدمي الـ Domain والـ Shares والـ SIDs
-enum4linux -a 192.168.1.5</code></pre>
+  <div class="cyber-card" style="border-left: 4px solid #f1fa8c;">
+    <div class="card-header"><h3 style="color: #f1fa8c; margin: 0;">🌐 1) HTTP Enumeration (مواقع الويب)</h3></div>
+    
+    <div class="meth-section" style="margin-top: 20px;">
+        <h4 style="color: #fff;">🧠 الأساس: GET vs POST</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px; border: 1px solid #44475a;">
+                <h5 style="color: #ffb86c; margin-top: 0;">🔹 GET Request</h5>
+                <div class="cmd-ui-box">GET /index.php?id=1</div>
+                <p style="font-size: 0.9em;">👉 البيانات بتظهر في الـ URL (أقل أماناً)</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px; border: 1px solid #44475a;">
+                <h5 style="color: #ffb86c; margin-top: 0;">🔹 POST Request</h5>
+                <div class="cmd-ui-box">POST /login
+username=admin&password=123</div>
+                <p style="font-size: 0.9em;">👉 البيانات مخفية في الـ Body (أكثر أماناً)</p>
+            </div>
+        </div>
+
+        <h4 style="color: #8be9fd; margin-top: 25px;">🔍 أدوات HTTP Enumeration</h4>
+        
+        <h5 style="color: #50fa7b;">1. Nikto (مهم جدًا)</h5>
+        <div class="cmd-ui-box">nikto -h http://192.168.1.1</div>
+        <p>👉 بيكشف: Vulnerabilities، ملفات خطيرة، إعدادات غلط.</p>
+
+        <h5 style="color: #50fa7b; margin-top: 15px;">2. Nmap Scripts</h5>
+        <div class="cmd-ui-box">nmap --script=http-enum 192.168.1.1</div>
+        <p>👉 يطلع: directories، صفحات مخفية.</p>
+
+        <h5 style="color: #50fa7b; margin-top: 15px;">3. Directory Bruteforce</h5>
+        <div class="cmd-ui-box">dirb http://192.168.1.1</div>
+        <div class="cmd-ui-box">wfuzz -c -w /usr/share/wordlists/dirb/common.txt http://192.168.1.1/FUZZ</div>
+        <p>👉 بيكتشف: admin panels، hidden APIs.</p>
+
+        <h5 style="color: #50fa7b; margin-top: 15px;">4. SecLists (كنز 🔥)</h5>
+        <div class="cmd-ui-box">/usr/share/seclists</div>
+        <p>👉 فيها: قوائم (Wordlists) جاهزة للـ brute force، directories، passwords.</p>
+
+        <h5 style="color: #50fa7b; margin-top: 15px;">5. Burp Suite</h5>
+        <p>👉 يستخدم في: اعتراض الطلبات (Intercept)، تعديلها، واكتشاف الثغرات (Web hacking و SQL Injection).</p>
+    </div>
+  </div>
+
+  <div class="cyber-card" style="border-left: 4px solid #bd93f9;">
+    <div class="card-header"><h3 style="color: #bd93f9; margin: 0;">🖥️ 2) SMB Enumeration (ويندوز)</h3></div>
+    
+    <div class="meth-section" style="margin-top: 15px;">
+        <h5 style="color: #fff;">1. enum4linux</h5>
+        <div class="cmd-ui-box">enum4linux 192.168.1.1</div>
+        <p>👉 يطلع: Users، Shares، Password policy.</p>
+
+        <h5 style="color: #fff; margin-top: 15px;">2. Nmap SMB Scripts</h5>
+        <div class="cmd-ui-box">nmap --script=smb-enum* 192.168.1.1</div>
+
+        <h5 style="color: #fff; margin-top: 15px;">3. Metasploit SMB</h5>
+        <div class="cmd-ui-box">use auxiliary/scanner/smb/smb_enumshares</div>
+    </div>
+  </div>
+
+  <div class="cyber-card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; background: transparent; border: none; padding: 0;">
+      <div style="background: rgba(0,0,0,0.4); border: 1px solid #6272a4; padding: 15px; border-radius: 8px;">
+          <h3 style="color: #ffb86c; margin-top: 0;">🌐 3) NetBIOS Enumeration</h3>
+          <div class="cmd-ui-box">nmap -sU -p 137 --script=nbstat 192.168.1.1</div>
+          <p>👉 يطلع: اسم الجهاز، domain.</p>
       </div>
-    </div>
 
-    <div class="cyber-card" style="--tool-color: #f1c40f;">
-      <div class="card-header"><h4>2. تعداد SNMP</h4></div>
-      <p>بروتوكول إدارة أجهزة الشبكة. الاعتماد على Community Strings الافتراضية (public/private) قد يكشف عن جداول التوجيه والأجهزة المتصلة.</p>
-      <div class="cmd-block">
-        <div class="cmd-header"><span class="cmd-lang">SNMP Arsenal</span></div>
-        <pre><code># استخراج شجرة معلومات متكاملة (MIB tree) من خادم يعتمد على public string
-snmpwalk -v 2c -c public 192.168.1.1</code></pre>
+      <div style="background: rgba(0,0,0,0.4); border: 1px solid #6272a4; padding: 15px; border-radius: 8px;">
+          <h3 style="color: #ffb86c; margin-top: 0;">📁 4) NFS Enumeration</h3>
+          <div class="cmd-ui-box">use auxiliary/scanner/nfs/nfsmount</div>
+          <p>👉 باستخدام Metasploit، يطلع: Shared folders.</p>
       </div>
-    </div>
 
-    <div class="cyber-card" style="--tool-color: #ff4757;">
-      <div class="card-header"><h4>3. تعداد LDAP و RPC</h4></div>
-      <p><strong>LDAP (Port 389):</strong> استخراج أسماء المستخدمين الموثوقة في الـ Active Directory والهيكلية الإدارية لاستغلالها في الـ Social Engineering.<br>
-      <strong>RPC (Port 135):</strong> استكشاف التطبيقات التي تعمل في الخلفية عبر الـ Endpoint Mapper.</p>
-    </div>
+      <div style="background: rgba(0,0,0,0.4); border: 1px solid #6272a4; padding: 15px; border-radius: 8px;">
+          <h3 style="color: #ffb86c; margin-top: 0;">🔐 5) SSH Enumeration</h3>
+          <div class="cmd-ui-box">use auxiliary/scanner/ssh/ssh_version</div>
+          <p>👉 باستخدام Metasploit، يجيب: إصدار SSH.</p>
+      </div>
+  </div>
+
+  <div class="cyber-card" style="border-left: 4px solid #50fa7b; margin-top: 15px;">
+    <div class="card-header"><h3 style="color: #50fa7b; margin: 0;">🎯 6) Banner Grabbing (مهم جدًا)</h3></div>
+    <p>👉 <strong>فكرة بسيطة:</strong> تاخد “البانر” من السيرفر = معلومات عن الخدمة والإصدار.</p>
+    <div class="cmd-ui-box">nc -nv 192.168.1.1 80</div>
+    <p>👉 ممكن يرجع: Apache version، OS.</p>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">💣 7) البحث عن Exploits</h3></div>
+    <ul style="line-height: 1.8; margin-top: 10px;">
+        <li><strong>محلي (Kali):</strong> <code>searchsploit apache</code></li>
+        <li><strong>أونلاين:</strong> Exploit-DB، GitHub</li>
+    </ul>
+
+    <h3 style="color: #ff5555; margin-top: 25px;">🧠 8) UDP Enumeration</h3>
+    <div class="cmd-ui-box">nmap -sU 192.168.1.1</div>
+    <p>👉 مهم لخدمات زي: DNS, SNMP.</p>
+  </div>
+
+  <div class="cyber-card" style="background: rgba(255, 85, 85, 0.1);">
+    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">⚠️ ملاحظات مهمة</h3></div>
+    <ul style="line-height: 1.8; margin-top: 10px;">
+        <li>Enumeration = مرحلة حساسة جدًا ومزعجة (Noisy) 🔥.</li>
+        <li>غالبًا تحتاج: Brute force و Password guessing.</li>
+        <li><strong>خطر:</strong> ممكن تتكشف بسهولة من أنظمة الـ IDS/IPS.</li>
+    </ul>
+    
+    <h4 style="color: #f1fa8c; margin-top: 20px;">💡 أفضل Workflow عملي</h4>
+    <ol style="line-height: 1.8;">
+        <li><strong>Scan:</strong> <code>nmap -sS -sV -O 192.168.1.1</code></li>
+        <li><strong>HTTP:</strong> <code>nikto -h http://IP</code></li>
+        <li><strong>SMB:</strong> <code>enum4linux IP</code></li>
+        <li><strong>Directories:</strong> <code>dirb http://IP</code></li>
+    </ol>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header"><h3 style="color: #fff; margin: 0;">🔥 الخلاصة</h3></div>
+    <table class="interactive-table" dir="rtl" style="margin-top: 15px;">
+        <thead>
+            <tr>
+                <th>النوع</th>
+                <th>الهدف</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>HTTP</td><td>صفحات وثغرات</td></tr>
+            <tr><td>SMB</td><td>Users & Shares</td></tr>
+            <tr><td>NetBIOS</td><td>معلومات الشبكة</td></tr>
+            <tr><td>NFS</td><td>ملفات (Shared)</td></tr>
+            <tr><td>SSH</td><td>إصدار الخدمة</td></tr>
+            <tr><td>Banner</td><td>معلومات السيرفر بدقة</td></tr>
+        </tbody>
+    </table>
   </div>
 
 </div>
@@ -5348,7 +5490,7 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
         mermaid.initialize({ startOnLoad: false, theme: 'dark' });
     }
   </script>
-  <script src="js/methodology.js?v=1781934774"></script>
-  <script src="js/quiz_engine.js?v=1781934774"></script>
+  <script src="js/methodology.js?v=1781935077"></script>
+  <script src="js/quiz_engine.js?v=1781935077"></script>
 </body>
 </html>
