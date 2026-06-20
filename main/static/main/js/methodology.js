@@ -35,7 +35,7 @@
       var activeContent = document.getElementById('meth-content-' + phaseId);
 
       // Lazy Loading logic
-      if (!activeContent && (phaseId.startsWith('pt_mod') || phaseId.startsWith('assess') || phaseId.startsWith('mod') || phaseId === 'sys-hack' || phaseId === 'lab-metasploitable')) {
+      if (!activeContent && (phaseId.startsWith('pt_mod') || phaseId.startsWith('assess') || phaseId === 'sys-hack' || phaseId === 'lab-metasploitable')) {
         
         var mainViewer = document.querySelector('.meth-container');
         var loadingEl = document.getElementById('lazy-loading-div');
