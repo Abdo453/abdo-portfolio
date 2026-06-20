@@ -1356,20 +1356,7 @@
       el.classList.toggle('open');
     }
 
-    // --- Quick Reference Toggle ---
-    function toggleQuickRef() {
-      var qr = document.getElementById('rdQuickRef');
-      var arrow = document.getElementById('rdQrArrow');
-      qr.classList.toggle('open');
-      arrow.textContent = qr.classList.contains('open') ? '▼' : '▲';
-    }
-    function copyQR(btn, text) {
-      navigator.clipboard.writeText(text).then(function() {
-        btn.textContent = '✓';
-        btn.classList.add('copied');
-        setTimeout(function() { btn.textContent = '📋'; btn.classList.remove('copied'); }, 1500);
-      });
-    }
+
 
     // --- Show/Hide redesign sections based on active phase ---
     var RD_SECTIONS = ['rd-tools-grid','rd-case-study','rd-checklist','rd-mistakes','rd-edge-cases','rd-next-cta'];
