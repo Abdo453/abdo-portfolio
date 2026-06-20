@@ -45,6 +45,7 @@ def sync_main_to_build():
     html = re.sub(r"{%\s*static\s*'main/(css/style\.css)'\s*%}", fr"\1?v={timestamp}", html)
     html = re.sub(r"{%\s*static\s*'main/(css/methodology\.css)'\s*%}", fr"\1?v={timestamp}", html)
     html = re.sub(r"{%\s*static\s*'main/(js/methodology\.js)'\s*%}", fr"\1?v={timestamp}", html)
+    html = re.sub(r"{%\s*static\s*'main/(js/components\.js)'\s*%}", fr"\1?v={timestamp}", html)
     html = re.sub(r"{%\s*static\s*'main/(js/quiz_engine\.js)'\s*%}", fr"\1?v={timestamp}", html)
     html = re.sub(r"{%\s*static\s*'main/(js/quiz_db\.js)'\s*%}", fr"\1?v={timestamp}", html)
     
@@ -69,11 +70,23 @@ def sync_main_to_build():
     quiz_db_src = r"d:\abdo_portfolio\main\static\main\js\quiz_db.js"
     quiz_engine_dst = r"d:\abdo_portfolio\build\js\quiz_engine.js"
     quiz_db_dst = r"d:\abdo_portfolio\build\js\quiz_db.js"
+    components_src = r"d:\abdo_portfolio\main\static\main\js\components.js"
+    components_dst = r"d:\abdo_portfolio\build\js\components.js"
     
     if os.path.exists(quiz_engine_src):
         shutil.copy2(quiz_engine_src, quiz_engine_dst)
     if os.path.exists(quiz_db_src):
         shutil.copy2(quiz_db_src, quiz_db_dst)
+    if os.path.exists(components_src):
+        shutil.copy2(components_src, components_dst)
+
+    # Sync Data Directory
+    data_src = r"d:\abdo_portfolio\main\static\main\data"
+    data_dst = r"d:\abdo_portfolio\build\data"
+    if os.path.exists(data_dst):
+        shutil.rmtree(data_dst)
+    if os.path.exists(data_src):
+        shutil.copytree(data_src, data_dst)
 
     # Sync CSS
     with open(css_src, 'r', encoding='utf-8') as f:

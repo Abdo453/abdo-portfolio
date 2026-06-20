@@ -34,6 +34,31 @@
 
       var activeContent = document.getElementById('meth-content-' + phaseId);
 
+      // V2 Component Architecture Logic
+      if (!activeContent && phaseId.startsWith('tool_')) {
+        var mainViewer = document.querySelector('.meth-container');
+        var loadingEl = document.getElementById('lazy-loading-div');
+        if (!loadingEl) {
+            loadingEl = document.createElement('div');
+            loadingEl.id = 'lazy-loading-div';
+            loadingEl.style.cssText = 'color: #00e5a0; text-align: center; margin-top: 50px; font-family: var(--font-mono); width: 100%;';
+            mainViewer.appendChild(loadingEl);
+        }
+        loadingEl.style.display = 'block';
+        loadingEl.innerText = '[+] Loading Tool Data...';
+        
+        document.querySelectorAll('.meth-content-view').forEach(function(content) {
+          content.style.display = 'none';
+        });
+
+        if (typeof loadToolFromJson === 'function') {
+            loadToolFromJson(phaseId.replace('tool_', ''), mainViewer);
+        } else {
+            console.error('loadToolFromJson function is not defined.');
+        }
+        return;
+      }
+
       // Lazy Loading logic
       if (!activeContent && (phaseId.startsWith('pt_mod') || phaseId.startsWith('assess') || phaseId === 'sys-hack' || phaseId === 'lab-metasploitable' || phaseId === 'capstone-mid')) {
         
