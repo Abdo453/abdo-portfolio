@@ -414,37 +414,33 @@
     // =============================================
 
     // All phases registry for Quick Jump
-    const ALL_PHASES = [
-      { id: 'p0',        icon: '💻', name: 'Subdomain Enumeration',  cat: 'CORE RECON',        tags: 'subfinder amass httpx naabu nmap katana nuclei' },
-      { id: 'p2',        icon: '🖥️', name: 'Tech Detection',         cat: 'CORE RECON',        tags: 'whatweb wappalyzer fingerprinting' },
-      { id: 'p1',        icon: '📡', name: 'Port Scanning',           cat: 'CORE RECON',        tags: 'nmap masscan naabu network' },
-      { id: 'p_matrix',  icon: '🎯', name: 'Decision Matrix',         cat: 'CORE RECON',        tags: 'strategy attack surface planning' },
-      { id: 'p6',        icon: '📂', name: 'Directory Discovery',     cat: 'WEB DISCOVERY',     tags: 'ffuf gobuster dirsearch wordlist' },
-      { id: 'p4',        icon: '📜', name: 'JavaScript Recon',        cat: 'WEB DISCOVERY',     tags: 'js secrets endpoints aws keys' },
-      { id: 'p16',       icon: '🧬', name: 'APIs & REST Hacking',     cat: 'WEB DISCOVERY',     tags: 'bola idor kiterunner api endpoints' },
-      { id: 'p_graphql', icon: '🕸️', name: 'GraphQL Hacking',         cat: 'WEB DISCOVERY',     tags: 'introspection batching bypass shopify' },
-      { id: 'p5',        icon: '🎛️', name: 'Parameters Discovery',    cat: 'WEB DISCOVERY',     tags: 'arjun hidden params fuzzing debug' },
-      { id: 'p3',        icon: '🕷️', name: 'Crawling & Spidering',    cat: 'WEB DISCOVERY',     tags: 'katana gospider hakrawler crawl' },
-      { id: 'p7',        icon: '🌐', name: 'XSS Workflow',            cat: 'VULNERABILITIES',   tags: 'cross site scripting reflected stored dom waf bypass' },
-      { id: 'p8',        icon: '💉', name: 'SQLi Workflow',           cat: 'VULNERABILITIES',   tags: 'sql injection union error blind sqlmap' },
-      { id: 'p9',        icon: '📡', name: 'SSRF Workflow',           cat: 'VULNERABILITIES',   tags: 'server side request forgery aws metadata cloud' },
-      { id: 'p_ssti',    icon: '🧬', name: 'SSTI Workflow',           cat: 'VULNERABILITIES',   tags: 'jinja2 flask rce template injection' },
-      { id: 'p_xxe',     icon: '🕸️', name: 'XXE Injection',           cat: 'VULNERABILITIES',   tags: 'xml external entity file read lfi passwd' },
-      { id: 'p10',       icon: '🔑', name: 'IDOR Testing',            cat: 'VULNERABILITIES',   tags: 'insecure direct object reference bola horizontal' },
-      { id: 'p11',       icon: '📤', name: 'File Upload Exploits',    cat: 'VULNERABILITIES',   tags: 'shell bypass extension magic bytes png' },
-      { id: 'p12',       icon: '⚡', name: 'Race Conditions',         cat: 'VULNERABILITIES',   tags: 'concurrent request shopify coupon turbo' },
-      { id: 'p14',       icon: '🎫', name: 'JWT Hacking',             cat: 'VULNERABILITIES',   tags: 'token rsa hmac confusion alg none' },
-      { id: 'p13',       icon: '🔐', name: 'OAuth & Sessions',        cat: 'VULNERABILITIES',   tags: 'redirect uri hijacking oauth token' },
-      { id: 'p15',       icon: '☁️', name: 'Cloud Security',          cat: 'VULNERABILITIES',   tags: 'aws s3 bucket iam privilege escalation' },
-      { id: 'p17',       icon: '⚙️', name: 'Automation Pipelines',    cat: 'PIPELINES & LABS',  tags: 'bash scripting oneliners bug bounty automation' },
-      { id: 'p_payloads',icon: '📋', name: 'Searchable Payloads',     cat: 'PIPELINES & LABS',  tags: 'xss sqli rce wordlist cheatsheet' },
-      { id: 'p18',       icon: '🧪', name: 'Interactive Labs',        cat: 'PIPELINES & LABS',  tags: 'xss idor hands on practice lab' },
-      { id: 'p_writeups',icon: '📜', name: 'Real Writeups',           cat: 'PIPELINES & LABS',  tags: 'bug bounty reports hackerone writeups' },
-      { id: 'p19',       icon: '🐚', name: 'Simulated Shell',         cat: 'PIPELINES & LABS',  tags: 'terminal emulator bash command line' },
-          { id: 'p_scen_rce',     icon: '💥', name: 'LFI to RCE Scenario',      cat: 'HACKER SCENARIOS',  tags: 'scenario rce remote code execution lfi log poisoning' },
-      { id: 'p_scen_idor',    icon: '🔑', name: 'IDOR Admin Takeover',       cat: 'HACKER SCENARIOS',  tags: 'scenario idor access control api parameter tampering' },
-      { id: 'p_scen_takeover',icon: '🏳️', name: 'Subdomain Takeover',         cat: 'HACKER SCENARIOS',  tags: 'scenario subdomain takeover cname dns hijacking github pages' },
-    ];
+    let ALL_PHASES = [];
+    document.querySelectorAll('.meth-item').forEach(function(item) {
+      let catEl = item.closest('.sidebar-category');
+      let catName = 'OTHER';
+      if (catEl) {
+          let titleEl = catEl.querySelector('.category-title span:first-child');
+          if (titleEl) catName = titleEl.innerText.replace(/[▼▶🎬]/g, '').trim();
+      }
+      
+      let icon = '🔹';
+      let firstSpan = item.querySelector('span:first-child');
+      if (firstSpan) {
+          let match = firstSpan.innerText.match(/([^\w\s\u0000-\u007F]+)/);
+          if (match) icon = match[0];
+      }
+      
+      let nameSpan = item.querySelector('span:nth-child(2)');
+      let name = nameSpan ? nameSpan.innerText.trim() : item.innerText.replace('├──', '').replace('└──', '').trim();
+      
+      ALL_PHASES.push({
+          id: item.id.replace('meth-ef-', ''),
+          icon: icon,
+          name: name,
+          cat: catName,
+          tags: item.getAttribute('data-search') || ''
+      });
+    });
     const TOTAL_PHASES = ALL_PHASES.length;
 
     // ---- VISITED PHASES (Progress Tracker) ----
@@ -571,6 +567,13 @@
           if (matchedIds.includes(i.id)) {
             i.style.display = 'block';
             visibleCount++;
+            let catContainer = i.closest('.category-items');
+            if (catContainer && (catContainer.style.display === 'none' || !catContainer.style.display)) {
+              catContainer.style.display = 'flex';
+              catContainer.style.maxHeight = '2000px';
+              let titleSpan = catContainer.previousElementSibling.querySelector('span:last-child');
+              if (titleSpan) titleSpan.innerText = '▼';
+            }
           } else {
             i.style.display = 'none';
           }
@@ -583,6 +586,13 @@
           if (text.includes(q) || tags.includes(q)) {
             i.style.display = 'block';
             visibleCount++;
+            let catContainer = i.closest('.category-items');
+            if (catContainer && (catContainer.style.display === 'none' || !catContainer.style.display)) {
+              catContainer.style.display = 'flex';
+              catContainer.style.maxHeight = '2000px';
+              let titleSpan = catContainer.previousElementSibling.querySelector('span:last-child');
+              if (titleSpan) titleSpan.innerText = '▼';
+            }
           } else {
             i.style.display = 'none';
           }
