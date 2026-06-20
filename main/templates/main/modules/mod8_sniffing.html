@@ -1,0 +1,60 @@
+
+<!-- =======================================================
+     CEH MODULE 8: SNIFFING
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod8" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🎧</span> Sniffing</h2>
+    <p class="hero-tagline">اعتراض البيانات، تسميم بروتوكول ARP، وفلاتر Wireshark العميقة.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 08</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">📡</span>
+      <h3>تقنيات هجمات التنصت النشط (Active Sniffing)</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #00b4d8;">
+      <div class="card-header"><h4>1. إغراق جدول MAC (MAC Flooding)</h4></div>
+      <p>إغراق الـ Switch بآلاف العناوين المزيفة لملء جدول الـ CAM. هذا يُجبر الـ Switch على العمل كـ Hub، مسبباً بث كل الحزم لجميع المنافذ لالتقاطها.</p>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>2. تسميم ARP (ARP Poisoning / Spoofing)</h4></div>
+      <p>يستغل غياب المصادقة في ARP. المهاجم يُقنع الضحية والـ Gateway بأن جهازه هو الطرف الآخر المستهدف، ليمرر الحركة عبره في هجوم (Man-in-the-Middle).</p>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <div class="card-header"><h4>3. تجويع خادم DHCP (DHCP Starvation & Spoofing)</h4></div>
+      <p>استنزاف عناوين הـ IP المتوفرة من خادم الـ DHCP عن طريق إرسال طلبات عناوين وهمية، ليقوم المهاجم لاحقاً بتشغيل Rogue DHCP ويصبح هو الـ Gateway الخاص بالشبكة.</p>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🦈</span>
+      <h3>Wireshark Arsenal (فلاتر وايرشارك المتقدمة)</h3>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header"><span class="cmd-lang">Wireshark Filters</span></div>
+      <pre><code># تصفية حسب عنوان IP معين
+ip.addr == 192.168.1.1
+
+# عرض طلبات ويب من نوع GET أو التي تحتوي على كلمات سر
+http.request.method == "GET"
+http contains "password"
+
+# عرض حزم استجابة ARP فقط لاكتشاف تسميم ARP
+arp.opcode == 2
+
+# تصفية حسب عنوان MAC
+eth.addr == 00:11:22:33:44:55</code></pre>
+    </div>
+  </div>
+
+</div>
