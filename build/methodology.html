@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=1781954156">
-  <link rel="stylesheet" href="css/methodology.css?v=1781954156">
+  <link rel="stylesheet" href="css/style.css?v=1781954438">
+  <link rel="stylesheet" href="css/methodology.css?v=1781954438">
 
   
 
@@ -3199,85 +3199,95 @@
 <div class="meth-content-view" id="meth-content-mod7" style="display:none;" dir="rtl">
   
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🦠</span> Malware Threats</h2>
+    <h2 class="hero-title"><span class="hero-icon">🦠</span> Module 7: Malware Threats</h2>
     <p class="hero-tagline">فهم البرامج الخبيثة، أنواعها، وطرق تحليلها الثابتة والديناميكية (Static & Dynamic Analysis).</p>
     <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-red);"></span> Module 07</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Analysis & Exploitation</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ff5555;"></span> Module 07</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#bd93f9;"></span> Analysis & Exploitation</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">☠️</span>
-      <h3>مفهوم البرمجيات الخبيثة (Malware)</h3>
+  <!-- WHAT IS MALWARE -->
+  <div class="cyber-card" style="border-top:3px solid #ff5555;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">☠️ مفهوم البرمجيات الخبيثة (Malware)</h3>
     </div>
-    <div class="concept-card">
-      <p>أي برنامج مُصمم خصيصاً لإلحاق الضرر بالنظام أو الوصول غير المصرح به.</p>
-      <ul>
-        <li><strong>سرقة البيانات:</strong> (كلمات المرور، الملفات الشخصية).</li>
-        <li><strong>التحكم في الجهاز:</strong> (تحويله لـ Zombie أو Bot).</li>
-        <li><strong>تخريب النظام:</strong> (مسح ملفات النظام، تشفير القرص الصلب).</li>
-      </ul>
+    <p style="font-size:1.05em; line-height:1.9;">
+      أي برنامج مُصمم خصيصاً لإلحاق الضرر بالنظام أو الوصول غير المصرح به.
+    </p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:15px;">
+      <div style="background:rgba(255,85,85,0.08); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:12px; text-align:center; font-size:0.9em;">
+        <div style="font-size:1.8em;">🔐</div>
+        <strong style="color:#ff5555;">سرقة البيانات</strong><br>
+        <span style="color:#aaa;">كلمات المرور والملفات</span>
+      </div>
+      <div style="background:rgba(255,85,85,0.08); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:12px; text-align:center; font-size:0.9em;">
+        <div style="font-size:1.8em;">🤖</div>
+        <strong style="color:#ff5555;">التحكم في الجهاز</strong><br>
+        <span style="color:#aaa;">تحويله لـ Zombie</span>
+      </div>
+      <div style="background:rgba(255,85,85,0.08); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:12px; text-align:center; font-size:0.9em;">
+        <div style="font-size:1.8em;">💥</div>
+        <strong style="color:#ff5555;">تخريب النظام</strong><br>
+        <span style="color:#aaa;">مسح وتشفير الملفات</span>
+      </div>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">💣</span>
-      <h3>أنواع البرمجيات الخبيثة</h3>
+  <!-- TYPES OF MALWARE -->
+  <div class="cyber-card" style="border-top:3px solid #bd93f9;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#bd93f9;">💣 أنواع البرمجيات الخبيثة</h3>
     </div>
-    <div class="rd-compare-grid">
-      <div class="rd-compare-col" style="border-color: #ff9900;">
-        <div class="rd-compare-title">🦠 Virus (الفيروس)</div>
-        <ul class="rd-compare-list">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#ffb86c; margin-top:0; font-size: 1.1em;">🦠 Virus (الفيروس)</h5>
+        <ul style="color:#aaa; font-size:0.9em; padding-right: 20px;">
           <li>بيرتبط بملف أو برنامج حقيقي.</li>
-          <li>مش بيشتغل غير لو الضحية شغّل الملف (زي ملف <code>.exe</code> مصاب).</li>
+          <li>مش بيشتغل غير لو الضحية شغّل الملف.</li>
         </ul>
       </div>
-      <div class="rd-compare-col" style="border-color: #00e5a0;">
-        <div class="rd-compare-title">🐛 Worm (الدودة)</div>
-        <ul class="rd-compare-list">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#50fa7b; margin-top:0; font-size: 1.1em;">🐛 Worm (الدودة)</h5>
+        <ul style="color:#aaa; font-size:0.9em; padding-right: 20px;">
           <li>بتنتشر لوحدها عبر الشبكة من جهاز للتاني.</li>
           <li><strong>خطورتها:</strong> مش محتاجة تدخل من الـ user خالص عشان تشتغل.</li>
         </ul>
       </div>
-      <div class="rd-compare-col" style="border-color: #bd93f9;">
-        <div class="rd-compare-title">🐴 Trojan (حصان طروادة)</div>
-        <ul class="rd-compare-list">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#bd93f9; margin-top:0; font-size: 1.1em;">🐴 Trojan (حصان طروادة)</h5>
+        <ul style="color:#aaa; font-size:0.9em; padding-right: 20px;">
           <li>برنامج شكله شرعي (لعبة أو أداة) لكن جواه Backdoor مخفي.</li>
           <li>بيخدع المستخدم عشان ينزله ويديله صلاحيات.</li>
         </ul>
       </div>
-      <div class="rd-compare-col" style="border-color: #ff4757;">
-        <div class="rd-compare-title">💰 Ransomware (الفدية)</div>
-        <ul class="rd-compare-list">
-          <li>بيشفر كل ملفات الجهاز ويطلب فدية (فلوس/بيتكوين) لفك التشفير.</li>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#ff5555; margin-top:0; font-size: 1.1em;">💰 Ransomware (الفدية)</h5>
+        <ul style="color:#aaa; font-size:0.9em; padding-right: 20px;">
+          <li>بيشفر كل ملفات الجهاز ويطلب فدية لفك التشفير.</li>
           <li>مثال شهير: <strong>WannaCry</strong>.</li>
         </ul>
       </div>
     </div>
     
-    <div class="tech-card mt-3">
-      <div class="tech-header">
-        <span class="tech-icon">🔥</span>
-        <span class="tech-title">RAT (Remote Access Trojan)</span>
-        <span class="tech-badge" style="background:#ff4757; color:white;">أخطر الأنواع</span>
+    <div style="margin-top:20px; border:1px solid rgba(255,85,85,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(255,85,85,0.1); padding:10px 15px; display:flex; align-items:center; justify-content:space-between;">
+        <strong style="color:#ff5555; font-size:1.05em;">🔥 RAT (Remote Access Trojan)</strong>
+        <span style="background:rgba(255,85,85,0.2); color:#ff5555; font-size:0.75em; padding:3px 10px; border-radius:20px;">أخطر الأنواع</span>
       </div>
-      <div class="tech-content">
-        <p>نوع متقدم من التروجان بيدي الهاكر <strong>تحكم كامل (Full Control)</strong> في جهاز الضحية (شاشة، مايك، كاميرا، ملفات).</p>
-        <p>💡 <strong>أداة كمثال:</strong> <code>njRAT</code> (تستخدم لإنشاء Trojan يوفر Backdoor و Remote Control).</p>
+      <div style="padding:15px;">
+        <p style="color:#aaa; font-size:0.9em;">نوع متقدم من التروجان بيدي الهاكر <strong>تحكم كامل (Full Control)</strong> في جهاز الضحية (شاشة، مايك، كاميرا، ملفات).</p>
+        <p style="color:#6272a4; font-size:0.85em; margin-top:6px;">💡 <strong>أداة كمثال:</strong> <code>njRAT</code> (تستخدم لإنشاء Trojan يوفر Backdoor و Remote Control).</p>
       </div>
     </div>
 
-    <div class="tech-card mt-3">
-      <div class="tech-header">
-        <span class="tech-icon">💀</span>
-        <span class="tech-title">Exploit Kits</span>
+    <div style="margin-top:15px; border:1px solid rgba(189,147,249,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(189,147,249,0.1); padding:10px 15px; display:flex; align-items:center; justify-content:space-between;">
+        <strong style="color:#bd93f9; font-size:1.05em;">💀 Exploit Kits</strong>
       </div>
-      <div class="tech-content">
-        <p>أدوات جاهزة ومؤتمتة بتعمل حاجتين مع بعض:</p>
-        <ul>
+      <div style="padding:15px;">
+        <p style="color:#aaa; font-size:0.9em;">أدوات جاهزة ومؤتمتة بتعمل حاجتين مع بعض:</p>
+        <ul style="color:#aaa; font-size:0.9em; padding-right: 20px;">
           <li>بتدور على ثغرة في المتصفح أو الإضافات (Exploit).</li>
           <li>أول ما تلاقيها، بتنزل البرمجية الخبيثة تلقائياً (Drop Malware).</li>
         </ul>
@@ -3285,126 +3295,97 @@
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🔬</span>
-      <h3>تحليل البرمجيات الخبيثة (Malware Analysis)</h3>
+  <!-- MALWARE ANALYSIS -->
+  <div class="cyber-card" style="border-top:3px solid #00bfff;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#00bfff;">🔬 تحليل البرمجيات الخبيثة (Malware Analysis)</h3>
     </div>
     
-    <div class="process-timeline">
-      <!-- Static Analysis -->
-      <div class="timeline-step">
-        <div class="step-icon">1</div>
-        <div class="step-content">
-          <h4>التحليل الثابت (Static Analysis)</h4>
-          <p>فحص الملف <strong>بدون تشغيله</strong> لمعرفة بياناته وتركيبته.</p>
-          <div class="tools-grid mt-2">
-            <div class="tool-card">
-              <h5>VirusTotal</h5>
-              <p>رفع الملف لمعرفة الـ Signatures ورأي الـ Antiviruses فيه.</p>
-            </div>
-            <div class="tool-card">
-              <h5>strings</h5>
-              <p>يستخرج النصوص من الملف (IPs, URLs, Passwords).</p>
-              <code>strings malware.exe</code>
-            </div>
-            <div class="tool-card">
-              <h5>bintext & Dependency Walker</h5>
-              <p>استخراج الكلمات وفحص الـ DLLs والـ APIs اللي البرنامج بيطلبها.</p>
-            </div>
-          </div>
-        </div>
+    <div style="margin-top:20px; border:1px solid rgba(0,191,255,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(0,191,255,0.1); padding:10px 15px;">
+        <strong style="color:#00bfff; font-size:1.05em;">1️⃣ التحليل الثابت (Static Analysis)</strong>
       </div>
-
-      <!-- Dynamic Analysis -->
-      <div class="timeline-step">
-        <div class="step-icon">2</div>
-        <div class="step-content">
-          <h4>التحليل الديناميكي (Dynamic Analysis)</h4>
-          <p><strong>تشغيل الملف</strong> في بيئة معزولة (VM) ومراقبة تصرفاته.</p>
-          <div class="tools-grid mt-2">
-            <div class="tool-card">
-              <h5>Process Monitor 🔥</h5>
-              <p>بيراقب بدقة التعديلات على الـ Files والـ Registry والـ Processes.</p>
-            </div>
-            <div class="tool-card">
-              <h5>TCPView & CurrPorts</h5>
-              <p>لمراقبة اتصالات الشبكة (Connections) وأي محاولة اتصال بسيرفر خارجي (C2).</p>
-            </div>
+      <div style="padding:15px;">
+        <p style="color:#aaa; font-size:0.9em; margin-bottom: 10px;">فحص الملف <strong>بدون تشغيله</strong> لمعرفة بياناته وتركيبته.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px;">
+          <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:6px; padding:10px;">
+            <strong style="color:#8be9fd;">VirusTotal</strong>
+            <p style="color:#aaa; font-size:0.85em; margin: 5px 0 0 0;">رفع الملف لمعرفة الـ Signatures ورأي الـ Antiviruses فيه.</p>
+          </div>
+          <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:6px; padding:10px;">
+            <strong style="color:#8be9fd;">strings</strong>
+            <p style="color:#aaa; font-size:0.85em; margin: 5px 0 0 0;">يستخرج النصوص من الملف (IPs, URLs, Passwords).</p>
+            <div class="cmd-ui-box" style="margin-top:5px; font-size:0.8em; padding: 5px;">strings malware.exe</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:6px; padding:10px;">
+            <strong style="color:#8be9fd;">Dependency Walker</strong>
+            <p style="color:#aaa; font-size:0.85em; margin: 5px 0 0 0;">استخراج الكلمات وفحص الـ DLLs والـ APIs اللي البرنامج بيطلبها.</p>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">💻</span>
-      <h3>سيناريو عملي: تحليل Malware.exe</h3>
-    </div>
-    <div class="code-terminal">
-      <div class="terminal-header">
-        <span class="term-dot close"></span>
-        <span class="term-dot min"></span>
-        <span class="term-dot max"></span>
-        <span class="term-title">Malware_Analysis_Lab</span>
+    <div style="margin-top:20px; border:1px solid rgba(255,184,108,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(255,184,108,0.1); padding:10px 15px;">
+        <strong style="color:#ffb86c; font-size:1.05em;">2️⃣ التحليل الديناميكي (Dynamic Analysis)</strong>
       </div>
-      <div class="terminal-body" dir="ltr">
-        <div class="term-comment"># Step 1: Static Analysis (Extracting embedded data without running)</div>
-        <div class="term-line"><span class="term-prompt">user@kali:~$</span> strings malware.exe</div>
-        <div class="term-output">
-          ...<br>
-          http://evil-domain.com/drop<br>
-          192.168.1.105<br>
-          kernel32.dll<br>
-          ...
+      <div style="padding:15px;">
+        <p style="color:#aaa; font-size:0.9em; margin-bottom: 10px;"><strong>تشغيل الملف</strong> في بيئة معزولة (VM) ومراقبة تصرفاته.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px;">
+          <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:6px; padding:10px;">
+            <strong style="color:#f1fa8c;">Process Monitor 🔥</strong>
+            <p style="color:#aaa; font-size:0.85em; margin: 5px 0 0 0;">بيراقب بدقة التعديلات على الـ Files والـ Registry والـ Processes.</p>
+          </div>
+          <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:6px; padding:10px;">
+            <strong style="color:#f1fa8c;">TCPView & CurrPorts</strong>
+            <p style="color:#aaa; font-size:0.85em; margin: 5px 0 0 0;">لمراقبة اتصالات الشبكة (Connections) وأي محاولة اتصال بسيرفر خارجي (C2).</p>
+          </div>
         </div>
-        <div class="term-comment mt-2"># Step 2: Upload Hash to VirusTotal to check reputation</div>
-        <div class="term-comment mt-2"># Step 3: Dynamic Analysis</div>
-        <div class="term-line"><span class="term-prompt">PS C:\Lab></span> Start-Process malware.exe</div>
-        <div class="term-comment"># Monitor changes using Process Monitor & TCPView in real-time.</div>
       </div>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🛡️</span>
-      <h3>الحماية من البرمجيات الخبيثة (Countermeasures)</h3>
+  <!-- PRACTICAL LAB -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">💻 سيناريو عملي: تحليل Malware.exe</h3>
     </div>
-    <div class="concept-card" style="border-left: 3px solid #00e5a0;">
-      <ul>
-        <li>تحديث النظام والبرامج باستمرار (Patching).</li>
-        <li>استخدام Antivirus / EDR وتحديث قاعدة البيانات الخاصة به.</li>
-        <li>تفعيل الـ Firewall ومراقبة الـ Traffic الصادر.</li>
-        <li>عدم تحميل أو تشغيل أي مرفقات من مصادر غير موثوقة.</li>
-      </ul>
-      <p style="color:#ff4757; margin-top:10px; font-weight:bold;">⚠️ تحذير: اختبار وتحليل الـ Malware وإنشاء الـ Trojans يجب أن يتم فقط داخل مختبر معزول (Isolated Lab) ولا يتم أبداً على أجهزة حقيقية خارج بيئة الاختبار.</p>
+    
+    <div style="background:#282a36; border:1px solid #44475a; border-radius:8px; padding:15px; margin-top:15px; font-family: monospace;">
+      <div style="color:#6272a4; margin-bottom:5px;"># Step 1: Static Analysis (Extracting embedded data without running)</div>
+      <div style="color:#f8f8f2;"><span style="color:#50fa7b;">user@kali</span><span style="color:#bd93f9;">:~$</span> strings malware.exe</div>
+      <div style="color:#f1fa8c; margin-left:15px; margin-top:5px; margin-bottom:15px;">
+        ...<br>
+        http://evil-domain.com/drop<br>
+        192.168.1.105<br>
+        kernel32.dll<br>
+        ...
+      </div>
+      
+      <div style="color:#6272a4; margin-bottom:5px;"># Step 2: Upload Hash to VirusTotal to check reputation</div>
+      
+      <div style="color:#6272a4; margin-bottom:5px; margin-top:15px;"># Step 3: Dynamic Analysis</div>
+      <div style="color:#f8f8f2;"><span style="color:#8be9fd;">PS C:\Lab></span> Start-Process malware.exe</div>
+      <div style="color:#6272a4; margin-top:5px;"># Monitor changes using Process Monitor & TCPView in real-time.</div>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">💡</span>
-      <h3>الفرق بين أشهر الأنواع (Cheat Sheet)</h3>
+  <!-- COUNTERMEASURES -->
+  <div class="cyber-card" style="border-top:3px solid #ff5555; background:rgba(255,85,85,0.02);">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">🛡️ الحماية من البرمجيات الخبيثة (Countermeasures)</h3>
     </div>
-    <table class="meth-table">
-      <thead>
-        <tr>
-          <th>النوع</th>
-          <th>طريقة العمل / الوظيفة</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>Virus</strong></td><td>يحتاج ملف ليرتبط به وتدخل المستخدم لتشغيله.</td></tr>
-        <tr><td><strong>Worm</strong></td><td>ينتشر ذاتياً عبر الشبكة دون تدخل.</td></tr>
-        <tr><td><strong>Trojan</strong></td><td>يخدع المستخدم بمظهر شرعي لإدخال الـ Backdoor.</td></tr>
-        <tr><td><strong>RAT</strong></td><td>يمنح الهاكر تحكم كامل عن بُعد في الجهاز.</td></tr>
-        <tr><td><strong>Ransomware</strong></td><td>يشفر البيانات ويطلب فدية لفك التشفير.</td></tr>
-      </tbody>
-    </table>
+    <ul style="color:#aaa; font-size:0.95em; line-height: 1.8; padding-right: 20px; margin-top: 15px;">
+      <li>تحديث النظام والبرامج باستمرار (Patching).</li>
+      <li>استخدام Antivirus / EDR وتحديث قاعدة البيانات الخاصة به.</li>
+      <li>تفعيل الـ Firewall ومراقبة الـ Traffic الصادر.</li>
+      <li>عدم تحميل أو تشغيل أي مرفقات من مصادر غير موثوقة.</li>
+    </ul>
+    <div style="margin-top: 15px; padding: 10px; border-left: 4px solid #ff5555; background: rgba(255,85,85,0.1); border-radius: 4px;">
+      <p style="color:#ff5555; margin:0; font-weight:bold; font-size: 0.9em;">⚠️ تحذير: اختبار وتحليل الـ Malware وإنشاء الـ Trojans يجب أن يتم فقط داخل مختبر معزول (Isolated Lab) ولا يتم أبداً على أجهزة حقيقية خارج بيئة الاختبار.</p>
+    </div>
   </div>
-  
+
 </div>
 
       
@@ -7349,7 +7330,7 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
         mermaid.initialize({ startOnLoad: false, theme: 'dark' });
     }
   </script>
-  <script src="js/methodology.js?v=1781954156"></script>
-  <script src="js/quiz_engine.js?v=1781954156"></script>
+  <script src="js/methodology.js?v=1781954438"></script>
+  <script src="js/quiz_engine.js?v=1781954438"></script>
 </body>
 </html>
