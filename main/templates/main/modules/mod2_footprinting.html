@@ -1,0 +1,163 @@
+
+<!-- =======================================================
+     CEH MODULE 2: FOOTPRINTING & RECONNAISSANCE
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod2" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">👁️‍🗨️</span> Footprinting & Reconnaissance</h2>
+    <p class="hero-tagline">أولى مراحل الاختراق: جمع المعلومات الدقيقة، الـ OSINT، واستكشاف البنية التحتية.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 02</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">⚖️</span>
+      <h3>مقارنة: الاستطلاع النشط مقابل السلبي</h3>
+    </div>
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col good">
+        <div class="rd-compare-title">🕵️ الاستطلاع السلبي (Passive)</div>
+        <ul class="rd-compare-list">
+          <li>جمع المعلومات دون الاتصال المباشر بالهدف (Stealthy).</li>
+          <li>استخدام محركات البحث، مواقع التوظيف، و Archive.org.</li>
+          <li>البحث في السجلات العامة مثل WHOIS.</li>
+          <li>لا يُسجل في الـ Logs الخاصة بالهدف.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col bad" style="border-top-color: #ff4757;">
+        <div class="rd-compare-title">🚨 الاستطلاع النشط (Active)</div>
+        <ul class="rd-compare-list">
+          <li>يتطلب الاتصال المباشر بخوادم وأنظمة الهدف.</li>
+          <li>محاولات نقل النطاق (DNS Zone Transfer).</li>
+          <li>الهندسة الاجتماعية المباشرة (Social Engineering).</li>
+          <li>خطر تسجيل الأنشطة واكتشاف المهاجم.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🌐</span>
+      <h3>الاستخبارات مفتوحة المصدر (OSINT) و Dorking</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #00e5a0;">
+      <div class="card-header"><h4>Google Hacking (Dorking)</h4></div>
+      <p>استخدام مشغلات بحث متقدمة لاستخراج معلومات أو ملفات غير مفهرسة بشكل صحيح.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Google Search Queries</span></div>
+        <pre><code># البحث عن مسارات الدليل المفتوحة
+intitle:"index of" "target.com"
+
+# البحث عن ملفات إعدادات وكلمات مرور
+site:target.com ext:txt | ext:log | ext:env | ext:sql
+
+# البحث عن صفحات لوحة التحكم
+site:target.com inurl:admin | inurl:login</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🛠️</span>
+      <h3>أدوات الاستطلاع العميقة (Recon Arsenal)</h3>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #00b4d8;">
+      <div class="card-header"><h4>1. أداة Recon-ng</h4></div>
+      <p>إطار عمل مخصص للـ OSINT مشابه لواجهة Metasploit.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Recon-ng Console</span></div>
+        <pre><code>recon-ng
+workspaces create target_corp
+modules load recon/domains-hosts/hackertarget
+options set SOURCE target.com
+run
+show hosts</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <div class="card-header"><h4>2. أداة TheHarvester</h4></div>
+      <p>أداة جبارة لاستخراج الإيميلات، النطاقات الفرعية، وعناوين الـ IP من مصادر مختلفة.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Bash Shell</span></div>
+        <pre><code>theHarvester -d target.com -b google,linkedin,bing -l 500</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>3. محرك Shodan</h4></div>
+      <p>محرك بحث أجهزة الـ IoT والخوادم المربوطة بالإنترنت.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Shodan CLI</span></div>
+        <pre><code># تهيئة الأداة
+shodan init &lt;API_KEY&gt;
+
+# البحث عن خوادم أباتشي في دبي
+shodan search "apache city:Dubai"
+
+# إحصائيات الثغرات للشركة
+shodan stats vuln:cve-2014-0160 org:"Target Corp"</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #2ed573;">
+      <div class="card-header"><h4>4. جمع معلومات DNS (DNS Footprinting)</h4></div>
+      <p>البحث عن سجلات الـ DNS واستخراج الـ Subdomains المخفية.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Dig & Fierce</span></div>
+        <pre><code># جلب سجلات الميل (MX)
+dig mx target.com
+
+# محاولة نقل نطاق الخادم للحصول على نسخة كاملة من القاعدة
+dig axfr @ns1.target.com target.com
+
+# الفحص العنيف للنطاقات
+fierce --domain target.com</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🛡️</span>
+      <h3>استراتيجيات الحماية والتخفيف (Mitigation)</h3>
+    </div>
+    <div class="table-wrapper">
+      <table class="interactive-table" dir="rtl">
+        <thead>
+          <tr>
+            <th>التهديد الاستطلاعي (Threat)</th>
+            <th>الحل التقني للحماية (Mitigation)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>DNS Zone Transfer</strong></td>
+            <td>تعطيل Zone Transfer (AXFR) بحيث لا يُسمح بها إلا لخوادم الـ Secondary DNS.</td>
+          </tr>
+          <tr>
+            <td><strong>Directory Listing</strong></td>
+            <td>إغلاق تصفح الدلائل في إعدادات (Apache/Nginx/IIS) وإخفاء الصفحات الداخلية.</td>
+          </tr>
+          <tr>
+            <td><strong>Banner Grabbing & Server Info</strong></td>
+            <td>إخفاء إصدارات الخادم عبر تعديل (HTTP Server Headers) واستخدام صفحات أخطاء مخصصة.</td>
+          </tr>
+          <tr>
+            <td><strong>Metadata Leakage</strong></td>
+            <td>استخدام أدوات تنظيف البيانات لإزالة البيانات الوصفية من الـ PDFs والصور قبل نشرها (مثل أسماء الموظفين والبرامج).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
