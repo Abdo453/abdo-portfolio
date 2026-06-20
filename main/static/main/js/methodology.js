@@ -10,7 +10,7 @@
       const titleSpan = cat.previousElementSibling.querySelector('span:last-child');
       if (cat.style.maxHeight === '0px' || cat.style.display === 'none') {
         cat.style.display = 'flex';
-        cat.style.maxHeight = '1000px';
+        cat.style.maxHeight = '5000px';
         titleSpan.innerText = '▼';
       } else {
         cat.style.display = 'none';
@@ -574,9 +574,13 @@
             let catContainer = i.closest('.category-items');
             if (catContainer && (catContainer.style.display === 'none' || !catContainer.style.display)) {
               catContainer.style.display = 'flex';
-              catContainer.style.maxHeight = '2000px';
+              catContainer.style.maxHeight = '5000px';
               let titleSpan = catContainer.previousElementSibling.querySelector('span:last-child');
               if (titleSpan) titleSpan.innerText = '▼';
+            }
+            // Also ensure if it's already block/flex, it doesn't get stuck at 1000px
+            if (catContainer && catContainer.style.maxHeight === '1000px') {
+                catContainer.style.maxHeight = '5000px';
             }
           } else {
             i.style.display = 'none';
@@ -595,9 +599,12 @@
             let catContainer = i.closest('.category-items');
             if (catContainer && (catContainer.style.display === 'none' || !catContainer.style.display)) {
               catContainer.style.display = 'flex';
-              catContainer.style.maxHeight = '2000px';
+              catContainer.style.maxHeight = '5000px';
               let titleSpan = catContainer.previousElementSibling.querySelector('span:last-child');
               if (titleSpan) titleSpan.innerText = '▼';
+            }
+            if (catContainer && catContainer.style.maxHeight === '1000px') {
+                catContainer.style.maxHeight = '5000px';
             }
           } else {
             i.style.display = 'none';
