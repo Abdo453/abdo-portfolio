@@ -23,7 +23,7 @@
       --bg-dark: var(--bg-primary);
     }
 
-    body {
+    html, body {
       background-color: var(--bg-primary);
       color: var(--text-secondary);
       font-family: 'Inter', sans-serif;
@@ -32,11 +32,8 @@
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden !important;
-      position: relative;
+      /* allow body to scroll naturally */
+      overflow-x: hidden;
     }
 
     /* Ambient Neon Orbs & Grid */
@@ -98,14 +95,18 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border-color);
-      padding: 12px 30px;
+      padding: 0 30px;
+      height: 60px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 100;
+      left: 260px; width: calc(100% - 260px);
+      right: 0;
+      z-index: 1000;
       box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
     }
     .meth-logo {
       font-family: var(--font-mono);
@@ -137,11 +138,8 @@
     }
     .meth-container {
       display: flex;
-      flex: 1;
-      height: calc(100vh - 65px);
-      min-height: 0;
-      position: relative;
-      z-index: 1;
+      width: 100%;
+      min-height: calc(100vh - 60px);
     }
     
     /* Collapsible Sidebar styling */
@@ -154,7 +152,12 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      z-index: 10;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 500;
+      box-sizing: border-box;
     }
     .sidebar-category {
       display: flex;
@@ -215,14 +218,16 @@
     
     .meth-viewer {
       flex: 1;
-      padding: 40px;
-      overflow-y: auto;
+      padding: 24px; padding-top: 16px;
+      margin-left: 260px;
+      margin-top: 60px;
       background: radial-gradient(circle at top right, rgba(155, 89, 255, 0.02), transparent 60%);
       display: flex;
       flex-direction: column;
       gap: 30px;
       position: relative;
       z-index: 1;
+      box-sizing: border-box;
     }
     
     /* Cyber Hero Styling */
@@ -3139,24 +3144,7 @@
 /* ========================================================
    SIDEBAR STICKY & FLEXBOX FIXES
    ======================================================== */
-.meth-container {
-    /* Prevent the container from stretching beyond the viewport */
-    overflow: hidden !important;
-}
 
-.meth-viewer {
-    /* Critical flexbox fix to allow scrolling inside the viewer */
-    min-height: 0 !important;
-    height: 100% !important;
-}
-
-.meth-sidebar {
-    /* Guarantee the sidebar stays fixed */
-    position: sticky !important;
-    top: 0 !important;
-    align-self: flex-start !important;
-    height: calc(100vh - 65px) !important;
-}
 
 /* ========================================================
    DARK HACKER THEME - UI COMPONENTS
@@ -3731,3 +3719,5 @@
 /* Fix Typography */
 .phase-title-new { font-size: 32px; letter-spacing: -0.5px; }
 
+
+.hunt-dashboard { display: none !important; }
