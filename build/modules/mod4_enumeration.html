@@ -3,191 +3,219 @@
      CEH MODULE 4: ENUMERATION
      ======================================================= -->
 <div class="meth-content-view" id="meth-content-mod4" style="display:none;" dir="rtl">
-  
+
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🧠</span> Module 4: Enumeration (التعداد)</h2>
-    <p class="hero-tagline">مرحلة سحب المعلومات الحساسة الحقيقية من الهدف. هنا تبدأ المعركة الحقيقية!</p>
+    <h2 class="hero-title"><span class="hero-icon">📋</span> Module 4: Enumeration (التعداد)</h2>
+    <p class="hero-tagline">بعد فتح الأبواب، حان وقت التفتيش — سحب بيانات حقيقية وحساسة من الهدف مباشرةً.</p>
     <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 04</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:#ff0055;"></span> Deep Extraction</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#00bfff;"></span> Module 04</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ff9900;"></span> Data Extraction</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ff5555;"></span> OSCP Critical</span>
     </div>
   </div>
 
-  <div class="cyber-card" style="border-left: 4px solid #ff5555;">
-    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">⚡ أولاً: يعني إيه Enumeration؟</h3></div>
-    <p>هو إنك تعمل <strong>اتصال مباشر بالهدف وتسأله أسئلة (Queries)</strong> علشان يطلعلك بيانات 🎯</p>
-    
-    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 15px;">
-        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; flex: 1; min-width: 200px;">
-            <h4 style="color: #50fa7b; margin-top: 0;">📌 المعلومات المستهدفة:</h4>
-            <ul style="margin: 0; padding-right: 20px;">
-                <li>👤 Users (المستخدمين)</li>
-                <li>🔑 Passwords (كلمات المرور)</li>
-                <li>📁 Shares (المجلدات المشتركة)</li>
-                <li>⚙️ Services details (تفاصيل الخدمات)</li>
-            </ul>
-        </div>
-        <div style="background: rgba(255,85,85,0.1); padding: 15px; border-radius: 8px; flex: 1; min-width: 200px;">
-            <h4 style="color: #ff5555; margin-top: 0;">🔥 الفرق عن Scanning:</h4>
-            <ul style="margin: 0; padding-right: 20px;">
-                <li><strong>Scanning:</strong> “فيه إيه؟ الباب ده مفتوح؟”</li>
-                <li><strong>Enumeration:</strong> “هات التفاصيل الدقيقة! مين جوه؟”</li>
-            </ul>
-        </div>
+  <!-- WHAT IS ENUMERATION -->
+  <div class="cyber-card" style="border-top:3px solid #ff9900;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff9900;">🧠 ما هو الـ Enumeration؟</h3>
     </div>
-  </div>
-
-  <div class="cyber-card">
-    <div class="card-header"><h3 style="color: #8be9fd; margin: 0;">🧭 خطوات الاختراق (مهم تحفظها)</h3></div>
-    <div class="mermaid" style="text-align: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-top: 10px;">
-graph LR
-    A[Recon] --> B[Scanning]
-    B --> C((Enumeration 🔥))
-    C --> D[Gaining Access]
-    D --> E[Maintaining Access]
-    E --> F[Covering Tracks]
-    
-    style C fill:#ff5555,stroke:#fff,stroke-width:3px,color:#fff
-    style A fill:#44475a,stroke:#6272a4,color:#f8f8f2
-    style B fill:#44475a,stroke:#6272a4,color:#f8f8f2
-    style D fill:#50fa7b,stroke:#333,color:#000
-    style E fill:#f1fa8c,stroke:#333,color:#000
-    style F fill:#6272a4,stroke:#333,color:#fff
-    </div>
-  </div>
-
-  <div class="cyber-card" style="border-left: 4px solid #f1fa8c;">
-    <div class="card-header"><h3 style="color: #f1fa8c; margin: 0;">🌐 1) HTTP Enumeration (مواقع الويب)</h3></div>
-    
-    <div class="meth-section" style="margin-top: 20px;">
-        <h4 style="color: #fff;">🧠 الأساس: GET vs POST</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px; border: 1px solid #44475a;">
-                <h5 style="color: #ffb86c; margin-top: 0;">🔹 GET Request</h5>
-                <div class="cmd-ui-box">GET /index.php?id=1</div>
-                <p style="font-size: 0.9em;">👉 البيانات بتظهر في الـ URL (أقل أماناً)</p>
-            </div>
-            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px; border: 1px solid #44475a;">
-                <h5 style="color: #ffb86c; margin-top: 0;">🔹 POST Request</h5>
-                <div class="cmd-ui-box">POST /login
-username=admin&password=123</div>
-                <p style="font-size: 0.9em;">👉 البيانات مخفية في الـ Body (أكثر أماناً)</p>
-            </div>
-        </div>
-
-        <h4 style="color: #8be9fd; margin-top: 25px;">🔍 أدوات HTTP Enumeration</h4>
-        
-        <h5 style="color: #50fa7b;">1. Nikto (مهم جدًا)</h5>
-        <div class="cmd-ui-box">nikto -h http://192.168.1.1</div>
-        <p>👉 بيكشف: Vulnerabilities، ملفات خطيرة، إعدادات غلط.</p>
-
-        <h5 style="color: #50fa7b; margin-top: 15px;">2. Nmap Scripts</h5>
-        <div class="cmd-ui-box">nmap --script=http-enum 192.168.1.1</div>
-        <p>👉 يطلع: directories، صفحات مخفية.</p>
-
-        <h5 style="color: #50fa7b; margin-top: 15px;">3. Directory Bruteforce</h5>
-        <div class="cmd-ui-box">dirb http://192.168.1.1</div>
-        <div class="cmd-ui-box">wfuzz -c -w /usr/share/wordlists/dirb/common.txt http://192.168.1.1/FUZZ</div>
-        <p>👉 بيكتشف: admin panels، hidden APIs.</p>
-
-        <h5 style="color: #50fa7b; margin-top: 15px;">4. SecLists (كنز 🔥)</h5>
-        <div class="cmd-ui-box">/usr/share/seclists</div>
-        <p>👉 فيها: قوائم (Wordlists) جاهزة للـ brute force، directories، passwords.</p>
-
-        <h5 style="color: #50fa7b; margin-top: 15px;">5. Burp Suite</h5>
-        <p>👉 يستخدم في: اعتراض الطلبات (Intercept)، تعديلها، واكتشاف الثغرات (Web hacking و SQL Injection).</p>
-    </div>
-  </div>
-
-  <div class="cyber-card" style="border-left: 4px solid #bd93f9;">
-    <div class="card-header"><h3 style="color: #bd93f9; margin: 0;">🖥️ 2) SMB Enumeration (ويندوز)</h3></div>
-    
-    <div class="meth-section" style="margin-top: 15px;">
-        <h5 style="color: #fff;">1. enum4linux</h5>
-        <div class="cmd-ui-box">enum4linux 192.168.1.1</div>
-        <p>👉 يطلع: Users، Shares، Password policy.</p>
-
-        <h5 style="color: #fff; margin-top: 15px;">2. Nmap SMB Scripts</h5>
-        <div class="cmd-ui-box">nmap --script=smb-enum* 192.168.1.1</div>
-
-        <h5 style="color: #fff; margin-top: 15px;">3. Metasploit SMB</h5>
-        <div class="cmd-ui-box">use auxiliary/scanner/smb/smb_enumshares</div>
-    </div>
-  </div>
-
-  <div class="cyber-card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; background: transparent; border: none; padding: 0;">
-      <div style="background: rgba(0,0,0,0.4); border: 1px solid #6272a4; padding: 15px; border-radius: 8px;">
-          <h3 style="color: #ffb86c; margin-top: 0;">🌐 3) NetBIOS Enumeration</h3>
-          <div class="cmd-ui-box">nmap -sU -p 137 --script=nbstat 192.168.1.1</div>
-          <p>👉 يطلع: اسم الجهاز، domain.</p>
+    <p style="font-size:1.05em; line-height:1.9;">
+      الـ Enumeration هو إنشاء <strong>اتصال مباشر بالهدف وسؤاله بشكل نشط</strong> للحصول على بيانات تفصيلية دقيقة.
+      الفرق عن الـ Scanning أنك مش بس بتسأل "مفتوح ولا لأ؟" — دلوقتي بتسأل <em style="color:#f1fa8c;">"إيه موجود جواه؟"</em>
+    </p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div style="background:rgba(255,153,0,0.08); border:1px solid rgba(255,153,0,0.4); border-radius:10px; padding:18px;">
+        <h5 style="color:#ff9900; margin-top:0;">📡 Scanning يقول:</h5>
+        <ul style="color:#aaa; font-size:0.9em; line-height:1.8;">
+          <li>"البورت 80 مفتوح"</li>
+          <li>"البورت 445 مفتوح"</li>
+          <li>"البورت 22 مفتوح"</li>
+        </ul>
       </div>
-
-      <div style="background: rgba(0,0,0,0.4); border: 1px solid #6272a4; padding: 15px; border-radius: 8px;">
-          <h3 style="color: #ffb86c; margin-top: 0;">📁 4) NFS Enumeration</h3>
-          <div class="cmd-ui-box">use auxiliary/scanner/nfs/nfsmount</div>
-          <p>👉 باستخدام Metasploit، يطلع: Shared folders.</p>
+      <div style="background:rgba(80,250,123,0.08); border:1px solid rgba(80,250,123,0.4); border-radius:10px; padding:18px;">
+        <h5 style="color:#50fa7b; margin-top:0;">🔥 Enumeration يقول:</h5>
+        <ul style="color:#aaa; font-size:0.9em; line-height:1.8;">
+          <li>"على البورت 80: Apache 2.4.49 وفيه /admin"</li>
+          <li>"على 445: Users: admin, john. Share: C$"</li>
+          <li>"على 22: OpenSSH 7.6p1 يقبل Password Auth"</li>
+        </ul>
       </div>
+    </div>
 
-      <div style="background: rgba(0,0,0,0.4); border: 1px solid #6272a4; padding: 15px; border-radius: 8px;">
-          <h3 style="color: #ffb86c; margin-top: 0;">🔐 5) SSH Enumeration</h3>
-          <div class="cmd-ui-box">use auxiliary/scanner/ssh/ssh_version</div>
-          <p>👉 باستخدام Metasploit، يجيب: إصدار SSH.</p>
+    <!-- Attack chain -->
+    <h4 style="color:#8be9fd; margin-top:25px;">🧭 مكان Enumeration في سلسلة الهجوم:</h4>
+    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-top:10px; font-size:0.85em;">
+      <div style="background:#44475a; padding:6px 12px; border-radius:20px; color:#aaa;">1. Recon</div>
+      <div style="color:#6272a4;">→</div>
+      <div style="background:#44475a; padding:6px 12px; border-radius:20px; color:#aaa;">2. Scanning</div>
+      <div style="color:#6272a4;">→</div>
+      <div style="background:rgba(255,153,0,0.3); border:2px solid #ff9900; padding:6px 12px; border-radius:20px; color:#ff9900; font-weight:bold;">3. Enumeration 🔥</div>
+      <div style="color:#6272a4;">→</div>
+      <div style="background:rgba(80,250,123,0.2); padding:6px 12px; border-radius:20px; color:#50fa7b;">4. Exploitation</div>
+      <div style="color:#6272a4;">→</div>
+      <div style="background:#44475a; padding:6px 12px; border-radius:20px; color:#aaa;">5. Post-Exploit</div>
+    </div>
+  </div>
+
+  <!-- HTTP ENUMERATION -->
+  <div class="cyber-card" style="border-top:3px solid #00bfff;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#00bfff;">🌐 1. HTTP Enumeration (مواقع الويب)</h3>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px;">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#00bfff; margin-top:0;">GET Request</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em; direction:ltr; text-align:left;">GET /index.php?id=1 HTTP/1.1</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">البيانات ظاهرة في الـ URL — سهل اكتشافه في الـ Logs.</p>
       </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#00bfff; margin-top:0;">POST Request</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em; direction:ltr; text-align:left;">POST /login HTTP/1.1<br>username=admin&amp;password=123</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">البيانات في الـ Body — أكثر أماناً ولكن يمكن اعتراضه بـ Burp Suite.</p>
+      </div>
+    </div>
+
+    <h5 style="color:#f1fa8c; margin-top:20px;">🔍 أدوات HTTP Enumeration:</h5>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-top:12px;">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">Nikto — فحص شامل</h6>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nikto -h http://192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يكشف الثغرات المعروفة، الملفات الخطيرة، الإعدادات الخاطئة (Outdated, Misconfig).</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">dirb + wfuzz — اكتشاف المسارات</h6>
+        <div class="cmd-ui-box" style="font-size:0.85em;">dirb http://192.168.1.1</div>
+        <div class="cmd-ui-box" style="font-size:0.8em; margin-top:6px;">wfuzz -c -w /usr/share/wordlists/dirb/common.txt http://IP/FUZZ</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يكتشف admin panels, /backup, /config, hidden APIs.</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">Burp Suite — الأقوى</h6>
+        <p style="color:#aaa; font-size:0.8em; margin-top:0;">يعترض الطلبات ويسمح بتعديلها — ضروري في Web Hacking و SQL Injection. يعمل كـ Proxy بين متصفحك والموقع.</p>
+        <div style="background:rgba(255,85,85,0.1); padding:6px; border-radius:4px; font-size:0.8em; color:#ff5555;">أكثر أداة استخداماً في Bug Bounty!</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">SecLists — كنز الـ Wordlists 🔥</h6>
+        <div class="cmd-ui-box" style="font-size:0.85em;">/usr/share/seclists/</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يحتوي على آلاف الـ Wordlists الجاهزة: Directories, Passwords, Usernames, Subdomains, Fuzzing.</p>
+      </div>
+    </div>
   </div>
 
-  <div class="cyber-card" style="border-left: 4px solid #50fa7b; margin-top: 15px;">
-    <div class="card-header"><h3 style="color: #50fa7b; margin: 0;">🎯 6) Banner Grabbing (مهم جدًا)</h3></div>
-    <p>👉 <strong>فكرة بسيطة:</strong> تاخد “البانر” من السيرفر = معلومات عن الخدمة والإصدار.</p>
-    <div class="cmd-ui-box">nc -nv 192.168.1.1 80</div>
-    <p>👉 ممكن يرجع: Apache version، OS.</p>
+  <!-- SMB ENUMERATION -->
+  <div class="cyber-card" style="border-top:3px solid #bd93f9;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#bd93f9;">🖥️ 2. SMB Enumeration (ويندوز)</h3>
+    </div>
+    <p style="color:#aaa;">الـ SMB (Port 445) بروتوكول مشاركة الملفات في Windows — كنز من البيانات إذا كان مفتوحاً!</p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-top:15px;">
+      <div style="background:rgba(189,147,249,0.08); border:1px solid rgba(189,147,249,0.3); border-radius:8px; padding:15px;">
+        <h6 style="color:#bd93f9; margin-top:0;">enum4linux — الأداة الكل في واحد</h6>
+        <div class="cmd-ui-box" style="font-size:0.85em;">enum4linux 192.168.1.1</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">enum4linux -a 192.168.1.1 <span style="color:#6272a4;"># كل شيء</span></div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">يجيب: Users, Groups, Shares, Password Policy, OS Info.</p>
+      </div>
+      <div style="background:rgba(189,147,249,0.08); border:1px solid rgba(189,147,249,0.3); border-radius:8px; padding:15px;">
+        <h6 style="color:#bd93f9; margin-top:0;">Nmap SMB Scripts</h6>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap --script=smb-enum* 192.168.1.1</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">nmap --script=smb-vuln-ms17-010 IP <span style="color:#6272a4;"># EternalBlue!</span></div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">يفحص مشاركات، ثغرات، وإعدادات SMB.</p>
+      </div>
+      <div style="background:rgba(189,147,249,0.08); border:1px solid rgba(189,147,249,0.3); border-radius:8px; padding:15px;">
+        <h6 style="color:#bd93f9; margin-top:0;">Metasploit SMB</h6>
+        <div class="cmd-ui-box" style="font-size:0.85em;">use auxiliary/scanner/smb/smb_enumshares</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">use auxiliary/scanner/smb/smb_enumusers</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">يعطيك قائمة بالمشاركات والمستخدمين بشكل منظم.</p>
+      </div>
+    </div>
   </div>
 
-  <div class="cyber-card">
-    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">💣 7) البحث عن Exploits</h3></div>
-    <ul style="line-height: 1.8; margin-top: 10px;">
-        <li><strong>محلي (Kali):</strong> <code>searchsploit apache</code></li>
-        <li><strong>أونلاين:</strong> Exploit-DB، GitHub</li>
-    </ul>
-
-    <h3 style="color: #ff5555; margin-top: 25px;">🧠 8) UDP Enumeration</h3>
-    <div class="cmd-ui-box">nmap -sU 192.168.1.1</div>
-    <p>👉 مهم لخدمات زي: DNS, SNMP.</p>
+  <!-- OTHER PROTOCOLS -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">🔌 3. Enumeration للبروتوكولات الأخرى</h3>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin-top:18px;">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:14px;">
+        <h6 style="color:#ffb86c; margin-top:0;">🌐 NetBIOS (Port 137)</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em;">nmap -sU -p 137 --script=nbstat 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يجيب: اسم الجهاز، اسم الـ Domain، MAC Address.</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:14px;">
+        <h6 style="color:#ffb86c; margin-top:0;">📁 NFS (Network File System)</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em;">showmount -e 192.168.1.1</div>
+        <div class="cmd-ui-box" style="font-size:0.8em; margin-top:4px;">use auxiliary/scanner/nfs/nfsmount</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يجيب قائمة الـ Shared Folders — قد تكون مفتوحة للـ Mount!</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:14px;">
+        <h6 style="color:#ffb86c; margin-top:0;">🔐 SSH (Port 22)</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em;">use auxiliary/scanner/ssh/ssh_version</div>
+        <div class="cmd-ui-box" style="font-size:0.8em; margin-top:4px;">nmap -sV -p22 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يجيب إصدار SSH — إصدارات قديمة قد تكون عرضة للثغرات.</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:14px;">
+        <h6 style="color:#ffb86c; margin-top:0;">📡 SNMP (Port 161 UDP)</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em;">snmpwalk -v1 -c public 192.168.1.1</div>
+        <div class="cmd-ui-box" style="font-size:0.8em; margin-top:4px;">use auxiliary/scanner/snmp/snmp_enum</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">بروتوكول إدارة الشبكات — غالباً بـ Community String افتراضي "public"!</p>
+      </div>
+    </div>
   </div>
 
-  <div class="cyber-card" style="background: rgba(255, 85, 85, 0.1);">
-    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">⚠️ ملاحظات مهمة</h3></div>
-    <ul style="line-height: 1.8; margin-top: 10px;">
-        <li>Enumeration = مرحلة حساسة جدًا ومزعجة (Noisy) 🔥.</li>
-        <li>غالبًا تحتاج: Brute force و Password guessing.</li>
-        <li><strong>خطر:</strong> ممكن تتكشف بسهولة من أنظمة الـ IDS/IPS.</li>
-    </ul>
-    
-    <h4 style="color: #f1fa8c; margin-top: 20px;">💡 أفضل Workflow عملي</h4>
-    <ol style="line-height: 1.8;">
-        <li><strong>Scan:</strong> <code>nmap -sS -sV -O 192.168.1.1</code></li>
-        <li><strong>HTTP:</strong> <code>nikto -h http://IP</code></li>
-        <li><strong>SMB:</strong> <code>enum4linux IP</code></li>
-        <li><strong>Directories:</strong> <code>dirb http://IP</code></li>
+  <!-- BANNER GRABBING -->
+  <div class="cyber-card" style="border-top:3px solid #ff5555;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">🎯 4. Banner Grabbing — اقرأ بطاقة تعريف الخدمة</h3>
+    </div>
+    <p style="color:#aaa;">الـ Banner هو الرسالة الأولى التي يرسلها الخادم عند الاتصال — تحتوي على اسم الخدمة وإصدارها!</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:15px;">
+      <div>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nc -nv 192.168.1.1 80 <span style="color:#6272a4;"># HTTP Banner</span></div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">nc -nv 192.168.1.1 21 <span style="color:#6272a4;"># FTP Banner</span></div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">nc -nv 192.168.1.1 25 <span style="color:#6272a4;"># SMTP Banner</span></div>
+      </div>
+      <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:8px; padding:14px; direction:ltr; text-align:left; font-family:monospace; font-size:0.8em;">
+        <span style="color:#6272a4;"># نتيجة مثال:</span><br>
+        <span style="color:#50fa7b;">220 vsftpd 2.3.4</span><br>
+        <span style="color:#ff9900;">→ ثغرة Backdoor معروفة! 🔥</span>
+      </div>
+    </div>
+
+    <h5 style="color:#fff; margin-top:20px;">💣 البحث عن الـ Exploits بعد معرفة الإصدار:</h5>
+    <div class="cmd-ui-box">searchsploit vsftpd 2.3.4</div>
+    <div class="cmd-ui-box" style="margin-top:8px;">searchsploit apache 2.4.49</div>
+    <p style="color:#aaa; font-size:0.9em; margin-top:8px;">أيضاً تقدر تبحث على <strong>exploit-db.com</strong> و <strong>GitHub</strong> لو مش لاقي في searchsploit.</p>
+  </div>
+
+  <!-- WORKFLOW -->
+  <div class="cyber-card" style="background:rgba(80,250,123,0.06); border:2px solid rgba(80,250,123,0.4);">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">🏆 Workflow عملي مثالي</h3>
+    </div>
+    <ol style="line-height:2; margin-top:15px; font-size:0.95em;">
+      <li><strong style="color:#00bfff;">Scan:</strong> <code>nmap -sS -sV -O 192.168.1.1</code></li>
+      <li><strong style="color:#00bfff;">HTTP:</strong> <code>nikto -h http://IP</code> ثم <code>dirb http://IP</code></li>
+      <li><strong style="color:#bd93f9;">SMB:</strong> <code>enum4linux IP</code></li>
+      <li><strong style="color:#ff9900;">Banner:</strong> <code>nc -nv IP [port]</code></li>
+      <li><strong style="color:#ff5555;">Exploit Search:</strong> <code>searchsploit [service] [version]</code></li>
     </ol>
   </div>
 
-  <div class="cyber-card">
-    <div class="card-header"><h3 style="color: #fff; margin: 0;">🔥 الخلاصة</h3></div>
-    <table class="interactive-table" dir="rtl" style="margin-top: 15px;">
-        <thead>
-            <tr>
-                <th>النوع</th>
-                <th>الهدف</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>HTTP</td><td>صفحات وثغرات</td></tr>
-            <tr><td>SMB</td><td>Users & Shares</td></tr>
-            <tr><td>NetBIOS</td><td>معلومات الشبكة</td></tr>
-            <tr><td>NFS</td><td>ملفات (Shared)</td></tr>
-            <tr><td>SSH</td><td>إصدار الخدمة</td></tr>
-            <tr><td>Banner</td><td>معلومات السيرفر بدقة</td></tr>
-        </tbody>
+  <!-- SUMMARY -->
+  <div class="cyber-card" style="background:rgba(0,0,0,0.4);">
+    <div class="card-header"><h3 style="margin:0; color:#fff;">💡 خلاصة — أنواع الـ Enumeration</h3></div>
+    <table class="interactive-table" dir="rtl" style="margin-top:15px;">
+      <thead><tr><th>النوع</th><th>البورت</th><th>الأداة</th><th>ما تجيبه</th></tr></thead>
+      <tbody>
+        <tr><td>HTTP</td><td>80, 443</td><td>Nikto, dirb, Burp</td><td>صفحات وثغرات</td></tr>
+        <tr><td>SMB</td><td>445</td><td>enum4linux, Metasploit</td><td>Users, Shares</td></tr>
+        <tr><td>NetBIOS</td><td>137 UDP</td><td>nmap nbstat</td><td>اسم الجهاز والـ Domain</td></tr>
+        <tr><td>NFS</td><td>2049</td><td>showmount</td><td>Shared Folders</td></tr>
+        <tr><td>SSH</td><td>22</td><td>nmap, Metasploit</td><td>الإصدار والإعدادات</td></tr>
+        <tr><td>SNMP</td><td>161 UDP</td><td>snmpwalk, Metasploit</td><td>إعدادات الشبكة</td></tr>
+        <tr><td>Banner</td><td>أي بورت</td><td>Netcat</td><td>اسم الخدمة والإصدار</td></tr>
+      </tbody>
     </table>
   </div>
 

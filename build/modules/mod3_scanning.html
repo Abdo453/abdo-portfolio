@@ -3,159 +3,236 @@
      CEH MODULE 3: SCANNING NETWORKS
      ======================================================= -->
 <div class="meth-content-view" id="meth-content-mod3" style="display:none;" dir="rtl">
-  
+
   <div class="cyber-hero">
     <h2 class="hero-title"><span class="hero-icon">📡</span> Module 3: Scanning Networks</h2>
-    <p class="hero-tagline">شرح شامل لكل أنواع الفحص (Scanning) وطرق الأتمتة واكتشاف البورتات وتجاوز أنظمة الحماية.</p>
+    <p class="hero-tagline">بعد جمع المعلومات، حان وقت الفحص — اعرف كل باب مفتوح في هدفك قبل أن تدخل.</p>
     <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 03</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Nmap Mastery</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#00bfff;"></span> Module 03</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#50fa7b;"></span> Nmap Mastery</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ff5555;"></span> OSCP Essential</span>
     </div>
   </div>
 
-  <div class="cyber-card">
-    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">🧠 أولاً: يعني إيه Scanning؟</h3></div>
-    <p>بعد ما جمعت معلومات (Footprinting)، بتيجي مرحلة فحص الشبكة علشان تعرف:</p>
-    <ul style="line-height: 1.8;">
-        <li>الأجهزة اللي شغالة (Live Hosts)</li>
-        <li>البورتات المفتوحة</li>
-        <li>الخدمات (Services)</li>
-        <li>نظام التشغيل (OS)</li>
-        <li>الثغرات</li>
-    </ul>
-  </div>
-
-  <div class="cyber-card">
-    <div class="card-header"><h3 style="color: #50fa7b; margin: 0;">🧭 1) Host Discovery (اكتشاف الأجهزة)</h3></div>
-    <p>🎯 <strong>الهدف:</strong> تعرف مين شغال على الشبكة.</p>
-    
-    <div class="meth-section" style="margin-top: 20px;">
-        <h4 style="color: #8be9fd;">🔹 1. Ping Sweep</h4>
-        <p><strong>الفكرة:</strong> يبعت ICMP لكل IP ويشوف مين رد.</p>
-        <div class="cmd-ui-box">nmap -sn 192.168.1.0/24</div>
-        <p>📌 <strong>معناه:</strong> <code>-sn</code> → scan بدون بورتات (بس hosts).<br>👉 <strong>الاستخدام:</strong> تعرف الأجهزة الموجودة.</p>
-
-        <h4 style="color: #8be9fd; margin-top: 15px;">🔹 2. ARP Scan (أقوى في الشبكة المحلية)</h4>
-        <div class="cmd-ui-box">netdiscover -r 192.168.1.0/24</div>
-        <p>👉 <strong>ليه قوي؟</strong> بيشتغل حتى لو Ping مقفول 🔥.</p>
+  <!-- WHAT IS SCANNING -->
+  <div class="cyber-card" style="border-top:3px solid #00bfff;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#00bfff;">🧠 ما هو الـ Scanning؟</h3>
+    </div>
+    <p style="font-size:1.05em; line-height:1.9;">
+      بعد مرحلة الـ Footprinting (جمع المعلومات)، تبدأ مرحلة الـ Scanning التي تهدف إلى الاتصال المباشر بالهدف وفحص بنيته التحتية.
+    </p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:15px;">
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:12px; text-align:center; font-size:0.9em;">
+        <div style="font-size:1.8em;">💻</div>
+        <strong style="color:#00bfff;">Live Hosts</strong><br>
+        <span style="color:#aaa;">مين شغال؟</span>
+      </div>
+      <div style="background:rgba(80,250,123,0.08); border:1px solid rgba(80,250,123,0.3); border-radius:8px; padding:12px; text-align:center; font-size:0.9em;">
+        <div style="font-size:1.8em;">🚪</div>
+        <strong style="color:#50fa7b;">Open Ports</strong><br>
+        <span style="color:#aaa;">الأبواب المفتوحة</span>
+      </div>
+      <div style="background:rgba(189,147,249,0.08); border:1px solid rgba(189,147,249,0.3); border-radius:8px; padding:12px; text-align:center; font-size:0.9em;">
+        <div style="font-size:1.8em;">⚙️</div>
+        <strong style="color:#bd93f9;">Services</strong><br>
+        <span style="color:#aaa;">الخدمات الشغالة</span>
+      </div>
+      <div style="background:rgba(255,184,108,0.08); border:1px solid rgba(255,184,108,0.3); border-radius:8px; padding:12px; text-align:center; font-size:0.9em;">
+        <div style="font-size:1.8em;">🖥️</div>
+        <strong style="color:#ffb86c;">OS</strong><br>
+        <span style="color:#aaa;">نظام التشغيل</span>
+      </div>
+      <div style="background:rgba(255,85,85,0.08); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:12px; text-align:center; font-size:0.9em;">
+        <div style="font-size:1.8em;">🐛</div>
+        <strong style="color:#ff5555;">Vulns</strong><br>
+        <span style="color:#aaa;">الثغرات</span>
+      </div>
     </div>
   </div>
 
-  <div class="cyber-card" style="border-left: 4px solid #f1fa8c;">
-    <div class="card-header"><h3 style="color: #f1fa8c; margin: 0;">🌐 2) Port Scanning (فحص البورتات)</h3></div>
-    <p>🎯 <strong>الهدف:</strong> تعرف أي بورت مفتوح وأي خدمة شغالة.</p>
-    
-    <div class="meth-section" style="margin-top: 20px;">
-        <h4 style="color: #ffb86c;">🔹 1. TCP Connect Scan (العادي)</h4>
-        <div class="cmd-ui-box">nmap -sT 192.168.1.1</div>
-        <p>👉 <strong>بيعمل:</strong> اتصال كامل (3-way handshake).<br>📌 <strong>مميزاته:</strong> دقيق. | ❌ <strong>عيوبه:</strong> سهل يتكشف.</p>
+  <!-- HOST DISCOVERY -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">🧭 1. Host Discovery — مين شغال على الشبكة؟</h3>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#50fa7b; margin-top:0;">📡 Ping Sweep</h5>
+        <p style="color:#aaa; font-size:0.9em;">يبعت ICMP لكل IP في الـ Range ويشوف مين بيرد.</p>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap -sn 192.168.1.0/24</div>
+        <p style="color:#6272a4; font-size:0.8em; margin-top:6px;"><code>-sn</code> = Ping Scan بدون فحص بورتات</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#ff5555; margin-top:0;">⚡ ARP Scan (أقوى في الشبكة المحلية)</h5>
+        <p style="color:#aaa; font-size:0.9em;">يشتغل حتى لو Ping مقفول — لأنه يتواصل على مستوى MAC Address.</p>
+        <div class="cmd-ui-box" style="font-size:0.85em;">netdiscover -r 192.168.1.0/24</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">arp-scan -l</div>
+      </div>
+    </div>
+  </div>
 
-        <h4 style="color: #ffb86c; margin-top: 15px;">🔹 2. TCP SYN Scan (Stealth Scan 🔥)</h4>
+  <!-- PORT SCANNING TYPES -->
+  <div class="cyber-card" style="border-top:3px solid #bd93f9;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#bd93f9;">🌐 2. أنواع Port Scanning — اعرف كل نوع وإمتى تستخدمه</h3>
+    </div>
+
+    <!-- SYN Scan -->
+    <div style="margin-top:20px; border:1px solid rgba(80,250,123,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(80,250,123,0.1); padding:10px 15px; display:flex; align-items:center; justify-content:space-between;">
+        <strong style="color:#50fa7b; font-size:1.05em;">🔥 TCP SYN Scan (Stealth Scan) — الأهم في الامتحان</strong>
+        <span style="background:rgba(80,250,123,0.2); color:#50fa7b; font-size:0.75em; padding:3px 10px; border-radius:20px;">⭐ الأكثر استخداماً</span>
+      </div>
+      <div style="padding:15px;">
+        <p style="color:#aaa; font-size:0.9em;">يبعت SYN فقط، لو جاء SYN-ACK = البورت مفتوح، ثم يبعت RST لإنهاء الاتصال بدون إكماله. سريع + أقل كشفاً.</p>
         <div class="cmd-ui-box">nmap -sS 192.168.1.1</div>
-        <p>👉 <strong>بيعمل:</strong> SYN → SYN-ACK → يقفل قبل ما يكمل.<br>📌 <strong>مميزاته:</strong> أسرع + أقل كشف (ده أهم Scan تستخدمه في الامتحان).</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+          <div style="background:rgba(80,250,123,0.08); border-radius:6px; padding:8px; font-size:0.85em;">✅ سريع جداً</div>
+          <div style="background:rgba(80,250,123,0.08); border-radius:6px; padding:8px; font-size:0.85em;">✅ صعب اكتشافه</div>
+          <div style="background:rgba(80,250,123,0.08); border-radius:6px; padding:8px; font-size:0.85em;">✅ لا يكمل الاتصال</div>
+          <div style="background:rgba(255,85,85,0.08); border-radius:6px; padding:8px; font-size:0.85em;">⚠️ يحتاج صلاحيات root</div>
+        </div>
+      </div>
+    </div>
 
-        <h4 style="color: #ffb86c; margin-top: 15px;">🔹 3. FIN Scan</h4>
-        <div class="cmd-ui-box">nmap -sF 192.168.1.1</div>
-        <p>👉 <strong>بيستخدم:</strong> TCP FIN flag.<br>📌 <strong>الرد:</strong> لو البورت مفتوح → مفيش رد. لو مقفول → RST.</p>
-
-        <h4 style="color: #ffb86c; margin-top: 15px;">🔹 4. XMAS Scan 🎄</h4>
-        <div class="cmd-ui-box">nmap -sX 192.168.1.1</div>
-        <p>👉 <strong>بيبعت:</strong> FIN + URG + PSH.<br>📌 <strong>الاستخدام:</strong> محاولة تجاوز firewall. | ❌ <strong>خطر:</strong> ممكن يتكشف بسهولة.</p>
-
-        <h4 style="color: #ffb86c; margin-top: 15px;">🔹 5. UDP Scan (بطيء 🔥)</h4>
-        <div class="cmd-ui-box">nmap -sU 192.168.1.1</div>
-        <p>👉 <strong>بيستخدم:</strong> لاكتشاف خدمات زي DNS (53) و SNMP (161).<br>❌ <strong>عيوبه:</strong> بطيء جدًا.</p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-top:12px;">
+      <!-- TCP Connect -->
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#ffb86c; margin-top:0;">TCP Connect Scan (-sT)</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap -sT 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">اتصال كامل (3-way handshake). دقيق لكن سهل يتكشف في الـ Logs.</p>
+        <div style="font-size:0.8em; color:#6272a4;">لما مش معاك root access</div>
+      </div>
+      <!-- FIN Scan -->
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#ffb86c; margin-top:0;">FIN Scan (-sF)</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap -sF 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">يبعت FIN Flag فقط. البورت المفتوح = لا رد. البورت المقفول = RST.</p>
+        <div style="font-size:0.8em; color:#6272a4;">لتجاوز بعض أنواع الـ Firewalls</div>
+      </div>
+      <!-- XMAS Scan -->
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#ffb86c; margin-top:0;">XMAS Scan 🎄 (-sX)</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap -sX 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">يبعت FIN + URG + PSH معاً. لتجاوز الـ Firewalls لكن لا يعمل على Windows.</p>
+        <div style="font-size:0.8em; color:#6272a4;">يعمل بشكل جيد على Linux targets</div>
+      </div>
+      <!-- UDP Scan -->
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#ffb86c; margin-top:0;">UDP Scan (-sU)</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap -sU 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">لاكتشاف خدمات UDP: DNS(53), SNMP(161), TFTP(69). بطيء جداً.</p>
+        <div style="font-size:0.8em; color:#6272a4;">يستغرق وقتاً طويلاً — استخدمه بحكمة</div>
+      </div>
     </div>
   </div>
 
-  <div class="cyber-card">
-    <div class="card-header"><h3 style="color: #bd93f9; margin: 0;">💣 أنواع Scan مهمة</h3></div>
-    <ul style="line-height: 1.8; margin-top: 10px;">
-        <li><strong>Scan Range معين:</strong> <code>nmap -p 80,443 192.168.1.1</code> (يفحص بورتات محددة).</li>
-        <li><strong>Scan كل البورتات:</strong> <code>nmap -p- 192.168.1.1</code> (كل 65535 بورت).</li>
-        <li><strong>سرعة الفحص (Threading):</strong> <code>nmap -T4 192.168.1.1</code> (من 0 لـ 5، رقم 5 سريع جدًا ومزعج للشبكة).</li>
-    </ul>
-  </div>
+  <!-- NMAP POWER OPTIONS -->
+  <div class="cyber-card" style="border-top:3px solid #ffb86c;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ffb86c;">🧠 3. أوامر Nmap المتقدمة</h3>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-top:18px;">
 
-  <div class="cyber-card">
-    <div class="card-header"><h3 style="color: #00e5a0; margin: 0;">🧠 قدرات Nmap المتقدمة</h3></div>
-    
-    <div class="meth-section" style="margin-top: 20px;">
-        <h4 style="color: #50fa7b;">3) OS Detection (معرفة النظام)</h4>
-        <div class="cmd-ui-box">nmap -O 192.168.1.1</div>
-        <p>👉 يحدد: Windows / Linux.</p>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#8be9fd; margin-top:0;">🔍 OS Detection</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap -O 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">يحاول يتعرف على نظام التشغيل (Windows / Linux) من خلال تحليل استجابات الـ TCP/IP.</p>
+      </div>
 
-        <h4 style="color: #50fa7b; margin-top: 15px;">4) Service Detection</h4>
-        <div class="cmd-ui-box">nmap -sV 192.168.1.1</div>
-        <p>👉 يجيب نوع الخدمة والإصدار (مثال: Apache 2.4 / OpenSSH 7.6).</p>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#8be9fd; margin-top:0;">⚙️ Service Detection</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap -sV 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">يجيب اسم الخدمة وإصدارها (مثال: Apache 2.4.49، OpenSSH 7.6p1).</p>
+      </div>
 
-        <h4 style="color: #50fa7b; margin-top: 15px;">5) Nmap Script Engine (NSE)</h4>
-        <div class="cmd-ui-box">nmap --script vuln 192.168.1.1</div>
-        <p>👉 يعمل فحص ثغرات. 📌 مكان السكريبتات: <code>/usr/share/nmap/scripts</code></p>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#8be9fd; margin-top:0;">📜 NSE Scripts</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap --script vuln 192.168.1.1</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">nmap --script http-enum 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">مكتبة سكريبتات ضخمة في <code>/usr/share/nmap/scripts</code> — فحص ثغرات، enum، وأكثر.</p>
+      </div>
 
-        <h4 style="color: #50fa7b; margin-top: 15px;">6) الفحص الشامل (Full Scan)</h4>
-        <div class="cmd-ui-box">nmap -A 192.168.1.1</div>
-        <p>👉 يعمل: Port scan + OS detection + Service detection + Scripts.<br>❌ <strong>عيبه:</strong> Noise عالي (سهل يتكشف).</p>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#8be9fd; margin-top:0;">💣 Full Aggressive Scan</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap -A 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">يجمع كل شيء: Port scan + OS + Service + Scripts. ضجيج عالي جداً (Noisy).</p>
+      </div>
 
-        <h4 style="color: #50fa7b; margin-top: 15px;">7) Netcat (Manual Scan)</h4>
-        <div class="cmd-ui-box">nc -nv 192.168.1.1 80</div>
-        <p>👉 يختبر هل البورت مفتوح. مهم في الاختبار اليدوي.</p>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#8be9fd; margin-top:0;">🎯 Port Range Options</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nmap -p 80,443 192.168.1.1 <span style="color:#6272a4;"># بورتات محددة</span></div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">nmap -p- 192.168.1.1 <span style="color:#6272a4;"># كل 65535 بورت</span></div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">nmap -T4 192.168.1.1 <span style="color:#6272a4;"># سرعة عالية (0-5)</span></div>
+      </div>
+
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#8be9fd; margin-top:0;">🖥️ Netcat — Manual Check</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">nc -nv 192.168.1.1 80</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">اختبار يدوي هل البورت مفتوح — مفيد جداً في Banner Grabbing والـ OSCP.</p>
+      </div>
     </div>
   </div>
 
-  <div class="cyber-card" style="border-left: 4px solid #ff4757;">
-    <div class="card-header"><h3 style="color: #ff4757; margin: 0;">🧠 8) Evading Firewall / IDS</h3></div>
-    
-    <div class="meth-section" style="margin-top: 20px;">
-        <h4 style="color: #ffb86c;">🔹 1. تغيير Source Port</h4>
-        <div class="cmd-ui-box">nmap --source-port 80 192.168.1.1</div>
-        <p>👉 يخلي الترافيك شكله جاي من web server.</p>
-
-        <h4 style="color: #ffb86c; margin-top: 15px;">🔹 2. Fragmentation</h4>
-        <div class="cmd-ui-box">nmap -f 192.168.1.1</div>
-        <p>👉 يقسم الباكيت → صعب تتكشف.</p>
-
-        <h4 style="color: #ffb86c; margin-top: 15px;">🔹 3. Decoy (تضليل)</h4>
-        <div class="cmd-ui-box">nmap -D RND:10 192.168.1.1</div>
-        <p>👉 يخلي الفحص يبان وكأنه جي من IPs وهمية.</p>
-
-        <h4 style="color: #ffb86c; margin-top: 15px;">🔹 4. تغيير MAC</h4>
-        <div class="cmd-ui-box">nmap --spoof-mac 0 192.168.1.1</div>
+  <!-- FIREWALL EVASION -->
+  <div class="cyber-card" style="border-top:3px solid #ff5555;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">🥷 4. تجاوز الـ Firewall و IDS</h3>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin-top:18px;">
+      <div style="background:rgba(255,85,85,0.05); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">🔀 Source Port Spoofing</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em;">nmap --source-port 80 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يخلي الترافيك يبدو كأنه قادم من Web Server.</p>
+      </div>
+      <div style="background:rgba(255,85,85,0.05); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">📦 Fragmentation</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em;">nmap -f 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يقسم الـ Packets لأجزاء صغيرة — صعب اكتشافه من الـ IDS.</p>
+      </div>
+      <div style="background:rgba(255,85,85,0.05); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">🎭 Decoy Attack</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em;">nmap -D RND:10 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يخلط Scan الحقيقي مع 10 IPs وهمية — محير لنظام الحماية!</p>
+      </div>
+      <div style="background:rgba(255,85,85,0.05); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">🔄 MAC Spoofing</h6>
+        <div class="cmd-ui-box" style="font-size:0.8em;">nmap --spoof-mac 0 192.168.1.1</div>
+        <p style="color:#aaa; font-size:0.8em; margin-top:6px;">يغير الـ MAC Address عشوائياً لتجنب الكشف.</p>
+      </div>
     </div>
   </div>
 
-  <div class="cyber-card" style="background: rgba(255, 85, 85, 0.1);">
-    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">⚠️ تحذيرات مهمة (جاية في الامتحان)</h3></div>
-    <ul style="line-height: 1.8; margin-top: 10px;">
-        <li>Nmap ممكن يبعت <strong>100,000+ request</strong>.</li>
-        <li>بعض الفحوصات ممكن تكشفك أو <strong>توقف السيرفر 💀</strong>.</li>
-        <li>لازم تبدأ بـ Scan بسيط ثم متقدم.</li>
-    </ul>
-    
-    <h4 style="color: #f1fa8c; margin-top: 20px;">🔥 أفضل Scan عملي (احفظه)</h4>
-    <div class="cmd-ui-box">nmap -sS -sV -O -T4 192.168.1.1</div>
-    <p>👉 ده: Stealth, Service, OS, وسريع.</p>
+  <!-- BEST SCAN -->
+  <div class="cyber-card" style="background:rgba(80,250,123,0.06); border:2px solid rgba(80,250,123,0.4);">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">🏆 أفضل Scan عملي — احفظه!</h3>
+    </div>
+    <div class="cmd-ui-box" style="font-size:1em; margin-top:15px; border:1px solid #50fa7b;">nmap -sS -sV -O -T4 -p- 192.168.1.1</div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px; text-align:center; font-size:0.85em;">
+      <div style="background:rgba(80,250,123,0.1); padding:8px; border-radius:6px;"><code>-sS</code><br><span style="color:#aaa;">Stealth</span></div>
+      <div style="background:rgba(80,250,123,0.1); padding:8px; border-radius:6px;"><code>-sV</code><br><span style="color:#aaa;">Services</span></div>
+      <div style="background:rgba(80,250,123,0.1); padding:8px; border-radius:6px;"><code>-O</code><br><span style="color:#aaa;">OS Detection</span></div>
+      <div style="background:rgba(80,250,123,0.1); padding:8px; border-radius:6px;"><code>-T4</code><br><span style="color:#aaa;">Fast</span></div>
+    </div>
+    <div style="background:rgba(255,85,85,0.1); border-left:3px solid #ff5555; padding:10px; border-radius:4px; margin-top:12px; font-size:0.9em;">
+      ⚠️ <strong>تحذير OSCP مهم:</strong> Nmap ممكن يبعت أكثر من 100,000 طلب — يبدأ دايماً بـ Scan بسيط ثم تعمق تدريجياً.
+    </div>
   </div>
 
-  <div class="cyber-card">
-    <div class="card-header"><h3 style="color: #fff; margin: 0;">💡 خلاصة سريعة</h3></div>
-    <table class="interactive-table" dir="rtl" style="margin-top: 15px;">
-        <thead>
-            <tr>
-                <th>النوع</th>
-                <th>الاستخدام</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Ping</td><td>اكتشاف الأجهزة</td></tr>
-            <tr><td>ARP</td><td>أقوى في الشبكة المحلية</td></tr>
-            <tr><td>SYN</td><td>أفضل Scan</td></tr>
-            <tr><td>TCP</td><td>واضح وسهل</td></tr>
-            <tr><td>UDP</td><td>خدمات خاصة</td></tr>
-            <tr><td>OS</td><td>معرفة النظام</td></tr>
-            <tr><td>sV</td><td>معرفة الخدمة</td></tr>
-            <tr><td>NSE</td><td>فحص ثغرات</td></tr>
-        </tbody>
+  <!-- SUMMARY TABLE -->
+  <div class="cyber-card" style="background:rgba(0,0,0,0.4);">
+    <div class="card-header"><h3 style="margin:0; color:#fff;">💡 جدول مقارنة أنواع الـ Scan</h3></div>
+    <table class="interactive-table" dir="rtl" style="margin-top:15px;">
+      <thead><tr><th>النوع</th><th>الكود</th><th>السرعة</th><th>الكشف</th><th>أفضل استخدام</th></tr></thead>
+      <tbody>
+        <tr><td style="color:#50fa7b;">SYN Stealth</td><td><code>-sS</code></td><td>🟢 سريع</td><td>🟢 منخفض</td><td>الاستخدام الافتراضي دائماً</td></tr>
+        <tr><td>TCP Connect</td><td><code>-sT</code></td><td>🟡 متوسط</td><td>🔴 مرتفع</td><td>بدون صلاحيات root</td></tr>
+        <tr><td>FIN</td><td><code>-sF</code></td><td>🟢 سريع</td><td>🟡 متوسط</td><td>تجاوز بعض الـ Firewalls</td></tr>
+        <tr><td>XMAS</td><td><code>-sX</code></td><td>🟢 سريع</td><td>🟡 متوسط</td><td>Linux targets فقط</td></tr>
+        <tr><td>UDP</td><td><code>-sU</code></td><td>🔴 بطيء</td><td>🟢 منخفض</td><td>DNS, SNMP, TFTP</td></tr>
+      </tbody>
     </table>
   </div>
 
