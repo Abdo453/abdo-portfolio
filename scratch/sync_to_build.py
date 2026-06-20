@@ -84,10 +84,21 @@ def sync_main_to_build():
     # Sync Modules
     build_modules_dir = r"d:\abdo_portfolio\build\modules"
     static_modules_dir = r"d:\abdo_portfolio\main\static\main\modules"
+    template_modules_dir = r"d:\abdo_portfolio\main\templates\main\modules"
+    
     if os.path.exists(build_modules_dir):
         shutil.rmtree(build_modules_dir)
+        
     if os.path.exists(static_modules_dir):
         shutil.copytree(static_modules_dir, build_modules_dir)
+        
+    # Also copy the CEH modules from templates/main/modules
+    if os.path.exists(template_modules_dir):
+        for item in os.listdir(template_modules_dir):
+            if item.endswith('.html'):
+                src_path = os.path.join(template_modules_dir, item)
+                dst_path = os.path.join(build_modules_dir, item)
+                shutil.copy2(src_path, dst_path)
 
     print("Synced main to build successfully with dynamic cache busters and quiz JS!")
 

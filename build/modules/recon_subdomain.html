@@ -1,0 +1,220 @@
+<div class="meth-content-view" id="meth-content-p0" style="display: block;">
+
+        <!-- Phase Header -->
+        <div class="phase-header-new" dir="rtl">
+          <div class="phase-header-top">
+            <div class="phase-icon-large">📄</div>
+            <div>
+              <h1 class="phase-title-new">Subdomain Enumeration</h1>
+              <p class="phase-subtitle-new">Build your full attack surface before touching the target — as used in real Bug Bounty</p>
+            </div>
+          </div>
+          <div class="phase-meta-row">
+            <div class="meta-pill difficulty">🟠 Medium</div>
+          </div>
+        </div>
+
+        <!-- Goal Cards -->
+        <div class="goal-cards-grid" dir="rtl">
+          <div class="goal-card what">
+            <div class="goal-card-header">ℹ️ What is it?</div>
+            <p>عملية اكتشاف كل النطاقات الفرعية<br>المرتبطة بالهدف من مصادر OSINT خارجية<br>أو DNS بنشط — بدون لمس الـ target مباشرة.</p>
+          </div>
+          <div class="goal-card goal">
+            <div class="goal-card-header">🎯 Goal</div>
+            <p>بناء أوسع Attack Surface ممكن.<br>كل subdomain = نقطة دخول: Takeover /<br>Admin panel / Dev environment / API مكشوف.</p>
+          </div>
+        </div>
+        <div class="meta-pill" style="margin-bottom: 32px; display:inline-flex; border: 1px solid #1e293b; background: transparent; color: #64748b;">
+            <span style="color:#00b4d8; margin-right:6px;">🔧</span> subfinder · amass · httpx · nuclei
+        </div>
+
+        <!-- Interactive Decision Tree -->
+        <div class="section-header-hacker">🔀 DECISION TREE — FOLLOW THE PATH <span style="color:#64748b; font-weight:normal; text-transform:none; margin-right:12px;">Interactive — انقر على إجابتك</span></div>
+        <div class="decision-tree-container" dir="rtl" id="dtree-subdomain">
+          <!-- Node 1 -->
+          <div class="decision-node active" id="subd-node-1" style="text-align:center; transition: all 0.3s ease;">
+            هل عندك scope واضح من الـ target.com أم target.com.* ؟
+            <div class="decision-btns" style="margin-top:15px; display:flex; justify-content:center; gap:20px; align-items:center;">
+              <button class="decision-btn yes" style="padding:10px 20px; background:rgba(0, 229, 160, 0.1); border:1px solid #00e5a0; color:#00e5a0; border-radius:5px; cursor:pointer;" onclick="document.getElementById('subd-node-1').style.display='none'; document.getElementById('subd-node-yes').style.display='block';">✓ YES</button>
+              <span style="color:#64748b; font-size:12px;">← اقرأ الـ Policy أولاً</span>
+              <button class="decision-btn no" style="padding:10px 20px; background:rgba(255, 71, 87, 0.1); border:1px solid #ff4757; color:#ff4757; border-radius:5px; cursor:pointer;" onclick="document.getElementById('subd-node-1').style.display='none'; document.getElementById('subd-node-no').style.display='block';">✕ NO</button>
+            </div>
+          </div>
+
+          <!-- Node YES -->
+          <div class="decision-node" id="subd-node-yes" style="text-align:center; display:none; border-color: #00e5a0; background:rgba(0, 229, 160, 0.05); padding:20px; border-radius:8px; border:1px solid #00e5a0; animation: fadeIn 0.4s;">
+            <h4 style="color:#00e5a0; margin-bottom:10px; font-size:18px;">ممتاز! (In Scope) 🎯</h4>
+            <p style="color:#e2e8f0; font-size:15px; line-height:1.6;">يمكنك البدء في عملية الـ Enumeration.<br>استخدم <code>subfinder -d target.com -all -silent</code> لجمع النطاقات الفرعية.</p>
+            <button class="decision-btn" style="margin-top:15px; padding:8px 16px; background:transparent; border:1px solid #64748b; color:#94a3b8; border-radius:5px; cursor:pointer;" onclick="document.getElementById('subd-node-yes').style.display='none'; document.getElementById('subd-node-1').style.display='block';">↺ رجوع للبداية</button>
+          </div>
+
+          <!-- Node NO -->
+          <div class="decision-node" id="subd-node-no" style="text-align:center; display:none; border-color: #ff4757; background:rgba(255, 71, 87, 0.05); padding:20px; border-radius:8px; border:1px solid #ff4757; animation: fadeIn 0.4s;">
+            <h4 style="color:#ff4757; margin-bottom:10px; font-size:18px;">توقف فوراً! 🛑</h4>
+            <p style="color:#e2e8f0; font-size:15px; line-height:1.6;">أنت خارج النطاق المسموح به (Out of Scope).<br>أي هجوم أو فحص سيعتبر غير قانوني ومخالف لسياسة البرنامج.<br><strong>راجع ملف السياسة (Policy/Brief) مرة أخرى.</strong></p>
+            <button class="decision-btn" style="margin-top:15px; padding:8px 16px; background:transparent; border:1px solid #64748b; color:#94a3b8; border-radius:5px; cursor:pointer;" onclick="document.getElementById('subd-node-no').style.display='none'; document.getElementById('subd-node-1').style.display='block';">↺ رجوع للبداية</button>
+          </div>
+
+          <div class="bonus-tip" style="text-align:center; background: transparent; border: none; padding: 0; margin-top:20px;">⚡ بونص: هل وجدت subdomain يظهر "NoSuchBucket" أو "Web Site not found"؟ -> Subdomain Takeover!</div>
+        </div>
+
+        <!-- Tools Grid -->
+        <div class="section-header-hacker">🛠 TOOLS</div>
+        <div class="tools-hacker-grid" dir="ltr">
+          <div class="tool-hacker-card">
+            <div class="tool-h-name">subfinder</div>
+            <div class="tool-metrics"><span class="tool-metric">⚡ 95%</span><span class="tool-metric wide">🌊 Wide</span></div>
+            <div class="tool-h-desc" dir="rtl" style="text-align:right;">أسرع وأوسع تغطية — Passive OSINT</div>
+          </div>
+          <div class="tool-hacker-card">
+            <div class="tool-h-name">amass</div>
+            <div class="tool-metrics"><span class="tool-metric">⚡ 20%</span><span class="tool-metric wide">🌊 Deep</span></div>
+            <div class="tool-h-desc" dir="rtl" style="text-align:right;">الأشمل — Deep OSINT + DNS brute</div>
+          </div>
+          <div class="tool-hacker-card">
+            <div class="tool-h-name">assetfinder</div>
+            <div class="tool-metrics"><span class="tool-metric" style="color:var(--accent-primary);">⚡ 98%</span><span class="tool-metric wide">🌊 Medium</span></div>
+            <div class="tool-h-desc" dir="rtl" style="text-align:right;">سريع — crt.sh + Facebook CT</div>
+          </div>
+          <div class="tool-hacker-card">
+            <div class="tool-h-name">httpx</div>
+            <div class="tool-metrics"><span class="tool-metric">⚡ 90%</span><span class="tool-metric wide">🌊 Wide</span></div>
+            <div class="tool-h-desc" dir="rtl" style="text-align:right;">Live check + tech + status codes</div>
+          </div>
+        </div>
+
+        <!-- Commands Section -->
+        <div class="section-header-hacker">💻 COMMANDS</div>
+        <div class="hacker-terminal" dir="ltr">
+          <div class="h-term-header">
+            <div class="h-term-dots">
+              <div class="h-term-dot r"></div><div class="h-term-dot y"></div><div class="h-term-dot g"></div>
+            </div>
+            <div class="h-term-filename">subdomain-enum.sh</div>
+          </div>
+          <div class="h-term-body-wrap">
+            <div class="h-term-actions">
+              <button class="term-action-btn">📋 Copy</button>
+              <button class="term-action-btn sim">▶ Simulate</button>
+            </div>
+            <div class="h-term-body">
+              <div style="color:var(--accent-primary); margin-bottom:8px;">① Passive Collection</div>
+              <span class="hl-comment"># Passive subdomain discovery</span><br>
+              <span class="hl-cmd">subfinder</span> <span class="hl-flag">-d</span> target.com <span class="hl-flag">-all -recursive -silent -o</span> subs.txt<br>
+              <span class="hl-cmd">amass</span> enum -passive -d target.com -o amass.txt<br>
+              <span class="hl-cmd">assetfinder</span> --subs-only target.com > assetfinder.txt<br><br>
+              <span class="hl-comment"># Merge & deduplicate all sources</span><br>
+              <span class="hl-cmd" style="color:#ff4757;">cat</span> subs.txt amass.txt assetfinder.txt | <span class="hl-cmd" style="color:#ff4757;">sort</span> <span class="hl-flag">-u</span> > <span style="color:#ff4757;">all_subs.txt</span>
+            </div>
+          </div>
+        </div>
+        <div class="expected-output-block" dir="ltr">
+            <div class="expected-output-header">⬇ EXPECTED OUTPUT</div>
+            api.target.com<br>
+            <span style="color:var(--accent-warning);">dev.target.com &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← HOT 🔥</span><br>
+            <span style="color:var(--accent-warning);">staging-auth.target.com &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← HOT 🔥</span><br>
+            <span style="color:var(--accent-warning);">admin.target.com &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← HOT 🔥</span><br>
+            assets.target.com<br>
+            cdn.target.com<br>
+            [+] Total unique: 347 subdomains
+        </div>
+
+        <!-- Checklist -->
+        <div class="section-header-hacker" style="margin-top:40px;">☑ CHECKLIST — SAVED AUTOMATICALLY</div>
+        <div class="hacker-checklist" dir="rtl">
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">subfinder -d target.com -all -recursive -silent</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">amass enum -passive -d target.com</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">assetfinder --subs-only target.com + gau</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">cat *.txt | sort -u > all_subs.txt</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">httpx -l all_subs.txt -status-code -title -tech-detect</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">أفحص dev / staging / admin / test / api أولاً</span></div>
+          </div>
+          <div class="hk-check-item">
+            <div class="hk-checkbox"></div>
+            <div class="hk-check-text"><span class="cmd" dir="ltr">dig CNAME 404 على كل response</span></div>
+          </div>
+          <div class="hk-check-progress" dir="ltr">
+             <div style="font-size:11px; color:#64748b;">0 / 9 completed</div>
+             <div class="hk-prog-bar"><div class="hk-prog-fill"></div></div>
+          </div>
+        </div>
+
+        <!-- Mistakes vs Best Practices -->
+        <div class="section-header-hacker">⚠️ COMMON MISTAKES VS BEST PRACTICES</div>
+        <div class="mistakes-practices-grid" dir="rtl">
+          <div class="mp-col mistakes" style="background: transparent; border: 1px solid #ff4757; padding:16px;">
+            <div class="mp-header" style="color:#ff4757;">■ Common Mistakes</div>
+            <div class="mp-item" style="border:none;">✗ الاكتفاء بـ subfinder وحدها فقط</div>
+            <div class="mp-item" style="border:none;">✗ تجاهل 404 responses بدون فحص CNAME</div>
+            <div class="mp-item" style="border:none;">✗ عدم فحص المنافذ غير المعيارية</div>
+            <div class="mp-item" style="border:none;">✗ بدء Active Recon قبل انتهاء Passive</div>
+            <div class="mp-item" style="border:none;">✗ نسيان wildcard: *.target.com</div>
+          </div>
+          <div class="mp-col practices" style="background: transparent; border: 1px solid var(--accent-primary); padding:16px;">
+            <div class="mp-header" style="color:var(--accent-primary);">■ Best Practices</div>
+            <div class="mp-item" style="border:none;">✓ دمج 4+ مصادر + sort -u دائماً</div>
+            <div class="mp-item" style="border:none;">✓ فحص CNAME لكل 404 بـ dig</div>
+            <div class="mp-item" style="border:none;">✓ naabu على كل host للمنافذ غير المعيارية</div>
+            <div class="mp-item" style="border:none;">✓ الأولوية الأولى دائماً = dev / staging / admin</div>
+            <div class="mp-item" style="border:none;">✓ gau + waybackurls للأرشيف التاريخي</div>
+            <div class="mp-item" style="border:none;">✓ لاحقاً دائماً Active ← أولاً Passive</div>
+          </div>
+        </div>
+
+        <!-- Real World Case -->
+        <div class="section-header-hacker">📂 REAL WORLD CASE</div>
+        <div class="real-world-case" dir="rtl" style="background:transparent;">
+          <div class="rwc-header">
+            <div class="rwc-title">📄 Starbucks Subdomain Takeover — Full Chain</div>
+            <div class="rwc-badge">💰 $2,000 Bounty</div>
+          </div>
+          <div class="rwc-timeline">
+            <div class="rwc-step"><div class="rwc-step-number">1</div><div class="rwc-step-content">Recon: subfinder -d starbucks.com → starbucks-api.starbucks.com</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">2</div><div class="rwc-step-content">Live Check: httpx 404 → "Web Site not found" → مؤشر takeover</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">3</div><div class="rwc-step-content">CNAME: dig → azurewebsites.net → NXDOMAIN = Dangling!</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">4</div><div class="rwc-step-content">Exploit: تسجيل Azure App Service بنفس المعرّف ← تحكم كامل</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">5</div><div class="rwc-step-content">Impact: Cookies لـ .starbucks.com → Session Hijacking</div></div>
+            <div class="rwc-step"><div class="rwc-step-number">6</div><div class="rwc-step-content">Report: Responsible Disclosure → $2,000 Bug Bounty 🏆</div></div>
+          </div>
+        </div>
+
+        <!-- When to Stop -->
+        <div class="section-header-hacker">🛑 WHEN TO STOP?</div>
+        <div class="real-world-case" dir="rtl" style="background:transparent;">
+            <div class="rwc-step-content" style="margin-bottom:12px;">☑ جمعت 100+ subdomain من 3+ مصادر مختلفة</div>
+            <div class="rwc-step-content" style="margin-bottom:12px;">☑ فرزت الحية بـ httpx وحددت الأكثر أهمية</div>
+            <div class="rwc-step-content" style="margin-bottom:12px;">☑ فحصت 404 لكل CNAME</div>
+            <div class="rwc-step-content">☑ سجلت dev / staging / admin subdomains للفحص اللاحق</div>
+            
+            <button class="start-hunt-btn" style="width:100%; margin-top:24px; font-size:12px; background:transparent; border:1px solid var(--accent-primary); color:var(--accent-primary);">
+              ✅ Mark Phase Complete — Subdomain Enumeration Done → Proceed to Tech Detection
+            </button>
+        </div>
+
+        <!-- Practice Lab CTA -->
+        <div class="practice-lab-cta" dir="rtl" style="background: transparent;">
+          <div class="pl-content">
+            <div class="pl-title">جاهز لتطبيق ما تعلمته؟</div>
+          </div>
+          <button class="pl-btn">▶ Launch Interactive Labs</button>
+        </div>
+
+      </div>

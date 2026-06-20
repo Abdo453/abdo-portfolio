@@ -1,0 +1,143 @@
+
+<!-- =======================================================
+     CEH MODULE 5: VULNERABILITY ANALYSIS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod5" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🚨</span> Module 5: Vulnerability Analysis</h2>
+    <p class="hero-tagline">تحليل الثغرات: المرحلة التي تفصل بين من يقوم بمسح عشوائي ❌ ومن يفهم كيف يخترق فعلياً ✅</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 05</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ff9900;"></span> Exploit Discovery</span>
+    </div>
+  </div>
+
+  <div class="cyber-card" style="border-left: 4px solid #ff5555;">
+    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">⚡ أولاً: يعني إيه Vulnerability؟</h3></div>
+    <p><strong>الثغرة (Vulnerability) = نقطة ضعف في النظام ممكن الهاكر يستغلها.</strong></p>
+    
+    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-top: 15px;">
+        <h4 style="color: #ffb86c; margin-top: 0;">📌 أسباب الثغرات:</h4>
+        <ul style="margin: 0;">
+            <li>⚙️ إعدادات غلط (Misconfiguration)</li>
+            <li>🏗️ تصميم ضعيف للتطبيق</li>
+            <li>🐛 مشاكل وأخطاء برمجية في التكنولوجيا نفسها</li>
+            <li>👤 أخطاء المستخدمين (Human Error)</li>
+        </ul>
+    </div>
+
+    <h4 style="color: #f1fa8c; margin-top: 20px;">🔥 مثال بسيط:</h4>
+    <p>لو عندك موقع شغال بإصدار <strong>Apache قديم</strong> 👉 ده ممكن يكون فيه ثغرة معروفة وجاهزة للاستغلال!</p>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header"><h3 style="color: #8be9fd; margin: 0;">🧭 الفرق المهم (ركز 🔥)</h3></div>
+    <table class="interactive-table" dir="rtl" style="margin-top: 15px;">
+        <thead>
+            <tr>
+                <th>المرحلة</th>
+                <th>بتعمل إيه؟</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td style="color: #6272a4;">Scanning</td><td>تعرف البورتات والخدمات المفتوحة</td></tr>
+            <tr><td style="color: #6272a4;">Enumeration</td><td>تجيب تفاصيل وبيانات من هذه الخدمات</td></tr>
+            <tr><td style="color: #50fa7b; font-weight: bold;">Vulnerability Analysis</td><td style="color: #50fa7b; font-weight: bold;">تعرف الثغرات الموجودة بناءً على المعلومات السابقة 🔥</td></tr>
+        </tbody>
+    </table>
+  </div>
+
+  <div class="cyber-card" style="border-left: 4px solid #bd93f9;">
+    <div class="card-header"><h3 style="color: #bd93f9; margin: 0;">🧠 أنواع تحليل الثغرات</h3></div>
+    
+    <div class="meth-section" style="margin-top: 20px;">
+        <h4 style="color: #fff;">1) Manual (يدوي 🔥) <span style="font-size: 0.8em; color: #ff5555; background: rgba(255,85,85,0.2); padding: 3px 8px; border-radius: 4px;">أهم نوع في OSCP</span></h4>
+        <p>البحث اليدوي يعتمد على مهاراتك في ربط الإصدارات بالثغرات المعروفة، وهو الأدق والأقل إزعاجاً (Stealth).</p>
+
+        <h5 style="color: #f1fa8c; margin-top: 20px;">🔍 1. البحث في CVE (قواعد بيانات الثغرات)</h5>
+        <p><strong>يعني إيه CVE؟</strong> هي قاعدة بيانات رسمية تحتوي على كل الثغرات المكتشفة عالمياً.</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
+            <div style="background: rgba(0,0,0,0.4); border: 1px solid #44475a; padding: 15px; border-radius: 8px;">
+                <h6 style="color: #ffb86c; margin-top: 0; font-size: 1.1em;">🔹 NIST CVE</h6>
+                <p style="font-size: 0.9em;">تبحث عن الثغرات الرسمية وتقييم خطورتها.</p>
+                <p style="font-size: 0.85em; color: #8be9fd; margin: 0;">مثال: Apache 2.4.49 → ثغرة RCE</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); border: 1px solid #44475a; padding: 15px; border-radius: 8px;">
+                <h6 style="color: #ffb86c; margin-top: 0; font-size: 1.1em;">🔹 MITRE CVE</h6>
+                <p style="font-size: 0.9em;">المصدر الأساسي والأرقام المرجعية (CVE IDs).</p>
+                <p style="font-size: 0.85em; color: #8be9fd; margin: 0;">مثال: CVE-2021-41773</p>
+            </div>
+        </div>
+
+        <h5 style="color: #f1fa8c; margin-top: 25px;">🔍 2. Exploit-DB (أهم موقع عملي 🔥)</h5>
+        <p>المكان الذي تجد فيه كود الاستغلال (Exploit) جاهزاً.</p>
+        <div class="cmd-ui-box">searchsploit apache 2.4</div>
+        <div class="cmd-ui-box">searchsploit vsftpd 2.3.4</div>
+        <p>👉 النتيجة: سيظهر لك الـ <strong>Backdoor exploit</strong> الخاص بالنسخة مباشرة!</p>
+    </div>
+
+    <div class="meth-section" style="margin-top: 30px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 20px;">
+        <h4 style="color: #fff;">2) Automated (أدوات جاهزة 🤖)</h4>
+        <p>أسرع في فحص الشبكات الكبيرة، لكنها ليست دائمًا دقيقة 100% وقد تصدر إنذارات كاذبة (False Positives).</p>
+
+        <h5 style="color: #50fa7b; margin-top: 15px;">🔹 1. Nessus 🔥</h5>
+        <p>أشهر أداة في العالم للفحص الآلي. تقوم بعمل Scan كامل، استخراج الـ Vulnerabilities، وتصنيف الخطورة (Severity).</p>
+
+        <h5 style="color: #50fa7b; margin-top: 15px;">🔹 2. OpenVAS</h5>
+        <p>البديل المجاني لـ Nessus، يقوم بنفس مهام الـ Network scanning والـ Vulnerability detection.</p>
+    </div>
+  </div>
+
+  <div class="cyber-card" style="background: rgba(255, 85, 85, 0.1);">
+    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">🧠 الفرق المهم جدًا</h3></div>
+    <div style="text-align: center; font-size: 1.2em; margin: 15px 0;">
+        <strong style="color: #ff5555;">⚠️ Vulnerability Analysis ≠ Exploitation</strong>
+    </div>
+    <p>📌 <strong>يعني:</strong> هنا أنت <strong>تكتشف الثغرة فقط</strong> وتبحث عن وجودها، <strong>ولكنك لم تستغلها بعد!</strong> الاستغلال يأتي في المرحلة القادمة.</p>
+  </div>
+
+  <div class="cyber-card" style="border-left: 4px solid #00e5a0;">
+    <div class="card-header"><h3 style="color: #00e5a0; margin: 0;">🔍 Workflow عملي (مهم 🔥)</h3></div>
+    
+    <div class="mermaid" style="text-align: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-top: 10px; margin-bottom: 20px;">
+graph TD
+    A[1. Scan System] -->|nmap -sS -sV| B[2. Identify Services]
+    B -->|FTP: vsftpd 2.3.4| C[3. Search Vulnerabilities]
+    C -->|searchsploit| D{4. Correlate Data}
+    D --> E[Match Version + CVE + Exploit]
+    
+    style A fill:#44475a,stroke:#6272a4,color:#f8f8f2
+    style B fill:#bd93f9,stroke:#333,color:#fff
+    style C fill:#ffb86c,stroke:#333,color:#000
+    style E fill:#50fa7b,stroke:#333,color:#000
+    </div>
+
+    <h4 style="color: #fff; margin-top: 25px;">💣 مثال تطبيقي كامل (Target: Metasploitable)</h4>
+    <ol style="line-height: 1.8; background: rgba(0,0,0,0.2); padding: 20px 40px; border-radius: 6px;">
+        <li><strong>Scan:</strong> <code>nmap -sV 192.168.1.5</code></li>
+        <li><strong>النتيجة:</strong> نكتشف خدمة FTP بإصدار <code>vsftpd 2.3.4</code></li>
+        <li><strong>البحث:</strong> <code>searchsploit vsftpd 2.3.4</code></li>
+        <li><strong>الاستنتاج:</strong> العثور على 👉 <strong style="color: #ff5555;">Backdoor exploit 🔥</strong></li>
+    </ol>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header"><h3 style="color: #ffb86c; margin: 0;">⚠️ أخطاء ناس كتير بتقع فيها</h3></div>
+    <ul style="line-height: 1.8; margin-top: 10px; color: #ffb86c;">
+        <li>❌ الاعتماد على أدوات الـ Automated فقط بدون فهم.</li>
+        <li>❌ تجاهل إصدار الخدمة (Version) الدقيق.</li>
+        <li>❌ عدم القدرة على ربط نتائج الـ Scan بكود الـ Exploit الصحيح.</li>
+    </ul>
+
+    <h4 style="color: #fff; margin-top: 20px;">💡 أهم مصادر الثغرات</h4>
+    <ul style="display: flex; gap: 15px; list-style: none; padding: 0; flex-wrap: wrap;">
+        <li style="background: #44475a; padding: 5px 15px; border-radius: 20px;">CVE Databases</li>
+        <li style="background: #44475a; padding: 5px 15px; border-radius: 20px;">Exploit-DB</li>
+        <li style="background: #44475a; padding: 5px 15px; border-radius: 20px;">GitHub</li>
+        <li style="background: #44475a; padding: 5px 15px; border-radius: 20px;">Security Blogs</li>
+    </ul>
+  </div>
+
+</div>
