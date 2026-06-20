@@ -35,7 +35,7 @@
       var activeContent = document.getElementById('meth-content-' + phaseId);
 
       // Lazy Loading logic
-      if (!activeContent && (phaseId.startsWith('pt_mod') || phaseId.startsWith('assess') || phaseId.startsWith('mod') || phaseId === 'sys-hack')) {
+      if (!activeContent && (phaseId.startsWith('pt_mod') || phaseId.startsWith('assess') || phaseId.startsWith('mod') || phaseId === 'sys-hack' || phaseId === 'lab-metasploitable')) {
         
         var mainViewer = document.querySelector('.meth-container');
         var loadingEl = document.getElementById('lazy-loading-div');
@@ -71,6 +71,7 @@
         if (phaseId === 'mod12') filename = 'mod12_evasion.html';
         if (phaseId === 'mod13') filename = 'mod13_web_servers.html';
         if (phaseId === 'sys-hack') filename = 'system_hacking.html';
+        if (phaseId === 'lab-metasploitable') filename = 'lab_metasploitable.html';
         
         const basePath = isLocal ? '/static/main/modules/' : 'modules/';
         
