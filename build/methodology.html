@@ -2371,16 +2371,32 @@ aireplay-ng -0 10 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF wlan0mon</code></pre
 
         <!-- Interactive Decision Tree -->
         <div class="section-header-hacker">🔀 DECISION TREE — FOLLOW THE PATH <span style="color:#64748b; font-weight:normal; text-transform:none; margin-right:12px;">Interactive — انقر على إجابتك</span></div>
-        <div class="decision-tree-container" dir="rtl">
-          <div class="decision-node" style="text-align:center;">
+        <div class="decision-tree-container" dir="rtl" id="dtree-subdomain">
+          <!-- Node 1 -->
+          <div class="decision-node active" id="subd-node-1" style="text-align:center; transition: all 0.3s ease;">
             هل عندك scope واضح من الـ target.com أم target.com.* ؟
-            <div class="decision-btns">
-              <button class="decision-btn yes">✓ YES</button>
-              <span style="color:#64748b; font-size:12px; margin-top:8px;">← اقرأ الـ Policy أولاً</span>
-              <button class="decision-btn no">✕ NO</button>
+            <div class="decision-btns" style="margin-top:15px; display:flex; justify-content:center; gap:20px; align-items:center;">
+              <button class="decision-btn yes" style="padding:10px 20px; background:rgba(0, 229, 160, 0.1); border:1px solid #00e5a0; color:#00e5a0; border-radius:5px; cursor:pointer;" onclick="document.getElementById('subd-node-1').style.display='none'; document.getElementById('subd-node-yes').style.display='block';">✓ YES</button>
+              <span style="color:#64748b; font-size:12px;">← اقرأ الـ Policy أولاً</span>
+              <button class="decision-btn no" style="padding:10px 20px; background:rgba(255, 71, 87, 0.1); border:1px solid #ff4757; color:#ff4757; border-radius:5px; cursor:pointer;" onclick="document.getElementById('subd-node-1').style.display='none'; document.getElementById('subd-node-no').style.display='block';">✕ NO</button>
             </div>
           </div>
-          <div class="bonus-tip" style="text-align:center; background: transparent; border: none; padding: 0;">⚡ بونص: هل وجدت subdomain يظهر "NoSuchBucket" أو "Web Site not found"؟</div>
+
+          <!-- Node YES -->
+          <div class="decision-node" id="subd-node-yes" style="text-align:center; display:none; border-color: #00e5a0; background:rgba(0, 229, 160, 0.05); padding:20px; border-radius:8px; border:1px solid #00e5a0; animation: fadeIn 0.4s;">
+            <h4 style="color:#00e5a0; margin-bottom:10px; font-size:18px;">ممتاز! (In Scope) 🎯</h4>
+            <p style="color:#e2e8f0; font-size:15px; line-height:1.6;">يمكنك البدء في عملية الـ Enumeration.<br>استخدم <code>subfinder -d target.com -all -silent</code> لجمع النطاقات الفرعية.</p>
+            <button class="decision-btn" style="margin-top:15px; padding:8px 16px; background:transparent; border:1px solid #64748b; color:#94a3b8; border-radius:5px; cursor:pointer;" onclick="document.getElementById('subd-node-yes').style.display='none'; document.getElementById('subd-node-1').style.display='block';">↺ رجوع للبداية</button>
+          </div>
+
+          <!-- Node NO -->
+          <div class="decision-node" id="subd-node-no" style="text-align:center; display:none; border-color: #ff4757; background:rgba(255, 71, 87, 0.05); padding:20px; border-radius:8px; border:1px solid #ff4757; animation: fadeIn 0.4s;">
+            <h4 style="color:#ff4757; margin-bottom:10px; font-size:18px;">توقف فوراً! 🛑</h4>
+            <p style="color:#e2e8f0; font-size:15px; line-height:1.6;">أنت خارج النطاق المسموح به (Out of Scope).<br>أي هجوم أو فحص سيعتبر غير قانوني ومخالف لسياسة البرنامج.<br><strong>راجع ملف السياسة (Policy/Brief) مرة أخرى.</strong></p>
+            <button class="decision-btn" style="margin-top:15px; padding:8px 16px; background:transparent; border:1px solid #64748b; color:#94a3b8; border-radius:5px; cursor:pointer;" onclick="document.getElementById('subd-node-no').style.display='none'; document.getElementById('subd-node-1').style.display='block';">↺ رجوع للبداية</button>
+          </div>
+
+          <div class="bonus-tip" style="text-align:center; background: transparent; border: none; padding: 0; margin-top:20px;">⚡ بونص: هل وجدت subdomain يظهر "NoSuchBucket" أو "Web Site not found"؟ -> Subdomain Takeover!</div>
         </div>
 
         <!-- Tools Grid -->
