@@ -5,159 +5,127 @@
 <div class="meth-content-view" id="meth-content-mod2" style="display:none;" dir="rtl">
   
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">👁️‍🗨️</span> Footprinting & Reconnaissance</h2>
-    <p class="hero-tagline">أولى مراحل الاختراق: جمع المعلومات الدقيقة، الـ OSINT، واستكشاف البنية التحتية.</p>
+    <h2 class="hero-title"><span class="hero-icon">👁️‍🗨️</span> Module 2: Footprinting & Recon</h2>
+    <p class="hero-tagline">شرح مبسط وعملي لمرحلة جمع المعلومات مع فهم وظيفة كل أداة بالتفصيل.</p>
     <div class="hero-meta">
       <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 02</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Practical OSINT</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">⚖️</span>
-      <h3>مقارنة: الاستطلاع النشط مقابل السلبي</h3>
-    </div>
-    <div class="rd-compare-grid">
-      <div class="rd-compare-col good">
-        <div class="rd-compare-title">🕵️ الاستطلاع السلبي (Passive)</div>
-        <ul class="rd-compare-list">
-          <li>جمع المعلومات دون الاتصال المباشر بالهدف (Stealthy).</li>
-          <li>استخدام محركات البحث، مواقع التوظيف، و Archive.org.</li>
-          <li>البحث في السجلات العامة مثل WHOIS.</li>
-          <li>لا يُسجل في الـ Logs الخاصة بالهدف.</li>
-        </ul>
-      </div>
-      <div class="rd-compare-col bad" style="border-top-color: #ff4757;">
-        <div class="rd-compare-title">🚨 الاستطلاع النشط (Active)</div>
-        <ul class="rd-compare-list">
-          <li>يتطلب الاتصال المباشر بخوادم وأنظمة الهدف.</li>
-          <li>محاولات نقل النطاق (DNS Zone Transfer).</li>
-          <li>الهندسة الاجتماعية المباشرة (Social Engineering).</li>
-          <li>خطر تسجيل الأنشطة واكتشاف المهاجم.</li>
-        </ul>
-      </div>
-    </div>
+  <div class="cyber-card">
+    <div class="card-header"><h3 style="color: #ff5555; margin: 0;">🧠 أولاً: يعني إيه Footprinting؟</h3></div>
+    <p>هو ببساطة: <br><strong style="color: #00e5a0; font-size: 1.1em;">"جمع أكبر قدر ممكن من المعلومات عن الهدف قبل الهجوم"</strong></p>
+    <ul style="line-height: 1.8;">
+        <li>تعرف السيستم شغال إزاي.</li>
+        <li>تعرف نقاط الضعف.</li>
+        <li>تسهل عملية الاختراق بعد كده.</li>
+    </ul>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🌐</span>
-      <h3>الاستخبارات مفتوحة المصدر (OSINT) و Dorking</h3>
-    </div>
+  <div class="cyber-card">
+    <div class="card-header"><h3 style="color: #50fa7b; margin: 0;">⚡ أنواع Footprinting</h3></div>
     
-    <div class="cyber-card" style="--tool-color: #00e5a0;">
-      <div class="card-header"><h4>Google Hacking (Dorking)</h4></div>
-      <p>استخدام مشغلات بحث متقدمة لاستخراج معلومات أو ملفات غير مفهرسة بشكل صحيح.</p>
-      <div class="cmd-block">
-        <div class="cmd-header"><span class="cmd-lang">Google Search Queries</span></div>
-        <pre><code># البحث عن مسارات الدليل المفتوحة
-intitle:"index of" "target.com"
+    <div class="meth-section" style="margin-top: 20px;">
+        <h4 style="color: #8be9fd;">1) Passive Footprinting (بدون لمس الهدف)</h4>
+        <p>👉 يعني: <strong>تجمع معلومات من غير ما الهدف يحس بيك</strong></p>
+        
+        <h5 style="color: #f1fa8c; margin-top: 15px;">🔎 1. Google Dorks</h5>
+        <p>دي طريقة ذكية للبحث في جوجل عن معلومات حساسة.</p>
+        <div class="cmd-ui-box">site:example.com <span style="color: #6272a4;"># يجيب كل الصفحات الخاصة بالموقع</span></div>
+        <div class="cmd-ui-box">filetype:pdf site:example.com <span style="color: #6272a4;"># يدور على ملفات PDF (ممكن تكون فيها بيانات حساسة)</span></div>
+        <div class="cmd-ui-box">intitle:"index of" <span style="color: #6272a4;"># يجيب صفحات فيها ملفات مفتوحة (خطير 🔥)</span></div>
+        <p>👉 <strong>الاستخدام:</strong> استخراج ملفات، اكتشاف صفحات مخفية، معلومات حساسة.</p>
 
-# البحث عن ملفات إعدادات وكلمات مرور
-site:target.com ext:txt | ext:log | ext:env | ext:sql
+        <h5 style="color: #f1fa8c; margin-top: 15px;">🌐 2. Shodan</h5>
+        <p>🔹 محرك بحث للأجهزة مش المواقع (كاميرات، سيرفرات، أجهزة IoT).</p>
+        <div class="cmd-ui-box">apache country:EG</div>
 
-# البحث عن صفحات لوحة التحكم
-site:target.com inurl:admin | inurl:login</code></pre>
-      </div>
+        <h5 style="color: #f1fa8c; margin-top: 15px;">🌍 3. Netcraft</h5>
+        <p>👉 يجيب نوع السيرفر (Apache / Nginx) ونظام التشغيل.</p>
+
+        <h5 style="color: #f1fa8c; margin-top: 15px;">🔐 4. crt.sh</h5>
+        <p>👉 يجيب Subdomains من الـ SSL Certificates (مثل test.example.com و mail.example.com).</p>
+
+        <h5 style="color: #f1fa8c; margin-top: 15px;">📧 5. hunter.io</h5>
+        <p>👉 يجيب إيميلات الشركة (مهم جداً في الـ Social Engineering).</p>
+
+        <h5 style="color: #f1fa8c; margin-top: 15px;">⚙️ 6. theHarvester</h5>
+        <div class="cmd-ui-box">theHarvester -d example.com -b google</div>
+        <p>📌 <strong>معناه:</strong> <code>-d</code> (الدومين) و <code>-b</code> (مصدر البيانات). <br>👉 يطلع: Emails و Subdomains.</p>
+
+        <h5 style="color: #f1fa8c; margin-top: 15px;">🧩 7. sublist3r</h5>
+        <div class="cmd-ui-box">sublist3r -d example.com</div>
+        <p>👉 يجيب Subdomains.</p>
+
+        <h5 style="color: #f1fa8c; margin-top: 15px;">🛰️ 8. Whois</h5>
+        <div class="cmd-ui-box">whois example.com</div>
+        <p>👉 يجيب: صاحب الدومين، تاريخ التسجيل، ومزود الـ DNS.</p>
+
+        <h5 style="color: #f1fa8c; margin-top: 15px;">👨‍💻 9. Social Media (LinkedIn)</h5>
+        <p>👉 تجمع معلومات عن الموظفين (تستخدم في Phishing و Social Engineering).</p>
+    </div>
+
+    <div class="meth-section" style="margin-top: 40px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 20px;">
+        <h4 style="color: #ff5555;">⚠️ 2) Active Footprinting (الهجوم المباشر)</h4>
+        <p>👉 هنا الهدف ممكن يلاحظك ويسجل بياناتك في الـ Logs ⚠️</p>
+
+        <h5 style="color: #ffb86c; margin-top: 15px;">📡 1. Ping</h5>
+        <div class="cmd-ui-box">ping example.com</div>
+        <p>👉 يستخدم في معرفة هل السيرفر شغال، ومعرفة الـ IP.</p>
+
+        <h5 style="color: #ffb86c; margin-top: 15px;">🧭 2. Traceroute</h5>
+        <div class="cmd-ui-box">traceroute example.com</div>
+        <p>👉 يجيب المسار والراوترات بينك وبين الهدف.</p>
+
+        <h5 style="color: #ffb86c; margin-top: 15px;">🌐 3. DNS Recon</h5>
+        <div class="cmd-ui-box">dnsrecon -d example.com</div>
+        <p>👉 يجيب DNS records و Subdomains.</p>
+
+        <h5 style="color: #ffb86c; margin-top: 15px;">🕷️ 4. Photon</h5>
+        <div class="cmd-ui-box">photon -u http://example.com</div>
+        <p>👉 يعمل Crawling للموقع ويجيب مسارات URLs مخفية.</p>
+
+        <h5 style="color: #ffb86c; margin-top: 15px;">🚪 5. Knockpy</h5>
+        <div class="cmd-ui-box">knockpy example.com</div>
+        <p>👉 يجيب Subdomains بطريقة الـ Brute Force.</p>
+
+        <h5 style="color: #ffb86c; margin-top: 15px;">📂 6. Dirb / 7. Dirbuster</h5>
+        <div class="cmd-ui-box">dirb http://example.com</div>
+        <p>👉 يكتشف الدلائل (Directories) المخفية (Dirbuster نفس الفكرة لكن بواجهة رسومية GUI).</p>
+
+        <h5 style="color: #ffb86c; margin-top: 15px;">⚡ 8. Wfuzz</h5>
+        <div class="cmd-ui-box">wfuzz -c -w wordlist.txt http://example.com/FUZZ</div>
+        <p>📌 <strong>معناه:</strong> يجرب كلمات من القاموس مكان كلمة FUZZ. <br>👉 يكتشف صفحات مخفية و APIs.</p>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🛠️</span>
-      <h3>أدوات الاستطلاع العميقة (Recon Arsenal)</h3>
-    </div>
-
-    <div class="cyber-card" style="--tool-color: #00b4d8;">
-      <div class="card-header"><h4>1. أداة Recon-ng</h4></div>
-      <p>إطار عمل مخصص للـ OSINT مشابه لواجهة Metasploit.</p>
-      <div class="cmd-block">
-        <div class="cmd-header"><span class="cmd-lang">Recon-ng Console</span></div>
-        <pre><code>recon-ng
-workspaces create target_corp
-modules load recon/domains-hosts/hackertarget
-options set SOURCE target.com
-run
-show hosts</code></pre>
-      </div>
-    </div>
-
-    <div class="cyber-card" style="--tool-color: #ffa502;">
-      <div class="card-header"><h4>2. أداة TheHarvester</h4></div>
-      <p>أداة جبارة لاستخراج الإيميلات، النطاقات الفرعية، وعناوين الـ IP من مصادر مختلفة.</p>
-      <div class="cmd-block">
-        <div class="cmd-header"><span class="cmd-lang">Bash Shell</span></div>
-        <pre><code>theHarvester -d target.com -b google,linkedin,bing -l 500</code></pre>
-      </div>
-    </div>
-
-    <div class="cyber-card" style="--tool-color: #ff4757;">
-      <div class="card-header"><h4>3. محرك Shodan</h4></div>
-      <p>محرك بحث أجهزة الـ IoT والخوادم المربوطة بالإنترنت.</p>
-      <div class="cmd-block">
-        <div class="cmd-header"><span class="cmd-lang">Shodan CLI</span></div>
-        <pre><code># تهيئة الأداة
-shodan init &lt;API_KEY&gt;
-
-# البحث عن خوادم أباتشي في دبي
-shodan search "apache city:Dubai"
-
-# إحصائيات الثغرات للشركة
-shodan stats vuln:cve-2014-0160 org:"Target Corp"</code></pre>
-      </div>
-    </div>
-
-    <div class="cyber-card" style="--tool-color: #2ed573;">
-      <div class="card-header"><h4>4. جمع معلومات DNS (DNS Footprinting)</h4></div>
-      <p>البحث عن سجلات الـ DNS واستخراج الـ Subdomains المخفية.</p>
-      <div class="cmd-block">
-        <div class="cmd-header"><span class="cmd-lang">Dig & Fierce</span></div>
-        <pre><code># جلب سجلات الميل (MX)
-dig mx target.com
-
-# محاولة نقل نطاق الخادم للحصول على نسخة كاملة من القاعدة
-dig axfr @ns1.target.com target.com
-
-# الفحص العنيف للنطاقات
-fierce --domain target.com</code></pre>
-      </div>
-    </div>
+  <div class="cyber-card" style="border-left: 4px solid #bd93f9;">
+    <div class="card-header"><h3 style="color: #bd93f9; margin: 0;">🔥 الفرق المهم: Subdomain vs Subdirectory</h3></div>
+    <ul style="line-height: 1.8; margin-top: 10px;">
+        <li><strong>Subdomain (نطاق فرعي):</strong> <code>test.example.com</code></li>
+        <li><strong>Subdirectory (دليل فرعي):</strong> <code>example.com/admin</code></li>
+    </ul>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🛡️</span>
-      <h3>استراتيجيات الحماية والتخفيف (Mitigation)</h3>
-    </div>
-    <div class="table-wrapper">
-      <table class="interactive-table" dir="rtl">
-        <thead>
-          <tr>
-            <th>التهديد الاستطلاعي (Threat)</th>
-            <th>الحل التقني للحماية (Mitigation)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>DNS Zone Transfer</strong></td>
-            <td>تعطيل Zone Transfer (AXFR) بحيث لا يُسمح بها إلا لخوادم الـ Secondary DNS.</td>
-          </tr>
-          <tr>
-            <td><strong>Directory Listing</strong></td>
-            <td>إغلاق تصفح الدلائل في إعدادات (Apache/Nginx/IIS) وإخفاء الصفحات الداخلية.</td>
-          </tr>
-          <tr>
-            <td><strong>Banner Grabbing & Server Info</strong></td>
-            <td>إخفاء إصدارات الخادم عبر تعديل (HTTP Server Headers) واستخدام صفحات أخطاء مخصصة.</td>
-          </tr>
-          <tr>
-            <td><strong>Metadata Leakage</strong></td>
-            <td>استخدام أدوات تنظيف البيانات لإزالة البيانات الوصفية من الـ PDFs والصور قبل نشرها (مثل أسماء الموظفين والبرامج).</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="cyber-card">
+    <div class="card-header"><h3 style="color: #00e5a0; margin: 0;">💻 جزء اللاب (مهم جداً ليك)</h3></div>
+    <p>المحاضرة قالت تستخدم بيئة التدريب التالية لاكتساب الخبرة العملية بدون مخاطر قانونية:</p>
+    <ul>
+        <li>Kali Linux (نظام المهاجم)</li>
+        <li>Windows (هدف اختباري)</li>
+        <li>Metasploitable (سيرفر مصاب بالثغرات عمداً)</li>
+    </ul>
+    <p>👉 <strong>الهدف:</strong> تعمل <strong>بيئة تدريب للاختراق</strong> وتطبق عليها الأوامر السابقة.</p>
+  </div>
+
+  <div class="cyber-card" style="background: rgba(255, 255, 255, 0.05);">
+    <div class="card-header"><h3 style="color: #fff; margin: 0;">💡 خلاصة سريعة</h3></div>
+    <ul style="line-height: 1.8; margin-top: 10px;">
+        <li><strong>Passive:</strong> آمن + بدون كشف.</li>
+        <li><strong>Active:</strong> أسرع + ممكن تتكشف (يجب توخي الحذر).</li>
+        <li><strong>كل أداة هدفها محدد:</strong> Emails, Subdomains, Directories, أو معلومات السيرفر.</li>
+    </ul>
   </div>
 
 </div>

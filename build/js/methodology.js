@@ -35,7 +35,7 @@
       var activeContent = document.getElementById('meth-content-' + phaseId);
 
       // Lazy Loading logic
-      if (!activeContent && (phaseId.startsWith('pt_mod') || phaseId.startsWith('assess'))) {
+      if (!activeContent && (phaseId.startsWith('pt_mod') || phaseId.startsWith('assess') || phaseId.startsWith('mod'))) {
         
         var mainViewer = document.querySelector('.meth-container');
         var loadingEl = document.getElementById('lazy-loading-div');
@@ -58,6 +58,18 @@
         if (phaseId === 'assess-htb') filename = 'mod_assess_htb.html';
         if (phaseId === 'assess-bb') filename = 'mod_assess_bugbounty.html';
         if (phaseId === 'assess-ad') filename = 'mod_assess_ad.html';
+        if (phaseId === 'mod1') filename = 'mod1_intro.html';
+        if (phaseId === 'mod2') filename = 'mod2_footprinting.html';
+        if (phaseId === 'mod3') filename = 'mod3_scanning.html';
+        if (phaseId === 'mod4') filename = 'mod4_enumeration.html';
+        if (phaseId === 'mod5') filename = 'mod5_vuln_analysis.html';
+        if (phaseId === 'mod7') filename = 'mod7_malware.html';
+        if (phaseId === 'mod8') filename = 'mod8_sniffing.html';
+        if (phaseId === 'mod9') filename = 'mod9_social_eng.html';
+        if (phaseId === 'mod10') filename = 'mod10_dos.html';
+        if (phaseId === 'mod11') filename = 'mod11_session_hijacking.html';
+        if (phaseId === 'mod12') filename = 'mod12_evasion.html';
+        if (phaseId === 'mod13') filename = 'mod13_web_servers.html';
         
         const basePath = isLocal ? '/static/main/modules/' : 'modules/';
         
