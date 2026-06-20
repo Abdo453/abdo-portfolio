@@ -27,7 +27,7 @@
       
       document.querySelectorAll('.meth-content-view').forEach(el => el.style.display = 'none');
       const activeContent = document.getElementById('meth-content-' + phaseId);
-      if (activeContent) activeContent.style.display = 'block';
+      if (activeContent) { activeContent.style.display = 'block'; setTimeout(function(){injectCompleteButton(phaseId);}, 100); }
 
       // Close mobile sidebar if open
       const sidebar = document.querySelector('.meth-sidebar');
@@ -1255,6 +1255,7 @@
 
     function getCategoryForPhase(phaseId) {
       if (phaseId.startsWith('pt_mod')) return 'Pentesting Guide';
+      if (phaseId.startsWith('assess-')) return 'Real Assessments';
 
       var catMap = {
         'cat-recon': ['p0','p2','p1','p_matrix'],
@@ -1288,6 +1289,9 @@
         if (phaseId === 'pt_mod8') return '8. Post-Exploitation';
         if (phaseId === 'pt_mod9') return '9. Methodologies';
         if (phaseId === 'pt_mod10') return '10. Tools Reference';
+        if (phaseId === 'assess-htb') return 'HTB Writeup';
+        if (phaseId === 'assess-bb') return 'Bug Bounty Report';
+        if (phaseId === 'assess-ad') return 'AD Pentest';
 
       var contentEl = document.getElementById('meth-content-' + phaseId);
       if (!contentEl) return phaseId;
@@ -1457,3 +1461,68 @@
       div.innerHTML = htmlString.trim();
       return div.firstElementChild || div.firstChild;
     }
+
+
+// --- Phase 1: Progress Tracking Logic ---
+function updateGlobalProgress() {
+  var completedModules = JSON.parse(localStorage.getItem('meth_completed_modules') || '[]');
+  var totalModules = document.querySelectorAll('.meth-item').length;
+  if (totalModules === 0) return;
+  
+  var percentage = Math.round((completedModules.length / totalModules) * 100);
+  var fillEl = document.getElementById('global-progress-fill');
+  var textEl = document.getElementById('global-progress-text');
+  
+  if (fillEl) fillEl.style.width = percentage + '%';
+  if (textEl) textEl.textContent = percentage + '%';
+  
+  // Update sidebar checks
+  document.querySelectorAll('.meth-item').forEach(function(item) {
+    var phaseId = item.id.replace('meth-ef-', '');
+    if (completedModules.includes(phaseId)) {
+      if (!item.innerHTML.includes('✅')) {
+        item.innerHTML = '✅ ' + item.innerHTML;
+      }
+    }
+  });
+}
+
+function markModuleComplete(phaseId) {
+  var completedModules = JSON.parse(localStorage.getItem('meth_completed_modules') || '[]');
+  if (!completedModules.includes(phaseId)) {
+    completedModules.push(phaseId);
+    localStorage.setItem('meth_completed_modules', JSON.stringify(completedModules));
+    updateGlobalProgress();
+  }
+}
+
+function injectCompleteButton(phaseId) {
+  var activeContent = document.getElementById('meth-content-' + phaseId);
+  if (!activeContent) return;
+  
+  // Check if button already exists
+  if (activeContent.querySelector('.mark-complete-btn')) return;
+  
+  var completedModules = JSON.parse(localStorage.getItem('meth_completed_modules') || '[]');
+  var isCompleted = completedModules.includes(phaseId);
+  
+  var btnHtml = '<div style="text-align: center; margin-top: 40px; margin-bottom: 20px;">' +
+                '<button class="mark-complete-btn" style="background: ' + (isCompleted ? 'var(--success)' : 'var(--accent-primary)') + '; color: #fff; border: none; padding: 12px 24px; border-radius: 4px; font-family: var(--font-mono); cursor: pointer; transition: all 0.3s ease;" onclick="handleMarkComplete(\'' + phaseId + '\', this)">' +
+                (isCompleted ? '✅ COMPLETED' : 'MARK AS COMPLETE') +
+                '</button></div>';
+                
+  activeContent.insertAdjacentHTML('beforeend', btnHtml);
+}
+
+window.handleMarkComplete = function(phaseId, btn) {
+  markModuleComplete(phaseId);
+  btn.style.background = 'var(--success)';
+  btn.innerHTML = '✅ COMPLETED';
+};
+
+// Hook into existing events
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(updateGlobalProgress, 500); // Wait for DOM
+});
+
+// We need to call injectCompleteButton inside openMethPhase
