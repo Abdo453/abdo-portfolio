@@ -21,28 +21,104 @@
 
     // Tab switcher — includes visited phase tracking
     function openMethPhase(phaseId) {
-      document.querySelectorAll('.meth-item').forEach(el => el.classList.remove('active'));
-      const activeFolder = document.getElementById('meth-ef-' + phaseId);
-      if (activeFolder) activeFolder.classList.add('active');
+      if (!phaseId) return;
       
-      document.querySelectorAll('.meth-content-view').forEach(el => el.style.display = 'none');
-      const activeContent = document.getElementById('meth-content-' + phaseId);
-      if (activeContent) { activeContent.style.display = 'block'; setTimeout(function(){injectCompleteButton(phaseId);}, 100); }
+      // Update sidebar active state
+      document.querySelectorAll('.meth-item').forEach(function(item) {
+        item.classList.remove('active');
+      });
+      var activeSidebarItem = document.getElementById('meth-ef-' + phaseId);
+      if (activeSidebarItem) {
+        activeSidebarItem.classList.add('active');
+      }
+
+      var activeContent = document.getElementById('meth-content-' + phaseId);
+
+      // Lazy Loading logic
+      if (!activeContent && (phaseId.startsWith('pt_mod') || phaseId.startsWith('assess'))) {
+        
+        var mainViewer = document.querySelector('.meth-container');
+        var loadingEl = document.getElementById('lazy-loading-div');
+        if (!loadingEl) {
+            loadingEl = document.createElement('div');
+            loadingEl.id = 'lazy-loading-div';
+            loadingEl.style.cssText = 'color: #00e5a0; text-align: center; margin-top: 50px; font-family: var(--font-mono); width: 100%;';
+            mainViewer.appendChild(loadingEl);
+        }
+        loadingEl.style.display = 'block';
+        loadingEl.innerText = '[+] Loading module ' + phaseId + '...';
+        
+        document.querySelectorAll('.meth-content-view').forEach(function(content) {
+          content.style.display = 'none';
+        });
+
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        
+        let filename = phaseId + '.html';
+        if (phaseId === 'assess-htb') filename = 'mod_assess_htb.html';
+        if (phaseId === 'assess-bb') filename = 'mod_assess_bugbounty.html';
+        if (phaseId === 'assess-ad') filename = 'mod_assess_ad.html';
+        
+        const basePath = isLocal ? '/static/main/modules/' : 'modules/';
+        
+        fetch(basePath + filename)
+          .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.text();
+          })
+          .then(html => {
+            loadingEl.style.display = 'none';
+            var tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            var newContent = tempDiv.firstElementChild; // The .meth-content-view div
+            mainViewer.appendChild(newContent);
+            
+            activeContent = document.getElementById('meth-content-' + phaseId);
+            if (activeContent) {
+                activeContent.style.display = 'block';
+                activeContent.classList.add('active');
+                if (typeof injectCompleteButton === 'function') {
+                    setTimeout(function(){injectCompleteButton(phaseId);}, 50);
+                }
+                if (typeof mermaid !== 'undefined') {
+                    mermaid.init(undefined, activeContent.querySelectorAll('.mermaid, pre > code.language-mermaid'));
+                }
+            }
+            markVisitedSafe(phaseId);
+            generatePhaseTOC(phaseId, activeContent);
+            generateBreadcrumb(phaseId);
+          })
+          .catch(error => {
+            loadingEl.style.display = 'block';
+            loadingEl.style.color = '#ff5555';
+            loadingEl.innerText = '[-] Failed to load module. Error: ' + error;
+          });
+        return;
+      }
+
+      // Hide all content views
+      document.querySelectorAll('.meth-content-view').forEach(function(content) {
+        content.style.display = 'none';
+      });
+
+      // Show selected content view
+      if (activeContent) {
+        activeContent.style.display = 'block';
+        activeContent.classList.add('active');
+        if (typeof injectCompleteButton === 'function') {
+            setTimeout(function(){injectCompleteButton(phaseId);}, 50);
+        }
+      }
+
+      // Hide empty state
+      var emptyState = document.getElementById('methEmptyState');
+      if (emptyState) emptyState.style.display = 'none';
 
       // Close mobile sidebar if open
       const sidebar = document.querySelector('.meth-sidebar');
       if (sidebar && sidebar.classList.contains('active')) {
         sidebar.classList.remove('active');
       }
-
-      // Auto update active node in attack flow if visible
-      const nodes = document.querySelectorAll('.flow-node');
-      nodes.forEach(node => node.classList.remove('active-stage'));
-      if (phaseId === 'p0' && nodes[0]) nodes[0].classList.add('active-stage');
-      if (phaseId === 'p1' && nodes[1]) nodes[1].classList.add('active-stage');
-      if (phaseId === 'p6' && nodes[2]) nodes[2].classList.add('active-stage');
-      if (phaseId === 'p3' && nodes[3]) nodes[3].classList.add('active-stage');
-      if (phaseId === 'p7' && nodes[4]) nodes[4].classList.add('active-stage');
 
       // Track visited phases (progress tracker)
       markVisitedSafe(phaseId);
