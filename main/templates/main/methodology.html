@@ -13,6 +13,12 @@
 
   <!-- Premium Arabic Font -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    .quiz-container { background: #1a1e29; padding: 20px; border-radius: 8px; border-left: 4px solid var(--accent-primary); margin: 20px 0; }
+    .quiz-option { display: block; width: 100%; text-align: left; background: #232838; border: 1px solid #333; color: #fff; padding: 12px; margin-top: 10px; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; }
+    .quiz-option:hover:not(:disabled) { background: #2d3345; border-color: var(--accent-primary); }
+  </style>
 </head>
 <body>
 
@@ -637,38 +643,31 @@
           <span>🎯 PENTESTING GUIDE</span>
           <span>▼</span>
         </div>
+        
         <div class="category-items" id="cat-pentest" style="display: none;">
-          <div class="meth-item" id="meth-ef-pt_mod1" onclick="openMethPhase('pt_mod1')" data-search="active reconnaissance dns brute force">
-            1. Active Reconnaissance
-          </div>
-          <div class="meth-item" id="meth-ef-pt_mod2" onclick="openMethPhase('pt_mod2')" data-search="content discovery directory fuzzing">
-            2. Content Discovery
-          </div>
-          <div class="meth-item" id="meth-ef-pt_mod3" onclick="openMethPhase('pt_mod3')" data-search="port scanning nmap masscan naabu">
-            3. Port Scanning & Enum
-          </div>
-          <div class="meth-item" id="meth-ef-pt_mod4" onclick="openMethPhase('pt_mod4')" data-search="web application testing owasp top 10">
-            4. Web App Testing
-          </div>
-          <div class="meth-item" id="meth-ef-pt_mod5" onclick="openMethPhase('pt_mod5')" data-search="api testing graphql rest jwt">
-            5. API Testing
-          </div>
-          <div class="meth-item" id="meth-ef-pt_mod6" onclick="openMethPhase('pt_mod6')" data-search="cloud infrastructure testing aws azure">
-            6. Cloud & Infra Testing
-          </div>
-          <div class="meth-item" id="meth-ef-pt_mod7" onclick="openMethPhase('pt_mod7')" data-search="network layer testing vpn dns">
-            7. Network Layer Testing
-          </div>
-          <div class="meth-item" id="meth-ef-pt_mod8" onclick="openMethPhase('pt_mod8')" data-search="post exploitation privilege escalation lateral movement">
-            8. Post-Exploitation
-          </div>
-          <div class="meth-item" id="meth-ef-pt_mod9" onclick="openMethPhase('pt_mod9')" data-search="pentesting methodologies ptes nist">
-            9. Methodologies
-          </div>
-          <div class="meth-item" id="meth-ef-pt_mod10" onclick="openMethPhase('pt_mod10')" data-search="essential tools reference wordlists">
-            10. Tools Reference
-          </div>
+          <div class="meth-item" id="meth-ef-pt_mod1" onclick="openMethPhase('pt_mod1')" data-search="fundamentals ethical hacking basics">01. Fundamentals</div>
+          <div class="meth-item" id="meth-ef-pt_mod2" onclick="openMethPhase('pt_mod2')" data-search="active reconnaissance dns enum">02. Active Recon</div>
+          <div class="meth-item" id="meth-ef-pt_mod3" onclick="openMethPhase('pt_mod3')" data-search="passive reconnaissance osint theharvester">03. Passive Recon</div>
+          <div class="meth-item" id="meth-ef-pt_mod4" onclick="openMethPhase('pt_mod4')" data-search="content discovery directory fuzzing js">04. Content Discovery</div>
+          <div class="meth-item" id="meth-ef-pt_mod5" onclick="openMethPhase('pt_mod5')" data-search="port scanning nmap masscan">05. Port Scanning</div>
+          <div class="meth-item" id="meth-ef-pt_mod6" onclick="openMethPhase('pt_mod6')" data-search="service enumeration snmp smb">06. Service Enumeration</div>
+          <div class="meth-item" id="meth-ef-pt_mod7" onclick="openMethPhase('pt_mod7')" data-search="web testing owasp sqli xss">07. Web Testing</div>
+          <div class="meth-item" id="meth-ef-pt_mod8" onclick="openMethPhase('pt_mod8')" data-search="api testing graphql rest jwt">08. API Testing</div>
+          <div class="meth-item" id="meth-ef-pt_mod9" onclick="openMethPhase('pt_mod9')" data-search="authentication authorization session oauth saml oidc sso jwt">09. Authentication</div>
+          <div class="meth-item" id="meth-ef-pt_mod10" onclick="openMethPhase('pt_mod10')" data-search="advanced vulnerabilities ssrf ssti xxe cache poisoning race conditions">10. Advanced Vulns</div>
+          <div class="meth-item" id="meth-ef-pt_mod11" onclick="openMethPhase('pt_mod11')" data-search="client side security cors websocket csp dom xss">11. Client Side</div>
+          <div class="meth-item" id="meth-ef-pt_mod12" onclick="openMethPhase('pt_mod12')" data-search="cloud aws azure gcp">12. Cloud</div>
+          <div class="meth-item" id="meth-ef-pt_mod13" onclick="openMethPhase('pt_mod13')" data-search="network pivot vpn routing">13. Network</div>
+          <div class="meth-item" id="meth-ef-pt_mod14" onclick="openMethPhase('pt_mod14')" data-search="active directory ad kerberos bloodhound">14. Active Directory</div>
+          <div class="meth-item" id="meth-ef-pt_mod15" onclick="openMethPhase('pt_mod15')" data-search="post exploitation privilege escalation c2">15. Post Exploitation</div>
+          <div class="meth-item" id="meth-ef-pt_mod16" onclick="openMethPhase('pt_mod16')" data-search="reporting cvss executive summary">16. Reporting</div>
+          <div class="meth-item" id="meth-ef-pt_mod17" onclick="openMethPhase('pt_mod17')" data-search="methodologies ptes nist isaf">17. Methodologies</div>
+          <div class="meth-item" id="meth-ef-pt_mod18" onclick="openMethPhase('pt_mod18')" data-search="bug bounty scope automation">18. Bug Bounty</div>
+          <div class="meth-item" id="meth-ef-pt_mod19" onclick="openMethPhase('pt_mod19')" data-search="labs practice htb thm portswigger">19. Labs</div>
+          <div class="meth-item" id="meth-ef-pt_mod20" onclick="openMethPhase('pt_mod20')" data-search="tools reference wordlists">20. Tools Reference</div>
         </div>
+
+      </div>
       </div>
 
       <!-- Category 7: CEH MASTERCLASS (MISSING MODULES) -->
@@ -3545,5 +3544,6 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
 
   <script src="{% static 'main/js/methodology.js' %}"></script>
 
+  <script src="{% static 'main/js/quiz_engine.js' %}"></script>
 </body>
 </html>

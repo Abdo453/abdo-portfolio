@@ -1,0 +1,143 @@
+<div class="meth-content-view" id="meth-content-pt_mod18" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    <div class="cyber-hero">
+        <h2>18. Bug Bounty</h2>
+        <p>فهم برامج صيد الثغرات، إدارة النطاق (Scope)، الاستطلاع، وتجنب التكرار (Duplicates)</p>
+    </div>
+
+    <div class="cyber-card">
+        <h3>[Theory] النظرية والمفاهيم الأساسية</h3>
+        <p>برامج صائد الجوائز (Bug Bounty Programs) هي مبادرات تقوم بها الشركات لدعوة الباحثين الأمنيين لاختبار أنظمتهم بشكل قانوني وتقديم تقارير بالثغرات المكتشفة مقابل مكافآت مالية أو تقدير معنوي. للنجاح في هذا المجال، يجب فهم مصطلحات أساسية:</p>
+        <ul>
+            <li><strong>النطاق (Scope):</strong> الأصول المسموح باختبارها (In-Scope) والأصول الممنوع اختبارها (Out-of-Scope). الخروج عن النطاق يعتبر انتهاكاً لسياسة البرنامج وقد يؤدي إلى الحظر.</li>
+            <li><strong>التكرار (Duplicates):</strong> عندما تقوم بالإبلاغ عن ثغرة سبق وأن أبلغ عنها باحث آخر قبلك. لن تحصل على مكافأة في هذه الحالة. لتجنب ذلك، ابحث في المناطق المعقدة والمنسية بدلاً من الأهداف السطحية.</li>
+            <li><strong>الفرز (Triage):</strong> عملية تقييم التقرير من قبل فريق الأمن الداخلي أو المنصة للتأكد من صحة الثغرة، خطورتها، وما إذا كانت مكررة أو خارج النطاق.</li>
+            <li><strong>منهجية الاستطلاع (Recon Workflow):</strong> عملية اكتشاف الأصول المخفية، النطاقات الفرعية، والمنافذ المفتوحة لتوسيع مساحة الهجوم (Attack Surface) وزيادة فرص إيجاد ثغرات نادرة.</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <h3>[Attack Flow] مسار العمل للاستطلاع (Recon Workflow)</h3>
+        <p>المخطط التالي يوضح مسار العمل الشائع لاكتشاف الأصول قبل البدء بالبحث عن الثغرات:</p>
+        <pre><code class="language-mermaid">
+graph TD
+    A[قراءة النطاق وتحديده Scope] --> B[اكتشاف النطاقات الفرعية Subdomain Enum]
+    A --> C[اكتشاف النطاقات الجذرية ASN & CIDR]
+    C --> B
+    B --> D[التحقق من حيوية النطاقات Resolving & Probing]
+    D --> E[مسح المنافذ والخدمات Port Scanning]
+    D --> F[الزحف واكتشاف المسارات Web Crawling & Fuzzing]
+    E --> G[البحث اليدوي والأوتوماتيكي عن الثغرات]
+    F --> G
+    G --> H[كتابة التقرير Report Writing]
+        </code></pre>
+    </div>
+
+    <div class="cyber-card">
+        <h3>[Manual Testing] الفحص اليدوي</h3>
+        <p>بينما يعتمد الكثير من الباحثين على أدوات الأتمتة، يبقى الفحص اليدوي هو الأهم في صيد الثغرات القيمة (High/Critical) والتي تفلت من الأدوات الآلية:</p>
+        <ul>
+            <li><strong>منطق العمل (Business Logic):</strong> اختبار كيفية تعامل التطبيق مع المدخلات المعقدة، التلاعب بالأسعار في سلة المشتريات، أو تخطي خطوات الدفع.</li>
+            <li><strong>التلاعب بالصلاحيات (IDOR/BAC):</strong> إنشاء حسابين بصلاحيات مختلفة (مثلاً: Admin و User) واختبار ما إذا كان يمكن للمستخدم العادي الوصول إلى بيانات الأدمين عبر تعديل المعرفات (IDs) في الطلبات (Requests).</li>
+            <li><strong>تحليل الكود المصدري (JS Analysis):</strong> البحث يدوياً في ملفات الجافاسكريبت عن مسارات مخفية (Hidden Endpoints) أو مفاتيح API حساسة باستخدام أدوات المطور (DevTools) في المتصفح.</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <h3>[Automation] أتمتة اكتشاف الأصول</h3>
+        <p>نظراً لاتساع مساحة الهجوم في برامج (Wildcard Scope)، تصبح الأتمتة ضرورية. يتم ربط عدة أدوات لتعمل بشكل متسلسل عبر أنابيب (Pipes):</p>
+        <div class="cmd-ui-box">
+        <pre><code class="language-bash">#!/bin/bash
+# سكريبت بسيط لأتمتة الاستطلاع
+TARGET="example.com"
+
+echo "[+] اكتشاف النطاقات الفرعية..."
+subfinder -d $TARGET -all -silent > subs.txt
+
+echo "[+] تصفية الروابط الحية (HTTP/HTTPS)..."
+cat subs.txt | httpx -silent -status-code -title -tech > active_urls.txt
+
+echo "[+] الزحف للبحث عن مسارات..."
+echo "[+] جلب المسارات باستخدام waybackurls..."
+cat subs.txt | waybackurls > urls_archive.txt
+
+echo "[+] فحص مبدئي للثغرات المعروفة..."
+nuclei -l active_urls.txt -t cves/ -o nuclei_results.txt
+</code></pre>
+        </div>
+    </div>
+
+    <div class="cyber-card">
+        <h3>[Tools] أدوات أساسية لا غنى عنها</h3>
+        <p>أداة استكشاف النطاقات الفرعية (Subfinder):</p>
+        <div class="cmd-ui-box">
+            <pre><code>subfinder -d example.com -all</code></pre>
+        </div>
+        <p>أداة تصفية الروابط واستخراج البيانات (HTTPX):</p>
+        <div class="cmd-ui-box">
+            <pre><code>httpx -list subs.txt -sc -title -td -ip</code></pre>
+        </div>
+        <p>أداة اكتشاف المحتوى المخفي (FFUF):</p>
+        <div class="cmd-ui-box">
+            <pre><code>ffuf -w wordlist.txt -u https://target.com/FUZZ -mc 200</code></pre>
+        </div>
+        <p>محرك فحص الثغرات القائم على القوالب (Nuclei):</p>
+        <div class="cmd-ui-box">
+            <pre><code>nuclei -u https://target.com -as</code></pre>
+        </div>
+    </div>
+
+    <div class="cyber-card">
+        <h3>[Lab] بيئات العمل ومنصات الباونتي</h3>
+        <ul>
+            <li><strong>HackerOne:</strong> المنصة الأشهر، تقدم برامج عامة وخاصة.</li>
+            <li><strong>Bugcrowd:</strong> منصة ضخمة تتميز ببرامج VDP و BBP مع نظام نقاط قوي.</li>
+            <li><strong>Intigriti:</strong> منصة أوروبية تتميز ببرامج مختلفة ومنافسة أقل نسبياً من نظيراتها.</li>
+            <li><strong>YesWeHack:</strong> منصة أوروبية أخرى رائدة في هذا المجال.</li>
+            <li><strong>PortSwigger Academy:</strong> أفضل مختبر مجاني لتطوير مهارات اكتشاف ثغرات الويب قبل الدخول في البرامج الحقيقية.</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <h3>[Quiz] اختبار المعرفة</h3>
+        <div class="quiz-container" data-correct="B">
+            <h4>Scenario: اكتشفت ثغرة تنفيذ أوامر (RCE) خطيرة جداً على نطاق فرعي غير مدرج في سياسة البرنامج (Out of Scope)، واكتشفت ثغرة (XSS) متوسطة على نطاق مدرج ومصرح باختباره (In Scope). كيف تتصرف باحترافية؟</h4>
+            <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) أبلغ عن الـ RCE فقط وأطلب مكافأة ضخمة لأنها ثغرة حرجة.</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) أبلغ عن الـ XSS بشكل رسمي. يمكنك الإشارة لوجود الـ RCE لفريق الفرز بسؤالهم إذا كانوا يودون معرفة تفاصيلها للحماية دون إلزامهم بمكافأة.</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'C')">C) انشر تفاصيل ثغرة الـ RCE في مدونتك أو على تويتر لأنها خارج نطاق السرية للبرنامج.</button>
+        </div>
+    </div>
+
+    <div class="cyber-card">
+        <h3>[Cheat Sheet] المرجع السريع لكتابة تقرير ثغرة (Report Writing)</h3>
+        <table style="width: 100%; text-align: right; border-collapse: collapse;">
+            <tr>
+                <th style="border-bottom: 1px solid #00e5a0; padding: 10px;">القسم</th>
+                <th style="border-bottom: 1px solid #00e5a0; padding: 10px;">الوصف والتفاصيل</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px;"><strong>Title (العنوان)</strong></td>
+                <td style="padding: 10px;">يجب أن يكون قصيراً ودقيقاً يوضح نوع الثغرة ومكانها (مثال: SQL Injection on /api/v2/users).</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px;"><strong>Description (الوصف)</strong></td>
+                <td style="padding: 10px;">شرح تقني للثغرة، وكيفية استغلالها، ومتى تحدث.</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px;"><strong>Steps to Reproduce</strong></td>
+                <td style="padding: 10px;">خطوات مرقمة وواضحة جداً (1, 2, 3...) لتمكين فريق الفرز (Triager) من إعادة إنتاج الثغرة بسهولة.</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px;"><strong>PoC (دليل المفهوم)</strong></td>
+                <td style="padding: 10px;">فيديو قصير، صور للشاشة، أو طلب HTTP (Request/Response) يثبت وجود الثغرة.</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px;"><strong>Impact (التأثير)</strong></td>
+                <td style="padding: 10px;">شرح واقعي لما يمكن للمهاجم فعله فعلياً في حال استغلال الثغرة (سرقة بيانات، اختراق النظام، إلخ).</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px;"><strong>Mitigation (الترقيع)</strong></td>
+                <td style="padding: 10px;">اقتراح حلول أو نصائح أمنية لإصلاح الثغرة بشكل جذري.</td>
+            </tr>
+        </table>
+    </div>
+</div>

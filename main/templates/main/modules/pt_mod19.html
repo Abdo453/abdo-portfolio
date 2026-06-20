@@ -1,0 +1,151 @@
+<div class="meth-content-view" id="meth-content-pt_mod19" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    <div class="cyber-hero">
+        <h1 class="glitch-text" data-text="19. Practice Labs">19. Practice Labs</h1>
+        <p class="cyber-subtitle">بيئات التدريب والاختراق الوهمية: PortSwigger, HTB, TryHackMe</p>
+    </div>
+
+    <!-- 1. Theory -->
+    <div class="cyber-card section-theory">
+        <h2 class="card-title">1. Theory (الإطار النظري)</h2>
+        <div class="card-content">
+            <p>
+                تمثل <strong>Practice Labs</strong> (بيئات التدريب المعملية) حجر الأساس لأي مختبر اختراق (Pentester). لا يكفي إتقان الجانب النظري والأدوات، بل يجب تطبيق هذه المفاهيم في بيئات قانونية، آمنة، ومصممة خصيصاً لمحاكاة ثغرات حقيقية. تنقسم هذه البيئات إلى:
+            </p>
+            <ul>
+                <li><strong>بيئات عبر الإنترنت (Online Platforms):</strong> مثل Hack The Box (HTB)، TryHackMe (THM)، و PortSwigger Web Security Academy. وتتميز بكونها محدثة باستمرار وتحتوي على مسارات تعليمية (Paths).</li>
+                <li><strong>بيئات محلية (Local Labs):</strong> مثل VulnHub (أجهزة افتراضية جاهزة) و Damn Vulnerable Web Application (DVWA) والتي يتم تشغيلها محلياً باستخدام Docker أو VirtualBox، مما يعطيك تحكماً كاملاً بالبيئة.</li>
+            </ul>
+            <p>
+                تطوير مهارات الاختراق يتطلب منهجية CTF (Capture The Flag)، حيث تقوم بالبحث عن الثغرة واستغلالها للوصول إلى "العلم" الذي يثبت نجاحك. يعلمك هذا النهج كيفية التفكير كمهاجم حقيقي (Adversary Mindset).
+            </p>
+        </div>
+    </div>
+
+    <!-- 2. Attack Flow -->
+    <div class="cyber-card section-flow">
+        <h2 class="card-title">2. Lab Workflow (مسار العمل)</h2>
+        <div class="card-content">
+            <pre><code class="language-mermaid">
+graph TD
+    A[Start Lab / Connect VPN] --> B[Information Gathering & Recon]
+    B --> C{Vulnerability Found?}
+    C -- Yes --> D[Exploitation / Initial Access]
+    C -- No --> B
+    D --> E[Privilege Escalation]
+    E --> F[Root/System Access]
+    F --> G[Submit Flag & Write Notes]
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 3. Manual Testing -->
+    <div class="cyber-card section-manual">
+        <h2 class="card-title">3. Manual Setup & Testing (الإعداد والاختبار اليدوي)</h2>
+        <div class="card-content">
+            <p>العمل على المختبرات يتطلب إعداد البيئة الخاصة بك بشكل صحيح لضمان اتصال مستقر واستخدام فعال للأدوات:</p>
+            <ol>
+                <li><strong>الاتصال بالشبكة (VPN):</strong> معظم المنصات مثل HTB و THM تتطلب تنزيل ملف <code>.ovpn</code> للاتصال بشبكتهم الداخلية باستخدام OpenVPN.</li>
+                <li><strong>إعداد مختبر محلي (Local Environment):</strong> يفضل إعداد بيئة آمنة باستخدام Kali Linux أو Parrot OS على Virtual Machine. لتشغيل بيئات ويب مصابة محلياً (مثل DVWA أو Juice Shop)، يمكنك استخدام تقنية Docker لسهولة التركيب والعزل.</li>
+                <li><strong>تنظيم الملاحظات (Note-Taking):</strong> استخدم أدوات مثل Obsidian أو CherryTree أو Notion لتوثيق كل خطوة (Nmap Scans, Payloads used, Credentials). التنظيم هو مفتاح النجاح في المختبرات والواقع.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- 4. Automation -->
+    <div class="cyber-card section-auto">
+        <h2 class="card-title">4. Automation (الأتمتة في المعامل)</h2>
+        <div class="card-content">
+            <p>
+                يمكنك أتمتة عملية بدء المختبر والفحص الأولي لتوفير الوقت والتركيز على تحليل الثغرات:
+            </p>
+            <ul>
+                <li>استخدام سكريبتات Auto-Recon (مثل <code>AutoRecon</code> أو <code>Legion</code>) التي تقوم بتنفيذ عمليات مسح Nmap و Nikto و Gobuster بشكل متوازٍ.</li>
+                <li>كتابة Bash Aliases للاتصال السريع بـ VPN، مثال: <code>alias htb-vpn='sudo openvpn ~/Downloads/lab_htb.ovpn'</code>.</li>
+                <li>استخدام Docker Compose لرفع مختبر كامل محلياً بضغطة زر.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 5. Tools -->
+    <div class="cyber-card section-tools">
+        <h2 class="card-title">5. Core Tools (الأدوات الأساسية)</h2>
+        <div class="card-content">
+            <p>أوامر لا غنى عنها للتعامل مع بيئات التدريب:</p>
+            
+            <div class="cmd-ui-box">
+                <div class="cmd-header"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <div class="cmd-body">
+                    <code># الاتصال بمنصة Hack The Box أو TryHackMe عبر VPN</code><br>
+                    <code>sudo openvpn my_lab_connection.ovpn</code><br><br>
+                    <code># تشغيل بيئة ويب مصابة (DVWA) محلياً باستخدام Docker</code><br>
+                    <code>docker run --rm -it -p 80:80 vulnerables/web-dvwa</code><br><br>
+                    <code># فحص النطاقات وإضافة عنوان الـ IP إلى ملف Hosts لحل الأسماء</code><br>
+                    <code>echo "10.10.10.X  target.htb" | sudo tee -a /etc/hosts</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Lab -->
+    <div class="cyber-card section-lab">
+        <h2 class="card-title">6. Recommended Labs (مختبرات التدريب)</h2>
+        <div class="card-content">
+            <ul>
+                <li><strong>PortSwigger Web Security Academy:</strong> المنصة الأفضل والمجانية بالكامل لتعلم ثغرات الويب وكيفية استخدام Burp Suite.</li>
+                <li><strong>TryHackMe (THM):</strong> الأنسب للمبتدئين لوجود مسارات تعليمية موجهة (Guided Pathways) تشرح النظرية ثم تطلب التطبيق.</li>
+                <li><strong>Hack The Box (HTB):</strong> موجهة للمستويات المتوسطة والمتقدمة، تتميز بواقعية الأجهزة وتحديثها المستمر بثغرات حديثة.</li>
+                <li><strong>VulnHub:</strong> مكتبة ضخمة من الأجهزة الافتراضية المصابة التي تقوم بتحميلها وتشغيلها محلياً (Offline).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 7. Quiz -->
+    <div class="cyber-card section-quiz">
+        <h2 class="card-title">7. Scenario Quiz (اختبار المفاهيم)</h2>
+        <div class="card-content">
+            <div class="quiz-container" data-correct="A">
+                <h4>Scenario: ترغب في التدرب بشكل مكثف وحصري على ثغرات الويب (Web Application Vulnerabilities) وتعلم كيفية العثور عليها يدوياً باستخدام بروكسي محلي. أي من المنصات التالية هي الأنسب والأكثر تخصصاً لهذا الغرض؟</h4>
+                <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) PortSwigger Web Security Academy</button>
+                <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) VulnHub Boot2Root Machines</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Cheat Sheet -->
+    <div class="cyber-card section-cheat">
+        <h2 class="card-title">8. Lab Cheat Sheet (المرجع السريع)</h2>
+        <div class="card-content">
+            <table class="cheat-table">
+                <thead>
+                    <tr>
+                        <th>المهمة (Task)</th>
+                        <th>الأداة / المنصة (Tool/Platform)</th>
+                        <th>الوصف (Description)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Web Vulnerabilities</td>
+                        <td>PortSwigger / OWASP Juice Shop</td>
+                        <td>التدريب على ثغرات الـ Web و API باستخدام Burp Suite</td>
+                    </tr>
+                    <tr>
+                        <td>Guided Learning</td>
+                        <td>TryHackMe (THM)</td>
+                        <td>مسارات تعليمية مع شرح نظري يليه تطبيق عملي مبسط</td>
+                    </tr>
+                    <tr>
+                        <td>Advanced CTF</td>
+                        <td>Hack The Box (HTB)</td>
+                        <td>اختراق أجهزة قريبة من الواقع (Windows/Linux/AD) بدون توجيه مسبق</td>
+                    </tr>
+                    <tr>
+                        <td>Local Docker Lab</td>
+                        <td>bkimminich/juice-shop</td>
+                        <td>تشغيل تطبيق ويب مصاب محلياً (docker run -p 3000:3000 bkimminich/juice-shop)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

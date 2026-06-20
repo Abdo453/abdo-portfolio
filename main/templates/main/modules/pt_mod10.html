@@ -1,0 +1,151 @@
+<div class="meth-content-view" id="meth-content-pt_mod10" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+
+<div class="cyber-hero">
+  <h1>10. الثغرات المتقدمة (Advanced Vulnerabilities)</h1>
+  <p>فهم واستغلال الثغرات المعقدة مثل SSRF, SSTI, XXE, Request Smuggling, و Cache Poisoning.</p>
+</div>
+
+<!-- Theory -->
+<div class="cyber-card">
+  <h2>[Theory] النظرية والمفاهيم</h2>
+  <p>
+    الثغرات المتقدمة في تطبيقات الويب تتجاوز مجرد إدخال نصوص خبيثة (مثل XSS أو SQLi) وتستهدف البنية التحتية، أو طريقة معالجة البيانات المعقدة، أو تباين تفسير بروتوكول HTTP بين الخوادم.
+  </p>
+  <ul>
+    <li><strong>SSRF (Server-Side Request Forgery):</strong> تحدث عندما يتمكن المهاجم من إجبار الخادم على إرسال طلبات HTTP (أو بروتوكولات أخرى) نيابة عنه، مما يسمح بالوصول إلى شبكات داخلية، أو خدمات محلية (مثل 169.254.169.254 في البيئات السحابية).</li>
+    <li><strong>SSTI (Server-Side Template Injection):</strong> تنشأ عندما يتم تمرير مدخلات المستخدم مباشرة إلى محرك القوالب (Template Engine) مثل Jinja2، Twig، أو FreeMarker. يمكن للمهاجم حقن تعبيرات برمجية يتم تنفيذها على الخادم، مما يؤدي غالباً إلى تنفيذ أوامر عن بعد (RCE).</li>
+    <li><strong>XXE (XML External Entity):</strong> تظهر عند معالجة بيانات XML تحتوي على كيانات خارجية (External Entities) غير مقيدة. يمكن استغلالها لقراءة ملفات محلية على الخادم (مثل /etc/passwd)، أو تنفيذ SSRF، أو التسبب في حرمان من الخدمة (Billion Laughs Attack).</li>
+    <li><strong>HTTP Request Smuggling:</strong> تحدث بسبب اختلاف طريقة تفسير الخوادم الأمامية (Front-end Proxies/Load Balancers) والخوادم الخلفية (Back-end Servers) لترويسات HTTP (تحديداً Content-Length و Transfer-Encoding). مما يتيح للمهاجم "تهريب" طلب مخفي ضمن طلب شرعي للوصول إلى بيانات مستخدمين آخرين أو تجاوز القيود الأمنية.</li>
+    <li><strong>Web Cache Poisoning:</strong> استغلال كيفية تخزين الخوادم للنسخ المخبأة (Caching) من خلال حقن محتوى خبيث (عبر مدخلات غير مفهرسة Unkeyed Inputs) يتم حفظه وعرضه للمستخدمين الآخرين.</li>
+  </ul>
+</div>
+
+<!-- Attack Flow -->
+<div class="cyber-card">
+  <h2>[Attack Flow] مسار الهجوم</h2>
+  <p>رسم توضيحي لعملية هجوم SSRF للوصول إلى معلومات حساسة من خادم داخلي أو سحابي:</p>
+  <pre><code class="language-mermaid">
+sequenceDiagram
+    participant Attacker as المهاجم
+    participant WebServer as خادم الويب (Vulnerable)
+    participant InternalServer as الخادم الداخلي / Metadata
+    
+    Attacker->>WebServer: إرسال حمولة خبيثة (مثال: url=http://169.254.169.254/)
+    activate WebServer
+    Note over WebServer: الخادم يعالج الطلب دون فلترة كافية
+    WebServer->>InternalServer: طلب داخلي للمورد المطلوب
+    activate InternalServer
+    InternalServer-->>WebServer: إرجاع بيانات حساسة (مثال: مفاتيح AWS)
+    deactivate InternalServer
+    WebServer-->>Attacker: عرض البيانات الحساسة للمهاجم
+    deactivate WebServer
+  </code></pre>
+</div>
+
+<!-- Manual Testing -->
+<div class="cyber-card">
+  <h2>[Manual Testing] الاختبار اليدوي</h2>
+  <p>
+    يعتمد الاختبار اليدوي على مراقبة سلوك التطبيق والبحث عن استجابات غير متوقعة أو تأخيرات زمنية.
+  </p>
+  <ul>
+    <li><strong>لاختبار SSRF:</strong> ابحث عن أي مدخلات تقبل روابط (URL) أو تعالج ملفات خارجية. جرب إدخال روابط تشير إلى الخادم المحلي (localhost, 127.0.0.1) أو خدمات معروفة على الشبكة المحلية، وراقب هل التطبيق يحاول جلب المحتوى. يمكنك استخدام Burp Collaborator لمراقبة التفاعلات غير المباشرة (Out-of-Band).</li>
+    <li><strong>لاختبار SSTI:</strong> ابحث عن المدخلات التي تنعكس في صفحة الويب وجرب إدخال عمليات حسابية برمجية مخصصة لمحركات القوالب، مثل <code>{{7*7}}</code> أو <code>${7*7}</code> أو <code>&lt;%= 7*7 %&gt;</code>. إذا تم إرجاع النتيجة <code>49</code>، فهذا دليل قوي على وجود الثغرة.</li>
+    <li><strong>لاختبار XXE:</strong> إذا كان التطبيق يعالج بيانات XML، قم باعتراض الطلب وحقن تعريف DOCTYPE يحتوي على كيان خارجي (ENTITY) يشير إلى ملف محلي (مثل <code>file:///etc/passwd</code>).</li>
+    <li><strong>لاختبار Request Smuggling:</strong> يتطلب الأمر إرسال طلبات تحتوي على ترويستي <code>Content-Length</code> و <code>Transfer-Encoding: chunked</code> (تقنيات CL.TE أو TE.CL) ومراقبة تأخيرات الاستجابة أو الأخطاء التي تدل على انقطاع المزامنة بين الخوادم.</li>
+  </ul>
+</div>
+
+<!-- Automation -->
+<div class="cyber-card">
+  <h2>[Automation] الأتمتة والأدوات</h2>
+  <p>استخدام الأدوات المتخصصة يمكن أن يسرع من عملية اكتشاف وتأكيد هذه الثغرات المعقدة.</p>
+  <ul>
+    <li><strong>Burp Suite Professional:</strong> يحتوي على إضافات قوية مثل HTTP Request Smuggler و Param Miner (لاكتشاف مدخلات Cache Poisoning).</li>
+    <li><strong>Tplmap:</strong> أداة متخصصة في اكتشاف واستغلال ثغرات SSTI بناءً على محركات القوالب المختلفة.</li>
+    <li><strong>XXEInjector:</strong> أداة لأتمتة حقن كيانات XML بطرق مختلفة واستخراج البيانات خارج النطاق (OOB).</li>
+    <li><strong>SSRFmap:</strong> أداة لاستغلال ثغرات SSRF لتنفيذ أوامر أو مسح الشبكة الداخلية.</li>
+  </ul>
+</div>
+
+<!-- Tools -->
+<div class="cyber-card">
+  <h2>[Tools] الأوامر والأدوات التطبيقية</h2>
+  <p>أمثلة على أوامر استخدام بعض الأدوات المتقدمة (للأغراض التعليمية المصرح بها فقط):</p>
+  <div class="cmd-ui-box">
+    <div class="cmd-header">Tplmap - SSTI Scanner</div>
+    <div class="cmd-body">python3 tplmap.py -u "http://target.com/page?name=user" --os-shell</div>
+  </div>
+  <div class="cmd-ui-box">
+    <div class="cmd-header">SSRFmap - SSRF Exploitation</div>
+    <div class="cmd-body">python3 ssrfmap.py -r request.txt -p url -m portscan</div>
+  </div>
+  <div class="cmd-ui-box">
+    <div class="cmd-header">Param Miner (Burp Suite Extension)</div>
+    <div class="cmd-body">يستخدم كإضافة داخل Burp Suite عبر واجهة المستخدم (GUI) للبحث التلقائي عن المعلمات المخفية (Unkeyed Parameters) التي قد تؤدي إلى Cache Poisoning.</div>
+  </div>
+</div>
+
+<!-- Lab -->
+<div class="cyber-card">
+  <h2>[Lab] بيئة التدريب والتطبيق (Labs)</h2>
+  <p>أفضل المنصات للتدرب على هذه الثغرات بشكل عملي وآمن:</p>
+  <ul>
+    <li><strong>PortSwigger Web Security Academy:</strong> يوفر معامل ممتازة ومجانية وتفصيلية لجميع هذه الثغرات المتقدمة. تعتبر المرجع الأول عالمياً في هذا المجال.</li>
+    <li><strong>HackTheBox:</strong> يحتوي على العديد من الآلات وتحديات الويب التي تتطلب دمج هذه الثغرات المتقدمة للوصول إلى الصلاحيات الكاملة.</li>
+    <li><strong>TryHackMe:</strong> يحتوي على غرف تعليمية تطبيقية مثل "SSRF", و "SSTI" مخصصة للمبتدئين والمتوسطين.</li>
+  </ul>
+</div>
+
+<!-- Quiz -->
+<div class="cyber-card">
+  <h2>[Quiz] اختبر معلوماتك</h2>
+  <div class="quiz-container" data-correct="A">
+    <h4>Scenario: أثناء تقييمك لتطبيق ويب، لاحظت أن إدخال `{{7*'7'}}` في حقل اسم المستخدم يعرض النتيجة `7777777`. ما هي الثغرة المحتملة وما هو محرك القوالب الذي يتصرف بهذا الشكل عادةً؟</h4>
+    <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) ثغرة SSTI، ومحرك القوالب المرجح هو Jinja2 أو Twig.</button>
+    <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) ثغرة XSS، والمحرك هو React.</button>
+  </div>
+</div>
+
+<!-- Cheat Sheet -->
+<div class="cyber-card">
+  <h2>[Cheat Sheet] ملخص سريع للمراجع (Cheat Sheet)</h2>
+  <table style="width:100%; border-collapse: collapse; text-align: left; direction: ltr;" border="1">
+    <thead>
+      <tr style="background-color: #333; color: white;">
+        <th style="padding: 8px;">Vulnerability</th>
+        <th style="padding: 8px;">Basic Payload / Vector</th>
+        <th style="padding: 8px;">Key Target</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding: 8px;"><strong>SSRF</strong></td>
+        <td style="padding: 8px;"><code>http://169.254.169.254/latest/meta-data/</code><br><code>http://127.0.0.1:22</code></td>
+        <td style="padding: 8px;">Cloud Metadata, Internal Services</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px;"><strong>SSTI</strong></td>
+        <td style="padding: 8px;"><code>{{7*7}}</code>, <code>${7*7}</code>, <code>&lt;%= 7*7 %&gt;</code></td>
+        <td style="padding: 8px;">Template Engines (Jinja2, Freemarker, etc.)</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px;"><strong>XXE</strong></td>
+        <td style="padding: 8px;"><code>&lt;!DOCTYPE foo [ &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; ]&gt;</code></td>
+        <td style="padding: 8px;">Local Files, Internal Network via XML parsers</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px;"><strong>Request Smuggling</strong></td>
+        <td style="padding: 8px;">Mixing <code>Content-Length</code> &amp; <code>Transfer-Encoding: chunked</code></td>
+        <td style="padding: 8px;">Front-end / Back-end synchronization bypass</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px;"><strong>Cache Poisoning</strong></td>
+        <td style="padding: 8px;">Injecting via Unkeyed Headers (e.g., <code>X-Forwarded-Host</code>)</td>
+        <td style="padding: 8px;">Cached Responses served to other users</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>

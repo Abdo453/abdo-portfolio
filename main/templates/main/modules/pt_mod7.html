@@ -1,0 +1,152 @@
+<div class="meth-content-view" id="meth-content-pt_mod7" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    <div class="cyber-hero">
+        <h1>07. Web Testing (OWASP Top 10)</h1>
+        <p>اختبار اختراق تطبيقات الويب واكتشاف ثغرات OWASP Top 10 مثل SQLi و XSS</p>
+    </div>
+
+    <!-- 1. Theory -->
+    <div class="cyber-card">
+        <h2>[Theory] الإطار النظري: اختبار تطبيقات الويب</h2>
+        <p>
+            تُعد تطبيقات الويب الواجهة الأمامية الأساسية للعديد من الأنظمة الحيوية، مما يجعلها هدفاً رئيسياً للمهاجمين. يُركز <strong>اختبار اختراق تطبيقات الويب (Web Application Penetration Testing)</strong> على تقييم أمان التطبيقات والمواقع الإلكترونية من خلال محاكاة هجمات حقيقية لاكتشاف الثغرات وتأمينها قبل استغلالها.
+        </p>
+        <p>
+            يستند المنهج القياسي في اختبار الويب إلى قائمة <strong>OWASP Top 10</strong>، وهي وثيقة توعوية قياسية تُمثل أبرز المخاطر الأمنية لتطبيقات الويب. من أهم هذه الثغرات:
+        </p>
+        <ul>
+            <li><strong>Injection (مثل SQLi):</strong> حيث يتم دمج بيانات غير موثوقة في استعلامات قاعدة البيانات أو الأوامر النظامية، مما يؤدي إلى تنفيذ أوامر غير مصرح بها.</li>
+            <li><strong>Cross-Site Scripting (XSS):</strong> إدراج سكربتات ضارة في صفحات الويب التي يعرضها المستخدمون الآخرون، مما يسمح بسرقة الجلسات (Sessions) أو تنفيذ إجراءات نيابة عن المستخدم.</li>
+            <li><strong>Broken Access Control:</strong> فشل النظام في فرض قيود صارمة على ما يُسمح للمستخدمين الموثقين بالقيام به.</li>
+            <li><strong>Security Misconfiguration:</strong> الإعدادات الافتراضية غير الآمنة، وترك خدمات غير ضرورية تعمل، أو عرض رسائل خطأ تفصيلية.</li>
+        </ul>
+        <p>
+            تتطلب هذه العملية فهماً عميقاً لبروتوكول HTTP(S)، وإدارة الجلسات (Session Management)، وآليات التحقق من المدخلات (Input Validation).
+        </p>
+    </div>
+
+    <!-- 2. Attack Flow -->
+    <div class="cyber-card">
+        <h2>[Attack Flow] مسار الهجوم المنهجي</h2>
+        <pre><code class="language-mermaid">
+graph TD
+    A[Reconnaissance & Mapping] --> B[Spidering & Crawling]
+    B --> C[Vulnerability Discovery]
+    C --> D{Vulnerability Type}
+    D -->|Input Validation| E[SQLi / XSS / CMDi]
+    D -->|Authentication/Authorization| F[Broken Access Control / IDOR]
+    D -->|Configuration| G[Security Misconfig / Info Disclosure]
+    E --> H[Exploitation]
+    F --> H
+    G --> H
+    H --> I[Post-Exploitation / Data Exfiltration]
+    I --> J[Reporting]
+        </code></pre>
+    </div>
+
+    <!-- 3. Manual Testing -->
+    <div class="cyber-card">
+        <h2>[Manual Testing] الفحص اليدوي</h2>
+        <p>
+            لا غنى عن الفحص اليدوي في اختبار تطبيقات الويب، حيث لا تستطيع الأدوات الآلية فهم السياق (Context) (المنطق الإداري للتطبيق) بالشكل الصحيح.
+        </p>
+        <ul>
+            <li><strong>اعتراض الطلبات (Traffic Interception):</strong> استخدم بروكسي مثل Burp Suite أو OWASP ZAP لاعتراض وتعديل طلبات HTTP واستجاباتها بحثاً عن سلوكيات غير متوقعة.</li>
+            <li><strong>اختبار ثغرات SQLi:</strong> إدخال رموز خاصة مثل <code>'</code> أو <code>"</code> أو <code>--</code> أو <code>WAITFOR DELAY '0:0:5'</code> في حقول الإدخال، مسارات URL، وترويسات HTTP لمراقبة استجابات قواعد البيانات (أخطاء، أو تأخيرات زمنية).</li>
+            <li><strong>اختبار ثغرات XSS:</strong> محاولة حقن حمولات (Payloads) برمجية مثل <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> أو <code>"&gt;&lt;img src=x onerror=prompt(document.cookie)&gt;</code> ومراقبة أين وكيف ينعكس هذا الإدخال في كود HTML الخاص بالصفحة بدون تشفير سليم (Encoding).</li>
+            <li><strong>اختبار التحكم في الوصول (IDOR):</strong> التلاعب بالمعرفات الرقمية أو الحرفية في مسارات URL أو المتغيرات (مثال: <code>user_id=123</code> إلى <code>user_id=124</code>) للوصول إلى بيانات مستخدمين آخرين بصلاحيات أفقية أو عمودية.</li>
+        </ul>
+    </div>
+
+    <!-- 4. Automation -->
+    <div class="cyber-card">
+        <h2>[Automation] أدوات الأتمتة والسكربتات</h2>
+        <p>
+            تُسهم الأتمتة في تسريع عملية الاكتشاف، خاصة للثغرات الشائعة والسطحية.
+        </p>
+        <ul>
+            <li><strong>Burp Suite Active Scanner:</strong> أداة قوية مدمجة في النسخة الاحترافية من Burp تقوم بفحص آلي شامل لنقاط الإدخال.</li>
+            <li><strong>SQLmap:</strong> الأداة الأقوى عالمياً في أتمتة اكتشاف واستغلال ثغرات حقن قواعد البيانات (SQL Injection) بمختلف أنواعها.</li>
+            <li><strong>Nuclei:</strong> أداة فحص تعتمد على قوالب (Templates) حديثة وسريعة لاكتشاف الثغرات المعروفة والتكوينات الخاطئة.</li>
+            <li><strong>FFuF / Gobuster:</strong> لأتمتة البحث عن الملفات والمجلدات المخفية (Directory Bruteforcing) واكتشاف مسارات غير مصرح بها.</li>
+        </ul>
+    </div>
+
+    <!-- 5. Tools -->
+    <div class="cyber-card">
+        <h2>[Tools] الأوامر والأدوات التطبيقية</h2>
+        
+        <h3>فحص ثغرات SQL Injection باستخدام SQLmap</h3>
+        <div class="cmd-ui-box">sqlmap -u "http://target.com/page.php?id=1" --dbs --random-agent --batch</div>
+        
+        <h3>فحص ثغرات XSS باستخدام XSStrike</h3>
+        <div class="cmd-ui-box">python xsstrike.py -u "http://target.com/search.php?q=test" --crawl</div>
+        
+        <h3>البحث عن المسارات باستخدام FFuF</h3>
+        <div class="cmd-ui-box">ffuf -w wordlist.txt -u http://target.com/FUZZ -mc 200,301,302,403</div>
+
+        <h3>الفحص السريع باستخدام Nuclei</h3>
+        <div class="cmd-ui-box">nuclei -u http://target.com -t cves/ -t vulnerabilities/</div>
+    </div>
+
+    <!-- 6. Lab -->
+    <div class="cyber-card">
+        <h2>[Lab] بيئات التدريب العملي</h2>
+        <ul>
+            <li><strong>PortSwigger Web Security Academy:</strong> أفضل منصة مجانية لتعلم ثغرات الويب من مبدعي Burp Suite.</li>
+            <li><strong>HackTheBox (HTB):</strong> مسارات مثل Bug Bounty Hunter، وأجهزة مخصصة لتطبيقات الويب.</li>
+            <li><strong>TryHackMe (THM):</strong> غرف OWASP Top 10 و Web Fundamentals.</li>
+            <li><strong>OWASP Juice Shop:</strong> تطبيق ويب حديث ومليء بالثغرات مصمم للتدريب والأبحاث.</li>
+        </ul>
+    </div>
+
+    <!-- 7. Quiz -->
+    <div class="cyber-card">
+        <h2>[Quiz] اختبر معلوماتك</h2>
+        <div class="quiz-container" data-correct="B">
+            <h4>Scenario: أثناء اختبار تطبيق ويب، قمت بتغيير قيمة البارامتر `id` في الرابط من `id=10` إلى `id=11` وتمكنت من عرض الفاتورة الخاصة بمستخدم آخر دون الحاجة لتسجيل الدخول بحسابه. ما هو نوع هذه الثغرة؟</h4>
+            <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) Cross-Site Request Forgery (CSRF)</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) Insecure Direct Object Reference (IDOR) / Broken Access Control</button>
+        </div>
+    </div>
+
+    <!-- 8. Cheat Sheet -->
+    <div class="cyber-card">
+        <h2>[Cheat Sheet] المرجع السريع لثغرات الويب</h2>
+        <table class="cheat-table">
+            <thead>
+                <tr>
+                    <th>نوع الثغرة (Vulnerability)</th>
+                    <th>الفحص اليدوي (Manual Test)</th>
+                    <th>التأثير (Impact)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SQL Injection</strong></td>
+                    <td>إضافة <code>'</code> أو <code>"</code> أو محاولة <code>ORDER BY 1--</code></td>
+                    <td>تسريب قواعد البيانات، تجاوز تسجيل الدخول، تنفيذ أوامر (RCE).</td>
+                </tr>
+                <tr>
+                    <td><strong>Reflected XSS</strong></td>
+                    <td>إدخال <code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code> في حقول البحث</td>
+                    <td>سرقة الجلسات (Cookies)، إعادة التوجيه لصفحات خبيثة، اختطاف حسابات.</td>
+                </tr>
+                <tr>
+                    <td><strong>Stored XSS</strong></td>
+                    <td>حفظ الكود الخبيث في التعليقات أو الملف الشخصي</td>
+                    <td>إصابة كل مستخدم يزور الصفحة التي تحتوي على التعليق أو الملف.</td>
+                </tr>
+                <tr>
+                    <td><strong>IDOR</strong></td>
+                    <td>تعديل الأرقام المعرفة للموارد في الروابط أو الطلبات المخفية</td>
+                    <td>الوصول غير المصرح به لبيانات المستخدمين الآخرين.</td>
+                </tr>
+                <tr>
+                    <td><strong>LFI (Local File Inclusion)</strong></td>
+                    <td>تغيير المعامل إلى مسار مثل <code>../../../../etc/passwd</code></td>
+                    <td>قراءة الملفات الحساسة للنظام الذي يستضيف التطبيق.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

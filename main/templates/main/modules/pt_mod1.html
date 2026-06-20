@@ -1,0 +1,151 @@
+<div class="meth-content-view" id="meth-content-pt_mod1" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    
+    <div class="cyber-hero">
+        <h2>01. Fundamentals of Ethical Hacking</h2>
+        <p>أساسيات الاختراق الأخلاقي، سلسلة القتل السيبراني (Cyber Kill Chain)، ونمذجة التهديدات (Threat Modeling).</p>
+    </div>
+
+    <!-- 1. Theory -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-book"></i> الجانب النظري (Theory)</h3>
+        <p>يعتبر الاختراق الأخلاقي (Ethical Hacking) منهجية مصرح بها تهدف لاكتشاف الثغرات والضعف في الأنظمة والشبكات قبل أن يستغلها المخترقون الخبيثون (Malicious Hackers). يتطلب الأمر فهمًا عميقًا لآليات عمل الشبكات، أنظمة التشغيل، وتطبيقات الويب.</p>
+        <p>تستند العمليات الهجومية المتقدمة (APT) على إطارات عمل محددة، من أبرزها <strong>سلسلة القتل السيبراني (Cyber Kill Chain)</strong>، وهي منهجية طورّتها شركة لوكهيد مارتن لتعقب وتحليل مراحل الهجوم السيبراني بدايةً من الاستطلاع وحتى تحقيق أهداف الهجوم. تتألف هذه السلسلة من سبع مراحل رئيسية:</p>
+        <ul>
+            <li><strong>Reconnaissance (الاستطلاع):</strong> جمع المعلومات عن الهدف سواء كانت مفتوحة المصدر (OSINT) أو عبر مسح المنافذ لاكتشاف البصمة الرقمية (Digital Footprint).</li>
+            <li><strong>Weaponization (التسليح):</strong> دمج البرمجيات الخبيثة مع ملفات استدراج (Exploit + Backdoor).</li>
+            <li><strong>Delivery (التسليم):</strong> إيصال الأداة الخبيثة للهدف (عبر رسائل التصيّد أو الروابط الملغمة).</li>
+            <li><strong>Exploitation (الاستغلال):</strong> استغلال الثغرات الموجودة على نظام الضحية وتفعيل الهجوم.</li>
+            <li><strong>Installation (التثبيت):</strong> تثبيت البرمجية الخبيثة لضمان التواجد الدائم (Persistence).</li>
+            <li><strong>Command & Control - C2 (القيادة والتحكم):</strong> إنشاء قناة اتصال خفية للتحكم في النظام المخترق وإدارته عن بعد.</li>
+            <li><strong>Actions on Objectives (تنفيذ الأهداف):</strong> الوصول للبيانات الحساسة وسرقتها (Exfiltration) أو التشفير (Ransomware).</li>
+        </ul>
+        <p>بالتوازي مع ذلك، تُستخدم <strong>نمذجة التهديدات (Threat Modeling)</strong> مثل إطار عمل <strong>STRIDE</strong> (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) لتحليل الأنظمة برمجياً ومعمارياً بهدف التنبؤ بالهجمات وسد الثغرات في مرحلة التصميم قبل التنفيذ.</p>
+    </div>
+
+    <!-- 2. Attack Flow -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-sitemap"></i> مسار الهجوم (Attack Flow)</h3>
+        <pre><code class="language-mermaid">
+graph TD
+    A[Reconnaissance] -->|OSINT & Scanning| B(Weaponization)
+    B -->|Payload Creation| C(Delivery)
+    C -->|Phishing / Web / USB| D{Exploitation}
+    D -->|Success| E[Installation]
+    D -->|Fail| A
+    E -->|Persistence Mechanism| F[Command & Control C2]
+    F -->|Lateral Movement| G[Actions on Objectives]
+        </code></pre>
+    </div>
+
+    <!-- 3. Manual Testing -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-search"></i> الاختبار اليدوي (Manual Testing)</h3>
+        <p>في المراحل الأولى للاختبار، يعتمد المحلل الأمني على الأساليب اليدوية للتعرف على هوية الهدف وتحديد أسطح الهجوم الممكنة (Attack Surface). هذا يشمل:</p>
+        <ul>
+            <li><strong>استخبارات المصادر المفتوحة (OSINT):</strong> استخدام محركات البحث بأسلوب متقدم (Google Dorks) للبحث عن الملفات الحساسة، أرقام الإصدارات، والبيانات المسربة في مستودعات GitHub أو مواقع لصق الأكواد (Pastebin).</li>
+            <li><strong>تحليل الترويسات (Header Analysis):</strong> استخدام أدوات المطورين في المتصفح (Developer Tools) وفحص الطلبات والاستجابات لمعرفة نوع الخوادم والتقنيات المستخدمة (Server Banners, Wappalyzer).</li>
+            <li><strong>التحقق المعماري اليدوي:</strong> رسم خارطة ذهنية للتطبيقات والنطاقات الفرعية (Subdomains) المرتبطة بالهدف بدون الاعتماد الفوري على الأدوات الآلية، لتجنب تفعيل جدران الحماية (WAF/IDS).</li>
+        </ul>
+    </div>
+
+    <!-- 4. Automation -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-robot"></i> الأتمتة (Automation)</h3>
+        <p>لزيادة كفاءة عملية التقييم الأمني وتسريع عملية الاستطلاع (Recon)، يتم الاستعانة بسكربتات وأدوات آلية لجمع المعلومات بشكل واسع النطاق، مثل:</p>
+        <ul>
+            <li>كتابة نصوص برمجية (Bash/Python scripts) لتشغيل أدوات مثل <code>Amass</code>، <code>Subfinder</code>، و <code>httpx</code> تباعًا، ودمج مخرجاتها لاكتشاف النطاقات الفعالة والمنافذ المفتوحة.</li>
+            <li>استخدام منصات مسح الثغرات الآلية (Vulnerability Scanners) مثل <code>Nessus</code>، <code>OpenVAS</code>، أو <code>Nuclei</code> لتحديد نقاط الضعف المعروفة (CVEs) وسوء التكوين (Misconfigurations) بسرعة وفعالية.</li>
+        </ul>
+    </div>
+
+    <!-- 5. Tools -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-tools"></i> الأدوات والتعليمات (Tools)</h3>
+        <p>أبرز الأوامر والأدوات المستخدمة في مراحل الأساسيات والاستطلاع الأولي:</p>
+        
+        <h4>1. مسح الشبكات وتحديد المنافذ المفتوحة - Nmap</h4>
+        <div class="cmd-ui-box">
+            <code>nmap -sC -sV -p- -T4 TARGET_IP</code>
+        </div>
+        
+        <h4>2. الاستطلاع النشط وجمع المسارات المخفية - FFUF</h4>
+        <div class="cmd-ui-box">
+            <code>ffuf -w wordlist.txt -u http://TARGET_IP/FUZZ</code>
+        </div>
+        
+        <h4>3. استكشاف النطاقات الفرعية تلقائياً - Amass</h4>
+        <div class="cmd-ui-box">
+            <code>amass enum -passive -d target.com</code>
+        </div>
+        
+        <h4>4. مسح الثغرات المتعدد عبر القوالب - Nuclei</h4>
+        <div class="cmd-ui-box">
+            <code>nuclei -u https://target.com -t cves/</code>
+        </div>
+    </div>
+
+    <!-- 6. Lab -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-flask"></i> بيئات العمل (Lab)</h3>
+        <p>للتدريب العملي على مفاهيم الاختراق الأساسية وسلسلة القتل، يُنصح بإكمال المسارات التالية:</p>
+        <ul>
+            <li><strong>TryHackMe:</strong> مسارات "Pre Security" و "Complete Beginner" و "Web Fundamentals".</li>
+            <li><strong>HackTheBox:</strong> مسار "Starting Point" المكون من أجهزة مجانية بأساسيات متدرجة (Tier 0 & Tier 1).</li>
+            <li><strong>PortSwigger Web Security Academy:</strong> مختبرات "Information Gathering" و "Access Control".</li>
+        </ul>
+    </div>
+
+    <!-- 7. Quiz -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-question-circle"></i> اختبر معلوماتك (Quiz)</h3>
+        <div class="quiz-container" data-correct="B">
+            <h4>Scenario: أثناء تنفيذ عملية اختبار اختراق، تمكنت من استغلال ثغرة (RCE) ورفعت صلاحياتك على خادم الضحية. بعد ذلك قمت بإضافة سكريبت ليعمل تلقائيًا عند إعادة تشغيل الخادم، لضمان قدرتك على العودة لاحقاً. في أي مرحلة من "Cyber Kill Chain" أنت الآن؟</h4>
+            <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) Exploitation (الاستغلال)</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) Installation (التثبيت والتواجد)</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'C')">C) Delivery (التسليم)</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'D')">D) Weaponization (التسليح)</button>
+        </div>
+    </div>
+
+    <!-- 8. Cheat Sheet -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-file-alt"></i> المرجع السريع (Cheat Sheet)</h3>
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th>المفهوم (Concept)</th>
+                    <th>الوصف (Description)</th>
+                    <th>الأداة / التقنية المرتبطة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Reconnaissance</td>
+                    <td>البحث عن الهدف وتحديد النطاقات وتفاصيل البنية التحتية.</td>
+                    <td>Amass, Nmap, Shodan, Google Dorks</td>
+                </tr>
+                <tr>
+                    <td>Weaponization</td>
+                    <td>تجهيز البرمجية الخبيثة وربطها بملف يمكن فتحه لاستدراج الضحية.</td>
+                    <td>Metasploit (msfvenom), Cobalt Strike</td>
+                </tr>
+                <tr>
+                    <td>Exploitation</td>
+                    <td>تنفيذ الكود الضار لاستغلال ثغرة في النظام وتحقيق الاختراق.</td>
+                    <td>Metasploit, Exploit-DB, Burp Suite</td>
+                </tr>
+                <tr>
+                    <td>Threat Modeling</td>
+                    <td>تحليل المخاطر الممكنة لتطبيق معين أثناء تصميمه (مثل نموذج STRIDE).</td>
+                    <td>Microsoft Threat Modeling Tool</td>
+                </tr>
+                <tr>
+                    <td>Persistence</td>
+                    <td>تقنيات تضمن بقاء وصول المخترق للنظام حتى بعد إغلاقه أو إعادة تشغيله.</td>
+                    <td>Scheduled Tasks, Registry Keys, Cron Jobs</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

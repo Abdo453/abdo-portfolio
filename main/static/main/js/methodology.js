@@ -1279,16 +1279,26 @@
 
     function getPhaseTitle(phaseId) {
         // Pentesting Guide
-        if (phaseId === 'pt_mod1') return '1. Active Reconnaissance';
-        if (phaseId === 'pt_mod2') return '2. Content Discovery';
-        if (phaseId === 'pt_mod3') return '3. Port Scanning & Enum';
-        if (phaseId === 'pt_mod4') return '4. Web App Testing';
-        if (phaseId === 'pt_mod5') return '5. API Testing';
-        if (phaseId === 'pt_mod6') return '6. Cloud & Infra Testing';
-        if (phaseId === 'pt_mod7') return '7. Network Layer Testing';
-        if (phaseId === 'pt_mod8') return '8. Post-Exploitation';
-        if (phaseId === 'pt_mod9') return '9. Methodologies';
-        if (phaseId === 'pt_mod10') return '10. Tools Reference';
+        if (phaseId === 'pt_mod1') return '01. Fundamentals';
+        if (phaseId === 'pt_mod2') return '02. Active Recon';
+        if (phaseId === 'pt_mod3') return '03. Passive Recon';
+        if (phaseId === 'pt_mod4') return '04. Content Discovery';
+        if (phaseId === 'pt_mod5') return '05. Port Scanning';
+        if (phaseId === 'pt_mod6') return '06. Service Enumeration';
+        if (phaseId === 'pt_mod7') return '07. Web Testing';
+        if (phaseId === 'pt_mod8') return '08. API Testing';
+        if (phaseId === 'pt_mod9') return '09. Authentication';
+        if (phaseId === 'pt_mod10') return '10. Advanced Vulns';
+        if (phaseId === 'pt_mod11') return '11. Client Side';
+        if (phaseId === 'pt_mod12') return '12. Cloud';
+        if (phaseId === 'pt_mod13') return '13. Network';
+        if (phaseId === 'pt_mod14') return '14. Active Directory';
+        if (phaseId === 'pt_mod15') return '15. Post Exploitation';
+        if (phaseId === 'pt_mod16') return '16. Reporting';
+        if (phaseId === 'pt_mod17') return '17. Methodologies';
+        if (phaseId === 'pt_mod18') return '18. Bug Bounty';
+        if (phaseId === 'pt_mod19') return '19. Labs';
+        if (phaseId === 'pt_mod20') return '20. Tools Reference';
         if (phaseId === 'assess-htb') return 'HTB Writeup';
         if (phaseId === 'assess-bb') return 'Bug Bounty Report';
         if (phaseId === 'assess-ad') return 'AD Pentest';

@@ -1,0 +1,142 @@
+<div class="meth-content-view" id="meth-content-pt_mod12" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+
+    <div class="cyber-hero">
+        <h2>اختبار اختراق السحابة (Cloud Security)</h2>
+        <p>استكشاف واستغلال الثغرات في بيئات السحابة مثل AWS و Azure، بدءاً من التكوينات الخاطئة لخدمات التخزين (S3, Blobs) وصولاً إلى تصعيد الصلاحيات عبر IAM و Azure AD.</p>
+    </div>
+
+    <!-- 1. Theory -->
+    <div class="cyber-card">
+        <h3>[Theory] الإطار النظري لأمن السحابة</h3>
+        <p>أمن السحابة يعتمد في الأساس على <strong>نموذج المسؤولية المشتركة (Shared Responsibility Model)</strong>. بينما يُؤمن مزود الخدمة (مثل Amazon أو Microsoft) البنية التحتية، تقع مسؤولية تأمين التكوينات والبيانات وإدارة الهويات (IAM) على عاتق العميل. أغلب اختراقات السحابة لا تعتمد على ثغرات Zero-Day، بل على التكوينات الخاطئة (Misconfigurations).</p>
+        <ul>
+            <li><strong>AWS IAM & S3:</strong> تعيين صلاحيات زائدة عن الحاجة للمستخدمين والأدوار (Over-permissive Policies) أو ترك حاويات التخزين (S3 Buckets) مفتوحة للقراءة والكتابة العامة، مما يؤدي إلى تسريب البيانات.</li>
+            <li><strong>Azure & Azure AD:</strong> ضعف إعدادات التحقق من الهوية (MFA)، والثغرات المتعلقة بإدارة التطبيقات (App Registrations) والوصول كضيف (Guest Access) والذي يمكن أن يتيح حصر المستخدمين (Enumeration) واستغلال الأدوار.</li>
+            <li><strong>SSRF to IMDS:</strong> استغلال ثغرة SSRF في تطبيق مستضاف على خادم سحابي للوصول إلى خدمة البيانات الوصفية (Instance Metadata Service) على العنوان <code>169.254.169.254</code> لسرقة مفاتيح الجلسات المؤقتة.</li>
+        </ul>
+    </div>
+
+    <!-- 2. Attack Flow -->
+    <div class="cyber-card">
+        <h3>[Attack Flow] مسار الهجوم السحابي</h3>
+        <pre><code class="language-mermaid">
+graph TD
+    A[Initial Access] -->|Leaked Keys / SSRF / Phishing| B(Recon & Enumeration)
+    B --> C{Target Environment}
+    C -->|AWS| D[Enumerate IAM & S3]
+    C -->|Azure| E[Enumerate Azure AD & Blobs]
+    D --> F[Privilege Escalation via IAM Policies]
+    E --> G[Privilege Escalation via Role Assignments]
+    F --> H[Data Exfiltration & Persistence]
+    G --> H
+    H --> I[Impact / Resource Hijacking]
+    
+    style A fill:#1a1a1a,stroke:#00e5a0
+    style I fill:#1a1a1a,stroke:#ff003c
+        </code></pre>
+    </div>
+
+    <!-- 3. Manual Testing -->
+    <div class="cyber-card">
+        <h3>[Manual Testing] الفحص اليدوي</h3>
+        <p>يمكنك تنفيذ العديد من تقنيات الفحص يدوياً للتحقق من التكوينات وصلاحيات الوصول:</p>
+        <ul>
+            <li><strong>استغلال SSRF (AWS):</strong><br>
+            إذا وجدت ثغرة SSRF، حاول طلب <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code> لمعرفة اسم الـ Role الملحق بالخادم، ثم اطلب مسار الـ Role للحصول على مفاتيح <code>AccessKeyId</code> و <code>SecretAccessKey</code> و <code>Token</code>.</li>
+            <li><strong>فحص S3 Buckets:</strong><br>
+            حاول تصفح الرابط <code>http://[bucket-name].s3.amazonaws.com</code> في المتصفح. إذا ظهرت رسالة خطأ "Access Denied" فالوصول مقيد، أما إذا ظهرت قائمة بصيغة XML، فالحاوية مفتوحة للاستعراض العام ويمكن سرد محتوياتها.</li>
+            <li><strong>حصر مستخدمي Azure AD:</strong><br>
+            يمكن استخدام أوامر PowerShell بوجود حساب، ولو بحد أدنى من الصلاحيات، لمحاولة سحب قائمة بكافة المستخدمين والمجموعات في الـ Tenant للبحث عن أهداف للهندسة الاجتماعية أو هجمات Password Spraying.</li>
+        </ul>
+    </div>
+
+    <!-- 4. Automation -->
+    <div class="cyber-card">
+        <h3>[Automation] أدوات الأتمتة السحابية</h3>
+        <p>نظراً لتعقيد البيئات السحابية وكثرة الخدمات، تعتبر أدوات الأتمتة ضرورية لاستخراج التكوينات الخاطئة وتحديد مسارات تصعيد الصلاحيات:</p>
+        <ul>
+            <li><strong>Pacu:</strong> إطار عمل هجومي (Offensive Framework) مخصص لاختبار اختراق AWS، يتيح استكشاف الصلاحيات، تصعيدها، وتجاوز الحماية بسلاسة.</li>
+            <li><strong>CloudFox:</strong> أداة سريعة من تطوير Rhino Security تساعد في الوعي الظرفي (Situational Awareness) في بيئات AWS و Azure لاكتشاف المسارات القابلة للاستغلال والموارد الحساسة المخفية.</li>
+            <li><strong>ScoutSuite:</strong> أداة مراجعة أمنية (Security Auditing) شاملة تعمل على عدة مزودي سحابة (Multi-Cloud) لتوليد تقارير مفصلة عن التكوينات الخاطئة.</li>
+            <li><strong>MicroBurst:</strong> مجموعة من نصوص PowerShell البرمجية المخصصة لاختبار اختراق بيئة Azure والقيام بمهام مثل استخراج كلمات المرور، الفحص، وتصعيد الصلاحيات.</li>
+        </ul>
+    </div>
+
+    <!-- 5. Tools -->
+    <div class="cyber-card">
+        <h3>[Tools] أوامر التنفيذ</h3>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">$</span> <span class="cmd-command">aws s3 ls s3://target-bucket-name --no-sign-request</span>
+            <span class="cmd-comment"># سرد محتويات S3 Bucket بشكل مجهول (بدون بيانات اعتماد)</span>
+        </div>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">$</span> <span class="cmd-command">aws sts get-caller-identity --profile attacker</span>
+            <span class="cmd-comment"># التحقق من الهوية والصلاحيات للمفاتيح الحالية (من أنا؟)</span>
+        </div>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">$</span> <span class="cmd-command">pacu --session my_pentest</span>
+            <span class="cmd-comment"># تشغيل إطار العمل Pacu لبدء فحص بيئة AWS واستغلالها</span>
+        </div>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">PS></span> <span class="cmd-command">Invoke-AzureADRecon -TenantID [Tenant-ID]</span>
+            <span class="cmd-comment"># تنفيذ فحص للمعلومات في Azure واستخراج البيانات عبر MicroBurst</span>
+        </div>
+    </div>
+
+    <!-- 6. Lab -->
+    <div class="cyber-card">
+        <h3>[Lab] بيئات التدريب (Labs)</h3>
+        <ul>
+            <li><strong>flaws.cloud / flaws2.cloud:</strong> تحديات عملية ممتازة للتدرب على ثغرات وتكوينات AWS الخاطئة.</li>
+            <li><strong>CloudGoat (Rhino Security):</strong> بيئة AWS قابلة للنشر (Vulnerable by Design) لتطوير مهارات اكتشاف مسارات الاختراق المعقدة في السحابة.</li>
+            <li><strong>HackTheBox (HTB):</strong> توفر مسارات كاملة ومختبرات متخصصة للسحابة (Cloud Tracks & Sherlocks).</li>
+            <li><strong>SadCloud:</strong> أداة لبناء بيئة سحابية متعمدة الضعف للتدريب على أدوات الحماية والهجوم في AWS.</li>
+        </ul>
+    </div>
+
+    <!-- 7. Quiz -->
+    <div class="cyber-card">
+        <h3>[Quiz] اختبار المعرفة</h3>
+        <div class="quiz-container" data-correct="A">
+            <h4>Scenario: لقد اكتشفت ثغرة SSRF في تطبيق يعمل على خادم EC2 في AWS. كيف يمكنك استخراج مفاتيح الوصول المؤقتة (Temporary Credentials) الخاصة بصلاحيات الخادم؟</h4>
+            <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) استدعاء الرابط http://169.254.169.254/latest/meta-data/iam/security-credentials/ وطلب اسم الـ Role المتصل.</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) قراءة الملف /etc/aws/credentials باستخدام ثغرة LFI بالتزامن مع SSRF.</button>
+        </div>
+    </div>
+
+    <!-- 8. Cheat Sheet -->
+    <div class="cyber-card">
+        <h3>[Cheat Sheet] المرجع السريع</h3>
+        <table class="cheat-table">
+            <thead>
+                <tr>
+                    <th>التقنية / الأداة</th>
+                    <th>الوصف / الأمر</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>IMDSv1 Metadata IP</strong></td>
+                    <td><code>http://169.254.169.254/latest/meta-data/</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Check AWS Identity</strong></td>
+                    <td><code>aws sts get-caller-identity</code></td>
+                </tr>
+                <tr>
+                    <td><strong>S3 Anonymous Read</strong></td>
+                    <td><code>aws s3api get-bucket-acl --bucket [name] --no-sign-request</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Azure Login (CLI)</strong></td>
+                    <td><code>az login</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Pacu PrivEsc Scan</strong></td>
+                    <td><code>run iam__privesc_scan</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

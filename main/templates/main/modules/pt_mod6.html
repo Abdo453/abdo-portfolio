@@ -1,0 +1,148 @@
+<div class="meth-content-view" id="meth-content-pt_mod6" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    <div class="cyber-hero">
+        <h1>06. Service Enumeration</h1>
+        <p>الاستكشاف المعمق واستخراج البيانات من الخدمات (SMB, SNMP, LDAP, RPC)</p>
+    </div>
+
+    <div class="cyber-card">
+        <h2>[Theory] الإطار النظري وتعداد الخدمات</h2>
+        <p>
+            تعد مرحلة <strong>Service Enumeration</strong> (تعداد الخدمات) الخطوة المحورية التي تلي عملية مسح المنافذ (Port Scanning). في حين أن المسح يخبرنا بوجود باب مفتوح، فإن التعداد هو عملية التفاعل مع هذا الباب لفهم ما يقع خلفه. الهدف الأساسي هو إرسال طلبات محددة للخدمات النشطة واستخراج معلومات دقيقة مثل أسماء المستخدمين (Usernames)، المجلدات المشتركة (Shares)، إعدادات التوجيه (Routing tables)، وهياكل الدليل النشط (Active Directory Objects)، مما يمهد الطريق لمرحلة الاستغلال (Exploitation).
+        </p>
+        <ul>
+            <li><strong>SMB (Server Message Block) [Ports 139, 445]:</strong> بروتوكول لمشاركة الملفات والطابعات، وهو من أغنى مصادر المعلومات لاكتشاف المستخدمين وصلاحياتهم والمجلدات غير المحمية في بيئات Windows.</li>
+            <li><strong>SNMP (Simple Network Management Protocol) [Port 161/UDP]:</strong> بروتوكول يعمل عبر UDP ويستخدم لإدارة مكونات الشبكة. الاستعلام عن قواعد المعلومات (MIBs) باستخدام سلاسل مجتمعية ضعيفة (Community Strings مثل 'public') قد يكشف عن تفاصيل خطيرة حول بنية الشبكة والنظام.</li>
+            <li><strong>LDAP (Lightweight Directory Access Protocol) [Port 389, 636]:</strong> العمود الفقري لاستعلام وتعديل خدمات Active Directory. الاستعلام المجهول (Anonymous Bind) قد يسمح بتصدير كامل شجرة الدليل (Directory Tree).</li>
+            <li><strong>RPC (Remote Procedure Call) [Port 135]:</strong> خدمة تسمح بتنفيذ الإجراءات عبر الشبكة كنقطة وصول مركزية (Endpoint Mapper). يوفر تفاصيل حساسة مثل أرقام الـ SIDs وقوائم المستخدمين المحليين.</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <h2>[Attack Flow] مسار التعداد المنطقي</h2>
+        <pre><code class="language-mermaid">
+graph TD
+    A[Discover Open Ports] --> B{Service Type?}
+    B -->|TCP 139/445| C[SMB Enumeration]
+    B -->|UDP 161| D[SNMP Enumeration]
+    B -->|TCP 389/636| E[LDAP Enumeration]
+    B -->|TCP 135| F[RPC Enumeration]
+    
+    C --> C1(Null Session / Shares / Users)
+    D --> D1(Bruteforce Community / Walk MIBs)
+    E --> E1(Anonymous Bind / Extract AD Objects)
+    F --> F1(Query Endpoints / Enumerate SIDs)
+    
+    C1 --> G[Privilege Escalation / Exploitation]
+    D1 --> G
+    E1 --> G
+    F1 --> G
+        </code></pre>
+    </div>
+
+    <div class="cyber-card">
+        <h2>[Manual Testing] الفحص اليدوي</h2>
+        <p>يجب على مختبر الاختراق أن يكون قادراً على التفاعل مع الخدمات بشكل يدوي لضمان عدم تفويت أي معلومات قد تتجاهلها الأدوات الآلية:</p>
+        
+        <h3>1. SMB Manual Interaction</h3>
+        <p>محاولة الاتصال بالخدمة بدون بيانات اعتماد (Null Session) لسرد المجلدات المشتركة:</p>
+        <div class="cmd-ui-box">smbclient -N -L //TARGET_IP</div>
+        
+        <h3>2. RPC Manual Testing</h3>
+        <p>الاتصال بـ RPC Mapper بشكل مجهول للاستعلام عن المستخدمين والمجموعات (باستخدام أوامر مثل <code>enumdomusers</code> أو <code>lsaenumsid</code>):</p>
+        <div class="cmd-ui-box">rpcclient -U "" -N TARGET_IP</div>
+
+        <h3>3. LDAP Anonymous Bind</h3>
+        <p>البحث عن محتوى شجرة الدليل النشط ومعرفة الـ Naming Contexts للاستعلام اللاحق:</p>
+        <div class="cmd-ui-box">ldapsearch -x -h TARGET_IP -s base namingcontexts</div>
+
+        <h3>4. SNMP Walk</h3>
+        <p>سحب بيانات الشجرة الكاملة (MIB tree) باستخدام سلسلة مجتمعية افتراضية:</p>
+        <div class="cmd-ui-box">snmpwalk -v2c -c public TARGET_IP</div>
+    </div>
+
+    <div class="cyber-card">
+        <h2>[Automation] الأتمتة والسكربتات</h2>
+        <p>لزيادة الكفاءة وتغطية عدد كبير من الأهداف، نعتمد على أدوات أتمتة تجمع معلومات متعددة في وقت واحد:</p>
+        <ul>
+            <li><strong>Enum4linux / Enum4linux-ng:</strong> أداة شاملة ومكتوبة بلغة Perl/Python لجمع كل ما يتعلق بـ SMB/RPC (مستخدمين، مجموعات، سياسات كلمات المرور، SIDs).</li>
+            <li><strong>Nmap Scripts (NSE):</strong> يوفر Nmap مكتبة ضخمة لتعداد الخدمات بشكل آلي. (مثال: <code>smb-enum-shares, ldap-rootdse, snmp-info</code>).</li>
+            <li><strong>NetExec (formerly CrackMapExec):</strong> يعتبر "سكين الجيش السويسري" لبيئات Active Directory، يمكنه أتمتة فحص SMB, WinRM, LDAP عبر شبكات كاملة.</li>
+            <li><strong>BloodHound:</strong> أداة تعتمد على الرسوم البيانية وتستخدم عادة بعد الوصول الأولي لجمع وتحليل مسارات الصلاحيات باستخدام الـ LDAP و الـ RPC.</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <h2>[Tools] أوامر الأدوات المتقدمة</h2>
+        
+        <p>استخدام Enum4linux-ng للحصول على تقرير مفصل حول SMB/RPC:</p>
+        <div class="cmd-ui-box">enum4linux-ng -A TARGET_IP</div>
+        
+        <p>استخدام NetExec (CrackMapExec) للبحث عن مجلدات SMB المشتركة والصلاحيات الخاصة بها للوصول المجهول:</p>
+        <div class="cmd-ui-box">netexec smb TARGET_IP -u '' -p '' --shares</div>
+        
+        <p>استخدام Nmap NSE لاستخراج معلومات LDAP:</p>
+        <div class="cmd-ui-box">nmap -n -sV --script "ldap* and not brute" -p 389 TARGET_IP</div>
+        
+        <p>اكتشاف سلاسل Community Strings الخاصة بـ SNMP باستخدام أداة onesixtyone القوية والسريعة:</p>
+        <div class="cmd-ui-box">onesixtyone -c dict.txt TARGET_IP</div>
+    </div>
+
+    <div class="cyber-card">
+        <h2>[Lab] بيئات التدريب (Practice Labs)</h2>
+        <p>لتعزيز مهارات التعداد الخاصة بك، يوصى بالتدريب على الآلات والمسارات التالية:</p>
+        <ul>
+            <li><strong>Hack The Box:</strong> Forest, Active, Reel (تركز بشدة على SMB/LDAP/RPC).</li>
+            <li><strong>TryHackMe:</strong> Network Services Series, Active Directory Basics, Enumeration Room.</li>
+            <li><strong>PortSwigger Labs:</strong> Information Disclosure modules (للتركيز على مفاهيم تسريب البيانات).</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <h2>[Quiz] اختبار المعرفة</h2>
+        <div class="quiz-container" data-correct="A">
+            <h4>Scenario: أثناء فحصك لشبكة هدف، اكتشفت أن المنفذ 161 (UDP) مفتوح، ولكن الفحوصات التقليدية لـ TCP لم تظهر أية معلومات مهمة. ما هي الخدمة المتوقعة وكيف ستبدأ بتعدادها للحصول على معلومات حيوية عن النظام؟</h4>
+            <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) الخدمة هي SNMP، وأفضل طريقة هي استخدام أداة snmpwalk مع سلاسل مجتمعية افتراضية مثل 'public' أو 'private'.</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) الخدمة هي SMB، ويجب استخدام smbclient للاتصال عبر جلسة مجهولة (Null Session) للوصول للبيانات.</button>
+        </div>
+    </div>
+
+    <div class="cyber-card">
+        <h2>[Cheat Sheet] المرجع السريع للتعداد</h2>
+        <table style="width: 100%; border-collapse: collapse; text-align: left; color: #fff;">
+            <thead>
+                <tr style="background-color: #222; border-bottom: 2px solid var(--tool-color);">
+                    <th style="padding: 10px;">Service</th>
+                    <th style="padding: 10px;">Port(s)</th>
+                    <th style="padding: 10px;">Key Tool / Command</th>
+                    <th style="padding: 10px;">Goal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #333;">
+                    <td style="padding: 10px;"><strong>SMB</strong></td>
+                    <td style="padding: 10px;">TCP 139, 445</td>
+                    <td style="padding: 10px;"><code>enum4linux -a IP</code></td>
+                    <td style="padding: 10px;">Shares, Users, Pass Policies</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #333;">
+                    <td style="padding: 10px;"><strong>RPC</strong></td>
+                    <td style="padding: 10px;">TCP 135</td>
+                    <td style="padding: 10px;"><code>rpcclient -U "" IP</code></td>
+                    <td style="padding: 10px;">Enum SIDs, Local Users</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #333;">
+                    <td style="padding: 10px;"><strong>LDAP</strong></td>
+                    <td style="padding: 10px;">TCP 389, 636</td>
+                    <td style="padding: 10px;"><code>ldapsearch -x -h IP</code></td>
+                    <td style="padding: 10px;">AD Objects, Domain Info</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px;"><strong>SNMP</strong></td>
+                    <td style="padding: 10px;">UDP 161</td>
+                    <td style="padding: 10px;"><code>snmpwalk -v2c -c public IP</code></td>
+                    <td style="padding: 10px;">Routing, System info, Network map</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
