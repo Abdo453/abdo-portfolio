@@ -1,0 +1,147 @@
+<div class="meth-content-view" id="meth-content-pt_mod2" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+
+    <div class="cyber-hero">
+        <h1>02. الاستطلاع النشط (Active Reconnaissance)</h1>
+        <p>اكتشاف البنية التحتية، فحص المنافذ، وتعداد خدمات DNS للهدف بشكل مباشر.</p>
+    </div>
+
+    <!-- 1. Theory -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-book"></i> النظري (Theory)</h2>
+        <p>
+            يُعد <strong>الاستطلاع النشط (Active Reconnaissance)</strong> المرحلة التي يبدأ فيها المهاجم أو مختبر الاختراق بالتفاعل المباشر مع البنية التحتية للهدف. على النقيض من الاستطلاع السلبي، يترك الاستطلاع النشط آثاراً وسجلات (Logs) في أنظمة الحماية الخاصة بالهدف مثل جدران الحماية (Firewalls) وأنظمة كشف التسلل (IDS/IPS).
+            تتضمن هذه المرحلة فحص المنافذ (Port Scanning)، تعداد الخدمات (Service Enumeration)، وتعداد نظام أسماء النطاقات (DNS Enumeration) بما في ذلك محاولات نقل النطاق (Zone Transfers - AXFR) لاكتشاف السجلات الداخلية وتخطيط الشبكة بالكامل. الهدف هو بناء خريطة دقيقة للأنظمة المتاحة والخدمات المفتوحة التي قد تحتوي على ثغرات.
+        </p>
+    </div>
+
+    <!-- 2. Attack Flow -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-project-diagram"></i> مسار الهجوم (Attack Flow)</h2>
+        <pre><code class="language-mermaid">
+graph TD
+    A[Target Domain] --> B{DNS Enumeration}
+    B -->|Query NS/MX| C[Identify Name Servers]
+    B -->|Subdomain Brute-force| D[Discover Subdomains]
+    C --> E{Zone Transfer AXFR}
+    E -->|Success| F[Full DNS Records Exposed]
+    E -->|Failed| D
+    D --> G[IP Resolution]
+    F --> G
+    G --> H[Port Scanning - Nmap]
+    H --> I[Service/Version Fingerprinting]
+    I --> J[Identify Attack Vectors]
+        </code></pre>
+    </div>
+
+    <!-- 3. Manual Testing -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-hand-paper"></i> الاختبار اليدوي (Manual Testing)</h2>
+        <p>
+            يعتمد الاختبار اليدوي هنا على الاستعلام المباشر لخوادم DNS لتحديد الخوادم المسؤولة (Name Servers) ومن ثم محاولة استخراج السجلات يدوياً وبدقة دون إحداث ضجيج كبير.
+        </p>
+        <ul>
+            <li>استخدام أدوات مثل <code>dig</code> أو <code>host</code> لمعرفة خوادم NS للهدف بشكل دقيق.</li>
+            <li>توجيه استعلام AXFR (Zone Transfer) المباشر إلى خوادم NS المكتشفة للتأكد من وجود سوء إعداد يسمح بتسريب كامل السجلات، مما يكشف عن بيئات التطوير الداخلية والنطاقات الفرعية المخفية.</li>
+            <li>إجراء فحص يدوي للمنافذ باستخدام أدوات بسيطة مثل <code>nc</code> (Netcat) أو <code>telnet</code> للتحقق من حالة منفذ معين والتقاط لافتات الخدمات (Banner Grabbing).</li>
+        </ul>
+    </div>
+
+    <!-- 4. Automation -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-robot"></i> الأتمتة (Automation)</h2>
+        <p>
+            لتقليل الوقت والجهد وتوسيع نطاق التغطية، يتم أتمتة هذه العمليات باستخدام أدوات متخصصة تقوم بتعداد النطاقات الفرعية (Subdomain Enumeration) باستخدام القوائم (Wordlists)، ومحاولة AXFR تلقائياً على كل الخوادم المكتشفة، بالإضافة إلى فحص النطاقات المكتشفة جماعياً.
+            أدوات مثل <code>dnsrecon</code> و <code>dnsenum</code> للتعامل مع سجلات DNS، و <code>nmap</code> الذي يُعتبر المعيار الذهبي لأتمتة فحص المنافذ واكتشاف الخدمات والأنظمة (OS Fingerprinting).
+        </p>
+    </div>
+
+    <!-- 5. Tools -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-terminal"></i> الأدوات (Tools)</h2>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">root@kali:~#</span>
+            <span class="cmd-text">dig +short NS target.com</span>
+            <div class="cmd-comment"># اكتشاف خوادم الأسماء (Name Servers) للنطاق المستهدف</div>
+        </div>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">root@kali:~#</span>
+            <span class="cmd-text">dig axfr @ns1.target.com target.com</span>
+            <div class="cmd-comment"># محاولة نقل النطاق (Zone Transfer) يدوياً من الخادم المكتشف</div>
+        </div>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">root@kali:~#</span>
+            <span class="cmd-text">dnsrecon -d target.com -t axfr</span>
+            <div class="cmd-comment"># أتمتة محاولة نقل النطاق وتعداد السجلات باستخدام أداة dnsrecon</div>
+        </div>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">root@kali:~#</span>
+            <span class="cmd-text">nmap -p- -sV -sC -T4 target.com</span>
+            <div class="cmd-comment"># فحص شامل لجميع المنافذ (65535) مع اكتشاف إصدارات الخدمات واستخدام السكربتات الافتراضية</div>
+        </div>
+    </div>
+
+    <!-- 6. Lab -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-flask"></i> بيئة التدريب (Lab)</h2>
+        <p>مختبرات ومنصات عملية لتطبيق وتجربة تقنيات الاستطلاع النشط:</p>
+        <ul>
+            <li><strong>TryHackMe:</strong> غرفة Active Reconnaissance وغرفة Nmap التفاعلية.</li>
+            <li><strong>Hack The Box:</strong> مسارات بدء الاختراق وتحديات Enumeration التي تتطلب استخراج سجلات DNS المعقدة.</li>
+            <li><strong>PortSwigger Web Security Academy:</strong> لابات جمع المعلومات والاستطلاع المتعلقة بخوادم الويب.</li>
+        </ul>
+    </div>
+
+    <!-- 7. Quiz -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-question-circle"></i> اختبار قصير (Quiz)</h2>
+        <div class="quiz-container" data-correct="A">
+            <h4>Scenario: لقد اكتشفت خادم أسماء (Name Server) يحمل الاسم `ns1.example.com` وتريد محاولة سحب كافة سجلات DNS المرتبطة بالنطاق (Zone Transfer) لمعرفة البنية التحتية الداخلية. ما هو الأمر الأنسب لفعل ذلك يدوياً باستخدام `dig`؟</h4>
+            <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) dig axfr @ns1.example.com example.com</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) dig +short A @ns1.example.com example.com</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'C')">C) dig any example.com</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'D')">D) dig -x example.com</button>
+        </div>
+    </div>
+
+    <!-- 8. Cheat Sheet -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-table"></i> المرجع السريع (Cheat Sheet)</h2>
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th>التقنية (Technique)</th>
+                    <th>الأداة/الأمر (Command)</th>
+                    <th>الوصف (Description)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>تعداد خوادم الأسماء</td>
+                    <td><code>host -t ns domain.com</code></td>
+                    <td>تحديد خوادم NS التابعة للهدف والتي قد تقبل طلبات النقل.</td>
+                </tr>
+                <tr>
+                    <td>نقل النطاق (Zone Transfer)</td>
+                    <td><code>dig axfr @ns1.domain.com domain.com</code></td>
+                    <td>استخراج كل سجلات DNS للهدف في حال وجود سوء إعداد في الخادم.</td>
+                </tr>
+                <tr>
+                    <td>تعداد DNS الشامل</td>
+                    <td><code>dnsenum --enum domain.com</code></td>
+                    <td>تخمين النطاقات الفرعية وتعداد السجلات باستخدام القواميس المدمجة.</td>
+                </tr>
+                <tr>
+                    <td>التخفي في فحص المنافذ</td>
+                    <td><code>nmap -sS -p- &lt;IP&gt;</code></td>
+                    <td>فحص منافذ التخفي (SYN Scan) لجميع المنافذ (TCP) لتقليل فرص الاكتشاف.</td>
+                </tr>
+                <tr>
+                    <td>التقاط اللافتات (Banner Grabbing)</td>
+                    <td><code>nc -nv &lt;IP&gt; 22</code></td>
+                    <td>الاتصال المباشر بمنفذ محدد (مثل 22) لاستخراج لافتة خدمة SSH وتحديد إصدارها.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

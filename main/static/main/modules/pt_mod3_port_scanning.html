@@ -1,0 +1,208 @@
+<div class="meth-content-view" id="meth-content-pt_mod3" style="display: none; --tool-color: #00e5a0;">
+    <div class="cyber-hero" dir="rtl">
+        <h2 class="hero-title"><span class="hero-icon">🔥</span> 3. Port Scanning & Service Enumeration</h2>
+        <p class="hero-tagline">فحص المنافذ واستكشاف الخدمات بدقة عالية. مرحلة الـ Port Scanning هي الأساس لمعرفة ما هي الأبواب المفتوحة والخدمات التي تعمل على النظام المستهدف، ومن هنا تبدأ عملية تقييم الثغرات الفعلية.</p>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+        <div class="card-header"><h3>3.1 Nmap Scanning Techniques</h3></div>
+        <p>تعتبر Nmap الأداة الأقوى والأشهر عالمياً في فحص المنافذ. تقدم خيارات هائلة تناسب مختلف السيناريوهات، سواء كنت تحتاج فحصاً صامتاً (Stealth) أو فحصاً شاملاً وقوياً.</p>
+
+        <h4>Basic Scan Types (أنواع الفحص الأساسية)</h4>
+        
+        <p><strong>1. SYN Scan (Stealth/Half-open):</strong><br>
+        هذا هو الفحص الافتراضي والأكثر استخداماً في Nmap. يعتمد على إرسال حزمة <code>SYN</code> وانتظار الرد (<code>SYN/ACK</code>). إذا جاء الرد، الأداة تعرف أن البورت مفتوح وتقوم بإرسال <code>RST</code> لإنهاء الاتصال قبل أن يكتمل (Half-open)، مما يجعله أكثر تخفياً ولا يُسجل بشكل كامل في سجلات النظام (Logs) العادية.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Nmap SYN Scan</span></div>
+            <pre><code>nmap -sS 192.168.1.0/24</code></pre>
+        </div>
+
+        <p><strong>2. TCP Connect Scan:</strong><br>
+        في حال لم تكن تملك صلاحيات Root/Administrator لعمل SYN Scan، أو في حال كان الـ Firewall يحجب حزم SYN غير المكتملة، نستخدم هذا الفحص الذي يكمل عملية الـ Three-Way Handshake بالكامل. يعيبه أنه بطيء ويترك أثراً واضحاً في سجلات النظام المستهدف.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Nmap TCP Connect Scan</span></div>
+            <pre><code>nmap -sT 192.168.1.0/24</code></pre>
+        </div>
+
+        <p><strong>3. UDP Scan:</strong><br>
+        فحص منافذ UDP يعتبر صعباً وبطيئاً مقارنة بالـ TCP لأن بروتوكول UDP لا يعتمد على اتصال مسبق (Connectionless). يستخدم هذا الفحص لاكتشاف خدمات هامة مثل DNS و SNMP و DHCP.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Nmap UDP Scan</span></div>
+            <pre><code>nmap -sU 192.168.1.1
+nmap -sU --top-ports 100 192.168.1.1
+nmap -sU -p 53,67,68,69,123,161,162,514 192.168.1.1</code></pre>
+        </div>
+
+        <p><strong>4. Stealth Scans (NULL, FIN, Xmas):</strong><br>
+        صُممت هذه الفحوصات لتجاوز جدران الحماية غير المعقدة (Stateless Firewalls). تقوم بالتلاعب بحزم TCP (Flags) بطريقة غير قياسية لاكتشاف حالة البورت بناءً على رد فعل النظام (RFC 793).<br>
+        - <strong>NULL Scan:</strong> يرسل حزمة بدون أي أعلام (Flags) مفعلة.<br>
+        - <strong>FIN Scan:</strong> يرسل حزمة تحتوي على علم FIN (الذي يُستخدم لإنهاء الاتصال).<br>
+        - <strong>Xmas Scan:</strong> يفعل الأعلام FIN, PSH, URG كشجرة عيد الميلاد.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Nmap Stealth Scans</span></div>
+            <pre><code>nmap -sN 192.168.1.1  # NULL scan
+nmap -sF 192.168.1.1  # FIN scan
+nmap -sX 192.168.1.1  # Xmas scan (FIN, PSH, URG)</code></pre>
+        </div>
+
+        <p><strong>5. ACK Scan (Firewall mapping):</strong><br>
+        هذا الفحص لا يخبرك ما إذا كان البورت مفتوحاً أم مغلقاً! بدلاً من ذلك، يستخدم لاختبار قواعد جدار الحماية (Firewall Rules) ومعرفة ما إذا كان البورت (Filtered) أي محمي بجدار حماية، أو (Unfiltered). يرسل حزمة ACK ويرصد الردود (RST).</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Nmap ACK Scan</span></div>
+            <pre><code>nmap -sA 192.168.1.1</code></pre>
+        </div>
+
+        <h4>Advanced Nmap Options (خيارات Nmap المتقدمة)</h4>
+        <p>لتوسيع وتخصيص الفحص، نستخدم الخيارات التالية التي تجمع بين الدقة، السرعة، ومعرفة معلومات أكثر عن الهدف.</p>
+        
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Nmap Advanced Options</span></div>
+            <pre><code># Full port scan (فحص جميع المنافذ 65535)
+nmap -p- 192.168.1.1
+
+# Fast scan (فحص أسرع 100 منفذ فقط)
+nmap -F 192.168.1.1
+
+# Version detection (معرفة إصدارات الخدمات بدقة - خطوة حيوية للبحث عن الثغرات)
+nmap -sV 192.168.1.1
+nmap -sV --version-intensity 9 192.168.1.1
+
+# OS detection (محاولة استنتاج نظام التشغيل للمستهدف)
+nmap -O 192.168.1.1
+
+# Default script scan (تشغيل سكربتات Nmap الافتراضية المفيدة للتشخيص الأولي)
+nmap -sC 192.168.1.1
+
+# Aggressive scan (شامل: يفحص النظام، الإصدار، السكربتات، وتتبع المسار دفعة واحدة)
+nmap -A 192.168.1.1
+
+# Vulnerability scanning scripts (استخدام سكربتات البحث عن ثغرات معروفة مباشرة)
+nmap --script=vuln 192.168.1.1
+
+# Specific service enumeration (فحص تفصيلي لخدمة ويب)
+nmap --script=http-enum 192.168.1.1
+
+# Decoy scan (فحص مموه يضيف آيبيهات وهمية لتشتيت أنظمة الحماية)
+nmap -sS -D RND:10 192.168.1.1
+
+# Timing templates (قوالب التحكم في سرعة الفحص، T4 سريع و T5 الأسرع والأكثر إزعاجاً)
+nmap -T4 192.168.1.1  # Aggressive
+nmap -T5 192.168.1.1  # Insane (noisy)
+
+# Fragment packets (تجزئة الحزم لتجاوز بعض أنواع جدران الحماية)
+nmap -f 192.168.1.1
+
+# Host discovery only (فحص البقاء فقط - كشف الأجهزة الحية بدون فحص منافذ)
+nmap -sn 192.168.1.0/24
+
+# Skip host discovery (تجاهل فحص البقاء والافتراض أن الجهاز حي - مفيد إذا كان الـ Ping محجوباً)
+nmap -Pn 192.168.1.1</code></pre>
+        </div>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+        <div class="card-header"><h3>3.2 Naabu (Fast Port Scanner)</h3></div>
+        <p>Naabu هي أداة سريعة جداً مكتوبة بـ Go من تطوير ProjectDiscovery. ميزتها أنها مخصصة للعمل بشكل رائع مع خطوط الأنابيب (Pipelines) والدمج مع أدوات أخرى مثل httpx. تقوم بإجراء فحص سريع للمنافذ والتعامل بكفاءة مع الشبكات الكبيرة.</p>
+        
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Naabu Commands</span></div>
+            <pre><code># Basic scan (فحص أساسي)
+naabu -host target.com
+
+# Specific ports (تحديد منافذ معينة وبعض منافذ UDP)
+naabu -p 80,443,21-23,u:53 -host target.com
+
+# Full port scan (فحص لجميع المنافذ)
+naabu -p - -host target.com
+
+# List of hosts (فحص قائمة من النطاقات أو الآيبيهات)
+naabu -list hosts.txt
+
+# ASN scan (فحص نطاق شبكات كامل بناء على رقم الـ ASN)
+echo AS14421 | naabu -p 80,443
+
+# UDP with service probes (فحص UDP مع إرسال حزم للتحقق من الخدمة)
+naabu -host scanme.sh -p u:53,u:123,u:161 -uP
+
+# CDN/WAF exclusion (استثناء الآيبيهات التابعة لـ CDN مثل Cloudflare لتوفير الوقت وتجنب الحظر)
+naabu -host target.com -exclude-cdn
+
+# Output to JSON (حفظ النتائج بصيغة JSON لمعالجتها برمجياً)
+naabu -host target.com -json
+
+# Integration with httpx (دمج رهيب: يجد المنافذ المفتوحة ثم يمررها فوراً لـ httpx لاكتشاف خدمات الويب)
+echo target.com | naabu -silent | httpx -silent</code></pre>
+        </div>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+        <div class="card-header"><h3>3.3 Masscan (High-speed Internet scanner)</h3></div>
+        <p>تُعرف أداة Masscan بأنها أسرع أداة فحص منافذ (Port Scanner) على الإطلاق. يمكنها نظرياً فحص الإنترنت بالكامل في أقل من 6 دقائق إذا كانت لديك سرعة اتصال كافية. تُستخدم في التقييمات واسعة النطاق (Large-scale scanning).</p>
+        <div class="info-box tip">
+            <strong>ملاحظة هامة (Use responsibly):</strong> معدلات النقل العالية (Rate) في Masscan قد تتسبب في إغراق الشبكة والتسبب بخدمة بطيئة (DoS) للمستهدف أو لشبكتك نفسها. استخدمها بحذر وبمعدلات نقل مناسبة.
+        </div>
+        
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Masscan Commands</span></div>
+            <pre><code># Scan entire internet (فحص كل الإنترنت لمنافذ 80 و 443 بسرعة 100 ألف حزمة بالثانية - كمثال فقط!)
+masscan -p80,443 0.0.0.0/0 --rate 100000
+
+# Targeted scan (فحص شبكة معينة على جميع المنافذ وحفظ النتيجة بصيغة JSON)
+masscan -p1-65535 192.168.1.0/24 --rate 10000 -oJ output.json</code></pre>
+        </div>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+        <div class="card-header"><h3>3.4 Service Enumeration</h3></div>
+        <p>بعد تحديد المنافذ المفتوحة، تأتي مرحلة الـ Enumeration لمعرفة الخدمات الدقيقة التي تعمل عليها، إصداراتها، والبيانات المتاحة عبرها. هذه هي الخطوة التي تحول "المنفذ المفتوح" إلى "ثغرة محتملة".</p>
+        
+        <h4>Banner Grabbing (استخراج البانر)</h4>
+        <p>عملية التواصل المباشر مع المنفذ وقراءة الرسالة الترحيبية (Banner) التي غالباً ما تكشف اسم الخدمة وإصدارها.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Banner Grabbing</span></div>
+            <pre><code># Netcat (الاتصال المباشر باستخدام netcat وإرسال إدخال فارغ لمعرفة رد المنفذ 22)
+echo -e "\n" | nc -v 192.168.1.1 22
+
+# Nmap version detection (استخدام nmap لجلب الإصدارات بدقة)
+nmap -sV -p 22,80,443 192.168.1.1</code></pre>
+        </div>
+
+        <h4>NSE Scripts for Service Enumeration (استخدام سكربتات Nmap للاستكشاف العميق)</h4>
+        <p>يوفر محرك السكربتات في إنماب (Nmap Scripting Engine) إمكانيات قوية للتفاعل مع مختلف البروتوكولات (مثل SMB، SNMP، HTTP، SSH، و DNS) لجمع أقصى قدر من المعلومات.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">NSE Service Enumeration</span></div>
+            <pre><code># SMB enumeration (استكشاف مجلدات ومستخدمي مشاركة الملفات SMB)
+nmap --script=smb-enum-shares,smb-enum-users -p 445 192.168.1.1
+
+# SNMP enumeration (استخراج بيانات النظام والشبكة عبر بروتوكول SNMP - غالباً كنز للمعلومات)
+nmap --script=snmp-brute,snmp-interfaces,snmp-netstat -p 161 192.168.1.1
+
+# HTTP enumeration (جلب عنوان الصفحة المستهدفة، ترويسات الرد، والأساليب المدعومة في السيرفر)
+nmap --script=http-title,http-headers,http-methods -p 80,443 192.168.1.1
+
+# SSH enumeration (استكشاف مفاتيح SSH وطرق المصادقة المدعومة)
+nmap --script=ssh-hostkey,ssh-auth-methods -p 22 192.168.1.1
+
+# DNS enumeration (استكشاف السجلات الفرعية ومحاولة نقل النطاق Zone Transfer)
+nmap --script=dns-brute,dns-zone-transfer -p 53 192.168.1.1</code></pre>
+        </div>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+        <div class="card-header"><h3>3.5 UDP Scanning Best Practices</h3></div>
+        <p>فحص الـ UDP يعتبر من أصعب المهام في الـ Pentesting وأكثرها عرضة للأخطاء الإيجابية (False Positives) أو السلبية (False Negatives). إليك أفضل الممارسات للحصول على نتائج دقيقة:</p>
+        
+        <ul style="list-style-type: square; padding-right: 20px;">
+            <li><strong>UDP is connectionless - responses are not guaranteed:</strong><br>
+            بما أن الـ UDP لا يقوم بإنشاء اتصال فعلي مثل TCP (بلا مصافحة)، فالأجهزة لا ترد عادة على الحزم. إذا لم يأتِ رد، قد يكون المنفذ مفتوحاً وقد يكون محجوباً (Filtered)، لذلك الاعتماد على الردود فقط غير كافٍ.</li>
+            <li><strong>Use protocol-specific probes (DNS query for 53, NTP for 123, SNMP for 161):</strong><br>
+            لتتأكد من أن منفذ الـ UDP مفتوح فعلياً، أرسل رسالة تتوافق مع البروتوكول الذي تتوقع وجوده عليه (Probe). مثلاً إرسال طلب DNS على المنفذ 53 بدلاً من حزمة فارغة؛ إذا رد الخادم بمعلومات DNS فالمنفذ مفتوح بلا شك.</li>
+            <li><strong>Rate limiting is crucial - ICMP port unreachable responses are often rate-limited:</strong><br>
+            في حال كان المنفذ مغلقاً، سيرد النظام برسالة (ICMP Port Unreachable). لكن أنظمة التشغيل (مثل لينكس) تقوم بالحد من سرعة إرسال رسائل ICMP لتجنب الهجمات (Rate Limiting). لذلك، فحص UDP السريع سيجعلك تفقد الردود ويظهر لك المنافذ المغلقة على أنها مفتوحة. قم بتقليل سرعة الفحص وتجنب الفحص العنيف.</li>
+            <li><strong>Combine with -sV for better service detection:</strong><br>
+            ادمج فحص UDP (<code>-sU</code>) مع خيار اكتشاف الإصدارات (<code>-sV</code>). سيقوم Nmap بإرسال Payload خاص بالعديد من خدمات UDP مما يساهم بشكل هائل في دقة النتائج واكتشاف المنافذ المفتوحة فعلياً.</li>
+            <li><strong>Use --host-timeout to skip slow hosts:</strong><br>
+            بما أن الفحص بطيء جداً، قد تتعطل أو تعلق الأداة عند أجهزة لا ترد إطلاقاً. استخدم خيار (<code>--host-timeout</code>) لتخطي الأجهزة التي تستغرق وقتاً غير منطقي لإنهاء فحصها.</li>
+        </ul>
+    </div>
+</div>

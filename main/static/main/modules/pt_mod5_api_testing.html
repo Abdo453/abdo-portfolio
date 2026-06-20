@@ -1,0 +1,257 @@
+<div class="meth-content-view" id="meth-content-pt_mod5" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    <div class="cyber-hero">
+        <h2 class="hero-title"><span class="hero-icon">🔥</span> 5. API Recon & Testing</h2>
+        <p class="hero-tagline">اكتشاف واختبار واجهات برمجة التطبيقات (APIs) - استخراج وثائق API، واختبار GraphQL، واكتشاف ثغرات المصادقة والتخويل (BOLA)، إلى جانب حقن قواعد البيانات.</p>
+    </div>
+
+    <div class="cyber-card">
+        <div class="card-header"><h3>5.1 API Documentation Discovery</h3></div>
+        <p class="section-desc">أول خطوة في اختبار واجهات برمجة التطبيقات هي العثور على التوثيق (Documentation) الخاص بها. توثيق الـ API مثل OpenAPI أو Swagger يكشف لنا جميع المسارات (Endpoints)، والمعلمات (Parameters)، والمدخلات المتوقعة، مما يسهل عملية الهجوم بشكل كبير.</p>
+
+        <h4 class="sub-title">OpenAPI/Swagger</h4>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Common paths to check</span>
+            </div>
+            <pre><code>/swagger.json
+/swagger.yaml
+/api/swagger.json
+/v1/swagger.json
+/openapi.json</code></pre>
+        </div>
+
+        <p class="text-expl">يمكننا استخدام أدوات الفحص مثل <code>ffuf</code> للبحث عن مسارات التوثيق المخفية على الخادم المستهدف باستخدام قوائم مخصصة (Wordlists).</p>
+        
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Using ffuf to find swagger docs</span>
+            </div>
+            <pre><code>ffuf -u https://target.com/FUZZ -w swagger_paths.txt -mc 200</code></pre>
+        </div>
+
+        <h4 class="sub-title">Postman Collections</h4>
+        <ul class="bullet-list">
+            <li><strong>Look for .postman_collection.json files:</strong> ابحث عن ملفات مجموعات Postman التي غالباً ما تترك بشكل غير مقصود على الخوادم، والتي تحتوي على هيكل كامل للطلبات والمصادقات.</li>
+            <li><strong>Check developer portals and documentation:</strong> تصفح بوابات المطورين الخاصة بالهدف، فقد تجد روابط مباشرة للتوثيق.</li>
+            <li><strong>Search GitHub for leaked collections:</strong> ابحث في منصة GitHub عن أي تسريبات لهذه الملفات التي قد يكون المطورون قد قاموا برفعها بالخطأ في مستودعات عامة.</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <div class="card-header"><h3>5.2 GraphQL Testing</h3></div>
+        <p class="section-desc">تقنية GraphQL تختلف عن REST APIs، حيث تتيح للعميل تحديد هيكل البيانات المطلوبة بالضبط. هذا يوفر مرونة كبيرة لكنه يفتح باباً لثغرات خطيرة إذا لم يتم تأمينها، مثل استخراج هيكل البيانات الكامل (Introspection) أو استغلال اقتراحات الحقول.</p>
+
+        <h4 class="sub-title">Introspection Query</h4>
+        <p class="text-expl">إذا كانت ميزة الـ Introspection مفعلة، يمكنك إرسال استعلام لمعرفة الهيكل الكامل لقاعدة البيانات وكل الحقول والأنواع المتاحة، وهو بمثابة خريطة كنز للمهاجم.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Introspection Query</span>
+            </div>
+            <pre><code>query {
+  __schema {
+    types {
+      name
+      fields {
+        name
+        type {
+          name
+        }
+      }
+    }
+  }
+}</code></pre>
+        </div>
+
+        <h4 class="sub-title">Field Suggestion Abuse</h4>
+        <p class="text-expl">في حال تم إيقاف ميزة الـ Introspection، قد يوفر خادم GraphQL ميزة "الاقتراحات". عند إرسال استعلام خاطئ، يقوم الخادم بالرد باقتراح حقول حقيقية موجودة (مثل: هل تقصد كذا؟). هذا يمكننا من تخمين الحقول المخفية.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Send malformed query to trigger suggestions</span>
+            </div>
+            <pre><code>query {
+  system
+}
+# Response: "Did you mean 'pastes', 'paste', 'systemDebug'?"</code></pre>
+        </div>
+
+        <h4 class="sub-title">Tools</h4>
+        <ul class="bullet-list">
+            <li><strong>InQL:</strong> أداة متخصصة لفحص واجهات GraphQL وتوليد الاستعلامات واستخراج هيكل البيانات.</li>
+            <li><strong>GraphQL Voyager:</strong> أداة تستخدم لتمثيل الهيكل (Schema) الذي تم استخراجه في شكل رسومي مرئي يسهل فهمه.</li>
+            <li><strong>Clairvoyance:</strong> أداة قوية لتوليد واستنتاج هيكل الـ Schema باستخدام تقنية الإكمال التلقائي (Field Suggestion) عندما تكون ميزة الـ Introspection مغلقة.</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <div class="card-header"><h3>5.3 API Authentication Testing</h3></div>
+        <p class="section-desc">اختبار عمليات المصادقة في الـ API للتأكد من عدم وجود ثغرات في طرق التحقق من هوية المستخدمين والتطبيقات، مثل تسريب التوكنز، ضعف المفاتيح، أو تخطي بروتوكولات المصادقة.</p>
+
+        <h4 class="sub-title">OAuth 2.0 Testing</h4>
+        <ul class="bullet-list">
+            <li><strong>Test for missing PKCE in mobile apps:</strong> التحقق من عدم استخدام بروتوكول PKCE في تطبيقات الجوال، مما يسهل على المهاجمين سرقة الـ Authorization Code.</li>
+            <li><strong>Authorization code interception:</strong> محاولة اعتراض كود التفويض أثناء تبادله بين العميل والخادم واستخدامه لتوليد Access Token.</li>
+            <li><strong>Token scope manipulation:</strong> التلاعب بنطاق الصلاحيات (Scopes) أثناء طلب التفويض لمحاولة الحصول على صلاحيات أعلى مما هو مسموح.</li>
+            <li><strong>Refresh token security:</strong> فحص مدى أمان الـ Refresh Token وما إذا كان يمكن استخدامه بشكل غير محدود أو إعادة استخدامه بعد انتهاء صلاحيته.</li>
+        </ul>
+
+        <h4 class="sub-title">JWT Testing</h4>
+        <p class="text-expl">مفاتيح JWT (JSON Web Tokens) هي من أشهر طرق المصادقة. يتم اختبارها للبحث عن ثغرات في هيكلة الـ Token، أو استخدام خوارزميات ضعيفة، أو مفاتيح تشفير قابلة للكسر.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">JWT Tool Tests</span>
+            </div>
+            <pre><code># Decode JWT
+jwt_tool.py &lt;token&gt;
+
+# Test for algorithm confusion
+jwt_tool.py -t &lt;token&gt; -X k
+
+# Test for weak signing keys
+jwt_tool.py -t &lt;token&gt; -C -d secrets.txt</code></pre>
+        </div>
+
+        <h4 class="sub-title">API Key Testing</h4>
+        <ul class="bullet-list">
+            <li><strong>Key in URL parameters (should be in headers):</strong> البحث عن إرسال المفاتيح عبر مسار الرابط (URL Parameters) بدلاً من الترويسات (Headers)، مما يعرضها للحفظ في سجلات التصفح أو الخادم.</li>
+            <li><strong>Missing key rotation:</strong> غياب سياسات تبديل وتحديث المفاتيح بشكل دوري، مما يجعل المفاتيح المسربة فعالة لفترة طويلة.</li>
+            <li><strong>Keys committed to repositories:</strong> العثور على مفاتيح مسربة في مستودعات الكود مثل GitHub بسبب إهمال المطورين.</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <div class="card-header"><h3>5.4 Authorization Testing (BOLA/BFLA)</h3></div>
+        <p class="section-desc">اختبار التخويل (Authorization) يركز على التحقق من أن المستخدم لديه الصلاحيات للوصول إلى بيانات أو وظائف معينة. من أشهر الثغرات هنا BOLA (كسر صلاحيات الكائنات) و BFLA (كسر صلاحيات الوظائف).</p>
+
+        <h4 class="sub-title">Broken Object-Level Authorization (BOLA/IDOR)</h4>
+        <p class="text-expl">تعتبر ثغرة BOLA (المعروفة أيضاً بـ IDOR) من أخطر الثغرات وأكثرها شيوعاً. تحدث عندما لا يتحقق الخادم مما إذا كان المستخدم يملك الصلاحية للوصول إلى كائن معين بناءً على معرفه (ID). يتم اختبارها بتغيير المعرفات (Object IDs) في الطلبات والتحقق مما إذا كنا نستطيع الوصول لبيانات مستخدم آخر.</p>
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Test BOLA by changing object IDs</span>
+            </div>
+            <pre><code>curl -H "Authorization: Bearer &lt;token&gt;" https://api.target.com/users/123/orders
+curl -H "Authorization: Bearer &lt;token&gt;" https://api.target.com/users/124/orders  # Should fail</code></pre>
+        </div>
+
+        <h4 class="sub-title">Authorization Matrix Testing</h4>
+        <ul class="bullet-list">
+            <li><strong>Create matrix of endpoints vs user roles:</strong> إنشاء جدول (Matrix) يقارن بين جميع المسارات (Endpoints) والأدوار المختلفة للمستخدمين (Admin, User, Guest).</li>
+            <li><strong>Test each endpoint with each role:</strong> إرسال طلبات إلى كل مسار باستخدام صلاحيات لكل دور على حدة.</li>
+            <li><strong>Document expected vs actual responses:</strong> توثيق الردود المتوقعة ومقارنتها بالردود الفعلية لاكتشاف أي مسارات غير محمية بصلاحيات كافية.</li>
+        </ul>
+    </div>
+
+    <div class="cyber-card">
+        <div class="card-header"><h3>5.5 Rate Limiting & Abuse Testing</h3></div>
+        <p class="section-desc">اختبار آليات تحديد عدد الطلبات (Rate Limiting) لمنع الهجمات المعتمدة على إرسال عدد كبير من الطلبات مثل البريوت فورس أو الـ DoS، وكذلك اختبار ثغرات السباق الزمني (Race Conditions).</p>
+
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Test rate limiting and Race conditions</span>
+            </div>
+            <pre><code># Test rate limiting
+for i in {1..100}; do
+  curl -H "Authorization: Bearer &lt;token&gt;" https://api.target.com/endpoint
+done
+
+# Test for race conditions
+# Send multiple simultaneous requests</code></pre>
+        </div>
+        <p class="text-expl">نقوم بإرسال عدد كبير من الطلبات في وقت قصير (بواسطة حلقات تكرارية أو أدوات مثل Turbo Intruder) للتأكد من تفعيل أنظمة حماية الـ Rate Limit، ولمعرفة ما إذا كان بإمكاننا استغلال الـ Race Conditions عن طريق تنفيذ عمليات مالية أو إدارية في نفس اللحظة للحصول على مزايا غير مشروعة.</p>
+    </div>
+
+    <div class="cyber-card">
+        <div class="card-header"><h3>5.6 API Input Validation</h3></div>
+        <p class="section-desc">تعتمد الـ APIs بشكل كبير على استقبال المدخلات بتنسيقات معينة (مثل JSON أو XML). عدم فحص أو تنظيف هذه المدخلات يمكن أن يؤدي إلى حقن تعليمات برمجية خبيثة.</p>
+
+        <h4 class="sub-title">Injection Testing</h4>
+        <p class="text-expl">نقوم بتضمين حمولات خبيثة (Payloads) داخل حقول الـ API، سواء لاختبار حقن قواعد البيانات العادية (SQLi)، قواعد البيانات غير العلاقية (NoSQLi)، أو حتى حقن الأوامر في نظام التشغيل (Command Injection).</p>
+        
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">Various Injection payloads for APIs</span>
+            </div>
+            <pre><code># SQL Injection in API parameters
+curl -X POST https://api.target.com/search -d '{"query":"test'\'' OR '\''1'\''='\''1"}'
+
+# NoSQL Injection
+curl -X POST https://api.target.com/search -d '{"query":{"$gt":""}}'
+
+# Command Injection
+curl -X POST https://api.target.com/generate -d '{"template":"test;whoami"}'</code></pre>
+        </div>
+    </div>
+
+    <div class="cyber-card">
+        <div class="card-header"><h3>5.7 API Testing Tools</h3></div>
+        <p class="section-desc">استخدام الأدوات المناسبة يسرع من عملية استكشاف الـ API واختباره وتوثيق الطلبات بكفاءة عالية.</p>
+
+        <h4 class="sub-title">Postman & Insomnia</h4>
+        <ul class="bullet-list">
+            <li><strong>Postman:</strong> أداة غنية جداً، تتيح استيراد ملفات OpenAPI، إنشاء مجموعات من الطلبات (Collections)، وعمل اختبارات تلقائية باستخدام أداة Newman.</li>
+            <li><strong>Insomnia:</strong> بديل خفيف وسريع لـ Postman، ويُفضل كثيراً في اختبارات الـ GraphQL بسبب واجهته الممتازة في التعامل مع هذا النوع من الـ APIs.</li>
+        </ul>
+
+        <h4 class="sub-title">Command Line Tools (HTTPie & Curl)</h4>
+        <p class="text-expl">للعمل من سطر الأوامر بسرعة وفاعلية أثناء بناء السكربتات (Scripts)، تُعتبر HTTPie و Curl خيارات مثالية لاختبار المسارات وتوثيق النتائج.</p>
+        
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">HTTPie and Curl Examples</span>
+            </div>
+            <pre><code># HTTPie
+http GET api.target.com/users Authorization:"Bearer &lt;token&gt;"
+
+# Curl
+curl -X POST https://api.target.com/endpoint \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer &lt;token&gt;" \
+     -d '{"key":"value"}'</code></pre>
+        </div>
+    </div>
+
+    <div class="cyber-card">
+        <div class="card-header"><h3>5.8 Complete API Testing Pipeline</h3></div>
+        <p class="section-desc">مخطط متسلسل وشامل (Pipeline) يجمع كل الخطوات المذكورة ليقوم المختبر بتنفيذ عملية الفحص بطريقة منهجية وصحيحة خطوة بخطوة.</p>
+
+        <div class="cmd-ui-box" dir="ltr">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">API Testing Workflow</span>
+            </div>
+            <pre><code># Step 1: Discover API documentation
+ffuf -u https://api.target.com/FUZZ -w api_doc_paths.txt -mc 200
+
+# Step 2: If GraphQL, test introspection
+curl -X POST https://api.target.com/graphql \
+     -H "Content-Type: application/json" \
+     -d '{"query":"{__schema{types{name}}}"}'
+
+# Step 3: Enumerate endpoints with valid token
+http GET api.target.com/endpoints Authorization:"Bearer &lt;token&gt;"
+
+# Step 4: Test authorization (BOLA)
+# Change IDs in requests and observe responses
+
+# Step 5: Test input validation
+# Send malformed JSON, special characters, injection payloads
+
+# Step 6: Test rate limiting
+# Send rapid sequential requests
+
+# Step 7: Document all findings with curl commands for reproduction</code></pre>
+        </div>
+        <div class="info-box tip">
+            <p><strong>💡 نصيحة احترافية:</strong> احرص دائماً على توثيق جميع اكتشافاتك ومحاولاتك الناجحة باستخدام أوامر <code>curl</code> قابلة للنسخ واللصق لتسهيل عملية إعادة الإنتاج (Reproduction) للمطورين الذين سيصلحون الثغرة.</p>
+        </div>
+    </div>
+
+</div>

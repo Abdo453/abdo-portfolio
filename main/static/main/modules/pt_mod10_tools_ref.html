@@ -1,0 +1,807 @@
+<div class="meth-content-view" id="meth-content-pt_mod10" style="display: none; --tool-color: #00e5a0;">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🔥</span> 10. Essential Tools Reference</h2>
+    <p class="hero-tagline">دليل شامل لأهم الأدوات المستخدمة في اختبار الاختراق واكتشاف الثغرات</p>
+  </div>
+
+  <div class="info-box tip" dir="rtl">
+    <strong>💡 تلميح:</strong> تعتبر هذه القائمة المرجع الأساسي لأدوات اختبار الاختراق ومكافآت الثغرات. يعتمد المحترفون على دمج هذه الأدوات معاً لإنشاء سير عمل متكامل (Pipelines).
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.1 Reconnaissance Tools</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">أدوات الاستطلاع (Reconnaissance) هي المرحلة الأولى والأهم في أي عملية هجوم. تُستخدم لجمع أكبر قدر ممكن من المعلومات حول الهدف (مثل النطاقات الفرعية، الأجهزة الحية، والمسارات) قبل التفاعل المباشر.</p>
+      <div class="table-responsive">
+        <table class="interactive-table" dir="rtl">
+          <thead>
+            <tr>
+              <th>الأداة (Tool)</th>
+              <th>الغرض (Purpose)</th>
+              <th>الشرح التقني (Deep Explanation)</th>
+              <th>أمر التثبيت (Installation)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td dir="ltr"><strong>subfinder</strong></td>
+              <td dir="ltr">Passive subdomain enumeration</td>
+              <td>أداة سريعة للبحث السلبي عن النطاقات الفرعية (Passive Recon) تعتمد على جمع المعلومات من مصادر علنية (OSINT) دون التفاعل المباشر مع خوادم الهدف، مما يجعلها خفية وفعالة.</td>
+              <td dir="ltr"><code>go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>amass</strong></td>
+              <td dir="ltr">Comprehensive subdomain enumeration</td>
+              <td>منصة قوية وشاملة لجمع المعلومات واكتشاف الأصول التابعة للهدف باستخدام تقنيات متعددة (سلبية ونشطة)، بالإضافة إلى رسم خرائط للشبكات.</td>
+              <td dir="ltr"><code>go install github.com/owasp-amass/amass/v4/...@master</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>assetfinder</strong></td>
+              <td dir="ltr">Subdomain discovery (crt.sh + Facebook CT)</td>
+              <td>أداة خفيفة تركز على إيجاد النطاقات الفرعية عبر مصادر محددة مثل سجلات شهادات الأمان (crt.sh) وغيرها.</td>
+              <td dir="ltr"><code>go install github.com/tomnomnom/assetfinder@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>httpx</strong></td>
+              <td dir="ltr">Live host probing</td>
+              <td>مجموعة أدوات لبروتوكول HTTP تتيح لك التحقق السريع من حالة الخوادم الحية (Live hosts) واستخراج معلومات مثل أكواد الحالة (Status Codes) والتقنيات المستخدمة.</td>
+              <td dir="ltr"><code>go install github.com/projectdiscovery/httpx/cmd/httpx@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>shuffledns</strong></td>
+              <td dir="ltr">MassDNS wrapper for subdomain brute force</td>
+              <td>أداة تغليف (Wrapper) لبرنامج MassDNS، تسهل عمليات التخمين العنيف (Brute-forcing) للنطاقات الفرعية وتحليل سجلات DNS بسرعة هائلة.</td>
+              <td dir="ltr"><code>go install github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>massdns</strong></td>
+              <td dir="ltr">High-speed DNS resolver</td>
+              <td>محلل DNS (Resolver) عالي الأداء يمكنه معالجة ملايين الطلبات في ثوانٍ، يُستخدم في عمليات المسح واسعة النطاق لضمان أقصى سرعة.</td>
+              <td dir="ltr"><code>git clone https://github.com/blechschmidt/massdns.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>puredns</strong></td>
+              <td dir="ltr">Fast domain resolver with wildcard filtering</td>
+              <td>أداة حديثة ومطورة تعتمد على MassDNS لحل النطاقات وفلترة النتائج الوهمية (Wildcard filtering) لضمان دقة النطاقات المكتشفة وتجنب الإيجابيات الكاذبة.</td>
+              <td dir="ltr"><code>go install github.com/d3mondev/puredns/v2@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>altdns</strong></td>
+              <td dir="ltr">Subdomain permutation generator</td>
+              <td>أداة تقوم بتوليد تنويعات وتباديل (Permutations) لأسماء النطاقات الفرعية لمحاولة اكتشاف نطاقات مخفية لم تظهر في البحث العادي، مفيدة جداً لتوسيع نطاق الهجوم.</td>
+              <td dir="ltr"><code>pip install py-altdns</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>gotator</strong></td>
+              <td dir="ltr">Advanced subdomain permutation</td>
+              <td>أداة مطورة بلغة Go لإنشاء تنويعات لأسماء النطاقات (Permutations) بسرعة وكفاءة عالية، تقدم أداءً محسناً مقارنة بـ altdns.</td>
+              <td dir="ltr"><code>go install github.com/Josue87/gotator@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>dnsx</strong></td>
+              <td dir="ltr">DNS toolkit</td>
+              <td>مجموعة أدوات DNS متعددة الأغراض تتيح الاستعلام المتعدد، وفلترة النطاقات النشطة (Alive filtering)، واكتشاف سجلات CNAME و A بسرعة خيالية.</td>
+              <td dir="ltr"><code>go install github.com/projectdiscovery/dnsx/cmd/dnsx@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>gau</strong></td>
+              <td dir="ltr">URL fetcher (AlienVault, Wayback, etc.)</td>
+              <td>أداة جلب الروابط التاريخية (Fetch URLs) من مصادر متعددة مثل AlienVault و Wayback Machine، مفيدة لاكتشاف مسارات ونقاط نهاية (Endpoints) قديمة قد تكون غير محمية.</td>
+              <td dir="ltr"><code>go install github.com/lc/gau/v2/cmd/gau@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>waybackurls</strong></td>
+              <td dir="ltr">Wayback Machine URL fetcher</td>
+              <td>أداة بسيطة تركز فقط على سحب جميع الروابط المؤرشفة لنطاق معين من موقع أرشيف الإنترنت (Wayback Machine).</td>
+              <td dir="ltr"><code>go install github.com/tomnomnom/waybackurls@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>katana</strong></td>
+              <td dir="ltr">Web crawler</td>
+              <td>زاحف ويب (Web Crawler) حديث وسريع يستخدم لاكتشاف المسارات والروابط المخبأة في تطبيقات الويب من خلال محاكاة تصفح المستخدم بذكاء.</td>
+              <td dir="ltr"><code>go install github.com/projectdiscovery/katana/cmd/katana@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>nuclei</strong></td>
+              <td dir="ltr">Vulnerability scanner</td>
+              <td>محرك فحص ثغرات يعتمد على قوالب (Templates) مخصصة، مصمم لإرسال طلبات محددة واكتشاف الثغرات المعروفة، والشهادات المنتهية، والأخطاء البرمجية بدقة عالية وسرعة فائقة.</td>
+              <td dir="ltr"><code>go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>naabu</strong></td>
+              <td dir="ltr">Port scanner</td>
+              <td>أداة مسح منافذ (Port Scanner) موثوقة وسريعة مكتوبة بلغة Go، تركز على اكتشاف المنافذ المفتوحة بصمت وبكفاءة مع التوافقية للربط مع أدوات أخرى.</td>
+              <td dir="ltr"><code>go install github.com/projectdiscovery/naabu/v2/cmd/naabu@latest</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.2 Content Discovery Tools</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">أدوات اكتشاف المحتوى تُستخدم للبحث عن المجلدات المخفية، الملفات الحساسة، والمعلمات (Parameters) التي لم يتم الإعلان عنها، مما يوسع مساحة الهجوم بشكل كبير.</p>
+      <div class="table-responsive">
+        <table class="interactive-table" dir="rtl">
+          <thead>
+            <tr>
+              <th>الأداة (Tool)</th>
+              <th>الغرض (Purpose)</th>
+              <th>الشرح التقني (Deep Explanation)</th>
+              <th>أمر التثبيت (Installation)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td dir="ltr"><strong>ffuf</strong></td>
+              <td dir="ltr">Fast web fuzzer</td>
+              <td>أداة فازينج (Fuzzer) سريعة جداً للويب، تستخدم لاكتشاف الملفات والمجلدات المخفية، وتخمين المعلمات (Parameters)، والبحث عن الثغرات بمرونة عالية.</td>
+              <td dir="ltr"><code>go install github.com/ffuf/ffuf/v2@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>feroxbuster</strong></td>
+              <td dir="ltr">Rust-based content discovery</td>
+              <td>أداة لاكتشاف المحتوى المخفي (Directory Brute-forcer) مبنية بلغة Rust، تتميز بالسرعة المهولة ودعم المسح المتكرر (Recursive) للمجلدات واكتشاف المسارات تلقائياً.</td>
+              <td dir="ltr"><code>cargo install feroxbuster</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>gobuster</strong></td>
+              <td dir="ltr">Directory/file/DNS brute forcer</td>
+              <td>أداة شهيرة وسريعة لتخمين المسارات، والملفات، والنطاقات الفرعية، وحتى خوادم DNS التابعة للهدف. يعتمد عليها الكثير لسهولتها.</td>
+              <td dir="ltr"><code>go install github.com/OJ/gobuster/v3@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>dirsearch</strong></td>
+              <td dir="ltr">Python-based directory brute forcer</td>
+              <td>أداة كلاسيكية مبنية بـ Python لاكتشاف المسارات والملفات المخبأة في خوادم الويب، تدعم تخصيص القواميس (Wordlists) وإخراج النتائج بتنسيقات متعددة.</td>
+              <td dir="ltr"><code>git clone https://github.com/maurosoria/dirsearch.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>arjun</strong></td>
+              <td dir="ltr">HTTP parameter discovery</td>
+              <td>أداة متخصصة في اكتشاف المعلمات المخفية (Hidden HTTP Parameters) في طلبات الويب، مفيدة جداً في البحث عن ثغرات XSS أو SSRF أو SQLi التي لا تظهر في الواجهة.</td>
+              <td dir="ltr"><code>pip install arjun</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>paramspider</strong></td>
+              <td dir="ltr">Parameter discovery from URLs</td>
+              <td>أداة تعتمد على مصادر الأرشيف لجمع المعلمات (Parameters) المرتبطة بالنطاق، مما يوفر الكثير من الوقت بدلاً من البحث عنها يدوياً.</td>
+              <td dir="ltr"><code>git clone https://github.com/devanshbatham/ParamSpider.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>xnLinkFinder</strong></td>
+              <td dir="ltr">Link finder from JS files</td>
+              <td>أداة مخصصة لتحليل ملفات JavaScript واستخراج الروابط (Links) ونقاط النهاية (Endpoints) التي قد تكون مخفية عن المستخدم العادي.</td>
+              <td dir="ltr"><code>git clone https://github.com/xnl-h4ck3r/xnLinkFinder.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>jsluice</strong></td>
+              <td dir="ltr">JavaScript analysis</td>
+              <td>أداة متقدمة لتحليل شفرات JavaScript واستخراج الروابط، المسارات، والأسرار (Secrets) الدفينة، وتعتمد على بناء شجرة لغوية (AST) لضمان دقة التحليل.</td>
+              <td dir="ltr"><code>go install github.com/BishopFox/jsluice/...</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>burp suite</strong></td>
+              <td dir="ltr">Web proxy and scanner</td>
+              <td>المنصة الأساسية والأقوى لاختبار اختراق تطبيقات الويب. تعمل كوكيل (Proxy) لاعتراض وتعديل الطلبات، وتحتوي على أدوات فحص وتخمين متعددة لا غنى عنها لأي مختبر اختراق.</td>
+              <td dir="ltr"><code>https://portswigger.net/burp/communitydownload</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>owasp zap</strong></td>
+              <td dir="ltr">Web proxy and scanner</td>
+              <td>البديل المجاني ومفتوح المصدر لـ Burp Suite، يقدم ميزات مشابهة لاعتراض الطلبات وفحص الثغرات الآلي ويُستخدم بشكل واسع في بيئات CI/CD.</td>
+              <td dir="ltr"><code>https://www.zaproxy.org/download/</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>nikto</strong></td>
+              <td dir="ltr">Web server scanner</td>
+              <td>أداة فحص كلاسيكية لخوادم الويب، تقوم باختبار الخوادم بحثاً عن الملفات الخطيرة، والبرمجيات القديمة، والتكوينات الخاطئة.</td>
+              <td dir="ltr"><code>apt install nikto</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.3 Port Scanning & Network Tools</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">هذه الأدوات أساسية لاكتشاف المنافذ المفتوحة والخدمات التي تعمل على الخوادم، مما يوفر نقطة انطلاق لاستغلال الشبكات.</p>
+      <div class="table-responsive">
+        <table class="interactive-table" dir="rtl">
+          <thead>
+            <tr>
+              <th>الأداة (Tool)</th>
+              <th>الغرض (Purpose)</th>
+              <th>الشرح التقني (Deep Explanation)</th>
+              <th>أمر التثبيت (Installation)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td dir="ltr"><strong>nmap</strong></td>
+              <td dir="ltr">Network scanner</td>
+              <td>الأداة المعيارية الأولى في مسح الشبكات لاكتشاف الأجهزة الحية، المنافذ المفتوحة، الخدمات، وأنظمة التشغيل، وتدعم تشغيل نصوص برمجية (NSE) لاكتشاف الثغرات المتقدمة.</td>
+              <td dir="ltr"><code>apt install nmap</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>masscan</strong></td>
+              <td dir="ltr">High-speed port scanner</td>
+              <td>أسرع أداة لمسح المنافذ (Port Scanner) قادرة على مسح الإنترنت بالكامل في دقائق معدودة عبر إرسال ملايين الحزم في الثانية، مثالية للنطاقات الواسعة.</td>
+              <td dir="ltr"><code>git clone https://github.com/robertdavidgraham/masscan.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>rustscan</strong></td>
+              <td dir="ltr">Fast port scanner</td>
+              <td>أداة مسح منافذ حديثة وسريعة جداً مبنية بـ Rust، تقوم بتحويل النتائج تلقائياً إلى Nmap لإجراء فحص أعمق، مما يختصر وقت الفحص بشكل كبير.</td>
+              <td dir="ltr"><code>cargo install rustscan</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>naabu</strong></td>
+              <td dir="ltr">Go port scanner</td>
+              <td>أداة مسح موثوقة تركز على الموثوقية العالية والأداء القوي، متوافقة بشدة مع بقية أدوات ProjectDiscovery.</td>
+              <td dir="ltr"><code>See above</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>wireshark</strong></td>
+              <td dir="ltr">Network protocol analyzer</td>
+              <td>محلل حزم الشبكة (Packet Analyzer) الرائد عالمياً، يسمح بمراقبة حركة المرور (Traffic) وتحليل بروتوكولات الشبكة على مستوى دقيق جداً باستخدام واجهة رسومية.</td>
+              <td dir="ltr"><code>apt install wireshark</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>tcpdump</strong></td>
+              <td dir="ltr">Packet analyzer</td>
+              <td>أداة سطر أوامر قوية لالتقاط وتحليل حزم البيانات المارة عبر الشبكة، تُستخدم غالباً في الخوادم البعيدة التي لا تحتوي على واجهة رسومية.</td>
+              <td dir="ltr"><code>apt install tcpdump</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>netcat</strong></td>
+              <td dir="ltr">Network utility</td>
+              <td>أداة الشبكات متعددة الاستخدامات، تُعرف بـ "سكين الجيش السويسري للشبكات"، تُستخدم لقراءة وكتابة البيانات عبر اتصالات TCP/UDP وإنشاء جلسات اتصال عكسية (Reverse Shells).</td>
+              <td dir="ltr"><code>apt install netcat</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>impacket</strong></td>
+              <td dir="ltr">Python network protocols</td>
+              <td>مجموعة أدوات بـ Python للتعامل مع بروتوكولات شبكات Windows مثل SMB، WMI، و Kerberos. تعتبر هذه المجموعة حجر الأساس في اختبارات اختراق بيئة Active Directory.</td>
+              <td dir="ltr"><code>pip install impacket</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.4 Web Application Testing Tools</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">مجموعة من الأدوات المخصصة لاكتشاف واستغلال ثغرات تطبيقات الويب الشهيرة مثل حقن قواعد البيانات (SQLi) والبرمجة عبر المواقع (XSS).</p>
+      <div class="table-responsive">
+        <table class="interactive-table" dir="rtl">
+          <thead>
+            <tr>
+              <th>الأداة (Tool)</th>
+              <th>الغرض (Purpose)</th>
+              <th>الشرح التقني (Deep Explanation)</th>
+              <th>أمر التثبيت (Installation)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td dir="ltr"><strong>burp suite</strong></td>
+              <td dir="ltr">Web proxy/scanner</td>
+              <td>أقوى منصة لاعتراض وتحليل طلبات الويب، تسمح لك بالتحكم الكامل في حركة المرور لتطبيق الويب (Traffic) لاكتشاف واستغلال الثغرات المختلفة.</td>
+              <td dir="ltr"><code>See above</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>sqlmap</strong></td>
+              <td dir="ltr">SQL injection automation</td>
+              <td>أداة أوتوماتيكية بالكامل لاكتشاف واستغلال ثغرات حقن قواعد البيانات (SQL Injection)، قادرة على استخراج قواعد البيانات والوصول للنظام.</td>
+              <td dir="ltr"><code>git clone https://github.com/sqlmapproject/sqlmap.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>ghauri</strong></td>
+              <td dir="ltr">Modern SQL injection tool</td>
+              <td>أداة حديثة تعتمد على Python لاكتشاف واستغلال ثغرات حقن قواعد البيانات (SQLi)، وتتميز بقدرتها على تجاوز بعض الحمايات الحديثة بكفاءة.</td>
+              <td dir="ltr"><code>pip install ghauri</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>dalfox</strong></td>
+              <td dir="ltr">XSS scanner</td>
+              <td>أداة فحص سريعة وقوية جداً مخصصة لاكتشاف ثغرات XSS، وتدعم التحليل المتقدم للمتغيرات (Parameters) وحقن الحمولات (Payloads) تلقائياً.</td>
+              <td dir="ltr"><code>go install github.com/hahwul/dalfox/v2@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>xsstrike</strong></td>
+              <td dir="ltr">XSS detection suite</td>
+              <td>مجموعة أدوات متكاملة لاكتشاف XSS، تعتمد على تحليل الاستجابة وتوليد حمولات (Payloads) ديناميكية لتجاوز جدران الحماية (WAF) بذكاء.</td>
+              <td dir="ltr"><code>git clone https://github.com/s0md3v/XSStrike.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>wafw00f</strong></td>
+              <td dir="ltr">WAF detection</td>
+              <td>أداة تُستخدم لتحديد نوع جدار الحماية لتطبيقات الويب (WAF) الذي يحمي الهدف، مما يساعد في وضع خطة مناسبة لتجاوز هذه الحماية.</td>
+              <td dir="ltr"><code>pip install wafw00f</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>whatweb</strong></td>
+              <td dir="ltr">Technology fingerprinting</td>
+              <td>أداة لجمع بصمات التقنيات (Fingerprinting) لمعرفة نوع خادم الويب، نظام إدارة المحتوى (CMS)، إصدارات البرمجيات، ورؤوس HTTP.</td>
+              <td dir="ltr"><code>apt install whatweb</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>gowitness</strong></td>
+              <td dir="ltr">Screenshotting</td>
+              <td>أداة لأخذ لقطات شاشة (Screenshots) جماعية لتطبيقات الويب على نطاق واسع باستخدام متصفح Headless، لتسهيل التعرف البصري على الأهداف.</td>
+              <td dir="ltr"><code>go install github.com/sensepost/gowitness@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>aquatone</strong></td>
+              <td dir="ltr">Screenshotting</td>
+              <td>أداة مشابهة تقوم بأخذ لقطات شاشة للنطاقات المكتشفة وتجميعها في تقرير HTML منظم ومرئي لتسريع عملية الاستكشاف وتحليل مساحة الهجوم.</td>
+              <td dir="ltr"><code>go install github.com/michenriksen/aquatone@latest</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.5 API Testing Tools</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">تتطلب واجهات برمجة التطبيقات (APIs) أدوات متخصصة للتعامل مع البيانات المهيكلة (مثل JSON و GraphQL) لاختبار أمانها بفعالية.</p>
+      <div class="table-responsive">
+        <table class="interactive-table" dir="rtl">
+          <thead>
+            <tr>
+              <th>الأداة (Tool)</th>
+              <th>الغرض (Purpose)</th>
+              <th>الشرح التقني (Deep Explanation)</th>
+              <th>أمر التثبيت (Installation)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td dir="ltr"><strong>postman</strong></td>
+              <td dir="ltr">API testing platform</td>
+              <td>منصة شهيرة لتطوير واختبار واجهات برمجة التطبيقات (APIs)، تتيح إرسال طلبات معقدة وتنظيم المجموعات (Collections) لتسهيل الفحص اليدوي.</td>
+              <td dir="ltr"><code>https://www.postman.com/downloads/</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>insomnia</strong></td>
+              <td dir="ltr">API testing client</td>
+              <td>عميل API بديل لـ Postman يتميز بواجهة نظيفة وسريعة، يدعم REST و GraphQL و gRPC، ومفيد جداً في بناء طلبات الاختبار اليدوية للـ APIs.</td>
+              <td dir="ltr"><code>https://insomnia.rest/download</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>httpie</strong></td>
+              <td dir="ltr">Command-line HTTP client</td>
+              <td>عميل HTTP يعمل عبر سطر الأوامر، يعتبر بديلاً أسهل وأكثر قابلية للقراءة من curl، مصمم للتعامل مع واجهات API والـ JSON بسهولة.</td>
+              <td dir="ltr"><code>apt install httpie</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>jwt_tool</strong></td>
+              <td dir="ltr">JWT testing toolkit</td>
+              <td>مجموعة أدوات متخصصة في اختبار رموز JWT (JSON Web Tokens)، تتيح فك التشفير، التلاعب بالبيانات (Claims)، ومحاولة تخطي آليات التحقق من التوقيع.</td>
+              <td dir="ltr"><code>git clone https://github.com/ticarpi/jwt_tool.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>inql</strong></td>
+              <td dir="ltr">GraphQL testing</td>
+              <td>أداة فحص واختبار لـ GraphQL يمكن استخدامها بشكل مستقل أو كإضافة لـ Burp Suite، تسحب المخططات (Schemas) لتسهيل استكشاف وبناء الاستعلامات.</td>
+              <td dir="ltr"><code>pip install inql</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>graphqlmap</strong></td>
+              <td dir="ltr">GraphQL exploitation</td>
+              <td>أداة مخصصة للتفاعل مع مسارات GraphQL واستغلالها، تدعم حقن الثغرات الشائعة (مثل NoSQLi، XSS، SSRF) مباشرة في استعلامات GraphQL.</td>
+              <td dir="ltr"><code>git clone https://github.com/swisskyrepo/GraphQLmap.git</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.6 Cloud & Infrastructure Tools</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">مع انتقال الشركات إلى الحوسبة السحابية، أصبحت هذه الأدوات حتمية لاكتشاف الموارد السحابية غير المحمية والمفاتيح المسربة.</p>
+      <div class="table-responsive">
+        <table class="interactive-table" dir="rtl">
+          <thead>
+            <tr>
+              <th>الأداة (Tool)</th>
+              <th>الغرض (Purpose)</th>
+              <th>الشرح التقني (Deep Explanation)</th>
+              <th>أمر التثبيت (Installation)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td dir="ltr"><strong>s3scanner</strong></td>
+              <td dir="ltr">S3 bucket enumeration</td>
+              <td>أداة متخصصة في فحص حزم التخزين السحابية (S3 Buckets) الخاصة بـ AWS لاكتشاف الحزم المفتوحة للعامة أو ذات الصلاحيات الضعيفة التي يمكن تسريب بيانات منها.</td>
+              <td dir="ltr"><code>pip install s3scanner</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>cloud_enum</strong></td>
+              <td dir="ltr">Multi-cloud enumeration</td>
+              <td>أداة قوية للبحث في السحابات العامة المتعددة (AWS، Azure، GCP) لاكتشاف الموارد، الملفات، والأصول غير المحمية التابعة لهدف معين.</td>
+              <td dir="ltr"><code>git clone https://github.com/initstring/cloud_enum.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>gcpbucketbrute</strong></td>
+              <td dir="ltr">GCP bucket enumeration</td>
+              <td>أداة مخصصة لتخمين واكتشاف حزم التخزين (Storage Buckets) المخفية أو غير الآمنة في بيئة Google Cloud Platform.</td>
+              <td dir="ltr"><code>git clone https://github.com/RhinoSecurityLabs/GCPBucketBrute.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>trufflehog</strong></td>
+              <td dir="ltr">Secret scanning</td>
+              <td>أداة متقدمة للبحث العميق في مستودعات الأكواد (Repositories) وتاريخ الالتزامات (Commits) لاكتشاف المفاتيح السرية، كلمات المرور، ورموز الوصول المسربة.</td>
+              <td dir="ltr"><code>pip install truffleHog</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>gitleaks</strong></td>
+              <td dir="ltr">Secret scanning</td>
+              <td>أداة سريعة للبحث التلقائي عن الأسرار والمفاتيح (Secrets/Tokens) في مشاريع Git، تُستخدم بكثرة في عمليات التطوير (CI/CD) وكذلك من قبل المهاجمين لاستخراج الأسرار.</td>
+              <td dir="ltr"><code>go install github.com/zricethezav/gitleaks/v8@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>gitdorker</strong></td>
+              <td dir="ltr">GitHub dorking</td>
+              <td>أداة تستخدم تقنية البحث المتقدم (Dorking) للبحث في GitHub عن معلومات حساسة متعلقة بالهدف عبر آلاف الاستعلامات المخصصة.</td>
+              <td dir="ltr"><code>git clone https://github.com/obheda12/GitDorker.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>asnmap</strong></td>
+              <td dir="ltr">ASN enumeration</td>
+              <td>أداة لجمع معلومات نظام الإدارة الذاتية (ASN) المرتبطة بالمؤسسات، مما يساعد في تحديد النطاقات الواسعة لبروتوكولات الإنترنت (IP Ranges) للهدف بشكل دقيق.</td>
+              <td dir="ltr"><code>go install github.com/projectdiscovery/asnmap/cmd/asnmap@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>shodan</strong></td>
+              <td dir="ltr">Internet scanner</td>
+              <td>محرك بحث مخصص للأجهزة المتصلة بالإنترنت (IoT، خوادم، أنظمة تحكم). واجهة API الخاصة به توفر كنزاً من المعلومات عن المنافذ والتقنيات المكشوفة.</td>
+              <td dir="ltr"><code>pip install shodan</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>censys</strong></td>
+              <td dir="ltr">Internet scanner</td>
+              <td>محرك بحث مشابه لـ Shodan يتيح لك الاستعلام عن بيانات الخوادم وشهادات SSL لاكتشاف البنية التحتية والموارد المرتبطة بالهدف عبر الإنترنت.</td>
+              <td dir="ltr"><code>pip install censys</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.7 Post-Exploitation & Privilege Escalation Tools</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">بمجرد حصولك على وصول مبدئي (Initial Access)، تُستخدم هذه الأدوات لتثبيت التواجد، تصعيد الصلاحيات لتصبح Administrator/Root، والتحرك الجانبي داخل الشبكة.</p>
+      <div class="table-responsive">
+        <table class="interactive-table" dir="rtl">
+          <thead>
+            <tr>
+              <th>الأداة (Tool)</th>
+              <th>الغرض (Purpose)</th>
+              <th>الشرح التقني (Deep Explanation)</th>
+              <th>أمر التثبيت (Installation)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td dir="ltr"><strong>linpeas</strong></td>
+              <td dir="ltr">Linux privesc enumeration</td>
+              <td>أداة نصية (Script) شاملة لاكتشاف ثغرات ومسارات تصعيد الصلاحيات (Privilege Escalation) على أنظمة Linux، توفر تقريراً ملوناً ومفصلاً يُبرز النقاط الحرجة.</td>
+              <td dir="ltr"><code>curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>winpeas</strong></td>
+              <td dir="ltr">Windows privesc enumeration</td>
+              <td>النسخة الخاصة بأنظمة Windows من عائلة PEASS، تستعرض إعدادات النظام للبحث عن مسارات لتصعيد الصلاحيات محلياً واكتشاف التكوينات الخاطئة.</td>
+              <td dir="ltr"><code>Download from PEASS-ng releases</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>linenum</strong></td>
+              <td dir="ltr">Linux enumeration</td>
+              <td>أداة قديمة وموثوقة لجمع المعلومات من خوادم Linux والبحث عن التكوينات الخاطئة (Misconfigurations) والأذونات الضعيفة لتسهيل تصعيد الصلاحيات.</td>
+              <td dir="ltr"><code>git clone https://github.com/rebootuser/LinEnum.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>linux-exploit-suggester</strong></td>
+              <td dir="ltr">Kernel exploit suggestions</td>
+              <td>أداة تقوم بتحليل إصدار النواة (Kernel) لنظام Linux وتقترح قائمة بالثغرات العامة (CVEs) القابلة للاستغلال لتصعيد الصلاحيات محلياً.</td>
+              <td dir="ltr"><code>git clone https://github.com/mzet-/linux-exploit-suggester.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>seatbelt</strong></td>
+              <td dir="ltr">Windows enumeration</td>
+              <td>أداة من تطوير GhostPack مكتوبة بـ C#، تقوم بجمع "بيانات الأمان" من أنظمة Windows لاستكشاف التكوينات القابلة للاستغلال دون تنفيذ أي أوامر ضارة.</td>
+              <td dir="ltr"><code>git clone https://github.com/GhostPack/Seatbelt.git</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>powerup</strong></td>
+              <td dir="ltr">Windows privesc checks</td>
+              <td>وحدة برمجية ضمن PowerSploit تعتمد على PowerShell لاكتشاف واستغلال مسارات تصعيد الصلاحيات الشائعة في بيئة Windows (مثل مسارات الخدمات غير المحمية).</td>
+              <td dir="ltr"><code>Included in PowerSploit</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>bloodhound</strong></td>
+              <td dir="ltr">AD visualization</td>
+              <td>أداة متقدمة تعتمد على نظرية المخططات (Graph Theory) لتصور وتحليل العلاقات، المجموعات، وصلاحيات المستخدمين في بيئة Active Directory لاكتشاف مسارات السيطرة.</td>
+              <td dir="ltr"><code>apt install bloodhound</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>sharphound</strong></td>
+              <td dir="ltr">AD data collector</td>
+              <td>أداة تجميع البيانات (Collector) الرسمية لـ BloodHound، تقوم باستخراج بيانات الجلسات، المستخدمين، والمجموعات من الـ AD وتجهيزها للتحليل.</td>
+              <td dir="ltr"><code>Download from BloodHound releases</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>mimikatz</strong></td>
+              <td dir="ltr">Credential extraction</td>
+              <td>أداة أسطورية لاستخراج كلمات المرور الواضحة (Clear-text)، ورموز التجزئة (Hashes)، و تذاكر Kerberos من ذاكرة النظام (LSASS) في أنظمة Windows.</td>
+              <td dir="ltr"><code>https://github.com/gentilkiwi/mimikatz/releases</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>netexec</strong></td>
+              <td dir="ltr">Network exploitation</td>
+              <td>أداة قوية (المعروفة سابقاً بـ CrackMapExec) لاستغلال بروتوكولات شبكات Windows مثل SMB و WMI للتحرك الجانبي (Lateral Movement) والتحقق من كلمات المرور.</td>
+              <td dir="ltr"><code>pip install netexec</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>chisel</strong></td>
+              <td dir="ltr">TCP tunneling</td>
+              <td>أداة قوية جداً لإنشاء أنفاق (Tunnels) متقدمة لنقل البيانات عبر TCP أو UDP، مغلفة ومخفية داخل طلبات HTTP، لتجاوز جدران الحماية المعقدة للشبكات.</td>
+              <td dir="ltr"><code>go install github.com/jpillora/chisel@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>ligolo-ng</strong></td>
+              <td dir="ltr">Advanced tunneling</td>
+              <td>أداة متطورة وحديثة لإدارة الأنفاق والـ Pivoting (توجيه حركة المرور)، توفر واجهات شبكة وهمية (TUN interfaces) لتسهيل الاستكشاف الداخلي براحة كاملة.</td>
+              <td dir="ltr"><code>go install github.com/nicocha30/ligolo-ng/cmd/ligolo-ng@latest</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>proxychains</strong></td>
+              <td dir="ltr">Proxy chaining</td>
+              <td>أداة لسطر الأوامر تجبر أي برنامج على توجيه اتصالاته عبر خوادم بروكسي (SOCKS/HTTP) لتسهيل الوصول إلى الشبكات الداخلية المخفية أثناء الـ Pivoting.</td>
+              <td dir="ltr"><code>apt install proxychains4</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>metasploit</strong></td>
+              <td dir="ltr">Exploitation framework</td>
+              <td>إطار عمل (Framework) متكامل لتطوير وتنفيذ الثغرات (Exploits)، يحتوي على آلاف الحمولات (Payloads) والأدوات المساعدة للاختراق وتصعيد الصلاحيات.</td>
+              <td dir="ltr"><code>apt install metasploit-framework</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.8 Password Cracking & Brute Force</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">في حال الحصول على Hashes أو الحاجة لتخمين كلمات المرور للوصول إلى الخدمات، تُعتبر هذه الأدوات الخيار الأمثل للمهاجمين ومختبري الاختراق.</p>
+      <div class="table-responsive">
+        <table class="interactive-table" dir="rtl">
+          <thead>
+            <tr>
+              <th>الأداة (Tool)</th>
+              <th>الغرض (Purpose)</th>
+              <th>الشرح التقني (Deep Explanation)</th>
+              <th>أمر التثبيت (Installation)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td dir="ltr"><strong>hashcat</strong></td>
+              <td dir="ltr">Password cracking</td>
+              <td>أداة كسر كلمات المرور (Password Cracker) الأسرع والأكثر تقدماً، تعتمد على معالجات كروت الشاشة (GPU) لدعم مئات الخوارزميات، وتعتبر المعيار الصناعي للكسر.</td>
+              <td dir="ltr"><code>apt install hashcat</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>john (jtr)</strong></td>
+              <td dir="ltr">Password cracking</td>
+              <td>"John the Ripper"، أداة كلاسيكية وشائعة جداً لكسر كلمات المرور، تدعم العديد من التنسيقات وتُستخدم غالباً للكسر المعتمد على المعالج المركزي (CPU).</td>
+              <td dir="ltr"><code>apt install john</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>hydra</strong></td>
+              <td dir="ltr">Network login brute force</td>
+              <td>أداة سريعة لتخمين بيانات الدخول (Brute-forcer) تدعم عشرات البروتوكولات الشبكية (مثل SSH, FTP, HTTP-Auth) وتقوم بتجربة القواميس (Wordlists) عبر الشبكة.</td>
+              <td dir="ltr"><code>apt install hydra</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>medusa</strong></td>
+              <td dir="ltr">Parallel login brute force</td>
+              <td>أداة مشابهة لـ Hydra لتخمين كلمات المرور عبر الشبكة، تتميز ببعض التحسينات في الاستقرار والتوازي المتقدم أثناء عمليات الفحص المتعددة.</td>
+              <td dir="ltr"><code>apt install medusa</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>burp suite intruder</strong></td>
+              <td dir="ltr">Web login brute force</td>
+              <td>أداة مدمجة داخل Burp Suite مخصصة لتنفيذ هجمات التخمين (Brute-force) والهجمات المخصصة على تطبيقات الويب بسهولة وتخصيص عالٍ جداً.</td>
+              <td dir="ltr"><code>See above</code></td>
+            </tr>
+            <tr>
+              <td dir="ltr"><strong>ffuf</strong></td>
+              <td dir="ltr">Web fuzzing/brute force</td>
+              <td>على الرغم من أنها أداة Fuzzing بشكل أساسي، إلا أنه يمكن استخدامها كأداة Brute-force سريعة ومرنة لصفحات تسجيل الدخول وتخطي القيود لتطبيقات الويب.</td>
+              <td dir="ltr"><code>See above</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.9 Useful Wordlists</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">قوائم الكلمات (Wordlists) هي قلب أي عملية تخمين أو فحص آلي. المستودعات التالية تحتوي على أشهر وأكبر التجميعات للكلمات الشائعة، المسارات، المعلمات، والـ Payloads المستخدمة في استغلال الثغرات.</p>
+      
+      <div class="cmd-ui-box">
+        <div class="cmd-header">
+           <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+           <span class="cmd-title">SecLists & Payloads Repositories</span>
+        </div>
+        <pre><code class="language-bash" dir="ltr"># SecLists (comprehensive wordlists)
+git clone https://github.com/danielmiessler/SecLists.git
+
+# Key wordlists:
+# /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
+# /usr/share/seclists/Discovery/Web-Content/common.txt
+# /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt
+# /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt
+# /usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt
+# /usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt
+
+# PayloadsAllTheThings (payload collections)
+git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git
+
+# FuzzDB (fuzzing payloads)
+git clone https://github.com/fuzzdb-project/fuzzdb.git</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>10.10 GTFOBins & LOLBAS</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-4">مشاريع أساسية تساعد في تجاوز الحماية وتصعيد الصلاحيات (Privilege Escalation) عبر استغلال الملفات التنفيذية الشرعية المتواجدة أصلاً في النظام، مما يُعرف بأسلوب التعايش مع موارد النظام (Living Off The Land).</p>
+      <div class="grid-2-col">
+        <div class="info-box tip">
+          <h4 class="mb-2">GTFOBins: Unix binaries that can be exploited for privesc</h4>
+          <p dir="rtl" class="mb-2">مستودع شامل لثنائيات Unix/Linux التي تسمح بتخطي القيود وتصعيد الصلاحيات عبر استغلال إعدادات SUID أو قدرات أخرى (Capabilities).</p>
+          <ul dir="ltr">
+            <li><strong>URL:</strong> <a href="https://gtfobins.github.io/" target="_blank">https://gtfobins.github.io/</a></li>
+            <li><strong>Usage:</strong> Search for SUID binary name, get exploitation command</li>
+          </ul>
+        </div>
+        <div class="info-box tip">
+          <h4 class="mb-2">LOLBAS: Living Off The Land Binaries (Windows)</h4>
+          <p dir="rtl" class="mb-2">مشروع يركز على أدوات Windows الأصلية التي يمكن للمهاجمين استغلالها لتنفيذ تعليمات برمجية، تنزيل ملفات، أو تخطي الحمايات (مثل AMSI, AppLocker).</p>
+          <ul dir="ltr">
+            <li><strong>URL:</strong> <a href="https://lolbas-project.github.io/" target="_blank">https://lolbas-project.github.io/</a></li>
+            <li><strong>Usage:</strong> Search for Windows binary, get abuse techniques</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>APPENDIX: Quick Reference Commands</h3>
+    </div>
+    <div class="card-content">
+      <h4 class="mb-2" dir="ltr">Full Recon Pipeline (One-liner style)</h4>
+      <p dir="rtl" class="mb-3">هذا خط أنابيب (Pipeline) متكامل يجمع بين الاستكشاف السلبي والنشط بخطوة واحدة باستخدام أدوات ProjectDiscovery وغيرها. هذا النهج يضمن كفاءة وسرعة فائقة في جمع النطاقات المباشرة، فحص المنافذ، اكتشاف المحتوى المخفي، وفحص الثغرات الآلي.</p>
+      <div class="cmd-ui-box mb-4">
+        <div class="cmd-header">
+           <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+           <span class="cmd-title">Full Recon Pipeline</span>
+        </div>
+        <pre><code class="language-bash" dir="ltr"># Complete subdomain enumeration pipeline
+subfinder -d target.com -all -silent | amass enum -passive -d target.com -silent | assetfinder --subs-only target.com | sort -u | shuffledns -d target.com -r resolvers.txt -mode resolve | httpx -status-code -title -tech-detect | tee all_subdomains.txt
+
+# Port scan all live hosts
+cat all_subdomains.txt | naabu -p - -o ports.txt
+
+# Content discovery on all web hosts
+cat all_subdomains.txt | ffuf -u https://FUZZ/FUZZ2 -w -:FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt:FUZZ2 -mc 200,301,302,403
+
+# Vulnerability scan
+nuclei -list all_subdomains.txt -severity critical,high -o vulns.txt</code></pre>
+      </div>
+
+      <h4 class="mt-4 mb-2" dir="ltr">OSCP-like Internal Assessment</h4>
+      <p dir="rtl" class="mb-3">مسار منهجي متسلسل يحاكي أسلوب امتحان OSCP واختبارات الاختراق للشبكات الداخلية. يبدأ من اكتشاف الأجهزة، مرورا بفحص الخدمات والويب، ثم الاستغلال وتصعيد الصلاحيات، وينتهي بتوثيق الاختراق.</p>
+      <div class="cmd-ui-box">
+        <div class="cmd-header">
+           <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+           <span class="cmd-title">OSCP Methodology Pipeline</span>
+        </div>
+        <pre><code class="language-bash" dir="ltr"># 1. Network discovery
+nmap -sn 192.168.1.0/24 -oG hosts.txt
+
+# 2. Port scan live hosts
+nmap -sC -sV -p- -iL live_hosts.txt -oN full_scan.txt
+
+# 3. Service enumeration
+# (Use NSE scripts based on services found)
+
+# 4. Web enumeration
+# (Use ffuf, gobuster, nikto on web services)
+
+# 5. Exploitation
+# (Use Metasploit, manual exploitation)
+
+# 6. Post-exploitation
+# (Upload LinPEAS/WinPEAS, run them)
+# (Use BloodHound for AD environments)
+
+# 7. Reporting
+# (Document everything with screenshots)</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="cyber-card">
+    <div class="card-header">
+      <h3>REFERENCES & SOURCES</h3>
+    </div>
+    <div class="card-content">
+      <p dir="rtl" class="mb-3">تم تجميع هذا الدليل المنهجي من المصادر والمراجع الموثوقة التالية لضمان توافقه مع أعلى المعايير الأمنية العالمية:</p>
+      <ul class="ref-list" dir="ltr" style="list-style: none; padding-left: 0;">
+        <li style="margin-bottom: 0.5rem;"><strong>OWASP Web Security Testing Guide (WSTG)</strong> - <a href="https://owasp.org/www-project-web-security-testing-guide/" target="_blank">https://owasp.org/www-project-web-security-testing-guide/</a></li>
+        <li style="margin-bottom: 0.5rem;"><strong>Penetration Testing Execution Standard (PTES)</strong> - <a href="http://www.pentest-standard.org/" target="_blank">http://www.pentest-standard.org/</a></li>
+        <li style="margin-bottom: 0.5rem;"><strong>NIST SP 800-115</strong> - Technical Guide to Information Security Testing</li>
+        <li style="margin-bottom: 0.5rem;"><strong>ProjectDiscovery Tools Documentation</strong> - <a href="https://docs.projectdiscovery.io/" target="_blank">https://docs.projectdiscovery.io/</a></li>
+        <li style="margin-bottom: 0.5rem;"><strong>Nmap Reference Guide</strong> - <a href="https://nmap.org/book/" target="_blank">https://nmap.org/book/</a></li>
+        <li style="margin-bottom: 0.5rem;"><strong>OWASP API Security Top 10</strong> - <a href="https://owasp.org/API-Security/" target="_blank">https://owasp.org/API-Security/</a></li>
+        <li style="margin-bottom: 0.5rem;"><strong>HackTricks</strong> - <a href="https://book.hacktricks.xyz/" target="_blank">https://book.hacktricks.xyz/</a></li>
+        <li style="margin-bottom: 0.5rem;"><strong>PayloadsAllTheThings</strong> - <a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank">https://github.com/swisskyrepo/PayloadsAllTheThings</a></li>
+        <li style="margin-bottom: 0.5rem;"><strong>GTFOBins</strong> - <a href="https://gtfobins.github.io/" target="_blank">https://gtfobins.github.io/</a></li>
+        <li style="margin-bottom: 0.5rem;"><strong>LOLBAS Project</strong> - <a href="https://lolbas-project.github.io/" target="_blank">https://lolbas-project.github.io/</a></li>
+      </ul>
+      <div class="info-box tip mt-4" dir="rtl">
+        <strong>Document Version:</strong> 1.0 <br>
+        <strong>Compiled:</strong> 2025/2026 <br>
+        <strong>Purpose:</strong> Complete reference for penetration testing, bug bounty hunting, and OSCP preparation <br>
+        (دليل مرجعي شامل لاختبار الاختراق، اكتشاف الثغرات، والتحضير لشهادة OSCP).
+      </div>
+    </div>
+  </div>
+
+</div>

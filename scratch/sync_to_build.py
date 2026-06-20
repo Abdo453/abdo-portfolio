@@ -67,6 +67,15 @@ def sync_main_to_build():
     with open(css_dst, 'w', encoding='utf-8') as f:
         f.write(css)
 
+    
+    import shutil
+    build_modules_dir = r"d:\abdo_portfolio\build\modules"
+    static_modules_dir = r"d:\abdo_portfolio\main\static\main\modules"
+    if os.path.exists(build_modules_dir):
+        shutil.rmtree(build_modules_dir)
+    if os.path.exists(static_modules_dir):
+        shutil.copytree(static_modules_dir, build_modules_dir)
+
     print("Synced main to build successfully with Includes resolved!")
 
 if __name__ == "__main__":

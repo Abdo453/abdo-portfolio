@@ -1,0 +1,175 @@
+<div class="meth-content-view" id="meth-content-pt_mod11" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+
+    <div class="cyber-hero">
+        <h2 class="cyber-title">11. أمن جهة العميل (Client Side Security)</h2>
+        <p class="cyber-subtitle">CORS, WebSockets, DOM XSS & CSP</p>
+    </div>
+
+    <!-- 1. Theory -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-book"></i> الجانب النظري (Theory)</h3>
+        <p>
+            تعتمد تطبيقات الويب الحديثة بشكل كبير على متصفح العميل (Client-Side) في معالجة وعرض البيانات، وهذا يفتح آفاقاً جديدة من الثغرات. أمن جهة العميل يركز على استغلال الثغرات التي تنفذ في المتصفح مثل DOM-based XSS و التكوينات الخاطئة لـ CORS (Cross-Origin Resource Sharing) و WebSockets و CSP (Content Security Policy).
+        </p>
+        <ul>
+            <li><strong>DOM XSS:</strong> تحدث عندما يقوم سكريبت العميل (JavaScript) بأخذ بيانات غير موثوقة (Source) ويمررها إلى دالة خطرة (Sink) مما يؤدي إلى تنفيذ كود برمجي خبيث داخل المتصفح.</li>
+            <li><strong>CORS:</strong> آلية تسمح للخوادم بتحديد من يحق له طلب الموارد. الإعدادات الخاطئة (مثل السماح بأي Origin وإرسال Credentials) تتيح للمهاجم سرقة بيانات حساسة من مستخدمين آخرين.</li>
+            <li><strong>WebSockets:</strong> بروتوكول يوفر اتصالاً ثنائي الاتجاه بين العميل والخادم. قد يكون عرضة لهجمات مثل CSWSH (Cross-Site WebSocket Hijacking) إذا لم يتم التحقق من Origin.</li>
+            <li><strong>CSP:</strong> سياسة أمنية تهدف إلى منع XSS عبر تقييد مصادر تحميل السكريبتات. تخطي (Bypass) الـ CSP يعتبر جزءاً أساسياً في هجمات جهة العميل المتقدمة.</li>
+        </ul>
+    </div>
+
+    <!-- 2. Attack Flow -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-project-diagram"></i> مسار الهجوم (Attack Flow)</h3>
+        <pre><code class="language-mermaid">
+graph TD
+    A[تحديد الهدف Client-Side] --> B{نوع الثغرة؟}
+    B -->|DOM XSS| C[تتبع Source إلى Sink]
+    B -->|CORS| D[فحص ترويسات Access-Control]
+    B -->|WebSockets| E[تحليل الـ Handshake و Origin]
+    
+    C --> F[إعداد Payload وتخطي التصفية]
+    D --> G[إنشاء صفحة خبيثة لسرقة البيانات]
+    E --> H[تنفيذ CSWSH عبر Origin مزيف]
+    
+    F --> I{يوجد CSP؟}
+    G --> J[استخراج البيانات]
+    H --> J
+    
+    I -->|نعم| K[استغلال ثغرات تخطي CSP]
+    I -->|لا| J
+    K --> J[تنفيذ الكود / سرقة البيانات]
+        </code></pre>
+    </div>
+
+    <!-- 3. Manual Testing -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-hand-paper"></i> الاختبار اليدوي (Manual Testing)</h3>
+        <p>
+            لاكتشاف ثغرات جهة العميل، يجب التفاعل بعمق مع سلوك المتصفح:
+        </p>
+        <ul>
+            <li><strong>لاكتشاف DOM XSS:</strong> استخدم أدوات المطور في المتصفح (DevTools). قم بتغيير الـ URL (مثل إدراج <code>#payload</code>) وراقب كيف يتعامل JavaScript معها باستخدام Breakpoints عند دوال مثل <code>eval()</code> أو <code>innerHTML</code>.</li>
+            <li><strong>لاكتشاف CORS:</strong> عبر أداة Burp Suite، قم بتعديل ترويسة <code>Origin: https://evil.com</code> في الطلبات، ولاحظ إذا كان الخادم يرد بـ <code>Access-Control-Allow-Origin: https://evil.com</code> مع <code>Access-Control-Allow-Credentials: true</code>.</li>
+            <li><strong>لاكتشاف WebSockets CSWSH:</strong> قم باعتراض طلب ترقية الاتصال (Upgrade Request) وغير قيمة <code>Origin</code>. إذا تم قبول الاتصال وتم تلقي رسائل حساسة بدون التحقق من الجلسة بقوة، فهناك ثغرة.</li>
+            <li><strong>تخطي CSP:</strong> قم بقراءة الـ CSP Headers. ابحث عن السماحات المفرطة مثل <code>unsafe-inline</code> أو النطاقات القابلة للاستغلال (مثل استضافة JSONP) لتخطي السياسة الأمنية.</li>
+        </ul>
+    </div>
+
+    <!-- 4. Automation -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-cogs"></i> الأتمتة (Automation)</h3>
+        <p>
+            أتمتة الفحص تساعد في اكتشاف الثغرات في التطبيقات الضخمة:
+        </p>
+        <ul>
+            <li><strong>DOM Invader:</strong> إضافة مدمجة في Burp Suite تكتشف بشكل تلقائي نقاط DOM XSS عبر حقن قيم عشوائية (Canaries) ومراقبة الـ Sinks.</li>
+            <li><strong>CORScanner:</strong> أداة تعتمد على Python لاكتشاف الإعدادات الخاطئة في CORS والتحقق من إمكانية الاستغلال.</li>
+            <li><strong>CSP Evaluator:</strong> أداة من Google لتحليل سياسات CSP وتحديد الثغرات فيها.</li>
+        </ul>
+    </div>
+
+    <!-- 5. Tools -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-terminal"></i> الأدوات والأوامر (Tools & Commands)</h3>
+        
+        <h4>CORScanner</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot close"></span>
+                <span class="cmd-dot minimize"></span>
+                <span class="cmd-dot maximize"></span>
+                <span class="cmd-title">bash</span>
+            </div>
+            <pre><code class="language-bash">python3 corscanner.py -i targets.txt -t 50</code></pre>
+        </div>
+
+        <h4>CSP Analysis (curl)</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot close"></span>
+                <span class="cmd-dot minimize"></span>
+                <span class="cmd-dot maximize"></span>
+                <span class="cmd-title">bash</span>
+            </div>
+            <pre><code class="language-bash">curl -I -s https://target.com | grep "Content-Security-Policy"</code></pre>
+        </div>
+
+        <h4>Semgrep (Source Code Review for DOM XSS)</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot close"></span>
+                <span class="cmd-dot minimize"></span>
+                <span class="cmd-dot maximize"></span>
+                <span class="cmd-title">bash</span>
+            </div>
+            <pre><code class="language-bash">semgrep --config "p/javascript" path/to/source_code/</code></pre>
+        </div>
+    </div>
+
+    <!-- 6. Lab -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-flask"></i> بيئة التجارب (Labs)</h3>
+        <ul>
+            <li><strong>PortSwigger Web Security Academy:</strong>
+                <ul>
+                    <li><a href="https://portswigger.net/web-security/cors" target="_blank" style="color:var(--tool-color);">CORS vulnerabilities</a></li>
+                    <li><a href="https://portswigger.net/web-security/cross-site-scripting/dom-based" target="_blank" style="color:var(--tool-color);">DOM-based XSS</a></li>
+                    <li><a href="https://portswigger.net/web-security/websockets" target="_blank" style="color:var(--tool-color);">WebSockets</a></li>
+                </ul>
+            </li>
+            <li><strong>TryHackMe:</strong> Intro to Cross-site Scripting, CSP bypass rooms.</li>
+            <li><strong>PentesterLab:</strong> DOM XSS & CSP bypass exercises.</li>
+        </ul>
+    </div>
+
+    <!-- 7. Quiz -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-question-circle"></i> اختبر معلوماتك (Quiz)</h3>
+        <div class="quiz-container" data-correct="B">
+            <h4>Scenario: قمت بإرسال طلب HTTP بتعديل ترويسة Origin إلى نطاق تتحكم به (https://attacker.com)، ورد الخادم بـ "Access-Control-Allow-Origin: https://attacker.com" مع "Access-Control-Allow-Credentials: true". ما هي الخطوة التالية لاستغلال هذه الثغرة؟</h4>
+            <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) حقن كود JavaScript في ترويسة Origin لاختراق الخادم.</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) إنشاء صفحة ويب تحتوي على كود JavaScript يطلب بيانات حساسة من الهدف نيابة عن الضحية وإرسالها إليك.</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'C')">C) استخدام WebSockets للاتصال العكسي بالخادم.</button>
+        </div>
+    </div>
+
+    <!-- 8. Cheat Sheet -->
+    <div class="cyber-card">
+        <h3><i class="fas fa-table"></i> المرجع السريع (Cheat Sheet)</h3>
+        <table style="width:100%; text-align:left; border-collapse:collapse; background:rgba(0,0,0,0.5); border:1px solid #444;">
+            <tr style="background:rgba(0,229,160,0.2); color:#00e5a0;">
+                <th style="padding:10px; border:1px solid #444;">التقنية (Technique)</th>
+                <th style="padding:10px; border:1px solid #444;">الوصف (Description)</th>
+                <th style="padding:10px; border:1px solid #444;">مثال الاستغلال (Payload / Config)</th>
+            </tr>
+            <tr>
+                <td style="padding:10px; border:1px solid #444;">DOM XSS Source</td>
+                <td style="padding:10px; border:1px solid #444;">المصدر الذي يتلقى إدخال المستخدم في المتصفح</td>
+                <td style="padding:10px; border:1px solid #444;"><code>location.hash</code>, <code>window.name</code></td>
+            </tr>
+            <tr>
+                <td style="padding:10px; border:1px solid #444;">DOM XSS Sink</td>
+                <td style="padding:10px; border:1px solid #444;">الدالة التي تنفذ الكود الخطير</td>
+                <td style="padding:10px; border:1px solid #444;"><code>eval()</code>, <code>innerHTML</code>, <code>setTimeout()</code></td>
+            </tr>
+            <tr>
+                <td style="padding:10px; border:1px solid #444;">CORS Exploit</td>
+                <td style="padding:10px; border:1px solid #444;">سرقة البيانات عبر إعدادات Origin مرنة</td>
+                <td style="padding:10px; border:1px solid #444;"><code>req.withCredentials = true;</code> in XHR</td>
+            </tr>
+            <tr>
+                <td style="padding:10px; border:1px solid #444;">CSWSH</td>
+                <td style="padding:10px; border:1px solid #444;">اختطاف اتصال WebSockets</td>
+                <td style="padding:10px; border:1px solid #444;">تعديل ترويسة <code>Origin</code> في طلب <code>Connection: Upgrade</code></td>
+            </tr>
+            <tr>
+                <td style="padding:10px; border:1px solid #444;">CSP Bypass</td>
+                <td style="padding:10px; border:1px solid #444;">تخطي سياسات CSP المتساهلة</td>
+                <td style="padding:10px; border:1px solid #444;">استخدام نقاط نهاية JSONP مسموحة أو <code>script-src 'unsafe-eval'</code></td>
+            </tr>
+        </table>
+    </div>
+
+</div>

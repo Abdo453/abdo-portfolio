@@ -1,0 +1,163 @@
+<div class="meth-content-view" id="meth-content-pt_mod16" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    
+    <div class="cyber-hero">
+        <h1 class="glitch-text" data-text="16. Reporting (كتابة التقارير)">16. Reporting (كتابة التقارير)</h1>
+        <p>فن تحويل الاختراقات التقنية المعقدة إلى قيمة تجارية (Business Value). التقرير هو المنتج النهائي الذي يُسلم للعميل، ويجب أن يوازن بين الدقة التقنية وسهولة الفهم للإدارة العليا.</p>
+    </div>
+
+    <!-- 1. Theory -->
+    <div class="cyber-card">
+        <h2 class="section-title">1. Theory (المفاهيم النظرية)</h2>
+        <div class="theory-content">
+            <p>يُعد إعداد التقرير النهائي (Reporting) أهم مرحلة في اختبار الاختراق. مهما كانت مهاراتك التقنية عالية، إذا لم تتمكن من إيصال حجم الخطر وطريقة المعالجة بوضوح، فإن الاختبار يفقد قيمته. يتكون التقرير الاحترافي عادة من قسمين رئيسيين:</p>
+            <ul>
+                <li><strong>الملخص التنفيذي (Executive Summary):</strong> مُوجه للإدارة العليا وصناع القرار (C-Level). يركز على المخاطر التجارية (Business Risk)، وتأثير الثغرات على سمعة الشركة وأرباحها، والمستوى العام للأمان، دون الدخول في تعقيدات برمجية.</li>
+                <li><strong>التفاصيل التقنية (Technical Findings):</strong> مُوجه للفرق التقنية والمطورين. يحتوي على تفاصيل كل ثغرة، نظام تقييم الثغرات (CVSS Score)، تصنيف الضعف (CWE)، خطوات إعادة الاستغلال (Steps to Reproduce)، والأدلة (PoC - Screenshots).</li>
+                <li><strong>التوصيات والعلاج (Remediation):</strong> حلول عملية وواضحة ترشد الفريق التقني لترقيع الثغرات بشكل نهائي.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 2. Attack Flow -->
+    <div class="cyber-card">
+        <h2 class="section-title">2. Reporting Workflow (مسار كتابة التقرير)</h2>
+        <div class="mermaid-wrapper">
+            <pre><code class="language-mermaid">
+graph TD
+    A[جمع الأدلة Evidence Gathering] --> B[فرز وتصنيف الثغرات Triage]
+    B --> C{حساب تقييم المخاطر}
+    C -->|CVSS / CWE| D[صياغة الملخص التنفيذي Executive Summary]
+    C -->|CVSS / CWE| E[التوثيق التقني Technical Findings]
+    D --> F[مراجعة الجودة QA & Peer Review]
+    E --> F
+    F --> G[تشفير التقرير وتسليمه Secure Delivery]
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- 3. Manual Testing -->
+    <div class="cyber-card">
+        <h2 class="section-title">3. Manual Documentation (التوثيق اليدوي)</h2>
+        <div class="theory-content">
+            <p>أثناء مرحلة التوثيق اليدوي، يجب على المختبر الالتزام بالآتي لضمان جودة المخرجات:</p>
+            <ul>
+                <li><strong>تدوين الملاحظات (Note-taking):</strong> استخدام أدوات مثل Obsidian، Notion، أو CherryTree لتنظيم المخرجات حسب عنوان IP أو اسم النطاق.</li>
+                <li><strong>التقاط الأدلة (Screenshots):</strong> أخذ صور واضحة توضح الثغرة بوضوح (مثل رسائل الخطأ، أو تنفيذ كود RCE) مع تظليل أو تمييز الأجزاء المهمة. استخدام أدوات مثل Flameshot أو Greenshot.</li>
+                <li><strong>خطوات الاستنساخ (Steps to Reproduce):</strong> كتابة خطوات متسلسلة ودقيقة (1، 2، 3...) تسمح للمطور بإعادة اكتشاف الثغرة بنفسه للتحقق منها قبل وبعد الترقيع.</li>
+                <li><strong>تحديد النطاق (Scope Context):</strong> التأكد من أن الثغرات المذكورة تقع ضمن النطاق المتفق عليه (In-Scope).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 4. Automation -->
+    <div class="cyber-card">
+        <h2 class="section-title">4. Automation (أتمتة التقارير)</h2>
+        <div class="theory-content">
+            <p>لتقليل الوقت المستغرق في تنسيق التقارير وإدارتها، تستخدم الفرق منصات إدارة الثغرات وأتمتة التقارير:</p>
+            <ul>
+                <li><strong>Ghostwriter:</strong> منصة مفتوحة المصدر لإدارة العمليات وكتابة التقارير بشكل تعاوني باستخدام قوالب Word/PDF جاهزة.</li>
+                <li><strong>Dradis Framework:</strong> بيئة لجمع مخرجات الأدوات الآلية (Nmap, Nessus, Burp) وتوليد تقرير موحد.</li>
+                <li><strong>PwnDoc:</strong> أداة متخصصة لإدارة تقارير اختبار الاختراق، تتيح تخصيص القوالب وتدعم العمل الجماعي.</li>
+                <li><strong>Pandoc:</strong> أداة سطر أوامر لتحويل ملفات Markdown إلى تقارير PDF احترافية باستخدام قوالب مثل Eisvogel.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 5. Tools -->
+    <div class="cyber-card">
+        <h2 class="section-title">5. Tools & Commands (الأدوات والأوامر)</h2>
+        <p>أمثلة على أوامر وأدوات تحويل وتوليد التقارير:</p>
+        
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span>
+                <span class="cmd-dot yellow"></span>
+                <span class="cmd-dot green"></span>
+                <span class="cmd-title">Bash - Pandoc (Markdown to PDF)</span>
+            </div>
+            <pre><code class="language-bash"># توليد تقرير PDF احترافي من ملف Markdown باستخدام قالب Eisvogel
+pandoc report.md -o Final_Pentest_Report.pdf \
+    --from markdown --template eisvogel \
+    --listing --toc --number-sections</code></pre>
+        </div>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span>
+                <span class="cmd-dot yellow"></span>
+                <span class="cmd-dot green"></span>
+                <span class="cmd-title">Bash - Metasploit Export</span>
+            </div>
+            <pre><code class="language-bash"># استخراج بيانات الثغرات المكتشفة من قاعدة بيانات Metasploit
+msf6 > db_export -f xml -a /path/to/report/msf_results.xml
+msf6 > db_export -f pwdump -a /path/to/report/hashes.txt</code></pre>
+        </div>
+    </div>
+
+    <!-- 6. Lab -->
+    <div class="cyber-card">
+        <h2 class="section-title">6. Lab & Practice (بيئة التدريب)</h2>
+        <div class="theory-content">
+            <p>لتطوير مهارات كتابة التقارير، يُنصح بالتدرب على القوالب الواقعية والمعامل التالية:</p>
+            <ul>
+                <li><strong>TryHackMe (Pentest+ Reporting):</strong> غرف مخصصة لتعليم كيفية صياغة الملخصات التنفيذية وحساب الـ CVSS.</li>
+                <li><strong>OSCP Exam Report Template:</strong> التدرب على كتابة التقارير باستخدام القوالب الرسمية لشهادة OSCP من Offensive Security.</li>
+                <li><strong>TCM Security (PNPT):</strong> تتطلب الشهادة اجتياز اختراق عملي يتبعه كتابة تقرير احترافي وتقديم عرض تقديمي (Debrief).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 7. Quiz -->
+    <div class="cyber-card">
+        <h2 class="section-title">7. Quiz (اختبار المعرفة)</h2>
+        <div class="quiz-container" data-correct="A">
+            <h4>Scenario: طلب منك العميل توضيح التأثير التجاري (Business Impact) لثغرة RCE المكتشفة بطريقة يفهمها مدير الشركة (CEO) غير التقني. في أي قسم من التقرير يجب وضع هذا الشرح؟</h4>
+            <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) الملخص التنفيذي (Executive Summary)</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) تفاصيل الثغرات التقنية (Technical Findings)</button>
+        </div>
+    </div>
+
+    <!-- 8. Cheat Sheet -->
+    <div class="cyber-card">
+        <h2 class="section-title">8. Cheat Sheet (مرجع سريع)</h2>
+        <div class="theory-content">
+            <table class="cheat-sheet-table">
+                <thead>
+                    <tr>
+                        <th>CVSS v3.1 Severity</th>
+                        <th>Score Range</th>
+                        <th>Description (الوصف)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Critical (حرج)</strong></td>
+                        <td>9.0 - 10.0</td>
+                        <td>اختراق كامل للنظام، RCE، تجاوز الصلاحيات بشكل كامل وسهل (Exploitation is trivial).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>High (عالي)</strong></td>
+                        <td>7.0 - 8.9</td>
+                        <td>استغلال يؤدي لضرر كبير، تسريب بيانات حساسة، أو SQLi، لكن قد يتطلب شروطاً معينة.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Medium (متوسط)</strong></td>
+                        <td>4.0 - 6.9</td>
+                        <td>ثغرات XSS، CSRF، تسريب بيانات محدودة الأهمية. تتطلب عادة تفاعل من الضحية (User Interaction).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Low (منخفض)</strong></td>
+                        <td>0.1 - 3.9</td>
+                        <td>تسريب معلومات بسيطة، غياب ترويسات الأمان (Security Headers)، لا تسبب ضرر مباشر.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>None / Informational</strong></td>
+                        <td>0.0</td>
+                        <td>معلومات فقط، ممارسات برمجية ينصح بتحسينها (Best Practices).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
