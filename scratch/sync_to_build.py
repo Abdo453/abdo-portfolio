@@ -45,8 +45,10 @@ def sync_main_to_build():
     html = re.sub(r"{%\s*static\s*'main/(css/style\.css)'\s*%}", fr"\1?v={timestamp}", html)
     html = re.sub(r"{%\s*static\s*'main/(css/methodology\.css)'\s*%}", fr"\1?v={timestamp}", html)
     html = re.sub(r"{%\s*static\s*'main/(js/methodology\.js)'\s*%}", fr"\1?v={timestamp}", html)
+    html = re.sub(r"{%\s*static\s*'main/(js/quiz_engine\.js)'\s*%}", fr"\1?v={timestamp}", html)
+    html = re.sub(r"{%\s*static\s*'main/(js/quiz_db\.js)'\s*%}", fr"\1?v={timestamp}", html)
     
-    # Update cache buster for quiz engine JS if included in HTML
+    # Update cache buster for quiz engine JS if included in HTML with normal src
     html = re.sub(r'src="js/quiz_engine\.js(\?v=\d+)?"', fr'src="js/quiz_engine.js?v={timestamp}"', html)
     html = re.sub(r'src="js/quiz_db\.js(\?v=\d+)?"', fr'src="js/quiz_db.js?v={timestamp}"', html)
 
