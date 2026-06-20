@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=1781955129">
-  <link rel="stylesheet" href="css/methodology.css?v=1781955129">
+  <link rel="stylesheet" href="css/style.css?v=1781955461">
+  <link rel="stylesheet" href="css/methodology.css?v=1781955461">
 
   
 
@@ -3449,69 +3449,194 @@ eth.addr == 00:11:22:33:44:55</code></pre>
 
 </div>
 
-      
-<!-- =======================================================
-     CEH MODULE 9: SOCIAL ENGINEERING
+      <!-- =======================================================
+     CEH MODULE 9: MISCELLANEOUS TOPICS (SOCIAL, MITM, WIFI, DOS, CLOUD)
      ======================================================= -->
 <div class="meth-content-view" id="meth-content-mod9" style="display:none;" dir="rtl">
   
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🎭</span> Social Engineering</h2>
-    <p class="hero-tagline">فن التلاعب بالبشر: التصيد الاحتيالي، الانتحال، وأدوات المهندس الاجتماعي.</p>
+    <h2 class="hero-title"><span class="hero-icon">🎭</span> Module 9: Miscellaneous Topics</h2>
+    <p class="hero-tagline">الهندسة الاجتماعية، التنصت، هجمات الواي فاي، إيقاف الخدمات، والـ Cloud Computing.. (5 مجالات في محاضرة واحدة).</p>
     <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-yellow);"></span> Module 09</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ffb86c;"></span> Module 09</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#bd93f9;"></span> Advanced Attacks</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🎣</span>
-      <h3>أساليب الهندسة الاجتماعية (Techniques)</h3>
+  <!-- SOCIAL ENGINEERING -->
+  <div class="cyber-card" style="border-top:3px solid #ff5555;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">🎭 1) Social Engineering (الهندسة الاجتماعية)</h3>
     </div>
+    <div style="padding-top:15px;">
+      <strong style="color:#ff5555;">🧠 التعريف الأساسي:</strong>
+      <p style="color:#aaa; font-size:0.9em; margin-bottom:10px;">فن خداع الناس عشان يطلعوا معلومات سرية. إنت هنا مش بتهاجم السيستم، <strong>إنت بتهاجم الإنسان نفسه (أضعف حلقة).</strong></p>
+      
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:15px;">
+        <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+          <h5 style="color:#ffb86c; margin-top:0; font-size: 1.05em;">💣 أمثلة شائعة</h5>
+          <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+            <li>مكالمة هاتفية ينتحل فيها صفة (IT Support).</li>
+            <li>إيميل مزيف (Phishing).</li>
+            <li>صفحات Login مزورة (Fake Pages).</li>
+          </ul>
+        </div>
+        <div style="background:rgba(0,0,0,0.3); border:1px solid #ff5555; border-radius:8px; padding:15px;">
+          <h5 style="color:#ff5555; margin-top:0; font-size: 1.05em;">⚙️ أداة SET Toolkit</h5>
+          <p style="color:#aaa; font-size:0.85em;">أداة مخصصة لعمل هجمات الهندسة الاجتماعية.</p>
+          <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+            <li>استنساخ المواقع (Site Cloner).</li>
+            <li>حملات Phishing.</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div style="margin-top:15px; background:rgba(80,250,123,0.05); border-left:3px solid #50fa7b; padding:10px;">
+        <strong style="color:#50fa7b; font-size:0.85em;">🛡️ الحماية:</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:0;">الوعي (Awareness) هو أهم حاجة، وعدم الضغط على أي لينكات مشبوهة.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SNIFFING & MITM -->
+  <div class="cyber-card" style="border-top:3px solid #8be9fd;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#8be9fd;">🌐 2) Sniffing & MITM</h3>
+    </div>
+    <div style="padding-top:15px;">
+      <strong style="color:#8be9fd;">🧠 يعني إيه Sniffing؟</strong>
+      <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">التقاط البيانات وهي ماشية في الشبكة. وليه نوعين:</p>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+        <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:10px;">
+          <strong style="color:#f1fa8c;">🔹 Passive:</strong> <span style="color:#aaa; font-size:0.85em;">بس بتراقب من غير تدخل.</span>
+        </div>
+        <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:10px;">
+          <strong style="color:#ff5555;">🔹 Active (MITM 🔥):</strong> <span style="color:#aaa; font-size:0.85em;">تدخل بين الضحية والراوتر.</span>
+        </div>
+      </div>
+
+      <strong style="color:#ffb86c;">💣 هجوم (Man-in-the-Middle):</strong>
+      <div style="background:#282a36; border:1px solid #44475a; border-radius:8px; padding:15px; margin-top:10px; font-family: monospace;">
+        <div style="color:#6272a4; margin-bottom:5px;"># خطوات تنفيذ هجوم MITM:</div>
+        <div style="color:#f8f8f2;">1. تفتح <span style="color:#8be9fd;">Wireshark</span> (لتحليل الترافيك).</div>
+        <div style="color:#f8f8f2;">2. تستخدم أداة زي <span style="color:#ffb86c;">Ettercap</span>.</div>
+        <div style="color:#f8f8f2;">3. تعمل <span style="color:#ff5555;">ARP Spoofing</span> (تسميم الـ ARP).</div>
+        <div style="color:#f8f8f2;">4. تبدأ Sniffing وتشوف الباسوردات والداتا 🔥.</div>
+      </div>
+
+      <div style="margin-top:15px; background:rgba(255,184,108,0.1); border-left:3px solid #ffb86c; padding:10px;">
+        <strong style="color:#ffb86c; font-size:0.85em;">❗ سؤال مهم: إزاي نشوف الترافيك لو الموقع HTTPS؟</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:0;">باستخدام هجمات زي <code>SSL Strip</code> أو <code>SSL Redirect</code> لفك التشفير.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIRELESS ATTACKS -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">📡 3) Wireless Attacks (الواي فاي)</h3>
+    </div>
+    <div style="padding-top:15px;">
+      
+      <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
+        <div style="flex:1; background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px; min-width:200px;">
+          <h5 style="color:#50fa7b; margin-top:0;">🔐 أنواع الحماية</h5>
+          <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+            <li><span style="color:#ff5555;">WEP:</span> ضعيف جداً (اتلغى).</li>
+            <li><span style="color:#f1fa8c;">WPA/WPA2:</span> المعيار الحالي.</li>
+            <li><span style="color:#50fa7b;">WPA3 🔥:</span> الأحدث والأقوى.</li>
+          </ul>
+        </div>
+        <div style="flex:1; background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px; min-width:200px;">
+          <h5 style="color:#ffb86c; margin-top:0;">💣 أهم الهجمات</h5>
+          <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+            <li><strong>Deauthentication:</strong> تبعت Packets تفصل الأجهزة عن الراوتر بقوة.</li>
+            <li><strong style="color:#ff5555;">Evil Twin 🔥:</strong> تعمل شبكة مزيفة بنفس اسم الأصلية وتخلي الناس تدخل عندك.</li>
+          </ul>
+        </div>
+      </div>
+
+      <strong style="color:#8be9fd;">🤝 الـ Handshake وكسر الباسورد:</strong>
+      <p style="color:#aaa; font-size:0.85em;">الـ Handshake هي "كلمة سر مشفرة" بتتبعت بين الجهاز والراوتر. الهجوم بيمشي كالتالي:</p>
+      <div style="background:#282a36; border:1px solid #44475a; border-radius:8px; padding:15px; font-family: monospace;">
+        <div style="color:#6272a4;"># 1. تفعيل وضع المراقبة (Monitor Mode)</div>
+        <div style="color:#f8f8f2; margin-bottom:10px;">airmon-ng start wlan0</div>
+        
+        <div style="color:#6272a4;"># 2. تحديد الشبكة (Target Network)</div>
+        <div style="color:#f8f8f2; margin-bottom:10px;">airodump-ng -w capture -c 6 --bssid TARGET wlan0mon</div>
+        
+        <div style="color:#6272a4;"># 3. فصل الناس مؤقتاً (Deauth) لإجبارهم يعملوا اتصل من جديد</div>
+        <div style="color:#f8f8f2; margin-bottom:10px;">aireplay-ng --deauth 0 -a TARGET wlan0mon</div>
+        
+        <div style="color:#6272a4;"># 4. بعد التقاط الـ Handshake، نكسره بـ ملف كلمات سر (Wordlist)</div>
+        <div style="color:#f8f8f2;"><span style="color:#50fa7b;">aircrack-ng</span> capture.cap -w rockyou.txt</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOS AND CLOUD -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:15px; margin-top:15px;">
     
-    <div class="goal-cards-grid" dir="rtl">
-      <div class="goal-card">
-        <div class="goal-icon">📧</div>
-        <h4>التصيد الاحتيالي (Phishing)</h4>
-        <p>إرسال رسائل مزيفة تبدو من مصدر موثوق لحث الضحية على إدخال بيانات الاعتماد.</p>
+    <!-- DoS -->
+    <div class="cyber-card" style="border-top:3px solid #ff5555; margin:0;">
+      <div class="card-header">
+        <h3 style="margin:0; color:#ff5555;">💣 4) DoS / DDoS</h3>
       </div>
-      <div class="goal-card">
-        <div class="goal-icon">🎯</div>
-        <h4>التصيد الموجه (Spear Phishing)</h4>
-        <p>هجوم مخصص لشخص أو قسم معين بُني على استطلاع مسبق للهدف (OSINT).</p>
+      <div style="padding-top:15px;">
+        <strong style="color:#ff5555;">🧠 الفكرة الأساسية:</strong>
+        <p style="color:#aaa; font-size:0.9em;">إرسال ترافيك ضخم أو طلبات وهمية عشان تخلي السيرفر ينهار وتوقع الخدمة.</p>
+        
+        <strong style="color:#ffb86c; display:block; margin-top:10px;">🔥 الفرق بينهم:</strong>
+        <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+          <li><strong>DoS:</strong> الهجوم جاي من جهاز واحد (سهل عمل بلوك ليه).</li>
+          <li><strong>DDoS:</strong> الهجوم جاي من آلاف الأجهزة (Botnet) في نفس الوقت.</li>
+        </ul>
       </div>
-      <div class="goal-card">
-        <div class="goal-icon">🐋</div>
-        <h4>صيد الحيتان (Whaling)</h4>
-        <p>يستهدف كبار الشخصيات والمسؤولين التنفيذيين (C-Level Executives) لصلاحياتهم العالية.</p>
+    </div>
+
+    <!-- CLOUD -->
+    <div class="cyber-card" style="border-top:3px solid #bd93f9; margin:0;">
+      <div class="card-header">
+        <h3 style="margin:0; color:#bd93f9;">☁️ 5) Cloud Computing</h3>
       </div>
-      <div class="goal-card">
-        <div class="goal-icon">👥</div>
-        <h4>الانتحال (Pretexting)</h4>
-        <p>تقمص شخصية (فني IT أو بنك) لإقناع الضحية بتقديم معلومات حساسة هاتفياً أو حضورياً.</p>
-      </div>
-      <div class="goal-card">
-        <div class="goal-icon">🚶</div>
-        <h4>التتبع (Tailgating / Piggybacking)</h4>
-        <p>دخول المهاجم لمبنى مؤمن عن طريق تتبع موظف مصرح له عن قرب (سواء برضاه أو غفلة منه).</p>
+      <div style="padding-top:15px;">
+        <strong style="color:#bd93f9;">🧠 التعريف:</strong>
+        <p style="color:#aaa; font-size:0.9em;">خدمات وسيرفرات وتخزين على الإنترنت بدل ما تكون على أجهزة فعلية عندك (زي AWS و Google Drive).</p>
+        
+        <strong style="color:#8be9fd; display:block; margin-top:10px;">🧱 أنواع الـ Cloud:</strong>
+        <p style="color:#aaa; font-size:0.85em;">Public (متاح للجميع) - Private (مقفول لشركة) - Hybrid (مزيج).</p>
+
+        <strong style="color:#50fa7b; display:block; margin-top:10px;">⚙️ نماذج الخدمة (Service Models):</strong>
+        <ul style="color:#aaa; font-size:0.85em; padding-right: 20px; margin-bottom:0;">
+          <li><strong>IaaS:</strong> بتأجر سيرفرات فاضية وإنت تبني.</li>
+          <li><strong>PaaS:</strong> منصة جاهزة للمطورين.</li>
+          <li><strong>SaaS:</strong> برنامج جاهز للمستخدم (زي الـ Gmail).</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🧰</span>
-      <h3>مجموعة أدوات المهندس الاجتماعي (SET)</h3>
+  <!-- SUMMARY TABLE -->
+  <div class="cyber-card" style="border-top:3px solid #f1fa8c; margin-top:20px;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#f1fa8c;">💡 الخلاصة القوية 🔥</h3>
     </div>
-    <div class="cyber-card" style="--tool-color: #ff4757;">
-      <p>أداة جبارة (Social-Engineer Toolkit) مفتوحة المصدر.</p>
-      <ul style="color:#e2e8f0; line-height: 1.8;">
-        <li><strong style="color:#ff4757">Site Cloner:</strong> نسخ صفحة حقيقية متطابقة بالكامل (مثل صفحة لوجن فيسبوك) لسرقة الباسوردات.</li>
-        <li><strong style="color:#ff4757">Credential Harvester:</strong> استقبال وتسجيل البيانات بمجرد إدخالها في الموقع المستنسخ.</li>
-        <li><strong style="color:#ff4757">Infectious Media (USB):</strong> تحضير أقراص USB محملة ببرمجيات خبيثة ذاتية التشغيل كطُعم للإيقاع بالموظفين.</li>
-      </ul>
-    </div>
+    <table class="meth-table" style="margin-top:15px;">
+      <thead>
+        <tr>
+          <th>المجال (Topic)</th>
+          <th>الفكرة الأساسية للهاكر (Concept)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Social Engineering</strong></td><td style="color:#ffb86c;">خداع الإنسان نفسه للوصول للسيستم.</td></tr>
+        <tr><td><strong>Sniffing & MITM</strong></td><td style="color:#8be9fd;">اعتراض الترافيك وسرقة الباسوردات من الشبكة.</td></tr>
+        <tr><td><strong>Wireless Attacks</strong></td><td style="color:#50fa7b;">كسر تشفير الواي فاي (Handshakes) و هجمات Evil Twin.</td></tr>
+        <tr><td><strong>DoS / DDoS</strong></td><td style="color:#ff5555;">تدمير السيرفر وإيقاف الخدمة.</td></tr>
+        <tr><td><strong>Cloud Computing</strong></td><td style="color:#bd93f9;">الهجوم على الخدمات السحابية (Misconfigurations).</td></tr>
+      </tbody>
+    </table>
   </div>
 
 </div>
@@ -7736,7 +7861,7 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
         mermaid.initialize({ startOnLoad: false, theme: 'dark' });
     }
   </script>
-  <script src="js/methodology.js?v=1781955129"></script>
-  <script src="js/quiz_engine.js?v=1781955129"></script>
+  <script src="js/methodology.js?v=1781955461"></script>
+  <script src="js/quiz_engine.js?v=1781955461"></script>
 </body>
 </html>
