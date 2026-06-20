@@ -1,0 +1,47 @@
+{
+  "id": "xss",
+  "title": "Cross-Site Scripting (XSS)",
+  "icon": "💉",
+  "category": "Web Vulnerabilities",
+  "theory": {
+    "definition": "ثغرة تسمح للمهاجم بحقن أكواد JavaScript خبيثة داخل صفحات ويب يثق بها المستخدمون الآخرون.",
+    "impact": [
+      "سرقة الجلسات (Session Hijacking)",
+      "تغيير محتوى الصفحة (Defacement)",
+      "إعادة التوجيه لمواقع خبيثة",
+      "Keylogging"
+    ]
+  },
+  "types": [
+    {
+      "name": "Reflected XSS",
+      "desc": "البايلود ينعكس في نفس الاستجابة (مثل رابط بحث). يتطلب تفاعل الضحية.",
+      "severity": "High"
+    },
+    {
+      "name": "Stored XSS",
+      "desc": "البايلود يُحفظ في قاعدة بيانات الموقع (مثل تعليق). يضرب أي ضحية تفتح الصفحة.",
+      "severity": "Critical"
+    },
+    {
+      "name": "DOM-Based XSS",
+      "desc": "التنفيذ يحدث بالكامل في متصفح الضحية بسبب تعامل الـ JavaScript بشكل غير آمن مع الـ DOM.",
+      "severity": "High"
+    }
+  ],
+  "detection": {
+    "manual": [
+      "إدخال رموز مميزة مثل `'\"><` في أي input أو URL parameter.",
+      "مراقبة استجابة السيرفر لمعرفة هل الرموز انعكست بدون تشفير (Sanitization)."
+    ],
+    "automation": [
+      "Burp Suite Scanner",
+      "XSStrike",
+      "Nuclei (XSS Templates)"
+    ]
+  },
+  "interactive_components": [
+    "payload_generator",
+    "xss_lab_simulator"
+  ]
+}

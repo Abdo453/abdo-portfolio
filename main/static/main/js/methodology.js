@@ -60,7 +60,7 @@
       }
 
       // Lazy Loading logic
-      if (!activeContent && (phaseId.startsWith('pt_mod') || phaseId.startsWith('assess') || phaseId === 'sys-hack' || phaseId === 'lab-metasploitable' || phaseId === 'capstone-mid')) {
+      if (!activeContent && (phaseId.startsWith('mod_v2') || phaseId.startsWith('pt_mod') || phaseId.startsWith('assess') || phaseId === 'sys-hack' || phaseId === 'lab-metasploitable' || phaseId === 'capstone-mid')) {
         
         var mainViewer = document.querySelector('.meth-container');
         var loadingEl = document.getElementById('lazy-loading-div');
@@ -98,6 +98,7 @@
         if (phaseId === 'sys-hack') filename = 'system_hacking.html';
         if (phaseId === 'lab-metasploitable') filename = 'lab_metasploitable.html';
         if (phaseId === 'capstone-mid') filename = 'capstone_mid.html';
+        if (phaseId.startsWith('mod_v2')) filename = phaseId + '.html';
         
         const basePath = isLocal ? '/static/main/modules/' : 'modules/';
         

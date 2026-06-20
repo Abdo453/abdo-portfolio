@@ -2,6 +2,10 @@ import re
 import os
 import shutil
 import time
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__)))
+from build_v2 import build_vulnerabilities
 
 def resolve_includes(html_content, base_dir):
     pattern = re.compile(r"{%\s*include\s*'([^']+)'\s*%}")
@@ -113,7 +117,10 @@ def sync_main_to_build():
                 dst_path = os.path.join(build_modules_dir, item)
                 shutil.copy2(src_path, dst_path)
 
-    print("Synced main to build successfully with dynamic cache busters and quiz JS!")
+    # V2 Architecture Data-Driven Build
+    build_vulnerabilities()
+    
+    print("Synced main to build successfully with dynamic cache busters, quiz JS, and V2 Architecture!")
 
 if __name__ == "__main__":
     sync_main_to_build()
