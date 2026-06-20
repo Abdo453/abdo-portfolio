@@ -539,6 +539,7 @@
       
       if (!q) {
         items.forEach(i => i.style.display = 'block');
+        document.querySelectorAll('.sidebar-category').forEach(cat => cat.style.display = 'block');
         document.getElementById('searchNoResults').style.display = 'none';
         return;
       }
@@ -598,6 +599,17 @@
           }
         });
       }
+      
+      // Hide empty categories
+      document.querySelectorAll('.sidebar-category').forEach(cat => {
+        const itemsList = cat.querySelectorAll('.meth-item');
+        let hasVisible = false;
+        itemsList.forEach(item => {
+          if (item.style.display === 'block') hasVisible = true;
+        });
+        cat.style.display = hasVisible ? 'block' : 'none';
+      });
+
       document.getElementById('searchNoResults').style.display = visibleCount === 0 ? 'block' : 'none';
     }
 
