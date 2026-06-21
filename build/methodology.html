@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=1782044516">
-  <link rel="stylesheet" href="css/methodology.css?v=1782044516">
+  <link rel="stylesheet" href="css/style.css?v=1782044993">
+  <link rel="stylesheet" href="css/methodology.css?v=1782044993">
 
   
 
@@ -247,6 +247,23 @@
         </button>
       </div>
 
+      <!-- ═══════ REDESIGN V2: Quick Reference Sticky Bar ═══════ -->
+      <div class="rd-quickref" id="rdQuickRef">
+        <div class="rd-quickref-toggle" onclick="toggleQuickRef()">
+          <span>📌 Quick Reference — Essential Commands</span>
+          <span id="rdQrArrow">▲</span>
+        </div>
+        <div class="rd-quickref-cmds">
+          <div class="rd-qr-item"><code>subfinder -d target.com -all</code><button class="rd-qr-copy" onclick="copyQR(this,'subfinder -d target.com -all')">📋</button></div>
+          <div class="rd-qr-item"><code>httpx -l subs.txt -sc -td</code><button class="rd-qr-copy" onclick="copyQR(this,'httpx -l subs.txt -sc -td')">📋</button></div>
+          <div class="rd-qr-item"><code>naabu -l live.txt -top-ports 1000</code><button class="rd-qr-copy" onclick="copyQR(this,'naabu -l live.txt -top-ports 1000')">📋</button></div>
+          <div class="rd-qr-item"><code>ffuf -u URL/FUZZ -w wordlist.txt</code><button class="rd-qr-copy" onclick="copyQR(this,'ffuf -u URL/FUZZ -w wordlist.txt')">📋</button></div>
+          <div class="rd-qr-item"><code>nuclei -l targets.txt -t cves/</code><button class="rd-qr-copy" onclick="copyQR(this,'nuclei -l targets.txt -t cves/')">📋</button></div>
+          <div class="rd-qr-item"><code>katana -u target.com -d 3</code><button class="rd-qr-copy" onclick="copyQR(this,'katana -u target.com -d 3')">📋</button></div>
+          <div class="rd-qr-item"><code>gf xss | httpx -silent</code><button class="rd-qr-copy" onclick="copyQR(this,'gf xss | httpx -silent')">📋</button></div>
+        </div>
+      </div>
+
   </div><!-- end rd-floating-sections -->
 
   <!-- Quick Jump Modal (Ctrl+K) -->
@@ -267,22 +284,23 @@
     </div>
   </div>
 
+  <!-- Mobile sidebar backdrop -->
+  <div class="meth-sidebar-overlay" id="methSidebarOverlay" onclick="toggleMobileSidebar()" aria-hidden="true"></div>
+
   <!-- Top Navbar -->
   <header class="meth-header">
-    <div style="display: flex; align-items: center; gap: 15px;">
-      <button class="menu-toggle-btn" onclick="toggleMobileSidebar()">☰ Menu</button>
-      
+    <div class="meth-header-start">
+      <button class="menu-toggle-btn" onclick="toggleMobileSidebar()" aria-label="Open menu">☰</button>
+      <div class="meth-logo">// <span class="logo-main">OFFENSIVE SECURITY</span><span class="logo-sub"> PLATFORM</span></div>
     </div>
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <button class="theme-toggle-btn" id="focusModeBtn" onclick="toggleFocusMode()" aria-label="Toggle Focus Mode" style="font-size: 1rem; width: auto; padding: 0 10px; border-radius: 4px;">📖 Focus</button>
-      <button onclick="openQuickJump()" style="background: rgba(0,229,255,0.05); color: var(--neon-cyan); border: 1px solid rgba(0,229,255,0.2); padding: 7px 14px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='rgba(0,229,255,0.12)'" onmouseout="this.style.background='rgba(0,229,255,0.05)'">
-        🔍 <span style="opacity:0.6; font-size:0.8rem;">Ctrl+K</span>
+    <div class="meth-header-actions">
+      <button class="theme-toggle-btn header-extra-btn" id="focusModeBtn" onclick="toggleFocusMode()" aria-label="Focus mode">📖</button>
+      <button class="header-search-btn" onclick="openQuickJump()" aria-label="Search phases">
+        <span aria-hidden="true">🔍</span><span class="header-kbd-hint">Ctrl+K</span>
       </button>
-      <button class="theme-toggle-btn" id="batterySaverIcon" onclick="toggleBatterySaver()" aria-label="Toggle Battery Saver">⚡</button>
-      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Theme">🌙</button>
-      <a href="index.html" class="back-btn">
-        <span>⬅</span> Back to Terminal OS
-      </a>
+      <button class="theme-toggle-btn header-extra-btn" id="batterySaverIcon" onclick="toggleBatterySaver()" aria-label="Battery saver">⚡</button>
+      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+      <a href="index.html" class="back-btn"><span aria-hidden="true">⬅</span><span class="back-btn-text">Back</span></a>
     </div>
   </header>
 
@@ -838,6 +856,64 @@
 
     <!-- Right Viewer: Dynamic Content Panes -->
     <div class="meth-viewer">
+
+      <!-- ═══════ REDESIGN V2: Hero Stats + Pipeline ═══════ -->
+      <div id="rd-hero-section">
+        <div class="hero-stats-row">
+          <div class="hero-stat-card">
+            <div class="hero-stat-icon">🌍</div>
+            <div class="hero-stat-value" data-target="15000">0</div>
+            <div class="hero-stat-label">SUBDOMAINS</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-icon">🔗</div>
+            <div class="hero-stat-value" data-target="50000">0</div>
+            <div class="hero-stat-label">ENDPOINTS</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-icon">⚡</div>
+            <div class="hero-stat-value" data-target="0">4-6 hrs</div>
+            <div class="hero-stat-label">AVG. TIME</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-icon">💰</div>
+            <div class="hero-stat-value" data-target="12500">$0</div>
+            <div class="hero-stat-label">TOTAL BOUNTY</div>
+          </div>
+        </div>
+        <div class="pipeline-flowchart" id="rd-pipeline">
+          <div class="pipe-node" onclick="clickPipelineNode('p_matrix')" title="Scope & Matrix">
+            <div class="pipe-node-icon">🔍</div>
+            <div class="pipe-node-label">Scope</div>
+            <div class="pipe-node-sub">Define targets</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-node" onclick="clickPipelineNode('p0')" title="Subdomain Enumeration">
+            <div class="pipe-node-icon">🌐</div>
+            <div class="pipe-node-label">Recon</div>
+            <div class="pipe-node-sub">Subdomains</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-node" onclick="clickPipelineNode('p6')" title="Directory Discovery">
+            <div class="pipe-node-icon">📂</div>
+            <div class="pipe-node-label">Discovery</div>
+            <div class="pipe-node-sub">Dirs &amp; JS</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-node" onclick="clickPipelineNode('p7')" title="Vulnerability Testing">
+            <div class="pipe-node-icon">💉</div>
+            <div class="pipe-node-label">Exploit</div>
+            <div class="pipe-node-sub">XSS, SQLi</div>
+          </div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-node" onclick="clickPipelineNode('p_writeups')" title="Reporting">
+            <div class="pipe-node-icon">📋</div>
+            <div class="pipe-node-label">Report</div>
+            <div class="pipe-node-sub">Write &amp; Submit</div>
+          </div>
+        </div>
+      </div>
+
       
 <!-- =======================================================
      CEH MODULE 1: INTRODUCTION TO ETHICAL HACKING
@@ -8333,10 +8409,10 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
         mermaid.initialize({ startOnLoad: false, theme: 'dark' });
     }
   </script>
-  <script src="js/components.js?v=1782044516"></script>
-  <script src="js/methodology.js?v=1782044516"></script>
-  <script src="js/quiz_engine.js?v=1782044516"></script>
-  <script src="js/payload_generator.js?v=1782044516"></script>
+  <script src="js/components.js?v=1782044993"></script>
+  <script src="js/methodology.js?v=1782044993"></script>
+  <script src="js/quiz_engine.js?v=1782044993"></script>
+  <script src="js/payload_generator.js?v=1782044993"></script>
   <button id="mobileFab" class="mobile-fab" onclick="openQuickJump()">
     🔍
   </button>

@@ -3835,3 +3835,435 @@ body.focus-mode .cyber-card {
 
 
 .hunt-dashboard { display: none !important; }
+
+/* ============================================================
+   MOBILE V3 — Full responsive overhaul for phones
+============================================================ */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.meth-header-start,
+.meth-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.meth-header-start {
+  flex: 1;
+  min-width: 0;
+}
+
+.logo-main {
+  color: var(--accent-primary);
+}
+
+.header-search-btn {
+  background: rgba(0, 229, 255, 0.05);
+  color: var(--neon-cyan);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  padding: 7px 12px;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease;
+}
+
+.header-search-btn:hover {
+  background: rgba(0, 229, 255, 0.12);
+}
+
+.header-kbd-hint {
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+
+.meth-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 999;
+}
+
+.meth-sidebar-overlay.active {
+  display: block;
+}
+
+body.sidebar-open {
+  overflow: hidden;
+}
+
+/* Quick Reference Sticky Bar */
+.rd-quickref {
+  position: sticky;
+  bottom: 0;
+  background: rgba(3, 3, 8, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(0, 229, 255, 0.15);
+  padding: 10px 16px;
+  z-index: 50;
+  margin-top: 20px;
+}
+
+.rd-quickref-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.78rem;
+  color: rgba(0, 229, 255, 0.6);
+  padding-bottom: 6px;
+  gap: 10px;
+}
+
+.rd-quickref-toggle span:first-child {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.4;
+}
+
+.rd-quickref-cmds {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 6px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.rd-quickref.open .rd-quickref-cmds {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.rd-qr-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  color: var(--neon-green);
+}
+
+.rd-qr-item code {
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.rd-qr-copy {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  padding: 4px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.rd-qr-copy:hover {
+  background: rgba(0, 229, 255, 0.1);
+  color: var(--neon-cyan);
+}
+
+.rd-qr-copy.copied {
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+}
+
+body.light-theme .rd-quickref {
+  background: rgba(255, 255, 255, 0.95);
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 900px) {
+  .meth-header {
+    height: auto;
+    min-height: 56px;
+    padding: 8px 12px;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .meth-header-start {
+    gap: 8px;
+  }
+
+  .meth-header-actions {
+    flex-shrink: 0;
+    gap: 6px;
+  }
+
+  .meth-logo {
+    font-size: 0.72rem;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: min(42vw, 160px);
+  }
+
+  .logo-sub {
+    display: none;
+  }
+
+  .header-extra-btn,
+  .header-kbd-hint {
+    display: none !important;
+  }
+
+  .header-search-btn {
+    padding: 7px 10px;
+    min-width: 40px;
+    justify-content: center;
+  }
+
+  .back-btn {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  .back-btn-text {
+    display: none;
+  }
+
+  .menu-toggle-btn {
+    padding: 7px 10px;
+    font-size: 1rem;
+  }
+
+  .meth-container {
+    height: auto !important;
+    min-height: calc(100vh - 56px);
+    overflow: visible !important;
+  }
+
+  .meth-viewer {
+    overflow-y: visible !important;
+    height: auto !important;
+    min-height: calc(100vh - 56px);
+    padding-bottom: 72px !important;
+  }
+
+  .meth-sidebar {
+    top: 0;
+    padding-top: 64px;
+    width: min(88vw, 320px);
+    left: calc(-1 * min(88vw, 320px) - 20px);
+  }
+
+  .meth-sidebar.active {
+    left: 0;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.85);
+  }
+
+  .pipeline-flowchart {
+    flex-direction: column;
+    align-items: stretch;
+    overflow-x: visible;
+    padding: 14px 12px;
+    gap: 4px;
+  }
+
+  .pipe-node {
+    min-width: unset !important;
+    width: 100%;
+  }
+
+  .pipe-arrow {
+    transform: rotate(90deg);
+    padding: 2px 0;
+    text-align: center;
+    align-self: center;
+  }
+
+  .flow-visualization {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    overflow-x: visible !important;
+    white-space: normal !important;
+    padding: 16px 12px;
+    gap: 6px;
+  }
+
+  .flow-node {
+    min-width: unset !important;
+    width: 100%;
+    white-space: normal;
+  }
+
+  .flow-arrow {
+    transform: rotate(90deg);
+    text-align: center;
+    align-self: center;
+  }
+
+  .phase-module-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .phase-module-title {
+    font-size: 1.45rem !important;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+
+  .phase-breadcrumb {
+    font-size: 0.68rem;
+    gap: 4px;
+  }
+
+  .phase-breadcrumb .bc-step-count {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .rd-quickref-cmds {
+    grid-template-columns: 1fr;
+  }
+
+  .rd-quickref.open .rd-quickref-cmds {
+    max-height: 50vh;
+  }
+
+  .rd-qr-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rd-qr-item code {
+    font-size: 0.72rem;
+  }
+
+  .rd-next-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+
+  .tools-compare-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tool-bar-wrap {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .cyber-card {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .card-header h3 {
+    word-break: break-word;
+    line-height: 1.35;
+  }
+
+  .hero-title {
+    font-size: 1.55rem !important;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+
+  .hero-tagline {
+    font-size: 0.95rem !important;
+    line-height: 1.55;
+  }
+
+  .dt-branches {
+    flex-direction: column;
+  }
+
+  .mobile-fab {
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .meth-header {
+    padding: 8px 10px;
+  }
+
+  .meth-logo {
+    max-width: 36vw;
+    font-size: 0.65rem;
+  }
+
+  .hero-stats-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .hero-stat-card {
+    padding: 12px 8px;
+  }
+
+  .hero-stat-value {
+    font-size: 1.15rem;
+  }
+
+  .hero-stat-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-stat-icon {
+    font-size: 1.25rem;
+  }
+
+  .pipe-node-label {
+    font-size: 0.82rem;
+  }
+
+  .pipe-node-sub {
+    font-size: 0.62rem;
+  }
+
+  .rd-quickref {
+    padding: 8px 10px;
+  }
+
+  .rd-quickref-toggle {
+    font-size: 0.72rem;
+  }
+
+  .shunt-box {
+    width: calc(100vw - 24px);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .shunt-scope-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .confirm-dialog {
+    width: calc(100vw - 32px);
+    max-width: 360px;
+  }
+}

@@ -1,7 +1,14 @@
-    // Toggle Mobile Sidebar
+    function setMobileSidebarOpen(isOpen) {
+      const sidebar = document.querySelector('.meth-sidebar');
+      const overlay = document.getElementById('methSidebarOverlay');
+      if (sidebar) sidebar.classList.toggle('active', isOpen);
+      if (overlay) overlay.classList.toggle('active', isOpen);
+      document.body.classList.toggle('sidebar-open', isOpen);
+    }
+
     function toggleMobileSidebar() {
       const sidebar = document.querySelector('.meth-sidebar');
-      sidebar.classList.toggle('active');
+      setMobileSidebarOpen(!(sidebar && sidebar.classList.contains('active')));
     }
 
     // Toggle sidebar categories
@@ -156,9 +163,8 @@
       if (emptyState) emptyState.style.display = 'none';
 
       // Close mobile sidebar if open
-      const sidebar = document.querySelector('.meth-sidebar');
-      if (sidebar && sidebar.classList.contains('active')) {
-        sidebar.classList.remove('active');
+      if (window.innerWidth <= 900) {
+        setMobileSidebarOpen(false);
       }
 
       // Track visited phases (progress tracker)
@@ -868,13 +874,14 @@
       });
     }
 
-    // Close sidebar when clicking outside on mobile
     document.addEventListener('click', function(event) {
       const sidebar = document.querySelector('.meth-sidebar');
       const toggleBtn = document.querySelector('.menu-toggle-btn');
+      const overlay = document.getElementById('methSidebarOverlay');
       if (window.innerWidth <= 900 && sidebar && sidebar.classList.contains('active')) {
-        if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
-          sidebar.classList.remove('active');
+        if (overlay && overlay.contains(event.target)) return;
+        if (!sidebar.contains(event.target) && toggleBtn && !toggleBtn.contains(event.target)) {
+          setMobileSidebarOpen(false);
         }
       }
     });
@@ -1356,8 +1363,22 @@
       el.classList.toggle('open');
     }
 
+    // --- Quick Reference Toggle ---
+    function toggleQuickRef() {
+      var qr = document.getElementById('rdQuickRef');
+      var arrow = document.getElementById('rdQrArrow');
+      if (!qr) return;
+      qr.classList.toggle('open');
+      if (arrow) arrow.textContent = qr.classList.contains('open') ? '▼' : '▲';
+    }
 
-
+    function copyQR(btn, text) {
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        setTimeout(function() { btn.textContent = '📋'; btn.classList.remove('copied'); }, 1500);
+      });
+    }
     // --- Show/Hide redesign sections based on active phase ---
     var RD_SECTIONS = ['rd-tools-grid','rd-case-study','rd-checklist','rd-mistakes','rd-edge-cases','rd-next-cta'];
     var originalOpenMethPhase = typeof openMethPhase === 'function' ? openMethPhase : null;
@@ -1395,6 +1416,24 @@
 
     // Init redesign features on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', function() {
+      var floatingSections = document.getElementById('rd-floating-sections');
+      var viewer = document.querySelector('.meth-viewer');
+
+      if (viewer && floatingSections) {
+        var firstPhase = viewer.querySelector('.meth-content-view');
+        while (floatingSections.firstChild) {
+          if (firstPhase) {
+            viewer.insertBefore(floatingSections.firstChild, firstPhase);
+          } else {
+            viewer.appendChild(floatingSections.firstChild);
+          }
+        }
+        floatingSections.remove();
+
+        var quickRef = document.getElementById('rdQuickRef');
+        if (quickRef) viewer.appendChild(quickRef);
+      }
+
       // Animate stat counters
       setTimeout(animateCounters, 400);
       // Init checklist
