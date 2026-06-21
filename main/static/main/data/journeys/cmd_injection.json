@@ -1,0 +1,68 @@
+{
+    "id": "cmd_injection_journey_v3",
+    "title": "Command Injection Mastery Journey",
+    "description": "Learn to find, exploit, and bypass filters for OS Command Injection vulnerabilities.",
+    "missions": [
+        {
+            "id": "mission_1_basic",
+            "title": "The Classic Mistake",
+            "scenario": {
+                "company": "Acme Corp",
+                "target": "Network Diagnostic Utility",
+                "objective": "Read the flag from /home/user/flag.txt",
+                "environment": {
+                    "os": "Linux",
+                    "web": "Apache",
+                    "lang": "PHP"
+                },
+                "initialFS": {
+                    "/": { "type": "dir", "contents": ["home", "var", "etc"] },
+                    "/home": { "type": "dir", "contents": ["user"] },
+                    "/home/user": { "type": "dir", "contents": ["flag.txt"] },
+                    "/home/user/flag.txt": { "type": "file", "content": "FLAG{cmd_inj_b4s1c_m4st3r}" },
+                    "/etc": { "type": "dir", "contents": ["passwd"] },
+                    "/etc/passwd": { "type": "file", "content": "root:x:0:0:root:/root:/bin/bash" }
+                },
+                "completionCondition": "history.some(h => h.output && h.output.includes('FLAG{cmd_inj_b4s1c_m4st3r}'))"
+            },
+            "hints": [
+                { "cost": 5, "text": "The input is passed directly to a ping command. Try using a semicolon (;) to add your own command." },
+                { "cost": 10, "text": "Try the payload: 8.8.8.8; cat /home/user/flag.txt" }
+            ],
+            "rewards": { "xp": 200, "coins": 20 }
+        },
+        {
+            "id": "mission_2_spaces",
+            "title": "Bypassing the WAF",
+            "scenario": {
+                "company": "Acme Corp",
+                "target": "Secure Network Diagnostic Utility V2",
+                "objective": "Read the flag from /home/user/flag2.txt without using spaces.",
+                "environment": {
+                    "os": "Linux",
+                    "web": "Apache",
+                    "lang": "PHP",
+                    "waf": "ModSecurity (Space Filter)"
+                },
+                "initialFS": {
+                    "/": { "type": "dir", "contents": ["home", "var"] },
+                    "/home": { "type": "dir", "contents": ["user"] },
+                    "/home/user": { "type": "dir", "contents": ["flag2.txt"] },
+                    "/home/user/flag2.txt": { "type": "file", "content": "FLAG{w4f_byp4ss_m4st3r}" }
+                },
+                "filters": {
+                    "blacklist": [" "],
+                    "feedback": {
+                        " ": "WAF BLOCKED: Space characters are strictly forbidden!"
+                    }
+                },
+                "completionCondition": "history.some(h => h.output && h.output.includes('FLAG{w4f_byp4ss_m4st3r}'))"
+            },
+            "hints": [
+                { "cost": 10, "text": "Linux shell variable $IFS evaluates to a space. Try using it instead of a real space." },
+                { "cost": 15, "text": "Try the payload: 8.8.8.8;cat$IFS/home/user/flag2.txt" }
+            ],
+            "rewards": { "xp": 300, "coins": 30 }
+        }
+    ]
+}

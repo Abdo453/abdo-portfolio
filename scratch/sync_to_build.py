@@ -90,6 +90,14 @@ def sync_main_to_build():
     if os.path.exists(pg_src):
         shutil.copy2(pg_src, pg_dst)
 
+    # Sync v3_engine
+    v3_src = r"d:\abdo_portfolio\main\static\main\js\v3_engine"
+    v3_dst = r"d:\abdo_portfolio\build\js\v3_engine"
+    if os.path.exists(v3_dst):
+        shutil.rmtree(v3_dst)
+    if os.path.exists(v3_src):
+        shutil.copytree(v3_src, v3_dst)
+
     # Sync Data Directory
     data_src = r"d:\abdo_portfolio\main\static\main\data"
     data_dst = r"d:\abdo_portfolio\build\data"
