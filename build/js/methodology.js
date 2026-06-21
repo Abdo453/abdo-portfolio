@@ -4,6 +4,7 @@
       if (sidebar) sidebar.classList.toggle('active', isOpen);
       if (overlay) overlay.classList.toggle('active', isOpen);
       document.body.classList.toggle('sidebar-open', isOpen);
+      document.documentElement.classList.toggle('sidebar-open', isOpen);
     }
 
     function toggleMobileSidebar() {
