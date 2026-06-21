@@ -52,10 +52,12 @@ def sync_main_to_build():
     html = re.sub(r"{%\s*static\s*'main/(js/components\.js)'\s*%}", fr"\1?v={timestamp}", html)
     html = re.sub(r"{%\s*static\s*'main/(js/quiz_engine\.js)'\s*%}", fr"\1?v={timestamp}", html)
     html = re.sub(r"{%\s*static\s*'main/(js/quiz_db\.js)'\s*%}", fr"\1?v={timestamp}", html)
+    html = re.sub(r"{%\s*static\s*'main/(js/payload_generator\.js)'\s*%}", fr"\1?v={timestamp}", html)
     
     # Update cache buster for quiz engine JS if included in HTML with normal src
     html = re.sub(r'src="js/quiz_engine\.js(\?v=\d+)?"', fr'src="js/quiz_engine.js?v={timestamp}"', html)
     html = re.sub(r'src="js/quiz_db\.js(\?v=\d+)?"', fr'src="js/quiz_db.js?v={timestamp}"', html)
+    html = re.sub(r'src="js/payload_generator\.js(\?v=\d+)?"', fr'src="js/payload_generator.js?v={timestamp}"', html)
 
     html = html.replace('{% templatetag openvariable %}', '{{')
     html = html.replace('{% templatetag closevariable %}', '}}')
@@ -76,6 +78,8 @@ def sync_main_to_build():
     quiz_db_dst = r"d:\abdo_portfolio\build\js\quiz_db.js"
     components_src = r"d:\abdo_portfolio\main\static\main\js\components.js"
     components_dst = r"d:\abdo_portfolio\build\js\components.js"
+    pg_src = r"d:\abdo_portfolio\main\static\main\js\payload_generator.js"
+    pg_dst = r"d:\abdo_portfolio\build\js\payload_generator.js"
     
     if os.path.exists(quiz_engine_src):
         shutil.copy2(quiz_engine_src, quiz_engine_dst)
@@ -83,6 +87,8 @@ def sync_main_to_build():
         shutil.copy2(quiz_db_src, quiz_db_dst)
     if os.path.exists(components_src):
         shutil.copy2(components_src, components_dst)
+    if os.path.exists(pg_src):
+        shutil.copy2(pg_src, pg_dst)
 
     # Sync Data Directory
     data_src = r"d:\abdo_portfolio\main\static\main\data"
