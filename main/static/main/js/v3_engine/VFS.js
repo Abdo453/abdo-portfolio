@@ -62,4 +62,54 @@ export class VFS {
         if (node.type === 'dir') return `cat: ${path}: Is a directory`;
         return node.content || '';
     }
+
+    find(startPath) {
+        const target = this.resolvePath(startPath || '.');
+        const node = this.getNode(target);
+        if (!node) return `find: '${startPath || target}': No such file or directory`;
+
+        let results = [];
+        
+        const traverse = (currentPath) => {
+            results.push(currentPath);
+            const currentNode = this.fs[currentPath];
+            if (currentNode && currentNode.type === 'dir' && currentNode.contents) {
+                for (let child of currentNode.contents) {
+                    let childPath = currentPath === '/' ? '/' + child : currentPath + '/' + child;
+                    traverse(childPath);
+                }
+            }
+        };
+
+        traverse(target);
+        return results.join('\n');
+    }
+
+    grep(pattern, filePattern) {
+        if (!pattern) return 'grep: missing pattern';
+        
+        if (!filePattern) return 'grep: missing file operand';
+
+        const targetFile = this.resolvePath(filePattern);
+        const node = this.getNode(targetFile);
+
+        if (!node) return `grep: ${filePattern}: No such file or directory`;
+        if (node.type === 'dir') return `grep: ${filePattern}: Is a directory`;
+
+        const content = node.content || '';
+        const lines = content.split('\n');
+        const matchedLines = [];
+
+        for (let line of lines) {
+            if (line.includes(pattern)) {
+                matchedLines.push(line);
+            }
+        }
+
+        return matchedLines.join('\n');
+    }
+
+    echo(args) {
+        return args.join(' ');
+    }
 }

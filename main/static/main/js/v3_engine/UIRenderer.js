@@ -130,8 +130,92 @@ export class UIRenderer {
         }
     }
 
+    clearTerminal() {
+        if (this.els.termOutput) this.els.termOutput.innerHTML = '';
+    }
+
+    showTimeline(historyArr, callback) {
+        // Find the mission object from manager
+        const missionData = this.manager.journey.missions[this.manager.currentMissionIndex];
+        
+        // Hide terminal, show dashboard overlay
+        const dashboard = document.getElementById('v3-dashboard-overlay');
+        if (!dashboard) {
+            // Fallback if not updated in HTML yet
+            alert("Mission Complete! Moving to next...");
+            if(callback) callback();
+            return;
+        }
+        
+        // Compute Analytics
+        const totalAttempts = historyArr.length;
+        const failed = historyArr.filter(h => !h.success).length;
+        const successLog = historyArr.filter(h => h.success);
+        const finalPayload = successLog.length > 0 ? successLog[successLog.length - 1].input : "N/A";
+        
+        const timeTakenMs = Date.now() - this.manager.startTime;
+        const timeTakenMins = Math.max(1, Math.round(timeTakenMs / 60000));
+
+        // Build HTML
+        let html = `
+            <div class="dashboard-content">
+                <h2>Mission Accomplished: ${missionData.title}</h2>
+                
+                <div class="dash-section stats-grid">
+                    <div class="stat-box"><h4>Attempts</h4><p>${totalAttempts}</p></div>
+                    <div class="stat-box"><h4>Failed</h4><p>${failed}</p></div>
+                    <div class="stat-box"><h4>Time</h4><p>${timeTakenMins} min</p></div>
+                    <div class="stat-box highlight"><h4>Winning Payload</h4><code>${finalPayload}</code></div>
+                </div>
+                
+                <div class="dash-section">
+                    <h3>Replay Timeline</h3>
+                    <div class="timeline">
+        `;
+        
+        historyArr.forEach((h, index) => {
+            let icon = h.success ? '🟢' : '🔴';
+            let label = h.success ? 'Executed' : 'Blocked';
+            html += `
+                <div class="timeline-item">
+                    <div class="timeline-icon">${icon}</div>
+                    <div class="timeline-data">
+                        <strong>Step ${index + 1}: ${label}</strong>
+                        <code>${h.input}</code>
+                        ${h.note ? `<p class="timeline-note">${h.note}</p>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `
+                    </div>
+                </div>
+                
+                <div class="dash-actions">
+                    <button id="dash-next-btn" class="btn btn-primary">Proceed to Next Mission</button>
+                </div>
+            </div>
+        `;
+        
+        dashboard.innerHTML = html;
+        dashboard.style.display = 'block';
+        
+        document.getElementById('dash-next-btn').addEventListener('click', () => {
+            dashboard.style.display = 'none';
+            if(callback) callback();
+        });
+    }
+
     renderMasteryDashboard() {
         if(this.els.dashboard) {
+            this.els.dashboard.innerHTML = `
+                <div class="mastery-content">
+                    <h1>Journey Completed!</h1>
+                    <p>You have mastered this vulnerability.</p>
+                    <a href="/academy" class="btn btn-primary">Return to Academy</a>
+                </div>
+            `;
             this.els.dashboard.style.display = 'flex';
         }
     }

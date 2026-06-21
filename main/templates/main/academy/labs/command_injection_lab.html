@@ -193,6 +193,36 @@
         width: 100%;
         text-align: center;
     }
+    
+    .dashboard-content {
+        background: var(--v3-panel);
+        border: 1px solid var(--v3-accent);
+        padding: 40px;
+        border-radius: 12px;
+        max-width: 800px;
+        width: 100%;
+        text-align: left;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .dashboard-content h2 { color: var(--v3-accent); margin-top: 0; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+    .stat-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; text-align: center; }
+    .stat-box h4 { margin: 0 0 5px 0; color: var(--v3-muted); font-size: 0.9rem; }
+    .stat-box p { margin: 0; font-size: 1.5rem; font-weight: bold; color: #fff; }
+    .stat-box.highlight { grid-column: span 3; border: 1px solid var(--v3-accent); }
+    .stat-box.highlight p { font-size: 1rem; color: var(--v3-accent); font-family: monospace; }
+    
+    .timeline { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+    .timeline-item { display: flex; gap: 15px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; }
+    .timeline-icon { font-size: 1.5rem; }
+    .timeline-data { display: flex; flex-direction: column; gap: 5px; width: 100%; }
+    .timeline-data code { background: #000; padding: 5px; border-radius: 4px; font-family: monospace; color: var(--v3-accent); }
+    .timeline-note { margin: 0; font-size: 0.85rem; color: var(--v3-warning); }
+    
+    .dash-actions { text-align: center; border-top: 1px solid var(--v3-border); padding-top: 20px; }
 </style>
 {% endblock %}
 
@@ -260,6 +290,9 @@
         </div>
     </div>
 </div>
+
+<!-- Mission Dashboard Overlay -->
+<div class="v3-dashboard-overlay" id="v3-dashboard-overlay"></div>
 
 <!-- Mastery Dashboard Overlay -->
 <div class="v3-dashboard-overlay" id="v3-mastery-modal">

@@ -9,19 +9,56 @@
             "scenario": {
                 "company": "Acme Corp",
                 "target": "Network Diagnostic Utility",
+                "difficulty": "Easy",
+                "estimated_time": "10 min",
+                "skills": ["Linux", "HTTP", "Basic Networking"],
+                "story": "An internal employee reported that the network diagnostic tool sometimes shows weird output if they type special characters. Your goal is to see if it allows executing system commands.",
                 "objective": "Read the flag from /home/user/flag.txt",
                 "environment": {
                     "os": "Linux",
                     "web": "Apache",
                     "lang": "PHP"
                 },
-                "initialFS": {
-                    "/": { "type": "dir", "contents": ["home", "var", "etc"] },
-                    "/home": { "type": "dir", "contents": ["user"] },
-                    "/home/user": { "type": "dir", "contents": ["flag.txt"] },
-                    "/home/user/flag.txt": { "type": "file", "content": "FLAG{cmd_inj_b4s1c_m4st3r}" },
-                    "/etc": { "type": "dir", "contents": ["passwd"] },
-                    "/etc/passwd": { "type": "file", "content": "root:x:0:0:root:/root:/bin/bash" }
+                "osState": {
+                    "filesystem": {
+                        "/": { "type": "dir", "contents": ["home", "var", "etc"] },
+                        "/home": { "type": "dir", "contents": ["user"] },
+                        "/home/user": { "type": "dir", "contents": ["flag.txt"] },
+                        "/home/user/flag.txt": { "type": "file", "content": "FLAG{cmd_inj_b4s1c_m4st3r}" },
+                        "/var": { "type": "dir", "contents": ["www"] },
+                        "/var/www": { "type": "dir", "contents": ["html"] },
+                        "/var/www/html": { "type": "dir", "contents": ["index.php", "config.php", "uploads"] },
+                        "/var/www/html/index.php": { "type": "file", "content": "<?php echo 'Ping Utility'; ?>" },
+                        "/var/www/html/config.php": { "type": "file", "content": "<?php $db_pass = 'super_secret_db_pass'; ?>" },
+                        "/var/www/html/uploads": { "type": "dir", "contents": [] },
+                        "/etc": { "type": "dir", "contents": ["passwd"] },
+                        "/etc/passwd": { "type": "file", "content": "root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin" }
+                    },
+                    "currentUser": "www-data",
+                    "env": {
+                        "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                        "HOME": "/var/www",
+                        "USER": "www-data",
+                        "PWD": "/var/www/html",
+                        "SHELL": "/bin/bash"
+                    },
+                    "processes": [
+                        { "pid": 1, "user": "root", "cmd": "/sbin/init" },
+                        { "pid": 501, "user": "root", "cmd": "/usr/sbin/sshd -D" },
+                        { "pid": 1024, "user": "root", "cmd": "apache2 -k start" },
+                        { "pid": 1025, "user": "www-data", "cmd": "apache2 -k start" }
+                    ],
+                    "network": {
+                        "interfaces": [
+                            { "name": "lo", "ip": "127.0.0.1", "mask": "255.0.0.0" },
+                            { "name": "eth0", "ip": "10.10.10.5", "mask": "255.255.255.0" }
+                        ],
+                        "ports": [
+                            { "proto": "tcp", "local": "0.0.0.0:80", "state": "LISTEN", "pid": "1024/apache2" },
+                            { "proto": "tcp", "local": "0.0.0.0:22", "state": "LISTEN", "pid": "501/sshd" }
+                        ],
+                        "hostname": "acme-web-prod"
+                    }
                 },
                 "completionCondition": "history.some(h => h.output && h.output.includes('FLAG{cmd_inj_b4s1c_m4st3r}'))"
             },
@@ -44,16 +81,28 @@
                     "lang": "PHP",
                     "waf": "ModSecurity (Space Filter)"
                 },
-                "initialFS": {
-                    "/": { "type": "dir", "contents": ["home", "var"] },
-                    "/home": { "type": "dir", "contents": ["user"] },
-                    "/home/user": { "type": "dir", "contents": ["flag2.txt"] },
-                    "/home/user/flag2.txt": { "type": "file", "content": "FLAG{w4f_byp4ss_m4st3r}" }
+                "osState": {
+                    "filesystem": {
+                        "/": { "type": "dir", "contents": ["home", "var"] },
+                        "/home": { "type": "dir", "contents": ["user"] },
+                        "/home/user": { "type": "dir", "contents": ["flag2.txt"] },
+                        "/home/user/flag2.txt": { "type": "file", "content": "FLAG{w4f_byp4ss_m4st3r}" },
+                        "/var": { "type": "dir", "contents": ["www"] },
+                        "/var/www": { "type": "dir", "contents": ["html"] },
+                        "/var/www/html": { "type": "dir", "contents": ["index.php"] }
+                    },
+                    "currentUser": "www-data",
+                    "env": {
+                        "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                        "HOME": "/var/www",
+                        "USER": "www-data",
+                        "PWD": "/var/www/html"
+                    }
                 },
                 "filters": {
                     "blacklist": [" "],
                     "feedback": {
-                        " ": "WAF BLOCKED: Space characters are strictly forbidden!"
+                        " ": "المسافات ممنوعة (Space character is forbidden!). حاول البحث عن بديل."
                     }
                 },
                 "completionCondition": "history.some(h => h.output && h.output.includes('FLAG{w4f_byp4ss_m4st3r}'))"

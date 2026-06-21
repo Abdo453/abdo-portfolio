@@ -1,7 +1,7 @@
 import { StorageEngine } from './StorageEngine.js';
 import { ProgressEngine } from './ProgressEngine.js';
 import { HintEngine } from './HintEngine.js';
-import { VFS } from './VFS.js';
+import { SimulationAPI } from './os/SimulationAPI.js';
 import { CommandParser } from './CommandParser.js';
 import { PayloadAnalyzer } from './PayloadAnalyzer.js';
 import { FeedbackEngine } from './FeedbackEngine.js';
@@ -24,6 +24,7 @@ export class JourneyManager {
         
         this.currentMissionIndex = 0;
         this.history = [];
+        this.startTime = Date.now();
         
         this.initMission(this.currentMissionIndex);
     }
@@ -38,8 +39,9 @@ export class JourneyManager {
         const missionData = this.journey.missions[index];
         
         this.scenario = new ScenarioEngine(missionData.scenario);
-        this.vfs = new VFS(missionData.scenario.initialFS);
+        this.os = new SimulationAPI(missionData.scenario.osState);
         this.history = []; // reset history for this mission
+        this.startTime = Date.now();
         
         this.ui.renderMission(missionData);
     }
@@ -63,7 +65,7 @@ export class JourneyManager {
         if (analysis.injectedCmds.length > 0) {
             for (let cmdStr of analysis.injectedCmds) {
                 const tokens = this.parser.tokenize(cmdStr);
-                output += this.runVirtualCommand(tokens.verb, tokens.args) + '\n';
+                output += this.runVirtualCommand(tokens.verb, tokens.args, cmdStr) + '\n';
             }
         } else {
             // Simulated base command
@@ -71,11 +73,15 @@ export class JourneyManager {
                 output += `PING ${input.replace('ping', '').trim()} (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.034 ms`;
             } else {
                 const tokens = this.parser.tokenize(input);
-                output += this.runVirtualCommand(tokens.verb, tokens.args) + '\n';
+                output += this.runVirtualCommand(tokens.verb, tokens.args, input) + '\n';
             }
         }
         
         output = output.trim();
+        if (output.includes('__CLEAR__')) {
+            this.ui.clearTerminal();
+            output = output.replace('__CLEAR__', '').trim();
+        }
         if (output) this.ui.printTerminal(output);
 
         this.history.push({ input, success: true, output });
@@ -92,21 +98,24 @@ export class JourneyManager {
             this.ui.printTerminal(`[+] Mission Accomplished! +${rewardXP} XP | +${rewardCoins} Coins`, 'term-success');
             
             setTimeout(() => {
-                this.initMission(this.currentMissionIndex + 1);
-            }, 2000);
+                this.ui.showTimeline(this.history, () => {
+                    this.initMission(this.currentMissionIndex + 1);
+                });
+            }, 1500);
         }
     }
 
-    runVirtualCommand(verb, args) {
+    runVirtualCommand(verb, args, rawInput) {
         if (!verb) return '';
         switch(verb) {
-            case 'whoami': return 'www-data';
-            case 'pwd': return this.vfs.pwd();
-            case 'ls': return this.vfs.ls(args[0]);
-            case 'cat': return this.vfs.cat(args[0]);
-            case 'cd': return this.vfs.cd(args[0]);
-            case 'sleep': return `[Simulating time delay of ${args[0] || 0} seconds]`;
-            default: return `bash: ${verb}: command not found`;
+            case 'history':
+                return this.history.map((h, i) => `  ${i+1}  ${h.input}`).join('\n');
+            case 'clear':
+                return '__CLEAR__';
+            case 'help': 
+                return `Available commands:\nls, pwd, cd, cat, find, grep, echo\nps, kill\nwhoami, id\nip, netstat, ss, hostname\nenv\nsleep, history, clear, help`;
+            default: 
+                return this.os.execute(verb, args, rawInput);
         }
     }
 }
