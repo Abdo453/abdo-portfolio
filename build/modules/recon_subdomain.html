@@ -84,30 +84,98 @@
           </div>
         </div>
 
+        <!-- ═══════ TOOLS COMPARISON ═══════ -->
+        <div class="section-header-hacker" style="margin-top: 30px;">⚖️ TOOLS COMPARISON</div>
+        <div class="table-container" dir="ltr" style="overflow-x: auto; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; text-align: left;">
+            <thead>
+              <tr style="background: rgba(0, 0, 0, 0.4); border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <th style="padding: 12px; color: var(--accent-primary);">Tool</th>
+                <th style="padding: 12px; color: var(--text-secondary);">Speed</th>
+                <th style="padding: 12px; color: var(--text-secondary);">Depth/Coverage</th>
+                <th style="padding: 12px; color: var(--text-secondary);">Primary Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 12px; font-weight: bold; color: #fff;">subfinder</td>
+                <td style="padding: 12px;"><span style="color: #00e5a0;">⚡⚡⚡ Very Fast</span></td>
+                <td style="padding: 12px;">Wide (OSINT + APIs)</td>
+                <td style="padding: 12px;">Initial broad subdomain gathering.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 12px; font-weight: bold; color: #fff;">amass</td>
+                <td style="padding: 12px;"><span style="color: #ff4757;">⚡ Slow</span></td>
+                <td style="padding: 12px;">Very Deep (Brute + Certs)</td>
+                <td style="padding: 12px;">Exhaustive targeted discovery.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 12px; font-weight: bold; color: #fff;">assetfinder</td>
+                <td style="padding: 12px;"><span style="color: #00e5a0;">⚡⚡ Fast</span></td>
+                <td style="padding: 12px;">Medium (crt.sh mainly)</td>
+                <td style="padding: 12px;">Quick discovery of related domains.</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-weight: bold; color: #fff;">httpx</td>
+                <td style="padding: 12px;"><span style="color: #00e5a0;">⚡⚡⚡ Very Fast</span></td>
+                <td style="padding: 12px;">N/A (Probing)</td>
+                <td style="padding: 12px;">Filtering dead domains and finding tech stack.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <!-- Commands Section -->
         <div class="section-header-hacker">💻 COMMANDS</div>
-        <div class="hacker-terminal" dir="ltr">
-          <div class="h-term-header">
-            <div class="h-term-dots">
-              <div class="h-term-dot r"></div><div class="h-term-dot y"></div><div class="h-term-dot g"></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+          
+          <div class="hacker-terminal" dir="ltr" style="margin: 0;">
+            <div class="h-term-header">
+              <div class="h-term-dots">
+                <div class="h-term-dot r"></div><div class="h-term-dot y"></div><div class="h-term-dot g"></div>
+              </div>
+              <div class="h-term-filename">subdomain-enum.sh</div>
             </div>
-            <div class="h-term-filename">subdomain-enum.sh</div>
+            <div class="h-term-body-wrap">
+              <div class="h-term-actions">
+                <button class="term-action-btn">📋 Copy</button>
+                <button class="term-action-btn sim" onclick="triggerTerminalSim('subfinder -d target.com -all -recursive -silent -o subs.txt')">▶ Simulate</button>
+              </div>
+              <div class="h-term-body">
+                <div style="color:var(--accent-primary); margin-bottom:8px;">① Passive Collection</div>
+                <span class="hl-comment"># Passive subdomain discovery</span><br>
+                <span class="hl-cmd">subfinder</span> <span class="hl-flag">-d</span> target.com <span class="hl-flag">-all -recursive -silent -o</span> subs.txt<br>
+                <span class="hl-cmd">amass</span> enum -passive -d target.com -o amass.txt<br>
+                <span class="hl-cmd">assetfinder</span> --subs-only target.com > assetfinder.txt<br><br>
+                <span class="hl-comment"># Merge & deduplicate all sources</span><br>
+                <span class="hl-cmd" style="color:#ff4757;">cat</span> subs.txt amass.txt assetfinder.txt | <span class="hl-cmd" style="color:#ff4757;">sort</span> <span class="hl-flag">-u</span> > <span style="color:#ff4757;">all_subs.txt</span>
+              </div>
+            </div>
           </div>
-          <div class="h-term-body-wrap">
-            <div class="h-term-actions">
-              <button class="term-action-btn">📋 Copy</button>
-              <button class="term-action-btn sim">▶ Simulate</button>
+
+          <div class="hacker-terminal" dir="ltr" style="margin: 0;">
+            <div class="h-term-header">
+              <div class="h-term-dots">
+                <div class="h-term-dot r"></div><div class="h-term-dot y"></div><div class="h-term-dot g"></div>
+              </div>
+              <div class="h-term-filename">auto-recon.sh (All-in-One)</div>
             </div>
-            <div class="h-term-body">
-              <div style="color:var(--accent-primary); margin-bottom:8px;">① Passive Collection</div>
-              <span class="hl-comment"># Passive subdomain discovery</span><br>
-              <span class="hl-cmd">subfinder</span> <span class="hl-flag">-d</span> target.com <span class="hl-flag">-all -recursive -silent -o</span> subs.txt<br>
-              <span class="hl-cmd">amass</span> enum -passive -d target.com -o amass.txt<br>
-              <span class="hl-cmd">assetfinder</span> --subs-only target.com > assetfinder.txt<br><br>
-              <span class="hl-comment"># Merge & deduplicate all sources</span><br>
-              <span class="hl-cmd" style="color:#ff4757;">cat</span> subs.txt amass.txt assetfinder.txt | <span class="hl-cmd" style="color:#ff4757;">sort</span> <span class="hl-flag">-u</span> > <span style="color:#ff4757;">all_subs.txt</span>
+            <div class="h-term-body-wrap">
+              <div class="h-term-actions">
+                <button class="term-action-btn" onclick="copyQR(this,'#!/bin/bash\nTARGET=$1\necho \'[+] Running Subfinder\'\nsubfinder -d $TARGET -all -silent > subs.txt\necho \'[+] Resolving & Probing HTTP\'\ncat subs.txt | httpx -silent -threads 200 -o live.txt\necho \'[+] Done! Found $(wc -l < live.txt) live hosts.\'')">📋 Copy</button>
+              </div>
+              <div class="h-term-body">
+                <span class="hl-comment">#!/bin/bash</span><br>
+                <span style="color:#ffb86c;">TARGET</span>=$1<br>
+                <span class="hl-cmd" style="color:#ff4757;">echo</span> <span style="color:#f1fa8c;">"[+] Running Subfinder..."</span><br>
+                <span class="hl-cmd">subfinder</span> <span class="hl-flag">-d</span> <span style="color:#ffb86c;">$TARGET</span> <span class="hl-flag">-all -silent</span> > subs.txt<br>
+                <span class="hl-cmd" style="color:#ff4757;">echo</span> <span style="color:#f1fa8c;">"[+] Resolving & Probing HTTP..."</span><br>
+                <span class="hl-cmd" style="color:#ff4757;">cat</span> subs.txt | <span class="hl-cmd">httpx</span> <span class="hl-flag">-silent -threads</span> 200 > live.txt<br>
+                <span class="hl-cmd" style="color:#ff4757;">echo</span> <span style="color:#f1fa8c;">"[+] Done! Found $(wc -l < live.txt) live hosts."</span>
+              </div>
             </div>
           </div>
+
         </div>
         <div class="expected-output-block" dir="ltr">
             <div class="expected-output-header">⬇ EXPECTED OUTPUT</div>
@@ -217,6 +285,22 @@
           <button class="pl-btn">▶ Launch Interactive Labs</button>
         </div>
 
+        <!-- ═══════ REPORT TEMPLATE ═══════ -->
+        <div class="section-header-hacker" style="margin-top:40px;">📝 REPORT TEMPLATE: Subdomain Takeover</div>
+        <div class="hacker-terminal" dir="ltr" style="background: rgba(15, 23, 42, 0.6); border-left: 4px solid var(--accent-warning);">
+          <div class="h-term-body-wrap">
+            <div class="h-term-actions">
+              <button class="term-action-btn" onclick="copyQR(this, 'Title: Subdomain Takeover on dev.target.com\n\nDescription:\nI found that `dev.target.com` is pointing to a third-party service (e.g., GitHub Pages / S3 Bucket) that is no longer claimed. An attacker can claim this resource and host arbitrary content on a subdomain belonging to the company.\n\nSteps To Reproduce:\n1. Navigate to http://dev.target.com\n2. Observe the \'404 Not Found\' or \'NoSuchBucket\' error from the provider.\n3. Register an account with the provider and claim the domain `dev.target.com`.\n\nImpact:\nAn attacker can host phishing pages, steal session cookies via XSS, or damage the company\'s reputation.')">📋 Copy Template</button>
+            </div>
+            <div class="h-term-body" style="font-family: var(--font-primary); font-size: 0.95em;">
+              <div style="margin-bottom: 10px;"><strong>Title:</strong> Subdomain Takeover on dev.target.com</div>
+              <div style="margin-bottom: 10px;"><strong>Description:</strong><br>I found that <code>dev.target.com</code> is pointing to a third-party service (e.g., GitHub Pages / S3 Bucket) that is no longer claimed. An attacker can claim this resource and host arbitrary content on a subdomain belonging to the company.</div>
+              <div style="margin-bottom: 10px;"><strong>Steps To Reproduce:</strong><br>1. Navigate to http://dev.target.com<br>2. Observe the '404 Not Found' or 'NoSuchBucket' error.<br>3. Register an account with the provider and claim the domain.</div>
+              <div><strong>Impact:</strong><br>An attacker can host phishing pages, steal session cookies via XSS, or damage the company's reputation.</div>
+            </div>
+          </div>
+        </div>
+
         <!-- ═══════ REDESIGN V2: Quick Reference Sticky Bar ═══════ -->
         <div class="rd-quickref" id="rdQuickRef">
           <div class="rd-quickref-toggle" onclick="toggleQuickRef()">
@@ -224,13 +308,13 @@
             <span id="rdQrArrow">▲</span>
           </div>
           <div class="rd-quickref-cmds">
-            <div class="rd-qr-item"><code>subfinder -d target.com -all</code><button class="rd-qr-copy" onclick="copyQR(this,'subfinder -d target.com -all')">📋</button></div>
-            <div class="rd-qr-item"><code>httpx -l subs.txt -sc -td</code><button class="rd-qr-copy" onclick="copyQR(this,'httpx -l subs.txt -sc -td')">📋</button></div>
-            <div class="rd-qr-item"><code>naabu -l live.txt -top-ports 1000</code><button class="rd-qr-copy" onclick="copyQR(this,'naabu -l live.txt -top-ports 1000')">📋</button></div>
-            <div class="rd-qr-item"><code>ffuf -u URL/FUZZ -w wordlist.txt</code><button class="rd-qr-copy" onclick="copyQR(this,'ffuf -u URL/FUZZ -w wordlist.txt')">📋</button></div>
-            <div class="rd-qr-item"><code>nuclei -l targets.txt -t cves/</code><button class="rd-qr-copy" onclick="copyQR(this,'nuclei -l targets.txt -t cves/')">📋</button></div>
-            <div class="rd-qr-item"><code>katana -u target.com -d 3</code><button class="rd-qr-copy" onclick="copyQR(this,'katana -u target.com -d 3')">📋</button></div>
-            <div class="rd-qr-item"><code>gf xss | httpx -silent</code><button class="rd-qr-copy" onclick="copyQR(this,'gf xss | httpx -silent')">📋</button></div>
+            <div class="rd-qr-item"><code>subfinder -d target.com -all -recursive -silent -o subs.txt</code><button class="rd-qr-copy" onclick="copyQR(this,'subfinder -d target.com -all -recursive -silent -o subs.txt')">📋</button></div>
+            <div class="rd-qr-item"><code>httpx -l subs.txt -ports 80,443,8080 -threads 200 -sc -title -o live.txt</code><button class="rd-qr-copy" onclick="copyQR(this,'httpx -l subs.txt -ports 80,443,8080 -threads 200 -sc -title -o live.txt')">📋</button></div>
+            <div class="rd-qr-item"><code>naabu -l live.txt -top-ports 1000 -c 50 -nmap-cli "nmap -sV -sC" -o ports.txt</code><button class="rd-qr-copy" onclick="copyQR(this,'naabu -l live.txt -top-ports 1000 -c 50 -nmap-cli &quot;nmap -sV -sC&quot; -o ports.txt')">📋</button></div>
+            <div class="rd-qr-item"><code>ffuf -u https://target/FUZZ -w raft-large-words.txt -mc 200,301,302,403</code><button class="rd-qr-copy" onclick="copyQR(this,'ffuf -u https://target/FUZZ -w raft-large-words.txt -mc 200,301,302,403')">📋</button></div>
+            <div class="rd-qr-item"><code>nuclei -l live.txt -t cves/ -t exposed-panels/ -o nuclei_res.txt</code><button class="rd-qr-copy" onclick="copyQR(this,'nuclei -l live.txt -t cves/ -t exposed-panels/ -o nuclei_res.txt')">📋</button></div>
+            <div class="rd-qr-item"><code>katana -u https://target.com -jc -kf -d 3 -o katana_urls.txt</code><button class="rd-qr-copy" onclick="copyQR(this,'katana -u https://target.com -jc -kf -d 3 -o katana_urls.txt')">📋</button></div>
+            <div class="rd-qr-item"><code>cat katana_urls.txt | gf xss | httpx -silent -o potential_xss.txt</code><button class="rd-qr-copy" onclick="copyQR(this,'cat katana_urls.txt | gf xss | httpx -silent -o potential_xss.txt')">📋</button></div>
           </div>
         </div>
 
