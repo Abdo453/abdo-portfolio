@@ -1,19 +1,19 @@
 {
-    "id": "cmd_injection_journey_v3",
+    "id": "cmd_injection_journey_v4",
     "title": "Command Injection Mastery Journey",
-    "description": "Learn to find, exploit, and bypass filters for OS Command Injection vulnerabilities.",
+    "description": "A 3-stage simulated attack against Acme Corp. Persistent OS environment.",
     "missions": [
         {
-            "id": "mission_1_basic",
-            "title": "The Classic Mistake",
+            "id": "mission_1_recon",
+            "title": "Initial Foothold",
             "scenario": {
                 "company": "Acme Corp",
                 "target": "Network Diagnostic Utility",
                 "difficulty": "Easy",
                 "estimated_time": "10 min",
                 "skills": ["Linux", "HTTP", "Basic Networking"],
-                "story": "An internal employee reported that the network diagnostic tool sometimes shows weird output if they type special characters. Your goal is to see if it allows executing system commands.",
-                "objective": "Read the flag from /home/user/flag.txt",
+                "story": "Acme Corp uses a network diagnostic tool. We believe it's vulnerable to Command Injection. Start by exploring the server and locating the database password inside config.php.",
+                "objective": "Read /var/www/html/config.php to find the DB password.",
                 "environment": {
                     "os": "Linux",
                     "web": "Apache",
@@ -21,18 +21,24 @@
                 },
                 "osState": {
                     "filesystem": {
-                        "/": { "type": "dir", "contents": ["home", "var", "etc"] },
+                        "/": { "type": "dir", "contents": ["home", "var", "etc", "opt", "root"] },
+                        "/root": { "type": "dir", "contents": ["flag.txt"] },
+                        "/root/flag.txt": { "type": "file", "content": "FLAG{r00t_pr1v_3sc_m4st3r}" },
                         "/home": { "type": "dir", "contents": ["user"] },
-                        "/home/user": { "type": "dir", "contents": ["flag.txt"] },
-                        "/home/user/flag.txt": { "type": "file", "content": "FLAG{cmd_inj_b4s1c_m4st3r}" },
-                        "/var": { "type": "dir", "contents": ["www"] },
+                        "/home/user": { "type": "dir", "contents": [] },
+                        "/var": { "type": "dir", "contents": ["www", "db"] },
+                        "/var/db": { "type": "dir", "contents": ["employee.db"] },
+                        "/var/db/employee.db": { "type": "file", "content": "SQLite format 3\nadmin: FLAG{l4t3r4l_m0v3_1337}" },
                         "/var/www": { "type": "dir", "contents": ["html"] },
                         "/var/www/html": { "type": "dir", "contents": ["index.php", "config.php", "uploads"] },
                         "/var/www/html/index.php": { "type": "file", "content": "<?php echo 'Ping Utility'; ?>" },
-                        "/var/www/html/config.php": { "type": "file", "content": "<?php $db_pass = 'super_secret_db_pass'; ?>" },
+                        "/var/www/html/config.php": { "type": "file", "content": "<?php\n// Internal Config\n$db_host = '127.0.0.1';\n$db_user = 'root';\n$db_pass = 'sUp3r_s3cr3t_p4ss';\n?>" },
                         "/var/www/html/uploads": { "type": "dir", "contents": [] },
                         "/etc": { "type": "dir", "contents": ["passwd"] },
-                        "/etc/passwd": { "type": "file", "content": "root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin" }
+                        "/etc/passwd": { "type": "file", "content": "root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin" },
+                        "/opt": { "type": "dir", "contents": ["scripts"] },
+                        "/opt/scripts": { "type": "dir", "contents": ["backup.sh"] },
+                        "/opt/scripts/backup.sh": { "type": "file", "content": "#!/bin/bash\necho 'Backing up employee database...'\ncat /var/db/employee.db > /var/db/backup.sql" }
                     },
                     "currentUser": "www-data",
                     "env": {
@@ -46,7 +52,8 @@
                         { "pid": 1, "user": "root", "cmd": "/sbin/init" },
                         { "pid": 501, "user": "root", "cmd": "/usr/sbin/sshd -D" },
                         { "pid": 1024, "user": "root", "cmd": "apache2 -k start" },
-                        { "pid": 1025, "user": "www-data", "cmd": "apache2 -k start" }
+                        { "pid": 1025, "user": "www-data", "cmd": "apache2 -k start" },
+                        { "pid": 2040, "user": "root", "cmd": "cron" }
                     ],
                     "network": {
                         "interfaces": [
@@ -60,58 +67,158 @@
                         "hostname": "acme-web-prod"
                     }
                 },
-                "completionCondition": "history.some(h => h.output && h.output.includes('FLAG{cmd_inj_b4s1c_m4st3r}'))"
+                "completionCondition": "history.some(h => h.output && h.output.includes('sUp3r_s3cr3t_p4ss'))"
             },
             "hints": [
-                { "cost": 5, "text": "The input is passed directly to a ping command. Try using a semicolon (;) to add your own command." },
-                { "cost": 10, "text": "Try the payload: 8.8.8.8; cat /home/user/flag.txt" }
+                { "cost": 5, "text": "Start by listing the contents of the current directory using `ls -la`" },
+                { "cost": 10, "text": "Use `cat config.php` combined with the command injection syntax `; cat config.php`." }
             ],
-            "rewards": { "xp": 200, "coins": 20 }
+            "rewards": { "xp": 100, "coins": 20 }
         },
         {
-            "id": "mission_2_spaces",
-            "title": "Bypassing the WAF",
+            "id": "mission_2_lateral",
+            "title": "Lateral Movement",
             "scenario": {
                 "company": "Acme Corp",
-                "target": "Secure Network Diagnostic Utility V2",
-                "objective": "Read the flag from /home/user/flag2.txt without using spaces.",
+                "target": "Internal Filesystem",
+                "difficulty": "Medium",
+                "estimated_time": "15 min",
+                "skills": ["Linux", "Reconnaissance"],
+                "story": "Excellent! You found the database password. However, the database itself isn't running on an open port. Search the filesystem for any SQLite database files that might contain sensitive data.",
+                "objective": "Find and read the contents of employee.db.",
                 "environment": {
                     "os": "Linux",
                     "web": "Apache",
-                    "lang": "PHP",
-                    "waf": "ModSecurity (Space Filter)"
+                    "lang": "PHP"
                 },
                 "osState": {
                     "filesystem": {
-                        "/": { "type": "dir", "contents": ["home", "var"] },
+                        "/": { "type": "dir", "contents": ["home", "var", "etc", "opt", "root"] },
+                        "/root": { "type": "dir", "contents": ["flag.txt"] },
+                        "/root/flag.txt": { "type": "file", "content": "FLAG{r00t_pr1v_3sc_m4st3r}" },
                         "/home": { "type": "dir", "contents": ["user"] },
-                        "/home/user": { "type": "dir", "contents": ["flag2.txt"] },
-                        "/home/user/flag2.txt": { "type": "file", "content": "FLAG{w4f_byp4ss_m4st3r}" },
-                        "/var": { "type": "dir", "contents": ["www"] },
+                        "/home/user": { "type": "dir", "contents": [] },
+                        "/var": { "type": "dir", "contents": ["www", "db"] },
+                        "/var/db": { "type": "dir", "contents": ["employee.db"] },
+                        "/var/db/employee.db": { "type": "file", "content": "SQLite format 3\nadmin: FLAG{l4t3r4l_m0v3_1337}" },
                         "/var/www": { "type": "dir", "contents": ["html"] },
-                        "/var/www/html": { "type": "dir", "contents": ["index.php"] }
+                        "/var/www/html": { "type": "dir", "contents": ["index.php", "config.php", "uploads"] },
+                        "/var/www/html/index.php": { "type": "file", "content": "<?php echo 'Ping Utility'; ?>" },
+                        "/var/www/html/config.php": { "type": "file", "content": "<?php\n// Internal Config\n$db_host = '127.0.0.1';\n$db_user = 'root';\n$db_pass = 'sUp3r_s3cr3t_p4ss';\n?>" },
+                        "/var/www/html/uploads": { "type": "dir", "contents": [] },
+                        "/etc": { "type": "dir", "contents": ["passwd"] },
+                        "/etc/passwd": { "type": "file", "content": "root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin" },
+                        "/opt": { "type": "dir", "contents": ["scripts"] },
+                        "/opt/scripts": { "type": "dir", "contents": ["backup.sh"] },
+                        "/opt/scripts/backup.sh": { "type": "file", "content": "#!/bin/bash\necho 'Backing up employee database...'\ncat /var/db/employee.db > /var/db/backup.sql" }
                     },
                     "currentUser": "www-data",
                     "env": {
                         "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
                         "HOME": "/var/www",
                         "USER": "www-data",
-                        "PWD": "/var/www/html"
+                        "PWD": "/var/www/html",
+                        "SHELL": "/bin/bash"
+                    },
+                    "processes": [
+                        { "pid": 1, "user": "root", "cmd": "/sbin/init" },
+                        { "pid": 501, "user": "root", "cmd": "/usr/sbin/sshd -D" },
+                        { "pid": 1024, "user": "root", "cmd": "apache2 -k start" },
+                        { "pid": 1025, "user": "www-data", "cmd": "apache2 -k start" },
+                        { "pid": 2040, "user": "root", "cmd": "cron" }
+                    ],
+                    "network": {
+                        "interfaces": [
+                            { "name": "lo", "ip": "127.0.0.1", "mask": "255.0.0.0" },
+                            { "name": "eth0", "ip": "10.10.10.5", "mask": "255.255.255.0" }
+                        ],
+                        "ports": [
+                            { "proto": "tcp", "local": "0.0.0.0:80", "state": "LISTEN", "pid": "1024/apache2" },
+                            { "proto": "tcp", "local": "0.0.0.0:22", "state": "LISTEN", "pid": "501/sshd" }
+                        ],
+                        "hostname": "acme-web-prod"
                     }
                 },
-                "filters": {
-                    "blacklist": [" "],
-                    "feedback": {
-                        " ": "المسافات ممنوعة (Space character is forbidden!). حاول البحث عن بديل."
-                    }
-                },
-                "completionCondition": "history.some(h => h.output && h.output.includes('FLAG{w4f_byp4ss_m4st3r}'))"
+                "completionCondition": "history.some(h => h.output && h.output.includes('FLAG{l4t3r4l_m0v3_1337}'))"
             },
             "hints": [
-                { "cost": 10, "text": "Linux shell variable $IFS evaluates to a space. Try using it instead of a real space." },
-                { "cost": 15, "text": "Try the payload: 8.8.8.8;cat$IFS/home/user/flag2.txt" }
+                { "cost": 10, "text": "Use the `find` command to search for files with the .db extension. E.g. `; find / | grep .db`" },
+                { "cost": 15, "text": "The file is located at `/var/db/employee.db`. Try reading it with `cat`." }
             ],
-            "rewards": { "xp": 300, "coins": 30 }
+            "rewards": { "xp": 200, "coins": 30 }
+        },
+        {
+            "id": "mission_3_privesc",
+            "title": "Privilege Escalation",
+            "scenario": {
+                "company": "Acme Corp",
+                "target": "Root Directory",
+                "difficulty": "Hard",
+                "estimated_time": "20 min",
+                "skills": ["Linux", "PrivEsc", "Scripting"],
+                "story": "You've successfully moved laterally, but you are still just 'www-data'. If you inspect the running processes, you might notice something interesting. Find a way to read /root/flag.txt using a cronjob or script.",
+                "objective": "Read the flag in /root/flag.txt using redirection or scripting.",
+                "environment": {
+                    "os": "Linux",
+                    "web": "Apache",
+                    "lang": "PHP",
+                    "notes": "Cron runs scripts in /opt/scripts as root."
+                },
+                "osState": {
+                    "filesystem": {
+                        "/": { "type": "dir", "contents": ["home", "var", "etc", "opt", "root"] },
+                        "/root": { "type": "dir", "contents": ["flag.txt"] },
+                        "/root/flag.txt": { "type": "file", "content": "FLAG{r00t_pr1v_3sc_m4st3r}" },
+                        "/home": { "type": "dir", "contents": ["user"] },
+                        "/home/user": { "type": "dir", "contents": [] },
+                        "/var": { "type": "dir", "contents": ["www", "db"] },
+                        "/var/db": { "type": "dir", "contents": ["employee.db"] },
+                        "/var/db/employee.db": { "type": "file", "content": "SQLite format 3\nadmin: FLAG{l4t3r4l_m0v3_1337}" },
+                        "/var/www": { "type": "dir", "contents": ["html"] },
+                        "/var/www/html": { "type": "dir", "contents": ["index.php", "config.php", "uploads"] },
+                        "/var/www/html/index.php": { "type": "file", "content": "<?php echo 'Ping Utility'; ?>" },
+                        "/var/www/html/config.php": { "type": "file", "content": "<?php\n// Internal Config\n$db_host = '127.0.0.1';\n$db_user = 'root';\n$db_pass = 'sUp3r_s3cr3t_p4ss';\n?>" },
+                        "/var/www/html/uploads": { "type": "dir", "contents": [] },
+                        "/etc": { "type": "dir", "contents": ["passwd"] },
+                        "/etc/passwd": { "type": "file", "content": "root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin" },
+                        "/opt": { "type": "dir", "contents": ["scripts"] },
+                        "/opt/scripts": { "type": "dir", "contents": ["backup.sh"] },
+                        "/opt/scripts/backup.sh": { "type": "file", "content": "#!/bin/bash\necho 'Backing up employee database...'\ncat /var/db/employee.db > /var/db/backup.sql" }
+                    },
+                    "currentUser": "www-data",
+                    "env": {
+                        "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                        "HOME": "/var/www",
+                        "USER": "www-data",
+                        "PWD": "/var/www/html",
+                        "SHELL": "/bin/bash"
+                    },
+                    "processes": [
+                        { "pid": 1, "user": "root", "cmd": "/sbin/init" },
+                        { "pid": 501, "user": "root", "cmd": "/usr/sbin/sshd -D" },
+                        { "pid": 1024, "user": "root", "cmd": "apache2 -k start" },
+                        { "pid": 1025, "user": "www-data", "cmd": "apache2 -k start" },
+                        { "pid": 2040, "user": "root", "cmd": "cron" }
+                    ],
+                    "network": {
+                        "interfaces": [
+                            { "name": "lo", "ip": "127.0.0.1", "mask": "255.0.0.0" },
+                            { "name": "eth0", "ip": "10.10.10.5", "mask": "255.255.255.0" }
+                        ],
+                        "ports": [
+                            { "proto": "tcp", "local": "0.0.0.0:80", "state": "LISTEN", "pid": "1024/apache2" },
+                            { "proto": "tcp", "local": "0.0.0.0:22", "state": "LISTEN", "pid": "501/sshd" }
+                        ],
+                        "hostname": "acme-web-prod"
+                    }
+                },
+                "completionCondition": "history.some(h => (h.input.includes('backup.sh') || h.input.includes('root/flag.txt')) && (h.output && h.output.includes('FLAG{r00t_pr1v_3sc_m4st3r}')))"
+            },
+            "hints": [
+                { "cost": 15, "text": "Notice there is a script at `/opt/scripts/backup.sh`. Since we simulate a vulnerable environment, you can modify it using echo and redirection." },
+                { "cost": 20, "text": "Try overwriting it: `; echo 'cat /root/flag.txt' > /opt/scripts/backup.sh` then execute it `; /opt/scripts/backup.sh`." }
+            ],
+            "rewards": { "xp": 500, "coins": 50 }
         }
     ]
 }

@@ -39,11 +39,22 @@ export class JourneyManager {
         const missionData = this.journey.missions[index];
         
         this.scenario = new ScenarioEngine(missionData.scenario);
-        this.os = new SimulationAPI(missionData.scenario.osState);
+        // Persist OS state across missions in the same journey
+        if (!this.os) {
+            this.os = new SimulationAPI(missionData.scenario.osState);
+        }
         this.history = []; // reset history for this mission
         this.startTime = Date.now();
         
         this.ui.renderMission(missionData);
+    }
+
+    resetServer() {
+        if (this.journey.missions[this.currentMissionIndex]) {
+            const missionData = this.journey.missions[this.currentMissionIndex];
+            this.os = new SimulationAPI(missionData.scenario.osState);
+            this.ui.printTerminal("[!] Server reset to original state.", "term-warning");
+        }
     }
 
     executeCommand(input) {

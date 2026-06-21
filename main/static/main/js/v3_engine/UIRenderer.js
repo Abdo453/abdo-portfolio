@@ -45,6 +45,15 @@ export class UIRenderer {
                 this.unlockNextHint();
             });
         }
+
+        const resetBtn = document.getElementById('v3-reset-btn');
+        if (resetBtn) {
+            const new_reset = resetBtn.cloneNode(true);
+            resetBtn.parentNode.replaceChild(new_reset, resetBtn);
+            new_reset.addEventListener('click', () => {
+                this.manager.resetServer();
+            });
+        }
     }
 
     renderMission(missionData) {
