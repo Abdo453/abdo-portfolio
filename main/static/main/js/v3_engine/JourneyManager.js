@@ -7,6 +7,7 @@ import { PayloadAnalyzer } from './PayloadAnalyzer.js';
 import { FeedbackEngine } from './FeedbackEngine.js';
 import { ScenarioEngine } from './ScenarioEngine.js';
 import { UIRenderer } from './UIRenderer.js';
+import { ObjectiveEngine } from './ObjectiveEngine.js';
 
 export class JourneyManager {
     constructor(journeyData) {
@@ -41,8 +42,11 @@ export class JourneyManager {
         this.scenario = new ScenarioEngine(missionData.scenario);
         // Persist OS state across missions in the same journey
         if (!this.os) {
-            this.os = new SimulationAPI(missionData.scenario.osState);
+            const osStateData = missionData.scenario.osState || this.journey.osState;
+            this.os = new SimulationAPI(osStateData);
         }
+        this.objectiveEngine = new ObjectiveEngine(this.os);
+        
         this.history = []; // reset history for this mission
         this.startTime = Date.now();
         
@@ -52,7 +56,9 @@ export class JourneyManager {
     resetServer() {
         if (this.journey.missions[this.currentMissionIndex]) {
             const missionData = this.journey.missions[this.currentMissionIndex];
-            this.os = new SimulationAPI(missionData.scenario.osState);
+            const osStateData = missionData.scenario.osState || this.journey.osState;
+            this.os = new SimulationAPI(osStateData);
+            this.objectiveEngine = new ObjectiveEngine(this.os);
             this.ui.printTerminal("[!] Server reset to original state.", "term-warning");
         }
     }
@@ -99,7 +105,17 @@ export class JourneyManager {
         this.ui.updateHistoryPanel(this.history);
 
         // Check Win Condition
-        if (this.scenario.checkObjective(this.vfs, this.history)) {
+        const currentMission = this.journey.missions[this.currentMissionIndex];
+        let isComplete = false;
+        
+        if (currentMission.objective_engine) {
+            isComplete = this.objectiveEngine.check(currentMission.objective_engine, this.history);
+        } else {
+            // Fallback for older scenarios using completionCondition string
+            isComplete = this.scenario.checkObjective(this.vfs, this.history);
+        }
+
+        if (isComplete) {
             const rewardXP = this.journey.missions[this.currentMissionIndex].rewards.xp || 0;
             const rewardCoins = this.journey.missions[this.currentMissionIndex].rewards.coins || 0;
             
