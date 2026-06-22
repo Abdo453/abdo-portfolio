@@ -2042,6 +2042,7 @@ h1, h2, h3, h4, h5, h6 {
 .explorer-folder:hover {
   background: rgba(255,255,255,0.03);
   color: var(--text-primary);
+  animation: floatUpDown 1.5s ease-in-out infinite;
 }
 
 .explorer-folder.active {
@@ -2084,7 +2085,17 @@ h1, h2, h3, h4, h5, h6 {
 
 .tool-list-item:hover {
   border-color: rgba(0, 229, 255, 0.3);
-  transform: translateX(3px);
+  animation: floatUpDownRight 1.5s ease-in-out infinite;
+}
+
+@keyframes floatUpDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes floatUpDownRight {
+  0%, 100% { transform: translate(3px, 0); }
+  50% { transform: translate(3px, -4px); }
 }
 
 .tool-list-item.active {
