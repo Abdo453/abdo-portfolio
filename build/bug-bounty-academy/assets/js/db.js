@@ -61,11 +61,11 @@
     },
     {
       id: "scenario-006",
-      title: "Business Logic - Price Manipulation in Checkout",
+      title: "Business Logic - The Alchemy of Negative Wealth",
       level: "Easy",
       category: "Business Logic",
-      company: "Uber",
-      reward: "$2,000",
+      company: "CyberGear",
+      reward: "$5,000",
       time: "1 Hour",
       status: "Unlocked",
       solved: false

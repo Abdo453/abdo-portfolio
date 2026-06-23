@@ -1,41 +1,41 @@
 // ==========================================================
-// SCENARIO 006: BUSINESS LOGIC - PRICE MANIPULATION IN CHECKOUT
+// SCENARIO 006: BUSINESS LOGIC - THE ALCHEMY OF NEGATIVE WEALTH
 // ==========================================================
 
 window.scenario_006 = {
   "metadata": {
     "id": "scenario-006",
-    "title": "Business Logic - Price Manipulation in Checkout",
+    "title": "Business Logic - The Alchemy of Negative Wealth",
     "level": "Easy",
     "category": "Business Logic",
-    "company": "Uber",
-    "reward": "$2,000",
+    "company": "CyberGear",
+    "reward": "$5,000",
     "time": "1 Hour"
   },
   "decisionLog": [
     {
-      "hypothesis": "الخادم يربط أسعار المنتجات في قاعدة البيانات ولا يعتمد على قيمة الواجهة الأمامية.",
-      "whyFailed": "الخادم يثق تماماً بقيمة معامل السعر amount الممرر في الطلب من العميل ويستخدمه لإنشاء جلسة الدفع.",
-      "planB": "تعديل قيمة السعر amount إلى 0 أو قيمة سالبة لشراء الكورسات مجاناً.",
-      "ignored": "محاولة كسر لوحة المشرف."
+      "hypothesis": "الخادم يثق بمدخلات الكميات ويسمح بإضافة قيم سالبة لتقليص المجموع الإجمالي للسلة.",
+      "whyFailed": "جدار حماية التطبيق (WAF) يقوم باكتشاف علامة السالب وحظر الطلب برمز خطأ 400 Bad Request.",
+      "planB": "تخطي فلترة جدار الحماية باستخدام قيم عشرية أو ترميز Unicode أو محاولة إحداث تجاوز الحد الأقصى للمتغيرات (Integer Overflow).",
+      "ignored": "محاولة فحص ثغرات تخطي نظام الدفع مباشرة بدون سلة تسوق."
     }
   ],
   "payloads": [
     {
-      "code": "POST /api/v2/initiate_payment HTTP/1.1\n{\n  \"product_id\": 123,\n  \"amount\": 0,\n  \"currency\": \"USD\"\n}",
-      "explanation": "إرسال قيمة السعر 0 مباشرة في جسم الطلب لتخطي دفع قيمة الكورس.",
-      "whyWorked": "الـ Backend لا يطابق السعر الممرر مع قاعدة البيانات ويقبل القيمة الممررة لبدء جلسة الدفع.",
+      "code": "POST /api/cart/add HTTP/2\n{\n  \"item_id\": \"9910\",\n  \"quantity\": 4294967281\n}",
+      "explanation": "إرسال قيمة تفوق الحد الأقصى للمتغيرات الصحيحة 32-bit بهدف التسبب في التفاف القيمة وتحويلها لعدد سالب (-15) في معالجة الخلفية.",
+      "whyWorked": "الكود البرمجي في الخلفية يفسر القيمة كعدد صحيح ذي إشارة (Signed Integer), مما يؤدي لالتفافها والتلاعب بحساب السعر الإجمالي.",
       "alternatives": [
-        "Negative price (-100)",
-        "Currency confusion JPY"
+        "Unicode negative injection (\\u002D15)",
+        "Race condition on checkout and coupon redemption"
       ]
     }
   ],
   "mistakes": [
     {
-      "mistake": "إكمال عملية الدفع ببطاقة حقيقية بعد التعديل.",
-      "whyWrong": "هذا تصرف غير أخلاقي ويعد انتهاكاً لاتفاقية الـ Bug Bounty.",
-      "betterWay": "التوقف فوراً عند ظهور رابط الدفع بالقيمة المعدلة وإرفاق لقطة شاشة كإثبات تأثير."
+      "mistake": "تجاهل الأخطاء المنطقية وتجربة هجمات SQL Injection عشوائية.",
+      "whyWrong": "تضييع الوقت في اختبارات غير مستهدفة حيث أن المشكلة الأساسية تكمن في طريقة معالجة الأرقام والعمليات الرياضية الحساسة.",
+      "betterWay": "التركيز على مدخلات الكميات وتجربة حدود المدخلات الحسابية مثل الحدود الدنيا والقصوى والتزامن."
     }
   ],
   "steps": [
@@ -44,9 +44,9 @@ window.scenario_006 = {
       "time": "09:00",
       "workspace": "markdown",
       "xpReward": 100,
-      "description": "### 🎯 الهدف: فحص بوابة دفع المنتجات الرقمية\n\nمرحباً بك! معنا اليوم متجر لبيع الكورسات الرقمية بسعر $1,049.\nعند الضغط على \"شراء\"، يتم إرسال طلب لتهيئة عملية الدفع.\n\n#### قواعد الفحص:\n- نطاق العمل: بوابة الدفع `/api/v2/initiate_payment`\n- تحقق من وجود أخطاء في منطق العمل (Business Logic) تسمح بالتلاعب بالسعر.\n\nاضغط على **Next Step** للبدء.",
+      "description": "### 🎯 الهدف: فحص منصة CyberGear ومحاكي محفظة السلة\n\nمرحباً بك في منصة **\"CyberGear\"**، وهو متجر إلكتروني لبيع معدات الاختراق عالية الأداء (مثل أجهزة كشف الشبكات وحواسيب مخصصة).\nالمنصة تحتوي على نظام \"محفظة\" (Wallet) ونظام \"سلة مشتريات\" (Cart).\n\n#### قواعد العمل:\n- رصيد محفظتك الحالي هو **10 دولارات** فقط.\n- هدفك هو شراء جهاز **\"Signal Interceptor\"** الذي يبلغ سعره **1,500 دولار**.\n- نحتاج لاختبار المنطق البرمجي والرياضي للخادم (Business Logic) لمعرفة ما إذا كان من الممكن التلاعب بالعمليات الحسابية لشراء المنتج مجاناً.\n\nاضغط على **Next Step** لبدء الاستطلاع المتقدم.",
       "aiAdvisor": {
-        "hint": "ادرس الطلبات المارة عند الضغط على شراء.",
+        "hint": "اقرأ أهداف المهمة وسعر المنتج والفرق بينه وبين رصيدك الحالي.",
         "payloadExplanation": "لا توجد أكواد مطلوبة حالياً.",
         "failureExplanation": "لا يوجد."
       }
@@ -56,49 +56,53 @@ window.scenario_006 = {
       "time": "09:15",
       "workspace": "recon",
       "xpReward": 150,
-      "description": "### 🔍 فحص هيكلية طلبات الدفع\n\nسنقوم بالتحقق من صحة الخيارات المتاحة للمسار.\nاختر الأداة المناسبة لتشغيلها.",
+      "description": "### 🔍 استكشاف واجهة البرمجة (API Endpoints)\n\nقبل البدء بالهجوم، نحتاج لمعرفة كيف يتخاطب المتصفح مع السيرفر لإضافة المنتجات للطلب وتطبيق الخصومات.\nشغّل أداة الفحص والتخمين لمعرفة مسارات الدفع المتاحة.",
       "terminalCommands": [
         {
-          "name": "curl -I https://shop.target.com/checkout",
+          "name": "curl -I https://api.cybergear.com/api/cart/add",
           "correct": false,
           "output": [
             {
-              "text": "HTTP/1.1 200 OK",
-              "type": "info"
+              "text": "HTTP/2 405 Method Not Allowed",
+              "type": "error"
             },
             {
-              "text": "Server: nginx",
-              "type": "out"
+              "text": "Allow: POST",
+              "type": "error"
             }
           ]
         },
         {
-          "name": "ffuf -u https://shop.target.com/api/v2/initiate_payment -X POST -d '{\"product_id\": 123}'",
+          "name": "ffuf -u https://api.cybergear.com/api/cart -X POST -d \"item_id=8842\"",
           "correct": true,
           "evidence": {
-            "title": "Checkout API Parameters",
-            "content": "POST Parameters: product_id, amount, currency, user_id"
+            "title": "Discovered CyberGear API Paths",
+            "content": "POST /api/cart/add\nPOST /api/coupon/apply\nPOST /api/cart/checkout"
           },
           "output": [
             {
-              "text": "Status: 400 Bad Request",
+              "text": "[INF] Scanning directories under /api/cart...",
               "type": "info"
             },
             {
-              "text": "Response: Missing required parameters: amount, currency",
+              "text": "[+] Found endpoint: POST /api/cart/add",
               "type": "success"
             },
             {
-              "text": "[!] Success: Checkout parameters leaked in error message!",
+              "text": "[+] Found endpoint: POST /api/coupon/apply",
+              "type": "success"
+            },
+            {
+              "text": "[+] Found endpoint: POST /api/cart/checkout",
               "type": "success"
             }
           ]
         }
       ],
       "aiAdvisor": {
-        "hint": "شغّل ffuf للتحقق من البارامترات المطلوبة لواجهة الدفع البرمجية.",
-        "payloadExplanation": "ffuf تساعد في استكشاف وعمل فحص للمدخلات والمخرجات.",
-        "failureExplanation": "الفشل في معرفة البارامترات يجعلك ترسل طلبات غير مكتملة."
+        "hint": "شغّل أداة التخمين ffuf للتعرف على نهايات الخدمة (endpoints) المرتبطة بالسلة والدفع.",
+        "payloadExplanation": "تخمين المسارات يحدد لنا الروابط الفعالة التي تعيد تهيئة سلة المشتريات.",
+        "failureExplanation": "عدم معرفة نهايات الخدمة البرمجية يمنعنا من صياغة طلبات التلاعب."
       }
     },
     {
@@ -106,50 +110,95 @@ window.scenario_006 = {
       "time": "09:40",
       "workspace": "burp",
       "xpReward": 200,
-      "description": "### 🌐 اعتراض وتعديل طلب الدفع\n\nسنقوم بتعديل قيمة الـ `amount` من 1049 إلى 0 أو تجربة عملة الـ JPY المخفضة.\nاضغط على **Manipulate Price** لمشاهدة الرد.",
-      "burpRequest": "POST /api/v2/initiate_payment HTTP/1.1\nHost: shop.target.com\nContent-Type: application/json\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\n\n{\n  \"product_id\": 123,\n  \"amount\": 1049,\n  \"currency\": \"USD\",\n  \"user_id\": 1337\n}",
-      "burpResponse": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"payment_url\": \"https://payment-gateway.com/checkout?session=abc123\",\n  \"amount\": 1049\n}",
+      "description": "### 🌐 اعتراض الطلب والتلاعب بالكميات (Negative & Overflow Injection)\n\nلقد قمنا بالتقاط طلب إضافة جهاز \"Signal Interceptor\" بسعر 1,500 دولار.\nجرب تعديل كمية المنتجات في الطلب عبر Burp Suite لتمرير قيم سالبة أو تجاوز الحد الأقصى للمتغيرات (Integer Overflow) لتجاوز جدار الحماية (WAF).",
+      "burpRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": 1\n}",
+      "burpResponse": "HTTP/2 200 OK\nContent-Type: application/json\n\n{\n  \"status\": \"success\",\n  \"cart_total\": 1500,\n  \"message\": \"Item added to cart\"\n}",
       "burpActions": [
         {
-          "name": "Manipulate Price",
+          "name": "Inject Negative Quantity (-15)",
+          "correct": false,
+          "modifiedRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": -15\n}",
+          "modifiedResponse": "HTTP/2 400 Bad Request\nContent-Type: application/json\n\n{\n  \"error\": \"Security Filter: Negative values are strictly prohibited.\"\n}",
+          "outcome": "تم حظرك بواسطة جدار الحماية (WAF) الذي يكتشف علامة الناقص (-) في حقل الأرقام."
+        },
+        {
+          "name": "Bypass WAF with Float",
+          "correct": false,
+          "modifiedRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": -15.0\n}",
+          "modifiedResponse": "HTTP/2 500 Internal Server Error\nContent-Type: application/json\n\n{\n  \"error\": \"Database Error: Cannot cast negative float to unsigned integer.\"\n}",
+          "outcome": "تخطى جدار الحماية لكن قاعدة البيانات ترفض الرقم العشرى السالب لأن الحقل مبرمج كـ Unsigned INT."
+        },
+        {
+          "name": "Trigger Integer Overflow (4294967281)",
           "correct": true,
-          "modifiedRequest": "POST /api/v2/initiate_payment HTTP/1.1\nHost: shop.target.com\nContent-Type: application/json\n\n{\n  \"product_id\": 123,\n  \"amount\": 0,\n  \"currency\": \"USD\",\n  \"user_id\": 1337\n}",
-          "modifiedResponse": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"payment_url\": \"https://payment-gateway.com/checkout?session=def456\",\n  \"amount\": 0,\n  \"currency\": \"USD\"\n}",
-          "evidence": {
-            "title": "Price Tampered to $0",
-            "content": "POST /api/v2/initiate_payment amount: 0 -> Returned success session with $0"
-          }
+          "modifiedRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": 4294967281\n}",
+          "modifiedResponse": "HTTP/2 400 Bad Request\nContent-Type: application/json\n\n{\n  \"error\": \"Cart validation failed: Cart total cannot be verified.\"\n}",
+          "outcome": "تجاوزت الـ WAF وفك السيرفر تشفير القيمة لتمثل عدد سالب (-15) في معالجة الخلفية، ولكن الخادم يقوم بالتحقق من الإجمالي النهائي للسلة ويرفض المعاملات الشاذة أو غير المنطقية."
         }
       ],
       "aiAdvisor": {
-        "hint": "اضغط على زر Manipulate Price لتعديل السعر إلى 0 وتأكيد إمكانية الشراء المجاني.",
-        "payloadExplanation": "تعديل قيمة المعامل المرسل للخادم مباشرة لتخطي فحص الثمن.",
-        "failureExplanation": "تأكد من تمرير القيمة صفر بنجاح."
+        "hint": "اضغط على خيار Trigger Integer Overflow لمعرفة رد السيرفر عند حدوث التجاوز الحسابي الرقمي.",
+        "payloadExplanation": "الرقم 4294967281 يمثل القيمة سالبة 15 عند تفسيرها كعدد صحيح ذي إشارة 32-bit (Two's Complement).",
+        "failureExplanation": "المحاولات السابقة تم كشفها بفضل فلاتر الـ WAF والتحقق من الأنواع."
+      }
+    },
+    {
+      "name": "DNS Verification",
+      "time": "10:05",
+      "workspace": "markdown",
+      "xpReward": 150,
+      "description": "### 🧠 التفكير في مسار الهجوم البديل\n\nبعد أن فشلت محاولات التلاعب بالكميات والأرقام السالبة لتخفيض الإجمالي مباشرة بسبب التحقق من قيمة السلة:\n`{\"error\": \"Cart total cannot be verified\"}`\n\nكيف تتصرف الآن لتخطي هذا القيد البرمجي الحسابي؟",
+      "choices": [
+        {
+          "text": "أ) أبحث عن ثغرة XSS في اسم المنتج لتنفيذ كود في متصفح الأدمن للتحكم بحسابه.",
+          "correct": false,
+          "xp": -10,
+          "timePenalty": 5,
+          "outcome": "تشتيت للجهد وفقدان للتركيز على مسار الـ Logic الخاص بعملية الدفع الحساسة."
+        },
+        {
+          "text": "ب) أجرب إضافة منتج واحد بكمية 1، وأتلاعب بسعر المنتج نفسه في الطلب price: -1500.",
+          "correct": false,
+          "xp": -5,
+          "timePenalty": 2,
+          "outcome": "الأسعار عادة ما يتم جلبها وتأكيدها بالخلفية بناءً على قاعدة البيانات ولا تُقرأ من طلب المستخدم مباشرة."
+        },
+        {
+          "text": "ج) أبقي الكميات صحيحة (1)، لكني أحاول تطبيق كوبون الخصم تزامناً مع عملية الشراء (Race Condition) لكسر معادلة الخصم والدفع قبل أن يحدث التحديث النهائي.",
+          "correct": true,
+          "xp": 50,
+          "outcome": "تخمين رائع! استغلال العمليات التزامنية (Concurrency) هو الخيار الذهبي لتطبيق الخصم المتكرر أو كسر الشروط الحسابية وتعديل النتيجة النهائية."
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "اختر الخيار (ج) لتجربة الهجوم التزامني لتكرار تطبيق الكوبونات.",
+        "payloadExplanation": "الـ Race Condition يتجاوز الفحوصات المتتالية بإرسال طلبات دفع وكوبونات معاً في نفس التوقيت.",
+        "failureExplanation": "تجنب تضييع الوقت في تجربة ثغرات غير مؤثرة."
       }
     },
     {
       "name": "Exploitation & Flag",
-      "time": "10:05",
+      "time": "10:30",
       "workspace": "lab",
       "xpReward": 300,
-      "instructions": "أدخل الـ Flag المكتشف بعد تأكيد جلسة الدفع المجانية بنجاح.",
-      "targetUrl": "https://shop.target.com/api/v2/initiate_payment",
-      "correctFlag": "FLAG{price_manipulation_free_purchase}",
+      "instructions": "قم بتنفيذ هجوم Race Condition لإرسال طلب تطبيق الكوبون متزامناً مع طلب الدفع (Checkout) للحصول على العلم (Flag).",
+      "targetUrl": "https://api.cybergear.com/api/cart/checkout",
+      "correctFlag": "FLAG{business_logic_race_negative_wealth_cracked}",
       "aiAdvisor": {
-        "hint": "أدخل العلم الصحيح: FLAG{price_manipulation_free_purchase}",
-        "payloadExplanation": "تأكيد إكمال عملية التلاعب بنجاح.",
-        "failureExplanation": "تأكد من كتابة العلم بشكل صحيح."
+        "hint": "أدخل العلم المسترجع الصحيح: FLAG{business_logic_race_negative_wealth_cracked}",
+        "payloadExplanation": "الحصول على العلم يؤكد كسر شروط الدفع بنجاح.",
+        "failureExplanation": "تأكد من كتابة العلم والحروف بدقة."
       }
     },
     {
       "name": "Report Writing",
-      "time": "10:30",
+      "time": "11:00",
       "workspace": "report",
       "xpReward": 250,
       "aiAdvisor": {
-        "hint": "الكلمات المفتاحية المطلوبة هي 'price' و 'checkout'.",
-        "payloadExplanation": "شرح خطورة ثقة الخادم بمدخلات العميل في عمليات الدفع.",
-        "failureExplanation": "يجب وضع الكلمات المفتاحية بالتقرير للتقييم الصحيح."
+        "hint": "الكلمات المفتاحية المطلوبة هي 'race' و 'logic'.",
+        "payloadExplanation": "شرح كيفية التسبب في تطبيق خصومات متعددة تؤدي لإتمام الدفع مجاناً.",
+        "failureExplanation": "عدم ذكر التفاصيل والكلمات المفتاحية يقلل من جودة التقرير."
       }
     },
     {
@@ -157,8 +206,8 @@ window.scenario_006 = {
       "time": "5 Days Later",
       "workspace": "review",
       "aiAdvisor": {
-        "hint": "انظر Verdict وقبول الثغرة.",
-        "payloadExplanation": "تم تقييم الثغرة كـ High نظراً للخسائر المالية المباشرة.",
+        "hint": "راجع النتيجة وقبول الثغرة.",
+        "payloadExplanation": "تقييم الثغرة كـ Critical نظراً لتأثيرها المباشر على الإيرادات والأموال.",
         "failureExplanation": "لا يوجد."
       }
     },
@@ -168,44 +217,44 @@ window.scenario_006 = {
       "workspace": "quiz",
       "quizData": [
         {
-          "question": "ما هو الخطأ الرئيسي للمطور في هذا السيناريو؟",
+          "question": "ما هو السبب البرمجي الجوهري لحدوث ثغرات التزامن (Race Conditions)؟",
           "options": [
-            "عدم استخدام جدار حماية.",
-            "الثقة ببيانات السعر المرسلة من جهة العميل (Frontend) دون التحقق منها ومقارنتها بقاعدة البيانات في الخلفية (Backend).",
-            "استخدام عملات دولية.",
-            "حظر استخدام المتصفحات."
+            "بطء اتصال خوادم الويب الخاصة بالشركة.",
+            "عدم استخدام أقفال المعاملات (Database Locks/Mutex) للتحقق والتحديث بشكل متزامن.",
+            "استخدام جدار حماية ضعيف.",
+            "تسريب ملفات التكوين."
           ],
           "answer": 1
         },
         {
-          "question": "كيف يتم إصلاح ثغرات التلاعب بالأسعار نهائياً؟",
+          "question": "كيف يتم إصلاح ثغرات التلاعب بالمنطق البرمجي الحسابي في سلة التسوق؟",
           "options": [
-            "تشفير السعر بالكامل.",
-            "توليد السعر والتحقق منه بالكامل في الخلفية (Server-Side) بناءً على معرف المنتج الثابت ومطابقته بقاعدة البيانات قبل إرساله لبوابة الدفع.",
-            "تعطيل خيار الدفع بالعملات الأخرى.",
-            "حظر التعديل في الواجهة الأمامية فقط."
+            "تشفير أسماء المنتجات.",
+            "تطبيق تحديثات ذرية (Atomic Updates)، واستخدام دالة القيمة المطلقة abs() للكميات والتحقق التام بالخلفية.",
+            "حظر استخدام متصفحات الهاتف.",
+            "حظر استخدام الكوبونات نهائياً."
           ],
           "answer": 1
         }
       ],
       "aiAdvisor": {
         "hint": "الإجابة لكلا السؤالين هي الخيار الثاني (ب).",
-        "payloadExplanation": "مراجعة قواعد أمان منطق العمليات التجارية الحساسة.",
-        "failureExplanation": "خطأ في الإجابة يؤدي لخصم XP."
+        "payloadExplanation": "ترسيخ مبادئ المعاملات الذرية وحماية منطق العمل الحساس.",
+        "failureExplanation": "الإجابات الخاطئة تخصم من نقاط الـ XP."
       }
     }
   ],
   "realReport": {
-    "title": "Business Logic price manipulation on checkout api endpoint allows free purchases",
-    "severity": "High",
-    "type": "MassAssignment",
-    "desc": "The initiate_payment endpoint accepts the amount parameter directly from the client side and processes it without server-side database validation. This allows creating $0 order payment sessions.",
-    "steps": "1. Select a product and click checkout.\n2. Modify the POST body parameter amount to 0.\n3. The backend generates a checkout session with 0 USD.",
-    "impact": "Direct financial theft and unauthorized subscription upgrades.",
-    "feedback": "Confirmed. We patched the logic by fetching the official product price directly from the database prior to calling the payment gateway. Bounty awarded.",
+    "title": "Race condition in checkout coupon application leads to negative cart total or free purchases",
+    "severity": "Critical",
+    "type": "IDOR",
+    "desc": "The shopping cart checkout service at /api/cart/checkout is vulnerable to a race condition with the coupon application endpoint /api/coupon/apply. Applying multiple coupons concurrently during checking out reduces the final cart total to $0 and allows purchasing items for free.",
+    "steps": "1. Add a Signal Interceptor ($1,500) to the cart.\n2. Prepare concurrent requests to apply a coupon and checkout the cart.\n3. Send requests in parallel using a concurrency tool.\n4. Payment finishes successfully with a total of $0.",
+    "impact": "Direct theft of physical/digital goods without correct payment.",
+    "feedback": "Confirmed. We patched the logic by enforcing transaction locks and applying database updates atomically. Bounty awarded.",
     "keywords": [
-      "price",
-      "checkout"
+      "race",
+      "logic"
     ]
   }
 };
