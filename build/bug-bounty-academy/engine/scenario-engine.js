@@ -341,33 +341,180 @@ window.ScenarioEngine = {
     this.el.burpResp.innerText = step.burpResponse || '';
     this.el.burpActions.innerHTML = '';
 
-    if (step.burpActions) {
-      step.burpActions.forEach(action => {
-        const btn = document.createElement('button');
-        btn.className = 'hunt-btn';
-        btn.innerHTML = `<i class="bx bx-navigation"></i> ${action.name}`;
-        btn.addEventListener('click', () => {
-          this.el.burpReq.innerText = action.modifiedRequest || step.burpRequest;
-          this.el.burpResp.innerText = action.modifiedResponse || '';
-          
-          if (action.evidence) {
-            this.addEvidence(action.evidence);
-          }
+    const hasInteractive = typeof this.scenario.simulateBackend === 'function' || this.scenario.metadata.id === 'scenario-006';
+    this.el.burpReq.setAttribute('contenteditable', hasInteractive ? 'true' : 'false');
 
-          if (action.correct) {
-            alert("Vulnerable parameter tampered successfully! Target response payload captured in Burp proxy.");
-            this.el.nextBtn.disabled = false;
-          } else {
-            alert(action.outcome || "Bypass blocked by target security filters.");
-            if (action.timePenalty) {
-              this.timeSpent += action.timePenalty;
-              this.el.stepTimeSpent.innerText = this.timeSpent;
-            }
+    if (hasInteractive) {
+      // Premium V3 Interactive Repeater mode!
+      const sendBtn = document.createElement('button');
+      sendBtn.className = 'hunt-btn success-btn';
+      sendBtn.innerHTML = `<i class="bx bx-send"></i> Send Request (Repeater)`;
+      sendBtn.style.padding = '10px 20px';
+      sendBtn.style.fontWeight = 'bold';
+      
+      sendBtn.addEventListener('click', () => {
+        const requestText = this.el.burpReq.innerText || this.el.burpReq.textContent || '';
+        
+        // Extract JSON body
+        let bodyJson = null;
+        try {
+          const bodyStart = requestText.indexOf('{');
+          if (bodyStart !== -1) {
+            const bodyText = requestText.substring(bodyStart);
+            bodyJson = JSON.parse(bodyText.trim());
           }
-        });
-        this.el.burpActions.appendChild(btn);
+        } catch(e) {
+          console.warn("Failed to parse request JSON body: ", e);
+        }
+
+        // Run simulation backend logic (supports loaded JS module or static fallback)
+        let result;
+        if (typeof this.scenario.simulateBackend === 'function') {
+          result = this.scenario.simulateBackend(requestText, bodyJson);
+        } else {
+          result = this.runScenario006Simulation(requestText, bodyJson);
+        }
+
+        // Display response
+        this.el.burpResp.innerText = result.responseHeaders + '\n\n' + result.responseBody;
+
+        // Print observability log in browser console for realism
+        if (result.observabilityLog) {
+          console.log(`%c[BlueTeam Observability] ${result.observabilityLog}`, 'color: #ff3e3e; font-weight: bold;');
+        }
+
+        if (result.correct) {
+          alert(result.outcome || "Vulnerability bypassed successfully!");
+          this.el.nextBtn.disabled = false;
+          if (result.evidence) {
+            this.addEvidence(result.evidence);
+          }
+        } else {
+          alert(result.outcome || "Bypass blocked by target security filters.");
+          if (result.timePenalty) {
+            this.timeSpent += result.timePenalty;
+            this.el.stepTimeSpent.innerText = this.timeSpent;
+          }
+        }
       });
+      this.el.burpActions.appendChild(sendBtn);
+    } else {
+      // V2 Fallback static action buttons
+      if (step.burpActions) {
+        step.burpActions.forEach(action => {
+          const btn = document.createElement('button');
+          btn.className = 'hunt-btn';
+          btn.innerHTML = `<i class="bx bx-navigation"></i> ${action.name}`;
+          btn.addEventListener('click', () => {
+            this.el.burpReq.innerText = action.modifiedRequest || step.burpRequest;
+            this.el.burpResp.innerText = action.modifiedResponse || '';
+            
+            if (action.evidence) {
+              this.addEvidence(action.evidence);
+            }
+
+            if (action.correct) {
+              alert("Vulnerable parameter tampered successfully! Target response payload captured in Burp proxy.");
+              this.el.nextBtn.disabled = false;
+            } else {
+              alert(action.outcome || "Bypass blocked by target security filters.");
+              if (action.timePenalty) {
+                this.timeSpent += action.timePenalty;
+                this.el.stepTimeSpent.innerText = this.timeSpent;
+              }
+            }
+          });
+          this.el.burpActions.appendChild(btn);
+        });
+      }
     }
+  },
+
+  runScenario006Simulation(requestText, bodyJson) {
+    const response = {
+      responseHeaders: "HTTP/2 200 OK\nContent-Type: application/json",
+      responseBody: "{}",
+      correct: false,
+      outcome: "",
+      timePenalty: 0,
+      observabilityLog: ""
+    };
+
+    if (!bodyJson || typeof bodyJson.quantity === 'undefined') {
+      response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+      response.responseBody = JSON.stringify({ error: "Missing required parameters: quantity" }, null, 2);
+      response.outcome = "الطلب غير مكتمل أو يحتوي على بنية JSON غير صالحة.";
+      return response;
+    }
+
+    const qty = bodyJson.quantity;
+    const rawText = requestText.replace(/\s+/g, ''); // strip spaces to check patterns easily
+
+    // 1. Check if quantity is normal (1)
+    if (qty === 1) {
+      response.responseBody = JSON.stringify({ status: "success", cart_total: 1500, message: "Item added to cart" }, null, 2);
+      response.outcome = "تمت إضافة المنتج بنجاح بالسعر الطبيعي 1,500$.";
+      return response;
+    }
+
+    // 2. Check if raw request text contains explicit minus sign
+    const hasMinusSign = rawText.includes('"-15"') || rawText.includes(':-15') || rawText.includes(':-15.0') || rawText.includes('"-15.0"');
+    
+    if (qty < 0 && hasMinusSign) {
+      response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+      response.responseBody = JSON.stringify({ error: "WAF Blocked: Invalid characters detected." }, null, 2);
+      response.observabilityLog = "[WARN] WAF triggered on negative quantity payload '-15'.";
+      response.outcome = "تم حظرك بواسطة جدار الحماية (WAF) الذي يكتشف علامة الناقص (-) في حقل الأرقام.";
+      response.timePenalty = 5;
+      return response;
+    }
+
+    // 3. Float or Unicode bypass attempt
+    const isUnicodeBypass = rawText.includes('\\u002D');
+    const isFloatBypass = qty === -15.0 && !hasMinusSign; // bypassed minus check but still negative
+    
+    if (qty < 0 && (isUnicodeBypass || isFloatBypass)) {
+      response.responseHeaders = "HTTP/2 500 Internal Server Error\nContent-Type: application/json";
+      response.responseBody = JSON.stringify({ error: "Database Error: Cannot cast negative float to unsigned integer." }, null, 2);
+      response.observabilityLog = "[ERROR] Database constraint violation: Cannot store negative value in Unsigned Int column 'quantity'.";
+      response.outcome = "تجاوزت جدار الحماية (WAF) بنجاح، ولكن خادم قاعدة البيانات انهار بترميز 500 Internal Server Error لأن الحقل مبرمج كـ Unsigned INT ولا يقبل السوالب.";
+      response.timePenalty = 2;
+      return response;
+    }
+
+    // 4. Integer Overflow Attempt (Wraparound)
+    const MAX_INT = 2147483647;
+    if (qty > MAX_INT) {
+      let interpretedQty = qty;
+      if (qty > 2147483647 && qty <= 4294967295) {
+        interpretedQty = qty - 4294967296; // wrap to signed negative
+      }
+
+      if (interpretedQty === -15) {
+        response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+        response.responseBody = JSON.stringify({ error: "Cart validation failed: Cart total cannot be verified." }, null, 2);
+        response.observabilityLog = "[CRITICAL] Integer Overflow bypass successful! Interpreted quantity: -15. Cart calculation: (1 * 1500) + (-15 * 100) = 0. Checkout blocked by cart validation rules.";
+        response.outcome = "تجاوزت جدار الـ WAF بنجاح ووقع التفاف للمتغيرات (Integer Overflow) ليتحول العدد إلى -15 داخل الخادم. ولكن النظام كشف أن إجمالي السلة صفر أو شاذ، فرفض تفعيل الدفع بـ 400 Bad Request.";
+        response.correct = true; // Advance step!
+        response.evidence = {
+          title: "Integer Overflow Cart Bypass",
+          content: "POST /api/cart/add quantity: 4294967281 -> Bypasses WAF and overflows to -15"
+        };
+        return response;
+      } else {
+        response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+        response.responseBody = JSON.stringify({ error: "Cart validation failed: Cart total cannot be verified." }, null, 2);
+        response.observabilityLog = `[CRITICAL] Integer Overflow detected. Interpreted quantity: ${interpretedQty}. Cart Total: ${(1500 + interpretedQty * 100)}.`;
+        response.outcome = "تم إحداث التفاف للمتغيرات، ولكن قيمة السلة غير صحيحة أو السيرفر رفض التحقق من الإجمالي.";
+        return response;
+      }
+    }
+
+    // Generic fallback
+    response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+    response.responseBody = JSON.stringify({ error: "Invalid request parameters." }, null, 2);
+    response.outcome = "الطلب البرمجي لم ينجح في تجاوز جدار الحماية أو التسبب في الالتفاف الحسابي الصحيح.";
+    return response;
   },
 
   // --- PAYLOAD VIEWER ---

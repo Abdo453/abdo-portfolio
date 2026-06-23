@@ -256,5 +256,87 @@ window.scenario_006 = {
       "race",
       "logic"
     ]
+  },
+  simulateBackend(requestText, bodyJson) {
+    const response = {
+      responseHeaders: "HTTP/2 200 OK\nContent-Type: application/json",
+      responseBody: "{}",
+      correct: false,
+      outcome: "",
+      timePenalty: 0,
+      observabilityLog: ""
+    };
+
+    if (!bodyJson || typeof bodyJson.quantity === 'undefined') {
+      response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+      response.responseBody = JSON.stringify({ error: "Missing required parameters: quantity" }, null, 2);
+      response.outcome = "الطلب غير مكتمل أو يحتوي على بنية JSON غير صالحة.";
+      return response;
+    }
+
+    const qty = bodyJson.quantity;
+    const rawText = requestText.replace(/\s+/g, ''); // strip spaces to check patterns easily
+
+    // 1. Check if quantity is normal (1)
+    if (qty === 1) {
+      response.responseBody = JSON.stringify({ status: "success", cart_total: 1500, message: "Item added to cart" }, null, 2);
+      response.outcome = "تمت إضافة المنتج بنجاح بالسعر الطبيعي 1,500$.";
+      return response;
+    }
+
+    // 2. Check if raw request text contains explicit minus sign
+    const hasMinusSign = rawText.includes('"-15"') || rawText.includes(':-15') || rawText.includes(':-15.0') || rawText.includes('"-15.0"');
+    
+    if (qty < 0 && hasMinusSign) {
+      response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+      response.responseBody = JSON.stringify({ error: "WAF Blocked: Invalid characters detected." }, null, 2);
+      response.observabilityLog = "[WARN] WAF triggered on negative quantity payload '-15'.";
+      response.outcome = "تم حظرك بواسطة جدار الحماية (WAF) الذي يكتشف علامة الناقص (-) في حقل الأرقام.";
+      response.timePenalty = 5;
+      return response;
+    }
+
+    // 3. Float or Unicode bypass attempt
+    const isUnicodeBypass = rawText.includes('\\u002D');
+    const isFloatBypass = qty === -15.0 && !hasMinusSign; // bypassed minus check but still negative
+    
+    if (qty < 0 && (isUnicodeBypass || isFloatBypass)) {
+      response.responseHeaders = "HTTP/2 500 Internal Server Error\nContent-Type: application/json";
+      response.responseBody = JSON.stringify({ error: "Database Error: Cannot cast negative float to unsigned integer." }, null, 2);
+      response.observabilityLog = "[ERROR] Database constraint violation: Cannot store negative value in Unsigned Int column 'quantity'.";
+      response.outcome = "تجاوزت جدار الحماية (WAF) بنجاح، ولكن خادم قاعدة البيانات انهار بترميز 500 Internal Server Error لأن الحقل مبرمج كـ Unsigned INT ولا يقبل السوالب.";
+      response.timePenalty = 2;
+      return response;
+    }
+
+    // 4. Integer Overflow Attempt (Wraparound)
+    const MAX_INT = 2147483647;
+    if (qty > MAX_INT) {
+      let interpretedQty = qty;
+      if (qty > 2147483647 && qty <= 4294967295) {
+        interpretedQty = qty - 4294967296; // wrap to signed negative
+      }
+
+      if (interpretedQty === -15) {
+        response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+        response.responseBody = JSON.stringify({ error: "Cart validation failed: Cart total cannot be verified." }, null, 2);
+        response.observabilityLog = "[CRITICAL] Integer Overflow bypass successful! Interpreted quantity: -15. Cart calculation: (1 * 1500) + (-15 * 100) = 0. Checkout blocked by cart validation rules.";
+        response.outcome = "تجاوزت جدار الـ WAF بنجاح ووقع التفاف للمتغيرات (Integer Overflow) ليتحول العدد إلى -15 داخل الخادم. ولكن النظام كشف أن إجمالي السلة صفر أو شاذ، فرفض تفعيل الدفع بـ 400 Bad Request.";
+        response.correct = true; // Advance step!
+        return response;
+      } else {
+        response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+        response.responseBody = JSON.stringify({ error: "Cart validation failed: Cart total cannot be verified." }, null, 2);
+        response.observabilityLog = `[CRITICAL] Integer Overflow detected. Interpreted quantity: ${interpretedQty}. Cart Total: ${(1500 + interpretedQty * 100)}.`;
+        response.outcome = "تم إحداث التفاف للمتغيرات، ولكن قيمة السلة غير صحيحة أو السيرفر رفض التحقق من الإجمالي.";
+        return response;
+      }
+    }
+
+    // Generic fallback
+    response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
+    response.responseBody = JSON.stringify({ error: "Invalid request parameters." }, null, 2);
+    response.outcome = "الطلب البرمجي لم ينجح في تجاوز جدار الحماية أو التسبب في الالتفاف الحسابي الصحيح.";
+    return response;
   }
 };
