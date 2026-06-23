@@ -349,9 +349,9 @@
   </main>
 
   <!-- Load core registry and loading hooks -->
-  <script src="../assets/js/db.js"></script>
-  <script src="../engine/progress.js"></script>
-  <script src="../engine/parser.js"></script>
+  <script src="../assets/js/db.js?v=2"></script>
+  <script src="../engine/progress.js?v=2"></script>
+  <script src="../engine/parser.js?v=2"></script>
   
   <!-- Dynamic Scenario Script injector to bypass CORS in file:// protocol -->
   <script>
@@ -371,16 +371,16 @@
       // Map folder level name
       const lvlFolder = scMeta.level.toLowerCase().replace(' ', '');
       const script = document.createElement('script');
-      script.src = `../data/scenarios/${lvlFolder}/${scId.replace('-', '_')}.js`;
+      script.src = `../data/scenarios/${lvlFolder}/${scId.replace('-', '_')}.js?v=${Date.now()}`;
       
       script.onload = function() {
         // Core game script dependencies
         const simScript = document.createElement('script');
-        simScript.src = '../engine/simulation.js';
+        simScript.src = `../engine/simulation.js?v=${Date.now()}`;
         
         simScript.onload = function() {
           const rendererScript = document.createElement('script');
-          rendererScript.src = '../engine/renderer.js';
+          rendererScript.src = `../engine/renderer.js?v=${Date.now()}`;
           
           rendererScript.onload = function() {
             window.SimulationManager.init(scId, window[scId.replace('-', '_')]);
