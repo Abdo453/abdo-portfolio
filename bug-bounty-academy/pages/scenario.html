@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investigation Room | Bug Bounty Scenarios Academy</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <!-- Marked.js -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    /* Adjust asset references for subfolder hierarchy */
+    :root {
+      --header-height: 70px;
+    }
+    .view-panel {
+      padding: 0;
+      max-width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body style="overflow: hidden;">
+
+  <!-- Visual decoration -->
+  <div class="bg-glow">
+    <div class="glow-orb orb-1" style="opacity: 0.1;"></div>
+  </div>
+  <div class="scanlines"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="logo">
+      <i class="bx bx-target-lock logo-icon"></i>
+      <span class="logo-text">Bug Bounty Scenarios Academy</span>
+      <span class="logo-subtext">Simulator V2</span>
+    </div>
+    
+    <div class="header-stats">
+      <div class="stat-badge xp-badge">
+        <i class="bx bxs-zap"></i>
+        <span class="stat-label">XP:</span>
+        <span class="stat-value" id="global-xp">0</span>
+      </div>
+      <div class="stat-badge bounty-badge">
+        <i class="bx bx-dollar-circle"></i>
+        <span class="stat-label">Bounty:</span>
+        <span class="stat-value" id="global-bounty">$0</span>
+      </div>
+      <div class="stat-badge rank-badge">
+        <i class="bx bxs-medal"></i>
+        <span class="stat-label">Rank:</span>
+        <span class="stat-value" id="global-rank">Recon Rookie</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Split Pane Game View -->
+  <main class="view-panel active">
+    <!-- Simulator controls subheader -->
+    <div class="simulator-controls">
+      <button class="control-btn back-btn" id="exit-sim-btn">
+        <i class="bx bx-left-arrow-alt"></i> Leave Simulation
+      </button>
+      <div class="simulator-title" id="sim-scenario-title">Scenario: Loading data...</div>
+      
+      <!-- AI Advisor assistant chat drawer toggler -->
+      <button class="control-btn" id="ai-advisor-toggle-btn" style="margin-left: auto; border-color: rgba(6, 182, 212, 0.25); color: var(--accent-cyan);">
+        <i class="bx bx-bot"></i> Ask AI Advisor
+      </button>
+    </div>
+
+    <div class="simulator-layout">
+      <!-- Left Timeline Navigation Sidebar -->
+      <aside class="timeline-sidebar">
+        <!-- Scenario statistics brief widget -->
+        <div class="sidebar-scenario-card">
+          <div class="badge-row">
+            <span class="difficulty-badge" id="sim-diff-badge">Easy</span>
+            <span class="category-badge" id="sim-category-badge">Auth</span>
+          </div>
+          <div class="metric-row">
+            <div class="metric-item">
+              <span class="metric-lbl">Bounty</span>
+              <span class="metric-val text-green" id="sim-bounty-val">$3,500</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-lbl">Est. Time</span>
+              <span class="metric-val" id="sim-time-val">2 Hours</span>
+            </div>
+          </div>
+          <div class="company-row">
+            <span class="metric-lbl">Company:</span>
+            <span class="company-name" id="sim-company-val">Hidden</span>
+          </div>
+        </div>
+
+        <!-- Clock-based step list -->
+        <ul class="timeline-steps" id="timeline-steps-list">
+          <!-- Populated dynamically by timeline component -->
+        </ul>
+      </aside>
+
+      <!-- Right Main Workspace Panel -->
+      <section class="workspace-panel">
+        
+        <!-- Step Header details -->
+        <div class="workspace-header">
+          <h2 id="step-title">Mission Brief</h2>
+          <div class="step-metrics">
+            <span>Time Spent: <strong class="text-orange" id="step-time-spent">0</strong> min</span>
+            <span>•</span>
+            <span>Step Potential Reward: <strong class="text-green" id="step-xp-potential">0</strong> XP</span>
+          </div>
+        </div>
+
+        <!-- Main Workspace Body -->
+        <div class="workspace-body">
+          
+          <!-- Markdown Text Render container -->
+          <div id="step-content-markdown" class="markdown-body">
+            <!-- Parsed html -->
+          </div>
+
+          <!-- TERMINAL COMPONENT -->
+          <div id="workspace-terminal" class="interactive-component hidden">
+            <div class="terminal-shell">
+              <div class="terminal-header">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">bash - recon@hunter-machine:~</span>
+              </div>
+              <div class="terminal-body" id="term-body">
+                <!-- CLI inputs/outputs -->
+              </div>
+              <div class="terminal-footer">
+                <span class="term-prompt">hunter@recon:~$</span>
+                <input type="text" id="term-input" placeholder="Choose a command to run below..." disabled>
+              </div>
+            </div>
+            <div class="terminal-controls" id="term-control-buttons">
+              <!-- CLI trigger buttons -->
+            </div>
+          </div>
+
+          <!-- BURP SUITE COMPONENT -->
+          <div id="workspace-burp" class="interactive-component hidden">
+            <div class="burp-shell">
+              <div class="burp-header">
+                <span class="burp-tab active" id="burp-tab-proxy"><i class="bx bx-wifi"></i> Proxy</span>
+                <span class="burp-tab" id="burp-tab-repeater"><i class="bx bx-navigation"></i> Repeater</span>
+              </div>
+              <div class="burp-grid">
+                <div class="burp-pane">
+                  <div class="pane-header">HTTP Request</div>
+                  <pre class="code-editor" id="burp-request-view" contenteditable="false"></pre>
+                </div>
+                <div class="burp-pane">
+                  <div class="pane-header">HTTP Response</div>
+                  <pre class="code-editor" id="burp-response-view" contenteditable="false"></pre>
+                </div>
+              </div>
+            </div>
+            <div class="burp-controls" id="burp-actions-container">
+              <!-- Tampering injection actions -->
+            </div>
+          </div>
+
+          <!-- 🧠 DECISION LOG COMPONENT -->
+          <div id="workspace-decision-log" class="mindset-box hidden" style="border-color: rgba(245, 158, 11, 0.25); background: rgba(245, 158, 11, 0.01);">
+            <div class="box-header text-orange" style="border-color: rgba(245, 158, 11, 0.25);"><i class="bx bx-git-branch"></i> 🧠 Hunter's Decision Log & Logical Flow</div>
+            <div class="box-content" id="decision-log-content">
+              <!-- Dynamic decision log details -->
+            </div>
+          </div>
+
+          <!-- PAYLOAD VIEWER COMPONENT -->
+          <div id="workspace-payload" class="interactive-component hidden">
+            <div class="mindset-box" style="border-color: rgba(168, 85, 247, 0.25); background: rgba(168, 85, 247, 0.01);">
+              <div class="box-header text-purple" style="border-color: rgba(168, 85, 247, 0.25);"><i class="bx bx-code-block"></i> Vulnerability Payload Analysis</div>
+              <div class="box-content" id="payload-content-area">
+                <!-- Payload breakdown tables -->
+              </div>
+            </div>
+          </div>
+
+          <!-- EVIDENCE LOCKER -->
+          <div id="workspace-evidence" class="evidence-locker hidden">
+            <div class="locker-header"><i class="bx bx-archive-in"></i> Evidence Locker</div>
+            <div class="evidence-grid" id="evidence-container">
+              <!-- Evidence snippets -->
+            </div>
+          </div>
+
+          <!-- REPORT BUILDER FORM -->
+          <div id="workspace-report" class="interactive-component hidden">
+            <div class="report-builder">
+              <div class="report-form">
+                <div class="form-group">
+                  <label for="report-title">Report Title</label>
+                  <input type="text" id="report-title" placeholder="Identify the route and vulnerability summary">
+                </div>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="report-severity">Severity</label>
+                    <select id="report-severity">
+                      <option value="">Select Severity...</option>
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                      <option value="Critical">Critical</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="report-type">Vulnerability Type</label>
+                    <select id="report-type">
+                      <option value="">Select Vulnerability...</option>
+                      <option value="IDOR">Insecure Direct Object Reference (IDOR)</option>
+                      <option value="XSS">Cross-Site Scripting (XSS)</option>
+                      <option value="SSRF">Server-Side Request Forgery (SSRF)</option>
+                      <option value="AuthBypass">Authentication Bypass</option>
+                      <option value="PrivEsc">Privilege Escalation</option>
+                      <option value="MassAssignment">Mass Assignment</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="report-desc">Description</label>
+                  <textarea id="report-desc" rows="4" placeholder="Vulnerability details..."></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="report-steps">Steps to Reproduce</label>
+                  <textarea id="report-steps" rows="6" placeholder="Provide step by step replication guidelines..."></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="report-impact">Impact</label>
+                  <textarea id="report-impact" rows="3" placeholder="Security impact on user database / server backend..."></textarea>
+                </div>
+                <button class="hunt-btn success-btn" id="submit-report-btn"><i class="bx bxs-file-export"></i> Submit Report to Triage</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- REPORT COMPARISON REVIEW -->
+          <div id="workspace-review" class="interactive-component hidden">
+            <div class="review-split">
+              <div class="review-pane user-report">
+                <h4>Your Submitted Report</h4>
+                <div class="review-card" id="user-report-summary"></div>
+              </div>
+              <div class="review-pane real-report">
+                <h4>Real Disclosed Report / Reference</h4>
+                <div class="review-card real" id="real-report-summary"></div>
+              </div>
+            </div>
+            <div class="triage-verdict-box" id="triage-verdict-panel">
+              <!-- Triager verdict score -->
+            </div>
+          </div>
+
+          <!-- MISTAKES CHECKLIST -->
+          <div id="workspace-mistakes" class="mistakes-box hidden">
+            <div class="box-header text-red"><i class="bx bx-x-circle"></i> Common Hunter Traps & Mistakes</div>
+            <div class="box-content" id="mistakes-list">
+              <!-- Injected mistakes -->
+            </div>
+          </div>
+
+          <!-- QUIZ CONTAINER -->
+          <div id="workspace-quiz" class="interactive-component hidden">
+            <div class="quiz-shell">
+              <div class="quiz-progress">Question <span id="quiz-current-num">1</span> of <span id="quiz-total-num">5</span></div>
+              <div class="quiz-question" id="quiz-question-text">Quiz question content...</div>
+              <div class="quiz-options" id="quiz-options-list">
+                <!-- Quiz options cards -->
+              </div>
+              <div class="quiz-navigation">
+                <button class="hunt-btn" id="quiz-submit-btn">Verify Answer</button>
+                <button class="hunt-btn hidden" id="quiz-next-btn">Next Question <i class="bx bx-right-arrow-alt"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- DECISION POINTS / CHOICES BRANCHING -->
+          <div id="step-choices-container" class="choices-panel hidden">
+            <h3 class="choices-header"><i class="bx bx-navigation"></i> Decision Point: Choose Next Action</h3>
+            <div class="choices-grid" id="step-choices">
+              <!-- Choices buttons -->
+            </div>
+          </div>
+
+          <!-- LAB FLAGGING COMPONENT -->
+          <div id="workspace-lab" class="interactive-component hidden">
+            <div class="lab-shell">
+              <div class="lab-icon"><i class="bx bx-code-alt"></i></div>
+              <h3>Hands-On Simulation Lab</h3>
+              <p id="lab-instructions"></p>
+              <div class="lab-challenge-box">
+                <span class="challenge-tag">Simulated Target URL</span>
+                <div class="target-url-container">
+                  <code id="lab-target-url">https://bank-api.staging.target.com/</code>
+                  <button class="copy-url-btn" onclick="navigator.clipboard.writeText(document.getElementById('lab-target-url').innerText)"><i class="bx bx-copy"></i></button>
+                </div>
+              </div>
+              <div class="lab-flag-submission">
+                <input type="text" id="lab-flag-input" placeholder="Enter captured Flag (e.g. FLAG{...})">
+                <button class="hunt-btn success-btn" id="submit-flag-btn">Submit Flag</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="workspace-navigation">
+          <button class="hunt-btn secondary" id="prev-step-btn" disabled>
+            <i class="bx bx-chevron-left"></i> Previous Step
+          </button>
+          <button class="hunt-btn" id="next-step-btn" disabled>
+            Next Step <i class="bx bx-chevron-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- AI ASSISTANT CHAT DRAWER PANEL -->
+      <aside class="ai-assistant-drawer" id="ai-advisor-drawer" style="width: 320px; border-left: 1px solid var(--border-color); background: #0b111e; display: flex; flex-direction: column; transform: translateX(320px); transition: transform 0.3s; position: absolute; right: 0; top: var(--header-height); bottom: 0; z-index: 99;">
+        <div class="drawer-header" style="padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-card);">
+          <span style="font-weight: 700; color: var(--accent-cyan); display: flex; align-items: center; gap: 8px;"><i class="bx bx-bot"></i> AI Investigation Advisor</span>
+          <button id="close-ai-drawer-btn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.25rem;"><i class="bx bx-x"></i></button>
+        </div>
+        <div class="drawer-chat-body" id="ai-chat-history" style="flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; font-size: 0.82rem; line-height: 1.5;">
+          <div class="chat-bubble ai-bubble" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; color: var(--text-secondary);">
+            Hello Hunter. I am your AI Mentor. Ask me for hints, payload explanations, or reviews for this step.
+          </div>
+        </div>
+        <div class="drawer-chat-footer" style="padding: 15px; border-top: 1px solid var(--border-color); background: var(--bg-card); display: flex; gap: 8px;">
+          <input type="text" id="ai-chat-input" placeholder="Ask AI Advisor..." style="flex-grow: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; color: var(--text-main); font-size: 0.8rem; outline: none;">
+          <button id="send-ai-chat-btn" class="hunt-btn success-btn" style="padding: 8px 12px; border-radius: 6px; font-size: 0.8rem;">Send</button>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Load core registry and loading hooks -->
+  <script src="../assets/js/db.js"></script>
+  <script src="../engine/progress.js"></script>
+  <script src="../engine/parser.js"></script>
+  
+  <!-- Dynamic Scenario Script injector to bypass CORS in file:// protocol -->
+  <script>
+    (function() {
+      // Parse query string for scenario id
+      const params = new URLSearchParams(window.location.search);
+      const scId = params.get('id') || 'scenario-001';
+      
+      // Load scenairo definition dynamically
+      const scMeta = window.scenariosDatabase.find(x => x.id === scId);
+      if(!scMeta) {
+        alert("Scenario not found in registry database!");
+        window.location.href = '../index.html';
+        return;
+      }
+      
+      // Map folder level name
+      const lvlFolder = scMeta.level.toLowerCase().replace(' ', '');
+      const script = document.createElement('script');
+      script.src = `../data/scenarios/${lvlFolder}/${scId.replace('-', '_')}.js`;
+      
+      script.onload = function() {
+        // Core game script dependencies
+        const simScript = document.createElement('script');
+        simScript.src = '../engine/simulation.js';
+        
+        simScript.onload = function() {
+          const rendererScript = document.createElement('script');
+          rendererScript.src = '../engine/renderer.js';
+          document.head.appendChild(rendererScript);
+        };
+        
+        document.head.appendChild(simScript);
+      };
+      
+      script.onerror = function() {
+        alert("Failed to load scenario dynamic data file!");
+        window.location.href = '../index.html';
+      };
+      
+      document.head.appendChild(script);
+    })();
+  </script>
+</body>
+</html>

@@ -1,14 +1,35 @@
 [
     {
-        "chapter": "PART 1: The Basics (Ch 1-2)",
+        "chapter": "Domain 1: Linux Basics",
         "questions": [
             {
-                "question": "What is the difference between User Space and Kernel Space?",
+                "question": "What is the difference between an absolute path and a relative path?",
                 "tips": [
-                    "Mention hardware access.",
-                    "Mention restriction levels."
+                    "Mention the root directory.",
+                    "Mention current working directory."
                 ],
-                "answer": "Kernel space has unrestricted access to hardware, while user space is restricted and communicates with the kernel via system calls."
+                "answer": "An absolute path always starts from the root directory (/), specifying the full path. A relative path starts from the current working directory, often using . or .. as references."
+            },
+            {
+                "question": "Explain the difference between '>' and '>>' in bash redirection.",
+                "tips": [
+                    "Mention overwriting.",
+                    "Mention appending."
+                ],
+                "answer": "The '>' operator redirects output to a file and overwrites the file's existing content. The '>>' operator redirects output and appends it to the end of the file."
+            }
+        ]
+    },
+    {
+        "chapter": "Domain 4: Pentesting",
+        "questions": [
+            {
+                "question": "If you gain a low-privilege shell, how do you find SUID binaries?",
+                "tips": [
+                    "Mention the find command.",
+                    "Mention the specific permission flag."
+                ],
+                "answer": "You can use the find command: find / -perm -4000 -type f 2>/dev/null to search the root filesystem for files with the SUID bit set, redirecting errors to /dev/null."
             }
         ]
     }

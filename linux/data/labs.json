@@ -1,13 +1,77 @@
 [
     {
-        "phase": "PART 1: The Basics (Ch 1-2)",
+        "phase": "Domain 1: Linux Basics & CLI",
         "levels": [
             {
-                "id": "lab1",
-                "title": "Basic Commands",
-                "objective": "Practice basic Linux navigation.",
-                "hint": "Try using ls and pwd.",
-                "validate": "function(state) { return state.commands && state.commands.includes('ls'); }"
+                "id": "lab1_1",
+                "title": "Navigate the FHS",
+                "objective": "Change your directory to /etc and list its contents.",
+                "hint": "Use 'cd /etc' then 'ls'.",
+                "validate": "function(state) { return state.history && state.history.includes('cd /etc') && state.history.includes('ls'); }"
+            },
+            {
+                "id": "lab1_2",
+                "title": "Text Processing: Grep",
+                "objective": "Search for the word 'root' inside the /etc/passwd file.",
+                "hint": "Use 'grep root /etc/passwd'.",
+                "validate": "function(state) { return state.history && state.history.some(c => c.includes('grep root /etc/passwd')); }"
+            }
+        ]
+    },
+    {
+        "phase": "Domain 2: System Internals",
+        "levels": [
+            {
+                "id": "lab2_1",
+                "title": "Process Management",
+                "objective": "A rogue process is running. View all processes to find it.",
+                "hint": "Use 'ps aux'.",
+                "validate": "function(state) { return state.history && state.history.includes('ps aux'); }"
+            },
+            {
+                "id": "lab2_2",
+                "title": "Change Permissions",
+                "objective": "Make the file 'script.sh' executable for everyone.",
+                "hint": "Use 'chmod 777 script.sh' or 'chmod +x script.sh'.",
+                "validate": "function(state) { return state.history && state.history.some(c => c.includes('chmod') && c.includes('script.sh')); }"
+            }
+        ]
+    },
+    {
+        "phase": "Domain 3: Administration & Networking",
+        "levels": [
+            {
+                "id": "lab3_1",
+                "title": "Check IP Address",
+                "objective": "Find the IP address of your machine using the modern command.",
+                "hint": "Use 'ip a'.",
+                "validate": "function(state) { return state.history && state.history.includes('ip a'); }"
+            },
+            {
+                "id": "lab3_2",
+                "title": "Start SSH Service",
+                "objective": "Start the SSH service using systemctl.",
+                "hint": "Use 'systemctl start ssh'.",
+                "validate": "function(state) { return state.history && state.history.includes('systemctl start ssh'); }"
+            }
+        ]
+    },
+    {
+        "phase": "Domain 4: Security & Pentesting",
+        "levels": [
+            {
+                "id": "lab4_1",
+                "title": "Find SUID Binaries",
+                "objective": "Search the entire filesystem for files with the SUID bit set, hiding errors.",
+                "hint": "Use 'find / -perm -4000 2>/dev/null'.",
+                "validate": "function(state) { return state.history && state.history.some(c => c.includes('find') && c.includes('-perm -4000')); }"
+            },
+            {
+                "id": "lab4_2",
+                "title": "Check Sudo Privileges",
+                "objective": "Check what commands you are allowed to run as root.",
+                "hint": "Use 'sudo -l'.",
+                "validate": "function(state) { return state.history && state.history.includes('sudo -l'); }"
             }
         ]
     }
