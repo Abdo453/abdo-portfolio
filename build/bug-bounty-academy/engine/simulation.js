@@ -555,6 +555,28 @@ window.SimulationManager = {
     this.el.labFlagInput.value = '';
     this.el.submitFlagBtn.disabled = false;
 
+    // Add a simulated exploit button if not already present
+    let exploitBtn = document.getElementById('lab-exploit-simulate-btn');
+    if (!exploitBtn) {
+      exploitBtn = document.createElement('button');
+      exploitBtn.id = 'lab-exploit-simulate-btn';
+      exploitBtn.className = 'hunt-btn';
+      exploitBtn.style.marginTop = '10px';
+      exploitBtn.style.marginBottom = '20px';
+      exploitBtn.style.width = '100%';
+      exploitBtn.style.background = 'rgba(6, 182, 212, 0.1)';
+      exploitBtn.style.borderColor = 'var(--accent-cyan)';
+      exploitBtn.style.color = 'var(--accent-cyan)';
+      exploitBtn.innerHTML = '<i class="bx bx-play-circle"></i> Run Exploit (Simulate Request)';
+      
+      const submissionDiv = this.el.lab.querySelector('.lab-flag-submission');
+      submissionDiv.parentNode.insertBefore(exploitBtn, submissionDiv);
+    }
+    
+    exploitBtn.onclick = () => {
+      alert(`[Simulated Browser Output for: ${step.targetUrl}]\n\nExploit Executed Successfully!\n\nCaptured Flag: ${step.correctFlag}`);
+    };
+
     this.el.submitFlagBtn.onclick = () => {
       const flag = this.el.labFlagInput.value.trim();
       if (!flag) return;
