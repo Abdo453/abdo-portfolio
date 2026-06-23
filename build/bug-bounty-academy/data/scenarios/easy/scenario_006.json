@@ -36,23 +36,23 @@
   ],
   "steps": [
     {
-      "name": "Mission Brief",
+      "name": "Mission",
       "time": "09:00",
       "workspace": "markdown",
       "xpReward": 100,
-      "description": "### 🎯 الهدف: فحص منصة CyberGear ومحاكي محفظة السلة\n\nمرحباً بك في منصة **\"CyberGear\"**، وهو متجر إلكتروني لبيع معدات الاختراق عالية الأداء (مثل أجهزة كشف الشبكات وحواسيب مخصصة).\nالمنصة تحتوي على نظام \"محفظة\" (Wallet) ونظام \"سلة مشتريات\" (Cart).\n\n#### قواعد العمل:\n- رصيد محفظتك الحالي هو **10 دولارات** فقط.\n- هدفك هو شراء جهاز **\"Signal Interceptor\"** الذي يبلغ سعره **1,500 دولار**.\n- نحتاج لاختبار المنطق البرمجي والرياضي للخادم (Business Logic) لمعرفة ما إذا كان من الممكن التلاعب بالعمليات الحسابية لشراء المنتج مجاناً.\n\nاضغط على **Next Step** لبدء الاستطلاع المتقدم.",
+      "description": "### 🎯 MISSION BRIEF\n\n**Target**: CyberGear E-Commerce System  \n**Objective**: Buy \"Signal Interceptor\" ($1,500) with a Wallet balance of only $10.  \n**Reward**: $5,000 | **Difficulty**: Easy → Medium\n\n---\n\n#### 🩻 Threat Model (نموذج التهديد)\n* **Wallet Service**: تسمح المحفظة للمستخدم بجمع وتحديث رصيد الدفع.\n* **Cart Service**: تعتمد على الحساب البرمجي بالخلفية لجمع إجمالي السعر.\n* **Vulnerability**: لا توجد حماية أمنية أو تحققات صارمة لسلامة رصيد السلة النهائي.\n\nاضغط على **Next Step** لبدء الاستطلاع وتجميع بيانات الأهداف.",
       "aiAdvisor": {
-        "hint": "اقرأ أهداف المهمة وسعر المنتج والفرق بينه وبين رصيدك الحالي.",
-        "payloadExplanation": "لا توجد أكواد مطلوبة حالياً.",
-        "failureExplanation": "لا يوجد."
+        "hint": "Check the threat model details: Target item is Signal Interceptor at $1,500.",
+        "payloadExplanation": "No payload is needed in the mission brief step.",
+        "failureExplanation": "None."
       }
     },
     {
-      "name": "Passive Recon",
+      "name": "Recon",
       "time": "09:15",
       "workspace": "recon",
       "xpReward": 150,
-      "description": "### 🔍 استكشاف واجهة البرمجة (API Endpoints)\n\nقبل البدء بالهجوم، نحتاج لمعرفة كيف يتخاطب المتصفح مع السيرفر لإضافة المنتجات للطلب وتطبيق الخصومات.\nشغّل أداة الفحص والتخمين لمعرفة مسارات الدفع المتاحة.",
+      "description": "### 🔍 RECON PHASE\n\nنحتاج أولاً لتحديد مسارات الخدمة البرمجية (API Endpoints) التي يستدعيها المتصفح لإتمام الطلبات وسحب الأموال.\n\n#### 🧭 Interesting Observations (الملاحظات الأولية)\n* تحديث الرصيد يتم بشكل فوري بدون قيود أمنية.\n* لا توجد ترويسات حماية أو توكين تحقق (Verification Token) لمنع تزوير المعاملات.\n* عمليات احتساب قيمة سلة المشتريات تعتمد جزئياً على مدخلات العميل.\n\nشغّل أداة التخمين `ffuf` للتعرف على نهايات الخدمة (endpoints).",
       "terminalCommands": [
         {
           "name": "curl -I https://api.cybergear.com/api/cart/add",
@@ -96,54 +96,32 @@
         }
       ],
       "aiAdvisor": {
-        "hint": "شغّل أداة التخمين ffuf للتعرف على نهايات الخدمة (endpoints) المرتبطة بالسلة والدفع.",
-        "payloadExplanation": "تخمين المسارات يحدد لنا الروابط الفعالة التي تعيد تهيئة سلة المشتريات.",
-        "failureExplanation": "عدم معرفة نهايات الخدمة البرمجية يمنعنا من صياغة طلبات التلاعب."
+        "hint": "Check if backend validates negative values. Run ffuf command to scan API paths.",
+        "payloadExplanation": "ffuf tool exposes the active API endpoints so we can target them directly.",
+        "failureExplanation": "Missing endpoint scanning prevents us from modifying the checkout cart flows."
       }
     },
     {
-      "name": "Burp Verification",
+      "name": "Burp Stage",
       "time": "09:40",
       "workspace": "burp",
       "xpReward": 200,
-      "description": "### 🌐 اعتراض الطلب والتلاعب بالكميات (Negative & Overflow Injection)\n\nلقد قمنا بالتقاط طلب إضافة جهاز **\"Signal Interceptor\"** بسعر 1,500 دولار.\nجرب تعديل كمية المنتجات في الطلب عبر Burp Suite لتمرير قيم سالبة أو تجاوز الحد الأقصى للمتغيرات (Integer Overflow) لتجاوز جدار الحماية (WAF).\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-world\"></i> 🌐 Browser Thinking (كيف يرى المتصفح هذا الطلب؟)</summary>\n  <div class=\"accordion-content\">\n    <ul>\n      <li><strong>SameSite Cookies:</strong> بما أن الطلب يُرسل إلى <code>api.cybergear.com</code> من نفس الأصل (Same-Origin)، فإن المتصفح سيرسل ملفات الكوكيز (Cookies) وتوكين الجلسة تلقائياً.</li>\n      <li><strong>Origin Header:</strong> المتصفح يضيف ترويسة <code>Origin: https://cybergear.com</code> للتأكيد على مصدر الطلب للـ Backend لحماية من هجمات CSRF.</li>\n      <li><strong>Request Content-Type:</strong> تم ترميز جسم الطلب كـ <code>application/json</code>، وهي الصيغة التي يتوقعها الخادم ويقوم بتحليلها.</li>\n    </ul>\n  </div>\n</details>\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-server\"></i> ⚙️ Server Thinking (تشريح خريطة عمل السيرفر)</summary>\n  <div class=\"accordion-content\">\n    <p>يمر طلب المستخدم عبر طبقات الحماية المتتالية على النحو التالي:</p>\n    <code>Request ➔ WAF Filter (يتحقق من السوالب) ➔ Auth Middleware (يتحقق من التوكين) ➔ Cart Service (الحساب الرياضي) ➔ DB Write</code>\n    <p style=\"margin-top: 8px;\"><strong>نقطة الخلل:</strong> يمنع الـ WAF علامة الناقص <code>-</code> صراحةً، ولكنه يفشل في منع الأعداد الضخمة التي تتسبب في طفح الأرقام (Integer Overflow)، والتي تلتف في لغة السي بلس بلس أو لغات الـ Backend لتصبح سالبة داخل المعالج بعد عبور طبقة الفلترة.</p>\n  </div>\n</details>\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-brain\"></i> 🧠 Expert Mindset & Burp Notes (عقلية الخبير وملاحظات بورب)</summary>\n  <div class=\"accordion-content\">\n    <h4>ملاحظة بورب الاحترافية:</h4>\n    <p>عند إرسال قيمة سالبة صريحة، يرجع الخادم استجابة <code>400 Bad Request</code> مع حجم رد صغير (Size: 180B). ولكن عند إرسال قيمة Float، يرجع <code>500 Internal Server Error</code> (Size: 520B) مما يعكس انهياراً في المعالجة البرمجية خلف جدار الحماية.</p>\n    <h4 style=\"margin-top:10px;\">فرصة النجاح (Success Chance):</h4>\n    <p>⭐⭐⭐⭐☆ (80%) - تجاوز الـ WAF باستخدام Overflow هو ثغرة كلاسيكية تحدث عند دمج لغات برمجة مختلفة (مثل جافا سكربت كـ Frontend، وسي بلس بلس أو لغات مفسرة ضعيفة النوع في الـ Backend).</p>\n  </div>\n</details>",
+      "description": "### 🛠️ BURP SUITE MODE\n\nلقد قمنا بالتقاط طلب إضافة جهاز **\"Signal Interceptor\"** بسعر 1,500 دولار.  \nجرب تعديل كمية المنتجات في الطلب عبر Burp Suite لتمرير قيم سالبة أو تجاوز الحد الأقصى للمتغيرات (Integer Overflow) لتجاوز جدار الحماية (WAF).\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-world\"></i> 🌐 Browser Thinking (كيف يفكر المتصفح؟)</summary>\n  <div class=\"accordion-content\">\n    <ul>\n      <li><strong>SameSite Cookies</strong>: يتم إرسال كوكيز الجلسة تلقائياً للـ API لكونه Same-Origin.</li>\n      <li><strong>Origin Header</strong>: يرفق المتصفح ترويسة <code>Origin: https://cybergear.com</code> لحماية الموقع من CSRF.</li>\n      <li><strong>Request Body</strong>: تم ترميز جسم الطلب كـ <code>application/json</code>.</li>\n    </ul>\n  </div>\n</details>\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-server\"></i> ⚙️ Server Thinking (كيف يفكر السيرفر؟)</summary>\n  <div class=\"accordion-content\">\n    <p>يمر طلب المستخدم عبر طبقات الحماية المتتالية على النحو التالي:</p>\n    <code>Request ➔ WAF Filter (يتحقق من السوالب) ➔ Auth Middleware (يتحقق من التوكين) ➔ Cart Service (الحساب الرياضي) ➔ DB Write</code>\n    <p style=\"margin-top: 8px;\"><strong>نقطة الخلل:</strong> يمنع الـ WAF علامة الناقص <code>-</code> صراحةً، ولكنه يفشل في منع الأعداد الضخمة التي تتسبب في طفح الأرقام (Integer Overflow)، والتي تلتف في لغة الـ Backend لتصبح سالبة داخل المعالج بعد عبور طبقة الفلترة.</p>\n  </div>\n</details>\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-brain\"></i> 🧠 Expert Mindset & Burp Notes (عقلية الخبير وملاحظات بورب)</summary>\n  <div class=\"accordion-content\">\n    <h4>ملاحظة بورب الاحترافية:</h4>\n    <p>عند إرسال قيمة سالبة صريحة، يرجع الخادم استجابة <code>400 Bad Request</code> مع حجم رد صغير (Size: 180B). ولكن عند إرسال قيمة Float، يرجع <code>500 Internal Server Error</code> (Size: 520B) مما يعكس انهياراً في المعالجة البرمجية خلف جدار الحماية.</p>\n    <h4 style=\"margin-top:10px;\">فرصة النجاح (Success Chance):</h4>\n    <p>⭐⭐⭐⭐☆ (80%) - تجاوز الـ WAF باستخدام Overflow هو ثغرة كلاسيكية تحدث عند دمج لغات برمجة مختلفة.</p>\n  </div>\n</details>",
       "burpRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": 1\n}",
       "burpResponse": "HTTP/2 200 OK\nContent-Type: application/json\n\n{\n  \"status\": \"success\",\n  \"cart_total\": 1500,\n  \"message\": \"Item added to cart\"\n}",
-      "burpActions": [
-        {
-          "name": "Inject Negative Quantity (-15)",
-          "correct": false,
-          "modifiedRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": -15\n}",
-          "modifiedResponse": "HTTP/2 400 Bad Request\nContent-Type: application/json\n\n{\n  \"error\": \"Security Filter: Negative values are strictly prohibited.\"\n}",
-          "outcome": "تم حظرك بواسطة جدار الحماية (WAF) الذي يكتشف علامة الناقص (-) في حقل الأرقام."
-        },
-        {
-          "name": "Bypass WAF with Float",
-          "correct": false,
-          "modifiedRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": -15.0\n}",
-          "modifiedResponse": "HTTP/2 500 Internal Server Error\nContent-Type: application/json\n\n{\n  \"error\": \"Database Error: Cannot cast negative float to unsigned integer.\"\n}",
-          "outcome": "تخطى جدار الحماية لكن قاعدة البيانات ترفض الرقم العشرى السالب لأن الحقل مبرمج كـ Unsigned INT."
-        },
-        {
-          "name": "Trigger Integer Overflow (4294967281)",
-          "correct": true,
-          "modifiedRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": 4294967281\n}",
-          "modifiedResponse": "HTTP/2 400 Bad Request\nContent-Type: application/json\n\n{\n  \"error\": \"Cart validation failed: Cart total cannot be verified.\"\n}",
-          "outcome": "تجاوزت الـ WAF وفك السيرفر تشفير القيمة لتمثل عدد سالب (-15) في معالجة الخلفية، ولكن الخادم يقوم بالتحقق من الإجمالي النهائي للسلة ويرفض المعاملات الشاذة أو غير المنطقية."
-        }
-      ],
+      "burpActions": [],
       "aiAdvisor": {
-        "hint": "اضغط على خيار Trigger Integer Overflow لمعرفة رد السيرفر عند حدوث التجاوز الحسابي الرقمي.",
-        "payloadExplanation": "الرقم 4294967281 يمثل القيمة سالبة 15 عند تفسيرها كعدد صحيح ذي إشارة 32-bit (Two's Complement).",
-        "failureExplanation": "المحاولات السابقة تم كشفها بفضل فلاتر الـ WAF والتحقق من الأنواع."
+        "hint": "Try modifying the payload JSON quantity. To overflow 32-bit integer, use 4294967281 (which represents -15).",
+        "payloadExplanation": "Integer Overflow forces the signed quantity backend calculations to wraparound to a negative offset.",
+        "failureExplanation": "Normal quantities will charge you $1500, which exceeds your wallet balance."
       }
     },
     {
-      "name": "DNS Verification",
+      "name": "DNS Check",
       "time": "10:05",
       "workspace": "markdown",
       "xpReward": 150,
-      "description": "### 🧠 التفكير في مسار الهجوم البديل\n\nبعد أن فشلت محاولات التلاعب بالكميات والأرقام السالبة لتخفيض الإجمالي مباشرة بسبب التحقق من قيمة السلة:\n`{\"error\": \"Cart total cannot be verified\"}`\n\nكيف تتصرف الآن لتخطي هذا القيد البرمجي الحسابي؟\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-git-branch\"></i> 🌳 Decision Tree (شجرة القرارات والتشخيص)</summary>\n  <div class=\"accordion-content\">\n    <p>خارطة طريق حل العقبة الحالية:</p>\n    <code>سلة مشتريات ➔ مجموع معطل ➔ هل السعر في الـ Request؟ ➔ لا (يُجلب من DB) ➔ هل يمكن تطبيق خصم تزامني؟ ➔ نعم (Race Condition)</code>\n    <p style=\"margin-top:10px;\">عند تجميد السيرفر بطلبات تزامنية في نفس الأجزاء من الثانية، يفشل كود التحقق في قراءة الحالة الأخيرة لقاعدة البيانات في الوقت المناسب قبل تحديث الرصيد.</p>\n  </div>\n</details>",
+      "description": "### 🧠 DECISION TREE ENGINE\n\nبعد أن فشلت محاولات التلاعب بالكميات والأرقام السالبة لتخفيض الإجمالي مباشرة بسبب التحقق من قيمة السلة: `{\"error\": \"Cart total cannot be verified\"}`.  \nكيف تتصرف الآن لتخطي هذا القيد البرمجي الحسابي؟\n\n<div style=\"background: rgba(0,0,0,0.2); padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.6; margin: 15px 0;\">\n  <span style=\"color: var(--accent-cyan);\">[+] Is input validated server-side?</span><br>\n  &nbsp;&nbsp;&nbsp;&nbsp;└── ❌ NO<br>\n  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span style=\"color: var(--accent-cyan);\">[+] Can quantity/amount value be negative?</span><br>\n  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 🟢 YES (Integer Overflow or Negative input)<br>\n  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span style=\"color: var(--accent-cyan);\">[+] Does backend trust client-side data?</span><br>\n  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 🚨 <strong>BUSINESS LOGIC FLAW CONFIRMED</strong>\n</div>",
       "choices": [
         {
           "text": "أ) أبحث عن ثغرة XSS في اسم المنتج لتنفيذ كود في متصفح الأدمن للتحكم بحسابه.",
@@ -167,32 +145,32 @@
         }
       ],
       "aiAdvisor": {
-        "hint": "اختر الخيار (ج) لتجربة الهجوم التزامني لتكرار تطبيق الكوبونات.",
-        "payloadExplanation": "الـ Race Condition يتجاوز الفحوصات المتتالية بإرسال طلبات دفع وكوبونات معاً في نفس التوقيت.",
-        "failureExplanation": "تجنب تضييع الوقت في تجربة ثغرات غير مؤثرة."
+        "hint": "Select option (C) to trigger concurrency race condition coupon attacks.",
+        "payloadExplanation": "Concurrency allows us to bypass sequential checks and reuse single-use resources before state modification updates.",
+        "failureExplanation": "Normal price modification gets ignored since pricing is fetched server-side from database entries."
       }
     },
     {
-      "name": "Exploitation & Flag",
+      "name": "Exploit",
       "time": "10:30",
       "workspace": "lab",
       "xpReward": 300,
-      "description": "### 🚩 استغلال الـ Race Condition وجلب العلم\n\nالآن سنقوم بتنفيذ هجوم Race Condition لإرسال طلب تطبيق الكوبون متزامناً مع طلب الدفع (Checkout).\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-time-five\"></i> 🕒 Timeline (الخط الزمني للهجوم الناجح)</summary>\n  <div class=\"accordion-content\">\n    <ul>\n      <li><strong>00:00:</strong> أضاف المهاجم جهاز Signal Interceptor (1,500$) وسلك USB (100$).</li>\n      <li><strong>00:01:</strong> الرصيد الفعلي للمحفظة هو 10$ فقط.</li>\n      <li><strong>00:02:</strong> تم إطلاق سكربت هجوم التزامن (Race Condition).</li>\n      <li><strong>00:02.1:</strong> السيرفر يستقبل طلب تطبيق الكوبون متزامناً مع معالجة الدفع في نفس اللحظة (Thread-1 & Thread-2).</li>\n      <li><strong>00:03:</strong> يتم احتساب الدفع وقيمة السلة تصبح صفر بنجاح، ويتم شحن المنتج.</li>\n    </ul>\n  </div>\n</details>",
+      "description": "### 💥 EXPLOIT LAB & TIMELINE SIMULATION\n\nالآن سنقوم بتنفيذ هجوم Race Condition لإرسال طلب تطبيق الكوبون متزامناً مع طلب الدفع (Checkout).\n\n<div style=\"background: rgba(0,0,0,0.2); padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.6; margin: 15px 0;\">\n  <span style=\"color: var(--warning-amber);\">⏱️ Concurrency Race Condition Timeline:</span><br>\n  <strong>T0 (0ms)</strong>: Exploit triggers 10 threads concurrently.<br>\n  <strong>T1 (2ms)</strong>: Thread-1 sends coupon redemption request.<br>\n  <strong>T2 (3ms)</strong>: Thread-2 sends cart checkout request.<br>\n  <strong>T3 (5ms)</strong>: Database reads coupon status (valid) for both threads before update lock.<br>\n  <strong>T4 (8ms)</strong>: Coupon applied twice, reducing $1500 cart total to $0.<br>\n  <span style=\"color: var(--accent-green);\">[✔] EXPLOIT STATUS: SUCCESSFUL FREE PURCHASE</span>\n</div>\n\n#### ⚙️ Exploit Simulation Panel\n* **Try Input**: Apply Welcome Coupon (value: $1500 discount) on Checkout.\n* **Expected Behavior**: Reject coupon reuse, final checkout total = $1,500.\n* **Actual Behavior**: Double coupon applied due to concurrency, checkout total = $0.\n\nاضغط على **Run Exploit (Simulate Request)** لتنفيذ هجوم التزامن والحصول على الـ Flag.",
       "instructions": "قم بتنفيذ هجوم Race Condition لإرسال طلب تطبيق الكوبون متزامناً مع طلب الدفع (Checkout) للحصول على العلم (Flag).",
       "targetUrl": "https://api.cybergear.com/api/cart/checkout",
       "correctFlag": "FLAG{business_logic_race_negative_wealth_cracked}",
       "aiAdvisor": {
-        "hint": "أدخل العلم المسترجع الصحيح: FLAG{business_logic_race_negative_wealth_cracked}",
-        "payloadExplanation": "الحصول على العلم يؤكد كسر شروط الدفع بنجاح.",
-        "failureExplanation": "تأكد من كتابة العلم والحروف بدقة."
+        "hint": "Check the exploit simulation details. The correct Flag is: FLAG{business_logic_race_negative_wealth_cracked}.",
+        "payloadExplanation": "Flag acts as a proof of vulnerability exploitation.",
+        "failureExplanation": "Make sure you input the Flag exactly as presented."
       }
     },
     {
-      "name": "Report Writing",
+      "name": "Report",
       "time": "11:00",
       "workspace": "report",
       "xpReward": 250,
-      "description": "### 📝 كتابة التقرير الأمني\n\nاكتب تقريراً احترافياً يصف الثغرة وطريقة إعادة إنتاجها وتأثيرها على الأرباح المالية للشركة.",
+      "description": "### 📝 REPORT MODE\n\nاكتب تقريراً احترافياً يصف الثغرة وطريقة إعادة إنتاجها وتأثيرها على الأرباح المالية للشركة.",
       "aiAdvisor": {
         "hint": "الكلمات المفتاحية المطلوبة هي 'race' و 'logic'.",
         "payloadExplanation": "شرح كيفية التسبب في تطبيق خصومات متعددة تؤدي لإتمام الدفع مجاناً.",
@@ -200,7 +178,7 @@
       }
     },
     {
-      "name": "Triage & Verdict",
+      "name": "Verdict",
       "time": "5 Days Later",
       "workspace": "review",
       "description": "### 🛡️ مراجعة التقرير وقرار المشرف الأمني\n\nتلقيت رداً من فريق الأمن الخاص بمنصة CyberGear بخصوص التقرير المرسل.",

@@ -21,6 +21,13 @@ window.ScenarioEngine = {
     company: document.getElementById('sim-company-val'),
     timeline: document.getElementById('timeline-steps-list'),
     
+    logoText: document.getElementById('app-logo-text'),
+    logoSubtext: document.getElementById('app-logo-subtext'),
+    briefTargetName: document.getElementById('brief-target-name'),
+    briefObjectiveText: document.getElementById('brief-objective-text'),
+    briefRewardVal: document.getElementById('brief-reward-val'),
+    briefScopeList: document.getElementById('brief-scope-list'),
+    
     stepTitle: document.getElementById('step-title'),
     stepTimeSpent: document.getElementById('step-time-spent'),
     stepXPPotential: document.getElementById('step-xp-potential'),
@@ -30,13 +37,13 @@ window.ScenarioEngine = {
     prevBtn: document.getElementById('prev-step-btn'),
     nextBtn: document.getElementById('next-step-btn'),
     
-    // Terminal
-    terminal: document.getElementById('workspace-terminal'),
+    // Terminal console pane
+    terminal: document.getElementById('console-pane-terminal'),
     termBody: document.getElementById('term-body'),
     termControls: document.getElementById('term-control-buttons'),
     
-    // Burp
-    burp: document.getElementById('workspace-burp'),
+    // Burp console pane
+    burp: document.getElementById('console-pane-burp'),
     burpReq: document.getElementById('burp-request-view'),
     burpResp: document.getElementById('burp-response-view'),
     burpActions: document.getElementById('burp-actions-container'),
@@ -90,12 +97,7 @@ window.ScenarioEngine = {
     submitFlagBtn: document.getElementById('submit-flag-btn'),
     
     // AI Chat
-    aiDrawer: document.getElementById('ai-advisor-drawer'),
-    aiToggleBtn: document.getElementById('ai-advisor-toggle-btn'),
-    aiCloseBtn: document.getElementById('close-ai-drawer-btn'),
-    aiChatHistory: document.getElementById('ai-chat-history'),
-    aiChatInput: document.getElementById('ai-chat-input'),
-    aiSendBtn: document.getElementById('send-ai-chat-btn')
+    aiToggleBtn: document.getElementById('ai-advisor-toggle-btn')
   },
 
   init(scId, data) {
@@ -117,6 +119,33 @@ window.ScenarioEngine = {
     this.el.time.innerText = data.metadata.time;
     this.el.company.innerText = data.metadata.company;
 
+    // Dynamic Header Logo
+    if (this.el.logoText && data.metadata.company) {
+      this.el.logoText.innerText = `${data.metadata.company} Bug Bounty Academy`;
+    }
+    if (this.el.logoSubtext) {
+      const cleanNum = scId.replace('scenario-', '').toUpperCase();
+      this.el.logoSubtext.innerText = `Scenario-${cleanNum}: ${data.metadata.category} Exploit Engine`;
+    }
+
+    // Dynamic Target Brief Panel
+    if (this.el.briefTargetName) this.el.briefTargetName.innerText = data.metadata.company || "Target System";
+    if (this.el.briefObjectiveText) {
+      this.el.briefObjectiveText.innerText = data.metadata.objective || `Identify flaws in ${data.metadata.category} controls.`;
+    }
+    if (this.el.briefRewardVal) this.el.briefRewardVal.innerText = data.metadata.reward;
+    if (this.el.briefScopeList) {
+      this.el.briefScopeList.innerHTML = '';
+      const scopeItems = data.metadata.scope || [
+        "No verification tokens in API requests.",
+        "Backend trust on client-side state variables.",
+        "No validation check on final balance integrity."
+      ];
+      scopeItems.forEach(item => {
+        this.el.briefScopeList.innerHTML += `<li>${item}</li>`;
+      });
+    }
+
     // Start timer clock
     if (this.timer) clearInterval(this.timer);
     this.timer = setInterval(() => {
@@ -125,13 +154,13 @@ window.ScenarioEngine = {
     }, 60000);
     this.el.stepTimeSpent.innerText = "0";
 
-    // AI Chat togglers
-    this.el.aiToggleBtn.addEventListener('click', () => this.toggleAIDrawer(true));
-    this.el.aiCloseBtn.addEventListener('click', () => this.toggleAIDrawer(false));
-    this.el.aiSendBtn.addEventListener('click', () => this.handleAIChatSubmit());
-    this.el.aiChatInput.addEventListener('keypress', (e) => {
-      if(e.key === 'Enter') this.handleAIChatSubmit();
-    });
+    // AI Advisor Column toggle
+    const splitBody = document.querySelector('.workspace-body-split');
+    if (this.el.aiToggleBtn && splitBody) {
+      this.el.aiToggleBtn.addEventListener('click', () => {
+        splitBody.classList.toggle('advisor-collapsed');
+      });
+    }
 
     document.getElementById('exit-sim-btn').addEventListener('click', () => {
       if(confirm("Exit investigation? Unsaved step progress will be discarded.")) {
@@ -159,8 +188,14 @@ window.ScenarioEngine = {
     this.loadStep(0);
   },
 
-  toggleAIDrawer(open) {
-    this.el.aiDrawer.style.transform = open ? 'translateX(0)' : 'translateX(320px)';
+  switchConsoleTab(tabId) {
+    const tabs = ['idle', 'terminal', 'burp'];
+    tabs.forEach(t => {
+      const tabEl = document.getElementById(`console-tab-${t}`);
+      const paneEl = document.getElementById(`console-pane-${t}`);
+      if (tabEl) tabEl.classList.toggle('active', t === tabId);
+      if (paneEl) paneEl.classList.toggle('hidden', t !== tabId);
+    });
   },
 
   loadStep(idx) {
@@ -176,25 +211,133 @@ window.ScenarioEngine = {
     const isSolved = ProgressManager.state.solved.includes(this.scenario.metadata.id);
     Renderer.renderTimelineSteps(this.el.timeline, this.scenario.steps, idx, isSolved);
 
+    // Switch bottom console pane active tab based on active step workspace
+    if (step.workspace === 'recon') {
+      this.switchConsoleTab('terminal');
+    } else if (step.workspace === 'burp') {
+      this.switchConsoleTab('burp');
+    } else if (step.workspace === 'lab') {
+      this.switchConsoleTab('terminal');
+    } else {
+      this.switchConsoleTab('idle');
+    }
+
+    // Dynamic AI Advisor - progressive hints system
+    const hintsSelector = document.getElementById('advisor-hints-selector');
+    const hintDisplay = document.getElementById('advisor-hint-display');
+    if (hintsSelector && hintDisplay) {
+      hintsSelector.innerHTML = '';
+      hintDisplay.innerText = "Select a hint tab above to show assistance.";
+      
+      const hints = step.aiAdvisor?.hints || (step.aiAdvisor?.hint ? step.aiAdvisor.hint.split('. ').filter(h => h.trim().length > 0) : []);
+      if (hints.length === 0) {
+        hintsSelector.innerHTML = '<span style="color:var(--text-muted); font-size:0.75rem;">No hints active for this step.</span>';
+        hintDisplay.innerText = "Analyze the description and inputs.";
+      } else {
+        hints.forEach((hintText, hIdx) => {
+          const btn = document.createElement('button');
+          btn.className = 'hint-badge-btn';
+          btn.innerText = `Hint ${hIdx + 1}`;
+          btn.addEventListener('click', () => {
+            Array.from(hintsSelector.children).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            btn.classList.add('unlocked');
+            hintDisplay.innerText = hintText + (hintText.endsWith('.') ? '' : '.');
+          });
+          hintsSelector.appendChild(btn);
+        });
+        if (hintsSelector.children.length > 0) {
+          hintsSelector.children[0].click();
+        }
+      }
+    }
+
+    // Dynamic AI Advisor - threat analysis pane
+    const analysisText = document.getElementById('advisor-analysis-text');
+    if (analysisText && step.aiAdvisor) {
+      analysisText.innerHTML = `
+        <div style="margin-bottom:8px;"><strong>Status:</strong> <span class="text-cyan">${step.name === 'Verdict' || step.name === 'Triage & Verdict' ? 'RESOLVED' : 'ACTIVE_DIAGNOSIS'}</span></div>
+        <div style="margin-bottom:8px;"><strong>Payload Logic:</strong> ${step.aiAdvisor.payloadExplanation || 'Analyze parameters to design an exploit.'}</div>
+        <div><strong>Trap Analysis:</strong> ${step.aiAdvisor.failureExplanation || 'Avoid standard fuzzers to bypass firewalls.'}</div>
+      `;
+    }
+
+    // Dynamic AI Advisor - Decision Tree or Timeline interactive visual card
+    const interCard = document.getElementById('advisor-interactive-card');
+    const interTitle = document.getElementById('advisor-interactive-title');
+    const interVisual = document.getElementById('advisor-interactive-visual');
+    if (interCard && interTitle && interVisual) {
+      const lowerName = step.name.toLowerCase();
+      if (lowerName.includes('dns') || lowerName.includes('check') || lowerName.includes('decision')) {
+        interCard.classList.remove('hidden');
+        interTitle.innerHTML = `<i class="bx bx-git-branch text-green"></i> Decision Tree Engine`;
+        interVisual.innerHTML = `
+          <div class="decision-tree-node highlighted">
+            Is input validated server-side?<br>
+            <span style="color:var(--critical-red); font-weight:700;">➔ NO</span>
+          </div>
+          <div class="decision-tree-arrow">↓</div>
+          <div class="decision-tree-node highlighted">
+            Can value be negative?<br>
+            <span style="color:var(--accent-green); font-weight:700;">➔ YES</span>
+          </div>
+          <div class="decision-tree-arrow">↓</div>
+          <div class="decision-tree-node highlighted">
+            Does backend trust frontend value?<br>
+            <span style="color:var(--accent-green); font-weight:700;">➔ YES</span>
+          </div>
+          <div class="decision-tree-arrow">↓</div>
+          <div style="background:rgba(239,68,68,0.12); border:1px solid var(--critical-red); color:var(--critical-red); border-radius:6px; padding:10px; font-size:0.75rem; text-align:center; font-weight:bold; letter-spacing:0.5px; font-family:var(--font-mono);">
+            🚨 BUSINESS LOGIC FLAW POSSIBLE
+          </div>
+        `;
+      } else if (lowerName.includes('exploit') || lowerName.includes('timeline')) {
+        interCard.classList.remove('hidden');
+        interTitle.innerHTML = `<i class="bx bx-time-five text-orange"></i> Concurrency Race Timeline`;
+        interVisual.innerHTML = `
+          <div class="timeline-stamp-row">
+            <span class="timeline-stamp-time">T0 (0ms)</span>
+            <span class="timeline-stamp-desc">Race exploit triggers 10 threads.</span>
+          </div>
+          <div class="timeline-stamp-row">
+            <span class="timeline-stamp-time">T1 (2ms)</span>
+            <span class="timeline-stamp-desc">Thread-1 applies discount coupon.</span>
+          </div>
+          <div class="timeline-stamp-row">
+            <span class="timeline-stamp-time">T2 (3ms)</span>
+            <span class="timeline-stamp-desc">Thread-2 requests cart checkout.</span>
+          </div>
+          <div class="timeline-stamp-row">
+            <span class="timeline-stamp-time">T3 (5ms)</span>
+            <span class="timeline-stamp-desc">DB checks coupon status before updates.</span>
+          </div>
+          <div class="timeline-stamp-row active">
+            <span class="timeline-stamp-time">T4 (8ms)</span>
+            <span class="timeline-stamp-desc">Coupon applied twice. Total: $0.</span>
+          </div>
+          <div style="background:rgba(34,197,94,0.12); border:1px solid var(--accent-green); color:var(--accent-green); border-radius:6px; padding:8px; font-size:0.72rem; text-align:center; font-weight:700; font-family:var(--font-mono); margin-top:8px;">
+            💰 FREE PURCHASE CONFIRMED
+          </div>
+        `;
+      } else {
+        interCard.classList.add('hidden');
+      }
+    }
+
     // Markdown description parsing
     if (step.description) {
       this.el.markdownBody.classList.remove('hidden');
       this.el.markdownBody.innerHTML = MarkdownParser.parse(step.description);
     }
 
-    // Dynamic mindset box
-    if (step.thoughts) {
-      // Replaced thoughts with the new Decision Log component V2!
-    }
-
     // Dynamic decision log V2
-    if (this.scenario.decisionLog && step.name === "DNS Verification") {
+    if (this.scenario.decisionLog && (step.name === "DNS Verification" || step.name === "DNS Check")) {
       this.el.decisionLog.classList.remove('hidden');
       Renderer.renderDecisionLog(this.el.decisionLogContent, this.scenario.decisionLog);
     }
 
     // Dynamic mistakes box V2
-    if (this.scenario.mistakes && step.name === "Passive Recon") {
+    if (this.scenario.mistakes && (step.name === "Passive Recon" || step.name === "Recon")) {
       this.el.mistakes.classList.remove('hidden');
       Renderer.renderMistakesChecklist(this.el.mistakesList, this.scenario.mistakes);
     }
@@ -736,58 +879,39 @@ window.ScenarioEngine = {
 
     // Add a simulated exploit button if not already present
     let exploitBtn = document.getElementById('lab-exploit-simulate-btn');
-    let outputBox = document.getElementById('lab-exploit-output-box');
     if (!exploitBtn) {
       exploitBtn = document.createElement('button');
       exploitBtn.id = 'lab-exploit-simulate-btn';
       exploitBtn.className = 'hunt-btn';
-      exploitBtn.style.marginTop = '10px';
+      exploitBtn.style.marginTop = '15px';
       exploitBtn.style.marginBottom = '15px';
       exploitBtn.style.width = '100%';
       exploitBtn.style.background = 'rgba(6, 182, 212, 0.08)';
       exploitBtn.style.borderColor = 'var(--accent-cyan)';
       exploitBtn.style.color = 'var(--accent-cyan)';
-      exploitBtn.innerHTML = '<i class="bx bx-play-circle"></i> Run Exploit (Simulate Request)';
-      
-      outputBox = document.createElement('div');
-      outputBox.id = 'lab-exploit-output-box';
-      outputBox.className = 'hidden';
-      outputBox.style.marginTop = '10px';
-      outputBox.style.marginBottom = '20px';
-      outputBox.style.padding = '15px';
-      outputBox.style.background = 'rgba(0, 0, 0, 0.4)';
-      outputBox.style.border = '1px solid var(--border-color)';
-      outputBox.style.borderRadius = '6px';
-      outputBox.style.fontFamily = 'var(--font-mono)';
-      outputBox.style.fontSize = '0.82rem';
-      outputBox.style.lineHeight = '1.6';
-      outputBox.style.color = 'var(--text-secondary)';
-      outputBox.style.textAlign = 'left';
-      outputBox.style.position = 'relative';
-      
-      outputBox.innerHTML = `
-        <div style="position: absolute; right: 12px; top: 10px; font-size: 0.7rem; color: var(--accent-green); text-transform: uppercase; font-weight: 700; display: flex; align-items: center; gap: 4px;"><i class="bx bx-check-circle"></i> Success</div>
-        <div style="color: var(--accent-cyan); font-weight: 600; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; font-family: var(--font-title);"><i class="bx bx-terminal"></i> Exploit Output Console</div>
-        <pre id="lab-exploit-output-text" style="margin: 0; white-space: pre-wrap; word-break: break-all; color: var(--text-main); font-family: var(--font-mono);"></pre>
-      `;
+      exploitBtn.innerHTML = '<i class="bx bx-play-circle"></i> Run Exploit (Simulate Concurrency Request)';
       
       const submissionDiv = this.el.lab.querySelector('.lab-flag-submission');
       submissionDiv.parentNode.insertBefore(exploitBtn, submissionDiv);
-      submissionDiv.parentNode.insertBefore(outputBox, submissionDiv);
-    } else {
-      // Hide output box from previous scenario if it exists
-      if (outputBox) outputBox.classList.add('hidden');
     }
     
     exploitBtn.onclick = () => {
-      const activeOutputBox = document.getElementById('lab-exploit-output-box');
-      if (activeOutputBox) {
-        activeOutputBox.classList.remove('hidden');
-        const textEl = document.getElementById('lab-exploit-output-text');
-        if (textEl) {
-          textEl.innerText = `[Requesting]: ${step.targetUrl}\n\n[Status]: Exploit Executed Successfully!\n[Response]:\n----------------------------------------\nCaptured Flag: ${step.correctFlag}\n----------------------------------------`;
-        }
-      }
+      this.switchConsoleTab('terminal');
+      this.el.termBody.innerHTML = '';
+      this.executeTerminalCommand({
+        name: "python3 exploit.py --target " + step.targetUrl,
+        correct: true,
+        output: [
+          { text: "[*] Initializing race condition thread pool (10 concurrent workers)...", type: "info" },
+          { text: "[*] Target Endpoint: POST /api/cart/checkout", type: "info" },
+          { text: "[*] Dispatching parallel payloads with timing delta < 1ms...", type: "info" },
+          { text: "[+] Thread-1 applied coupon WELCOME_1500 (balance check: $10)", type: "info" },
+          { text: "[+] Thread-2 applied coupon WELCOME_1500 concurrently! (bypass lock status)", type: "success" },
+          { text: "[+] Thread-3 initiated checkout (order total reduced: $0)", type: "success" },
+          { text: "[+] Payment execution bypass verified. Transaction ID: TX_8829402", type: "success" },
+          { text: `[+] Success: Flag retrieved: ${step.correctFlag}`, type: "success" }
+        ]
+      });
     };
 
     this.el.submitFlagBtn.onclick = () => {
@@ -814,37 +938,7 @@ window.ScenarioEngine = {
 
   // --- AI ADVISOR CHATBOT MOCK ---
   handleAIChatSubmit() {
-    const input = this.el.aiChatInput.value.trim();
-    if (!input) return;
-
-    this.el.aiChatInput.value = '';
-    this.el.aiChatHistory.innerHTML += `
-      <div class="chat-bubble user-bubble" style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); padding: 10px; border-radius: 8px; color: var(--text-main); align-self: flex-end; width: fit-content; max-width: 90%;">
-        ${input}
-      </div>
-    `;
-
-    // Process Response
-    setTimeout(() => {
-      const step = this.scenario.steps[this.currentStepIndex];
-      let aiResponse = "I can only advise you on findings related to the active investigation step. Ask for a 'hint' if you are stuck.";
-
-      const query = input.toLowerCase();
-      if (query.includes('hint') || query.includes('help') || query.includes('خطوة')) {
-        aiResponse = step.aiAdvisor?.hint || "For this step, look closely at the choices grid and evaluate the server response headers in Burp Suite.";
-      } else if (query.includes('payload') || query.includes('exploit') || query.includes('استغلال')) {
-        aiResponse = step.aiAdvisor?.payloadExplanation || "A valid payload should tamper parameters in the GET request or inject CRLF characters to bypass header filters.";
-      } else if (query.includes('fail') || query.includes('wrong') || query.includes('خطأ')) {
-        aiResponse = step.aiAdvisor?.failureExplanation || "Your choices might fail if you trigger aggressive fuzzing tools (like sqlmap or nuclei) directly, alerting WAF firewalls.";
-      }
-
-      this.el.aiChatHistory.innerHTML += `
-        <div class="chat-bubble ai-bubble" style="background: rgba(6,182,212,0.05); border: 1px solid rgba(6,182,212,0.15); padding: 10px; border-radius: 8px; color: var(--accent-cyan);">
-          <strong>AI Advisor:</strong> ${aiResponse}
-        </div>
-      `;
-      this.el.aiChatHistory.scrollTop = this.el.aiChatHistory.scrollHeight;
-    }, 600);
+    // Retained for backwards compatibility
   }
 };
 

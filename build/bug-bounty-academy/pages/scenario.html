@@ -37,8 +37,8 @@
   <header class="app-header">
     <div class="logo">
       <i class="bx bx-target-lock logo-icon"></i>
-      <span class="logo-text">Bug Bounty Scenarios Academy</span>
-      <span class="logo-subtext">Simulator V2</span>
+      <span class="logo-text" id="app-logo-text">CyberGear Bug Bounty Academy</span>
+      <span class="logo-subtext" id="app-logo-subtext">V3 Exploit Engine</span>
     </div>
     
     <div class="header-stats">
@@ -69,288 +69,381 @@
       </button>
       <div class="simulator-title" id="sim-scenario-title">Scenario: Loading data...</div>
       
-      <!-- AI Advisor assistant chat drawer toggler -->
+      <!-- AI Advisor assistant panel toggler -->
       <button class="control-btn" id="ai-advisor-toggle-btn" style="margin-left: auto; border-color: rgba(6, 182, 212, 0.25); color: var(--accent-cyan);">
-        <i class="bx bx-bot"></i> Ask AI Advisor
+        <i class="bx bx-bot"></i> Toggle AI Advisor Column
       </button>
     </div>
 
     <div class="simulator-layout">
-      <!-- Left Timeline Navigation Sidebar -->
-      <aside class="timeline-sidebar">
-        <!-- Scenario statistics brief widget -->
-        <div class="sidebar-scenario-card">
-          <div class="badge-row">
-            <span class="difficulty-badge" id="sim-diff-badge">Easy</span>
-            <span class="category-badge" id="sim-category-badge">Auth</span>
-          </div>
-          <div class="metric-row">
-            <div class="metric-item">
-              <span class="metric-lbl">Bounty</span>
-              <span class="metric-val text-green" id="sim-bounty-val">$3,500</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-lbl">Est. Time</span>
-              <span class="metric-val" id="sim-time-val">2 Hours</span>
-            </div>
-          </div>
-          <div class="company-row">
-            <span class="metric-lbl">Company:</span>
-            <span class="company-name" id="sim-company-val">Hidden</span>
-          </div>
-        </div>
-
-        <!-- Clock-based step list -->
-        <ul class="timeline-steps" id="timeline-steps-list">
-          <!-- Populated dynamically by timeline component -->
-        </ul>
-      </aside>
-
-      <!-- Right Main Workspace Panel -->
-      <section class="workspace-panel">
+      <!-- Top main split container containing sidebar and workspace -->
+      <div class="main-split-container">
         
-        <!-- Step Header details -->
-        <div class="workspace-header">
-          <h2 id="step-title">Mission Brief</h2>
-          <div class="step-metrics">
-            <span>Time Spent: <strong class="text-orange" id="step-time-spent">0</strong> min</span>
-            <span>•</span>
-            <span>Step Potential Reward: <strong class="text-green" id="step-xp-potential">0</strong> XP</span>
+        <!-- Left Timeline Navigation Sidebar -->
+        <aside class="timeline-sidebar">
+          <!-- Scenario statistics brief widget -->
+          <div class="sidebar-scenario-card">
+            <div class="badge-row">
+              <span class="difficulty-badge" id="sim-diff-badge">Easy</span>
+              <span class="category-badge" id="sim-category-badge">Auth</span>
+            </div>
+            <div class="metric-row">
+              <div class="metric-item">
+                <span class="metric-lbl">Bounty</span>
+                <span class="metric-val text-green" id="sim-bounty-val">$3,500</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-lbl">Est. Time</span>
+                <span class="metric-val" id="sim-time-val">2 Hours</span>
+              </div>
+            </div>
+            <div class="company-row">
+              <span class="metric-lbl">Company:</span>
+              <span class="company-name" id="sim-company-val">Hidden</span>
+            </div>
           </div>
-        </div>
 
-        <!-- Main Workspace Body -->
-        <div class="workspace-body">
+          <!-- Clock-based step list -->
+          <ul class="timeline-steps" id="timeline-steps-list">
+            <!-- Populated dynamically by timeline component -->
+          </ul>
+        </aside>
+
+        <!-- Right Main Workspace Panel -->
+        <section class="workspace-panel">
           
-          <!-- Markdown Text Render container -->
-          <div id="step-content-markdown" class="markdown-body">
-            <!-- Parsed html -->
-          </div>
-
-          <!-- TERMINAL COMPONENT -->
-          <div id="workspace-terminal" class="interactive-component hidden">
-            <div class="terminal-shell">
-              <div class="terminal-header">
-                <span class="terminal-dot red"></span>
-                <span class="terminal-dot yellow"></span>
-                <span class="terminal-dot green"></span>
-                <span class="terminal-title">bash - recon@hunter-machine:~</span>
-              </div>
-              <div class="terminal-body" id="term-body">
-                <!-- CLI inputs/outputs -->
-              </div>
-              <div class="terminal-footer">
-                <span class="term-prompt">hunter@recon:~$</span>
-                <input type="text" id="term-input" placeholder="Choose a command to run below..." disabled>
-              </div>
-            </div>
-            <div class="terminal-controls" id="term-control-buttons">
-              <!-- CLI trigger buttons -->
+          <!-- Step Header details -->
+          <div class="workspace-header">
+            <h2 id="step-title">Mission Brief</h2>
+            <div class="step-metrics">
+              <span>Time Spent: <strong class="text-orange" id="step-time-spent">0</strong> min</span>
+              <span>•</span>
+              <span>Step Potential Reward: <strong class="text-green" id="step-xp-potential">0</strong> XP</span>
             </div>
           </div>
 
-          <!-- BURP SUITE COMPONENT -->
-          <div id="workspace-burp" class="interactive-component hidden">
-            <div class="burp-shell">
-              <div class="burp-header">
-                <span class="burp-tab active" id="burp-tab-proxy"><i class="bx bx-wifi"></i> Proxy</span>
-                <span class="burp-tab" id="burp-tab-repeater"><i class="bx bx-navigation"></i> Repeater</span>
-              </div>
-              <div class="burp-grid" id="burp-grid-container">
-                <div class="burp-pane">
-                  <div class="pane-header">HTTP Request</div>
-                  <pre class="code-editor" id="burp-request-view" contenteditable="false"></pre>
+          <!-- Main Workspace Body with Side-by-Side Panels -->
+          <div class="workspace-body-split">
+            
+            <!-- Left Pane: Step Content and Forms -->
+            <div class="instructions-column">
+              <!-- 🎯 Static Mission Brief Panel (Always visible for context) -->
+              <div id="static-mission-brief" class="mission-brief-card">
+                <div class="mission-brief-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:6px;">
+                  <span style="font-weight:700; color:var(--text-main); font-size:0.85rem;"><i class="bx bx-target-lock text-cyan"></i> TARGET SUMMARY</span>
+                  <span class="difficulty-badge easy" style="font-size:0.65rem; padding: 2px 6px;">V3 ACTIVE</span>
                 </div>
-                <div class="burp-pane">
-                  <div class="pane-header">HTTP Response</div>
-                  <pre class="code-editor" id="burp-response-view" contenteditable="false"></pre>
+                <div style="font-size:0.82rem; margin-bottom:8px; line-height:1.4;">
+                  <strong>Target:</strong> <span id="brief-target-name">CyberGear Wallet System</span><br>
+                  <strong>Objective:</strong> <span id="brief-objective-text">Identify Business Logic Flaw in Wallet & Cart calculations.</span><br>
+                  <strong>Reward:</strong> <span class="text-green" id="brief-reward-val">$5,000</span>
                 </div>
-                <div class="burp-pane hidden" id="burp-logs-pane">
-                  <div class="pane-header" style="color: var(--accent-cyan); border-bottom: 1px solid rgba(6, 182, 212, 0.15);"><i class="bx bx-pulse"></i> Blue Team Logs (Observability)</div>
-                  <pre class="code-editor" id="burp-logs-view" style="color: #38bdf8; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.6; overflow-y: auto; text-shadow: 0 0 4px rgba(56, 189, 248, 0.15);" contenteditable="false"></pre>
-                </div>
-              </div>
-            </div>
-            <div class="burp-controls" id="burp-actions-container">
-              <!-- Tampering injection actions -->
-            </div>
-          </div>
-
-          <!-- 🧠 DECISION LOG COMPONENT -->
-          <div id="workspace-decision-log" class="mindset-box hidden" style="border-color: rgba(245, 158, 11, 0.25); background: rgba(245, 158, 11, 0.01);">
-            <div class="box-header text-orange" style="border-color: rgba(245, 158, 11, 0.25);"><i class="bx bx-git-branch"></i> 🧠 Hunter's Decision Log & Logical Flow</div>
-            <div class="box-content" id="decision-log-content">
-              <!-- Dynamic decision log details -->
-            </div>
-          </div>
-
-          <!-- PAYLOAD VIEWER COMPONENT -->
-          <div id="workspace-payload" class="interactive-component hidden">
-            <div class="mindset-box" style="border-color: rgba(168, 85, 247, 0.25); background: rgba(168, 85, 247, 0.01);">
-              <div class="box-header text-purple" style="border-color: rgba(168, 85, 247, 0.25);"><i class="bx bx-code-block"></i> Vulnerability Payload Analysis</div>
-              <div class="box-content" id="payload-content-area">
-                <!-- Payload breakdown tables -->
-              </div>
-            </div>
-          </div>
-
-          <!-- EVIDENCE LOCKER -->
-          <div id="workspace-evidence" class="evidence-locker hidden">
-            <div class="locker-header"><i class="bx bx-archive-in"></i> Evidence Locker</div>
-            <div class="evidence-grid" id="evidence-container">
-              <!-- Evidence snippets -->
-            </div>
-          </div>
-
-          <!-- REPORT BUILDER FORM -->
-          <div id="workspace-report" class="interactive-component hidden">
-            <div class="report-builder">
-              <div class="report-form">
-                <div class="form-group">
-                  <label for="report-title">Report Title</label>
-                  <input type="text" id="report-title" placeholder="Identify the route and vulnerability summary">
-                </div>
-                <div class="form-grid">
-                  <div class="form-group">
-                    <label for="report-severity">Severity</label>
-                    <select id="report-severity">
-                      <option value="">Select Severity...</option>
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
-                      <option value="Critical">Critical</option>
-                    </select>
+                <details class="brief-details-accordion" open>
+                  <summary><i class="bx bx-shield-quarter"></i> Scope & Threat Model</summary>
+                  <div class="brief-details-content" style="font-size:0.78rem; color:var(--text-muted); margin-top:5px; padding-left:12px;">
+                    <ul style="margin:0; padding-left:12px; list-style-type:disc;" id="brief-scope-list">
+                      <li>Wallet allows arbitrary credit updates.</li>
+                      <li>Cart calculations are partially client-side.</li>
+                      <li>Zero strict verification on balance integrity check.</li>
+                    </ul>
                   </div>
-                  <div class="form-group">
-                    <label for="report-type">Vulnerability Type</label>
-                    <select id="report-type">
-                      <option value="">Select Vulnerability...</option>
-                      <option value="IDOR">Insecure Direct Object Reference (IDOR)</option>
-                      <option value="XSS">Cross-Site Scripting (XSS)</option>
-                      <option value="SSRF">Server-Side Request Forgery (SSRF)</option>
-                      <option value="AuthBypass">Authentication Bypass</option>
-                      <option value="PrivEsc">Privilege Escalation</option>
-                      <option value="MassAssignment">Mass Assignment</option>
-                    </select>
+                </details>
+              </div>
+
+              <!-- 🔍 Dynamic Markdown Text Render container -->
+              <div id="step-content-markdown" class="markdown-body">
+                <!-- Parsed html -->
+              </div>
+
+              <!-- 🧠 DECISION LOG COMPONENT -->
+              <div id="workspace-decision-log" class="mindset-box hidden" style="border-color: rgba(245, 158, 11, 0.25); background: rgba(245, 158, 11, 0.01); margin-top: 15px;">
+                <div class="box-header text-orange" style="border-color: rgba(245, 158, 11, 0.25);"><i class="bx bx-git-branch"></i> Hunter's Decision Log & Logical Flow</div>
+                <div class="box-content" id="decision-log-content" style="padding:15px; font-size:0.85rem;">
+                  <!-- Dynamic decision log details -->
+                </div>
+              </div>
+
+              <!-- PAYLOAD VIEWER COMPONENT -->
+              <div id="workspace-payload" class="interactive-component hidden" style="margin-top: 15px;">
+                <div class="mindset-box" style="border-color: rgba(168, 85, 247, 0.25); background: rgba(168, 85, 247, 0.01);">
+                  <div class="box-header text-purple" style="border-color: rgba(168, 85, 247, 0.25);"><i class="bx bx-code-block"></i> Vulnerability Payload Analysis</div>
+                  <div class="box-content" id="payload-content-area" style="padding:15px;">
+                    <!-- Payload breakdown tables -->
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="report-desc">Description</label>
-                  <textarea id="report-desc" rows="4" placeholder="Vulnerability details..."></textarea>
-                </div>
-                <div class="form-group">
-                  <label for="report-steps">Steps to Reproduce</label>
-                  <textarea id="report-steps" rows="6" placeholder="Provide step by step replication guidelines..."></textarea>
-                </div>
-                <div class="form-group">
-                  <label for="report-impact">Impact</label>
-                  <textarea id="report-impact" rows="3" placeholder="Security impact on user database / server backend..."></textarea>
-                </div>
-                <button class="hunt-btn success-btn" id="submit-report-btn"><i class="bx bxs-file-export"></i> Submit Report to Triage</button>
               </div>
-            </div>
-          </div>
 
-          <!-- REPORT COMPARISON REVIEW -->
-          <div id="workspace-review" class="interactive-component hidden">
-            <div class="review-split">
-              <div class="review-pane user-report">
-                <h4>Your Submitted Report</h4>
-                <div class="review-card" id="user-report-summary"></div>
-              </div>
-              <div class="review-pane real-report">
-                <h4>Real Disclosed Report / Reference</h4>
-                <div class="review-card real" id="real-report-summary"></div>
-              </div>
-            </div>
-            <div class="triage-verdict-box" id="triage-verdict-panel">
-              <!-- Triager verdict score -->
-            </div>
-          </div>
-
-          <!-- MISTAKES CHECKLIST -->
-          <div id="workspace-mistakes" class="mistakes-box hidden">
-            <div class="box-header text-red"><i class="bx bx-x-circle"></i> Common Hunter Traps & Mistakes</div>
-            <div class="box-content" id="mistakes-list">
-              <!-- Injected mistakes -->
-            </div>
-          </div>
-
-          <!-- QUIZ CONTAINER -->
-          <div id="workspace-quiz" class="interactive-component hidden">
-            <div class="quiz-shell">
-              <div class="quiz-progress">Question <span id="quiz-current-num">1</span> of <span id="quiz-total-num">5</span></div>
-              <div class="quiz-question" id="quiz-question-text">Quiz question content...</div>
-              <div class="quiz-options" id="quiz-options-list">
-                <!-- Quiz options cards -->
-              </div>
-              <div class="quiz-navigation">
-                <button class="hunt-btn" id="quiz-submit-btn">Verify Answer</button>
-                <button class="hunt-btn hidden" id="quiz-next-btn">Next Question <i class="bx bx-right-arrow-alt"></i></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- DECISION POINTS / CHOICES BRANCHING -->
-          <div id="step-choices-container" class="choices-panel hidden">
-            <h3 class="choices-header"><i class="bx bx-navigation"></i> Decision Point: Choose Next Action</h3>
-            <div class="choices-grid" id="step-choices">
-              <!-- Choices buttons -->
-            </div>
-          </div>
-
-          <!-- LAB FLAGGING COMPONENT -->
-          <div id="workspace-lab" class="interactive-component hidden">
-            <div class="lab-shell">
-              <div class="lab-icon"><i class="bx bx-code-alt"></i></div>
-              <h3>Hands-On Simulation Lab</h3>
-              <p id="lab-instructions"></p>
-              <div class="lab-challenge-box">
-                <span class="challenge-tag">Simulated Target URL</span>
-                <div class="target-url-container">
-                  <code id="lab-target-url">https://bank-api.staging.target.com/</code>
-                  <button class="copy-url-btn" onclick="navigator.clipboard.writeText(document.getElementById('lab-target-url').innerText)"><i class="bx bx-copy"></i></button>
+              <!-- EVIDENCE LOCKER -->
+              <div id="workspace-evidence" class="evidence-locker hidden" style="margin-top: 15px; padding:15px;">
+                <div class="locker-header"><i class="bx bx-archive-in"></i> Evidence Locker</div>
+                <div class="evidence-grid" id="evidence-container">
+                  <!-- Evidence snippets -->
                 </div>
               </div>
-              <div class="lab-flag-submission">
-                <input type="text" id="lab-flag-input" placeholder="Enter captured Flag (e.g. FLAG{...})">
-                <button class="hunt-btn success-btn" id="submit-flag-btn">Submit Flag</button>
+
+              <!-- REPORT BUILDER FORM -->
+              <div id="workspace-report" class="interactive-component hidden" style="margin-top: 15px;">
+                <div class="report-builder">
+                  <div class="report-form">
+                    <div class="form-group">
+                      <label for="report-title">Report Title</label>
+                      <input type="text" id="report-title" placeholder="Identify the route and vulnerability summary">
+                    </div>
+                    <div class="form-grid">
+                      <div class="form-group">
+                        <label for="report-severity">Severity</label>
+                        <select id="report-severity">
+                          <option value="">Select Severity...</option>
+                          <option value="Low">Low</option>
+                          <option value="Medium">Medium</option>
+                          <option value="High">High</option>
+                          <option value="Critical">Critical</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="report-type">Vulnerability Type</label>
+                        <select id="report-type">
+                          <option value="">Select Vulnerability...</option>
+                          <option value="IDOR">Insecure Direct Object Reference (IDOR)</option>
+                          <option value="XSS">Cross-Site Scripting (XSS)</option>
+                          <option value="SSRF">Server-Side Request Forgery (SSRF)</option>
+                          <option value="AuthBypass">Authentication Bypass</option>
+                          <option value="PrivEsc">Privilege Escalation</option>
+                          <option value="MassAssignment">Mass Assignment</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="report-desc">Description</label>
+                      <textarea id="report-desc" rows="4" placeholder="Vulnerability details..."></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="report-steps">Steps to Reproduce</label>
+                      <textarea id="report-steps" rows="6" placeholder="Provide step by step replication guidelines..."></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="report-impact">Impact</label>
+                      <textarea id="report-impact" rows="3" placeholder="Security impact on user database / server backend..."></textarea>
+                    </div>
+                    <button class="hunt-btn success-btn" id="submit-report-btn"><i class="bx bxs-file-export"></i> Submit Report to Triage</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- REPORT COMPARISON REVIEW -->
+              <div id="workspace-review" class="interactive-component hidden" style="margin-top: 15px;">
+                <div class="review-split">
+                  <div class="review-pane user-report">
+                    <h4>Your Submitted Report</h4>
+                    <div class="review-card" id="user-report-summary"></div>
+                  </div>
+                  <div class="review-pane real-report">
+                    <h4>Real Disclosed Report / Reference</h4>
+                    <div class="review-card real" id="real-report-summary"></div>
+                  </div>
+                </div>
+                <div class="triage-verdict-box" id="triage-verdict-panel">
+                  <!-- Triager verdict score -->
+                </div>
+              </div>
+
+              <!-- MISTAKES CHECKLIST -->
+              <div id="workspace-mistakes" class="mistakes-box hidden" style="margin-top: 15px;">
+                <div class="box-header text-red"><i class="bx bx-x-circle"></i> Common Hunter Traps & Mistakes</div>
+                <div class="box-content" id="mistakes-list" style="padding:15px;">
+                  <!-- Injected mistakes -->
+                </div>
+              </div>
+
+              <!-- QUIZ CONTAINER -->
+              <div id="workspace-quiz" class="interactive-component hidden" style="margin-top: 15px;">
+                <div class="quiz-shell">
+                  <div class="quiz-progress">Question <span id="quiz-current-num">1</span> of <span id="quiz-total-num">5</span></div>
+                  <div class="quiz-question" id="quiz-question-text">Quiz question content...</div>
+                  <div class="quiz-options" id="quiz-options-list">
+                    <!-- Quiz options cards -->
+                  </div>
+                  <div class="quiz-navigation">
+                    <button class="hunt-btn" id="quiz-submit-btn">Verify Answer</button>
+                    <button class="hunt-btn hidden" id="quiz-next-btn">Next Question <i class="bx bx-right-arrow-alt"></i></button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DECISION POINTS / CHOICES BRANCHING -->
+              <div id="step-choices-container" class="choices-panel hidden" style="margin-top: 15px;">
+                <h3 class="choices-header"><i class="bx bx-navigation"></i> Decision Point: Choose Next Action</h3>
+                <div class="choices-grid" id="step-choices">
+                  <!-- Choices buttons -->
+                </div>
+              </div>
+
+              <!-- LAB FLAGGING COMPONENT -->
+              <div id="workspace-lab" class="interactive-component hidden" style="margin-top: 15px;">
+                <div class="lab-shell">
+                  <div class="lab-icon"><i class="bx bx-code-alt"></i></div>
+                  <h3>Hands-On Simulation Lab</h3>
+                  <p id="lab-instructions"></p>
+                  <div class="lab-challenge-box">
+                    <span class="challenge-tag">Simulated Target URL</span>
+                    <div class="target-url-container">
+                      <code id="lab-target-url">https://bank-api.staging.target.com/</code>
+                      <button class="copy-url-btn" onclick="navigator.clipboard.writeText(document.getElementById('lab-target-url').innerText)"><i class="bx bx-copy"></i></button>
+                    </div>
+                  </div>
+                  <div class="lab-flag-submission">
+                    <input type="text" id="lab-flag-input" placeholder="Enter captured Flag (e.g. FLAG{...})">
+                    <button class="hunt-btn success-btn" id="submit-flag-btn">Submit Flag</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Pane: 🧠 AI Advisor Panel (Hints + Analysis + Interactive Decision Tree/Timeline) -->
+            <div class="ai-advisor-panel" id="static-ai-advisor-panel">
+              <div class="advisor-header-title">
+                <i class="bx bx-bot"></i> <span>AI ADVISOR</span>
+              </div>
+              
+              <div class="advisor-content-scroll">
+                <!-- Progressive Hints Card -->
+                <div class="advisor-card-section" id="advisor-hints-card">
+                  <h4><i class="bx bx-bulb text-orange"></i> Progressive Hints</h4>
+                  <div class="hints-tab-buttons" id="advisor-hints-selector">
+                    <!-- Dynamic hint badges will be added here -->
+                  </div>
+                  <div class="hint-display-box" id="advisor-hint-display">
+                    Click a hint badge above to unlock technical details.
+                  </div>
+                </div>
+
+                <!-- Step Vulnerability Analysis -->
+                <div class="advisor-card-section" id="advisor-analysis-card">
+                  <h4><i class="bx bx-analyse text-cyan"></i> Threat Analysis</h4>
+                  <div id="advisor-analysis-text" style="font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary);">
+                    Select steps to evaluate vulnerabilities and threat metrics.
+                  </div>
+                </div>
+
+                <!-- Interactive Decision Tree / Concurrency Timeline visualizer card -->
+                <div class="advisor-card-section hidden" id="advisor-interactive-card">
+                  <h4 id="advisor-interactive-title"><i class="bx bx-git-branch text-green"></i> Decision Tree Graph</h4>
+                  <div id="advisor-interactive-visual" style="margin-top: 10px;">
+                    <!-- Rendered content -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="workspace-navigation">
+            <button class="hunt-btn secondary" id="prev-step-btn" disabled>
+              <i class="bx bx-chevron-left"></i> Previous Step
+            </button>
+            <button class="hunt-btn" id="next-step-btn" disabled>
+              Next Step <i class="bx bx-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Bottom Console Section Footer (Terminal, Burp, and Idle Connection Panel) -->
+      <footer class="console-section-footer" id="main-console-footer">
+        <div class="console-tabs-header">
+          <span class="console-tab active" id="console-tab-idle"><i class="bx bx-pulse"></i> Console Idle</span>
+          <span class="console-tab" id="console-tab-terminal"><i class="bx bx-terminal"></i> Terminal Simulation</span>
+          <span class="console-tab" id="console-tab-burp"><i class="bx bx-wifi"></i> Burp Repeater</span>
+        </div>
+        <div class="console-panes-body">
+          
+          <!-- Idle View -->
+          <div id="console-pane-idle" class="console-pane-content">
+            <div class="idle-terminal-layout" style="display:flex; justify-content:space-between; padding:20px; color:var(--text-secondary); align-items:center; height: 100%;">
+              <div class="idle-col" style="display:flex; flex-direction:column; gap:6px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="status-indicator-dot online" style="width:10px; height:10px; background:#22c55e; border-radius:50%; box-shadow:0 0 8px #22c55e; display:inline-block;"></span>
+                  <span style="font-weight:700; color:var(--text-main); font-family:var(--font-title); font-size:0.85rem; letter-spacing:1px;">ACADEMY SIMULATION NODE ACTIVE</span>
+                </div>
+                <pre style="margin: 0; font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); line-height: 1.4;">
+TARGET HOST : api.cybergear.com (Port 443/HTTPS)
+STATUS      : LISTENING
+SESSION KEY : SECURE_SSL_V3_ESTABLISHED
+RECON SCAN  : IDLE</pre>
+              </div>
+              <div class="idle-col chart-col" style="display:flex; flex-direction:column; gap:8px; width:220px; font-family:var(--font-mono); font-size:0.72rem;">
+                <div class="system-perf-bar" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                  <span style="color:var(--text-muted);">CPU:</span>
+                  <div class="perf-bar-track" style="flex-grow:1; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;"><div class="perf-bar-fill" style="width:18%; height:100%; background:var(--accent-cyan);"></div></div>
+                  <span style="color:var(--accent-cyan); font-weight:bold;">18%</span>
+                </div>
+                <div class="system-perf-bar" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                  <span style="color:var(--text-muted);">RTT:</span>
+                  <div class="perf-bar-track" style="flex-grow:1; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;"><div class="perf-bar-fill" style="width:34%; height:100%; background:var(--accent-green);"></div></div>
+                  <span style="color:var(--accent-green); font-weight:bold;">35ms</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terminal simulation Console -->
+          <div id="console-pane-terminal" class="console-pane-content hidden">
+            <div class="workspace-terminal-wrapper" style="display:flex; gap:20px; padding:15px; height:100%;">
+              <div class="terminal-shell" style="flex-grow:1; height:100%; display:flex; flex-direction:column; border:1px solid var(--border-color); border-radius:6px; background:#05070c; overflow:hidden;">
+                <div class="terminal-header" style="height:30px; background:var(--bg-card); display:flex; align-items:center; padding:0 12px; gap:6px; border-bottom:1px solid var(--border-color);">
+                  <span class="terminal-dot red" style="width:8px; height:8px; border-radius:50%; background:#ef4444; display:inline-block;"></span>
+                  <span class="terminal-dot yellow" style="width:8px; height:8px; border-radius:50%; background:#f59e0b; display:inline-block;"></span>
+                  <span class="terminal-dot green" style="width:8px; height:8px; border-radius:50%; background:#22c55e; display:inline-block;"></span>
+                  <span class="terminal-title" style="margin-left:8px; font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">bash - recon@hunter-machine:~</span>
+                </div>
+                <div class="terminal-body" id="term-body" style="flex-grow:1; padding:12px; overflow-y:auto; font-family:var(--font-mono); font-size:0.78rem; line-height:1.5;">
+                  <!-- CLI inputs/outputs -->
+                </div>
+                <div class="terminal-footer" style="height:32px; border-top:1px solid rgba(255,255,255,0.04); display:flex; align-items:center; padding:0 12px; background:rgba(0,0,0,0.15);">
+                  <span class="term-prompt" style="font-family:var(--font-mono); font-size:0.78rem; color:var(--accent-green); margin-right:8px;">hunter@recon:~$</span>
+                  <input type="text" id="term-input" placeholder="Choose a command to run from the buttons on the right..." disabled style="flex-grow:1; background:transparent; border:none; color:var(--text-main); font-family:var(--font-mono); font-size:0.78rem; outline:none;">
+                </div>
+              </div>
+              <div class="terminal-controls" id="term-control-buttons" style="width:260px; display:flex; flex-direction:column; gap:10px; overflow-y:auto;">
+                <!-- CLI trigger buttons -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Burp Repeater simulation Console -->
+          <div id="console-pane-burp" class="console-pane-content hidden" style="height: 100%;">
+            <div class="workspace-burp-wrapper" style="display:flex; gap:15px; padding:15px; height:100%; box-sizing: border-box;">
+              <div class="burp-shell" style="flex-grow:1; display:flex; flex-direction:column; border:1px solid var(--border-color); border-radius:6px; background:#090d16; overflow:hidden; height: 100%;">
+                <div class="burp-header" style="height:32px; background:var(--bg-card); border-bottom:1px solid var(--border-color); display:flex; align-items:center; padding:0 10px; gap:8px;">
+                  <span class="burp-tab active" id="burp-tab-proxy"><i class="bx bx-wifi"></i> Proxy</span>
+                  <span class="burp-tab" id="burp-tab-repeater"><i class="bx bx-navigation"></i> Repeater</span>
+                </div>
+                <div class="burp-grid" id="burp-grid-container" style="flex-grow:1; display:grid; grid-template-columns:1fr 1fr; height: calc(100% - 32px); overflow:hidden;">
+                  <div class="burp-pane" style="display:flex; flex-direction:column; border-right:1px solid var(--border-color); height:100%;">
+                    <div class="pane-header" style="padding:6px 12px; font-size:0.72rem; background:rgba(0,0,0,0.1); border-bottom:1px solid rgba(255,255,255,0.03); color:var(--text-secondary); text-transform:uppercase; font-weight:600;">HTTP Request</div>
+                    <pre class="code-editor" id="burp-request-view" contenteditable="false" style="flex-grow:1; margin:0; padding:10px; font-family:var(--font-mono); font-size:0.78rem; color:#f8fafc; overflow-y:auto; outline:none; white-space:pre-wrap; word-break:break-all; background:#030712; line-height:1.4;"></pre>
+                  </div>
+                  <div class="burp-pane" style="display:flex; flex-direction:column; height:100%;">
+                    <div class="pane-header" style="padding:6px 12px; font-size:0.72rem; background:rgba(0,0,0,0.1); border-bottom:1px solid rgba(255,255,255,0.03); color:var(--text-secondary); text-transform:uppercase; font-weight:600;">HTTP Response</div>
+                    <pre class="code-editor" id="burp-response-view" contenteditable="false" style="flex-grow:1; margin:0; padding:10px; font-family:var(--font-mono); font-size:0.78rem; color:#f8fafc; overflow-y:auto; outline:none; white-space:pre-wrap; word-break:break-all; background:#030712; line-height:1.4;"></pre>
+                  </div>
+                  <div class="burp-pane hidden" id="burp-logs-pane" style="display:flex; flex-direction:column; border-left:1px solid var(--border-color); height:100%;">
+                    <div class="pane-header" style="padding:6px 12px; font-size:0.72rem; background:rgba(0,0,0,0.1); border-bottom:1px solid rgba(6, 182, 212, 0.15); color:var(--accent-cyan); text-transform:uppercase; font-weight:600;"><i class="bx bx-pulse"></i> Blue Team Logs</div>
+                    <pre class="code-editor" id="burp-logs-view" style="flex-grow:1; margin:0; padding:10px; font-family:var(--font-mono); font-size:0.72rem; color:#38bdf8; overflow-y:auto; white-space:pre-wrap; word-break:break-all; background:#020617; line-height:1.5; text-shadow:0 0 3px rgba(56,189,248,0.1);"></pre>
+                  </div>
+                </div>
+              </div>
+              <div class="burp-controls" id="burp-actions-container" style="width:220px; display:flex; flex-direction:column; gap:10px; justify-content:center;">
+                <!-- Tampering injection actions -->
               </div>
             </div>
           </div>
 
         </div>
-
-        <!-- Navigation Buttons -->
-        <div class="workspace-navigation">
-          <button class="hunt-btn secondary" id="prev-step-btn" disabled>
-            <i class="bx bx-chevron-left"></i> Previous Step
-          </button>
-          <button class="hunt-btn" id="next-step-btn" disabled>
-            Next Step <i class="bx bx-chevron-right"></i>
-          </button>
-        </div>
-      </section>
-
-      <!-- AI ASSISTANT CHAT DRAWER PANEL -->
-      <aside class="ai-assistant-drawer" id="ai-advisor-drawer" style="width: 320px; border-left: 1px solid var(--border-color); background: #0b111e; display: flex; flex-direction: column; transform: translateX(320px); transition: transform 0.3s; position: absolute; right: 0; top: var(--header-height); bottom: 0; z-index: 99;">
-        <div class="drawer-header" style="padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-card);">
-          <span style="font-weight: 700; color: var(--accent-cyan); display: flex; align-items: center; gap: 8px;"><i class="bx bx-bot"></i> AI Investigation Advisor</span>
-          <button id="close-ai-drawer-btn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.25rem;"><i class="bx bx-x"></i></button>
-        </div>
-        <div class="drawer-chat-body" id="ai-chat-history" style="flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; font-size: 0.82rem; line-height: 1.5;">
-          <div class="chat-bubble ai-bubble" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; color: var(--text-secondary);">
-            Hello Hunter. I am your AI Mentor. Ask me for hints, payload explanations, or reviews for this step.
-          </div>
-        </div>
-        <div class="drawer-chat-footer" style="padding: 15px; border-top: 1px solid var(--border-color); background: var(--bg-card); display: flex; gap: 8px;">
-          <input type="text" id="ai-chat-input" placeholder="Ask AI Advisor..." style="flex-grow: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; color: var(--text-main); font-size: 0.8rem; outline: none;">
-          <button id="send-ai-chat-btn" class="hunt-btn success-btn" style="padding: 8px 12px; border-radius: 6px; font-size: 0.8rem;">Send</button>
-        </div>
-      </aside>
-
+      </footer>
     </div>
-  </main>
 
   <!-- Load core registry and loading hooks -->
   <script src="../assets/js/db.js?v=2"></script>
