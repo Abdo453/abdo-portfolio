@@ -1,19 +1,25 @@
 // ==========================================
-// V2 GAME STATE & PROGRESS CONTROLLER
+// V3 STATE & PROGRESS MANAGER (STATE MANAGER)
 // ==========================================
 
-window.ProgressManager = {
+window.StateManager = {
   state: {
     xp: 0,
     bounty: 0,
     solved: [],
-    lastActive: null
+    lastActive: null,
+    // V3 Analytics extensions
+    errorsCount: 0,
+    timeSpentTotal: 0
   },
 
   load() {
     this.state.xp = parseInt(localStorage.getItem('bb_sim_xp')) || 0;
     this.state.bounty = parseInt(localStorage.getItem('bb_sim_bounty')) || 0;
     this.state.lastActive = localStorage.getItem('bb_sim_last_active') || null;
+    this.state.errorsCount = parseInt(localStorage.getItem('bb_sim_errors_count')) || 0;
+    this.state.timeSpentTotal = parseInt(localStorage.getItem('bb_sim_time_spent_total')) || 0;
+    
     try {
       this.state.solved = JSON.parse(localStorage.getItem('bb_sim_solved')) || [];
     } catch(e) {
@@ -26,6 +32,9 @@ window.ProgressManager = {
     localStorage.setItem('bb_sim_xp', this.state.xp);
     localStorage.setItem('bb_sim_bounty', this.state.bounty);
     localStorage.setItem('bb_sim_solved', JSON.stringify(this.state.solved));
+    localStorage.setItem('bb_sim_errors_count', this.state.errorsCount);
+    localStorage.setItem('bb_sim_time_spent_total', this.state.timeSpentTotal);
+    
     if (this.state.lastActive) {
       localStorage.setItem('bb_sim_last_active', this.state.lastActive);
     }
@@ -71,8 +80,22 @@ window.ProgressManager = {
   setLastActive(id) {
     this.state.lastActive = id;
     this.save();
+  },
+
+  // V3 extensions
+  logError() {
+    this.state.errorsCount++;
+    this.save();
+  },
+
+  addTimeSpent(minutes) {
+    this.state.timeSpentTotal += minutes;
+    this.save();
   }
 };
 
-// Initialize progress manager automatically on load
-ProgressManager.load();
+// V2 Alias for backwards compatibility
+window.ProgressManager = window.StateManager;
+
+// Auto load progress
+window.StateManager.load();

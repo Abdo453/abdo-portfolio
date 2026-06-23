@@ -1,8 +1,8 @@
 // ==========================================
-// V2 INTERACTIVE SIMULATION ENGINE & AI MOCK
+// V3 INTERACTIVE SIMULATION ENGINE (SCENARIO ENGINE)
 // ==========================================
 
-window.SimulationManager = {
+window.ScenarioEngine = {
   scenario: null,
   currentStepIndex: 0,
   timeSpent: 0,
@@ -668,3 +668,7 @@ window.SimulationManager = {
     }, 600);
   }
 };
+
+// Aliasing SimulationManager to ScenarioEngine for backward compatibility
+window.SimulationManager = window.ScenarioEngine;
+
