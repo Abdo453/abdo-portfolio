@@ -11,10 +11,11 @@ async function loadCcnaData() {
         console.log("Fetching Linux Data...");
         
         // Fetch all JSON files in parallel (quizzes loaded via quizzes.js)
+        const cacheBuster = '?v=' + Date.now();
         const [lessonsRes, labsRes, interviewsRes] = await Promise.all([
-            fetch('data/lessons.json'),
-            fetch('data/labs.json'),
-            fetch('data/interviews.json')
+            fetch('data/lessons.json' + cacheBuster),
+            fetch('data/labs.json' + cacheBuster),
+            fetch('data/interviews.json' + cacheBuster)
         ]);
         
         if (!lessonsRes.ok) throw new Error("Failed to load lessons.json");
