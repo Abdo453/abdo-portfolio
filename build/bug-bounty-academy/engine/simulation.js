@@ -557,24 +557,58 @@ window.SimulationManager = {
 
     // Add a simulated exploit button if not already present
     let exploitBtn = document.getElementById('lab-exploit-simulate-btn');
+    let outputBox = document.getElementById('lab-exploit-output-box');
     if (!exploitBtn) {
       exploitBtn = document.createElement('button');
       exploitBtn.id = 'lab-exploit-simulate-btn';
       exploitBtn.className = 'hunt-btn';
       exploitBtn.style.marginTop = '10px';
-      exploitBtn.style.marginBottom = '20px';
+      exploitBtn.style.marginBottom = '15px';
       exploitBtn.style.width = '100%';
-      exploitBtn.style.background = 'rgba(6, 182, 212, 0.1)';
+      exploitBtn.style.background = 'rgba(6, 182, 212, 0.08)';
       exploitBtn.style.borderColor = 'var(--accent-cyan)';
       exploitBtn.style.color = 'var(--accent-cyan)';
       exploitBtn.innerHTML = '<i class="bx bx-play-circle"></i> Run Exploit (Simulate Request)';
       
+      outputBox = document.createElement('div');
+      outputBox.id = 'lab-exploit-output-box';
+      outputBox.className = 'hidden';
+      outputBox.style.marginTop = '10px';
+      outputBox.style.marginBottom = '20px';
+      outputBox.style.padding = '15px';
+      outputBox.style.background = 'rgba(0, 0, 0, 0.4)';
+      outputBox.style.border = '1px solid var(--border-color)';
+      outputBox.style.borderRadius = '6px';
+      outputBox.style.fontFamily = 'var(--font-mono)';
+      outputBox.style.fontSize = '0.82rem';
+      outputBox.style.lineHeight = '1.6';
+      outputBox.style.color = 'var(--text-secondary)';
+      outputBox.style.textAlign = 'left';
+      outputBox.style.position = 'relative';
+      
+      outputBox.innerHTML = `
+        <div style="position: absolute; right: 12px; top: 10px; font-size: 0.7rem; color: var(--accent-green); text-transform: uppercase; font-weight: 700; display: flex; align-items: center; gap: 4px;"><i class="bx bx-check-circle"></i> Success</div>
+        <div style="color: var(--accent-cyan); font-weight: 600; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; font-family: var(--font-title);"><i class="bx bx-terminal"></i> Exploit Output Console</div>
+        <pre id="lab-exploit-output-text" style="margin: 0; white-space: pre-wrap; word-break: break-all; color: var(--text-main); font-family: var(--font-mono);"></pre>
+      `;
+      
       const submissionDiv = this.el.lab.querySelector('.lab-flag-submission');
       submissionDiv.parentNode.insertBefore(exploitBtn, submissionDiv);
+      submissionDiv.parentNode.insertBefore(outputBox, submissionDiv);
+    } else {
+      // Hide output box from previous scenario if it exists
+      if (outputBox) outputBox.classList.add('hidden');
     }
     
     exploitBtn.onclick = () => {
-      alert(`[Simulated Browser Output for: ${step.targetUrl}]\n\nExploit Executed Successfully!\n\nCaptured Flag: ${step.correctFlag}`);
+      const activeOutputBox = document.getElementById('lab-exploit-output-box');
+      if (activeOutputBox) {
+        activeOutputBox.classList.remove('hidden');
+        const textEl = document.getElementById('lab-exploit-output-text');
+        if (textEl) {
+          textEl.innerText = `[Requesting]: ${step.targetUrl}\n\n[Status]: Exploit Executed Successfully!\n[Response]:\n----------------------------------------\nCaptured Flag: ${step.correctFlag}\n----------------------------------------`;
+        }
+      }
     };
 
     this.el.submitFlagBtn.onclick = () => {
