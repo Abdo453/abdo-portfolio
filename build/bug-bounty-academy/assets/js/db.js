@@ -147,6 +147,99 @@
   const db = [];
   let scenarioCounter = 1;
 
+  const overrides = {
+    "scenario-001": {
+      title: "IDOR in API Endpoint - Full User Data Leak",
+      level: "Beginner",
+      category: "Authorization",
+      company: "Shopify",
+      reward: "$6,500",
+      time: "30 Min",
+      status: "Unlocked"
+    },
+    "scenario-002": {
+      title: "Stored XSS in PDF Viewer - Slack Compromise",
+      level: "Easy",
+      category: "API Security",
+      company: "Slack",
+      reward: "$5,000",
+      time: "1 Hour",
+      status: "Unlocked"
+    },
+    "scenario-003": {
+      title: "SSRF to AWS Metadata - EC2 IAM Keys Theft",
+      level: "Medium",
+      category: "Cloud",
+      company: "Airbnb",
+      reward: "$4,500",
+      time: "2 Hours",
+      status: "Unlocked"
+    },
+    "scenario-004": {
+      title: "JWT Authentication Bypass - Weak Secret",
+      level: "Hard",
+      category: "Authentication",
+      company: "Stripe",
+      reward: "$10,000",
+      time: "3+ Hours",
+      status: "Unlocked"
+    },
+    "scenario-005": {
+      title: "Time-Based Blind SQLi - Admin Password Extraction",
+      level: "Expert",
+      category: "API Security",
+      company: "Tesla",
+      reward: "$3,500",
+      time: "3+ Hours",
+      status: "Unlocked"
+    },
+    "scenario-006": {
+      title: "Business Logic - Price Manipulation in Checkout",
+      level: "Easy",
+      category: "Business Logic",
+      company: "Uber",
+      reward: "$2,000",
+      time: "1 Hour",
+      status: "Unlocked"
+    },
+    "scenario-007": {
+      title: "Information Disclosure - Exposed .git & .env",
+      level: "Beginner",
+      category: "Recon Driven",
+      company: "GitHub",
+      reward: "$750",
+      time: "30 Min",
+      status: "Unlocked"
+    },
+    "scenario-008": {
+      title: "File Upload to RCE - ImageMagick GIF Shell",
+      level: "Hard",
+      category: "API Security",
+      company: "Meta",
+      reward: "$8,000",
+      time: "3+ Hours",
+      status: "Unlocked"
+    },
+    "scenario-009": {
+      title: "Chain Bug - IDOR to Stored XSS Account Takeover",
+      level: "Expert",
+      category: "Chaining",
+      company: "TikTok",
+      reward: "$12,000",
+      time: "3+ Hours",
+      status: "Unlocked"
+    },
+    "scenario-010": {
+      title: "Race Condition - Promo Coupon Double-Redeem",
+      level: "Hard",
+      category: "Business Logic",
+      company: "Stripe",
+      reward: "$5,000",
+      time: "3+ Hours",
+      status: "Unlocked"
+    }
+  };
+
   // Generate 100 scenarios systematically
   categories.forEach(cat => {
     const list = bugTitles[cat.name];
@@ -184,8 +277,9 @@
       else if (level === "Expert") reward = 8000 + (i * 1000);
       else if (level === "Real Reports") reward = 5000 + (i * 700);
 
-      db.push({
-        id: `scenario-${idNum}`,
+      const id = `scenario-${idNum}`;
+      const record = {
+        id: id,
         title: title,
         level: level,
         category: cat.name,
@@ -194,7 +288,14 @@
         time: level === "Beginner" ? "30 Min" : level === "Easy" ? "1 Hour" : level === "Medium" ? "2 Hours" : "3+ Hours",
         status: status,
         solved: false
-      });
+      };
+
+      // Apply overrides for custom scenarios
+      if (overrides[id]) {
+        Object.assign(record, overrides[id]);
+      }
+
+      db.push(record);
 
       scenarioCounter++;
     }

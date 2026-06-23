@@ -1,0 +1,224 @@
+// ==========================================================
+// SCENARIO 007: INFORMATION DISCLOSURE - EXPOSED .GIT & .ENV
+// ==========================================================
+
+window.scenario_007 = {
+  "metadata": {
+    "id": "scenario-007",
+    "title": "Information Disclosure - Exposed .git & .env",
+    "level": "Beginner",
+    "category": "Recon Driven",
+    "company": "GitHub",
+    "reward": "$750",
+    "time": "30 Min"
+  },
+  "decisionLog": [
+    {
+      "hypothesis": "النطاق التطويري dev محمي خلف جدار حماية أو يتطلب حساباً داخلياً.",
+      "whyFailed": "الموقع متاح للعامة دون أي قيود وصول وتم نسيان ملفات التطوير في المجلد الرئيسي.",
+      "planB": "استخدام أدوات التخمين لفحص الملفات المخفية مثل .git و .env على النطاق dev.",
+      "ignored": "البحث عن ثغرات XSS في النطاق الرئيسي."
+    }
+  ],
+  "payloads": [
+    {
+      "code": "curl -s \"https://dev.marketing-tool.com/.env\"",
+      "explanation": "طلب ملف الإعدادات البيئية .env مباشرة عبر المتصفح أو أداة curl.",
+      "whyWorked": "الملف تم تركه بصلاحيات قراءة للعامة في مجلد الويب الرئيسي دون حماية في تكوين خادم الويب.",
+      "alternatives": [
+        ".git/config",
+        "backup.sql",
+        "config.yml"
+      ]
+    }
+  ],
+  "mistakes": [
+    {
+      "mistake": "تجاهل النطاقات الفرعية القديمة أو التطويرية (dev/staging).",
+      "whyWrong": "البيئات التطويرية هي الحلقة الأضعف وغالباً ما تحمل إعدادات أمان ضعيفة وملفات اختبار.",
+      "betterWay": "البدء دائماً بفحص النطاقات الفرعية وتصنيفها والبحث عن النطاقات المتروكة."
+    }
+  ],
+  "steps": [
+    {
+      "name": "Mission Brief",
+      "time": "09:00",
+      "workspace": "markdown",
+      "xpReward": 100,
+      "description": "### 🎯 الهدف: كشف الملفات الحساسة على النطاق التطويري\n\nمرحباً بك! لدينا اليوم منصة SaaS للتسويق الرقمي.\nهدفنا هو البحث عن تسريبات لملفات حساسة متروكة على خوادمها.\n\n#### قواعد الفحص:\n- نطاق الفحص: النطاقات الفرعية التابعة لـ `*.marketing-tool.com`\n- ابحث عن مجلدات التطوير المشتركة أو ملفات التكوين المتروكة للعامة.\n\nاضغط على **Next Step** للبدء.",
+      "aiAdvisor": {
+        "hint": "ابدأ بجمع النطاقات الفرعية للبحث عن بيئات التطوير.",
+        "payloadExplanation": "لا توجد أكواد حالياً.",
+        "failureExplanation": "لا يوجد."
+      }
+    },
+    {
+      "name": "Passive Recon",
+      "time": "09:15",
+      "workspace": "recon",
+      "xpReward": 150,
+      "description": "### 🔍 فحص النطاقات والتخمين على الملفات\n\nسنقوم بالبحث أولاً عن الأجهزة الفرعية ثم تخمين المجلدات على النطاق التطويري المكتشف `dev.marketing-tool.com`.\nاختر الأداة المناسبة لتشغيلها.",
+      "terminalCommands": [
+        {
+          "name": "subfinder -d marketing-tool.com -silent",
+          "correct": false,
+          "output": [
+            {
+              "text": "[INF] Scanning marketing-tool.com",
+              "type": "info"
+            },
+            {
+              "text": "www.marketing-tool.com",
+              "type": "out"
+            },
+            {
+              "text": "dev.marketing-tool.com",
+              "type": "success"
+            }
+          ]
+        },
+        {
+          "name": "ffuf -u https://dev.marketing-tool.com/FUZZ -w common.txt -s",
+          "correct": true,
+          "evidence": {
+            "title": "Exposed Git & Env Files",
+            "content": "/.git/HEAD [Status: 200]\n/.env [Status: 200]\n/backup.sql [Status: 200]"
+          },
+          "output": [
+            {
+              "text": "/index.html [200]",
+              "type": "out"
+            },
+            {
+              "text": "/.git/HEAD [200]",
+              "type": "success"
+            },
+            {
+              "text": "/.env [200]",
+              "type": "success"
+            },
+            {
+              "text": "/backup.sql [200]",
+              "type": "success"
+            },
+            {
+              "text": "[!] Success: Critical development files exposed on webroot!",
+              "type": "success"
+            }
+          ]
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "شغّل أداة ffuf للتخمين على المسارات المخفية للنطاق dev المكتشف.",
+        "payloadExplanation": "أداة ffuf تقوم بتخمين مسارات شائعة مثل .git و .env في مجلد الويب الرئيسي.",
+        "failureExplanation": "عدم تشغيل التخمين سيحرمك من رؤية الملفات التي لا تظهر في الروابط العادية."
+      }
+    },
+    {
+      "name": "Burp Verification",
+      "time": "09:40",
+      "workspace": "burp",
+      "xpReward": 200,
+      "description": "### 🌐 قراءة محتويات ملف الـ .env الحساس\n\nسنقوم بالوصول إلى الرابط المكتشف:\n`https://dev.marketing-tool.com/.env`\n\nاضغط على **Request Env File** لمعاينة محتويات الملف والمفاتيح المسربة.",
+      "burpRequest": "GET /.env HTTP/1.1\nHost: dev.marketing-tool.com\nUser-Agent: Mozilla/5.0",
+      "burpResponse": "HTTP/1.1 404 Not Found\nContent-Length: 15",
+      "burpActions": [
+        {
+          "name": "Request Env File",
+          "correct": true,
+          "modifiedRequest": "GET /.env HTTP/1.1\nHost: dev.marketing-tool.com\nUser-Agent: Mozilla/5.0",
+          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: text/plain\n\nDB_USERNAME=admin\nDB_PASSWORD=SuperSecretDBPass123!\nAWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nSTRIPE_SECRET_KEY=sk_live_51H...xxx\nJWT_SECRET=dev-jwt-secret-2024",
+          "evidence": {
+            "title": "Leaked Stripe Secret Key",
+            "content": "STRIPE_SECRET_KEY=sk_live_51H...xxx\nDB_PASSWORD=SuperSecretDBPass123!"
+          }
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "اضغط على زر Request Env File لإرسال الطلب وقراءة مفاتيح Stripe والـ AWS المسربة.",
+        "payloadExplanation": "طلب الملف مباشرة لقراءة الأسرار المخزنة بداخله.",
+        "failureExplanation": "تأكد من قراءة البيانات بالكامل لتأكيد التسريب."
+      }
+    },
+    {
+      "name": "Exploitation & Flag",
+      "time": "10:05",
+      "workspace": "lab",
+      "xpReward": 300,
+      "instructions": "أدخل الـ Flag بعد التحقق من البيانات وقراءة الأسرار بنجاح.",
+      "targetUrl": "https://dev.marketing-tool.com/.env",
+      "correctFlag": "FLAG{exposed_git_env_stripe_keys_compromised}",
+      "aiAdvisor": {
+        "hint": "أدخل العلم الصحيح: FLAG{exposed_git_env_stripe_keys_compromised}",
+        "payloadExplanation": "إثبات الوصول للأسرار ومفاتيح Stripe الحساسة.",
+        "failureExplanation": "تأكد من كتابة العلم بطريقة صحيحة."
+      }
+    },
+    {
+      "name": "Report Writing",
+      "time": "10:30",
+      "workspace": "report",
+      "xpReward": 250,
+      "aiAdvisor": {
+        "hint": "الكلمات المفتاحية المطلوبة هي 'git' و 'env'.",
+        "payloadExplanation": "شرح خطورة تسريب ملفات البيئة والتطوير والأسرار البرمجية.",
+        "failureExplanation": "يجب وضع الكلمات المفتاحية بالتقرير للتقييم الصحيح."
+      }
+    },
+    {
+      "name": "Triage & Verdict",
+      "time": "1 Day Later",
+      "workspace": "review",
+      "aiAdvisor": {
+        "hint": "راجع قرار الفحص والمكافأة الممنوحة.",
+        "payloadExplanation": "تم التقييم بـ High لوجود Stripe Keys نشطة.",
+        "failureExplanation": "لا يوجد."
+      }
+    },
+    {
+      "name": "Lessons Learned",
+      "time": "Post-Incident",
+      "workspace": "quiz",
+      "quizData": [
+        {
+          "question": "ما هو المجلد الذي يحتوي على تاريخ المشروع بالكامل والـ Source Code؟",
+          "options": [
+            "مجلد static.",
+            "مجلد .git المخصص لنظام Git لإدارة النسخ.",
+            "مجلد uploads.",
+            "مجلد node_modules."
+          ],
+          "answer": 1
+        },
+        {
+          "question": "كيف يمكن منع تسريب ملفات .git و .env في الإنتاج؟",
+          "options": [
+            "تغيير اسم الملفات فقط.",
+            "إضافة قواعد في تكوين خادم الويب (Nginx/Apache) لمنع الوصول للملفات التي تبدأ بنقطة، وعدم رفع مجلدات التطوير للإنتاج.",
+            "حظر استخدام أدوات التخمين.",
+            "تعطيل قاعدة البيانات."
+          ],
+          "answer": 1
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "الإجابة لكلا السؤالين هي الخيار الثاني (ب).",
+        "payloadExplanation": "مراجعة مبادئ تأمين خوادم الويب ضد تسريبات الملفات المخفية.",
+        "failureExplanation": "خطأ في الإجابة يؤدي لخصم XP."
+      }
+    }
+  ],
+  "realReport": {
+    "title": "Exposed git directory and env file on dev subdomain leaks database and Stripe keys",
+    "severity": "High",
+    "type": "IDOR",
+    "desc": "The development subdomain dev.marketing-tool.com has an exposed .git directory and a publicly accessible .env configuration file containing live Stripe and database keys.",
+    "steps": "1. Run directory fuzzing on dev subdomain.\n2. Access /.env and /.git/config directly.\n3. Retrieve active Stripe private credentials.",
+    "impact": "Complete source code leak and access to financial credentials and production database.",
+    "feedback": "Confirmed. We disabled the dev subdomain directory listing and blocked dotfiles access in Nginx. Bounty awarded.",
+    "keywords": [
+      "git",
+      "env"
+    ]
+  }
+};

