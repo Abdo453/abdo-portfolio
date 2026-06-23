@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bug Bounty Scenarios Academy - Real World Bug Bounty Simulator. Learn bug hunting by playing real cybersecurity reports.">
+  <title>Bug Bounty Scenarios Academy | Real World Bug Bounty Simulator</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Boxicons (CDN for clean icons) -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <!-- Marked.js for parsing markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- Floating particles / background decorations -->
+  <div class="bg-glow">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+  </div>
+  <div class="scanlines"></div>
+
+  <!-- Main App Container -->
+  <div id="app">
+    
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+      <div class="logo">
+        <i class="bx bx-target-lock logo-icon"></i>
+        <span class="logo-text">Bug Bounty Scenarios Academy</span>
+        <span class="logo-subtext">Simulator v1.0</span>
+      </div>
+      
+      <div class="header-stats">
+        <div class="stat-badge xp-badge">
+          <i class="bx bxs-zap"></i>
+          <span class="stat-label">XP:</span>
+          <span class="stat-value" id="global-xp">0</span>
+        </div>
+        <div class="stat-badge bounty-badge">
+          <i class="bx bx-dollar-circle"></i>
+          <span class="stat-label">Bounty:</span>
+          <span class="stat-value" id="global-bounty">$0</span>
+        </div>
+        <div class="stat-badge rank-badge">
+          <i class="bx bxs-medal"></i>
+          <span class="stat-label">Rank:</span>
+          <span class="stat-value" id="global-rank">Recon Rookie</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- DASHBOARD VIEW -->
+    <main id="dashboard-view" class="view-panel active">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <span class="hero-tag">🎯 Tactical Learning Platform</span>
+          <h1 class="hero-title">Real World Bug Bounty Simulator</h1>
+          <p class="hero-desc">
+            Transform from a beginner to a professional hunter by simulating 100 actual bug bounty disclosures. 
+            Analyze targets, bypass security filters, write professional reports, and earn virtual bounties.
+          </p>
+        </div>
+        
+        <!-- Quick Progress Summary -->
+        <div class="progress-summary">
+          <div class="progress-box">
+            <span class="progress-value" id="completed-count">0/100</span>
+            <span class="progress-label">Scenarios Solved</span>
+          </div>
+          <div class="progress-box">
+            <span class="progress-value" id="success-rate">0%</span>
+            <span class="progress-label">Avg. Accuracy</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search & Filters Container -->
+      <section class="filters-container">
+        <!-- Level Filters -->
+        <div class="filter-group">
+          <label class="filter-label"><i class="bx bx-slider"></i> Choose Level:</label>
+          <div class="filter-buttons" id="level-filters">
+            <button class="filter-btn active" data-level="all">All Levels</button>
+            <button class="filter-btn lvl-beginner" data-level="Beginner">🟢 Beginner</button>
+            <button class="filter-btn lvl-easy" data-level="Easy">🔵 Easy</button>
+            <button class="filter-btn lvl-medium" data-level="Medium">🟡 Medium</button>
+            <button class="filter-btn lvl-hard" data-level="Hard">🟠 Hard</button>
+            <button class="filter-btn lvl-expert" data-level="Expert">🔴 Expert</button>
+            <button class="filter-btn lvl-real" data-level="Real Reports">🔥 Real Reports</button>
+          </div>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="filter-group" style="margin-top: 15px;">
+          <label class="filter-label"><i class="bx bx-category"></i> Phase / Focus:</label>
+          <div class="filter-buttons scrollable" id="category-filters">
+            <button class="filter-btn active" data-category="all">All Topics</button>
+            <button class="filter-btn" data-category="Recon Driven">Recon Driven</button>
+            <button class="filter-btn" data-category="Authentication">Authentication</button>
+            <button class="filter-btn" data-category="Authorization">Authorization</button>
+            <button class="filter-btn" data-category="API Security">API Security</button>
+            <button class="filter-btn" data-category="Business Logic">Business Logic</button>
+            <button class="filter-btn" data-category="Chaining">Chaining</button>
+            <button class="filter-btn" data-category="Mobile">Mobile</button>
+            <button class="filter-btn" data-category="Cloud">Cloud</button>
+            <button class="filter-btn" data-category="AI & LLM">AI & LLM</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scenarios Grid -->
+      <section class="scenarios-grid" id="scenarios-list">
+        <!-- Scenario cards will be rendered dynamically -->
+      </section>
+    </main>
+
+    <!-- SIMULATOR VIEW (Notion-style Split Pane) -->
+    <main id="simulator-view" class="view-panel">
+      <!-- Back to Dashboard -->
+      <div class="simulator-controls">
+        <button class="control-btn back-btn" id="exit-sim-btn">
+          <i class="bx bx-left-arrow-alt"></i> Leave Simulation
+        </button>
+        <div class="simulator-title" id="sim-scenario-title">Scenario #012: Loading...</div>
+      </div>
+
+      <div class="simulator-layout">
+        <!-- Left Sidebar: Interactive Timeline -->
+        <aside class="timeline-sidebar">
+          
+          <!-- Scenario Brief Card -->
+          <div class="sidebar-scenario-card">
+            <div class="badge-row">
+              <span class="difficulty-badge" id="sim-diff-badge">Easy</span>
+              <span class="category-badge" id="sim-category-badge">Auth</span>
+            </div>
+            <div class="metric-row">
+              <div class="metric-item">
+                <span class="metric-lbl">Bounty</span>
+                <span class="metric-val text-green" id="sim-bounty-val">$3,500</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-lbl">Est. Time</span>
+                <span class="metric-val" id="sim-time-val">2 Hours</span>
+              </div>
+            </div>
+            <div class="company-row">
+              <span class="metric-lbl">Company:</span>
+              <span class="company-name" id="sim-company-val">Hidden</span>
+            </div>
+          </div>
+
+          <!-- Timeline Navigation List -->
+          <ul class="timeline-steps" id="timeline-steps-list">
+            <!-- Timeline nodes rendered here -->
+          </ul>
+        </aside>
+
+        <!-- Right Main Panel: Step Interactive Workspaces -->
+        <section class="workspace-panel">
+          <!-- Step Headers -->
+          <div class="workspace-header">
+            <h2 id="step-title">Mission Brief</h2>
+            <div class="step-metrics">
+              <span>Time Spent: <strong class="text-orange" id="step-time-spent">0</strong> min</span>
+              <span>•</span>
+              <span>Potential Reward: <strong class="text-green" id="step-xp-potential">0</strong> XP</span>
+            </div>
+          </div>
+
+          <!-- Interactive Area Container -->
+          <div class="workspace-body">
+            
+            <!-- Standard Content (Text, lists, tables) -->
+            <div id="step-content-markdown" class="markdown-body">
+              <!-- Content injected here via Marked.js -->
+            </div>
+
+            <!-- TERMINAL WORKSPACE -->
+            <div id="workspace-terminal" class="interactive-component hidden">
+              <div class="terminal-shell">
+                <div class="terminal-header">
+                  <span class="terminal-dot red"></span>
+                  <span class="terminal-dot yellow"></span>
+                  <span class="terminal-dot green"></span>
+                  <span class="terminal-title">bash - recon@hunter-machine:~</span>
+                </div>
+                <div class="terminal-body" id="term-body">
+                  <!-- Terminal inputs/outputs -->
+                </div>
+                <div class="terminal-footer">
+                  <span class="term-prompt">hunter@recon:~$</span>
+                  <input type="text" id="term-input" placeholder="Type command or choose an action below..." disabled>
+                </div>
+              </div>
+              <!-- Recon Terminal Controls -->
+              <div class="terminal-controls" id="term-control-buttons">
+                <!-- Action buttons (e.g. Run subfinder, Run httpx) -->
+              </div>
+            </div>
+
+            <!-- BURP SUITE WORKSPACE -->
+            <div id="workspace-burp" class="interactive-component hidden">
+              <div class="burp-shell">
+                <div class="burp-header">
+                  <span class="burp-tab active"><i class="bx bx-wifi"></i> Proxy</span>
+                  <span class="burp-tab"><i class="bx bx-navigation"></i> Repeater</span>
+                  <span class="burp-tab"><i class="bx bx-search-alt"></i> Intruder</span>
+                </div>
+                <div class="burp-grid">
+                  <!-- HTTP Request Panel -->
+                  <div class="burp-pane">
+                    <div class="pane-header">HTTP Request</div>
+                    <pre class="code-editor" id="burp-request-view" contenteditable="false"></pre>
+                  </div>
+                  <!-- HTTP Response Panel -->
+                  <div class="burp-pane">
+                    <div class="pane-header">HTTP Response</div>
+                    <pre class="code-editor" id="burp-response-view" contenteditable="false"></pre>
+                  </div>
+                </div>
+              </div>
+              <!-- Burp tampering controls -->
+              <div class="burp-controls" id="burp-actions-container">
+                <!-- Injected choice buttons for Burp requests -->
+              </div>
+            </div>
+
+            <!-- EVIDENCE LOCKER -->
+            <div id="workspace-evidence" class="evidence-locker hidden">
+              <div class="locker-header"><i class="bx bx-archive-in"></i> Collected Evidence / Proof of Concept Details</div>
+              <div class="evidence-grid" id="evidence-container">
+                <!-- Evidence cards injected here -->
+              </div>
+            </div>
+
+            <!-- REPORT BUILDER WORKSPACE -->
+            <div id="workspace-report" class="interactive-component hidden">
+              <div class="report-builder">
+                <div class="report-form">
+                  <div class="form-group">
+                    <label for="report-title">Report Title</label>
+                    <input type="text" id="report-title" placeholder="e.g. IDOR leading to full Account Takeover on /api/v1/profile">
+                  </div>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="report-severity">Severity</label>
+                      <select id="report-severity">
+                        <option value="">Select Severity...</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="report-type">Vulnerability Type</label>
+                      <select id="report-type">
+                        <option value="">Select Vulnerability...</option>
+                        <option value="IDOR">Insecure Direct Object Reference (IDOR)</option>
+                        <option value="XSS">Cross-Site Scripting (XSS)</option>
+                        <option value="SSRF">Server-Side Request Forgery (SSRF)</option>
+                        <option value="AuthBypass">Authentication Bypass</option>
+                        <option value="PrivEsc">Privilege Escalation</option>
+                        <option value="MassAssignment">Mass Assignment</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="report-desc">Description</label>
+                    <textarea id="report-desc" rows="4" placeholder="Explain the vulnerability..."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="report-steps">Steps to Reproduce</label>
+                    <textarea id="report-steps" rows="6" placeholder="1. Navigate to...\n2. Intercept request in Burp...\n3. Change value..."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="report-impact">Impact</label>
+                    <textarea id="report-impact" rows="3" placeholder="What is the potential impact of this finding?"></textarea>
+                  </div>
+                  <button class="hunt-btn success-btn" id="submit-report-btn"><i class="bx bxs-file-export"></i> Submit Report to Triage</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- EXPERT REVIEW / REPORT COMPARISON -->
+            <div id="workspace-review" class="interactive-component hidden">
+              <div class="review-split">
+                <div class="review-pane user-report">
+                  <h4>Your Submitted Report</h4>
+                  <div class="review-card" id="user-report-summary"></div>
+                </div>
+                <div class="review-pane real-report">
+                  <h4>Real Disclosed Report / Reference</h4>
+                  <div class="review-card real" id="real-report-summary"></div>
+                </div>
+              </div>
+              <div class="triage-verdict-box" id="triage-verdict-panel">
+                <!-- Score, XP, comments, next actions -->
+              </div>
+            </div>
+
+            <!-- MISTAKES BOX -->
+            <div id="workspace-mistakes" class="mistakes-box hidden">
+              <div class="box-header text-red"><i class="bx bx-x-circle"></i> Common Mistakes during this Scenario</div>
+              <div class="box-content" id="mistakes-list">
+                <!-- Mistakes checklist -->
+              </div>
+            </div>
+
+            <!-- MINDSET / HUNTER THOUGHTS BOX -->
+            <div id="workspace-thoughts" class="mindset-box hidden">
+              <div class="box-header"><i class="bx bx-brain"></i> Hunter Thoughts (Mental Methodology)</div>
+              <div class="box-content" id="thoughts-content">
+                <!-- Mentality/Logic breakdown -->
+              </div>
+            </div>
+
+            <!-- QUIZ WORKSPACE -->
+            <div id="workspace-quiz" class="interactive-component hidden">
+              <div class="quiz-shell">
+                <div class="quiz-progress">Question <span id="quiz-current-num">1</span> of <span id="quiz-total-num">15</span></div>
+                <div class="quiz-question" id="quiz-question-text">Loading question...</div>
+                <div class="quiz-options" id="quiz-options-list">
+                  <!-- Options -->
+                </div>
+                <div class="quiz-navigation">
+                  <button class="hunt-btn" id="quiz-submit-btn">Verify Answer</button>
+                  <button class="hunt-btn hidden" id="quiz-next-btn">Next Question <i class="bx bx-right-arrow-alt"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- DECISION POINTS / OPTIONS SELECTOR -->
+            <div id="step-choices-container" class="choices-panel">
+              <h3 class="choices-header"><i class="bx bx-navigation"></i> Choose Your Next Action:</h3>
+              <div class="choices-grid" id="step-choices">
+                <!-- Injected choice buttons -->
+              </div>
+            </div>
+
+            <!-- LAB / TRY IT YOURSELF WORKSPACE -->
+            <div id="workspace-lab" class="interactive-component hidden">
+              <div class="lab-shell">
+                <div class="lab-icon"><i class="bx bx-code-alt"></i></div>
+                <h3>Hands-On Simulation Lab</h3>
+                <p id="lab-instructions"></p>
+                <div class="lab-challenge-box">
+                  <span class="challenge-tag">Simulated Target URL</span>
+                  <div class="target-url-container">
+                    <code id="lab-target-url">https://bank-api.staging.target.com/</code>
+                    <button class="copy-url-btn" onclick="navigator.clipboard.writeText(document.getElementById('lab-target-url').innerText)"><i class="bx bx-copy"></i></button>
+                  </div>
+                </div>
+                <div class="lab-flag-submission">
+                  <input type="text" id="lab-flag-input" placeholder="Enter captured Flag or Token (e.g. FLAG{...})">
+                  <button class="hunt-btn success-btn" id="submit-flag-btn">Submit Flag</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Navigation buttons for timeline -->
+          <div class="workspace-navigation">
+            <button class="hunt-btn secondary" id="prev-step-btn" disabled>
+              <i class="bx bx-chevron-left"></i> Previous Step
+            </button>
+            <button class="hunt-btn" id="next-step-btn" disabled>
+              Next Step <i class="bx bx-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Load script files -->
+  <script src="assets/js/db.js"></script>
+  <script src="scenarios/scenario_001.js"></script>
+  <script src="scenarios/scenario_002.js"></script>
+  <script src="scenarios/scenario_003.js"></script>
+  <script src="scenarios/scenario_004.js"></script>
+  <script src="scenarios/scenario_005.js"></script>
+  <script src="assets/js/engine.js"></script>
+</body>
+</html>
