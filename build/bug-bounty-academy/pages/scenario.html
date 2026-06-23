@@ -381,6 +381,11 @@
         simScript.onload = function() {
           const rendererScript = document.createElement('script');
           rendererScript.src = '../engine/renderer.js';
+          
+          rendererScript.onload = function() {
+            window.SimulationManager.init(scId, window[scId.replace('-', '_')]);
+          };
+          
           document.head.appendChild(rendererScript);
         };
         
