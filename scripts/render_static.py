@@ -80,3 +80,9 @@ js_dest = os.path.join(build_dir, 'js')
 if os.path.exists(js_src):
     shutil.copytree(js_src, js_dest, dirs_exist_ok=True)
     print(f"Copied JS to {js_dest}")
+
+linux_src = os.path.join(project_dir, 'linux')
+linux_dest = os.path.join(build_dir, 'linux')
+if os.path.exists(linux_src):
+    shutil.copytree(linux_src, linux_dest, dirs_exist_ok=True)
+    print(f"Copied Linux Academy to {linux_dest}")

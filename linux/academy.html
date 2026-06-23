@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linux Academy - أساسيات الشبكات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="features.css">
+    <style>
+        .academy-layout { display: flex; height: calc(100vh - 60px); }
+        .toc-panel { flex: 0 0 300px; background: var(--panel-bg); border-left: 1px solid var(--border); overflow-y: auto; padding: 20px; }
+        .content-panel { flex: 1; padding: 40px; overflow-y: auto; background: var(--bg-color); }
+        
+        .lesson-btn { display: block; width: 100%; text-align: right; padding: 12px; margin-bottom: 8px; background: transparent; border: 1px solid var(--border); color: var(--text-main); border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Tajawal', sans-serif; font-size: 1.05rem; }
+        .lesson-btn:hover { background: rgba(88, 166, 255, 0.1); border-color: var(--accent); }
+        .lesson-btn.active { background: rgba(88, 166, 255, 0.2); border-color: var(--accent); color: var(--accent); font-weight: bold; }
+        
+        .chapter-title { color: #8b949e; font-size: 0.95rem; margin-bottom: 5px; margin-top: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 8px; border-radius: 4px; transition: background 0.2s;}
+        .chapter-title:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .chapter-lessons { display: none; margin-right: 10px; border-right: 1px solid var(--border); padding-right: 10px; margin-bottom: 10px; }
+        .chapter-lessons.active { display: block; }
+        .content-article h1 { color: var(--accent); font-size: 2rem; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .content-article h2 { color: #fff; margin-top: 30px; margin-bottom: 15px; }
+        .content-article p { font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px; color: #c9d1d9; }
+        .content-article ul { margin-right: 20px; margin-bottom: 20px; }
+        .content-article li { font-size: 1.1rem; line-height: 1.8; margin-bottom: 10px; }
+        .content-article img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); margin: 20px 0; }
+        
+        .concept-box { background: rgba(88, 166, 255, 0.05); border: 1px dashed var(--accent); padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .concept-box h3 { color: var(--accent); margin-top: 0; }
+        
+        .nav-buttons { margin-top: 20px; margin-right: 20px;}
+        .top-btn { color: var(--accent); text-decoration: none; font-weight: bold; padding: 8px 15px; border: 1px solid var(--accent); border-radius: 5px; transition: 0.3s; }
+        .top-btn:hover { background: var(--accent); color: #000; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo" style="display: flex; align-items: center; gap: 15px;">
+            <h1>Linux Linux Academy</h1>
+            <span class="subtitle">المسار النظري (المرحلة الأولى)</span>
+        </div>
+        <div class="nav-buttons">
+            <button class="hack-btn" onclick="launchAcademySim('linux_arp')" style="margin-left: 5px; padding: 8px 15px;">💻 Live ARP Spoofing Simulation</button>
+            <a href="syllabus.html" class="top-btn" style="margin-left: 5px;">📖 الخطة</a>
+            <a href="index.html" class="top-btn" style="margin-left: 5px;">💻 المحاكي</a>
+            <a href="exam.html" class="top-btn" style="margin-left: 5px;">⏳ امتحن نفسك</a>
+            <a href="interview.html" class="top-btn" style="margin-left: 5px;">💼 المقابلات</a>
+            <a href="resources.html" class="top-btn">📦 الملحقات</a>
+        </div>
+    </header>
+
+    <div class="academy-layout">
+        <!-- Mobile Menu Toggle -->
+        <button class="menu-toggle" onclick="document.getElementById('tocPanel').classList.toggle('active')">☰</button>
+
+        <!-- Table of Contents -->
+        <aside class="toc-panel" id="tocPanel">
+            <!-- Populated by JS -->
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-panel" id="contentPanel">
+            <div class="content-article" id="articleBody">
+                <h1>مرحباً بك في أكاديمية Linux</h1>
+                <p>اختر درساً من القائمة الجانبية لتبدأ رحلتك في عالم الشبكات.</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="data_loader.js"></script>
+    <script src="academy.js?v=23"></script>
+    <script src="enrichment.js?v=17"></script>
+    <script src="quizzes.js?v=18" charset="utf-8"></script>
+    <script src="interviews.js?v=17"></script>
+    <script src="cheatsheets.js?v=17"></script>
+    <script src="progress.js?v=17"></script>
+    <script src="features.js?v=17"></script>
+    <script src="../js/academy_sim.js"></script>
+</body>
+</html>
