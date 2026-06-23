@@ -139,6 +139,23 @@ window.SimulationManager = {
       }
     });
 
+    // Step navigation buttons bindings
+    this.el.prevBtn.addEventListener('click', () => {
+      if (this.currentStepIndex > 0) {
+        this.loadStep(this.currentStepIndex - 1);
+      }
+    });
+
+    this.el.nextBtn.addEventListener('click', () => {
+      const isLastStep = this.currentStepIndex === this.scenario.steps.length - 1;
+      if (isLastStep) {
+        alert("🎉 Congratulations! You have completed the investigation and claimed the bounty!");
+        window.location.href = '../index.html';
+      } else {
+        this.loadStep(this.currentStepIndex + 1);
+      }
+    });
+
     this.loadStep(0);
   },
 
