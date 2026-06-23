@@ -110,7 +110,7 @@ window.scenario_006 = {
       "time": "09:40",
       "workspace": "burp",
       "xpReward": 200,
-      "description": "### 🌐 اعتراض الطلب والتلاعب بالكميات (Negative & Overflow Injection)\n\nلقد قمنا بالتقاط طلب إضافة جهاز \"Signal Interceptor\" بسعر 1,500 دولار.\nجرب تعديل كمية المنتجات في الطلب عبر Burp Suite لتمرير قيم سالبة أو تجاوز الحد الأقصى للمتغيرات (Integer Overflow) لتجاوز جدار الحماية (WAF).",
+      "description": "### 🌐 اعتراض الطلب والتلاعب بالكميات (Negative & Overflow Injection)\n\nلقد قمنا بالتقاط طلب إضافة جهاز **\"Signal Interceptor\"** بسعر 1,500 دولار.\nجرب تعديل كمية المنتجات في الطلب عبر Burp Suite لتمرير قيم سالبة أو تجاوز الحد الأقصى للمتغيرات (Integer Overflow) لتجاوز جدار الحماية (WAF).\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-world\"></i> 🌐 Browser Thinking (كيف يرى المتصفح هذا الطلب؟)</summary>\n  <div class=\"accordion-content\">\n    <ul>\n      <li><strong>SameSite Cookies:</strong> بما أن الطلب يُرسل إلى <code>api.cybergear.com</code> من نفس الأصل (Same-Origin)، فإن المتصفح سيرسل ملفات الكوكيز (Cookies) وتوكين الجلسة تلقائياً.</li>\n      <li><strong>Origin Header:</strong> المتصفح يضيف ترويسة <code>Origin: https://cybergear.com</code> للتأكيد على مصدر الطلب للـ Backend لحماية من هجمات CSRF.</li>\n      <li><strong>Request Content-Type:</strong> تم ترميز جسم الطلب كـ <code>application/json</code>، وهي الصيغة التي يتوقعها الخادم ويقوم بتحليلها.</li>\n    </ul>\n  </div>\n</details>\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-server\"></i> ⚙️ Server Thinking (تشريح خريطة عمل السيرفر)</summary>\n  <div class=\"accordion-content\">\n    <p>يمر طلب المستخدم عبر طبقات الحماية المتتالية على النحو التالي:</p>\n    <code>Request ➔ WAF Filter (يتحقق من السوالب) ➔ Auth Middleware (يتحقق من التوكين) ➔ Cart Service (الحساب الرياضي) ➔ DB Write</code>\n    <p style=\"margin-top: 8px;\"><strong>نقطة الخلل:</strong> يمنع الـ WAF علامة الناقص <code>-</code> صراحةً، ولكنه يفشل في منع الأعداد الضخمة التي تتسبب في طفح الأرقام (Integer Overflow)، والتي تلتف في لغة السي بلس بلس أو لغات الـ Backend لتصبح سالبة داخل المعالج بعد عبور طبقة الفلترة.</p>\n  </div>\n</details>\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-brain\"></i> 🧠 Expert Mindset & Burp Notes (عقلية الخبير وملاحظات بورب)</summary>\n  <div class=\"accordion-content\">\n    <h4>ملاحظة بورب الاحترافية:</h4>\n    <p>عند إرسال قيمة سالبة صريحة، يرجع الخادم استجابة <code>400 Bad Request</code> مع حجم رد صغير (Size: 180B). ولكن عند إرسال قيمة Float، يرجع <code>500 Internal Server Error</code> (Size: 520B) مما يعكس انهياراً في المعالجة البرمجية خلف جدار الحماية.</p>\n    <h4 style=\"margin-top:10px;\">فرصة النجاح (Success Chance):</h4>\n    <p>⭐⭐⭐⭐☆ (80%) - تجاوز الـ WAF باستخدام Overflow هو ثغرة كلاسيكية تحدث عند دمج لغات برمجة مختلفة (مثل جافا سكربت كـ Frontend، وسي بلس بلس أو لغات مفسرة ضعيفة النوع في الـ Backend).</p>\n  </div>\n</details>",
       "burpRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": 1\n}",
       "burpResponse": "HTTP/2 200 OK\nContent-Type: application/json\n\n{\n  \"status\": \"success\",\n  \"cart_total\": 1500,\n  \"message\": \"Item added to cart\"\n}",
       "burpActions": [
@@ -147,7 +147,7 @@ window.scenario_006 = {
       "time": "10:05",
       "workspace": "markdown",
       "xpReward": 150,
-      "description": "### 🧠 التفكير في مسار الهجوم البديل\n\nبعد أن فشلت محاولات التلاعب بالكميات والأرقام السالبة لتخفيض الإجمالي مباشرة بسبب التحقق من قيمة السلة:\n`{\"error\": \"Cart total cannot be verified\"}`\n\nكيف تتصرف الآن لتخطي هذا القيد البرمجي الحسابي؟",
+      "description": "### 🧠 التفكير في مسار الهجوم البديل\n\nبعد أن فشلت محاولات التلاعب بالكميات والأرقام السالبة لتخفيض الإجمالي مباشرة بسبب التحقق من قيمة السلة:\n`{\"error\": \"Cart total cannot be verified\"}`\n\nكيف تتصرف الآن لتخطي هذا القيد البرمجي الحسابي؟\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-git-branch\"></i> 🌳 Decision Tree (شجرة القرارات والتشخيص)</summary>\n  <div class=\"accordion-content\">\n    <p>خارطة طريق حل العقبة الحالية:</p>\n    <code>سلة مشتريات ➔ مجموع معطل ➔ هل السعر في الـ Request؟ ➔ لا (يُجلب من DB) ➔ هل يمكن تطبيق خصم تزامني؟ ➔ نعم (Race Condition)</code>\n    <p style=\"margin-top:10px;\">عند تجميد السيرفر بطلبات تزامنية في نفس الأجزاء من الثانية، يفشل كود التحقق في قراءة الحالة الأخيرة لقاعدة البيانات في الوقت المناسب قبل تحديث الرصيد.</p>\n  </div>\n</details>",
       "choices": [
         {
           "text": "أ) أبحث عن ثغرة XSS في اسم المنتج لتنفيذ كود في متصفح الأدمن للتحكم بحسابه.",
@@ -181,6 +181,7 @@ window.scenario_006 = {
       "time": "10:30",
       "workspace": "lab",
       "xpReward": 300,
+      "description": "### 🚩 استغلال الـ Race Condition وجلب العلم\n\nالآن سنقوم بتنفيذ هجوم Race Condition لإرسال طلب تطبيق الكوبون متزامناً مع طلب الدفع (Checkout).\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-time-five\"></i> 🕒 Timeline (الخط الزمني للهجوم الناجح)</summary>\n  <div class=\"accordion-content\">\n    <ul>\n      <li><strong>00:00:</strong> أضاف المهاجم جهاز Signal Interceptor (1,500$) وسلك USB (100$).</li>\n      <li><strong>00:01:</strong> الرصيد الفعلي للمحفظة هو 10$ فقط.</li>\n      <li><strong>00:02:</strong> تم إطلاق سكربت هجوم التزامن (Race Condition).</li>\n      <li><strong>00:02.1:</strong> السيرفر يستقبل طلب تطبيق الكوبون متزامناً مع معالجة الدفع في نفس اللحظة (Thread-1 & Thread-2).</li>\n      <li><strong>00:03:</strong> يتم احتساب الدفع وقيمة السلة تصبح صفر بنجاح، ويتم شحن المنتج.</li>\n    </ul>\n  </div>\n</details>",
       "instructions": "قم بتنفيذ هجوم Race Condition لإرسال طلب تطبيق الكوبون متزامناً مع طلب الدفع (Checkout) للحصول على العلم (Flag).",
       "targetUrl": "https://api.cybergear.com/api/cart/checkout",
       "correctFlag": "FLAG{business_logic_race_negative_wealth_cracked}",
@@ -195,6 +196,7 @@ window.scenario_006 = {
       "time": "11:00",
       "workspace": "report",
       "xpReward": 250,
+      "description": "### 📝 كتابة التقرير الأمني\n\nاكتب تقريراً احترافياً يصف الثغرة وطريقة إعادة إنتاجها وتأثيرها على الأرباح المالية للشركة.",
       "aiAdvisor": {
         "hint": "الكلمات المفتاحية المطلوبة هي 'race' و 'logic'.",
         "payloadExplanation": "شرح كيفية التسبب في تطبيق خصومات متعددة تؤدي لإتمام الدفع مجاناً.",
@@ -205,6 +207,7 @@ window.scenario_006 = {
       "name": "Triage & Verdict",
       "time": "5 Days Later",
       "workspace": "review",
+      "description": "### 🛡️ مراجعة التقرير وقرار المشرف الأمني\n\nتلقيت رداً من فريق الأمن الخاص بمنصة CyberGear بخصوص التقرير المرسل.",
       "aiAdvisor": {
         "hint": "راجع النتيجة وقبول الثغرة.",
         "payloadExplanation": "تقييم الثغرة كـ Critical نظراً لتأثيرها المباشر على الإيرادات والأموال.",
@@ -215,6 +218,7 @@ window.scenario_006 = {
       "name": "Lessons Learned",
       "time": "Post-Incident",
       "workspace": "quiz",
+      "description": "### 🧠 أسئلة تفاعلية لتثبيت المفاهيم المكتسبة\n\nأجب عن الأسئلة لتأكيد فهمك التام لكيفية معالجة وإصلاح هذه الثغرات الحساسة.",
       "quizData": [
         {
           "question": "ما هو السبب البرمجي الجوهري لحدوث ثغرات التزامن (Race Conditions)؟",
@@ -256,87 +260,5 @@ window.scenario_006 = {
       "race",
       "logic"
     ]
-  },
-  simulateBackend(requestText, bodyJson) {
-    const response = {
-      responseHeaders: "HTTP/2 200 OK\nContent-Type: application/json",
-      responseBody: "{}",
-      correct: false,
-      outcome: "",
-      timePenalty: 0,
-      observabilityLog: ""
-    };
-
-    if (!bodyJson || typeof bodyJson.quantity === 'undefined') {
-      response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
-      response.responseBody = JSON.stringify({ error: "Missing required parameters: quantity" }, null, 2);
-      response.outcome = "الطلب غير مكتمل أو يحتوي على بنية JSON غير صالحة.";
-      return response;
-    }
-
-    const qty = bodyJson.quantity;
-    const rawText = requestText.replace(/\s+/g, ''); // strip spaces to check patterns easily
-
-    // 1. Check if quantity is normal (1)
-    if (qty === 1) {
-      response.responseBody = JSON.stringify({ status: "success", cart_total: 1500, message: "Item added to cart" }, null, 2);
-      response.outcome = "تمت إضافة المنتج بنجاح بالسعر الطبيعي 1,500$.";
-      return response;
-    }
-
-    // 2. Check if raw request text contains explicit minus sign
-    const hasMinusSign = rawText.includes('"-15"') || rawText.includes(':-15') || rawText.includes(':-15.0') || rawText.includes('"-15.0"');
-    
-    if (qty < 0 && hasMinusSign) {
-      response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
-      response.responseBody = JSON.stringify({ error: "WAF Blocked: Invalid characters detected." }, null, 2);
-      response.observabilityLog = "[WARN] WAF triggered on negative quantity payload '-15'.";
-      response.outcome = "تم حظرك بواسطة جدار الحماية (WAF) الذي يكتشف علامة الناقص (-) في حقل الأرقام.";
-      response.timePenalty = 5;
-      return response;
-    }
-
-    // 3. Float or Unicode bypass attempt
-    const isUnicodeBypass = rawText.includes('\\u002D');
-    const isFloatBypass = qty === -15.0 && !hasMinusSign; // bypassed minus check but still negative
-    
-    if (qty < 0 && (isUnicodeBypass || isFloatBypass)) {
-      response.responseHeaders = "HTTP/2 500 Internal Server Error\nContent-Type: application/json";
-      response.responseBody = JSON.stringify({ error: "Database Error: Cannot cast negative float to unsigned integer." }, null, 2);
-      response.observabilityLog = "[ERROR] Database constraint violation: Cannot store negative value in Unsigned Int column 'quantity'.";
-      response.outcome = "تجاوزت جدار الحماية (WAF) بنجاح، ولكن خادم قاعدة البيانات انهار بترميز 500 Internal Server Error لأن الحقل مبرمج كـ Unsigned INT ولا يقبل السوالب.";
-      response.timePenalty = 2;
-      return response;
-    }
-
-    // 4. Integer Overflow Attempt (Wraparound)
-    const MAX_INT = 2147483647;
-    if (qty > MAX_INT) {
-      let interpretedQty = qty;
-      if (qty > 2147483647 && qty <= 4294967295) {
-        interpretedQty = qty - 4294967296; // wrap to signed negative
-      }
-
-      if (interpretedQty === -15) {
-        response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
-        response.responseBody = JSON.stringify({ error: "Cart validation failed: Cart total cannot be verified." }, null, 2);
-        response.observabilityLog = "[CRITICAL] Integer Overflow bypass successful! Interpreted quantity: -15. Cart calculation: (1 * 1500) + (-15 * 100) = 0. Checkout blocked by cart validation rules.";
-        response.outcome = "تجاوزت جدار الـ WAF بنجاح ووقع التفاف للمتغيرات (Integer Overflow) ليتحول العدد إلى -15 داخل الخادم. ولكن النظام كشف أن إجمالي السلة صفر أو شاذ، فرفض تفعيل الدفع بـ 400 Bad Request.";
-        response.correct = true; // Advance step!
-        return response;
-      } else {
-        response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
-        response.responseBody = JSON.stringify({ error: "Cart validation failed: Cart total cannot be verified." }, null, 2);
-        response.observabilityLog = `[CRITICAL] Integer Overflow detected. Interpreted quantity: ${interpretedQty}. Cart Total: ${(1500 + interpretedQty * 100)}.`;
-        response.outcome = "تم إحداث التفاف للمتغيرات، ولكن قيمة السلة غير صحيحة أو السيرفر رفض التحقق من الإجمالي.";
-        return response;
-      }
-    }
-
-    // Generic fallback
-    response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
-    response.responseBody = JSON.stringify({ error: "Invalid request parameters." }, null, 2);
-    response.outcome = "الطلب البرمجي لم ينجح في تجاوز جدار الحماية أو التسبب في الالتفاف الحسابي الصحيح.";
-    return response;
   }
 };

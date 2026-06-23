@@ -341,11 +341,26 @@ window.ScenarioEngine = {
     this.el.burpResp.innerText = step.burpResponse || '';
     this.el.burpActions.innerHTML = '';
 
+    const logsPane = document.getElementById('burp-logs-pane');
+    const gridContainer = document.getElementById('burp-grid-container');
+    const logsView = document.getElementById('burp-logs-view');
+
     const hasInteractive = typeof this.scenario.simulateBackend === 'function' || this.scenario.metadata.id === 'scenario-006';
     this.el.burpReq.setAttribute('contenteditable', hasInteractive ? 'true' : 'false');
 
     if (hasInteractive) {
-      // Premium V3 Interactive Repeater mode!
+      // Premium V3 Interactive Repeater mode with 3-column observability logs!
+      if (logsPane) logsPane.classList.remove('hidden');
+      if (gridContainer) gridContainer.style.gridTemplateColumns = '1fr 1fr 1.2fr';
+      
+      if (logsView) {
+        logsView.innerText = "[INFO] Observability agent active.\n[INFO] Listening for target requests on api.cybergear.com/cart...\n[INFO] Waiting for client request...";
+        if (logsPane) {
+          logsPane.style.borderColor = 'var(--border-color)';
+          logsPane.style.boxShadow = 'none';
+        }
+      }
+
       const sendBtn = document.createElement('button');
       sendBtn.className = 'hunt-btn success-btn';
       sendBtn.innerHTML = `<i class="bx bx-send"></i> Send Request (Repeater)`;
@@ -378,9 +393,22 @@ window.ScenarioEngine = {
         // Display response
         this.el.burpResp.innerText = result.responseHeaders + '\n\n' + result.responseBody;
 
-        // Print observability log in browser console for realism
-        if (result.observabilityLog) {
-          console.log(`%c[BlueTeam Observability] ${result.observabilityLog}`, 'color: #ff3e3e; font-weight: bold;');
+        // Print observability log on screen and console
+        if (logsView && result.observabilityLog) {
+          logsView.innerText = `[INFO] Request received: POST /api/cart/add\n${result.observabilityLog}`;
+          
+          if (logsPane) {
+            if (result.correct) {
+              logsPane.style.borderColor = 'var(--accent-green)';
+              logsPane.style.boxShadow = '0 0 12px rgba(34, 197, 94, 0.25)';
+            } else if (result.responseHeaders.includes('500')) {
+              logsPane.style.borderColor = 'var(--critical-red)';
+              logsPane.style.boxShadow = '0 0 12px rgba(239, 68, 68, 0.25)';
+            } else if (result.responseHeaders.includes('400')) {
+              logsPane.style.borderColor = 'var(--warning-amber)';
+              logsPane.style.boxShadow = '0 0 12px rgba(245, 158, 11, 0.25)';
+            }
+          }
         }
 
         if (result.correct) {
@@ -400,6 +428,9 @@ window.ScenarioEngine = {
       this.el.burpActions.appendChild(sendBtn);
     } else {
       // V2 Fallback static action buttons
+      if (logsPane) logsPane.classList.add('hidden');
+      if (gridContainer) gridContainer.style.gridTemplateColumns = '1fr 1fr';
+
       if (step.burpActions) {
         step.burpActions.forEach(action => {
           const btn = document.createElement('button');
@@ -454,6 +485,7 @@ window.ScenarioEngine = {
     if (qty === 1) {
       response.responseBody = JSON.stringify({ status: "success", cart_total: 1500, message: "Item added to cart" }, null, 2);
       response.outcome = "تمت إضافة المنتج بنجاح بالسعر الطبيعي 1,500$.";
+      response.observabilityLog = "[INFO] Cart Engine: Calculating total for User_ID:44\n[INFO] Cart Engine: Item added (Signal Interceptor, Qty: 1). New total: $1500.";
       return response;
     }
 
@@ -463,7 +495,7 @@ window.ScenarioEngine = {
     if (qty < 0 && hasMinusSign) {
       response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
       response.responseBody = JSON.stringify({ error: "WAF Blocked: Invalid characters detected." }, null, 2);
-      response.observabilityLog = "[WARN] WAF triggered on negative quantity payload '-15'.";
+      response.observabilityLog = "[WARN] WAF triggered on negative quantity payload '-15'.\n[WARN] Security Filter: Negative value validation check failed.";
       response.outcome = "تم حظرك بواسطة جدار الحماية (WAF) الذي يكتشف علامة الناقص (-) في حقل الأرقام.";
       response.timePenalty = 5;
       return response;
@@ -476,7 +508,7 @@ window.ScenarioEngine = {
     if (qty < 0 && (isUnicodeBypass || isFloatBypass)) {
       response.responseHeaders = "HTTP/2 500 Internal Server Error\nContent-Type: application/json";
       response.responseBody = JSON.stringify({ error: "Database Error: Cannot cast negative float to unsigned integer." }, null, 2);
-      response.observabilityLog = "[ERROR] Database constraint violation: Cannot store negative value in Unsigned Int column 'quantity'.";
+      response.observabilityLog = "[ERROR] Database constraint violation: Cannot store negative value in Unsigned Int column 'quantity'.\n[CRITICAL] Server crash: Database transaction rollback executed.";
       response.outcome = "تجاوزت جدار الحماية (WAF) بنجاح، ولكن خادم قاعدة البيانات انهار بترميز 500 Internal Server Error لأن الحقل مبرمج كـ Unsigned INT ولا يقبل السوالب.";
       response.timePenalty = 2;
       return response;
@@ -493,7 +525,7 @@ window.ScenarioEngine = {
       if (interpretedQty === -15) {
         response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
         response.responseBody = JSON.stringify({ error: "Cart validation failed: Cart total cannot be verified." }, null, 2);
-        response.observabilityLog = "[CRITICAL] Integer Overflow bypass successful! Interpreted quantity: -15. Cart calculation: (1 * 1500) + (-15 * 100) = 0. Checkout blocked by cart validation rules.";
+        response.observabilityLog = "[INFO] Cart Engine: Calculating total for User_ID:44\n[CRITICAL] Integer Overflow bypass successful. Payment Gateway charged: $0.\n🎉 BINGO! Account Takeover complete.";
         response.outcome = "تجاوزت جدار الـ WAF بنجاح ووقع التفاف للمتغيرات (Integer Overflow) ليتحول العدد إلى -15 داخل الخادم. ولكن النظام كشف أن إجمالي السلة صفر أو شاذ، فرفض تفعيل الدفع بـ 400 Bad Request.";
         response.correct = true; // Advance step!
         response.evidence = {
@@ -504,7 +536,7 @@ window.ScenarioEngine = {
       } else {
         response.responseHeaders = "HTTP/2 400 Bad Request\nContent-Type: application/json";
         response.responseBody = JSON.stringify({ error: "Cart validation failed: Cart total cannot be verified." }, null, 2);
-        response.observabilityLog = `[CRITICAL] Integer Overflow detected. Interpreted quantity: ${interpretedQty}. Cart Total: ${(1500 + interpretedQty * 100)}.`;
+        response.observabilityLog = `[CRITICAL] Integer Overflow detected. Interpreted quantity: ${interpretedQty}.\n[WARN] Cart calculation mismatch.`;
         response.outcome = "تم إحداث التفاف للمتغيرات، ولكن قيمة السلة غير صحيحة أو السيرفر رفض التحقق من الإجمالي.";
         return response;
       }

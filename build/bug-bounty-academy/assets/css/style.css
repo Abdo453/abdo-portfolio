@@ -1310,6 +1310,81 @@ html, body {
   border-color: var(--accent-green);
 }
 
+/* EXPERT ACCORDIONS (V3 CONTEXTUAL LAYERS) */
+.expert-accordion {
+  background: rgba(17, 24, 39, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+.expert-accordion:hover {
+  border-color: rgba(6, 182, 212, 0.35);
+  background: rgba(6, 182, 212, 0.01);
+}
+.expert-accordion[open] {
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+}
+.expert-accordion summary {
+  padding: 14px 16px;
+  font-weight: 600;
+  font-family: var(--font-title);
+  color: var(--text-main);
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+  font-size: 0.92rem;
+  transition: color 0.2s;
+}
+.expert-accordion summary::-webkit-details-marker {
+  display: none;
+}
+.expert-accordion summary::after {
+  content: '▼';
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  transition: transform 0.2s, color 0.2s;
+}
+.expert-accordion[open] summary::after {
+  transform: rotate(180deg);
+  color: var(--accent-cyan);
+}
+.expert-accordion[open] summary {
+  color: var(--accent-cyan);
+}
+.expert-accordion .accordion-content {
+  padding: 18px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.15);
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+.expert-accordion .accordion-content h4 {
+  color: var(--text-main);
+  margin-bottom: 8px;
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+}
+.expert-accordion .accordion-content ul {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+.expert-accordion .accordion-content code {
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
 /* HELPER UTILITIES */
 .hidden { display: none !important; }
 .text-cyan { color: var(--accent-cyan); }
