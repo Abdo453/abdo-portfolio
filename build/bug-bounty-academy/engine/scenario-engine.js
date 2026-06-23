@@ -207,6 +207,16 @@ window.ScenarioEngine = {
     this.el.stepTitle.innerText = step.name;
     this.el.stepXPPotential.innerText = step.xpReward || 50;
 
+    // Show Target Summary card ONLY on step 0 (Mission) to maximize vertical space on active steps
+    const briefCard = document.getElementById('static-mission-brief');
+    if (briefCard) {
+      if (idx === 0) {
+        briefCard.classList.remove('hidden');
+      } else {
+        briefCard.classList.add('hidden');
+      }
+    }
+
     // Render left timeline steps
     const isSolved = ProgressManager.state.solved.includes(this.scenario.metadata.id);
     Renderer.renderTimelineSteps(this.el.timeline, this.scenario.steps, idx, isSolved);
