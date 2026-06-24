@@ -428,9 +428,10 @@ window.ScenarioEngine = {
       step.choices.forEach((choice, i) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
+        btn.setAttribute('dir', 'auto');
         btn.innerHTML = `
           <span class="choice-marker">${String.fromCharCode(65 + i)}</span>
-          <span>${choice.text}</span>
+          <span dir="auto">${choice.text}</span>
         `;
         btn.addEventListener('click', () => this.selectChoice(choice));
         this.el.choicesGrid.appendChild(btn);
@@ -896,7 +897,8 @@ window.ScenarioEngine = {
     quiz.options.forEach((opt, idx) => {
       const div = document.createElement('div');
       div.className = 'quiz-option';
-      div.innerHTML = `<span class="choice-marker">${String.fromCharCode(65 + idx)}</span> <span>${opt}</span>`;
+      div.setAttribute('dir', 'auto');
+      div.innerHTML = `<span class="choice-marker">${String.fromCharCode(65 + idx)}</span> <span dir="auto">${opt}</span>`;
       div.addEventListener('click', () => {
         Array.from(this.el.quizOptionsList.children).forEach(el => el.classList.remove('selected'));
         div.classList.add('selected');
