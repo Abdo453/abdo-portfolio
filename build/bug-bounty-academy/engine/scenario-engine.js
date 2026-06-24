@@ -433,6 +433,8 @@ window.ScenarioEngine = {
       if (this.currentStepIndex + 1 < this.scenario.steps.length) {
         this.loadStep(this.currentStepIndex + 1);
       }
+    } else {
+      ProgressManager.logError();
     }
   },
 
@@ -576,6 +578,7 @@ window.ScenarioEngine = {
             this.timeSpent += result.timePenalty;
             this.el.stepTimeSpent.innerText = this.timeSpent;
           }
+          ProgressManager.logError();
         }
       });
       this.el.burpActions.appendChild(sendBtn);
@@ -858,6 +861,7 @@ window.ScenarioEngine = {
         optionCards[this.selectedQuizOption].classList.add('wrong');
         optionCards[quiz.answer].classList.add('correct');
         alert(`Wrong response. The correct answer was: ${String.fromCharCode(65 + quiz.answer)}.`);
+        ProgressManager.logError();
       }
 
       this.el.quizSubmitBtn.classList.add('hidden');
@@ -942,6 +946,7 @@ window.ScenarioEngine = {
         }
       } else {
         alert("❌ Invalid Flag identifier. Re-check the Burp responses.");
+        ProgressManager.logError();
       }
     };
   },
