@@ -211,5 +211,160 @@ window.scenario_004 = {
       "jwt",
       "weak"
     ]
+  },
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    // 1. Detect SQL Injection attempts in requestText
+    if (/union\s+select|' \s*or\s+|sleep\s*\(/i.test(requestText)) {
+      return builder
+        .setStatus(400, "Bad Request")
+        .setBody({ error: "Database exception or syntax error in query." })
+        .setObservabilityLog("[WARN] Security Shield: SQL Injection keyword detected in Authorization header or path.\n[INFO] Filter: Request blocked due to malicious SQL syntax.")
+        .setOutcome("حاولت حقن استعلام SQL في رأس الطلب أو توكن المصادقة. يقوم جدار الحماية (WAF) بحظر هذه الطلبات المشبوهة تلقائياً لحماية النظام.")
+        .build();
+    }
+
+    // 2. Detect XSS attempts in requestText
+    if (/<script|javascript:|onload=/i.test(requestText)) {
+      return builder
+        .setStatus(400, "Bad Request")
+        .setBody({ error: "Malicious input blocked by filter." })
+        .setObservabilityLog("[WARN] Security Filter: XSS tags detected in HTTP headers.\n[INFO] Sanitizer: Denied request containing potential HTML injection.")
+        .setOutcome("حاولت تنفيذ حقن XSS في رأس الطلب. تم تصفية وحظر الطلب بالكامل بواسطة فلتر المدخلات الأمنية.")
+        .build();
+    }
+
+    // 3. Path validation
+    if (!parsed.path.includes("/api/v1/admin/dashboard")) {
+      return builder
+        .setStatus(404, "Not Found")
+        .setBody({ error: "Resource not found at this endpoint." })
+        .setObservabilityLog(`[WARN] API Router: Unrecognized endpoint path: "${parsed.path}".\n[INFO] Available Admin API: GET /api/v1/admin/dashboard`)
+        .setOutcome("تأكد من طلب مسار لوحة التحكم الصحيح للمدراء: /api/v1/admin/dashboard")
+        .build();
+    }
+
+    // Find authorization header
+    const authHeader = parsed.headers["Authorization"] || parsed.headers["authorization"] || "";
+    if (!authHeader.startsWith("Bearer ")) {
+      return builder
+        .setStatus(401, "Unauthorized")
+        .setBody({ error: "Missing or invalid Authorization header. Use Bearer token." })
+        .setOutcome("لم يتم العثور على ترويسة Authorization: Bearer في الطلب.")
+        .build();
+    }
+
+    const token = authHeader.substring(7).trim();
+    const parts = token.split('.');
+
+    if (parts.length !== 3) {
+      return builder
+        .setStatus(401, "Unauthorized")
+        .setBody({ error: "Invalid JWT token structure. Must contain 3 parts separated by dots." })
+        .setOutcome("بنية التوكين JWT غير صالحة. يجب أن يتكون من 3 أقسام مفصولة بنقاط (Header.Payload.Signature).")
+        .build();
+    }
+
+    // Helper decode base64url
+    const base64UrlDecode = (str) => {
+      str = str.replace(/-/g, '+').replace(/_/g, '/');
+      while (str.length % 4) str += '=';
+      try {
+        return decodeURIComponent(atob(str).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+      } catch (e) {
+        try {
+          return atob(str);
+        } catch(err) {
+          return null;
+        }
+      }
+    };
+
+    const headerDecoded = base64UrlDecode(parts[0]);
+    const payloadDecoded = base64UrlDecode(parts[1]);
+
+    if (!headerDecoded || !payloadDecoded) {
+      return builder
+        .setStatus(401, "Unauthorized")
+        .setBody({ error: "Failed to decode JWT base64 parts." })
+        .setOutcome("فشل فك تشفير أقسام الـ Base64 للـ JWT.")
+        .build();
+    }
+
+    let headerObj, payloadObj;
+    try {
+      headerObj = JSON.parse(headerDecoded);
+      payloadObj = JSON.parse(payloadDecoded);
+    } catch (e) {
+      return builder
+        .setStatus(401, "Unauthorized")
+        .setBody({ error: "Failed to parse JWT parts as JSON." })
+        .setOutcome("فشل تحليل محتوى الـ JWT كـ JSON صالح.")
+        .build();
+    }
+
+    // Check algorithm
+    const alg = (headerObj.alg || '').toUpperCase();
+    if (alg === "NONE") {
+      return builder
+        .setStatus(401, "Unauthorized")
+        .setBody({ error: "JWT signature verification failed: alg 'none' is blocked." })
+        .setObservabilityLog(`[WARN] Auth Handler: Rejected JWT with alg: none\n[CRITICAL] Security Log: Blocked attempt to bypass JWT signature check.`)
+        .setOutcome("الخادم رفض التوكين لأن خوارزمية none محظورة أمنياً. يجب عليك استخدام خوارزمية HS256 وتوقيع التوكين باستخدام المفتاح السري المستخرج weak_secret_2024.")
+        .build();
+    }
+
+    if (alg !== "HS256") {
+      return builder
+        .setStatus(401, "Unauthorized")
+        .setBody({ error: `Unsupported algorithm: ${alg}. Supported algorithm is HS256.` })
+        .setOutcome("خوارزمية التوقيع غير مدعومة. يجب استخدام HS256.")
+        .build();
+    }
+
+    // Check signature presence
+    const signature = parts[2].trim();
+
+    // Check payload values
+    const role = payloadObj.role || '';
+    const user = payloadObj.user || '';
+
+    if (role === "superadmin" || role === "admin") {
+      if (signature.length < 10) {
+        return builder
+          .setStatus(401, "Unauthorized")
+          .setBody({ error: "JWT signature verification failed: invalid signature size." })
+          .setOutcome("التوقيع المرفق غير صالح أو قصير جداً. بعد تعديل الـ Payload، يجب إرفاق التوقيع الصحيح المولد بمفتاح weak_secret_2024.")
+          .build();
+      }
+
+      return builder
+        .setStatus(200)
+        .setBody({
+          status: "success",
+          data: {
+            total_users: 150000,
+            total_transactions: "$2.5M",
+            pending_withdrawals: "$150K",
+            admin_panel: "accessible"
+          }
+        })
+        .setCorrect(true)
+        .setObservabilityLog(`[INFO] Auth Handler: Verifying JWT signature using HS256...\n[INFO] Signature Check: Signature verified using secret 'weak_secret_2024'.\n[INFO] Privilege Level: Granted administrative access (${role}).\n[CRITICAL] Access Granted: User ${user} accessed /api/v1/admin/dashboard.`)
+        .setOutcome("تجاوزت المصادقة بنجاح! قمت بتزوير توقيع الـ JWT باستخدام المفتاح السري المكسور weak_secret_2024 وحصلت على صلاحيات المدير.")
+        .setEvidence("Bypass Admin Auth JWT", `Access granted to /api/v1/admin/dashboard via forged JWT with role: ${role}`)
+        .build();
+    } else {
+      return builder
+        .setStatus(401, "Unauthorized")
+        .setBody({ error: "Access denied. Standard users are restricted." })
+        .setObservabilityLog(`[INFO] Auth Handler: Valid JWT session for user: ${user} (role: ${role}).\n[WARN] Authz Check: User is not authorized to access admin panel.`)
+        .setOutcome("التوكين سليم وصالح، لكن صلاحياتك لا تزال مستخدم عادي (user). قم بتعديل حقل role في الـ Payload إلى superadmin أو admin لتخطي الحظر.")
+        .build();
+    }
   }
 };

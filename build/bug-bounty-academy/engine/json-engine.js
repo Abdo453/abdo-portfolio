@@ -14,42 +14,39 @@ window.JsonEngine = {
     const lvlFolder = scMeta.level.toLowerCase().replace(' ', '');
     const jsonUrl = `../data/scenarios/${lvlFolder}/${scId.replace('-', '_')}.json`;
     const jsUrl = `../data/scenarios/${lvlFolder}/${scId.replace('-', '_')}.js`;
+    const varName = scId.replace('-', '_');
 
-    // 1. Try standard JSON fetch
-    fetch(jsonUrl)
-      .then(response => {
-        if (!response.ok) throw new Error("JSON file not found or blocked.");
-        return response.json();
-      })
-      .then(data => {
-        console.log(`[JsonEngine] Loaded scenario ${scId} via JSON fetch.`);
-        callback(data);
-      })
-      .catch(err => {
-        console.warn(`[JsonEngine] JSON fetch failed (offline file:// protocol or missing file). Falling back to JS script injection.`);
-        
-        // 2. Fallback to JS script injection for offline compatibility
-        const varName = scId.replace('-', '_');
-        if (window[varName]) {
-          callback(window[varName]);
-          return;
-        }
+    // Try JS script injection first for interactive functions & offline compatibility
+    const script = document.createElement('script');
+    script.src = `${jsUrl}?v=${Date.now()}`;
+    script.onload = () => {
+      if (window[varName]) {
+        console.log(`[JsonEngine] Loaded scenario ${scId} via JS script injection.`);
+        callback(window[varName]);
+      } else {
+        fallbackToJson();
+      }
+    };
+    script.onerror = () => {
+      fallbackToJson();
+    };
+    document.head.appendChild(script);
 
-        const script = document.createElement('script');
-        script.src = `${jsUrl}?v=${Date.now()}`;
-        script.onload = () => {
-          if (window[varName]) {
-            callback(window[varName]);
-          } else {
-            alert(`Failed to parse scenario namespace object: window.${varName}`);
-            window.location.href = '../index.html';
-          }
-        };
-        script.onerror = () => {
-          alert(`Failed to load scenario data file: ${jsUrl}`);
+    function fallbackToJson() {
+      fetch(jsonUrl)
+        .then(response => {
+          if (!response.ok) throw new Error("JSON file not found or blocked.");
+          return response.json();
+        })
+        .then(data => {
+          console.log(`[JsonEngine] Loaded scenario ${scId} via fallback JSON fetch.`);
+          callback(data);
+        })
+        .catch(err => {
+          console.warn(`[JsonEngine] Fallback JSON fetch failed:`, err);
+          alert(`Failed to load scenario data file: ${jsUrl} or ${jsonUrl}`);
           window.location.href = '../index.html';
-        };
-        document.head.appendChild(script);
-      });
+        });
+    }
   }
 };

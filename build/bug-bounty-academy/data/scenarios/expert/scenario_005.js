@@ -211,5 +211,119 @@ window.scenario_005 = {
       "sqli",
       "order"
     ]
+  },
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    // 1. Detect XSS attempts
+    if (/<script|javascript:|onload=/i.test(requestText)) {
+      return builder
+        .setStatus(200)
+        .setBody({ error: "Invalid characters detected: &lt;script&gt;" })
+        .setObservabilityLog("[WARN] WAF Shield: Blocked XSS script injection pattern in query string.\n[INFO] Sanitization: Encoded special characters to prevent exploitation.")
+        .setOutcome("حاولت تنفيذ حقن XSS في رابط المنتجات. يقوم السيرفر بتصفية وترميز المدخلات لمنع هجمات XSS.")
+        .build();
+    }
+
+    // 2. Detect Directory Traversal / LFI
+    if (/\.\.\/|\/etc\/passwd|\/etc\/hosts|win\.ini/i.test(requestText)) {
+      return builder
+        .setStatus(400, "Bad Request")
+        .setBody({ error: "Access Denied: Path traversal detected." })
+        .setObservabilityLog("[WARN] Security Shield: Blocked directory traversal attack in URL parameters.")
+        .setOutcome("حاولت استدعاء ملفات محلية باستخدام Directory Traversal. يقوم السيرفر بحظر هذه المحاولات فوراً.")
+        .build();
+    }
+
+    // 3. Path Validation
+    if (!parsed.path.includes("/products")) {
+      return builder
+        .setStatus(404, "Not Found")
+        .setBody({ error: "Endpoint not found." })
+        .setObservabilityLog(`[WARN] API Router: Unrecognized path: "${parsed.path}".\n[INFO] Available Endpoint: GET /products`)
+        .setOutcome("تأكد من طلب مسار صفحة المنتجات الصحيح: /products")
+        .build();
+    }
+
+    // Extract sort parameter from query path: e.g. /products?category=electronics&sort=price_asc,SLEEP(5)
+    const urlParts = parsed.path.split('?');
+    const queryString = urlParts[1] || '';
+    const params = new URLSearchParams(queryString);
+    const sortVal = params.get('sort') || '';
+
+    // 4. Detect UNION SELECT inside ORDER BY (SQL syntax error simulation)
+    if (/union\s+select/i.test(sortVal)) {
+      return builder
+        .setStatus(500, "Internal Server Error")
+        .setBody({ error: "SQL Syntax Error near 'UNION SELECT'" })
+        .setObservabilityLog("[ERROR] Database Driver: MysqlException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'UNION SELECT...' at line 1.\n[INFO] Query Executed: SELECT * FROM products ORDER BY price_asc UNION SELECT 1,2,3")
+        .setOutcome("حاولت استخدام UNION SELECT بعد حقل ORDER BY مباشرة. قواعد SQL تمنع دمج الاستعلامات بـ UNION بعد كلمة ORDER BY مباشرة، مما يؤدي لخطأ في بناء الاستعلام (Syntax Error).")
+        .build();
+    }
+
+    if (!sortVal) {
+      return builder
+        .setStatus(200)
+        .setBody({ error: "Missing parameter: sort is required for ordering." })
+        .setOutcome("لم يتم العثور على معامل الترتيب sort في رابط الطلب.")
+        .build();
+    }
+
+    // Pattern matching to prevent memorized payload bypass
+    const hasLongSleep = /sleep\s*\(\s*([5-9]|\d{2,})\s*\)/i.test(sortVal);
+    const hasBenchmark = /benchmark\s*\(\s*\d+\s*,\s*.*\)/i.test(sortVal);
+    const hasWaitfor = /waitfor\s+delay\s+['"]\d{2}:\d{2}:\d{2}['"]/i.test(sortVal);
+    const hasShortSleep = /sleep\s*\(\s*[0-4]\s*\)/i.test(sortVal);
+
+    if (hasLongSleep || hasBenchmark || hasWaitfor) {
+      let delayText = "5.2 seconds";
+      let delayMs = 5200;
+      if (hasBenchmark) {
+        delayText = "4.8 seconds";
+        delayMs = 4800;
+      }
+
+      return builder
+        .setStatus(200)
+        .setHeader("X-Response-Time", delayText)
+        .setBody({
+          status: "success",
+          products: [
+            { id: 101, name: "Alpha Interceptor", price: 1500, category: "electronics" },
+            { id: 102, name: "Beta Interceptor", price: 2500, category: "electronics" }
+          ]
+        })
+        .setCorrect(true)
+        .setObservabilityLog(`[INFO] DB Query: SELECT * FROM products ORDER BY ${sortVal}\n[WARN] Slow Query Alert: Execution took ${delayText}.\n[CRITICAL] SQL Injection Warning: Timing function execution detected!`)
+        .setOutcome(`نجح الحقن! تأخر رد الخادم بمقدار ${delayText}، مما يؤكد أن قاعدة البيانات MySQL تقوم بتنفيذ الأوامر المحقونة في المعامل sort.`)
+        .setEvidence("Time-Based SQLi Delay", `GET /products?sort=${sortVal} -> Response delayed by ${delayText}`)
+        .build();
+    } else if (hasShortSleep) {
+      return builder
+        .setStatus(200)
+        .setHeader("X-Response-Time", "0.5 seconds")
+        .setBody({
+          status: "success",
+          products: [
+            { id: 101, name: "Alpha Interceptor", price: 1500 }
+          ]
+        })
+        .setObservabilityLog(`[INFO] DB Query: SELECT * FROM products ORDER BY ${sortVal}\n[INFO] Query executed successfully in 0.5s.`)
+        .setOutcome("تم تنفيذ الحقن بتأخير بسيط جداً. جرب استخدام sleep(5) أو sleep(10) لملاحظة تأخير الاستجابة بوضوح وتأكيد الثغرة.")
+        .build();
+    } else {
+      return builder
+        .setStatus(200)
+        .setHeader("X-Response-Time", "0.3 seconds")
+        .setBody({
+          status: "success",
+          products: [
+            { id: 101, name: "Alpha Interceptor", price: 1500 }
+          ]
+        })
+        .setOutcome("تم استرجاع قائمة المنتجات بشكل طبيعي. حاول حقن دالة SLEEP(5) في معامل sort لتأكيد وجود ثغرة Time-Based SQLi.")
+        .build();
+    }
   }
 };

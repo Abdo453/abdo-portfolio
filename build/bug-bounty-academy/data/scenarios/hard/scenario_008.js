@@ -207,5 +207,146 @@ window.scenario_008 = {
       "imagemagick",
       "rce"
     ]
+  },
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    // Check request method
+    const method = parsed.method.toUpperCase();
+
+    // 1. Detect SQLi / XSS in upload request parameters
+    if (method === "POST" && parsed.path.includes("/api/upload-avatar")) {
+      if (/union\s+select|' \s*or\s+|sleep\s*\(/i.test(requestText)) {
+        return builder
+          .setStatus(400, "Bad Request")
+          .setBody({ error: "Database exception: invalid parameter." })
+          .setObservabilityLog("[WARN] Security Shield: SQL Injection attempt blocked on file upload endpoint.\n[INFO] Filter: Prepared queries only.")
+          .setOutcome("حاولت حقن استعلام SQL. السيرفر يقوم بحظر وتصفية معاملات SQL لحماية لوحة الرفع وقواعد البيانات.")
+          .build();
+      }
+      if (/<script|javascript:|onload=/i.test(requestText) && !requestText.includes("<?php")) {
+        return builder
+          .setStatus(400, "Bad Request")
+          .setBody({ error: "Malicious input blocked." })
+          .setObservabilityLog("[WARN] Security Filter: XSS tags detected in POST body request.\n[INFO] Sanitization: Encoded HTML script parameters.")
+          .setOutcome("حاولت إدخال كود XSS في طلب الرفع. السيرفر يقوم بترميز وعزل الأكواد المشبوهة لحماية المستخدمين.")
+          .build();
+      }
+    }
+
+    if (method === "POST" && parsed.path.includes("/api/upload-avatar")) {
+      // 1. Upload Phase: check for PHP webshell payload in body
+      const hasPhpPayload = requestText.includes("<?php") || parsed.body.includes("<?php") || requestText.includes("system(");
+
+      if (hasPhpPayload) {
+        // Enforce stateful sequence
+        window.scenarioState.uploadedShell = true;
+
+        return builder
+          .setStatus(200)
+          .setBody({
+            status: "success",
+            url: "https://cdn.target-social.com/avatars/user_1337.gif"
+          })
+          .setObservabilityLog("[INFO] File Upload: Received file 'avatar.gif' (Mime: image/gif)\n[INFO] ImageMagick: Resizing image using convert legacy tool...\n[WARN] EXIF Metadata: Preserved unmodified raw blocks in GIF header.\n[SUCCESS] Avatar updated and saved to disk.")
+          .setOutcome("تم رفع ملف الـ GIF الخبيث بنجاح! الآن قم بتغيير الطلب في Burp Repeater إلى طلب GET لاستهداف الملف المرفوع وتشغيل الأوامر عبر المعامل c، مثل:\nGET /avatars/user_1337.gif?c=whoami HTTP/1.1")
+          .build();
+      } else {
+        return builder
+          .setStatus(400, "Bad Request")
+          .setBody({ error: "Invalid file: missing image signature or containing corrupted blocks." })
+          .setOutcome("لم يتم العثور على بايتات الـ PHP webshell المحقونة في طلب رفع الملف. تأكد من إرفاق كود Webshell (مثل <?php system($_GET[\"c\"]); ?>) داخل بايتات الصورة.")
+          .build();
+      }
+    } else if (method === "GET" && parsed.path.includes("/avatars/user_1337.gif")) {
+      // 2. Command Execution Phase: check state
+      if (!window.scenarioState.uploadedShell) {
+        return builder
+          .setStatus(404, "Not Found")
+          .setBody("Error 404: File not found.")
+          .setOutcome("الملف غير موجود على السيرفر! يجب عليك أولاً إرسال طلب الـ POST لرفع ملف الـ GIF الملقم بالـ Webshell.")
+          .build();
+      }
+
+      // Extract query parameter 'c'
+      const urlParts = parsed.path.split('?');
+      const queryString = urlParts[1] || '';
+      const params = new URLSearchParams(queryString);
+      const cmd = params.get('c') || '';
+
+      if (!cmd) {
+        return builder
+          .setStatus(200)
+          .setHeader("Content-Type", "image/gif")
+          .setBody("[Binary GIF Image Content]")
+          .setOutcome("تم طلب ملف الصورة بنجاح، ولكن لم يتم تمرير أي أمر لتشغيله. أرسل معامل الاستعلام c، مثل ?c=whoami لتنفيذ الأوامر.")
+          .build();
+      }
+
+      // Check for SQLi / XSS attempts inside RCE parameter 'c' (realistic bash syntax errors)
+      if (/union\s+select|' \s*or\s+|sleep\s*\(/i.test(cmd)) {
+        return builder
+          .setStatus(200)
+          .setHeader("Content-Type", "text/plain")
+          .setBody(`sh: 1: '${cmd.trim()}': not found`)
+          .setObservabilityLog(`[INFO] PHP Engine: Executing system command: ${cmd}\n[WARN] Shell Exec: command returned exit status 127: command not found`)
+          .setOutcome("قمت بكتابة أوامر SQL في سطر أوامر النظام (RCE). بما أنك داخل سطر أوامر Linux (Bash/Sh)، فإن محرك SQL غير موجود هنا، وسيتم إرجاع خطأ 'command not found'.")
+          .build();
+      }
+      if (/<script|javascript:|onload=/i.test(cmd)) {
+        return builder
+          .setStatus(200)
+          .setHeader("Content-Type", "text/plain")
+          .setBody(`sh: 1: Cannot open ${cmd.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;')}: No such file or directory`)
+          .setObservabilityLog(`[INFO] PHP Engine: Executing system command: ${cmd}\n[WARN] Shell Exec: command returned exit status 127: No such file or directory`)
+          .setOutcome("قمت بكتابة وسم HTML/XSS في سطر الأوامر. السيرفر ينفذ هذا المدخل داخل بيئة Linux (Shell) وليس المتصفح، لذا سيعود النظام بخطأ 'No such file or directory'.")
+          .build();
+      }
+
+      // Switch command output matching to satisfy educational realism
+      let outputText = "";
+      switch (cmd.trim()) {
+        case "whoami":
+          outputText = "www-data";
+          break;
+        case "id":
+          outputText = "uid=33(www-data) gid=33(www-data) groups=33(www-data)";
+          break;
+        case "pwd":
+          outputText = "/var/www/html/avatars";
+          break;
+        case "uname -a":
+          outputText = "Linux target-social 5.15.0-88-generic #98-Ubuntu SMP x86_64 x86_64 x86_64 GNU/Linux";
+          break;
+        case "cat /etc/passwd":
+          outputText = "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin";
+          break;
+        case "ls":
+          outputText = "avatar.gif\nindex.php\nupload.php\nconfig.php";
+          break;
+        case "cat config.php":
+          outputText = "<?php\ndefine('DB_HOST', 'localhost');\ndefine('DB_USER', 'social_user');\ndefine('DB_PASS', 'SuperSecretPassword123');\ndefine('DB_NAME', 'social_db');\n?>";
+          break;
+        default:
+          outputText = `[Command executed: ${cmd}]\n[Output]: Simulated command output returned successfully.`;
+      }
+
+      return builder
+        .setStatus(200)
+        .setHeader("Content-Type", "text/plain")
+        .setBody(outputText)
+        .setCorrect(true)
+        .setObservabilityLog(`[INFO] Request received: GET /avatars/user_1337.gif?c=${cmd}\n[INFO] PHP Engine: Executing system command: ${cmd}\n[CRITICAL] Webshell Execution: RCE triggered via uploaded GIF webshell!`)
+        .setOutcome("نجح استغلال ثغرة الـ RCE! تم تنفيذ الأمر بنجاح واسترجاع مخرجات النظام.")
+        .setEvidence("ImageMagick GIF RCE", `GET /avatars/user_1337.gif?c=${cmd} -> Returns ${outputText.split('\n')[0]} shell output`)
+        .build();
+    } else {
+      return builder
+        .setStatus(404, "Not Found")
+        .setBody({ error: "Route not matched. Check HTTP method and URL." })
+        .setOutcome("تأكد من تحديد مسار الاستغلال الصحيح: إما POST لرفع الملف أو GET لتشغيله.")
+        .build();
+    }
   }
 };

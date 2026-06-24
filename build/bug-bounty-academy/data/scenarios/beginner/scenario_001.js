@@ -257,5 +257,99 @@ window.scenario_001 = {
       "idor",
       "v1"
     ]
+  },
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    // 1. Detect SQL Injection attempts
+    if (/union\s+select|' \s*or\s+|sleep\s*\(/i.test(requestText)) {
+      return builder
+        .setStatus(200)
+        .setBody({ status: "success", members: [] })
+        .setObservabilityLog("[WARN] Database Guard: SQL syntax keywords detected in query.\n[INFO] Database Driver: Escaped parameter successfully. Prepared Statements active.\n[INFO] SQLi validation complete: 0 rows returned.")
+        .setOutcome("لقد حاولت حقن استعلام SQL. قاعدة البيانات تستخدم الاستعلامات المجهزة (Prepared Statements) بأمان، مما يمنع تمرير الأوامر إلى محرك SQL.")
+        .build();
+    }
+
+    // 2. Detect XSS attempts
+    if (/<script|javascript:|onload=/i.test(requestText)) {
+      return builder
+        .setStatus(200)
+        .setBody({ status: "error", message: "Invalid characters detected: &lt;script&gt;" })
+        .setObservabilityLog("[WARN] Security Filter: HTML tag syntax detected in request.\n[INFO] Sanitization: Encoded HTML tags to prevent cross-site scripting (XSS).")
+        .setOutcome("لقد حاولت تنفيذ هجوم XSS. يقوم السيرفر بترميز النصوص والمحارف الخاصة (HTML Entity Encoding) قبل معالجتها، مما يبطل مفعول الكود.")
+        .build();
+    }
+
+    // Check GET request paths
+    const match = parsed.path.match(/^\/api\/v1\/workspaces\/(\d+)\/(members|documents\/5001\/download)/i);
+
+    if (!match) {
+      return builder
+        .setStatus(404, "Not Found")
+        .setBody({ error: "Endpoint not found or method not allowed on this path." })
+        .setObservabilityLog(`[WARN] API Router: Route matching failed for request path "${parsed.path}".\n[INFO] Allowed paths: GET /api/v1/workspaces/{workspace_id}/members`)
+        .setOutcome("تأكد من كتابة المسار الصحيح للـ API في طلب الـ GET. المسار المطلوب هو /api/v1/workspaces/43/members")
+        .build();
+    }
+
+    const workspaceId = parseInt(match[1], 10);
+    const subRoute = match[2];
+
+    if (workspaceId === 42) {
+      return builder
+        .setStatus(200)
+        .setBody({
+          workspace_id: 42,
+          members: [
+            { user_id: 1337, email: "attacker@example.com", role: "member" }
+          ]
+        })
+        .setObservabilityLog(`[INFO] API Router: Routing legacy v1 request\n[INFO] Auth Handler: Bearer token validated for User_ID: 1337\n[INFO] Authz Check: User is member of workspace 42. Access granted.\n[INFO] Data Controller: Returning workspace membership details.`)
+        .setOutcome("تم طلب بيانات مساحة عملك الحالية (42). لتأكيد وجود ثغرة IDOR، حاول تعديل المعرف إلى مساحة عمل أخرى لا تنتمي إليها (مثلاً 43).")
+        .build();
+    } else if (workspaceId === 43) {
+      if (subRoute === "members") {
+        return builder
+          .setStatus(200)
+          .setBody({
+            workspace_id: 43,
+            members: [
+              { user_id: 999, email: "ceo@target-company.com", role: "admin" },
+              { user_id: 998, email: "finance@target-company.com", role: "member" }
+            ],
+            documents: [
+              { doc_id: 5001, title: "Q4 Financial Report", created_by: 999 }
+            ]
+          })
+          .setCorrect(true)
+          .setObservabilityLog(`[INFO] API Router: Routing legacy v1 request\n[INFO] Auth Handler: Bearer token validated for User_ID: 1337\n[WARN] Authz Check: Missing authorization check between User: 1337 and Workspace: 43\n[CRITICAL] Data Leakage: User: 1337 successfully accessed private data of Workspace: 43 (IDOR)!`)
+          .setOutcome("تجاوزت صلاحيات الوصول بنجاح! السيرفر لم يتحقق من ملكيتك لمساحة العمل 43 وقام بإرجاع بيانات الأعضاء والملفات السرية.")
+          .setEvidence("IDOR Leak Workspace 43", `GET /api/v1/workspaces/43/members -> Leaks Workspace Members & Documents`)
+          .build();
+      } else {
+        return builder
+          .setStatus(200)
+          .setBody({
+            status: "success",
+            message: "Downloading file Q4 Financial Report (PDF)...",
+            download_url: "/api/v1/workspaces/43/documents/5001/download?token=..."
+          })
+          .setCorrect(true)
+          .setObservabilityLog(`[INFO] API Router: Routing download request\n[INFO] Auth Handler: Bearer token validated\n[WARN] Authz Check: Missing access control on document download.\n[CRITICAL] Data Leakage: Downloaded sensitive Q4 Financial Report (doc_id: 5001).`)
+          .setOutcome("تم الوصول إلى رابط التحميل بنجاح! هذا يؤكد إمكانية تسريب المستندات الحساسة بالكامل.")
+          .build();
+      }
+    } else {
+      return builder
+        .setStatus(404, "Not Found")
+        .setBody({
+          error: `Workspace ${workspaceId} not found or access denied.`
+        })
+        .setObservabilityLog(`[INFO] API Router: Routing request to workspace ${workspaceId}\n[WARN] Authz Check: Access denied. Workspace either does not exist or user has no relations.`)
+        .setOutcome(`مساحة العمل ${workspaceId} غير صالحة أو لا تحتوي على بيانات مفيدة للاستغلال. حاول استهداف المعرف الخاص بالمدراء والمالية وهو 43.`)
+        .build();
+    }
   }
 };

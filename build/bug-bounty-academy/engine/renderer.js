@@ -15,38 +15,99 @@ window.Renderer = {
       if (!matchLvl || !matchCat) return;
 
       const isSolved = solvedList.includes(sc.id);
-      let statusHtml = '';
-      if (isSolved) {
-        statusHtml = `<span class="card-status completed"><i class="bx bx-check-circle"></i> Solved</span>`;
-      } else if (sc.status === 'Unlocked') {
-        statusHtml = `<span class="card-status unlocked"><i class="bx bx-lock-open-alt"></i> Play</span>`;
-      } else if (sc.status === 'Premium') {
-        statusHtml = `<span class="card-status premium"><i class="bx bxs-crown"></i> Premium</span>`;
-      } else {
-        statusHtml = `<span class="card-status locked"><i class="bx bx-lock-alt"></i> Locked</span>`;
+
+      const isRealHunt = localStorage.getItem('bb_sim_real_hunt_mode') === 'true';
+      let displayTitle = sc.title;
+      let displayCategory = sc.category;
+
+      if (isRealHunt) {
+        const maskedTitles = {
+          "scenario-001": "Legacy User Directory Endpoint",
+          "scenario-002": "Document Preview Module",
+          "scenario-003": "Avatar Processing Microservice",
+          "scenario-004": "Authorization Gateway API",
+          "scenario-005": "E-Commerce Sorting Endpoint",
+          "scenario-006": "Coupon Redemption Service",
+          "scenario-007": "User Settings Profile Page",
+          "scenario-008": "Image Processing CGI Gateway",
+          "scenario-009": "GraphQL Search Schema API",
+          "scenario-010": "SSO Callback Handler Endpoint"
+        };
+        displayTitle = maskedTitles[sc.id] || "Target API Endpoint";
+        displayCategory = "Web Endpoint Analysis";
       }
 
-      const diffClass = sc.level.toLowerCase().replace(' ', '');
+      let cardClass = 'neurolynx-card';
+      let progressPercent = 0;
+      let statusTextHtml = '';
+      let btnText = 'Start';
+      let iconHtml = '<i class="bx bx-shield-quarter"></i>';
+
+      // Pick icon based on category
+      const cat = sc.category.toLowerCase();
+      if (cat.includes('auth')) {
+        iconHtml = '<i class="bx bx-key"></i>';
+      } else if (cat.includes('api') || cat.includes('code')) {
+        iconHtml = '<i class="bx bx-code-alt"></i>';
+      } else if (cat.includes('cloud')) {
+        iconHtml = '<i class="bx bx-cloud"></i>';
+      } else if (cat.includes('business')) {
+        iconHtml = '<i class="bx bx-git-branch"></i>';
+      } else if (cat.includes('chain')) {
+        iconHtml = '<i class="bx bx-link"></i>';
+      } else if (cat.includes('recon')) {
+        iconHtml = '<i class="bx bx-radar"></i>';
+      }
+
+      if (isSolved) {
+        cardClass += ' completed-state';
+        progressPercent = 100;
+        statusTextHtml = '<span class="neurolynx-status-indicator completed">Completed <i class="bx bx-check-square" style="font-size:1.15rem; vertical-align:middle;"></i></span>';
+        btnText = 'Review';
+      } else if (sc.status === 'Unlocked') {
+        cardClass += ' active-state';
+        progressPercent = 50; // Mock active progress
+        statusTextHtml = '<span class="neurolynx-status-indicator active">Active</span>';
+        btnText = 'Resume';
+      } else {
+        cardClass += ' locked-state';
+        progressPercent = 0;
+        statusTextHtml = '<span class="neurolynx-status-indicator locked"><i class="bx bx-lock-alt"></i> Locked</span>';
+        btnText = 'Unlock';
+      }
+
+      let scLvl = 10;
+      if (sc.level === 'Easy') scLvl = 25;
+      else if (sc.level === 'Medium') scLvl = 35;
+      else if (sc.level === 'Hard') scLvl = 45;
+      else if (sc.level === 'Expert') scLvl = 50;
 
       const card = document.createElement('div');
-      card.className = 'scenario-card';
+      card.className = cardClass;
       card.innerHTML = `
-        <div class="card-header-row">
-          <span class="scenario-id">${sc.id.toUpperCase()}</span>
-          <span class="difficulty-badge ${diffClass}">${sc.level}</span>
+        <div class="neurolynx-card-header">
+          <div class="neurolynx-card-icon">${iconHtml}</div>
+          <div class="neurolynx-card-title-container">
+            <h4 class="neurolynx-card-title">${displayTitle}</h4>
+            <span class="neurolynx-card-level">Level ${scLvl} &bull; ${displayCategory} (${sc.company})</span>
+          </div>
         </div>
-        <h3 class="scenario-title">${sc.title}</h3>
-        <div class="scenario-meta">
-          <span class="category-tag">${sc.category}</span>
-          <span class="company-tag">${sc.company}</span>
+        <div class="neurolynx-card-progress-section">
+          <div class="neurolynx-card-progress-header">
+            <span>Progress:</span>
+            <span>${progressPercent}%</span>
+          </div>
+          <div class="neurolynx-card-progress-bar">
+            <div class="neurolynx-card-progress-fill" style="width: ${progressPercent}%;"></div>
+          </div>
         </div>
-        <div class="card-footer-row">
-          <span class="bounty-amount">${sc.reward}</span>
-          ${statusHtml}
+        <div class="neurolynx-card-footer">
+          ${statusTextHtml}
+          <button class="neurolynx-btn">${btnText}</button>
         </div>
       `;
 
-      card.addEventListener('click', () => {
+      card.addEventListener('click', (e) => {
         if (sc.status === 'Unlocked' || isSolved) {
           window.location.href = `pages/scenario.html?id=${sc.id}`;
         } else if (sc.status === 'Premium') {

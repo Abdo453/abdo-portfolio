@@ -211,5 +211,156 @@ window.scenario_003 = {
       "ssrf",
       "aws"
     ]
+  },
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    // 1. Detect SQL Injection attempts in requestText
+    if (/union\s+select|' \s*or\s+|sleep\s*\(/i.test(requestText)) {
+      return builder
+        .setStatus(200)
+        .setBody({ status: "success", image_fetched: false, message: "Query compiled successfully" })
+        .setObservabilityLog("[WARN] Security Shield: SQL Injection attempt detected in parameter: image_url.\n[INFO] Database Driver: Escaped parameter successfully. Prepared Statements active.\n[INFO] SQLi validation complete: 0 rows returned.")
+        .setOutcome("حاولت حقن استعلام SQL في حقل الرابط. لكن الخادم لا يمرر هذا الحقل إلى قاعدة البيانات بل يستعمله لإنشاء اتصال HTTP خارجي لجلب الصور.")
+        .build();
+    }
+
+    // 2. Detect XSS attempts in requestText
+    if (/<script|javascript:|onload=/i.test(requestText)) {
+      return builder
+        .setStatus(200)
+        .setBody({ status: "error", message: "Invalid characters detected: &lt;script&gt;" })
+        .setObservabilityLog("[WARN] Security Filter: HTML tag syntax detected in request.\n[INFO] Sanitization: Encoded HTML tags to prevent cross-site scripting (XSS).")
+        .setOutcome("حاولت تنفيذ حقن XSS في حقل الرابط. يقوم الخادم بترميز وعزل الأكواد المشبوهة (HTML Entity Encoding) قبل معالجتها، مما يبطل مفعول الهجوم.")
+        .build();
+    }
+
+    // Check if the request contains valid body JSON
+    let extractedBody = bodyJson;
+    if (!extractedBody) {
+      try {
+        const bodyStart = requestText.indexOf('{');
+        if (bodyStart !== -1) {
+          extractedBody = JSON.parse(requestText.substring(bodyStart).trim());
+        }
+      } catch (e) {
+        // failed parse
+      }
+    }
+
+    if (!extractedBody || typeof extractedBody.image_url === 'undefined') {
+      return builder
+        .setStatus(400, "Bad Request")
+        .setBody({ error: "Missing required parameter: image_url" })
+        .setOutcome("الطلب لا يحتوي على المعامل image_url في جسم الـ JSON.")
+        .build();
+    }
+
+    const url = extractedBody.image_url.trim();
+
+    // 3. Detect Forbidden Protocols (SSRF Sandbox)
+    const isForbiddenProtocol = /^(file|gopher|dict|ftp|sftp|tftp|ldap|php|expect):\/\//i.test(url);
+    if (isForbiddenProtocol) {
+      const matchProto = url.match(/^([a-z0-9]+):\/\//i);
+      const proto = matchProto ? matchProto[1] : "unknown";
+      return builder
+        .setStatus(400, "Bad Request")
+        .setBody({ error: `Forbidden protocol: ${proto}` })
+        .setObservabilityLog(`[WARN] Protocol Validator: Request attempted with forbidden protocol: ${proto}://\n[CRITICAL] Security Alert: SSRF mitigation blocked local system access protocol!`)
+        .setOutcome(`حاولت استخدام بروتوكول ${proto}:// لقراءة الملفات المحلية أو الخدمات الداخلية. الخادم مبرمج على السماح ببروتوكولات HTTP و HTTPS فقط لجلب الصور!`)
+        .build();
+    }
+
+    // 4. Detect Directory Traversal in URL
+    const hasTraversal = /\.\.\/|\/etc\/passwd|\/etc\/hosts|win\.ini/i.test(url);
+    if (hasTraversal) {
+      return builder
+        .setStatus(400, "Bad Request")
+        .setBody({ error: "Invalid characters in URL path." })
+        .setObservabilityLog("[WARN] Directory Traversal Blocked: Path traversal elements identified in request url.\n[INFO] Filter: Blocked request contains '../' or system file paths.")
+        .setOutcome("حاولت استدعاء مسار ملفات محلي عن طريق Directory Traversal. يقوم الفلتر بحظر أي مسار يحتوي على محارف التراجع ../ أو مسارات ملفات النظام الحساسة.")
+        .build();
+    }
+
+    // 1. AWS metadata check
+    const isAwsMetaRoot = url.includes("169.254.169.254") || url.includes("[::ffff:a9fe:a9fe]");
+    const isAwsRolePath = url.includes("iam/security-credentials/aws-elasticbeanstalk-ec2-role");
+
+
+    // 2. Google Cloud metadata check
+    const isGcpMetaRoot = url.includes("metadata.google.internal") || url.includes("computeMetadata/v1");
+    const isGcpTokenPath = url.includes("service-accounts/default/token");
+
+    // 3. Localhost loopback check
+    const isLoopback = url.includes("127.0.0.1") || url.includes("localhost");
+
+    if (isAwsMetaRoot) {
+      if (isAwsRolePath) {
+        return builder
+          .setStatus(200)
+          .setBody({
+            Code: "Success",
+            Type: "AWS-HMAC",
+            AccessKeyId: "AKIAIOSFODNN7EXAMPLE",
+            SecretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            Token: "IQoJb3JpZ2luX2VjEHYaCXVzLWVhc3QtMSJHMEUCIQDT...",
+            Expiration: "2026-12-01T12:00:00Z"
+          })
+          .setCorrect(true)
+          .setObservabilityLog(`[INFO] Image Fetcher: Initializing request to internal resource: ${url}\n[WARN] Security Filter: SSRF check skipped for cloud metadata IP.\n[CRITICAL] Data Leakage: IAM Credentials generated for EC2 Role and exposed in client response!`)
+          .setOutcome("نجحت في استعادة مفاتيح IAM الخاصة بالخادم السحابي AWS EC2 من مسار البيانات التعريفية (Metadata)!")
+          .setEvidence("AWS IAM Keys Leak", `AccessKeyId: AKIAIOSFODNN7EXAMPLE\nSecretAccessKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`)
+          .build();
+      } else {
+        return builder
+          .setStatus(200)
+          .setHeader("Content-Type", "text/plain")
+          .setBody("ami-id\nhostname\niam/\nsecurity-groups\nlocal-ipv4")
+          .setObservabilityLog(`[INFO] Image Fetcher: Fetching internal metadata root from: ${url}\n[WARN] SSRF: Request permitted to internal metadata service.`)
+          .setOutcome("لقد استجاب الخادم لـ Metadata IP بنجاح! الآن تحتاج لتعديل المسار للوصول لمفاتيح الـ IAM الخاصة بالخادم (المسار: iam/security-credentials/aws-elasticbeanstalk-ec2-role).")
+          .build();
+      }
+    } else if (isGcpMetaRoot) {
+      if (isGcpTokenPath) {
+        return builder
+          .setStatus(200)
+          .setBody({
+            access_token: "ya29.c.Ko8B0wcV3x...SimulatedGCPToken...",
+            expires_in: 3599,
+            token_type: "Bearer"
+          })
+          .setCorrect(true)
+          .setObservabilityLog(`[INFO] Image Fetcher: Fetching GCP metadata token from: ${url}\n[CRITICAL] Data Leakage: GCP Service Account Access Token leaked!`)
+          .setOutcome("نجحت في استعادة Access Token الخاص بـ Google Cloud Service Account عبر ثغرة SSRF!")
+          .setEvidence("GCP Token Leak", `access_token: ya29.c.Ko8B0wcV3x...`)
+          .build();
+      } else {
+        return builder
+          .setStatus(200)
+          .setHeader("Metadata-Flavor", "Google")
+          .setHeader("Content-Type", "text/plain")
+          .setBody("computeMetadata/v1/instance/service-accounts/default/token\nhostname\nid\nimage")
+          .setObservabilityLog(`[INFO] Image Fetcher: Accessing Google Cloud Metadata Service.\n[WARN] SSRF: Google metadata service access allowed.`)
+          .setOutcome("لقد استجاب الخادم لعنوان Google Cloud Metadata! حاول طلب التوكين الخاص بـ Service Account للحصول على صلاحيات السحابة (المسار: computeMetadata/v1/instance/service-accounts/default/token).")
+          .build();
+      }
+    } else if (isLoopback) {
+      return builder
+        .setStatus(200)
+        .setHeader("Content-Type", "text/html")
+        .setBody("<h1>Admin Control Panel</h1>\n<p>Welcome to loopback admin console. Server status: OK</p>\n<!-- Action: shutdown, restart -->")
+        .setObservabilityLog(`[INFO] Image Fetcher: Routing request to loopback server: ${url}\n[WARN] SSRF: Loopback access allowed. Admin console exposed.`)
+        .setOutcome("تم الوصول إلى لوحة التحكم المحلية (localhost) بنجاح! ولكن هدفك الأساسي هو سحب صلاحيات السحابة عبر AWS Metadata.")
+        .build();
+    } else {
+      return builder
+        .setStatus(200)
+        .setHeader("Content-Type", "image/jpeg")
+        .setBody("[Binary Image Data]")
+        .setObservabilityLog(`[INFO] Image Fetcher: Fetching external image from: ${url}\n[INFO] Response code 200. Image processed successfully.`)
+        .setOutcome("تم جلب الصورة ومعالجتها بنجاح. حاول استهداف الخوادم الداخلية أو الخدمات السحابية (مثل AWS Metadata: 169.254.169.254) لاختبار ثغرة SSRF.")
+        .build();
+    }
   }
 };

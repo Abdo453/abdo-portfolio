@@ -10,7 +10,8 @@ window.StateManager = {
     lastActive: null,
     // V3 Analytics extensions
     errorsCount: 0,
-    timeSpentTotal: 0
+    timeSpentTotal: 0,
+    realHuntMode: false
   },
 
   load() {
@@ -19,6 +20,7 @@ window.StateManager = {
     this.state.lastActive = localStorage.getItem('bb_sim_last_active') || null;
     this.state.errorsCount = parseInt(localStorage.getItem('bb_sim_errors_count')) || 0;
     this.state.timeSpentTotal = parseInt(localStorage.getItem('bb_sim_time_spent_total')) || 0;
+    this.state.realHuntMode = localStorage.getItem('bb_sim_real_hunt_mode') === 'true';
     
     try {
       this.state.solved = JSON.parse(localStorage.getItem('bb_sim_solved')) || [];
@@ -34,11 +36,18 @@ window.StateManager = {
     localStorage.setItem('bb_sim_solved', JSON.stringify(this.state.solved));
     localStorage.setItem('bb_sim_errors_count', this.state.errorsCount);
     localStorage.setItem('bb_sim_time_spent_total', this.state.timeSpentTotal);
+    localStorage.setItem('bb_sim_real_hunt_mode', this.state.realHuntMode);
     
     if (this.state.lastActive) {
       localStorage.setItem('bb_sim_last_active', this.state.lastActive);
     }
     this.updateUI();
+  },
+
+  toggleRealHuntMode() {
+    this.state.realHuntMode = !this.state.realHuntMode;
+    this.save();
+    window.location.reload();
   },
 
   updateUI() {

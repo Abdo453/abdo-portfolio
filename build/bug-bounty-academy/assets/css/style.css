@@ -2117,3 +2117,538 @@ body::before {
   border-radius: 12px !important;
   backdrop-filter: blur(8px) !important;
 }
+
+/* ==========================================
+   NEUROLYNX CYBER SECURITY DASHBOARD REDESIGN
+   ========================================== */
+
+/* Layout wrapper */
+.dashboard-wrapper {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+}
+
+/* Sidebar navigation */
+.sidebar-nav {
+  background: rgba(6, 11, 23, 0.9);
+  border-right: 1px solid rgba(6, 182, 212, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px 20px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-main);
+  text-decoration: none;
+  margin-bottom: 40px;
+}
+
+.sidebar-logo-text {
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.sidebar-logo-sub {
+  font-size: 0.65rem;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sidebar-menu {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-item a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+}
+
+.sidebar-item a i {
+  font-size: 1.25rem;
+}
+
+.sidebar-item a:hover {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-main);
+}
+
+.sidebar-item.active a {
+  background: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.08);
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 20px;
+}
+
+/* Main Dashboard content container */
+.main-dashboard-content {
+  padding: 40px;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+/* Top Header */
+.dashboard-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-title-area h2 {
+  font-family: var(--font-title);
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.dashboard-title-area p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+/* Top User Profile widget */
+.user-profile-widget {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(10, 20, 38, 0.45);
+  border: 1px solid rgba(6, 182, 212, 0.15);
+  padding: 10px 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-cyan);
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.user-stats {
+  font-size: 0.75rem;
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+}
+
+.user-xp-progress {
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 15px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 15px;
+}
+
+.xp-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.xp-progress-fill {
+  height: 100%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+/* Search bar styling */
+.dashboard-search-container {
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.dashboard-search-input {
+  width: 100%;
+  padding: 16px 24px 16px 54px;
+  background: rgba(10, 20, 38, 0.5);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 10px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.dashboard-search-input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+}
+
+.dashboard-search-icon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.4rem;
+  color: var(--accent-cyan);
+}
+
+/* Section Title */
+.section-header-title {
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-main);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-header-title::after {
+  content: '';
+  flex-grow: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-left: 15px;
+}
+
+/* Redesigned Card Layouts (Neurolynx Cards) */
+.neurolynx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+  margin-bottom: 45px;
+}
+
+.neurolynx-card {
+  background: rgba(10, 20, 38, 0.65);
+  border: 1px solid rgba(6, 182, 212, 0.15);
+  border-radius: 12px;
+  padding: 24px;
+  backdrop-filter: blur(8px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+}
+
+.neurolynx-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.15);
+}
+
+.neurolynx-card.active-state {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.1);
+}
+
+.neurolynx-card.completed-state {
+  border-color: var(--accent-green);
+}
+
+.neurolynx-card.locked-state {
+  border-color: rgba(255, 255, 255, 0.05);
+  opacity: 0.7;
+}
+
+.neurolynx-card-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.neurolynx-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--accent-cyan);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.1);
+}
+
+.completed-state .neurolynx-card-icon {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: var(--accent-green);
+}
+
+.locked-state .neurolynx-card-icon {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+.neurolynx-card-title-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.neurolynx-card-title {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.neurolynx-card-level {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.neurolynx-card-progress-section {
+  margin-bottom: 20px;
+}
+
+.neurolynx-card-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.neurolynx-card-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.neurolynx-card-progress-fill {
+  height: 100%;
+  background: var(--accent-cyan);
+}
+
+.completed-state .neurolynx-card-progress-fill {
+  background: var(--accent-green);
+}
+
+.locked-state .neurolynx-card-progress-fill {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.neurolynx-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.neurolynx-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.active-state .neurolynx-status-indicator { color: var(--accent-cyan); }
+.completed-state .neurolynx-status-indicator { color: var(--accent-green); }
+.locked-state .neurolynx-status-indicator { color: var(--text-muted); }
+
+.neurolynx-btn {
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: var(--accent-cyan);
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.neurolynx-btn:hover {
+  background: var(--accent-cyan);
+  color: #000;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+}
+
+.completed-state .neurolynx-btn {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--accent-green);
+}
+
+.completed-state .neurolynx-btn:hover {
+  background: var(--accent-green);
+  color: #000;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.locked-state .neurolynx-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* MY PROGRESS section (bottom widgets) */
+.progress-panel-row {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1fr;
+  gap: 24px;
+}
+
+.progress-panel-card {
+  background: rgba(10, 20, 38, 0.65);
+  border: 1px solid rgba(6, 182, 212, 0.15);
+  border-radius: 12px;
+  padding: 24px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+}
+
+.progress-panel-title {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+  display: block;
+}
+
+.badge-widget {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.badge-shield-container {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  color: var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+
+.badge-info-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-title-header {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.level-progress-bar-container {
+  width: 100%;
+}
+
+.checklist-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checklist-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.checklist-item.checked {
+  color: var(--accent-green);
+}
+
+.checklist-checkbox {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+}
+
+.checked .checklist-checkbox {
+  color: var(--accent-green);
+}
+
+/* Make sure filters and layouts fit the wrapper */
+@media (max-width: 900px) {
+  .dashboard-wrapper {
+    grid-template-columns: 1fr;
+  }
+  .sidebar-nav {
+    display: none; /* simple hidden on mobile for clean design */
+  }
+}

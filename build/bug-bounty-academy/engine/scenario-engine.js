@@ -106,15 +106,38 @@ window.ScenarioEngine = {
     this.timeSpent = 0;
     this.evidence = [];
     this.quizCurrentQuestion = 0;
+    this.hintsUnlockedCount = 0;
+    this.unlockedHints = {};
     
     // Save last active scenario
     ProgressManager.setLastActive(scId);
 
+    // Dynamic Title & Category masking for Real Hunt Mode
+    const isRealHunt = ProgressManager.state.realHuntMode;
+    let displayTitle = data.metadata.title;
+    let displayCategory = data.metadata.category;
+    if (isRealHunt) {
+      const maskedTitles = {
+        "scenario-001": "Legacy User Directory Endpoint",
+        "scenario-002": "Document Preview Module",
+        "scenario-003": "Avatar Processing Microservice",
+        "scenario-004": "Authorization Gateway API",
+        "scenario-005": "E-Commerce Sorting Endpoint",
+        "scenario-006": "Coupon Redemption Service",
+        "scenario-007": "User Settings Profile Page",
+        "scenario-008": "Image Processing CGI Gateway",
+        "scenario-009": "GraphQL Search Schema API",
+        "scenario-010": "SSO Callback Handler Endpoint"
+      };
+      displayTitle = maskedTitles[scId] || "Target API Endpoint";
+      displayCategory = "Web Endpoint Analysis";
+    }
+
     // Setup headers
-    this.el.title.innerText = `${scId.toUpperCase()}: ${data.metadata.title}`;
+    this.el.title.innerText = `${scId.toUpperCase()}: ${displayTitle}`;
     this.el.diff.className = `difficulty-badge ${data.metadata.level.toLowerCase().replace(' ', '')}`;
     this.el.diff.innerText = data.metadata.level;
-    this.el.cat.innerText = data.metadata.category;
+    this.el.cat.innerText = displayCategory;
     this.el.bounty.innerText = data.metadata.reward;
     this.el.time.innerText = data.metadata.time;
     this.el.company.innerText = data.metadata.company;
@@ -244,20 +267,47 @@ window.ScenarioEngine = {
         hintsSelector.innerHTML = '<span style="color:var(--text-muted); font-size:0.75rem;">No hints active for this step.</span>';
         hintDisplay.innerText = "Analyze the description and inputs.";
       } else {
+        const isRealHunt = ProgressManager.state.realHuntMode;
         hints.forEach((hintText, hIdx) => {
           const btn = document.createElement('button');
           btn.className = 'hint-badge-btn';
-          btn.innerText = `Hint ${hIdx + 1}`;
+          
+          const hintKey = `${this.scenario.metadata.id}_step_${this.currentStepIndex}_hint_${hIdx}`;
+          const isUnlocked = this.unlockedHints[hintKey] || !isRealHunt;
+          
+          if (isRealHunt && !isUnlocked) {
+            btn.classList.add('locked');
+            btn.innerHTML = `<i class="bx bx-lock-alt"></i> Hint ${hIdx + 1} ($500)`;
+          } else {
+            btn.classList.add('unlocked');
+            btn.innerText = `Hint ${hIdx + 1}`;
+          }
+
           btn.addEventListener('click', () => {
+            const currentUnlocked = this.unlockedHints[hintKey] || !isRealHunt;
+            if (isRealHunt && !currentUnlocked) {
+              const confirmUnlock = confirm("🚨 Warning: Unlocking this hint will deduct $500 from your potential bounty reward for this scenario. Do you want to proceed?");
+              if (!confirmUnlock) return;
+              
+              // Unlock hint
+              this.unlockedHints[hintKey] = true;
+              this.hintsUnlockedCount = (this.hintsUnlockedCount || 0) + 1;
+              btn.classList.remove('locked');
+              btn.classList.add('unlocked');
+              btn.innerText = `Hint ${hIdx + 1}`;
+            }
+
             Array.from(hintsSelector.children).forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            btn.classList.add('unlocked');
             hintDisplay.innerText = hintText + (hintText.endsWith('.') ? '' : '.');
           });
           hintsSelector.appendChild(btn);
         });
-        if (hintsSelector.children.length > 0) {
+        
+        if (!isRealHunt && hintsSelector.children.length > 0) {
           hintsSelector.children[0].click();
+        } else {
+          hintDisplay.innerText = "Click a hint tab above to unlock technical hints.";
         }
       }
     }
@@ -795,6 +845,13 @@ window.ScenarioEngine = {
 
     let bounty = parseInt(this.scenario.metadata.reward.replace('$', '').replace(',', ''));
     let xp = this.scenario.steps[this.currentStepIndex - 1]?.xpReward || 200;
+
+    // Apply Hint Penalty in Real Hunt Mode
+    const isRealHunt = ProgressManager.state.realHuntMode;
+    if (isRealHunt && this.hintsUnlockedCount > 0) {
+      const penaltyAmount = this.hintsUnlockedCount * 500;
+      bounty = Math.max(0, bounty - penaltyAmount);
+    }
 
     bounty = Math.round(bounty * (score / 100));
     xp = Math.round(xp * (score / 100));
