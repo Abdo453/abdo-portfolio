@@ -1,5 +1,5 @@
 // ==========================================
-// SCENARIO REGISTRY DATABASE
+// SCENARIO REGISTRY DATABASE  v4.0
 // ==========================================
 
 (function() {
@@ -7,112 +7,152 @@
     {
       id: "scenario-001",
       title: "IDOR in API Endpoint - Full User Data Leak",
+      realisticTitle: "Shopify Partner Portal — Workspace Data Breach",
       level: "Beginner",
+      stars: 2,
       category: "Authorization",
       company: "Shopify",
       reward: "$6,500",
+      xpReward: 1200,
       time: "30 Min",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["IDOR", "API", "Authorization"]
     },
     {
       id: "scenario-002",
       title: "Stored XSS in PDF Viewer - Slack Compromise",
+      realisticTitle: "Slack File Sharing — Document Preview Investigation",
       level: "Easy",
+      stars: 3,
       category: "API Security",
       company: "Slack",
       reward: "$5,000",
+      xpReward: 900,
       time: "1 Hour",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["XSS", "File Upload", "JavaScript"]
     },
     {
       id: "scenario-003",
       title: "SSRF to AWS Metadata - EC2 IAM Keys Theft",
+      realisticTitle: "Airbnb Host Dashboard — Image Processing Service",
       level: "Medium",
+      stars: 3,
       category: "Cloud",
       company: "Airbnb",
       reward: "$4,500",
+      xpReward: 1500,
       time: "2 Hours",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["SSRF", "Cloud", "AWS", "IAM"]
     },
     {
       id: "scenario-004",
       title: "JWT Authentication Bypass - Weak Secret",
+      realisticTitle: "Stripe Merchant Portal — Authentication Gateway",
       level: "Hard",
+      stars: 4,
       category: "Authentication",
       company: "Stripe",
       reward: "$10,000",
+      xpReward: 2000,
       time: "3+ Hours",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["JWT", "Auth Bypass", "Crypto", "Session"]
     },
     {
       id: "scenario-005",
       title: "Time-Based Blind SQLi - Admin Password Extraction",
+      realisticTitle: "Tesla Fleet Management — Vehicle Data API",
       level: "Expert",
+      stars: 5,
       category: "API Security",
       company: "Tesla",
       reward: "$3,500",
+      xpReward: 2500,
       time: "3+ Hours",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["SQLi", "Blind", "Time-Based", "Database"]
     },
     {
       id: "scenario-006",
       title: "Business Logic - The Alchemy of Negative Wealth",
+      realisticTitle: "Amazon Marketplace — Cart & Pricing Engine",
       level: "Easy",
+      stars: 3,
       category: "Business Logic",
-      company: "CyberGear",
+      company: "Amazon",
       reward: "$5,000",
+      xpReward: 1100,
       time: "1 Hour",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["Business Logic", "Integer Overflow", "WAF Bypass"]
     },
     {
       id: "scenario-007",
       title: "Information Disclosure - Exposed .git & .env",
+      realisticTitle: "SaaS Marketing Platform — Development Server Recon",
       level: "Beginner",
+      stars: 1,
       category: "Recon Driven",
       company: "GitHub",
       reward: "$750",
+      xpReward: 600,
       time: "30 Min",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["Recon", "Information Disclosure", "Secrets"]
     },
     {
       id: "scenario-008",
       title: "File Upload to RCE - ImageMagick GIF Shell",
+      realisticTitle: "Meta Media Platform — Profile Image Processing",
       level: "Hard",
+      stars: 4,
       category: "API Security",
       company: "Meta",
       reward: "$8,000",
+      xpReward: 2200,
       time: "3+ Hours",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["RCE", "File Upload", "ImageMagick", "Server-Side"]
     },
     {
       id: "scenario-009",
       title: "Chain Bug - IDOR to Stored XSS Account Takeover",
+      realisticTitle: "TikTok Creator Studio — Profile & Content Management",
       level: "Expert",
+      stars: 5,
       category: "Chaining",
       company: "TikTok",
       reward: "$12,000",
+      xpReward: 3000,
       time: "3+ Hours",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["Chain", "IDOR", "XSS", "Account Takeover"]
     },
     {
       id: "scenario-010",
       title: "Race Condition - Promo Coupon Double-Redeem",
+      realisticTitle: "Stripe Merchant Dashboard — Coupon Redemption System",
       level: "Hard",
+      stars: 4,
       category: "Business Logic",
       company: "Stripe",
       reward: "$5,000",
+      xpReward: 1800,
       time: "3+ Hours",
       status: "Unlocked",
-      solved: false
+      solved: false,
+      tags: ["Race Condition", "Business Logic", "Concurrency"]
     }
   ];
 

@@ -17,25 +17,9 @@ window.Renderer = {
       const isSolved = solvedList.includes(sc.id);
 
       const isRealHunt = localStorage.getItem('bb_sim_real_hunt_mode') === 'true';
-      let displayTitle = sc.title;
-      let displayCategory = sc.category;
-
-      if (isRealHunt) {
-        const maskedTitles = {
-          "scenario-001": "Legacy User Directory Endpoint",
-          "scenario-002": "Document Preview Module",
-          "scenario-003": "Avatar Processing Microservice",
-          "scenario-004": "Authorization Gateway API",
-          "scenario-005": "E-Commerce Sorting Endpoint",
-          "scenario-006": "Coupon Redemption Service",
-          "scenario-007": "User Settings Profile Page",
-          "scenario-008": "Image Processing CGI Gateway",
-          "scenario-009": "GraphQL Search Schema API",
-          "scenario-010": "SSO Callback Handler Endpoint"
-        };
-        displayTitle = maskedTitles[sc.id] || "Target API Endpoint";
-        displayCategory = "Web Endpoint Analysis";
-      }
+      // Use realisticTitle from db.js when in Real Hunt Mode (hides vulnerability type)
+      let displayTitle = isRealHunt ? (sc.realisticTitle || sc.title) : sc.title;
+      let displayCategory = isRealHunt ? '🔒 Classified Target' : sc.category;
 
       let cardClass = 'neurolynx-card';
       let progressPercent = 0;
@@ -76,11 +60,18 @@ window.Renderer = {
         btnText = 'Unlock';
       }
 
-      let scLvl = 10;
-      if (sc.level === 'Easy') scLvl = 25;
-      else if (sc.level === 'Medium') scLvl = 35;
-      else if (sc.level === 'Hard') scLvl = 45;
-      else if (sc.level === 'Expert') scLvl = 50;
+      // Build star rating HTML
+      const stars = sc.stars || 1;
+      const starHtml = '★'.repeat(stars) + '☆'.repeat(Math.max(0, 5 - stars));
+      const starColor = stars >= 4 ? '#ef4444' : stars >= 3 ? '#f59e0b' : '#64748b';
+
+      // Build tags HTML (only in normal mode)
+      const tagsHtml = (!isRealHunt && sc.tags && sc.tags.length)
+        ? `<div class="card-tags-row">${sc.tags.slice(0,3).map(t => `<span class="card-tag">${t}</span>`).join('')}</div>`
+        : '';
+
+      // XP reward display
+      const xpBadge = sc.xpReward ? `<span class="card-xp-badge">+${sc.xpReward.toLocaleString()} XP</span>` : '';
 
       const card = document.createElement('div');
       card.className = cardClass;
@@ -89,8 +80,15 @@ window.Renderer = {
           <div class="neurolynx-card-icon">${iconHtml}</div>
           <div class="neurolynx-card-title-container">
             <h4 class="neurolynx-card-title">${displayTitle}</h4>
-            <span class="neurolynx-card-level">Level ${scLvl} &bull; ${displayCategory} (${sc.company})</span>
+            <span class="neurolynx-card-level">${displayCategory} &bull; <span style="color:${starColor}; font-size:0.7rem; letter-spacing:1px;">${starHtml}</span></span>
           </div>
+          ${xpBadge}
+        </div>
+        ${tagsHtml}
+        <div class="neurolynx-card-meta-row">
+          <span class="card-meta-item"><i class="bx bx-buildings"></i> ${sc.company}</span>
+          <span class="card-meta-item"><i class="bx bx-time"></i> ${sc.time}</span>
+          <span class="card-meta-item text-green"><i class="bx bx-dollar-circle"></i> ${sc.reward}</span>
         </div>
         <div class="neurolynx-card-progress-section">
           <div class="neurolynx-card-progress-header">
