@@ -1705,18 +1705,19 @@ body::before {
 
 /* Split Pane Workspace Body */
 .workspace-body-split {
-  flex-grow: 1;
+  flex: 1 1 auto;
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   gap: 15px;
   padding: 15px 20px;
   overflow: hidden;
-  height: calc(100% - 100px);
+  min-height: 0;
   box-sizing: border-box;
 }
 
 .workspace-body-split.advisor-collapsed {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .workspace-body-split.advisor-collapsed .ai-advisor-panel {
