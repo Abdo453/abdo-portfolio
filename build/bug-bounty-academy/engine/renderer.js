@@ -109,7 +109,7 @@ window.Renderer = {
 
       card.addEventListener('click', (e) => {
         if (sc.status === 'Unlocked' || isSolved) {
-          window.location.href = `pages/scenario.html?id=${sc.id}`;
+          window.location.href = `pages/scenario.html?id=${sc.id}&cb=${Date.now()}`;
         } else if (sc.status === 'Premium') {
           alert("🔒 This is a premium scenario. Upgrade to the full Academy tier to unlock this target!");
         } else {
