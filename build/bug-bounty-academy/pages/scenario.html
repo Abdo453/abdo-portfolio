@@ -6,7 +6,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Investigation Room | Bug Bounty Scenarios Academy</title>
+  <title>Investigation Room | Bug Bounty Academy — Interactive Playground</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <!-- Boxicons -->
@@ -26,7 +26,61 @@
       height: calc(100vh - var(--header-height));
       overflow: hidden;
     }
+
+    /* ============ Advisor Tab Bar ============ */
+    .advisor-tab-bar {
+      display: flex;
+      gap: 2px;
+      padding: 8px 8px 0;
+      background: rgba(0,0,0,0.15);
+      border-bottom: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .advisor-tab {
+      flex: 1;
+      padding: 7px 4px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .advisor-tab:hover {
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .advisor-tab.active {
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.04);
+    }
+
+    /* Writeup badge on tab when available */
+    .advisor-tab.available::after {
+      content: '●';
+      color: var(--accent-green);
+      font-size: 0.5rem;
+      margin-left: 2px;
+    }
+
+    /* text-red utility */
+    .text-red { color: var(--critical-red); }
   </style>
+
 </head>
 <body style="overflow: hidden;">
 
@@ -302,13 +356,23 @@
               </div>
             </div>
 
-            <!-- Right Pane: 🧠 AI Advisor Panel (Hints + Analysis + Interactive Decision Tree/Timeline) -->
+            <!-- Right Pane: 🧠 AI Advisor Panel (Tabbed: AI Advisor / Write-up / Community) -->
             <div class="ai-advisor-panel" id="static-ai-advisor-panel">
-              <div class="advisor-header-title">
-                <i class="bx bx-bot"></i> <span>AI ADVISOR</span>
+              <!-- Tab bar -->
+              <div class="advisor-tab-bar">
+                <button class="advisor-tab active" id="atab-advisor" onclick="switchAdvisorTab('advisor')">
+                  <i class="bx bx-bot"></i> AI Advisor
+                </button>
+                <button class="advisor-tab" id="atab-writeup" onclick="switchAdvisorTab('writeup')">
+                  <i class="bx bx-book-content"></i> Write-up
+                </button>
+                <button class="advisor-tab" id="atab-community" onclick="switchAdvisorTab('community')">
+                  <i class="bx bx-chat"></i> Community
+                </button>
               </div>
-              
-              <div class="advisor-content-scroll">
+
+              <!-- Panel: AI Advisor (default) -->
+              <div class="advisor-content-scroll" id="advisor-pane-advisor">
                 <!-- Progressive Hints Card -->
                 <div class="advisor-card-section" id="advisor-hints-card">
                   <h4><i class="bx bx-bulb text-orange"></i> Progressive Hints</h4>
@@ -336,6 +400,61 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Panel: Write-up (unlocked after solving) -->
+              <div class="advisor-content-scroll hidden" id="advisor-pane-writeup">
+                <!-- Locked state -->
+                <div id="writeup-locked-msg" class="advisor-card-section" style="text-align:center; padding: 30px 15px;">
+                  <i class="bx bx-lock-alt" style="font-size:2rem; color:var(--text-muted); display:block; margin-bottom:12px;"></i>
+                  <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.6; margin-bottom:16px;">
+                    The full write-up is unlocked after completing this scenario. Solve all steps to access the detailed payload analysis, impact breakdown, and developer mitigations.
+                  </p>
+                  <button class="hunt-btn" id="unlock-writeup-penalty-btn" style="font-size:0.75rem;">
+                    <i class="bx bx-unlock"></i> Unlock Early (-200 XP Penalty)
+                  </button>
+                </div>
+
+                <!-- Unlocked write-up content -->
+                <div id="writeup-content" class="hidden">
+                  <div class="advisor-card-section">
+                    <h4><i class="bx bx-analyse text-red"></i> Vulnerability Explanation</h4>
+                    <div id="writeup-description" class="markdown-body" dir="auto" style="font-size:0.8rem; background: none; padding: 0; border: none;"></div>
+                  </div>
+                  <div class="advisor-card-section">
+                    <h4><i class="bx bx-code-alt text-cyan"></i> Payload Analysis</h4>
+                    <div id="writeup-payload" class="markdown-body" dir="auto" style="font-size:0.8rem; background: none; padding: 0; border: none;"></div>
+                  </div>
+                  <div class="advisor-card-section">
+                    <h4><i class="bx bx-error-circle text-orange"></i> Impact</h4>
+                    <div id="writeup-impact" class="markdown-body" dir="auto" style="font-size:0.8rem; background: none; padding: 0; border: none;"></div>
+                  </div>
+                  <div class="advisor-card-section">
+                    <h4><i class="bx bx-shield-quarter text-green"></i> Developer Mitigation</h4>
+                    <div id="writeup-mitigation" class="markdown-body" dir="auto" style="font-size:0.8rem; background: none; padding: 0; border: none;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Panel: Community -->
+              <div class="advisor-content-scroll hidden" id="advisor-pane-community">
+                <div class="advisor-card-section" style="text-align:center; padding: 20px 15px;">
+                  <i class="bx bx-chat" style="font-size:2rem; color:var(--accent-cyan); display:block; margin-bottom:10px;"></i>
+                  <h4 style="margin-bottom:8px; color:var(--text-main);">Community Discussions</h4>
+                  <p style="color:var(--text-muted); font-size:0.8rem; line-height:1.6; margin-bottom:16px;">
+                    Join the discussion about this scenario with other bug hunters. Share your approach, alternative payloads, and tips!
+                  </p>
+                  <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; padding:15px; font-family:var(--font-mono); font-size:0.72rem; color:var(--text-muted); text-align:left; margin-bottom:16px;">
+                    <div style="color:var(--accent-cyan); margin-bottom:6px; font-weight:700;">💬 Recent Discussion</div>
+                    <div style="margin-bottom:8px;"><span style="color:var(--accent-green);">@0xShadow:</span> <span dir="auto">The v1 endpoint trick is wild, always check legacy versions!</span></div>
+                    <div style="margin-bottom:8px;"><span style="color:#a855f7;">@VectorV:</span> <span dir="auto">Used waybackurls to discover this, exactly like in real engagements.</span></div>
+                    <div><span style="color:#f59e0b;">@NullByte:</span> <span dir="auto">Don't forget to check v0 and v1/beta as well!</span></div>
+                  </div>
+                  <a href="https://github.com/Abdo453/abdo-portfolio/discussions" target="_blank" class="hunt-btn" style="width:100%; display:block; text-align:center;">
+                    <i class="bx bxl-github"></i> Open Full Discussion on GitHub
+                  </a>
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -371,10 +490,11 @@
                   <span style="font-weight:700; color:var(--text-main); font-family:var(--font-title); font-size:0.85rem; letter-spacing:1px;">ACADEMY SIMULATION NODE ACTIVE</span>
                 </div>
                 <pre style="margin: 0; font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); line-height: 1.4;">
-TARGET HOST : api.cybergear.com (Port 443/HTTPS)
+TARGET HOST : Interactive Bug Bounty Academy Simulation Node
 STATUS      : LISTENING
 SESSION KEY : SECURE_SSL_V3_ESTABLISHED
-RECON SCAN  : IDLE</pre>
+RECON SCAN  : IDLE
+MODE        : ACTIVE SANDBOX ENVIRONMENT</pre>
               </div>
               <div class="idle-col chart-col" style="display:flex; flex-direction:column; gap:8px; width:220px; font-family:var(--font-mono); font-size:0.72rem;">
                 <div class="system-perf-bar" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
@@ -449,7 +569,14 @@ RECON SCAN  : IDLE</pre>
     </div>
 
   <!-- Load core registry and loading hooks -->
+  <!-- marked.js for Markdown rendering in Write-up panel -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
+  <!-- Global scenario state object for stateful simulateBackend functions -->
+  <script>
+    window.scenarioState = {};
+  </script>
   <script src="../assets/js/db.js?v=8"></script>
+
   <script src="../engine/state-manager.js?v=8"></script>
   <script src="../engine/parser.js?v=8"></script>
   <script src="../engine/http-helpers.js?v=3"></script>
@@ -459,6 +586,85 @@ RECON SCAN  : IDLE</pre>
   
   <!-- Load scenario and initialize the Scenario Engine -->
   <script>
+    // =============================================
+    // ADVISOR TAB SWITCHING
+    // =============================================
+    function switchAdvisorTab(tabName) {
+      // Update tab active states
+      ['advisor', 'writeup', 'community'].forEach(t => {
+        const btn = document.getElementById(`atab-${t}`);
+        const pane = document.getElementById(`advisor-pane-${t}`);
+        if (btn) btn.classList.toggle('active', t === tabName);
+        if (pane) pane.classList.toggle('hidden', t !== tabName);
+      });
+    }
+
+    // =============================================
+    // WRITE-UP RENDERING ENGINE
+    // =============================================
+    window.renderWriteup = function(scenario) {
+      const writeup = scenario.writeup;
+      if (!writeup) {
+        // No writeup data for this scenario
+        document.getElementById('writeup-locked-msg').innerHTML = `
+          <i class="bx bx-info-circle" style="font-size:2rem; color:var(--text-muted); display:block; margin-bottom:12px;"></i>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Write-up content is not available for this scenario yet. Check back later!</p>
+        `;
+        return;
+      }
+
+      // Check if scenario is solved
+      const scId = scenario.metadata.id;
+      const isSolved = ProgressManager.state.solved.includes(scId);
+
+      if (isSolved) {
+        unlockWriteup(writeup);
+      } else {
+        // Setup penalty unlock button
+        const penaltyBtn = document.getElementById('unlock-writeup-penalty-btn');
+        if (penaltyBtn) {
+          penaltyBtn.addEventListener('click', () => {
+            if (confirm('⚠️ Unlocking the write-up early will deduct 200 XP from your score. Proceed?')) {
+              ProgressManager.addXP(-200);
+              unlockWriteup(writeup);
+            }
+          });
+        }
+      }
+    };
+
+    function unlockWriteup(writeup) {
+      const lockedMsg = document.getElementById('writeup-locked-msg');
+      const content = document.getElementById('writeup-content');
+      if (lockedMsg) lockedMsg.classList.add('hidden');
+      if (content) content.classList.remove('hidden');
+
+      // Mark write-up tab as available
+      const writeupTab = document.getElementById('atab-writeup');
+      if (writeupTab) writeupTab.classList.add('available');
+
+      // Render markdown content using marked.js
+      const mdRenderer = (text) => {
+        if (typeof marked !== 'undefined') {
+          return marked.parse(text);
+        }
+        return text.replace(/\n/g, '<br>');
+      };
+
+      const desc = document.getElementById('writeup-description');
+      const payload = document.getElementById('writeup-payload');
+      const impact = document.getElementById('writeup-impact');
+      const mitigation = document.getElementById('writeup-mitigation');
+
+      if (desc && writeup.description) desc.innerHTML = mdRenderer(writeup.description);
+      if (payload && writeup.payloadAnalysis) payload.innerHTML = mdRenderer(writeup.payloadAnalysis);
+      if (impact && writeup.impact) impact.innerHTML = mdRenderer(writeup.impact);
+      if (mitigation && writeup.mitigation) mitigation.innerHTML = mdRenderer(writeup.mitigation);
+    }
+
+    // =============================================
+    // SCENARIO INITIALIZATION
+    // =============================================
     (function() {
       // Parse query string for scenario id
       const params = new URLSearchParams(window.location.search);
@@ -467,8 +673,11 @@ RECON SCAN  : IDLE</pre>
       // Load scenario via the unified JSON engine
       window.JsonEngine.loadScenario(scId, function(data) {
         window.ScenarioEngine.init(scId, data);
+        // Initialize write-up system after scenario loads
+        window.renderWriteup(data);
       });
     })();
   </script>
+
 </body>
 </html>

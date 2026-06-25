@@ -193,5 +193,80 @@ window.scenario_010 = {
       "race",
       "coupon"
     ]
+  },
+  "writeup": {
+    "description": "ثغرة **Race Condition** تحدث عندما يقوم التطبيق بـ **Check-Then-Act** على بيانات مشتركة بدون قفل ذري (Atomic Lock). التطبيق:\n1. يقرأ حالة الكوبون من DB (`SELECT used FROM coupons WHERE id = X` → `false`)\n2. يُطبّق الخصم\n3. يُحدّث الحالة (`UPDATE coupons SET used = true WHERE id = X`)\n\nبإرسال 30 طلباً متوازياً قبل اكتمال الخطوة 3، تقرأ كل الطلبات القيمة `false` في الخطوة 1 وتمرر جميعها.",
+    "payloadAnalysis": "يستخدم Turbo Intruder تقنية **Single-Packet Attack**: يُرسل كل الطلبات في حزمة TCP واحدة ليصلوا للخادم في نفس اللحظة بالضبط. هذا يُعظّم احتمالية التوازي ويتجاوز حماية Rate Limiting البسيطة.",
+    "impact": "**High** — تأثير مالي مباشر. باستخدام كوبون بقيمة $20,000 مع 30 طلب متوازٍ يمكن الحصول على $600,000 من رصيد الرسوم.",
+    "mitigation": "```sql\n-- PostgreSQL: Atomic update with row-level lock\n-- This prevents race condition at the database level\nUPDATE coupons\nSET used = true, used_at = NOW(), used_by = $account_id\nWHERE coupon_id = $coupon_id\n  AND used = false  -- Atomic check\nRETURNING *;\n\n-- If 0 rows returned -> coupon already used, reject!\n```\n\n```javascript\n// Application-level: Use database transaction + pessimistic lock\nasync function redeemCoupon(couponId, accountId) {\n  return await db.transaction(async (trx) => {\n    // Pessimistic lock - prevents concurrent reads\n    const coupon = await trx('coupons')\n      .where({ id: couponId, used: false })\n      .forUpdate()  // Row-level lock\n      .first();\n    \n    if (!coupon) throw new Error('Coupon already used');\n    \n    await trx('coupons').where({ id: couponId }).update({ used: true });\n    await applyCredit(accountId, coupon.value, trx);\n  });\n}\n```"
+  },
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    if (parsed.method !== 'POST' || !parsed.path.includes('coupons/accept')) {
+      return builder
+        .setStatus(404)
+        .setBody({ error: "Endpoint not found. Use POST /api/coupons/accept" })
+        .setObservabilityLog(`[WARN] Router: Unknown path "${parsed.path}".`)
+        .setOutcome("استخدم POST /api/coupons/accept مع body يحتوي على coupon_id.")
+        .build();
+    }
+
+    const couponId = bodyJson?.coupon_id || '';
+    const accountId = bodyJson?.account_id || '';
+
+    if (!couponId || !accountId) {
+      return builder
+        .setStatus(400)
+        .setBody({ error: "Missing required fields: coupon_id and account_id" })
+        .setObservabilityLog("[WARN] Validation: Missing coupon_id or account_id in request body.")
+        .setOutcome("أضف coupon_id و account_id في الـ JSON body.")
+        .build();
+    }
+
+    // Simulate race condition state using scenarioState
+    if (!window.scenarioState.scenario010) {
+      window.scenarioState.scenario010 = { couponUsedCount: 0, lastReset: Date.now() };
+    }
+
+    const state = window.scenarioState.scenario010;
+
+    // Reset every 60 seconds (new session)
+    if (Date.now() - state.lastReset > 60000) {
+      state.couponUsedCount = 0;
+      state.lastReset = Date.now();
+    }
+
+    // Simulate: First 3 concurrent requests pass (race condition window)
+    if (state.couponUsedCount === 0) {
+      // First normal request - coupon "valid" but not yet locked
+      state.couponUsedCount++;
+      return builder
+        .setStatus(200)
+        .setBody({ status: "success", applied_discount: 20000, message: "Coupon applied successfully", remaining: 0 })
+        .setObservabilityLog("[INFO] Coupon Handler: Received POST /api/coupons/accept\n[INFO] DB Check: SELECT used FROM coupons WHERE id = 'coupon_20k_fees' -> false\n[INFO] DB Update: UPDATE coupons SET used = true WHERE id = 'coupon_20k_fees'\n[INFO] Credit Applied: +$20,000 to account " + accountId + "\n[INFO] Single request: No race detected.")
+        .setOutcome("تم تطبيق الكوبون بنجاح بالطلب الواحد. الآن أرسل طلبات متوازية لاستغلال الـ Race Condition!")
+        .build();
+    } else if (state.couponUsedCount < 3) {
+      // Simulating concurrent race window - multiple requests bypass the check!
+      state.couponUsedCount++;
+      return builder
+        .setStatus(200)
+        .setBody({ status: "success", applied_discount: 20000, message: "Coupon applied successfully (RACE BYPASS)", total_applied: state.couponUsedCount * 20000 })
+        .setCorrect(state.couponUsedCount >= 2)
+        .setEvidence("Race Condition Confirmed", `POST /api/coupons/accept applied ${state.couponUsedCount} times concurrently -> $${(state.couponUsedCount * 20000).toLocaleString()} credits`)
+        .setObservabilityLog(`[INFO] Coupon Handler: Received concurrent request #${state.couponUsedCount}\n[INFO] DB Check: SELECT used FROM coupons WHERE id = 'coupon_20k_fees' -> false (STALE READ - race window!)\n[CRITICAL] Race Condition: Coupon checked as unused while previous update in flight!\n[CRITICAL] DB Update: Applied again! Total credits: $${(state.couponUsedCount * 20000).toLocaleString()}\n[CRITICAL] BUSINESS LOGIC BYPASS CONFIRMED - ${state.couponUsedCount} redemptions processed!`)
+        .setOutcome(`🎯 Race Condition ناجح! الكوبون تم تطبيقه ${state.couponUsedCount} مرة بقيمة $${(state.couponUsedCount * 20000).toLocaleString()} إجمالي. الخادم لم يستخدم Atomic Lock مما سمح بمرور طلبات متعددة في نفس النافذة الزمنية.`)
+        .build();
+    } else {
+      // After a few times, simulate the eventual lock kicking in
+      return builder
+        .setStatus(400)
+        .setBody({ error: "Coupon has already been redeemed.", code: "COUPON_USED" })
+        .setObservabilityLog("[INFO] Coupon Handler: Received late concurrent request.\n[INFO] DB Check: SELECT used FROM coupons WHERE id = 'coupon_20k_fees' -> true\n[INFO] Rejection: Coupon already marked as used. Late request denied.")
+        .setOutcome("هذا الطلب جاء بعد اكتمال التحديث. في هجوم Race Condition الحقيقي، بعض الطلبات تنجح وبعضها يُرفض حسب التوقيت الدقيق.")
+        .build();
+    }
   }
 };

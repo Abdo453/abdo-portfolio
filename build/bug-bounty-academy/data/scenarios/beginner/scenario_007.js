@@ -127,10 +127,10 @@ window.scenario_007 = {
           "name": "Request Env File",
           "correct": true,
           "modifiedRequest": "GET /.env HTTP/1.1\nHost: dev.marketing-tool.com\nUser-Agent: Mozilla/5.0",
-          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: text/plain\n\nDB_USERNAME=admin\nDB_PASSWORD=SuperSecretDBPass123!\nAWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nSTRIPE_SECRET_KEY=sk_live_51H...xxx\nJWT_SECRET=dev-jwt-secret-2024",
+          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: text/plain\n\nDB_USERNAME=admin\nDB_PASSWORD=SuperSecretDBPass123!\nAWS_ACCESS_KEY_ID=EXAMPLE_KEY_EDU_ONLY\nSTRIPE_SECRET_KEY=sk_FAKE_EXAMPLE_EDUCATIONAL_PURPOSE_ONLY\nJWT_SECRET=dev-jwt-secret-2024",
           "evidence": {
             "title": "Leaked Stripe Secret Key",
-            "content": "STRIPE_SECRET_KEY=sk_live_51H...xxx\nDB_PASSWORD=SuperSecretDBPass123!"
+            "content": "STRIPE_SECRET_KEY=sk_FAKE_EXAMPLE_EDUCATIONAL_PURPOSE_ONLY\nDB_PASSWORD=SuperSecretDBPass123!"
           }
         }
       ],
@@ -220,5 +220,110 @@ window.scenario_007 = {
       "git",
       "env"
     ]
+  },
+  "writeup": {
+    "description": "ثغرة **Information Disclosure** تحدث عندما تترك الفرق التطويرية ملفات حساسة في المجلد الرئيسي للخادم. ملف `.env` يحتوي على كل أسرار التطبيق (قواعد بيانات، مفاتيح API، JWT secrets). مجلد `.git` يحتوي على كامل تاريخ الكود المصدري بما فيه كلمات مرور قديمة.",
+    "payloadAnalysis": "الطلب بسيط جداً:\n```\nGET /.env HTTP/1.1\nHost: dev.marketing-tool.com\n```\nلا يتطلب أي مصادقة أو تلاعب. الخادم يقوم بإرجاع الملف مباشرة كنص عادي بسبب عدم وجود قواعد في تكوين الخادم.",
+    "impact": "**High → Critical** — يمكن استخدام `STRIPE_SECRET_KEY` لسحب مبالغ مالية مباشرة من حسابات العملاء. `AWS_ACCESS_KEY_ID` يسمح بالوصول لموارد السحابة الكاملة.",
+    "mitigation": "```nginx\n# Nginx: Block access to dotfiles and sensitive files\nlocation ~ /\\. {\n    deny all;\n    return 404;\n}\n\nlocation ~* (\\.env|\\.git|backup\\.sql|\\.bak) {\n    deny all;\n    return 404;\n}\n```\n\n```bash\n# Add .env and .git to .gitignore\necho '.env' >> .gitignore\necho '.git/' >> .gitignore\n\n# Use environment variables from deployment platform\n# Never commit secrets to version control\ngit rm --cached .env\n```"
+  },
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    // Detect path
+    const path = parsed.path.toLowerCase();
+
+    // /.env file
+    if (path === '/.env' || path.endsWith('/.env')) {
+      return builder
+        .setStatus(200)
+        .setHeader('Content-Type', 'text/plain')
+        .setBody(
+          'APP_NAME=MarketingToolPro\n' +
+          'APP_ENV=development\n' +
+          'DB_HOST=127.0.0.1\n' +
+          'DB_USERNAME=admin\n' +
+          'DB_PASSWORD=SuperSecretDBPass123!\n' +
+          'DB_DATABASE=marketing_prod_db\n' +
+          'AWS_ACCESS_KEY_ID=EXAMPLE_ACCESS_KEY_EDUCATIONAL_ONLY\n' +
+          'AWS_SECRET_ACCESS_KEY=EXAMPLE/SECRET_KEY/EDUCATIONAL_DEMO_ONLY\n' +
+          'STRIPE_SECRET_KEY=sk_FAKE_EXAMPLE_NOT_REAL_EDUCATIONAL_PURPOSE_ONLY\n' +
+          'JWT_SECRET=dev-jwt-secret-key-2024-not-changed\n' +
+          'MAIL_PASSWORD=smtp_pass_marketing_2023'
+        )
+        .setCorrect(true)
+        .setEvidence("Leaked .env Credentials", "STRIPE_SECRET_KEY=sk_FAKE_EXAMPLE_EDUCATIONAL_ONLY\nDB_PASSWORD=SuperSecretDBPass123!\nAWS_ACCESS_KEY_ID=EXAMPLE_KEY_EDU_ONLY")
+        .setObservabilityLog("[INFO] Nginx: Serving static file request for /.env\n[WARN] IDS: Sensitive file path detected in request: /.env\n[CRITICAL] Data Leak: Environment configuration file served without authentication!\n[CRITICAL] Exposed secrets: DB credentials, AWS keys, Stripe live API key\n[INFO] No access control rule matched - file served as plaintext")
+        .setOutcome("تم كشف ملف الـ .env كاملاً! الملف يحتوي على Stripe Live Key وبيانات AWS وكلمة سر قاعدة البيانات. هذا يمثل ثغرة High/Critical فورية.")
+        .build();
+    }
+
+    // /.git/config
+    if (path.includes('.git/config') || path.includes('.git/head')) {
+      return builder
+        .setStatus(200)
+        .setHeader('Content-Type', 'text/plain')
+        .setBody(
+          '[core]\n' +
+          '    repositoryformatversion = 0\n' +
+          '    filemode = true\n' +
+          '    bare = false\n' +
+          '[remote "origin"]\n' +
+          '    url = https://github.com/marketing-tool-org/marketing-pro-internal\n' +
+          '    fetch = +refs/heads/*:refs/remotes/origin/*\n' +
+          '[branch "main"]\n' +
+          '    remote = origin\n' +
+          '    merge = refs/heads/main'
+        )
+        .setCorrect(true)
+        .setEvidence("Exposed .git Repository Config", "Remote URL: https://github.com/marketing-tool-org/marketing-pro-internal\nFull source code potentially accessible via git clone")
+        .setObservabilityLog("[INFO] Nginx: Serving request for /.git/config\n[WARN] IDS: Version control metadata file exposed publicly!\n[CRITICAL] Data Leak: Git repository configuration revealed internal GitHub repo URL.\n[INFO] Attacker can use git-dumper tool to reconstruct full source code history.")
+        .setOutcome("مجلد الـ .git مكشوف! الـ config يكشف رابط الـ GitHub الداخلي. باستخدام أداة git-dumper يمكن استرداد كامل الكود المصدري بما فيه الأسرار التاريخية.")
+        .build();
+    }
+
+    // /backup.sql
+    if (path.includes('backup.sql')) {
+      return builder
+        .setStatus(200)
+        .setHeader('Content-Type', 'application/sql')
+        .setBody(
+          '-- MarketingToolPro Database Backup\n' +
+          '-- Generated: 2024-01-15 03:00:00\n' +
+          '-- WARNING: Contains production data\n\n' +
+          'CREATE TABLE users (\n' +
+          '  id INT PRIMARY KEY,\n' +
+          '  email VARCHAR(255),\n' +
+          '  password_hash VARCHAR(255)\n' +
+          ');\n\n' +
+          'INSERT INTO users VALUES (1, "admin@marketing-tool.com", "$2b$12$examplehash");\n' +
+          'INSERT INTO users VALUES (2, "cto@marketing-tool.com", "$2b$12$examplehash2");\n' +
+          '-- [+] 50,000 user records follow...'
+        )
+        .setCorrect(true)
+        .setEvidence("Database Backup Exposed", "backup.sql contains 50,000 user records including admin credentials and password hashes")
+        .setObservabilityLog("[CRITICAL] Database backup file served publicly without authentication!\n[CRITICAL] File contains 50,000 user records and admin credentials.\n[INFO] File size: 45MB compressed. All production user data exposed.")
+        .setOutcome("تم كشف ملف نسخة قاعدة البيانات الاحتياطية! يحتوي على بيانات 50,000 مستخدم بما فيها كلمات المرور المشفرة والبريد الإلكتروني.")
+        .build();
+    }
+
+    // Normal files
+    if (path === '/' || path.endsWith('/index.html')) {
+      return builder
+        .setStatus(200)
+        .setBody('<html><body>MarketingToolPro - Development Environment</body></html>')
+        .setHeader('Content-Type', 'text/html')
+        .setObservabilityLog("[INFO] Router: Serving index page for dev subdomain.")
+        .setOutcome("صفحة البداية للموقع التطويري. جرب مسارات مثل /.env أو /.git/config أو /backup.sql")
+        .build();
+    }
+
+    return builder
+      .setStatus(404)
+      .setBody({ error: "Not Found" })
+      .setObservabilityLog(`[INFO] Router: File not found at path "${parsed.path}".`)
+      .setOutcome(`المسار "${parsed.path}" غير موجود. حاول /.env أو /.git/config أو /backup.sql`)
+      .build();
   }
 };

@@ -219,5 +219,75 @@ window.scenario_002 = {
       "xss",
       "pdf"
     ]
+  },
+  "writeup": {
+    "description": "ملفات PDF تدعم معيار **Acrobat JavaScript** الذي يسمح بتضمين أكواد JS داخل الملف. معظم قرّاء الـ PDF الحديثة تشغّل هذه الأكواد. حين يعرض Slack ملفات PDF داخل `<iframe>` بنفس الـ origin، يُنفَّذ الكود في سياق `slack.com` مباشرة.",
+    "payloadAnalysis": "الـ payload يتضمن `app.alert(document.domain)` كأمر Acrobat JS. عند تشغيله يُظهر نافذة بعنوان `slack.com` دليلاً على تنفيذ XSS بالـ origin الصحيح. يمكن تطوير الهجوم لسرقة الـ cookies أو الـ session tokens.",
+    "impact": "**High** — يمكن تحويله لـ Account Takeover كامل عبر سرقة token الجلسة أو إعادة استخدام `document.cookie`.",
+    "mitigation": "```nginx\n# Add Content-Security-Policy header\nadd_header Content-Security-Policy \"sandbox allow-scripts allow-forms; default-src 'none';\";\n\n# Force PDF download instead of inline rendering\nadd_header Content-Disposition \"attachment\";\n```\n\n```javascript\n// Server-side: Use PDF sanitizer library\nconst { PDFDocument } = require('pdf-lib');\nasync function sanitizePDF(buffer) {\n  // Strip JavaScript actions from PDF\n  const pdf = await PDFDocument.load(buffer);\n  // Remove OpenAction and AA dictionary entries\n  pdf.catalog.delete(PDFName.of('OpenAction'));\n  pdf.catalog.delete(PDFName.of('AA'));\n  return await pdf.save();\n}\n```"
+  },
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    // Handle PDF file upload
+    if (parsed.method === 'POST' && parsed.path.includes('files.upload')) {
+      // Check if body contains PDF with JavaScript
+      const hasJS = /app\.alert|javascript:|alert\s*\(|document\.cookie|fetch\s*\(/i.test(requestText);
+      const hasPDF = /pdf|%PDF|application\/pdf/i.test(requestText);
+
+      if (!hasPDF) {
+        return builder
+          .setStatus(400)
+          .setBody({ ok: false, error: "invalid_file_type: Only PDF files are accepted in this channel." })
+          .setObservabilityLog("[INFO] File Upload Handler: Received file upload request.\n[WARN] Content-Type validation: Submitted file extension or MIME type is not PDF.\n[INFO] Upload rejected.")
+          .setOutcome("ملف ليس من نوع PDF. استخدم امتداد PDF صحيح وتحقق من نوع المحتوى.")
+          .build();
+      }
+
+      if (hasJS) {
+        return builder
+          .setStatus(200)
+          .setBody({
+            ok: true,
+            file_id: "F12345XSS",
+            url_private: "https://slack.com/files/F12345XSS/view",
+            url_private_download: "https://files.slack.com/files-pri/T01/F12345XSS/xss.pdf",
+            message: "File uploaded successfully"
+          })
+          .setCorrect(true)
+          .setEvidence("Malicious PDF Uploaded", "POST /api/files.upload -> File F12345XSS stored with embedded Acrobat JavaScript")
+          .setObservabilityLog("[INFO] Upload Handler: Received multipart/form-data file upload.\n[INFO] MIME check: application/pdf -> PASS\n[WARN] PDF Content Analyzer: Embedded JavaScript action detected in PDF Catalog.\n[CRITICAL] Security: JavaScript in PDF was NOT sanitized before storage. File stored with ID F12345XSS.\n[INFO] Response: 200 OK - File stored and preview link generated.")
+          .setOutcome("تم رفع الـ PDF الضار بنجاح! المنصة قبلت الملف دون فحص محتوى JavaScript المدمج. الآن اذهب للرابط المرجع لرؤية الـ XSS يتنفذ.")
+          .build();
+      } else {
+        return builder
+          .setStatus(200)
+          .setBody({ ok: true, file_id: "F99999SAFE", url_private: "https://slack.com/files/F99999SAFE/view" })
+          .setObservabilityLog("[INFO] Upload Handler: PDF file received and stored successfully.\n[INFO] No embedded JavaScript detected in document.")
+          .setOutcome("تم رفع الـ PDF بنجاح لكنه لا يحتوي على JavaScript. أضف payload XSS مثل `app.alert(document.domain)` داخل الملف.")
+          .build();
+      }
+    }
+
+    // Handle PDF viewer request
+    if (parsed.method === 'GET' && parsed.path.includes('files/F12345XSS/view')) {
+      return builder
+        .setStatus(200)
+        .setBody('<html><head><script>alert(document.domain);</script></head><body>[PDF Viewer Frame - Executing Embedded Acrobat JS]</body></html>')
+        .setHeader('Content-Type', 'text/html')
+        .setCorrect(true)
+        .setObservabilityLog("[INFO] File Viewer: User accessed file F12345XSS view link.\n[INFO] Renderer: Loading PDF in iframe under origin slack.com\n[CRITICAL] XSS Triggered: Acrobat JavaScript executed: alert(document.domain) -> 'slack.com'\n[CRITICAL] Origin: JavaScript ran under slack.com context - Full XSS Confirmed!")
+        .setOutcome("XSS تنفّذ بنجاح داخل معاين الـ PDF! الكود يعمل تحت origin الموقع مباشرة. هذا يؤكد إمكانية سرقة الـ cookies والـ tokens الحساسة.")
+        .build();
+    }
+
+    // Fallback
+    return builder
+      .setStatus(404)
+      .setBody({ error: "Endpoint not recognized. Use POST /api/files.upload to upload a malicious PDF." })
+      .setObservabilityLog(`[WARN] Router: Unrecognized path "${parsed.path}" for method "${parsed.method}".\n[INFO] Allowed: POST /api/files.upload | GET /files/{id}/view`)
+      .setOutcome("المسار غير صحيح. استخدم POST /api/files.upload لرفع ملف PDF يحتوي على JavaScript.")
+      .build();
   }
 };

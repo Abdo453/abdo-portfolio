@@ -243,5 +243,11 @@ window.scenario_006 = {
       "race",
       "logic"
     ]
+  },
+  "writeup": {
+    "description": "ثغرة **Integer Overflow / Business Logic** تحدث بسبب خطأ في معالجة الأرقام الكبيرة جداً عند التحويل بين أنواع البيانات:\n- قيمة `4294967281` هي `2^32 - 15` وتتجاوز الحد الأقصى للـ `Unsigned 32-bit Integer` (4,294,967,295)\n- عند معالجتها كـ `Signed 32-bit Integer`، تلتف الرياضيات وتصبح القيمة **-15**\n- الـ WAF يفحص وجود علامة الناقص `-` ولكن القيمة الضخمة تتجاوزه بشكل قانوني\n- بسلة تسوق بـ `-15 × $100 = -$1500`، إجمالي السلة يصبح **$0**",
+    "payloadAnalysis": "الـ payload الناجح هو:\n```json\n{\n  \"item_id\": \"9910\",\n  \"quantity\": 4294967281\n}\n```\nالمعادلة الرياضية: `4294967281 - 4294967296 = -15` (wrapping arithmetic)\n\nجدار الحماية (WAF) يفحص فقط علامة الناقص الحرفية `-` ويُخطئ في منع هذا المسار.",
+    "impact": "**Medium-High ($5,000)** — شراء أي منتج بسعر صفر عبر تلاعب حسابي في قيمة الكمية. يؤثر مباشرة على الإيرادات مع كل عملية شراء.",
+    "mitigation": "```python\n# Python: Validate quantity bounds server-side\ndef validate_cart_item(item_id: str, quantity: int) -> bool:\n    # Reject quantities outside safe range\n    MAX_SAFE_QUANTITY = 1000\n    MIN_SAFE_QUANTITY = 1\n    \n    if not (MIN_SAFE_QUANTITY <= quantity <= MAX_SAFE_QUANTITY):\n        raise ValueError(f'Invalid quantity: {quantity}. Must be between 1-{MAX_SAFE_QUANTITY}')\n    \n    return True\n\n# Recalculate total server-side from DB prices (never trust client prices!)\ndef calculate_cart_total(cart_items: list) -> Decimal:\n    total = Decimal('0')\n    for item in cart_items:\n        # Fetch price from DB - NEVER from request body\n        db_item = Product.objects.get(id=item['item_id'])\n        qty = abs(int(item['quantity']))  # Force absolute value\n        total += db_item.price * qty\n    \n    if total < 0:\n        raise ValueError('Cart total cannot be negative')\n    \n    return total\n```"
   }
 };
