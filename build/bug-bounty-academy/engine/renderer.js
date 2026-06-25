@@ -214,10 +214,10 @@ window.Renderer = {
       const div = document.createElement('div');
       div.style.marginBottom = '15px';
       div.innerHTML = `
-        <h4 style="font-family:var(--font-title); font-size:0.92rem; color:var(--text-main); margin-bottom:4px;">💡 Hypothesis: ${log.hypothesis}</h4>
-        <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.5; margin-bottom:4px;"><strong>Why it Failed:</strong> ${log.whyFailed}</p>
-        <p style="font-size:0.85rem; color:var(--accent-green); line-height:1.5; margin-bottom:4px;"><strong>Pivot Path (Plan B):</strong> ${log.planB}</p>
-        <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;"><strong>Ignored leads:</strong> ${log.ignored}</p>
+        <h4 style="font-family:var(--font-title); font-size:0.92rem; color:var(--text-main); margin-bottom:4px;">💡 Hypothesis: <span dir="auto">${log.hypothesis}</span></h4>
+        <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.5; margin-bottom:4px;"><strong>Why it Failed:</strong> <span dir="auto">${log.whyFailed}</span></p>
+        <p style="font-size:0.85rem; color:var(--accent-green); line-height:1.5; margin-bottom:4px;"><strong>Pivot Path (Plan B):</strong> <span dir="auto">${log.planB}</span></p>
+        <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;"><strong>Ignored leads:</strong> <span dir="auto">${log.ignored}</span></p>
       `;
       container.appendChild(div);
     });
@@ -234,9 +234,9 @@ window.Renderer = {
       div.style.marginBottom = '15px';
       div.innerHTML = `
         <div style="display:flex; flex-direction:column; gap:2px;">
-          <span style="font-weight:600; color:var(--critical-red); font-size:0.88rem;"><i class="bx bx-x-circle"></i> Error: ${m.mistake}</span>
-          <span style="font-size:0.82rem; color:var(--text-secondary); padding-left:22px;"><strong>Why it was wrong:</strong> ${m.whyWrong}</span>
-          <span style="font-size:0.82rem; color:var(--accent-green); padding-left:22px;"><strong>Better approach:</strong> ${m.betterWay}</span>
+          <span style="font-weight:600; color:var(--critical-red); font-size:0.88rem;"><i class="bx bx-x-circle"></i> Error: <span dir="auto">${m.mistake}</span></span>
+          <span style="font-size:0.82rem; color:var(--text-secondary); padding-left:22px;"><strong>Why it was wrong:</strong> <span dir="auto">${m.whyWrong}</span></span>
+          <span style="font-size:0.82rem; color:var(--accent-green); padding-left:22px;"><strong>Better approach:</strong> <span dir="auto">${m.betterWay}</span></span>
         </div>
       `;
       container.appendChild(div);

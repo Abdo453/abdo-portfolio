@@ -317,8 +317,8 @@ window.ScenarioEngine = {
     if (analysisText && step.aiAdvisor) {
       analysisText.innerHTML = `
         <div style="margin-bottom:8px;"><strong>Status:</strong> <span class="text-cyan">${step.name === 'Verdict' || step.name === 'Triage & Verdict' ? 'RESOLVED' : 'ACTIVE_DIAGNOSIS'}</span></div>
-        <div style="margin-bottom:8px;"><strong>Payload Logic:</strong> ${step.aiAdvisor.payloadExplanation || 'Analyze parameters to design an exploit.'}</div>
-        <div><strong>Trap Analysis:</strong> ${step.aiAdvisor.failureExplanation || 'Avoid standard fuzzers to bypass firewalls.'}</div>
+        <div style="margin-bottom:8px;"><strong>Payload Logic:</strong> <span dir="auto">${step.aiAdvisor.payloadExplanation || 'Analyze parameters to design an exploit.'}</span></div>
+        <div><strong>Trap Analysis:</strong> <span dir="auto">${step.aiAdvisor.failureExplanation || 'Avoid standard fuzzers to bypass firewalls.'}</span></div>
       `;
     }
 
