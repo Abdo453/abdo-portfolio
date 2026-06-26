@@ -408,6 +408,17 @@
       </button>
       <div class="simulator-title" id="sim-scenario-title">Scenario: Loading data...</div>
       
+      <!-- 🧠 Investigation Confidence Bar -->
+      <div class="confidence-container" style="display: flex; align-items: center; gap: 8px; margin-left: 20px; background: rgba(5,7,12,0.6); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(168, 85, 247, 0.25);">
+        <span style="font-size: 0.7rem; color: #c084fc; font-family: var(--font-title); font-weight: bold; display: flex; align-items: center; gap: 4px;">
+          <i class="bx bx-brain" style="font-size: 0.85rem;"></i> ثقة التحقيق:
+        </span>
+        <div class="confidence-bar-bg" style="width: 80px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+          <div id="confidence-bar-fill" style="width: 10%; height: 100%; background: linear-gradient(90deg, #a855f7, #c084fc); transition: width 0.5s ease-out; box-shadow: 0 0 6px rgba(168,85,247,0.6);"></div>
+        </div>
+        <span id="confidence-percentage-text" style="font-family: var(--font-mono); font-size: 0.7rem; color: #c084fc; font-weight: bold; min-width: 28px;">10%</span>
+      </div>
+      
       <!-- AI Advisor assistant panel toggler -->
       <button class="control-btn" id="ai-advisor-toggle-btn" style="margin-left: auto; border-color: rgba(6, 182, 212, 0.25); color: var(--accent-cyan);">
         <i class="bx bx-bot"></i> Toggle AI Advisor Column
@@ -671,6 +682,9 @@
                 <button class="advisor-tab active" id="atab-advisor" onclick="switchAdvisorTab('advisor')">
                   <i class="bx bx-bot"></i> AI Advisor
                 </button>
+                <button class="advisor-tab" id="atab-notes" onclick="switchAdvisorTab('notes')">
+                  <i class="bx bx-edit-alt"></i> Notes
+                </button>
                 <button class="advisor-tab" id="atab-writeup" onclick="switchAdvisorTab('writeup')">
                   <i class="bx bx-book-content"></i> Write-up
                 </button>
@@ -705,6 +719,17 @@
                   <h4 id="advisor-interactive-title"><i class="bx bx-git-branch text-green"></i> Decision Tree Graph</h4>
                   <div id="advisor-interactive-visual" style="margin-top: 10px;">
                     <!-- Rendered content -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Panel: Investigation Notes -->
+              <div class="advisor-content-scroll hidden" id="advisor-pane-notes">
+                <div class="advisor-card-section">
+                  <h4 style="margin-bottom:8px;"><i class="bx bx-receipt text-purple"></i> Investigation Notes (ملاحظات التحقيق)</h4>
+                  <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px; line-height:1.4;">الأدلة والفرضيات التي تكتشفها وتؤكدها تلقائياً أثناء مسار التحقيق الفعلي:</p>
+                  <div id="investigation-notes-list" style="font-size:0.8rem; line-height:1.6; color:var(--text-secondary); display:flex; flex-direction:column; gap:8px;" dir="rtl">
+                    <!-- Dynamic notes will be appended here -->
                   </div>
                 </div>
               </div>
@@ -902,7 +927,7 @@ MODE        : ACTIVE SANDBOX ENVIRONMENT</pre>
     // =============================================
     function switchAdvisorTab(tabName) {
       // Update tab active states
-      ['advisor', 'writeup', 'community'].forEach(t => {
+      ['advisor', 'writeup', 'community', 'notes'].forEach(t => {
         const btn = document.getElementById(`atab-${t}`);
         const pane = document.getElementById(`advisor-pane-${t}`);
         if (btn) btn.classList.toggle('active', t === tabName);

@@ -42,6 +42,9 @@ window.ScenarioEngine = {
     mindsetPanel: document.getElementById('workspace-mindset-panel'),
     mindsetPanelContent: document.getElementById('mindset-panel-content'),
     investigationLogTimeline: document.getElementById('investigation-log-timeline'),
+    confidenceFill: document.getElementById('confidence-bar-fill'),
+    confidenceText: document.getElementById('confidence-percentage-text'),
+    notesList: document.getElementById('investigation-notes-list'),
     
     // Terminal console pane
     terminal: document.getElementById('console-pane-terminal'),
@@ -430,6 +433,34 @@ window.ScenarioEngine = {
     // Render left sidebar investigation activity log
     if (this.el.investigationLogTimeline) {
       Renderer.renderInvestigationLog(this.el.investigationLogTimeline, this.scenario.steps, idx);
+    }
+
+    // Update Investigation Confidence Bar
+    if (this.el.confidenceFill && this.el.confidenceText) {
+      const confidenceVal = typeof step.confidence !== 'undefined' ? step.confidence : Math.round(10 + (idx / (this.scenario.steps.length - 1)) * 90);
+      this.el.confidenceFill.style.width = confidenceVal + '%';
+      this.el.confidenceText.innerText = confidenceVal + '%';
+    }
+
+    // Update Investigation Notes list
+    if (this.el.notesList) {
+      this.el.notesList.innerHTML = '';
+      let notesHtml = '';
+      for (let i = 0; i <= idx; i++) {
+        const s = this.scenario.steps[i];
+        if (s && s.investigationClue) {
+          notesHtml += `
+            <div style="display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; animation: fadeIn 0.3s ease;">
+              <span style="color: var(--accent-cyan); font-weight: bold; flex-shrink: 0;">✔</span>
+              <span style="color: var(--text-secondary); line-height: 1.4;">${s.investigationClue}</span>
+            </div>
+          `;
+        }
+      }
+      if (notesHtml === '') {
+        notesHtml = '<div style="color: var(--text-muted); font-size: 0.75rem; text-align: center; padding: 10px 0;">لا توجد ملاحظات أو أدلة مسجلة للخطوة الحالية بعد.</div>';
+      }
+      this.el.notesList.innerHTML = notesHtml;
     }
 
     // Switch bottom console pane active tab based on active step workspace
@@ -1145,14 +1176,17 @@ window.ScenarioEngine = {
       const optionCards = Array.from(this.el.quizOptionsList.children);
       optionCards[this.selectedQuizOption].classList.remove('selected');
 
-      if (this.selectedQuizOption === quiz.answer) {
+      const isCorrect = this.selectedQuizOption === quiz.answer;
+      const explanationText = quiz.explanation ? ("\n\n💡 التوضيح المنهجي:\n" + quiz.explanation) : "";
+
+      if (isCorrect) {
         optionCards[this.selectedQuizOption].classList.add('correct');
         ProgressManager.addXP(10);
-        alert("Correct! +10 XP");
+        alert(`✅ إجابة صحيحة! (+10 XP)${explanationText}`);
       } else {
         optionCards[this.selectedQuizOption].classList.add('wrong');
         optionCards[quiz.answer].classList.add('correct');
-        alert(`Wrong response. The correct answer was: ${String.fromCharCode(65 + quiz.answer)}.`);
+        alert(`❌ إجابة خاطئة. الإجابة الصحيحة هي: ${String.fromCharCode(65 + quiz.answer)}.${explanationText}`);
         ProgressManager.logError();
       }
 
