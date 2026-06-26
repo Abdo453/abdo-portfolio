@@ -19,15 +19,115 @@
     :root {
       --header-height: 54px;
       --subheader-height: 52px;
-      --sidebar-width: 240px;
-      --advisor-width: 300px;
+      --sidebar-width: 260px;
+      --advisor-width: 320px;
     }
-    .view-panel {
-      padding: 0;
-      max-width: 100%;
-      height: calc(100vh - var(--header-height));
-      overflow: hidden;
+
+    *, *::before, *::after {
+      box-sizing: border-box !important;
     }
+    html, body {
+      min-height: 100% !important;
+      margin: 0 !important;
+      background: radial-gradient(circle at top right, rgba(6,182,212,0.12), transparent 35%), #020712 !important;
+      color: #e2e8f0 !important;
+      overflow: hidden !important;
+    }
+    body {
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    /* Override global view-panel which uses display:block */
+    .view-panel,
+    .view-panel.active {
+      display: flex !important;
+      flex-direction: column !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      height: calc(100vh - var(--header-height)) !important;
+      overflow: hidden !important;
+    }
+
+    .header-stats {
+      gap: 10px !important;
+      flex-wrap: wrap !important;
+      justify-content: flex-end !important;
+    }
+    .main-split-container {
+      display: grid !important;
+      grid-template-columns: var(--sidebar-width) minmax(0, 1fr) !important;
+      flex: 1 !important;
+      overflow: hidden !important;
+      min-height: 0 !important;
+    }
+    .workspace-body-split {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) var(--advisor-width) !important;
+      flex: 1 !important;
+      overflow: hidden !important;
+      min-height: 0 !important;
+    }
+
+    @media (max-width: 1220px) {
+      .main-split-container {
+        grid-template-columns: 200px minmax(0, 1fr) !important;
+      }
+      .timeline-sidebar {
+        min-width: 200px !important;
+      }
+      .advisor-tab-bar {
+        flex-wrap: wrap !important;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .main-split-container {
+        grid-template-columns: 1fr !important;
+      }
+      .workspace-body-split {
+        grid-template-columns: 1fr !important;
+      }
+      .ai-advisor-panel {
+        display: none !important;
+      }
+      .workspace-body-split.advisor-collapsed {
+        grid-template-columns: 1fr !important;
+      }
+      .simulator-controls {
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        height: auto !important;
+        padding: 12px 16px !important;
+      }
+      .simulator-title {
+        text-align: left !important;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .sidebar-scenario-card,
+      .workspace-header,
+      .workspace-navigation,
+      .console-section-footer {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+      }
+      .simulator-controls {
+        justify-content: center !important;
+      }
+      .control-btn {
+        width: 100% !important;
+      }
+    }
+
+    /* Main content section must fill remaining height */
+    .view-panel.active > main,
+    main.view-panel.active {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
 
     /* ============================================
        HEADER — Slim & Sleek
@@ -128,36 +228,66 @@
     }
 
     /* ============================================
-       SIMULATOR LAYOUT
+       SIMULATOR LAYOUT — fixed to match HTML structure
+       .simulator-layout wraps: simulator-controls + main-split-container
+       .main-split-container is the real grid (sidebar | workspace)
        ============================================ */
     .simulator-layout {
-      display: grid !important;
-      grid-template-columns: var(--sidebar-width) 1fr !important;
+      display: flex !important;
+      flex-direction: column !important;
       height: calc(100vh - var(--header-height) - var(--subheader-height)) !important;
       overflow: hidden !important;
+      flex: 1 !important;
+    }
+    .main-split-container {
+      display: grid !important;
+      grid-template-columns: var(--sidebar-width) 1fr !important;
+      flex: 1 !important;
+      overflow: hidden !important;
+      min-height: 0 !important;
     }
 
     /* ============================================
        LEFT TIMELINE SIDEBAR — Redesigned
        ============================================ */
     .timeline-sidebar {
-      background: #060d1a !important;
-      border-right: 1px solid rgba(6,182,212,0.1) !important;
+      background: rgba(4, 9, 20, 0.95) !important;
+      border-right: 1px solid rgba(6,182,212,0.08) !important;
       padding: 0 !important;
       display: flex !important;
       flex-direction: column !important;
       overflow: hidden !important;
+      backdrop-filter: blur(18px) !important;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.3) !important;
     }
 
     /* Scenario Quick Card */
     .sidebar-scenario-card {
-      background: linear-gradient(145deg, rgba(6,182,212,0.08), rgba(6,182,212,0.03)) !important;
-      border: none !important;
-      border-bottom: 1px solid rgba(6,182,212,0.12) !important;
-      border-radius: 0 !important;
-      padding: 16px !important;
-      margin: 0 !important;
+      background: linear-gradient(145deg, rgba(6,182,212,0.12), rgba(6,182,212,0.02)) !important;
+      border: 1px solid rgba(6,182,212,0.14) !important;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18) inset !important;
+      border-radius: 16px !important;
+      padding: 18px !important;
+      margin: 16px !important;
       flex-shrink: 0 !important;
+    }
+    .metric-row {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+    }
+    .metric-item {
+      min-width: 0 !important;
+    }
+    .company-row {
+      font-size: 0.75rem !important;
+      padding: 10px 12px !important;
+      background: rgba(255,255,255,0.03) !important;
+      border: 1px solid rgba(255,255,255,0.08) !important;
+      border-radius: 12px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
     }
     .sidebar-scenario-card .badge-row {
       margin-bottom: 10px !important;
@@ -518,10 +648,30 @@
     .console-section-footer {
       border-top: 1px solid rgba(6,182,212,0.12) !important;
       background: #04080f !important;
-      height: 200px !important;
+      min-height: 220px !important;
+      max-height: 42vh !important;
       display: flex !important;
       flex-direction: column !important;
       flex-shrink: 0 !important;
+      overflow: hidden !important;
+    }
+    .console-panes-body {
+      height: 100% !important;
+      min-height: 0 !important;
+      overflow: hidden !important;
+    }
+    .console-pane-content {
+      min-height: 0 !important;
+      overflow: hidden !important;
+    }
+    .idle-terminal-layout,
+    .workspace-terminal-wrapper,
+    .workspace-burp-wrapper {
+      min-height: 0 !important;
+    }
+    .workspace-terminal-wrapper,
+    .workspace-burp-wrapper {
+      height: 100% !important;
     }
     .console-tabs-header {
       display: flex !important;
