@@ -6,18 +6,18 @@
   const db = [
     {
       id: "scenario-001",
-      title: "IDOR in API Endpoint - Full User Data Leak",
+      title: "Legacy API Endpoint Investigation",
       realisticTitle: "Shopify Partner Portal — Workspace Data Breach",
       level: "Beginner",
       stars: 2,
-      category: "Authorization",
+      category: "API Security",
       company: "Shopify",
       reward: "$6,500",
       xpReward: 1200,
       time: "30 Min",
       status: "Unlocked",
       solved: false,
-      tags: ["IDOR", "API", "Authorization"]
+      tags: ["API", "Legacy Systems", "Access Control"]
     },
     {
       id: "scenario-002",

@@ -36,6 +36,12 @@ window.ScenarioEngine = {
     choicesGrid: document.getElementById('step-choices'),
     prevBtn: document.getElementById('prev-step-btn'),
     nextBtn: document.getElementById('next-step-btn'),
+    whyBtn: document.getElementById('why-step-btn'),
+    whyPanel: document.getElementById('workspace-why-panel'),
+    whyPanelContent: document.getElementById('why-panel-content'),
+    mindsetPanel: document.getElementById('workspace-mindset-panel'),
+    mindsetPanelContent: document.getElementById('mindset-panel-content'),
+    investigationLogTimeline: document.getElementById('investigation-log-timeline'),
     
     // Terminal console pane
     terminal: document.getElementById('console-pane-terminal'),
@@ -207,6 +213,15 @@ window.ScenarioEngine = {
       }
     });
 
+    if (this.el.whyBtn && this.el.whyPanel) {
+      this.el.whyBtn.addEventListener('click', () => {
+        this.el.whyPanel.classList.toggle('hidden');
+        if (!this.el.whyPanel.classList.contains('hidden')) {
+          this.el.whyPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+    }
+
     this.loadStep(0);
   },
 
@@ -221,31 +236,139 @@ window.ScenarioEngine = {
       `<i class="bx bxs-star" style="color: ${i < stars ? '#f59e0b' : 'rgba(255,255,255,0.1)'}"></i>`
     ).join('');
 
+    const debrief = this.scenario.debrief || {
+      correct: "لقد أتممت الخطوات الأساسية وتابعت التسلسل المنطقي لاستغلال الثغرة بنجاح.",
+      wasted: "محاولة تجربة مدخلات عشوائية أو أدوات فحص آلية ثقيلة دون دراسة بنية التطبيق أولاً.",
+      faster: "البحث عن معلمات الكائنات المباشرة (Direct Object Parameters) في مرحلة مبكرة من الفحص والجمع.",
+      expert: "أتمتة فحص معلمات الصلاحيات لجمع إثبات ضرر واسع النطاق (Massive Leak PoC) لضمان أعلى مكافأة تصنيف حرجة."
+    };
+
+    // Inject custom styling
+    let styleTag = document.getElementById('debrief-custom-styles');
+    if (!styleTag) {
+      styleTag = document.createElement('style');
+      styleTag.id = 'debrief-custom-styles';
+      styleTag.innerHTML = `
+        @keyframes pulseGlow {
+          0% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.4); }
+          50% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.8); }
+          100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.4); }
+        }
+        .debrief-flow-circle {
+          width: 54px;
+          height: 54px;
+          border-radius: 50%;
+          border: 1.5px solid rgba(168, 85, 247, 0.4);
+          background: rgba(5, 7, 12, 0.7);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.65rem;
+          color: #c084fc;
+          font-family: var(--font-mono);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          transition: all 0.3s ease;
+          flex-shrink: 0;
+          text-align: center;
+          line-height: 1.25;
+          cursor: pointer;
+        }
+        .debrief-flow-circle:hover {
+          border-color: var(--accent-cyan);
+          color: var(--accent-cyan);
+          background: rgba(6, 182, 212, 0.1);
+          box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+          transform: translateY(-2px);
+        }
+        .debrief-flow-arrow {
+          color: rgba(168, 85, 247, 0.4);
+          font-size: 1rem;
+          font-weight: bold;
+          user-select: none;
+        }
+      `;
+      document.head.appendChild(styleTag);
+    }
+
     const overlay = document.createElement('div');
     overlay.id = 'completion-overlay';
-    overlay.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;z-index:9999;animation:fadeIn 0.4s ease;`;
+    overlay.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.94);display:flex;align-items:center;justify-content:center;z-index:9999;animation:fadeIn 0.4s ease; overflow-y:auto; padding:20px;`;
     overlay.innerHTML = `
-      <div style="background:var(--bg-card);border:1px solid rgba(6,182,212,0.4);border-radius:16px;padding:48px 40px;max-width:520px;width:90%;text-align:center;box-shadow:0 0 60px rgba(6,182,212,0.15);">
-        <div style="font-size:3.5rem;margin-bottom:12px;">🏆</div>
-        <h2 style="font-family:var(--font-title);color:var(--accent-cyan);font-size:1.6rem;margin-bottom:8px;">Scenario Complete!</h2>
-        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:24px;">You've successfully completed this investigation and filed a report.</p>
-        <div style="display:flex;justify-content:center;gap:4px;margin-bottom:24px;font-size:1.4rem;">${starsHtml}</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;">
-          <div style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:16px;">
-            <div style="font-size:1.4rem;font-weight:700;color:var(--accent-cyan);font-family:var(--font-mono);">+${totalXP.toLocaleString()}</div>
-            <div style="color:var(--text-muted);font-size:0.72rem;text-transform:uppercase;margin-top:2px;">XP Earned</div>
+      <div style="background:var(--bg-card); border:1px solid rgba(168, 85, 247, 0.3); border-radius:16px; padding:32px 28px; max-width:780px; width:100%; box-shadow:0 0 50px rgba(168, 85, 247, 0.12); display:flex; flex-direction:column; gap:20px;" dir="rtl">
+        <div style="text-align:center;">
+          <div style="font-size:2.8rem; margin-bottom:4px;">🧠</div>
+          <h2 style="font-family:var(--font-title); color:#c084fc; font-size:1.6rem; margin-bottom:4px;">Mission Debrief | مراجعة التفكير الأمني</h2>
+          <p style="color:var(--text-muted); font-size:0.8rem; margin:0 0 12px 0;">تحليل المنهجية المتبعة لمطابقتها مع سلوك كبار باحثي الـ Bug Bounty</p>
+          <div style="display:flex; justify-content:center; gap:4px; font-size:1.2rem; margin-bottom:8px;">${starsHtml}</div>
+        </div>
+
+        <!-- Investigation Path Flow Widget -->
+        <div style="background: rgba(5,7,12,0.6); border: 1px solid rgba(168, 85, 247, 0.15); border-radius: 10px; padding: 16px 20px;">
+          <div style="color: var(--accent-cyan); font-size: 0.75rem; font-weight: bold; margin-bottom: 12px; font-family: var(--font-mono); text-align: center; letter-spacing: 0.5px;">
+            INVESTIGATION PATH FLOW (مسار التحقيق الأمني الزمني)
           </div>
-          <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:16px;">
-            <div style="font-size:1.4rem;font-weight:700;color:var(--accent-green);font-family:var(--font-mono);">$${bountyRaw.toLocaleString()}</div>
-            <div style="color:var(--text-muted);font-size:0.72rem;text-transform:uppercase;margin-top:2px;">Bounty Potential</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; position: relative; padding: 5px 0; overflow-x: auto; gap: 8px;" class="debrief-timeline-container">
+            <div class="debrief-flow-circle"><span>Start</span><span style="font-size:0.5rem; opacity:0.6;">البدء</span></div>
+            <span class="debrief-flow-arrow">➔</span>
+            <div class="debrief-flow-circle"><span>Recon</span><span style="font-size:0.5rem; opacity:0.6;">الجمع</span></div>
+            <span class="debrief-flow-arrow">➔</span>
+            <div class="debrief-flow-circle"><span>Endpoint</span><span style="font-size:0.5rem; opacity:0.6;">المسار</span></div>
+            <span class="debrief-flow-arrow">➔</span>
+            <div class="debrief-flow-circle"><span>Hypothesis</span><span style="font-size:0.5rem; opacity:0.6;">الفرضية</span></div>
+            <span class="debrief-flow-arrow">➔</span>
+            <div class="debrief-flow-circle"><span>Testing</span><span style="font-size:0.5rem; opacity:0.6;">الاختبار</span></div>
+            <span class="debrief-flow-arrow">➔</span>
+            <div class="debrief-flow-circle"><span>Exploit</span><span style="font-size:0.5rem; opacity:0.6;">الاستغلال</span></div>
+            <span class="debrief-flow-arrow">➔</span>
+            <div class="debrief-flow-circle"><span>Impact</span><span style="font-size:0.5rem; opacity:0.6;">الأثر</span></div>
+            <span class="debrief-flow-arrow">➔</span>
+            <div class="debrief-flow-circle"><span>Report</span><span style="font-size:0.5rem; opacity:0.6;">التقرير</span></div>
           </div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <button id="comp-next-scenario" class="hunt-btn success-btn" style="width:100%;padding:12px;font-size:0.9rem;">
-            <i class="bx bx-right-arrow-alt"></i> Back to Dashboard
+
+        <!-- 4-Quadrant Mindset Assessment -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div style="background: rgba(34,197,94,0.02); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 14px;">
+            <h4 style="color: var(--accent-green); font-size: 0.82rem; margin: 0 0 6px 0; font-weight:700;"><i class="bx bx-check-circle" style="vertical-align:middle; margin-left:4px;"></i> ما الذي فعلته صحيحاً؟</h4>
+            <p style="font-size: 0.76rem; line-height: 1.5; color: var(--text-secondary); margin:0;" dir="auto">${debrief.correct}</p>
+          </div>
+          
+          <div style="background: rgba(239,68,68,0.02); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 14px;">
+            <h4 style="color: var(--critical-red); font-size: 0.82rem; margin: 0 0 6px 0; font-weight:700;"><i class="bx bx-x-circle" style="vertical-align:middle; margin-left:4px;"></i> أين أضعت وقتاً؟</h4>
+            <p style="font-size: 0.76rem; line-height: 1.5; color: var(--text-secondary); margin:0;" dir="auto">${debrief.wasted}</p>
+          </div>
+
+          <div style="background: rgba(6,182,212,0.02); border: 1px solid rgba(6,182,212,0.15); border-radius: 8px; padding: 14px;">
+            <h4 style="color: var(--accent-cyan); font-size: 0.82rem; margin: 0 0 6px 0; font-weight:700;"><i class="bx bx-bulb" style="vertical-align:middle; margin-left:4px;"></i> ماذا كان بإمكانك اكتشافه أسرع؟</h4>
+            <p style="font-size: 0.76rem; line-height: 1.5; color: var(--text-secondary); margin:0;" dir="auto">${debrief.faster}</p>
+          </div>
+
+          <div style="background: rgba(168,85,247,0.02); border: 1px solid rgba(168,85,247,0.15); border-radius: 8px; padding: 14px;">
+            <h4 style="color: #c084fc; font-size: 0.82rem; margin: 0 0 6px 0; font-weight:700;"><i class="bx bx-award" style="vertical-align:middle; margin-left:4px;"></i> ماذا سيفعل خبير بخبرة 5 سنوات؟</h4>
+            <p style="font-size: 0.76rem; line-height: 1.5; color: var(--text-secondary); margin:0;" dir="auto">${debrief.expert}</p>
+          </div>
+        </div>
+
+        <!-- Reward Potential Stats Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
+          <div style="background:rgba(6,182,212,0.06); border:1px solid rgba(6,182,212,0.15); border-radius:10px; padding:12px; text-align:center;">
+            <div style="font-size:1.3rem; font-weight:700; color:var(--accent-cyan); font-family:var(--font-mono);">+${totalXP.toLocaleString()}</div>
+            <div style="color:var(--text-muted); font-size:0.68rem; text-transform:uppercase; margin-top:2px;">XP نقاط الخبرة المكتسبة</div>
+          </div>
+          <div style="background:rgba(34,197,94,0.06); border:1px solid rgba(34,197,94,0.15); border-radius:10px; padding:12px; text-align:center;">
+            <div style="font-size:1.3rem; font-weight:700; color:var(--accent-green); font-family:var(--font-mono);">$${bountyRaw.toLocaleString()}</div>
+            <div style="color:var(--text-muted); font-size:0.68rem; text-transform:uppercase; margin-top:2px;">Bounty قيمة المكافأة المقدرة</div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex; gap:12px; margin-top: 4px;">
+          <button id="comp-next-scenario" class="hunt-btn success-btn" style="flex:1; padding:12px; font-size:0.85rem; font-weight:bold;">
+            <i class="bx bx-right-arrow-alt" style="vertical-align:middle; margin-left:4px;"></i> العودة للوحة التحكم Dashboard
           </button>
-          <button id="comp-view-profile" class="hunt-btn" style="width:100%;padding:12px;font-size:0.9rem;">
-            <i class="bx bx-user"></i> View My Profile
+          <button id="comp-view-profile" class="hunt-btn" style="flex:1; padding:12px; font-size:0.85rem; font-weight:bold;">
+            <i class="bx bx-user" style="vertical-align:middle; margin-left:4px;"></i> عرض الملف الشخصي
           </button>
         </div>
       </div>
@@ -303,6 +426,11 @@ window.ScenarioEngine = {
     // Render left timeline steps
     const isSolved = ProgressManager.state.solved.includes(this.scenario.metadata.id);
     Renderer.renderTimelineSteps(this.el.timeline, this.scenario.steps, idx, isSolved);
+
+    // Render left sidebar investigation activity log
+    if (this.el.investigationLogTimeline) {
+      Renderer.renderInvestigationLog(this.el.investigationLogTimeline, this.scenario.steps, idx);
+    }
 
     // Switch bottom console pane active tab based on active step workspace
     if (step.workspace === 'recon') {
@@ -450,6 +578,20 @@ window.ScenarioEngine = {
       this.el.markdownBody.innerHTML = MarkdownParser.parse(step.description);
     }
 
+    // Expert Mindset rendering
+    if (step.expertMindset && this.el.mindsetPanel && this.el.mindsetPanelContent) {
+      this.el.mindsetPanel.classList.remove('hidden');
+      this.el.mindsetPanelContent.innerHTML = MarkdownParser.parse(step.expertMindset);
+    }
+
+    // Why Explanation rendering
+    if (step.whyExplanation && this.el.whyBtn && this.el.whyPanelContent) {
+      this.el.whyBtn.style.display = 'inline-flex';
+      this.el.whyPanelContent.innerHTML = MarkdownParser.parse(step.whyExplanation);
+    } else if (this.el.whyBtn) {
+      this.el.whyBtn.style.display = 'none';
+    }
+
     // Dynamic decision log V2
     if (this.scenario.decisionLog && (step.name === "DNS Verification" || step.name === "DNS Check")) {
       this.el.decisionLog.classList.remove('hidden');
@@ -517,6 +659,8 @@ window.ScenarioEngine = {
 
   hideAllWorkspaces() {
     this.el.markdownBody.classList.add('hidden');
+    if (this.el.whyPanel) this.el.whyPanel.classList.add('hidden');
+    if (this.el.mindsetPanel) this.el.mindsetPanel.classList.add('hidden');
     this.el.choicesPanel.classList.add('hidden');
     this.el.terminal.classList.add('hidden');
     this.el.burp.classList.add('hidden');
@@ -694,18 +838,30 @@ window.ScenarioEngine = {
         }
 
         if (result.correct) {
-          alert(result.outcome || "Vulnerability bypassed successfully!");
+          this.showToast("🔓 Vulnerability confirmed! (تم تأكيد الثغرة بنجاح)", "success");
           this.el.nextBtn.disabled = false;
           if (result.evidence) {
             this.addEvidence(result.evidence);
           }
         } else {
-          alert(result.outcome || "Bypass blocked by target security filters.");
-          if (result.timePenalty) {
-            this.timeSpent += result.timePenalty;
-            this.el.stepTimeSpent.innerText = this.timeSpent;
+          // If it is a normal probe (workspace 41, 42, 44 or other normal 404/403 pages), do not penalize.
+          const isNormalProbe = result.responseHeaders.includes("403") || 
+                              result.responseHeaders.includes("404") || 
+                              (result.responseHeaders.includes("200 OK") && requestText.includes("/workspaces/42/"));
+          
+          if (isNormalProbe) {
+            if (result.outcome) {
+              this.showToast(result.outcome, "info");
+            }
+          } else {
+            // It's a real blocked/invalid attack payload (e.g. WAF block or error)
+            alert(result.outcome || "Bypass blocked by target security filters.");
+            if (result.timePenalty) {
+              this.timeSpent += result.timePenalty;
+              this.el.stepTimeSpent.innerText = this.timeSpent;
+            }
+            ProgressManager.logError();
           }
-          ProgressManager.logError();
         }
       });
       this.el.burpActions.appendChild(sendBtn);

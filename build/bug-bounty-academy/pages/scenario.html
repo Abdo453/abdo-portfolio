@@ -446,6 +446,16 @@
           <ul class="timeline-steps" id="timeline-steps-list">
             <!-- Populated dynamically by timeline component -->
           </ul>
+
+          <!-- 🕵️ Investigation Log Card -->
+          <div class="sidebar-scenario-card" id="investigation-log-card" style="margin-top: 20px; border-color: rgba(6, 182, 212, 0.15); background: rgba(5, 7, 12, 0.5); padding: 15px; border-radius: 8px;">
+            <div class="box-header text-cyan" style="border-bottom: 1px solid rgba(6, 182, 212, 0.15); padding-bottom: 6px; margin-bottom: 10px; font-size: 0.8rem; font-weight: 700;">
+              <i class="bx bx-receipt"></i> سجل التحقيق (Investigation Log)
+            </div>
+            <div id="investigation-log-timeline" style="font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
+              <!-- Dynamically populated timeline entries -->
+            </div>
+          </div>
         </aside>
 
         <!-- Right Main Workspace Panel -->
@@ -492,6 +502,22 @@
               <!-- 🔍 Dynamic Markdown Text Render container -->
               <div id="step-content-markdown" class="markdown-body" dir="auto">
                 <!-- Parsed html -->
+              </div>
+
+              <!-- 🧠 EXPERT MINDSET COMPONENT -->
+              <div id="workspace-mindset-panel" class="mindset-box hidden" style="border-color: rgba(16, 185, 129, 0.25); background: rgba(16, 185, 129, 0.02); margin-top: 15px; margin-bottom: 15px;">
+                <div class="box-header text-green" style="border-color: rgba(16, 185, 129, 0.25);"><i class="bx bx-brain"></i> 🧠 Expert Mindset (عقلية الخبير)</div>
+                <div class="box-content" id="mindset-panel-content" style="padding:15px; font-size:0.85rem; line-height:1.55;" dir="auto">
+                  <!-- Dynamic mindset explanation -->
+                </div>
+              </div>
+
+              <!-- 🧠 WHY PANEL COMPONENT -->
+              <div id="workspace-why-panel" class="mindset-box hidden" style="border-color: rgba(168, 85, 247, 0.25); background: rgba(168, 85, 247, 0.02); margin-top: 15px; margin-bottom: 15px;">
+                <div class="box-header text-purple" style="border-color: rgba(168, 85, 247, 0.25);"><i class="bx bx-brain"></i> لماذا نقوم بهذه الخطوة؟ | Why this step?</div>
+                <div class="box-content" id="why-panel-content" style="padding:15px; font-size:0.85rem; line-height:1.55;" dir="auto">
+                  <!-- Dynamic why explanation -->
+                </div>
               </div>
 
               <!-- 🧠 DECISION LOG COMPONENT -->
@@ -745,6 +771,9 @@
           <div class="workspace-navigation">
             <button class="hunt-btn secondary" id="prev-step-btn" disabled>
               <i class="bx bx-chevron-left"></i> Previous Step
+            </button>
+            <button class="hunt-btn secondary" id="why-step-btn" style="display:none; background: rgba(168, 85, 247, 0.08) !important; border-color: rgba(168, 85, 247, 0.25) !important; color: #c084fc !important;">
+              <i class="bx bx-brain"></i> لماذا؟ (Why?)
             </button>
             <button class="hunt-btn" id="next-step-btn" disabled>
               Next Step <i class="bx bx-chevron-right"></i>

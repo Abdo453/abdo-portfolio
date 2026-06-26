@@ -164,6 +164,27 @@ window.Renderer = {
     });
   },
 
+  // 2b. Dynamic Investigation activity log
+  renderInvestigationLog(container, steps, activeIndex) {
+    if (!container) return;
+    container.innerHTML = '';
+    
+    // Render logs for all steps up to the activeIndex
+    for (let i = 0; i <= activeIndex; i++) {
+      const step = steps[i];
+      if (step && step.logEntry) {
+        const timeStr = step.time || '09:00';
+        const entryDiv = document.createElement('div');
+        entryDiv.style.cssText = "display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; font-family: var(--font-mono); font-size: 0.72rem; animation: fadeIn 0.3s ease;";
+        entryDiv.innerHTML = `
+          <span style="color: var(--accent-cyan); font-weight: bold; flex-shrink: 0;">[${timeStr}]</span>
+          <span style="color: var(--text-secondary); word-break: break-word;" dir="auto">${step.logEntry}</span>
+        `;
+        container.appendChild(entryDiv);
+      }
+    }
+  },
+
   // 3. Evidence Locker cards rendering
   renderEvidenceLocker(container, evidence) {
     if (!container) return;
