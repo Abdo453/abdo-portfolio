@@ -56,7 +56,7 @@ window.scenario_001 = {
       "time": "09:15",
       "workspace": "recon",
       "xpReward": 150,
-      "description": "### 🔍 جمع الروابط والأجهزة الفرعية\n\nنحتاج لجمع الروابط والأجهزة الفرعية النشطة أو التاريخية للبحث عن روابط v1 القديمة.\nاختر الأداة المناسبة لتشغيلها من الأسفل.",
+      "description": "### 🔍 جمع الروابط والأجهزة الفرعية\n\nنحتاج لجمع الروابط والأجهزة الفرعية النشطة أو التاريخية للبحث عن روابط v1 القديمة. لا تترك النتائج المهمة وسط ضوضاء المسارات غير المفيدة.\nاختر الأداة المناسبة لتشغيلها من الأسفل.",
       "terminalCommands": [
         {
           "name": "subfinder -d target-app.com -silent",
@@ -75,6 +75,10 @@ window.scenario_001 = {
               "type": "out"
             },
             {
+              "text": "legacy.target-app.com",
+              "type": "out"
+            },
+            {
               "text": "[INF] Subdomain enumeration completed.",
               "type": "success"
             }
@@ -85,7 +89,7 @@ window.scenario_001 = {
           "correct": true,
           "evidence": {
             "title": "Historical API v1 Endpoint",
-            "content": "GET /api/v1/workspaces/{workspace_id}/members\nGET /api/v1/workspaces/{workspace_id}/documents"
+            "content": "GET /api/v1/workspaces/{workspace_id}/members\nGET /api/v1/workspaces/{workspace_id}/documents\nGET /api/v1/workspaces/{workspace_id}/documents/5001/download"
           },
           "output": [
             {
@@ -97,6 +101,14 @@ window.scenario_001 = {
               "type": "out"
             },
             {
+              "text": "https://api.target-app.com/api/profile",
+              "type": "out"
+            },
+            {
+              "text": "https://api.target-app.com/api/settings",
+              "type": "out"
+            },
+            {
               "text": "https://api.target-app.com/api/v1/workspaces/42/members",
               "type": "success"
             },
@@ -105,7 +117,15 @@ window.scenario_001 = {
               "type": "success"
             },
             {
-              "text": "[!] Notice: Detected active legacy API v1 endpoints in history!",
+              "text": "https://api.target-app.com/api/v1/workspaces/43/members",
+              "type": "success"
+            },
+            {
+              "text": "https://api.target-app.com/api/v1/workspaces/43/documents/5001/download",
+              "type": "success"
+            },
+            {
+              "text": "[!] Notice: Detected active legacy API v1 endpoints and noisy routes in history!",
               "type": "success"
             }
           ]
@@ -288,15 +308,25 @@ window.scenario_001 = {
         .build();
     }
 
+    // Handle noisy API routes before evaluating legacy v1 endpoints
+    if (/^\/api\/(profile|settings|messages)/i.test(parsed.path) || /^\/api\/v2\//i.test(parsed.path)) {
+      return builder
+        .setStatus(404, "Not Found")
+        .setBody({ error: "Resource not available or accessible." })
+        .setObservabilityLog(`[INFO] API Router: Received request for noisy or modern endpoint "${parsed.path}".\n[INFO] Legacy router ignores this traffic.`)
+        .setOutcome("هذا المسار غير مفيد للاختبار الحالي. ركز على المسارات القديمة في /api/v1/workspaces/...")
+        .build();
+    }
+
     // Check GET request paths
-    const match = parsed.path.match(/^\/api\/v1\/workspaces\/(\d+)\/(members|documents\/5001\/download)/i);
+    const match = parsed.path.match(/^\/api\/v1\/workspaces\/(\d+)\/(members|documents(?:\/5001\/download)?)$/i);
 
     if (!match) {
       return builder
         .setStatus(404, "Not Found")
         .setBody({ error: "Endpoint not found or method not allowed on this path." })
-        .setObservabilityLog(`[WARN] API Router: Route matching failed for request path "${parsed.path}".\n[INFO] Allowed paths: GET /api/v1/workspaces/{workspace_id}/members`)
-        .setOutcome("تأكد من كتابة المسار الصحيح للـ API في طلب الـ GET. المسار المطلوب هو /api/v1/workspaces/43/members")
+        .setObservabilityLog(`[WARN] API Router: Route matching failed for request path "${parsed.path}".\n[INFO] Allowed paths: GET /api/v1/workspaces/{workspace_id}/members, /documents, or /documents/5001/download`)
+        .setOutcome("المسار غير صحيح أو غير مدعوم في هذا السيناريو. استخدم مسار /api/v1/workspaces/{workspace_id}/members أو /documents أولاً.")
         .build();
     }
 
@@ -304,16 +334,35 @@ window.scenario_001 = {
     const subRoute = match[2];
 
     if (workspaceId === 42) {
+      const body = { workspace_id: 42 };
+      if (subRoute === 'members') {
+        body.members = [
+          { user_id: 1337, email: "attacker@example.com", role: "member" }
+        ];
+      } else {
+        body.documents = [
+          { doc_id: 5001, title: "Q4 Financial Report", created_by: 1337 }
+        ];
+      }
       return builder
         .setStatus(200)
-        .setBody({
-          workspace_id: 42,
-          members: [
-            { user_id: 1337, email: "attacker@example.com", role: "member" }
-          ]
-        })
-        .setObservabilityLog(`[INFO] API Router: Routing legacy v1 request\n[INFO] Auth Handler: Bearer token validated for User_ID: 1337\n[INFO] Authz Check: User is member of workspace 42. Access granted.\n[INFO] Data Controller: Returning workspace membership details.`)
-        .setOutcome("تم طلب بيانات مساحة عملك الحالية (42). لتأكيد وجود ثغرة IDOR، حاول تعديل المعرف إلى مساحة عمل أخرى لا تنتمي إليها (مثلاً 43).")
+        .setBody(body)
+        .setObservabilityLog(`[INFO] API Router: Routing legacy v1 request.\n[INFO] Auth Handler: Bearer token validated for User_ID: 1337.\n[INFO] Authz Check: User is member of workspace 42. Access granted.\n[INFO] Data Controller: Returning workspace details for workspace 42.`)
+        .setOutcome("تم طلب بيانات مساحة عملك الحالية (42). لتأكيد وجود ثغرة IDOR، حاول تغيير المعرف إلى مساحة عمل أخرى (مثلاً 43).")
+        .build();
+    } else if (workspaceId === 41) {
+      return builder
+        .setStatus(403, "Forbidden")
+        .setBody({ error: "Access denied to workspace 41." })
+        .setObservabilityLog(`[WARN] API Router: Access denied for workspace 41.\n[INFO] Auth Handler: Bearer token validated, but no membership found.`)
+        .setOutcome("مساحة العمل 41 تمنع الوصول، مما يشير إلى أن ليس كل تغيير معرف يؤدي إلى ثغرة.")
+        .build();
+    } else if (workspaceId === 44) {
+      return builder
+        .setStatus(404, "Not Found")
+        .setBody({ error: "Workspace 44 not found." })
+        .setObservabilityLog(`[INFO] API Router: Workspace 44 not found.\n[INFO] Legacy router returned 404.`)
+        .setOutcome("المساحة 44 غير موجودة. حاول مسارات أو أرقام معرفات أكثر صلة.")
         .build();
     } else if (workspaceId === 43) {
       if (subRoute === "members") {
@@ -330,9 +379,24 @@ window.scenario_001 = {
             ]
           })
           .setCorrect(true)
-          .setObservabilityLog(`[INFO] API Router: Routing legacy v1 request\n[INFO] Auth Handler: Bearer token validated for User_ID: 1337\n[WARN] Authz Check: Missing authorization check between User: 1337 and Workspace: 43\n[CRITICAL] Data Leakage: User: 1337 successfully accessed private data of Workspace: 43 (IDOR)!`)
+          .setObservabilityLog(`[INFO] API Router: Routing legacy v1 request.\n[INFO] Auth Handler: Bearer token validated for User_ID: 1337.\n[WARN] Authz Check: Missing authorization check between User: 1337 and Workspace: 43.\n[CRITICAL] Data Leakage: User: 1337 successfully accessed private data of Workspace: 43 (IDOR)!`)
           .setOutcome("تجاوزت صلاحيات الوصول بنجاح! السيرفر لم يتحقق من ملكيتك لمساحة العمل 43 وقام بإرجاع بيانات الأعضاء والملفات السرية.")
           .setEvidence("IDOR Leak Workspace 43", `GET /api/v1/workspaces/43/members -> Leaks Workspace Members & Documents`)
+          .build();
+      } else if (subRoute === 'documents') {
+        return builder
+          .setStatus(200)
+          .setBody({
+            workspace_id: 43,
+            documents: [
+              { doc_id: 5001, title: "Q4 Financial Report", created_by: 999 },
+              { doc_id: 5002, title: "Employee Payroll", created_by: 999 }
+            ]
+          })
+          .setCorrect(true)
+          .setObservabilityLog(`[INFO] API Router: Routing legacy v1 request.\n[INFO] Auth Handler: Bearer token validated for User_ID: 1337.\n[WARN] Authz Check: Missing authorization check between User: 1337 and Workspace: 43.\n[CRITICAL] Data Leakage: User: 1337 successfully accessed document metadata for Workspace: 43 (IDOR)!`)
+          .setOutcome("تم الوصول إلى قائمة المستندات لworkspace 43 بدون صلاحية مناسبة. هذا يؤكد وجود تسريب IDOR في API القديم.")
+          .setEvidence("IDOR Leak Workspace 43 Documents", `GET /api/v1/workspaces/43/documents -> Leaks Document Metadata`)
           .build();
       } else {
         return builder
@@ -343,7 +407,7 @@ window.scenario_001 = {
             download_url: "/api/v1/workspaces/43/documents/5001/download?token=..."
           })
           .setCorrect(true)
-          .setObservabilityLog(`[INFO] API Router: Routing download request\n[INFO] Auth Handler: Bearer token validated\n[WARN] Authz Check: Missing access control on document download.\n[CRITICAL] Data Leakage: Downloaded sensitive Q4 Financial Report (doc_id: 5001).`)
+          .setObservabilityLog(`[INFO] API Router: Routing download request.\n[INFO] Auth Handler: Bearer token validated.\n[WARN] Authz Check: Missing access control on document download.\n[CRITICAL] Data Leakage: Downloaded sensitive Q4 Financial Report (doc_id: 5001).`)
           .setOutcome("تم الوصول إلى رابط التحميل بنجاح! هذا يؤكد إمكانية تسريب المستندات الحساسة بالكامل.")
           .build();
       }
@@ -353,8 +417,8 @@ window.scenario_001 = {
         .setBody({
           error: `Workspace ${workspaceId} not found or access denied.`
         })
-        .setObservabilityLog(`[INFO] API Router: Routing request to workspace ${workspaceId}\n[WARN] Authz Check: Access denied. Workspace either does not exist or user has no relations.`)
-        .setOutcome(`مساحة العمل ${workspaceId} غير صالحة أو لا تحتوي على بيانات مفيدة للاستغلال. حاول استهداف المعرف الخاص بالمدراء والمالية وهو 43.`)
+        .setObservabilityLog(`[INFO] API Router: Routing request to workspace ${workspaceId}.\n[WARN] Authz Check: Access denied. Workspace either does not exist or user has no relations.`)
+        .setOutcome(`مساحة العمل ${workspaceId} غير صالحة أو لا تحتوي على بيانات مفيدة للاستغلال. حاول استهداف معرفات أكثر احتمالاً، مثل 43.`)
         .build();
     }
   }

@@ -649,6 +649,7 @@ window.ScenarioEngine = {
       
       sendBtn.addEventListener('click', () => {
         const requestText = this.el.burpReq.innerText || this.el.burpReq.textContent || '';
+        const parsedRequest = window.HttpRequestParser.parse(requestText);
         
         // Extract JSON body
         let bodyJson = null;
@@ -675,7 +676,8 @@ window.ScenarioEngine = {
 
         // Print observability log on screen and console
         if (logsView && result.observabilityLog) {
-          logsView.innerText = `[INFO] Request received: POST /api/cart/add\n${result.observabilityLog}`;
+          const requestLine = `${parsedRequest.method || 'REQUEST'} ${parsedRequest.path || '(unknown path)'}`;
+          logsView.innerText = `[INFO] Request received: ${requestLine}\n${result.observabilityLog}`;
           
           if (logsPane) {
             if (result.correct) {
