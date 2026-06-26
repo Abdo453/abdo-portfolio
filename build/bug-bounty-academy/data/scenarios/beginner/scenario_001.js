@@ -39,238 +39,260 @@ window.scenario_001 = {
     }
   ],
   "steps": [
-    {
-      "name": "How a Real Bug Hunter Thinks",
-      "time": "09:00",
-      "workspace": "markdown",
-      "xpReward": 100,
-      "description": "### 🎯 سيناريو الهدف: ما خلفه المطورون وراءهم\n\n* **الشركة المستهدفة**: Shopify Partner Portal\n* **الميزة**: إدارة مساحات العمل للشركاء (Workspaces)\n* **الإصدار القديم**: `/api/v1`\n* **الإصدار الجديد**: `/api/v2`\n\n---\n\n### 🔍 لماذا نهتم بالإصدارات القديمة (Legacy APIs)؟\n\nأثناء عملية تطوير البرمجيات، تقوم الشركات بترقية أنظمتها وإصدار نسخ جديدة من واجهات البرمجية (مثل الانتقال من `v1` إلى `v2`). ولكن في كثير من الأحيان، **يترك المطورون الإصدار القديم `v1` نشطاً في الخلفية** لتجنب تعطيل التطبيقات القديمة التي تعتمد عليه.\n\nهنا يكمن المنجم الذهبي للباحث الأمني! الإصدار الجديد `v2` قد يكون محمياً بالكامل ومبرمجاً بأحدث المعايير الأمنية، بينما الإصدار القديم `v1` قد يحتوي على ثغرات قاتلة تم نسيانها وإهمال تحديثها.\n\n> **🧠 Expert Thinking | كيف يفكر باحث الـ Bug Bounty المحترف؟**\n> الباحث الذكي لا يستسلم عند رؤية نظام حماية قوي في الإصدار الحالي. بل يسأل نفسه دائماً:\n> * هل هناك إصدار قديم لا يزال يستقبل الطلبات؟\n> * هل تم تطبيق نفس ضوابط الصلاحيات (Authorization) على جميع الإصدارات؟\n> * إذا وجدنا `/api/v2/workspaces` تعمل بأمان، فلنبحث عن `/api/v1/workspaces`.\n\n---\n\n### 💡 لماذا نتوقع ثغرة IDOR هنا؟\n\nثغرة **IDOR (Insecure Direct Object Reference)** تحدث عندما يثق الخادم بمعرف الكائن المرسل من المستخدم (مثل `workspace_id=42`) ويقوم بجلب البيانات مباشرة دون التحقق من أن المستخدم يمتلك هذا المورد فعلاً.\n\nبما أن النظام يعتمد على معرفات تسلسلية رقمية، فهذا يعني أنه يمكننا تخمين المعرفات بسهولة.\n\n```text\nالعميل (المهاجم) ─────[ GET /api/v1/workspaces/42 ]─────> خادم الـ API القديم\n                                                                │ (يتحقق من الهوية ولكن ليس الصلاحية)\n                                                                ▼\n                                                            قاعدة البيانات ───> إرجاع بيانات مساحات عمل الآخرين!\n```\n\n---\n\n### ❓ سؤال للتفكير قبل البدء:\nإذا كان معرف مساحة العمل الخاصة بك هو `42`، وتعرف أن هناك مساحات عمل أخرى معرفاتها تسلسلية (مثل `43` أو `44`)، ماذا تتوقع أن يحدث عند تغيير الرقم في الطلب المرسل إلى `/api/v1/workspaces/`؟\n\nاضغط على **Next Step** للانتقال إلى مرحلة جمع المعلومات (Recon) والتحقق من وجود الإصدار القديم.",
-      "aiAdvisor": {
-        "hint": "اقرأ قواعد الفحص بعناية ثم انطلق للخطوة التالية.",
-        "payloadExplanation": "لا يوجد استغلال مطلوب في هذه الخطوة الأولى.",
-        "failureExplanation": "لا يمكن الفشل في هذه الخطوة التمهيدية."
+  {
+    "name": "How a Real Bug Hunter Thinks",
+    "time": "09:00",
+    "workspace": "markdown",
+    "xpReward": 100,
+    "description": "### 🎯 الهدف من هذه الخطوة:\nفهم بيئة الهدف، وتحديد الثغرة المحتملة في الأنظمة القديمة.\n\n---\n\n### 📖 خلفية الشركة وسياق القصة\n\nأنت تعمل كباحث أمني (Security Researcher) مشارك في برنامج **Shopify Bug Bounty**.\n\nأطلق فريق تطوير منصة الشركاء مؤخراً إصداراً جديداً كلياً من واجهة البرمجية (API) لإدارة الملفات والملفات الشخصية وهو الإصدار `/api/v2` وهو محمي بالكامل ويتحقق من صلاحية المستخدم وعلاقته بكل مورد يطلبه بدقة.\n\nولكن، تسربت شائعات ومعلومات تاريخية تفيد بأن الإصدار القديم `/api/v1` لا يزال نشطاً في الخلفية ولم يتم إيقافه بالكامل من قبل المطورين لتجنب تعطيل بعض البرمجيات القديمة للشركاء.\n\n> **🧠 كيف يفكر الباحث الأمني؟ | فلسفة المنهجية الأحدث**\n> باحث الـ Bug Bounty المحترف لا يتوقف عند رؤية إصدار محمي بالكامل. بل يبحث دائماً عن الأبواب الخلفية والنسخ المتروكة (Legacy Endpoints). الإصدارات القديمة غالباً ما يتم إهمال تحديثها وتفقد تدابير الحماية الحديثة.\n> هدفنا الأساسي اليوم هو الإجابة عن السؤال التالي: **هل هناك بيانات سرية لشركاء آخرين يمكننا الوصول إليها بدون امتلاك صلاحيات، من خلال هذا الإصدار القديم؟**\n\n---\n\n### ❓ سؤال تفاعلي لتنشيط التفكير:\nما هو المفهوم الجوهري لثغرة **IDOR (Insecure Direct Object Reference)**؟",
+    "choices": [
+      {
+        "text": "أ) عدم استخدام تشفير قوي لنقل البيانات عبر بروتوكول HTTPS.",
+        "correct": false,
+        "xp": -10,
+        "timePenalty": 5,
+        "outcome": "غير صحيح. هذا يتعلق بأمن قنوات الاتصال والتشفير وليس بالصلاحيات."
+      },
+      {
+        "text": "ب) اعتماد الخادم على معرّف يرسله المستخدم للوصول للمورد دون التحقق من صلاحيته له.",
+        "correct": true,
+        "xp": 50,
+        "outcome": "أحسنت! هذا هو المفهوم الجوهري لـ IDOR؛ السيرفر يثق بالرقم المرسل منه ويسلم المورد دون التأكد من أحقيته."
+      },
+      {
+        "text": "ج) إرسال كميات هائلة من الطلبات لإغراق السيرفر وتعطيله.",
+        "correct": false,
+        "xp": -5,
+        "timePenalty": 2,
+        "outcome": "غير صحيح. هذا هجوم حجب الخدمة DoS."
       }
-    },
-    {
-      "name": "Recon and Information Gathering",
-      "time": "09:15",
-      "workspace": "recon",
-      "xpReward": 150,
-      "description": "### 🔍 ما هو الـ Recon ولماذا هو خطوتنا الأولى؟\n\nمرحلة **جمع المعلومات (Recon)** هي ما يفرق بين الهجوم العشوائي والهجوم المنظم. نحن لا نهاجم بشكل أعمى، بل نكتشف خريطة الموقع أولاً.\n\nهدفنا في هذه الخطوة هو العثور على أي أثر للمسار القديم `/api/v1/` الذي تم أرشفته أو تركه نشطاً في خوادم الشركة.\n\n> **🧠 Expert Thinking | لماذا نستخدم Waybackurls تحديداً؟**\n> متصفحك يرى فقط الروابط التي يعرضها الموقع حالياً. ولكن أداة `waybackurls` تبحث في أرشيفات الويب التاريخية (مثل Wayback Machine) وتجلب جميع الروابط التي زارها المستخدمون أو تم فهرستها طوال السنوات الماضية.\n> هذا يتيح لنا العثور على روابط مخفية أو قديمة لا يمكن الوصول إليها من خلال تصفح الموقع العادي اليوم.\n\n---\n\n### 🛠️ تشغيل الأداة:\nابحث في الأدوات المتاحة بالأسفل لتشغيل الأداة المناسبة لجلب الروابط المؤرشفة لـ `target-app.com`.",
-      "terminalCommands": [
-        {
-          "name": "subfinder -d target-app.com -silent",
-          "correct": false,
-          "output": [
-            {
-              "text": "[INF] Enumerating subdomains for target-app.com",
-              "type": "info"
-            },
-            {
-              "text": "www.target-app.com",
-              "type": "out"
-            },
-            {
-              "text": "api.target-app.com",
-              "type": "out"
-            },
-            {
-              "text": "legacy.target-app.com",
-              "type": "out"
-            },
-            {
-              "text": "[INF] Subdomain enumeration completed.",
-              "type": "success"
-            }
-          ]
-        },
-        {
-          "name": "waybackurls target-app.com",
-          "correct": true,
-          "evidence": {
-            "title": "Historical API v1 Endpoint",
-            "content": "GET /api/v1/workspaces/{workspace_id}/members\nGET /api/v1/workspaces/{workspace_id}/documents\nGET /api/v1/workspaces/{workspace_id}/documents/5001/download"
-          },
-          "output": [
-            {
-              "text": "https://api.target-app.com/api/v2/auth/login",
-              "type": "out"
-            },
-            {
-              "text": "https://api.target-app.com/api/v2/workspaces/active",
-              "type": "out"
-            },
-            {
-              "text": "https://api.target-app.com/api/profile",
-              "type": "out"
-            },
-            {
-              "text": "https://api.target-app.com/api/settings",
-              "type": "out"
-            },
-            {
-              "text": "https://api.target-app.com/api/v1/workspaces/42/members",
-              "type": "success"
-            },
-            {
-              "text": "https://api.target-app.com/api/v1/workspaces/42/documents",
-              "type": "success"
-            },
-            {
-              "text": "https://api.target-app.com/api/v1/workspaces/43/members",
-              "type": "success"
-            },
-            {
-              "text": "https://api.target-app.com/api/v1/workspaces/43/documents/5001/download",
-              "type": "success"
-            },
-            {
-              "text": "[!] Notice: Detected active legacy API v1 endpoints and noisy routes in history!",
-              "type": "success"
-            }
-          ]
-        }
-      ],
-      "aiAdvisor": {
-        "hint": "شغّل أمر waybackurls للبحث عن مسارات قديمة تم أرشفتها مسبقاً.",
-        "payloadExplanation": "يقوم waybackurls بجلب جميع الروابط التاريخية المؤرشفة للموقع من خوادم الأرشيف.",
-        "failureExplanation": "عدم فحص الروابط التاريخية سيحرمك من اكتشاف مسارات API القديمة المتروكة."
-      }
-    },
-    {
-      "name": "IDOR Hypothesis",
-      "time": "09:40",
-      "workspace": "markdown",
-      "xpReward": 150,
-      "description": "### 💡 بناء الفرضية الأمنية (Hypothesis Building)\n\nبعد تشغيل الأداة في الخطوة السابقة، اكتشفنا وجود هذا المسار التاريخي النشط:\n`GET /api/v1/workspaces/42/members`\n\n#### تحليل المسار:\n* `GET`: طلب لقراءة واسترجاع البيانات.\n* `/api/v1/`: تأكيد وجود الإصدار القديم المنسي!\n* `/workspaces/42/`: معرف رقمي تسلسلي ومباشر (Direct Object Reference).\n* `/members`: طلب جلب أعضاء مساحة العمل.\n\n> **🧠 Expert Thinking | لماذا نبدأ باختبار تغيير المعرّف مباشرة؟**\n> الباحث الأمني يبدأ دائماً بالاختبارات الأبسط والأكثر منطقية قبل الانتقال للتقنيات المعقدة. \n> وجود معرف تسلسلي مثل `42` يطرح فوراً الفرضية التالية:\n> *\"هل إذا قمت بتغيير المعرّف يدوياً إلى مساحة عمل أخرى (مثل `43`) سيقوم الخادم بالتحقق من علاقتي بها، أم سيتجاهل ذلك ويرسل لي البيانات فوراً؟\"*\n\n---\n\n### ❓ سؤال الفرضية:\nاختر المنهجية الأصح للتحقق من هذه الفرضية دون إحداث فوضى في السيرفر.",
-      "choices": [
-        {
-          "text": "أ) محاولة إرسال هجمات SQL Injection في معامل البحث الرئيسي.",
-          "correct": false,
-          "xp": -10,
-          "timePenalty": 5,
-          "outcome": "طلب البحث لا علاقة له بثغرة المعرفات المباشرة IDOR."
-        },
-        {
-          "text": "ب) إرسال طلب للحصول على أعضاء مساحتنا (42) ثم تعديل المعرف إلى رقم آخر تسلسلي (43) لمعرفة ما إذا كان الخادم يرجع البيانات.",
-          "correct": true,
-          "xp": 50,
-          "outcome": "تخمين رائع! بما أن المعرفات تسلسلية (Sequential IDs)، فإن تغيير الرقم هو الطريقة الكلاسيكية لفحص ثغرات IDOR."
-        },
-        {
-          "text": "ج) محاولة تعديل الـ JWT Header لحذف خوارزمية التوقيع.",
-          "correct": false,
-          "xp": -5,
-          "timePenalty": 2,
-          "outcome": "هذا اختبار لثغرات JWT وليس IDOR مباشرة."
-        }
-      ],
-      "aiAdvisor": {
-        "hint": "اختر الخيار (ب) لتجربة تعديل المعرف التسلسلي مباشرة.",
-        "payloadExplanation": "فحص المعرفات التسلسلية هو جوهر فحص ثغرات الـ IDOR.",
-        "failureExplanation": "اختيار مسارات معقدة قبل فحص المتغيرات البسيطة يضيع الوقت."
-      }
-    },
-    {
-      "name": "Burp Verification",
-      "time": "10:05",
-      "workspace": "burp",
-      "xpReward": 200,
-      "description": "### 🌐 لماذا نستخدم Burp Suite بدلاً من المتصفح؟\n\nالمتصفحات العادية مبنية لعرض صفحات الويب للمستخدم العادي، وهي مجبرة على اتباع القواعد التي يحددها مطورو الموقع. لا يمكنك كتابة طلب مخصص أو تعديل معاملات الطلب (Parameters) بشكل حر أثناء إرسالها.\n\nأداة **Burp Suite** تعمل كـ **Proxy** (وكيل اعتراض) يقف في المنتصف بين متصفحك والسيرفر. تتيح لك اعتراض الطلب، وتعديل أي قيمة فيه بالكامل، ثم إرساله إلى السيرفر.\n\n```text\n المتصفح (Browser)\n        │\n        │ (طلب طبيعي لمساحتك: workspace_id=42)\n        ▼\n البروكسي (Burp Suite) ────[ نقوم بتعديل القيمة يدوياً: workspace_id=43 ]\n        │\n        │ (طلب معدل)\n        ▼\n   الخادم (Server) ────> يرجع بيانات الضحية (الشركة المستهدفة)\n```\n\n> **🧠 Expert Thinking | سر نجاح هجوم الـ IDOR**\n> في هذا الطلب، نحن نملك رمز مصادقة (Bearer Token) صالح وموقع وصحيح لـ `user_id: 1337`.\n> عندما نغير المعرف لـ `43` ونرسله، سيقوم الخادم بالتحقق من الـ Token ويجد أنه صالح، ولكن إذا كان السيرفر ضعيفاً، **فلن يتحقق** مما إذا كان صاحب هذا التوكن (1337) مسموح له برؤية مساحة العمل (43). هذا هو الخلل الأمني!\n\n---\n\n### 🛠️ التحقق العملي:\nانظر إلى الطلب في نافذة Burp بالأسفل. قم بتعديل المعرف من `42` إلى `43` في عنوان الطلب، ثم اضغط على زر **Verify IDOR** لمشاهدة النتيجة.",
-      "burpRequest": "GET /api/v1/workspaces/42/members HTTP/1.1\nHost: api.target-app.com\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\nAccept: application/json",
-      "burpResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"workspace_id\": 42,\n  \"members\": [\n    {\"user_id\": 1337, \"email\": \"attacker@example.com\", \"role\": \"member\"}\n  ]\n}",
-      "burpActions": [
-        {
-          "name": "Verify IDOR",
-          "correct": true,
-          "modifiedRequest": "GET /api/v1/workspaces/43/members HTTP/1.1\nHost: api.target-app.com\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\nAccept: application/json",
-          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"workspace_id\": 43,\n  \"members\": [\n    {\"user_id\": 999, \"email\": \"ceo@target-company.com\", \"role\": \"admin\"},\n    {\"user_id\": 998, \"email\": \"finance@target-company.com\", \"role\": \"member\"}\n  ],\n  \"documents\": [\n    {\"doc_id\": 5001, \"title\": \"Q4 Financial Report\", \"created_by\": 999}\n  ]\n}",
-          "evidence": {
-            "title": "IDOR Leak Workspace 43",
-            "content": "GET /api/v1/workspaces/43/members -> Leaks Workspace Members & Documents"
-          }
-        }
-      ],
-      "aiAdvisor": {
-        "hint": "اضغط على زر Verify IDOR لتعديل معرف مساحة العمل إلى 43.",
-        "payloadExplanation": "الطلب المعدل يطلب بيانات مساحة عمل لا تنتمي للمهاجم.",
-        "failureExplanation": "إذا لم تقم بتعديل المعرف، فلن تتمكن من تأكيد الثغرة."
-      }
-    },
-    {
-      "name": "Exploitation & Flag",
-      "time": "10:30",
-      "workspace": "lab",
-      "xpReward": 300,
-      "description": "### 💥 استغلال الثغرة وتصعيد الأثر الأمني (Escalation)\n\nرائع! لقد أثبتنا وجود IDOR في قائمة الأعضاء، ورأينا في استجابة السيرفر وجود ملف مالي حساس باسم `Q4 Financial Report` ويحمل المعرف `doc_id = 5001`.\n\nفي عالم الـ Bug Bounty، إثبات أثر تسريب قائمة الأعضاء قد يعتبره العميل ثغرة متوسطة (Medium). ولكن باحث الـ Bug Bounty المحترف يبحث دائماً عن **تصعيد الأثر (Escalation)** ليبرهن على خطورة حقيقية ويحصل على مكافأة أعلى.\n\n> **🧠 Expert Thinking | كيف نصعد الأثر هنا؟**\n> سنفحص ما إذا كان مسار تحميل المستندات يعاني من نفس الخلل الأمني (IDOR).\n> سنحاول استدعاء مسار تحميل الملف مباشرة للمستند الحساس التابع للضحية:\n> `GET /api/v1/workspaces/43/documents/5001/download`\n> إذا نجح التحميل وقرأنا محتويات الملف الحساس، فهذا يثبت تسريباً كاملاً للمستندات السرية، مما يرفع الثغرة إلى مستوى خطورة **Critical** (حرجة جداً).\n\n---\n\n### 🛠️ استخراج العلم (Flag):\nاستخدم مسار التحميل الموضح في لوحة التحكم للحصول على ملف التقرير وقراءة العلم (Flag) بداخله لإثبات نجاح الاستغلال التام.",
-      "instructions": "قم باستغلال مسار تحميل الملفات لقراءة مستند التقرير المالي الحساس (doc_id = 5001) للحصول على العلم (Flag).",
-      "targetUrl": "https://api.target-app.com/api/v1/workspaces/43/documents/5001/download",
-      "correctFlag": "FLAG{api_v1_idor_workspace_takeover}",
-      "aiAdvisor": {
-        "hint": "استخدم الرابط الموضح للحصول على ملف التقرير وقراءة العلم بداخله: FLAG{api_v1_idor_workspace_takeover}",
-        "payloadExplanation": "العلم يمثل إثبات الاختراق الكامل للوصول لملفات سرية.",
-        "failureExplanation": "تأكد من كتابة العلم بدقة."
-      }
-    },
-    {
-      "name": "Report Writing",
-      "time": "11:00",
-      "workspace": "report",
-      "xpReward": 250,
-      "description": "### 📝 كتابة التقرير الأمني الاحترافي\n\nالبحث عن الثغرة واكتشافها هو نصف العمل فقط. النصف الآخر والأكثر أهمية هو **كيف تشرحها للشركة**. إذا لم يكن تقريرك واضحاً ومنظماً، قد يتم رفضه أو إغلاقه كـ Duplicated أو Out of Scope.\n\nالتقرير الجيد يوفر وقت المشرفين والمطورين، ويضمن لك تقييماً سريعاً ومكافأة عادلة.\n\n> **🧠 Expert Thinking | ماذا يجب أن يحتوي التقرير؟**\n> 1. **العنوان الوصفي**: يحدد بدقة الثغرة والمسار المصاب والأثر دون مبالغة.\n> 2. **خطوات إعادة الإنتاج (Reproduction Steps)**: خطوات بسيطة وواضحة جداً يستطيع أي مطور محاكاتها لتكرار الثغرة.\n> 3. **الأثر الأمني (Security Impact)**: شرح ماذا يمكن للمهاجم فعله بالثغرة (مثلاً: تسريب البيانات المالية الحساسة لجميع الشركاء).\n\nاكتب التقرير في المحرر بالأسفل مع ذكر الكلمات المفتاحية مثل `idor` و `v1` لتأكيد الأثر.",
-      "aiAdvisor": {
-        "hint": "اكتب الكلمات المفتاحية بالإنجليزية مثل 'idor' و 'v1' في التقرير.",
-        "payloadExplanation": "صياغة التقرير مع إثبات التأثير الكامل (Critical impact).",
-        "failureExplanation": "عدم كتابة الكلمات المفتاحية يؤدي لرفض التقرير أو تقليل المكافأة."
-      }
-    },
-    {
-      "name": "Triage & Verdict",
-      "time": "5 Days Later",
-      "workspace": "review",
-      "xpReward": 0,
-      "description": "### ⚖️ مرحلة التقييم والتحكيم (Triage Phase)\n\nبعد إرسال تقريرك، يمر عبر فريق الـ **Triage** (فحص وتقييم الثغرات). يقوم المحكمون بالتأكد من صحة الثغرة، وقياس مدى خطورتها الحقيقية باستخدام نموذج CVSS (Common Vulnerability Scoring System).\n\n> **🧠 Expert Thinking | كيف يتم تحديد المكافأة؟**\n> يتم حساب المكافأة بناءً على ثلاثة عوامل أساسية:\n> 1. **السرية (Confidentiality)**: هل تم تسريب بيانات سرية للغاية؟ (نعم، تقارير مالية).\n> 2. **التكاملية (Integrity)**: هل يمكن التعديل على البيانات؟ (في حالتنا قراءة فقط).\n> 3. **التوافرية (Availability)**: هل يؤدي الاختراق لتعطيل الخدمة؟ (لا).\n>\n> وصول المهاجم لبيانات مالية خاصة لشركاء آخرين يمنح الثغرة تقييماً حرجاً واستحقاقاً كاملاً للمكافأة الكبرى.\n\nتابع قرار الشركة بالأسفل ومبلغ المكافأة الممنوح لك!",
-      "aiAdvisor": {
-        "hint": "راجع قرار الفحص والمكافأة الممنوحة.",
-        "payloadExplanation": "قرار المشرف الأمني لإصلاح وحل الثغرة.",
-        "failureExplanation": "لا يوجد فشل هنا."
-      }
-    },
-    {
-      "name": "Lessons Learned",
-      "time": "Post-Incident",
-      "workspace": "quiz",
-      "xpReward": 150,
-      "description": "### 🎓 الدروس المستفادة وكيفية الإصلاح والوقاية\n\nالباحث الأمني الحقيقي لا يكتفي بالاختراق وتلقي المكافأة؛ بل يساعد المطورين في فهم كيفية إغلاق الثغرة وتأمين الكود بشكل سليم لمنع تكرارها.\n\n> **🧠 Expert Thinking | الإصلاح الجذري لثغرات IDOR**\n> أكبر خطأ يقع فيه المطورون هو محاولة تشفير المعرفات (مثل `workspace_id=hash`) في الواجهة الأمامية مع إبقاء الخادم بدون تحقق.\n> الحل البرمجي الصحيح هو تطبيق **Access Control Layer (طبقة التحكم بالوصول)** في الخلفية (Backend) تقوم بمطابقة معرف المستخدم المستخرج من رمز المصادقة (JWT) مع المورد المطلوب للتأكد من وجود علاقة صلاحية شرعية في قاعدة البيانات قبل إرجاع أي رد.\n\n---\n\n### 🧠 اختبار الفهم:\nأجب على الأسئلة بالأسفل للتأكد من استيعابك للمفاهيم الأمنية العميقة التي تعلمتها في هذا السيناريو.",
-      "quizData": [
-        {
-          "question": "ما هو السبب الرئيسي لحدوث ثغرات IDOR؟",
-          "options": [
-            "عدم استخدام تشفير قوي لكلمات المرور.",
-            "اعتماد الخادم على المدخلات القادمة من المستخدم للوصول للموارد دون التحقق من صلاحياته لها.",
-            "استخدام جدار حماية ضعيف.",
-            "تسريب ملفات التكوين."
-          ],
-          "answer": 1
-        },
-        {
-          "question": "كيف يمكن للمطور حماية التطبيق من ثغرات IDOR بالكامل؟",
-          "options": [
-            "تشفير المعرفات فقط في الواجهة الأمامية.",
-            "إلغاء تفعيل بروتوكول HTTP.",
-            "تطبيق نظام تحكم بالصلاحيات (Access Control) صارم في كل طلب على مستوى الخادم.",
-            "حظر استخدام Burp Suite."
-          ],
-          "answer": 2
-        }
-      ],
-      "aiAdvisor": {
-        "hint": "الإجابة الأولى هي الخيار الثاني، والإجابة الثانية هي الخيار الثالث.",
-        "payloadExplanation": "التحقق من فهمك لآلية الحماية والإصلاح للثغرة.",
-        "failureExplanation": "الإجابات الخاطئة تؤدي لخصم نقاط من الـ XP."
-      }
+    ],
+    "aiAdvisor": {
+      "hint": "اقرأ تفاصيل القصة بعناية، المفهوم يدور حول التحكم بالوصول للمعرفات المباشرة.",
+      "payloadExplanation": "لا يوجد استغلال كودي مطلوب في هذه الخطوة الأولى، بل فهم المنهجية.",
+      "failureExplanation": "الإخفاق في تحديد مفهوم الـ IDOR يعني أنك بحاجة لمراجعة الأساسيات قبل البدء."
     }
-  ],
+  },
+  {
+    "name": "Recon and Information Gathering",
+    "time": "09:15",
+    "workspace": "recon",
+    "xpReward": 150,
+    "description": "### 🎯 الهدف من هذه الخطوة:\nاستخراج الروابط القديمة والمؤرشفة لاكتشاف مسارات إصدار `v1` النشطة.\n\n---\n\n### 🔍 ما هو الـ Recon ولماذا هو خطوتنا الأولى؟\n\nمرحلة **جمع المعلومات (Recon)** هي ما يفرق بين الهجوم العشوائي والهجوم المنظم. هدفنا الآن **ليس** استغلال ثغرة، بل بناء خريطة كاملة للمنافذ والمسارات النشطة.\n\n```text\nالموقع المستهدف (Website)\n     │\n     ├── ملفات JavaScript (JS Files) ──> (قد تحتوي على روابط مسارات قديمة)\n     ├── واجهات البرمجية (API) ───> (v1 & v2)\n     ├── ملف Robots.txt ──> (يكشف مسارات الإدارة الحساسة)\n     └── الأرشيف التاريخي ──> (Wayback Machine)\n```\n\n> **🧠 كيف يفكر الباحث الأمني؟ | لماذا نستخدم Waybackurls؟**\n> متصفحك يرى فقط الروابط المفعّلة حالياً في القوائم. ولكن أداة `waybackurls` تبحث في أرشيفات الإنترنت التاريخية (مثل Wayback Machine) وتجلب كافة الروابط التي تم أرشفتها وزيارتها للموقع عبر التاريخ. هذا يتيح لنا اكتشاف مسارات `/api/v1` منسية لم يعد أحد يتحدث عنها اليوم.\n\n---\n\n### 🛠️ تشغيل الأداة:\nاختر الأداة المناسبة لتشغيلها بالأسفل للبحث في الروابط التاريخية والأرشيف لـ `target-app.com`.",
+    "terminalCommands": [
+      {
+        "name": "subfinder -d target-app.com -silent",
+        "correct": false,
+        "output": [
+          {
+            "text": "[INF] Enumerating subdomains for target-app.com",
+            "type": "info"
+          },
+          {
+            "text": "www.target-app.com",
+            "type": "out"
+          },
+          {
+            "text": "api.target-app.com",
+            "type": "out"
+          },
+          {
+            "text": "legacy.target-app.com",
+            "type": "out"
+          },
+          {
+            "text": "[INF] Subdomain enumeration completed.",
+            "type": "success"
+          }
+        ]
+      },
+      {
+        "name": "waybackurls target-app.com",
+        "correct": true,
+        "evidence": {
+          "title": "Historical API v1 Endpoint",
+          "content": "GET /api/v1/workspaces/{workspace_id}/members\nGET /api/v1/workspaces/{workspace_id}/documents\nGET /api/v1/workspaces/{workspace_id}/documents/5001/download"
+        },
+        "output": [
+          {
+            "text": "https://api.target-app.com/api/v2/auth/login",
+            "type": "out"
+          },
+          {
+            "text": "https://api.target-app.com/api/v2/workspaces/active",
+            "type": "out"
+          },
+          {
+            "text": "https://api.target-app.com/api/profile",
+            "type": "out"
+          },
+          {
+            "text": "https://api.target-app.com/api/settings",
+            "type": "out"
+          },
+          {
+            "text": "https://api.target-app.com/api/v1/workspaces/42/members",
+            "type": "success"
+          },
+          {
+            "text": "https://api.target-app.com/api/v1/workspaces/42/documents",
+            "type": "success"
+          },
+          {
+            "text": "https://api.target-app.com/api/v1/workspaces/43/members",
+            "type": "success"
+          },
+          {
+            "text": "https://api.target-app.com/api/v1/workspaces/43/documents/5001/download",
+            "type": "success"
+          },
+          {
+            "text": "[!] Notice: Detected active legacy API v1 endpoints and noisy routes in history!",
+            "type": "success"
+          }
+        ]
+      }
+    ],
+    "aiAdvisor": {
+      "hint": "شغّل أمر waybackurls للبحث عن مسارات قديمة تم أرشفتها مسبقاً.",
+      "payloadExplanation": "يقوم waybackurls بجلب جميع الروابط التاريخية المؤرشفة للموقع من خوادم الأرشيف.",
+      "failureExplanation": "عدم فحص الروابط التاريخية سيحرمك من اكتشاف مسارات API القديمة المتروكة."
+    }
+  },
+  {
+    "name": "IDOR Hypothesis",
+    "time": "09:40",
+    "workspace": "markdown",
+    "xpReward": 150,
+    "description": "### 🎯 الهدف من هذه الخطوة:\nتحديد المتغيرات القابلة للتعديل والتحضير لتجربتها بناءً على تفكيك مسار الطلب.\n\n---\n\n### 💡 بناء الفرضية الأمنية وتفكيك مسار الـ API\n\nبعد تشغيل الأداة في الخطوة السابقة، اكتشفنا وجود هذا المسار التاريخي النشط:\n`GET /api/v1/workspaces/42/members`\n\nدعنا نقوم بتفكيك هذا الرابط وفهمه عن قرب لتحديد أين تكمن الثغرة.\n\n#### 🛠️ هيكلية الرابط التفاعلية:\n*(اضغط على الأجزاء الملونة بالأسفل لقراءة دورها وفهمها):*\n\n<div style=\"background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); padding:12px; border-radius:8px; font-family:var(--font-mono); font-size:0.95rem; margin-bottom:15px; letter-spacing:0.5px; text-align:center;\">\n  <span class=\"ep-part\" data-explanation=\"طريقة GET: تستخدم لقراءة واسترجاع البيانات من الخادم دون تعديلها.\">GET</span> \n  <span class=\"ep-part\" data-explanation=\"مسار api/v1: إصدار الـ API القديم المنسي الذي نبحث فيه عن ثغرات الصلاحيات.\">/api/v1</span>/workspaces/\n  <span class=\"ep-part\" data-explanation=\"المعرّف 42: معرّف رقمي تسلسلي ومباشر لمساحة عملك (Direct Object Reference).\">42</span>/members\n</div>\n\n> **🧠 كيف يفكر الباحث الأمني؟ | بناء الفرضية**\n> وجود معرّف رقمي تسلسلي ومباشر (مثل `42`) يطرح فوراً الفرضية التالية:\n> *\"إذا كان المستخدم (1337) مسجلاً ولديه صلاحية لمساحته 42، وقام بتعديل الرقم يدوياً إلى 43 (التي تخص مستخدماً آخر)، هل سيقوم الخادم بالتحقق من الصلاحيات أم سيعتمد فقط على صلاحية الـ Token لإرجاع البيانات؟\"*\n\n---\n\n### ❓ سؤال تفاعلي قبل إظهار الإجابة:\nما المعامل (Parameter) الأكثر إثارة للاهتمام والجاهز للفحص في الرابط السابق لاختبار ثغرة IDOR؟",
+    "choices": [
+      {
+        "text": "أ) الـ Bearer Token الخاص بالمصادقة والتحقق من الهوية.",
+        "correct": false,
+        "xp": -5,
+        "timePenalty": 2,
+        "outcome": "هذا توكن الهوية الخاص بك، تغييره أو حذفه سيؤدي إلى رفض الطلب بالكامل 401 Unauthorized."
+      },
+      {
+        "text": "ب) معرّف مساحة العمل رقم 42.",
+        "correct": true,
+        "xp": 50,
+        "outcome": "أحسنت! تغيير المعرّف المباشر (Object ID) للمورد هو جوهر هجوم IDOR."
+      },
+      {
+        "text": "ج) نوع الطلب GET.",
+        "correct": false,
+        "xp": -5,
+        "timePenalty": 2,
+        "outcome": "لا، نوع الطلب GET هو فقط لقراءة البيانات، تغييره لـ POST دون سبب لن يفيدنا حالياً."
+      }
+    ],
+    "aiAdvisor": {
+      "hint": "اختر المعامل الرقمي الذي يمثل مساراً لمورد مباشر.",
+      "payloadExplanation": "فحص المعرفات التسلسلية يتيح للباحث اكتشاف ثغرات التحكم بالوصول بسهولة.",
+      "failureExplanation": "تغيير معاملات المصادقة يفقدك الجلسة ولا يساعد في فحص ثغرات الصلاحيات."
+    }
+  },
+  {
+    "name": "Burp Verification",
+    "time": "10:05",
+    "workspace": "burp",
+    "xpReward": 200,
+    "description": "### 🎯 الهدف من هذه الخطوة:\nتعديل الطلب يدوياً في البروكسي واختبار استجابة السيرفر.\n\n---\n\n### 🌐 إدخال البروكسي (Burp Suite) في سياق القصة\n\nالآن نريد إرسال الطلب، ولكن المتصفح العادي مصمم لاتباع قواعد التطبيق ولا يتيح لك تعديل الطلب وتغيير معامل الـ `id` بعد أن تضغط على الأزرار بشكل حر. \n\nلذلك، نقوم بإدخال أداة **Burp Suite** لتعمل كـ **Proxy (بروكسي اعتراض)** يقف في منتصف الطريق بين متصفحك والسيرفر. يعترض الطلب، يمنحك فرصة للتعديل عليه، ثم يرسله للسيرفر.\n\n```text\n  المتصفح (Browser)\n         │\n         │ (طلب طبيعي لمساحتك: workspace_id=42)\n         ▼\n  البروكسي (Burp Suite) ────[ نقوم بتعديل القيمة يدوياً: workspace_id=43 ]\n         │\n         │ (طلب معدل ومستهدف)\n         ▼\n    الخادم (Server) ────> يقوم بالمعالجة وإرسال النتيجة\n```\n\n> **🧠 كيف يفكر الباحث الأمني؟ | لماذا نفعل هذا؟**\n> نقوم بتعديل `workspace_id` من `42` إلى `43` مع إبقاء رمز المصادقة (Bearer Token) الخاص بنا كما هو. \n> إذا استجاب السيرفر برمز `200 OK` وأرجع لنا أعضاء مساحة العمل `43` والملفات الحساسة التابعة لهم، نكون قد أثبتنا الثغرة يقيناً!\n\n---\n\n### 🛠️ التحقق العملي:\nانظر إلى الطلب في نافذة Burp بالأسفل. قم بتعديل المعرف من `42` إلى `43` في مسار الطلب، ثم اضغط على زر **Verify IDOR** لمشاهدة الاستجابة وتأكيد الثغرة.",
+    "burpRequest": "GET /api/v1/workspaces/42/members HTTP/1.1\nHost: api.target-app.com\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\nAccept: application/json",
+    "burpResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"workspace_id\": 42,\n  \"members\": [\n    {\"user_id\": 1337, \"email\": \"attacker@example.com\", \"role\": \"member\"}\n  ]\n}",
+    "burpActions": [
+      {
+        "name": "Verify IDOR",
+        "correct": true,
+        "modifiedRequest": "GET /api/v1/workspaces/43/members HTTP/1.1\nHost: api.target-app.com\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\nAccept: application/json",
+        "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"workspace_id\": 43,\n  \"members\": [\n    {\"user_id\": 999, \"email\": \"ceo@target-company.com\", \"role\": \"admin\"},\n    {\"user_id\": 998, \"email\": \"finance@target-company.com\", \"role\": \"member\"}\n  ],\n  \"documents\": [\n    {\"doc_id\": 5001, \"title\": \"Q4 Financial Report\", \"created_by\": 999}\n  ]\n}",
+        "evidence": {
+          "title": "IDOR Leak Workspace 43",
+          "content": "GET /api/v1/workspaces/43/members -> Leaks Workspace Members & Documents"
+        }
+      }
+    ],
+    "aiAdvisor": {
+      "hint": "اضغط على زر Verify IDOR لتعديل معرف مساحة العمل إلى 43.",
+      "payloadExplanation": "الطلب المعدل يطلب بيانات مساحة عمل لا تنتمي للمهاجم.",
+      "failureExplanation": "إذا لم تقم بتعديل المعرف، فلن تتمكن من تأكيد الثغرة."
+    }
+  },
+  {
+    "name": "Exploitation & Flag",
+    "time": "10:30",
+    "workspace": "lab",
+    "xpReward": 300,
+    "description": "### 🎯 الهدف من هذه الخطوة:\nالاستغلال الفعلي وتحميل الملف المالي للحصول على العلم (Flag) كإثبات للاختراق الكامل.\n\n---\n\n### 💥 تصعيد الأثر الأمني (Impact Escalation)\n\nرائع! لقد أثبتنا وجود IDOR في قائمة الأعضاء، ورأينا في استجابة السيرفر وجود ملف مالي حساس للغاية باسم `Q4 Financial Report` ويحمل المعرف `doc_id = 5001`.\n\nفي برامج الـ Bug Bounty، إثبات تسريب أسماء الموظفين قد يمنحك مكافأة متوسطة (Medium). ولكن كباحث محترف، يجب عليك دائماً البحث عن **تصعيد الأثر (Escalation)** للحصول على أعلى قيمة أمنية ومكافأة.\n\n> **🧠 كيف يفكر الباحث الأمني؟ | لماذا نصعد الأثر؟**\n> سنقوم الآن بفحص مسار تحميل الملفات لمعرفة ما إذا كان مصاباً بالـ IDOR أيضاً.\n> سنحاول طلب الملف مباشرة باستخدام المسار التاريخي للتحميل:\n> `GET /api/v1/workspaces/43/documents/5001/download`\n> قراءة المستندات والتقارير المالية السرية للضحية هي الدليل القاطع على وجود خطر بالغ يهدد سرية بيانات العملاء، مما يرفع الثغرة لمستوى خطورة **Critical** (حرجة).\n\n---\n\n### 🛠️ استخراج العلم:\nانسخ رابط التحميل وقم بطلبه في لوحة التحكم بالأسفل للحصول على ملف التقرير وقراءة العلم (Flag) بداخله لإثبات الاختراق.",
+    "instructions": "قم باستغلال مسار تحميل الملفات لقراءة مستند التقرير المالي الحساس (doc_id = 5001) للحصول على العلم (Flag).",
+    "targetUrl": "https://api.target-app.com/api/v1/workspaces/43/documents/5001/download",
+    "correctFlag": "FLAG{api_v1_idor_workspace_takeover}",
+    "aiAdvisor": {
+      "hint": "استخدم الرابط الموضح للحصول على ملف التقرير وقراءة العلم بداخله: FLAG{api_v1_idor_workspace_takeover}",
+      "payloadExplanation": "العلم يمثل إثبات الاختراق الكامل للوصول لملفات سرية.",
+      "failureExplanation": "تأكد من كتابة العلم بدقة."
+    }
+  },
+  {
+    "name": "Report Writing",
+    "time": "11:00",
+    "workspace": "report",
+    "xpReward": 250,
+    "description": "### 🎯 الهدف من هذه الخطوة:\nشرح الثغرة، خطوات تكرارها، والأثر المترتب عليها بوضوح في تقرير أمني احترافي.\n\n---\n\n### 📝 صياغة التقرير الاحترافي للعميل\n\nالثغرة غير المكتوبة بتقرير احترافي هي ثغرة غير موجودة. المطورون والمشرفون يستقبلون مئات التقارير يومياً، والتقرير غير المنظم يضيع وقتهم وقد يؤدي لتقييم خاطئ للثغرة.\n\n> **🧠 كيف يفكر الباحث الأمني؟ | هيكل التقرير الأفضل**\n> 1. **العنوان (Title)**: يصف الخلل بوضوح دون تضخيم (مثال: IDOR in workspaces endpoint leaks documents).\n> 2. **خطوات الاستغلال (Steps to Reproduce)**: خطوات بسيطة وواضحة جداً يستطيع أي مطور محاكاتها لتكرار الثغرة.\n> 3. **الأثر الأمني (Impact)**: التوضيح المباشر لما يمكن للمهاجم فعله بالبيانات الحساسة المسربة.\n\nاكتب التقرير الآن في المحرر بالأسفل مع الحرص على كتابة الكلمات المفتاحية مثل `idor` و `v1` لتأكيد الأثر.",
+    "aiAdvisor": {
+      "hint": "اكتب الكلمات المفتاحية بالإنجليزية مثل 'idor' و 'v1' في التقرير.",
+      "payloadExplanation": "صياغة التقرير مع إثبات التأثير الكامل (Critical impact).",
+      "failureExplanation": "عدم كتابة الكلمات المفتاحية يؤدي لرفض التقرير أو تقليل المكافأة."
+    }
+  },
+  {
+    "name": "Triage & Verdict",
+    "time": "5 Days Later",
+    "workspace": "review",
+    "xpReward": 0,
+    "description": "### 🎯 الهدف من هذه الخطوة:\nفهم كواليس تقييم الثغرات وقبولها من جهة الشركات وسراديب التحكيم.\n\n---\n\n### ⚖️ كواليس التحكيم وحساب مكافأة الـ Bounty\n\nبعد إرسال تقريرك، يتم تحويله إلى فريق الـ **Triage** (مراجعة وتقييم الثغرات). هؤلاء المهندسون يراجعون تقريرك ويتأكدون من صحته وخلوه من التكرار، ثم يستخدمون نموذج CVSS لحساب الخطورة.\n\n> **🧠 كيف يفكر الباحث الأمني؟ | لماذا نهتم بنظام الـ Triage؟**\n> معرفتك بكيفية عمل فريق الـ Triage يساعدك على كتابة تقارير تتوافق مع معاييرهم. ثغرة IDOR التي تؤدي لتسريب مستندات مالية لشركات أخرى تقع مباشرة تحت معايير تسريب السرية الكامل (High/Critical Confidentiality Impact)، مما يضمن الحصول على الحد الأقصى للمكافأة المقررة.\n\nراجع التقييم النهائي بالأسفل واستلم مكافأتك!",
+    "aiAdvisor": {
+      "hint": "راجع قرار الفحص والمكافأة الممنوحة.",
+      "payloadExplanation": "قرار المشرف الأمني لإصلاح وحل الثغرة.",
+      "failureExplanation": "لا يوجد فشل هنا."
+    }
+  },
+  {
+    "name": "Lessons Learned",
+    "time": "Post-Incident",
+    "workspace": "quiz",
+    "xpReward": 150,
+    "description": "### 🎯 الهدف من هذه الخطوة:\nفهم الإصلاح البرمجي لمنع ثغرات IDOR نهائياً في الخلفية (Backend).\n\n---\n\n### 🎓 الدروس البرمجية المستفادة وكيفية الوقاية\n\nالباحث الأمني المتميز يساعد المطورين في إغلاق الثغرة بشكل سليم وصحيح برمجياً.\n\n> **🧠 كيف يفكر الباحث الأمني؟ | كيف نغلق الثغرة برمجياً؟**\n> محاولة تشفير المعرفات أو إخفائها في الواجهة الأمامية (Frontend) هي حماية وهمية (Security by Obscurity). \n> الحل الجذري والوحيد هو التحقق في كل طلب بالخلفية (Backend):\n> هل معرف المستخدم الحالي (المستخرج من رمز المصادقة الـ JWT) يمتلك صلاحية حقيقية وعلاقة مسجلة في قاعدة البيانات بـ `workspace_id` المطلوبة قبل إرجاع أي رد؟\n\n---\n\n### ❓ أسئلة الوقاية والاختبار النهائي:\nأجب على الأسئلة بالأسفل لاختبار مدى استيعابك للمفاهيم الوقائية للثغرة.",
+    "quizData": [
+      {
+        "question": "ما هو السبب الرئيسي لحدوث ثغرات IDOR؟",
+        "options": [
+          "عدم استخدام تشفير قوي لكلمات المرور.",
+          "اعتماد الخادم على المدخلات القادمة من المستخدم للوصول للموارد دون التحقق من صلاحياته لها.",
+          "استخدام جدار حماية ضعيف.",
+          "تسريب ملفات التكوين."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "كيف يمكن للمطور حماية التطبيق من ثغرات IDOR بالكامل؟",
+        "options": [
+          "تشفير المعرفات فقط في الواجهة الأمامية.",
+          "إلغاء تفعيل بروتوكول HTTP.",
+          "تطبيق نظام تحكم بالصلاحيات (Access Control) صارم في كل طلب على مستوى الخادم.",
+          "حظر استخدام Burp Suite."
+        ],
+        "answer": 2
+      }
+    ],
+    "aiAdvisor": {
+      "hint": "الإجابة الأولى هي الخيار الثاني، والإجابة الثانية هي الخيار الثالث.",
+      "payloadExplanation": "التحقق من فهمك لآلية الحماية والإصلاح للثغرة.",
+      "failureExplanation": "الإجابات الخاطئة تؤدي لخصم نقاط من الـ XP."
+    }
+  }
+],
   "realReport": {
     "title": "IDOR in API v1 workspaces endpoint allows accessing private workspaces documents",
     "severity": "Critical",
