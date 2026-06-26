@@ -6,7 +6,13 @@
     "category": "Business Logic",
     "company": "CyberGear",
     "reward": "$5,000",
-    "time": "1 Hour"
+    "time": "1 Hour",
+    "objective": "Exploit an integer overflow vulnerability in the shopping cart quantity field to bypass WAF protection and manipulate the order total to zero.",
+    "scope": [
+      "Cart quantity field accepts numeric values without server-side range validation.",
+      "WAF blocks explicit negative values but may miss integer overflow payloads.",
+      "Successfully placing a $0 order for a premium item constitutes a valid Critical finding."
+    ]
   },
   "decisionLog": [
     {

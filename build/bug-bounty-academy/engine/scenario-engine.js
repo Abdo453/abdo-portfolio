@@ -201,14 +201,74 @@ window.ScenarioEngine = {
     this.el.nextBtn.addEventListener('click', () => {
       const isLastStep = this.currentStepIndex === this.scenario.steps.length - 1;
       if (isLastStep) {
-        alert("🎉 Congratulations! You have completed the investigation and claimed the bounty!");
-        window.location.href = '../index.html';
+        this.showCompletionOverlay();
       } else {
         this.loadStep(this.currentStepIndex + 1);
       }
     });
 
     this.loadStep(0);
+  },
+
+  // --- COMPLETION OVERLAY ---
+  showCompletionOverlay() {
+    const id = this.scenario.metadata.id;
+    const totalXP = this.scenario.steps.reduce((sum, s) => sum + (s.xpReward || 0), 0);
+    const bountyRaw = parseInt((this.scenario.metadata.reward || '0').replace(/[^0-9]/g, ''));
+    const dbEntry = window.scenariosDatabase ? window.scenariosDatabase.find(s => s.id === id) : null;
+    const stars = dbEntry ? dbEntry.stars : 3;
+    const starsHtml = Array.from({length: 5}, (_, i) =>
+      `<i class="bx bxs-star" style="color: ${i < stars ? '#f59e0b' : 'rgba(255,255,255,0.1)'}"></i>`
+    ).join('');
+
+    const overlay = document.createElement('div');
+    overlay.id = 'completion-overlay';
+    overlay.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;z-index:9999;animation:fadeIn 0.4s ease;`;
+    overlay.innerHTML = `
+      <div style="background:var(--bg-card);border:1px solid rgba(6,182,212,0.4);border-radius:16px;padding:48px 40px;max-width:520px;width:90%;text-align:center;box-shadow:0 0 60px rgba(6,182,212,0.15);">
+        <div style="font-size:3.5rem;margin-bottom:12px;">🏆</div>
+        <h2 style="font-family:var(--font-title);color:var(--accent-cyan);font-size:1.6rem;margin-bottom:8px;">Scenario Complete!</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:24px;">You've successfully completed this investigation and filed a report.</p>
+        <div style="display:flex;justify-content:center;gap:4px;margin-bottom:24px;font-size:1.4rem;">${starsHtml}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;">
+          <div style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:16px;">
+            <div style="font-size:1.4rem;font-weight:700;color:var(--accent-cyan);font-family:var(--font-mono);">+${totalXP.toLocaleString()}</div>
+            <div style="color:var(--text-muted);font-size:0.72rem;text-transform:uppercase;margin-top:2px;">XP Earned</div>
+          </div>
+          <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:16px;">
+            <div style="font-size:1.4rem;font-weight:700;color:var(--accent-green);font-family:var(--font-mono);">$${bountyRaw.toLocaleString()}</div>
+            <div style="color:var(--text-muted);font-size:0.72rem;text-transform:uppercase;margin-top:2px;">Bounty Potential</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <button id="comp-next-scenario" class="hunt-btn success-btn" style="width:100%;padding:12px;font-size:0.9rem;">
+            <i class="bx bx-right-arrow-alt"></i> Back to Dashboard
+          </button>
+          <button id="comp-view-profile" class="hunt-btn" style="width:100%;padding:12px;font-size:0.9rem;">
+            <i class="bx bx-user"></i> View My Profile
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    document.getElementById('comp-next-scenario').onclick = () => { window.location.href = '../index.html'; };
+    document.getElementById('comp-view-profile').onclick = () => { window.location.href = 'profile.html'; };
+  },
+
+  // --- TOAST NOTIFICATIONS ---
+  showToast(msg, type = 'info', duration = 3000) {
+    if (typeof ProgressManager !== 'undefined' && ProgressManager.showToast) {
+      ProgressManager.showToast(msg, type);
+      return;
+    }
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    const colors = { success: '#22c55e', error: '#ef4444', info: '#06b6d4', warning: '#f59e0b' };
+    toast.style.cssText = `background:var(--bg-card);border:1px solid ${colors[type] || colors.info};border-left:3px solid ${colors[type] || colors.info};border-radius:8px;padding:12px 16px;color:var(--text-main);font-size:0.82rem;max-width:320px;animation:slideInToast 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.4);`;
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(20px)'; toast.style.transition = 'all 0.3s'; setTimeout(() => toast.remove(), 300); }, duration);
   },
 
   switchConsoleTab(tabId) {
@@ -475,15 +535,29 @@ window.ScenarioEngine = {
       this.timeSpent += choice.timePenalty;
       this.el.stepTimeSpent.innerText = this.timeSpent;
     }
-    
-    alert(`${choice.outcome}\n\nXP adjustment: ${choice.xp >= 0 ? '+' : ''}${choice.xp}`);
+
     ProgressManager.addXP(choice.xp);
 
-    if (choice.correct) {
+    // Show inline result notification instead of alert()
+    const existingResult = document.getElementById('choice-result-banner');
+    if (existingResult) existingResult.remove();
+    const isCorrect = choice.correct;
+    const xpSign = (choice.xp || 0) >= 0 ? '+' : '';
+    const banner = document.createElement('div');
+    banner.id = 'choice-result-banner';
+    banner.style.cssText = `margin-top:12px;padding:14px 16px;border-radius:8px;font-size:0.85rem;line-height:1.5;border:1px solid ${isCorrect ? 'rgba(34,197,94,0.4)' : 'rgba(239,68,68,0.4)'};background:${isCorrect ? 'rgba(34,197,94,0.07)' : 'rgba(239,68,68,0.07)'};color:var(--text-main);`;
+    banner.innerHTML = `<div style="font-weight:700;margin-bottom:6px;color:${isCorrect ? 'var(--accent-green)' : 'var(--critical-red)'}">${isCorrect ? '✅ Correct Choice!' : '❌ Wrong Path'}</div>
+      <div dir="auto" style="color:var(--text-secondary)">${choice.outcome}</div>
+      <div style="margin-top:8px;font-family:var(--font-mono);font-size:0.75rem;color:${isCorrect ? 'var(--accent-cyan)' : 'var(--warning-amber)'}">XP: ${xpSign}${choice.xp || 0}</div>`;
+    this.el.choicesGrid.appendChild(banner);
+
+    if (isCorrect) {
       this.el.nextBtn.disabled = false;
-      if (this.currentStepIndex + 1 < this.scenario.steps.length) {
-        this.loadStep(this.currentStepIndex + 1);
-      }
+      setTimeout(() => {
+        if (this.currentStepIndex + 1 < this.scenario.steps.length) {
+          this.loadStep(this.currentStepIndex + 1);
+        }
+      }, 1500);
     } else {
       ProgressManager.logError();
     }
@@ -767,7 +841,7 @@ window.ScenarioEngine = {
   addEvidence(item) {
     if (!this.evidence.some(e => e.title === item.title)) {
       this.evidence.push(item);
-      alert(`📂 Evidence added to locker: "${item.title}"`);
+      this.showToast(`📂 Evidence saved: "${item.title}"`, 'success');
     }
   },
 
@@ -871,7 +945,8 @@ window.ScenarioEngine = {
       </div>
     `;
 
-    if (!isCompleted) {
+    const isAlreadySolved = ProgressManager.state.solved.includes(id);
+    if (!isAlreadySolved) {
       ProgressManager.addXP(xp);
       ProgressManager.addBounty(bounty);
       ProgressManager.solveScenario(id);

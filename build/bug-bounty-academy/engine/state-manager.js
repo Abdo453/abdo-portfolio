@@ -235,6 +235,11 @@ window.StateManager = {
       toast.classList.remove('visible');
       setTimeout(() => toast.remove(), 400);
     }, duration);
+  },
+
+  // Public alias for external usage (e.g. ScenarioEngine.showToast())
+  showToast(message, type = 'info', duration = 2500) {
+    this._showToast(message, type, duration);
   }
 };
 

@@ -3207,4 +3207,31 @@ body::before {
   .profile-content { padding: 20px 15px; }
 }
 
+/* ============================================
+   COMPLETION OVERLAY & FADEIN ANIMATION
+   ============================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#completion-overlay {
+  backdrop-filter: blur(8px);
+}
+
+#completion-overlay > div {
+  animation: slideUpModal 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes slideUpModal {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ============================================
+   CHOICE RESULT BANNER
+   ============================================ */
+#choice-result-banner {
+  animation: fadeIn 0.25s ease;
+}
 
