@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Investigation Room | Bug Bounty Academy — Interactive Playground</title>
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <!-- Boxicons -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <!-- Marked.js -->
@@ -34,7 +34,19 @@
       background: radial-gradient(circle at top right, rgba(6,182,212,0.08), transparent 40%), #020712 !important;
       color: #e2e8f0 !important;
       overflow: hidden !important;
-      font-family: 'Inter', sans-serif !important;
+      font-family: 'Inter', 'Cairo', sans-serif !important;
+    }
+
+    [dir="auto"], [lang="ar"] {
+      font-family: 'Cairo', 'Inter', sans-serif !important;
+      line-height: 1.8 !important;
+    }
+
+    /* Force LTR direction and embed context on all raw CLI/Code elements to prevent character flipping */
+    pre, code, .code-editor, .term-prompt, .term-input, #lab-target-url, .terminal-shell, .burp-shell {
+      direction: ltr !important;
+      text-align: left !important;
+      unicode-bidi: embed !important;
     }
 
     /* --- VIEW PANEL: override global display:block to flex --- */
@@ -151,13 +163,15 @@
       background: rgba(4,9,20,0.95) !important;
       border-right: 1px solid rgba(6,182,212,0.08) !important;
       padding: 0 !important; display: flex !important;
-      flex-direction: column !important; overflow: hidden !important;
+      flex-direction: column !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
     }
     .sidebar-scenario-card {
       background: linear-gradient(145deg, rgba(6,182,212,0.12), rgba(6,182,212,0.02)) !important;
       border: 1px solid rgba(6,182,212,0.14) !important;
-      border-radius: 14px !important; padding: 16px !important;
-      margin: 14px !important; flex-shrink: 0 !important;
+      border-radius: 10px !important; padding: 12px !important;
+      margin: 10px !important; flex-shrink: 0 !important;
     }
     .sidebar-scenario-card .badge-row { margin-bottom: 10px !important; }
     .sidebar-scenario-card .metric-row {
@@ -179,8 +193,8 @@
 
     /* Timeline Steps */
     .timeline-steps {
-      list-style: none !important; padding: 14px 12px !important; margin: 0 !important;
-      flex: 1 !important; overflow-y: auto !important;
+      list-style: none !important; padding: 8px 10px !important; margin: 0 !important;
+      flex: none !important;
       display: flex !important; flex-direction: column !important; gap: 2px !important;
     }
     .timeline-step {
@@ -236,7 +250,13 @@
     }
     .workspace-body-split.advisor-collapsed { grid-template-columns: 1fr 0px !important; }
     .workspace-body-split.advisor-collapsed .ai-advisor-panel { display: none !important; }
-    .instructions-column { overflow-y: auto !important; padding: 18px 20px !important; min-height: 0 !important; }
+    .instructions-column {
+      height: 100% !important;
+      max-height: 100% !important;
+      overflow-y: auto !important;
+      padding: 18px 20px !important;
+      min-height: 0 !important;
+    }
 
     .mission-brief-card {
       background: linear-gradient(135deg, rgba(6,182,212,0.05), rgba(10,20,38,0.8)) !important;
@@ -277,7 +297,17 @@
     /* ============================================
        CONSOLE FOOTER
        ============================================ */
-    .console-section-footer { border-top: 1px solid rgba(6,182,212,0.12) !important; background: #04080f !important; min-height: 200px !important; max-height: 42vh !important; display: flex !important; flex-direction: column !important; flex-shrink: 0 !important; overflow: hidden !important; }
+    .console-section-footer {
+      border-top: 1px solid rgba(6,182,212,0.12) !important;
+      background: #04080f !important;
+      height: 250px !important;
+      min-height: 180px !important;
+      max-height: 35vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      flex-shrink: 0 !important;
+      overflow: hidden !important;
+    }
     .console-tabs-header { display: flex !important; align-items: center !important; height: 36px !important; padding: 0 16px !important; background: rgba(0,0,0,0.35) !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; flex-shrink: 0 !important; }
     .console-tab { padding: 0 14px !important; height: 100% !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; font-size: 0.68rem !important; font-weight: 600 !important; font-family: var(--font-mono) !important; color: rgba(255,255,255,0.3) !important; cursor: pointer !important; border-bottom: 2px solid transparent !important; transition: all 0.15s !important; }
     .console-tab:hover { color: rgba(255,255,255,0.55) !important; }
@@ -297,9 +327,20 @@
     .category-badge { font-size: 0.6rem !important; padding: 3px 9px !important; background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.08) !important; border-radius: 20px !important; color: var(--text-muted) !important; font-weight: 600 !important; text-transform: uppercase !important; font-family: var(--font-mono) !important; }
 
     /* Markdown */
-    .markdown-body { font-size: 0.83rem !important; line-height: 1.65 !important; color: var(--text-secondary) !important; }
-    .markdown-body h3 { font-size: 0.95rem !important; color: var(--text-main) !important; font-family: var(--font-mono) !important; }
+    .markdown-body {
+      font-size: 0.84rem !important;
+      line-height: 1.8 !important;
+      color: var(--text-secondary) !important;
+    }
+    .markdown-body h3 {
+      font-size: 0.95rem !important;
+      color: var(--text-main) !important;
+      font-family: var(--font-mono) !important;
+      margin-top: 15px !important;
+      margin-bottom: 8px !important;
+    }
     .markdown-body h4 { font-size: 0.82rem !important; color: var(--accent-cyan) !important; }
+    .markdown-body p { margin-bottom: 12px !important; }
     .markdown-body code { font-size: 0.76rem !important; background: rgba(0,0,0,0.35) !important; border: 1px solid rgba(255,255,255,0.06) !important; padding: 1px 6px !important; border-radius: 4px !important; color: #93c5fd !important; }
 
     /* Utilities */
