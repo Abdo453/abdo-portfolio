@@ -105,12 +105,9 @@
         if (phaseId === 'sys-hack') filename = 'system_hacking.html';
         if (phaseId === 'lab-metasploitable') filename = 'lab_metasploitable.html';
 
-      } else if (phaseId === 'bb_recon') {
-        filename = 'bb_recon.html';
-      } else if (phaseId === 'bb_web') {
-        filename = 'bb_web.html';
-      } else if (phaseId === 'bb_cmd') {
-        filename = 'bb_cmd.html';
+        if (phaseId === 'bb_recon') filename = 'bb_recon.html';
+        if (phaseId === 'bb_web') filename = 'bb_web.html';
+        if (phaseId === 'bb_cmd') filename = 'bb_cmd.html';
 
         if (phaseId === 'capstone-mid') filename = 'capstone_mid.html';
         if (phaseId.startsWith('mod_v2')) filename = phaseId + '.html';
