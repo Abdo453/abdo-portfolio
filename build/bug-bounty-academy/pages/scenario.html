@@ -908,6 +908,7 @@
           <span class="console-tab active" id="console-tab-idle"><i class="bx bx-pulse"></i> Console Idle</span>
           <span class="console-tab" id="console-tab-terminal"><i class="bx bx-terminal"></i> Terminal Simulation</span>
           <span class="console-tab" id="console-tab-burp"><i class="bx bx-wifi"></i> Burp Repeater</span>
+          <span class="console-tab" id="console-tab-browser"><i class="bx bx-window-alt"></i> Web Browser</span>
         </div>
         <div class="console-panes-body">
           
@@ -992,9 +993,35 @@ MODE        : ACTIVE SANDBOX ENVIRONMENT</pre>
                 <!-- Tampering injection actions -->
               </div>
             </div>
+          <!-- Web Browser Simulation Console -->
+          <div id="console-pane-browser" class="console-pane-content hidden" style="height: 100%;">
+            <div class="workspace-browser-wrapper" style="display:flex; flex-direction:column; height:100%; padding:15px; box-sizing:border-box;">
+              <div class="browser-header" style="display:flex; gap:10px; padding:10px; background:#0f172a; border:1px solid var(--border-color); border-bottom:none; border-top-left-radius:6px; border-top-right-radius:6px; align-items:center;">
+                <div class="browser-controls" style="display:flex; gap:5px;">
+                  <button id="browser-back-btn" style="background:transparent; border:none; color:var(--text-secondary); cursor:pointer; font-size:1.2rem;"><i class="bx bx-left-arrow-alt"></i></button>
+                  <button id="browser-refresh-btn" style="background:transparent; border:none; color:var(--text-secondary); cursor:pointer; font-size:1.2rem;"><i class="bx bx-refresh"></i></button>
+                </div>
+                <div class="browser-url-bar" style="flex-grow:1; display:flex; background:#020617; border:1px solid rgba(255,255,255,0.1); border-radius:15px; padding:5px 15px; align-items:center; gap:8px;">
+                  <i class="bx bx-lock-alt text-green" style="font-size:0.8rem;"></i>
+                  <input type="text" id="browser-url-input" placeholder="https://..." style="flex-grow:1; background:transparent; border:none; color:var(--text-main); outline:none; font-family:var(--font-mono); font-size:0.8rem;">
+                </div>
+                <button id="browser-go-btn" style="background:var(--accent-cyan); border:none; padding:6px 12px; border-radius:4px; font-weight:600; cursor:pointer; color:#000;">Go</button>
+              </div>
+              <div class="browser-body" style="flex-grow:1; border:1px solid var(--border-color); border-bottom-left-radius:6px; border-bottom-right-radius:6px; background:#ffffff; overflow:hidden; display:flex; flex-direction:column; position:relative;">
+                <iframe id="browser-iframe" style="width:100%; height:100%; border:none; background:#ffffff;"></iframe>
+                <!-- Mini DevTools Overlay -->
+                <div id="browser-devtools" class="hidden" style="position:absolute; bottom:0; left:0; width:100%; height:150px; background:#020617; border-top:1px solid var(--border-color); display:flex; flex-direction:column;">
+                  <div style="background:#0f172a; padding:5px 10px; font-size:0.75rem; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="bx bxl-javascript" style="color:#eab308;"></i> Console</span>
+                    <i class="bx bx-x" style="cursor:pointer;" id="browser-devtools-close"></i>
+                  </div>
+                  <div id="browser-console-logs" style="padding:10px; font-family:var(--font-mono); font-size:0.75rem; color:#f8fafc; overflow-y:auto; flex-grow:1;"></div>
+                </div>
+              </div>
+            </div>
           </div>
-
         </div>
+
       </footer>
     </div>
 

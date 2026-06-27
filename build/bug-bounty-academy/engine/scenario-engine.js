@@ -105,6 +105,14 @@ window.ScenarioEngine = {
     labFlagInput: document.getElementById('lab-flag-input'),
     submitFlagBtn: document.getElementById('submit-flag-btn'),
     
+    // Browser
+    browserUrlInput: document.getElementById('browser-url-input'),
+    browserGoBtn: document.getElementById('browser-go-btn'),
+    browserIframe: document.getElementById('browser-iframe'),
+    browserDevtools: document.getElementById('browser-devtools'),
+    browserConsoleLogs: document.getElementById('browser-console-logs'),
+    browserDevtoolsClose: document.getElementById('browser-devtools-close'),
+
     // AI Chat
     aiToggleBtn: document.getElementById('ai-advisor-toggle-btn')
   },
@@ -226,6 +234,35 @@ window.ScenarioEngine = {
     }
 
     this.loadStep(0);
+
+    // Setup manual console tab switching
+    document.querySelectorAll('.console-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        const tabId = e.currentTarget.id.replace('console-tab-', '');
+        this.switchConsoleTab(tabId);
+      });
+    });
+
+    // Setup Browser Simulator events
+    if (this.el.browserGoBtn) {
+      this.el.browserGoBtn.addEventListener('click', () => {
+        const url = this.el.browserUrlInput.value.trim();
+        if (url) this.renderBrowser(url);
+      });
+    }
+    if (this.el.browserUrlInput) {
+      this.el.browserUrlInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const url = this.el.browserUrlInput.value.trim();
+          if (url) this.renderBrowser(url);
+        }
+      });
+    }
+    if (this.el.browserDevtoolsClose) {
+      this.el.browserDevtoolsClose.addEventListener('click', () => {
+        this.el.browserDevtools.classList.add('hidden');
+      });
+    }
   },
 
   // --- COMPLETION OVERLAY ---
@@ -398,7 +435,7 @@ window.ScenarioEngine = {
   },
 
   switchConsoleTab(tabId) {
-    const tabs = ['idle', 'terminal', 'burp'];
+    const tabs = ['idle', 'terminal', 'burp', 'browser'];
     tabs.forEach(t => {
       const tabEl = document.getElementById(`console-tab-${t}`);
       const paneEl = document.getElementById(`console-pane-${t}`);
@@ -468,10 +505,17 @@ window.ScenarioEngine = {
       this.switchConsoleTab('terminal');
     } else if (step.workspace === 'burp') {
       this.switchConsoleTab('burp');
+    } else if (step.workspace === 'browser') {
+      this.switchConsoleTab('browser');
     } else if (step.workspace === 'lab') {
       this.switchConsoleTab('terminal');
     } else {
       this.switchConsoleTab('idle');
+    }
+
+    if (step.workspace === 'browser' && step.targetUrl) {
+      if (this.el.browserUrlInput) this.el.browserUrlInput.value = step.targetUrl;
+      this.renderBrowser(step.targetUrl);
     }
 
     // Dynamic AI Advisor - progressive hints system
@@ -1332,6 +1376,86 @@ window.ScenarioEngine = {
   // --- AI ADVISOR CHATBOT MOCK ---
   handleAIChatSubmit() {
     // Retained for backwards compatibility
+  },
+
+  // --- BROWSER SIMULATOR LOGIC ---
+  renderBrowser(url) {
+    if (!this.el.browserIframe) return;
+
+    if (!this.scenario.simulateBrowser) {
+      this.el.browserIframe.srcdoc = `<html><body style="font-family:sans-serif; padding: 20px;"><h2>Error: Network Offline</h2><p>The target server is not responding or the scenario does not support browser simulation.</p></body></html>`;
+      return;
+    }
+
+    // Call the scenario's simulateBrowser method
+    const result = this.scenario.simulateBrowser(url);
+    
+    // Inject custom scripts into the HTML to hook alerts and console.logs
+    let htmlContent = result.html || '';
+    
+    // The hooking script
+    const hookScript = `
+      <script>
+        // Hook alert
+        window.alert = function(msg) {
+          window.parent.postMessage({ type: 'xss_alert', message: msg }, '*');
+        };
+        // Hook console.log
+        const originalLog = console.log;
+        console.log = function(...args) {
+          window.parent.postMessage({ type: 'console_log', message: args.join(' ') }, '*');
+          originalLog.apply(console, args);
+        };
+      </script>
+    `;
+    
+    if (htmlContent.includes('<head>')) {
+      htmlContent = htmlContent.replace('<head>', '<head>' + hookScript);
+    } else {
+      htmlContent = hookScript + htmlContent;
+    }
+
+    this.el.browserIframe.srcdoc = htmlContent;
+
+    if (!this._iframeMessageBound) {
+      window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'xss_alert') {
+          this.showToast(`DOM Alert Executed: ${e.data.message}`, 'success', 5000);
+          
+          if (typeof Swal !== 'undefined') {
+            Swal.fire({
+              title: 'XSS Executed!',
+              text: `Alert Payload Triggered: ${e.data.message}`,
+              icon: 'success',
+              background: '#040b17',
+              color: '#22c55e',
+              confirmButtonColor: '#22c55e'
+            });
+          } else {
+             alert(`XSS Executed! Payload Triggered: ${e.data.message}`);
+          }
+          this.logToBrowserConsole(`[ALERT Triggered] ${e.data.message}`, 'success');
+          
+          const step = this.scenario.steps[this.currentStepIndex];
+          if (step && step.workspace === 'browser' && result.correct) {
+             // In V3, simulateTerminal is the way we handle terminal evidence, but here we can directly call advance logic if needed.
+             // Actually, we'll mark this step as complete manually if needed, or simply let the user see the alert.
+             this.showToast("XSS Successfully Executed! Mission Accomplished.", "success");
+          }
+        } else if (e.data && e.data.type === 'console_log') {
+          this.logToBrowserConsole(e.data.message);
+        }
+      });
+      this._iframeMessageBound = true;
+    }
+  },
+
+  logToBrowserConsole(msg, type = 'info') {
+    if (!this.el.browserConsoleLogs) return;
+    this.el.browserDevtools.classList.remove('hidden');
+    const color = type === 'success' ? '#22c55e' : (type === 'error' ? '#ef4444' : '#38bdf8');
+    this.el.browserConsoleLogs.innerHTML += `<div style="color: ${color}; margin-bottom:4px;">> ${msg}</div>`;
+    this.el.browserConsoleLogs.scrollTop = this.el.browserConsoleLogs.scrollHeight;
   }
 };
 

@@ -80,15 +80,15 @@ window.scenario_002 = {
     {
       "name": "Exploitation & Flag",
       "time": "10:05",
-      "workspace": "lab",
+      "workspace": "browser",
       "xpReward": 300,
       "instructions": "استلم الـ Flag بعد تأكيد قراءة كود الـ JavaScript بنجاح داخل الـ PDF Viewer.",
-      "targetUrl": "https://slack.com/files/F12345/view",
+      "targetUrl": "https://slack.com/files/F12345XSS/view",
       "correctFlag": "FLAG{stored_xss_in_pdf_viewer_slack}",
       "aiAdvisor": {
-        "hint": "أدخل العلم الصحيح: FLAG{stored_xss_in_pdf_viewer_slack}",
-        "payloadExplanation": "التأكيد على تنفيذ الكود بنجاح.",
-        "failureExplanation": "الرجاء كتابة الحروف كاملة وبشكل صحيح."
+        "hint": "أدخل الرابط المصاب في المتصفح لمشاهدة الـ XSS",
+        "payloadExplanation": "التأكيد على تنفيذ الكود بنجاح في بيئة المتصفح.",
+        "failureExplanation": "تأكد من كتابة المسار الصحيح للملف المرفوع."
       }
     },
     {
@@ -262,5 +262,37 @@ window.scenario_002 = {
       .setObservabilityLog(`[WARN] Router: Unrecognized path "${parsed.path}" for method "${parsed.method}".\n[INFO] Allowed: POST /api/files.upload | GET /files/{id}/view`)
       .setOutcome("المسار غير صحيح. استخدم POST /api/files.upload لرفع ملف PDF يحتوي على JavaScript.")
       .build();
+  },
+
+  simulateBrowser(url) {
+    if (url === "https://slack.com/files/F12345XSS/view") {
+      return {
+        html: `
+          <html>
+            <head>
+              <title>Slack - Document Preview</title>
+              <script>
+                // Acrobat JS embedded payload executed!
+                setTimeout(() => {
+                  alert("XSS in Slack! Domain: slack.com");
+                }, 500);
+              </script>
+            </head>
+            <body style="background: #222; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh;">
+              <div style="text-align: center;">
+                <h2>PDF Viewer</h2>
+                <p>Rendering F12345XSS.pdf...</p>
+                <div style="margin-top: 20px; font-size: 1.2rem; color: #4ade80;">FLAG{stored_xss_in_pdf_viewer_slack}</div>
+              </div>
+            </body>
+          </html>
+        `,
+        correct: true
+      };
+    }
+    return {
+      html: `<html><body style="font-family:sans-serif; padding:20px;"><h1>404 Not Found</h1></body></html>`,
+      correct: false
+    };
   }
 };
