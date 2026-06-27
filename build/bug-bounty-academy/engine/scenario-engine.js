@@ -804,6 +804,7 @@ window.ScenarioEngine = {
         });
       }
     }
+  },
 
   executeTerminalCommand(cmd, callback) {
     let index = 0;
