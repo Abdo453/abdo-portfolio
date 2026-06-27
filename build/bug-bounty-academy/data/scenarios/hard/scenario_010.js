@@ -57,30 +57,6 @@ window.scenario_010 = {
       "workspace": "recon",
       "xpReward": 150,
       "description": "### 🔍 فحص تكوين ومعدل الطلبات\n\nسنقوم باختبار فحص بسيط وتجربة مسار الاستدعاء أولاً.\nاختر الأداة المناسبة لتشغيلها.",
-      "terminalCommands": [
-        {
-          "name": "curl -I https://dashboard.stripe.com/api/coupons/accept",
-          "correct": true,
-          "evidence": {
-            "title": "Coupon API Active",
-            "content": "Status: 405 Method Not Allowed\nAllow: POST"
-          },
-          "output": [
-            {
-              "text": "HTTP/1.1 405 Method Not Allowed",
-              "type": "info"
-            },
-            {
-              "text": "Allow: POST",
-              "type": "out"
-            },
-            {
-              "text": "[!] Success: POST Endpoint is active and accepts coupon parameter!",
-              "type": "success"
-            }
-          ]
-        }
-      ],
       "aiAdvisor": {
         "hint": "شغّل curl لفحص المسار والتأكد من نشاط واجهة قبول الكوبونات.",
         "payloadExplanation": "طلب فحص الهيدر للتحقق من البروتوكولات والمسارات المدعومة.",
@@ -95,18 +71,6 @@ window.scenario_010 = {
       "description": "### 🌐 إرسال طلبات متزامنة بـ Turbo Intruder\n\nسنقوم بالتقاط طلب قبول الكوبون وإرسال 30 طلب متوازٍ باستخدام سكريبت الـ Turbo Intruder.\nاضغط على **Send Parallel Requests** لمعرفة النتائج.",
       "burpRequest": "POST /api/coupons/accept HTTP/1.1\nHost: dashboard.stripe.com\nContent-Type: application/json\nAuthorization: Bearer merchant_token\n\n{\n  \"coupon_id\": \"coupon_20k_fees\",\n  \"account_id\": \"acct_1234567890\"\n}",
       "burpResponse": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"applied_discount\": 20000,\n  \"remaining\": 0\n}",
-      "burpActions": [
-        {
-          "name": "Send Parallel Requests",
-          "correct": true,
-          "modifiedRequest": "[Turbo Intruder 30x Concurrency Active...]",
-          "modifiedResponse": "Request 1:  {\"status\": \"success\", \"applied_discount\": 20000}\nRequest 2:  {\"status\": \"success\", \"applied_discount\": 20000}\nRequest 3:  {\"status\": \"success\", \"applied_discount\": 20000}\n...\nRequest 30: {\"status\": \"success\", \"applied_discount\": 20000}\n\n[Successfully redeemed coupon 30 times! Total credits: $600,000]",
-          "evidence": {
-            "title": "Coupon Race Condition Successful",
-            "content": "POST /api/coupons/accept applied 30 times -> Yields $600,000 in fee credits"
-          }
-        }
-      ],
       "aiAdvisor": {
         "hint": "اضغط على زر Send Parallel Requests لتنفيذ هجوم Concurrency ورؤية النجاح المتعدد.",
         "payloadExplanation": "إرسال 30 طلب متزامن في نفس الوقت يجعل قاعدة البيانات تقرأ القيمة 'غير مستخدم' 30 مرة قبل التحديث.",
@@ -200,6 +164,30 @@ window.scenario_010 = {
     "impact": "**High** — تأثير مالي مباشر. باستخدام كوبون بقيمة $20,000 مع 30 طلب متوازٍ يمكن الحصول على $600,000 من رصيد الرسوم.",
     "mitigation": "```sql\n-- PostgreSQL: Atomic update with row-level lock\n-- This prevents race condition at the database level\nUPDATE coupons\nSET used = true, used_at = NOW(), used_by = $account_id\nWHERE coupon_id = $coupon_id\n  AND used = false  -- Atomic check\nRETURNING *;\n\n-- If 0 rows returned -> coupon already used, reject!\n```\n\n```javascript\n// Application-level: Use database transaction + pessimistic lock\nasync function redeemCoupon(couponId, accountId) {\n  return await db.transaction(async (trx) => {\n    // Pessimistic lock - prevents concurrent reads\n    const coupon = await trx('coupons')\n      .where({ id: couponId, used: false })\n      .forUpdate()  // Row-level lock\n      .first();\n    \n    if (!coupon) throw new Error('Coupon already used');\n    \n    await trx('coupons').where({ id: couponId }).update({ used: true });\n    await applyCredit(accountId, coupon.value, trx);\n  });\n}\n```"
   },
+  simulateTerminal(command) {
+    const cmd = command.trim();
+    if (cmd.startsWith("curl ")) {
+      return {
+        output: [
+          { text: "HTTP/1.1 405 Method Not Allowed", type: "info" },
+          { text: "Allow: POST", type: "out" },
+          { text: "[!] Success: POST Endpoint is active and accepts coupon parameter!", type: "success" }
+        ],
+        correct: true,
+        evidence: { title: "Coupon API Active", content: "Status: 405 Method Not Allowed\nAllow: POST" },
+        outcome: "تم التأكد من استجابة المسار وفتحه لطلبات POST. يمكنك الآن الانتقال لأداة Burp وتجربة التوازي (Concurrency)."
+      };
+    } else {
+      return {
+        output: [
+          { text: `Command not found or not useful: ${cmd}`, type: "error" },
+          { text: "Try using 'curl -I https://dashboard.stripe.com/api/coupons/accept' to check the endpoint.", type: "info" }
+        ],
+        correct: false
+      };
+    }
+  },
+
   simulateBackend(requestText, bodyJson) {
     const parsed = window.HttpRequestParser.parse(requestText);
     const builder = new window.HttpResponseBuilder();

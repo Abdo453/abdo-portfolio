@@ -58,56 +58,6 @@ window.scenario_007 = {
       "workspace": "recon",
       "xpReward": 150,
       "description": "### 🔍 فحص النطاقات والتخمين على الملفات\n\nسنقوم بالبحث أولاً عن الأجهزة الفرعية ثم تخمين المجلدات على النطاق التطويري المكتشف `dev.marketing-tool.com`.\nاختر الأداة المناسبة لتشغيلها.",
-      "terminalCommands": [
-        {
-          "name": "subfinder -d marketing-tool.com -silent",
-          "correct": false,
-          "output": [
-            {
-              "text": "[INF] Scanning marketing-tool.com",
-              "type": "info"
-            },
-            {
-              "text": "www.marketing-tool.com",
-              "type": "out"
-            },
-            {
-              "text": "dev.marketing-tool.com",
-              "type": "success"
-            }
-          ]
-        },
-        {
-          "name": "ffuf -u https://dev.marketing-tool.com/FUZZ -w common.txt -s",
-          "correct": true,
-          "evidence": {
-            "title": "Exposed Git & Env Files",
-            "content": "/.git/HEAD [Status: 200]\n/.env [Status: 200]\n/backup.sql [Status: 200]"
-          },
-          "output": [
-            {
-              "text": "/index.html [200]",
-              "type": "out"
-            },
-            {
-              "text": "/.git/HEAD [200]",
-              "type": "success"
-            },
-            {
-              "text": "/.env [200]",
-              "type": "success"
-            },
-            {
-              "text": "/backup.sql [200]",
-              "type": "success"
-            },
-            {
-              "text": "[!] Success: Critical development files exposed on webroot!",
-              "type": "success"
-            }
-          ]
-        }
-      ],
       "aiAdvisor": {
         "hint": "شغّل أداة ffuf للتخمين على المسارات المخفية للنطاق dev المكتشف.",
         "payloadExplanation": "أداة ffuf تقوم بتخمين مسارات شائعة مثل .git و .env في مجلد الويب الرئيسي.",
@@ -122,18 +72,6 @@ window.scenario_007 = {
       "description": "### 🌐 قراءة محتويات ملف الـ .env الحساس\n\nسنقوم بالوصول إلى الرابط المكتشف:\n`https://dev.marketing-tool.com/.env`\n\nاضغط على **Request Env File** لمعاينة محتويات الملف والمفاتيح المسربة.",
       "burpRequest": "GET /.env HTTP/1.1\nHost: dev.marketing-tool.com\nUser-Agent: Mozilla/5.0",
       "burpResponse": "HTTP/1.1 404 Not Found\nContent-Length: 15",
-      "burpActions": [
-        {
-          "name": "Request Env File",
-          "correct": true,
-          "modifiedRequest": "GET /.env HTTP/1.1\nHost: dev.marketing-tool.com\nUser-Agent: Mozilla/5.0",
-          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: text/plain\n\nDB_USERNAME=admin\nDB_PASSWORD=SuperSecretDBPass123!\nAWS_ACCESS_KEY_ID=EXAMPLE_KEY_EDU_ONLY\nSTRIPE_SECRET_KEY=sk_FAKE_EXAMPLE_EDUCATIONAL_PURPOSE_ONLY\nJWT_SECRET=dev-jwt-secret-2024",
-          "evidence": {
-            "title": "Leaked Stripe Secret Key",
-            "content": "STRIPE_SECRET_KEY=sk_FAKE_EXAMPLE_EDUCATIONAL_PURPOSE_ONLY\nDB_PASSWORD=SuperSecretDBPass123!"
-          }
-        }
-      ],
       "aiAdvisor": {
         "hint": "اضغط على زر Request Env File لإرسال الطلب وقراءة مفاتيح Stripe والـ AWS المسربة.",
         "payloadExplanation": "طلب الملف مباشرة لقراءة الأسرار المخزنة بداخله.",
@@ -227,6 +165,42 @@ window.scenario_007 = {
     "impact": "**High → Critical** — يمكن استخدام `STRIPE_SECRET_KEY` لسحب مبالغ مالية مباشرة من حسابات العملاء. `AWS_ACCESS_KEY_ID` يسمح بالوصول لموارد السحابة الكاملة.",
     "mitigation": "```nginx\n# Nginx: Block access to dotfiles and sensitive files\nlocation ~ /\\. {\n    deny all;\n    return 404;\n}\n\nlocation ~* (\\.env|\\.git|backup\\.sql|\\.bak) {\n    deny all;\n    return 404;\n}\n```\n\n```bash\n# Add .env and .git to .gitignore\necho '.env' >> .gitignore\necho '.git/' >> .gitignore\n\n# Use environment variables from deployment platform\n# Never commit secrets to version control\ngit rm --cached .env\n```"
   },
+  simulateTerminal(command) {
+    const cmd = command.trim();
+    if (cmd.startsWith("subfinder")) {
+      return {
+        output: [
+          { text: "[INF] Scanning marketing-tool.com", type: "info" },
+          { text: "www.marketing-tool.com", type: "out" },
+          { text: "dev.marketing-tool.com", type: "success" }
+        ],
+        correct: false,
+        outcome: "تم اكتشاف نطاق تطويري `dev`. يبدو أنه مثير للاهتمام. استخدم `ffuf` لفحص الملفات الموجودة عليه."
+      };
+    } else if (cmd.startsWith("ffuf")) {
+      return {
+        output: [
+          { text: "/index.html [200]", type: "out" },
+          { text: "/.git/HEAD [200]", type: "success" },
+          { text: "/.env [200]", type: "success" },
+          { text: "/backup.sql [200]", type: "success" },
+          { text: "[!] Success: Critical development files exposed on webroot!", type: "success" }
+        ],
+        correct: true,
+        evidence: { title: "Exposed Git & Env Files", content: "/.git/HEAD [Status: 200]\n/.env [Status: 200]\n/backup.sql [Status: 200]" },
+        outcome: "نجاح! تم اكتشاف مسارات حساسة جداً على خادم التطوير. انتقل الآن إلى Burp Suite وقم بطلب ملف `.env` لسرقة الأسرار."
+      };
+    } else {
+      return {
+        output: [
+          { text: `Command not found or not useful: ${cmd}`, type: "error" },
+          { text: "Try using 'subfinder -d marketing-tool.com -silent' or 'ffuf -u https://dev.marketing-tool.com/FUZZ'.", type: "info" }
+        ],
+        correct: false
+      };
+    }
+  },
+
   simulateBackend(requestText, bodyJson) {
     const parsed = window.HttpRequestParser.parse(requestText);
     const builder = new window.HttpResponseBuilder();

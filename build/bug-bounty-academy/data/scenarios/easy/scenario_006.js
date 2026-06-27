@@ -57,48 +57,6 @@ window.scenario_006 = {
       "workspace": "recon",
       "xpReward": 150,
       "description": "### 🔍 RECON PHASE\n\nنحتاج أولاً لتحديد مسارات الخدمة البرمجية (API Endpoints) التي يستدعيها المتصفح لإتمام الطلبات وسحب الأموال.\n\n#### 🧭 Interesting Observations (الملاحظات الأولية)\n* تحديث الرصيد يتم بشكل فوري بدون قيود أمنية.\n* لا توجد ترويسات حماية أو توكين تحقق (Verification Token) لمنع تزوير المعاملات.\n* عمليات احتساب قيمة سلة المشتريات تعتمد جزئياً على مدخلات العميل.\n\nشغّل أداة التخمين `ffuf` للتعرف على نهايات الخدمة (endpoints).",
-      "terminalCommands": [
-        {
-          "name": "curl -I https://api.cybergear.com/api/cart/add",
-          "correct": false,
-          "output": [
-            {
-              "text": "HTTP/2 405 Method Not Allowed",
-              "type": "error"
-            },
-            {
-              "text": "Allow: POST",
-              "type": "error"
-            }
-          ]
-        },
-        {
-          "name": "ffuf -u https://api.cybergear.com/api/cart -X POST -d \"item_id=8842\"",
-          "correct": true,
-          "evidence": {
-            "title": "Discovered CyberGear API Paths",
-            "content": "POST /api/cart/add\nPOST /api/coupon/apply\nPOST /api/cart/checkout"
-          },
-          "output": [
-            {
-              "text": "[INF] Scanning directories under /api/cart...",
-              "type": "info"
-            },
-            {
-              "text": "[+] Found endpoint: POST /api/cart/add",
-              "type": "success"
-            },
-            {
-              "text": "[+] Found endpoint: POST /api/coupon/apply",
-              "type": "success"
-            },
-            {
-              "text": "[+] Found endpoint: POST /api/cart/checkout",
-              "type": "success"
-            }
-          ]
-        }
-      ],
       "aiAdvisor": {
         "hint": "Check if backend validates negative values. Run ffuf command to scan API paths.",
         "payloadExplanation": "ffuf tool exposes the active API endpoints so we can target them directly.",
@@ -113,7 +71,6 @@ window.scenario_006 = {
       "description": "### 🛠️ BURP SUITE MODE\n\nلقد قمنا بالتقاط طلب إضافة جهاز **\"Signal Interceptor\"** بسعر 1,500 دولار.  \nجرب تعديل كمية المنتجات في الطلب عبر Burp Suite لتمرير قيم سالبة أو تجاوز الحد الأقصى للمتغيرات (Integer Overflow) لتجاوز جدار الحماية (WAF).\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-world\"></i> 🌐 Browser Thinking (كيف يفكر المتصفح؟)</summary>\n  <div class=\"accordion-content\">\n    <ul>\n      <li><strong>SameSite Cookies</strong>: يتم إرسال كوكيز الجلسة تلقائياً للـ API لكونه Same-Origin.</li>\n      <li><strong>Origin Header</strong>: يرفق المتصفح ترويسة <code>Origin: https://cybergear.com</code> لحماية الموقع من CSRF.</li>\n      <li><strong>Request Body</strong>: تم ترميز جسم الطلب كـ <code>application/json</code>.</li>\n    </ul>\n  </div>\n</details>\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-server\"></i> ⚙️ Server Thinking (كيف يفكر السيرفر؟)</summary>\n  <div class=\"accordion-content\">\n    <p>يمر طلب المستخدم عبر طبقات الحماية المتتالية على النحو التالي:</p>\n    <code>Request ➔ WAF Filter (يتحقق من السوالب) ➔ Auth Middleware (يتحقق من التوكين) ➔ Cart Service (الحساب الرياضي) ➔ DB Write</code>\n    <p style=\"margin-top: 8px;\"><strong>نقطة الخلل:</strong> يمنع الـ WAF علامة الناقص <code>-</code> صراحةً، ولكنه يفشل في منع الأعداد الضخمة التي تتسبب في طفح الأرقام (Integer Overflow)، والتي تلتف في لغة الـ Backend لتصبح سالبة داخل المعالج بعد عبور طبقة الفلترة.</p>\n  </div>\n</details>\n\n<details class=\"expert-accordion\">\n  <summary><i class=\"bx bx-brain\"></i> 🧠 Expert Mindset & Burp Notes (عقلية الخبير وملاحظات بورب)</summary>\n  <div class=\"accordion-content\">\n    <h4>ملاحظة بورب الاحترافية:</h4>\n    <p>عند إرسال قيمة سالبة صريحة، يرجع الخادم استجابة <code>400 Bad Request</code> مع حجم رد صغير (Size: 180B). ولكن عند إرسال قيمة Float، يرجع <code>500 Internal Server Error</code> (Size: 520B) مما يعكس انهياراً في المعالجة البرمجية خلف جدار الحماية.</p>\n    <h4 style=\"margin-top:10px;\">فرصة النجاح (Success Chance):</h4>\n    <p>⭐⭐⭐⭐☆ (80%) - تجاوز الـ WAF باستخدام Overflow هو ثغرة كلاسيكية تحدث عند دمج لغات برمجة مختلفة.</p>\n  </div>\n</details>",
       "burpRequest": "POST /api/cart/add HTTP/2\nHost: api.cybergear.com\nContent-Type: application/json\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIs...\n\n{\n  \"item_id\": \"8842\",\n  \"quantity\": 1\n}",
       "burpResponse": "HTTP/2 200 OK\nContent-Type: application/json\n\n{\n  \"status\": \"success\",\n  \"cart_total\": 1500,\n  \"message\": \"Item added to cart\"\n}",
-      "burpActions": [],
       "aiAdvisor": {
         "hint": "Try modifying the payload JSON quantity. To overflow 32-bit integer, use 4294967281 (which represents -15).",
         "payloadExplanation": "Integer Overflow forces the signed quantity backend calculations to wraparound to a negative offset.",
@@ -249,5 +206,98 @@ window.scenario_006 = {
     "payloadAnalysis": "الـ payload الناجح هو:\n```json\n{\n  \"item_id\": \"9910\",\n  \"quantity\": 4294967281\n}\n```\nالمعادلة الرياضية: `4294967281 - 4294967296 = -15` (wrapping arithmetic)\n\nجدار الحماية (WAF) يفحص فقط علامة الناقص الحرفية `-` ويُخطئ في منع هذا المسار.",
     "impact": "**Medium-High ($5,000)** — شراء أي منتج بسعر صفر عبر تلاعب حسابي في قيمة الكمية. يؤثر مباشرة على الإيرادات مع كل عملية شراء.",
     "mitigation": "```python\n# Python: Validate quantity bounds server-side\ndef validate_cart_item(item_id: str, quantity: int) -> bool:\n    # Reject quantities outside safe range\n    MAX_SAFE_QUANTITY = 1000\n    MIN_SAFE_QUANTITY = 1\n    \n    if not (MIN_SAFE_QUANTITY <= quantity <= MAX_SAFE_QUANTITY):\n        raise ValueError(f'Invalid quantity: {quantity}. Must be between 1-{MAX_SAFE_QUANTITY}')\n    \n    return True\n\n# Recalculate total server-side from DB prices (never trust client prices!)\ndef calculate_cart_total(cart_items: list) -> Decimal:\n    total = Decimal('0')\n    for item in cart_items:\n        # Fetch price from DB - NEVER from request body\n        db_item = Product.objects.get(id=item['item_id'])\n        qty = abs(int(item['quantity']))  # Force absolute value\n        total += db_item.price * qty\n    \n    if total < 0:\n        raise ValueError('Cart total cannot be negative')\n    \n    return total\n```"
+  },
+
+  simulateTerminal(command) {
+    const cmd = command.trim();
+    if (cmd.startsWith("curl ")) {
+      return {
+        output: [
+          { text: "HTTP/2 405 Method Not Allowed", type: "error" },
+          { text: "Allow: POST", type: "error" }
+        ],
+        correct: false,
+        outcome: "تم رفض الطلب لأن نقطة النهاية لا تقبل سوى POST. استخدم أداة مثل ffuf لاكتشاف المسارات."
+      };
+    } else if (cmd.startsWith("ffuf ")) {
+      return {
+        output: [
+          { text: "[INF] Scanning directories under /api/cart...", type: "info" },
+          { text: "[+] Found endpoint: POST /api/cart/add", type: "success" },
+          { text: "[+] Found endpoint: POST /api/coupon/apply", type: "success" },
+          { text: "[+] Found endpoint: POST /api/cart/checkout", type: "success" }
+        ],
+        correct: true,
+        evidence: { title: "Discovered CyberGear API Paths", content: "POST /api/cart/add\nPOST /api/coupon/apply\nPOST /api/cart/checkout" },
+        outcome: "تم العثور على المسارات الحساسة! يمكنك الآن تجربة إضافة المنتجات عبر مسار الإضافة وتطبيق الكوبونات عبر Burp Suite."
+      };
+    } else {
+      return {
+        output: [
+          { text: `Command not found or not useful: ${cmd}`, type: "error" },
+          { text: "Try using 'ffuf -u https://api.cybergear.com/api/cart -X POST' to discover endpoints.", type: "info" }
+        ],
+        correct: false
+      };
+    }
+  },
+
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    if (parsed.path.includes("/api/cart/add") && parsed.method.toUpperCase() === "POST") {
+      let qty = parseInt(bodyJson.quantity);
+      
+      // Handle missing or invalid
+      if (isNaN(qty)) {
+        return builder.setStatus(400).setBody({ error: "Invalid quantity" }).build();
+      }
+
+      // Check WAF rule for negative sign string in request
+      if (requestText.includes("-") && requestText.match(/-[0-9]+/)) {
+        return builder
+          .setStatus(400, "Bad Request")
+          .setBody({ error: "Malicious input detected (Negative values not allowed)." })
+          .setOutcome("اكتشف الـ WAF وجود إشارة السالب وقام بحظر الطلب.")
+          .build();
+      }
+
+      // 32-bit Integer Overflow Check
+      if (qty >= 2147483648) { // Over Max Int32
+        const overflowedQty = qty - 4294967296; // 32-bit wraparound
+        
+        if (overflowedQty < 0) {
+          const cartTotal = 1500 + (overflowedQty * 100);
+          
+          if (cartTotal <= 0) {
+            return builder
+              .setStatus(200)
+              .setBody({
+                status: "success",
+                cart_total: cartTotal,
+                message: "Item added, cart updated via wrapped integer!"
+              })
+              .setCorrect(true)
+              .setOutcome("نجاح! أدى تجاوز الحد الأقصى للأعداد (Integer Overflow) إلى حساب كمية سالبة، مما تسبب في خفض السعر الإجمالي للسلة إلى قيمة غير صالحة.")
+              .setEvidence("Integer Overflow Logic Flaw", `Quantity: ${qty} wrapped to ${overflowedQty}, reducing cart total to ${cartTotal}.`)
+              .build();
+          }
+        }
+      }
+
+      // Regular response
+      return builder
+        .setStatus(200)
+        .setBody({
+          status: "success",
+          cart_total: 1500 * qty,
+          message: "Item added to cart"
+        })
+        .setOutcome("تم إضافة المنتج بشكل طبيعي. إجمالي السعر تم تحديثه، فكر كيف يمكنك تقليل الإجمالي باستخدام طفح الأعداد (Integer Overflow).")
+        .build();
+    }
+    
+    return builder.setStatus(404).setBody({ error: "Endpoint not found" }).build();
   }
 };
