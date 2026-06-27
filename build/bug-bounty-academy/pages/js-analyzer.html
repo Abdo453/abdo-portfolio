@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Analyzer - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/index.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(90deg, #080f1e 0%, #0d1830 100%);
+      border-bottom: 1px solid rgba(6, 182, 212, 0.12);
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-family: var(--font-title);
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .main-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .input-panel {
+      width: 45%;
+      background: rgba(10, 20, 38, 0.45);
+      border-left: 1px solid rgba(6, 182, 212, 0.15);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .input-panel h3 {
+      margin-top: 0;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .code-textarea {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 8px;
+      padding: 15px;
+      color: #4ade80;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      direction: ltr;
+      resize: none;
+      outline: none;
+      transition: all 0.2s;
+      white-space: pre;
+      overflow: auto;
+    }
+    .code-textarea:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+    }
+    .btn-analyze {
+      margin-top: 15px;
+      background: var(--accent-cyan);
+      color: #000;
+      border: none;
+      padding: 14px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-analyze:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    }
+    
+    .results-panel {
+      flex: 1;
+      background: #040b17;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .tabs-header {
+      display: flex;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 15px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: rgba(255,255,255,0.4);
+      font-family: var(--font-title);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover {
+      color: rgba(255,255,255,0.7);
+    }
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.05);
+    }
+    .tab-badge {
+      background: rgba(255,255,255,0.1);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+    }
+    .tab-btn.active .tab-badge {
+      background: var(--accent-cyan);
+      color: #000;
+    }
+
+    .tab-content {
+      display: none;
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    .finding-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      direction: ltr;
+      text-align: left;
+    }
+    .finding-card.critical {
+      border-left: 4px solid #ef4444;
+      background: linear-gradient(90deg, rgba(239,68,68,0.05) 0%, transparent 100%);
+    }
+    .finding-card.high {
+      border-left: 4px solid #f97316;
+    }
+    .finding-card.medium {
+      border-left: 4px solid #f59e0b;
+    }
+    .finding-card.low {
+      border-left: 4px solid #3b82f6;
+    }
+
+    .finding-type {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .finding-value {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: var(--text-main);
+      word-break: break-all;
+    }
+    
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1><i class="bx bx-code-curly"></i> JS Analyzer</h1>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Static Code Analysis for Endpoints & Secrets</span>
+    <div style="flex-grow: 1;"></div>
+    <a href="../index.html" style="color: var(--accent-cyan); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
+      <i class="bx bx-home"></i> Back to Dashboard
+    </a>
+  </header>
+
+  <div class="main-content">
+    <aside class="input-panel">
+      <h3><i class="bx bx-code-block"></i> Source Code</h3>
+      <textarea id="js-input" class="code-textarea" placeholder="// Paste Minified or Obfuscated JavaScript here..."></textarea>
+      <button id="btn-analyze" class="btn-analyze">
+        <i class="bx bx-search-alt-2"></i> Analyze Code
+      </button>
+    </aside>
+
+    <main class="results-panel">
+      <div class="tabs-header">
+        <button class="tab-btn active" data-tab="endpoints">
+          <i class="bx bx-link"></i> Endpoints
+          <span class="tab-badge" id="badge-endpoints">0</span>
+        </button>
+        <button class="tab-btn" data-tab="secrets">
+          <i class="bx bx-key"></i> Secrets
+          <span class="tab-badge" id="badge-secrets">0</span>
+        </button>
+        <button class="tab-btn" data-tab="comments">
+          <i class="bx bx-comment-detail"></i> Comments
+          <span class="tab-badge" id="badge-comments">0</span>
+        </button>
+      </div>
+      
+      <div class="tab-content active" id="tab-endpoints">
+        <div class="empty-state">
+          <i class="bx bx-folder-open"></i>
+          <p>No endpoints found yet. Paste code and analyze.</p>
+        </div>
+      </div>
+      
+      <div class="tab-content" id="tab-secrets">
+        <div class="empty-state">
+          <i class="bx bx-shield-x"></i>
+          <p>No secrets found yet. Paste code and analyze.</p>
+        </div>
+      </div>
+      
+      <div class="tab-content" id="tab-comments">
+        <div class="empty-state">
+          <i class="bx bx-message-square-dots"></i>
+          <p>No comments found yet. Paste code and analyze.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/js-analyzer.js"></script>
+</body>
+</html>
