@@ -1182,11 +1182,11 @@ window.ScenarioEngine = {
       if (isCorrect) {
         optionCards[this.selectedQuizOption].classList.add('correct');
         ProgressManager.addXP(10);
-        alert(`✅ إجابة صحيحة! (+10 XP)${explanationText}`);
+        this.showToast(`✅ إجابة صحيحة! (+10 XP)`, 'success');
       } else {
         optionCards[this.selectedQuizOption].classList.add('wrong');
         optionCards[quiz.answer].classList.add('correct');
-        alert(`❌ إجابة خاطئة. الإجابة الصحيحة هي: ${String.fromCharCode(65 + quiz.answer)}.${explanationText}`);
+        this.showToast(`❌ إجابة خاطئة. الإجابة الصحيحة هي: ${String.fromCharCode(65 + quiz.answer)}`, 'error');
         ProgressManager.logError();
       }
 

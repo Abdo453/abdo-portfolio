@@ -230,7 +230,7 @@ window.AutoplayManager = {
     const q = window.ScenarioEngine.scenario.steps[window.ScenarioEngine.currentStepIndex].quizData[qIdx];
     const correctAnsIdx = q.answer;
     
-    const optionCards = document.querySelectorAll('#quiz-options-list .quiz-option-card');
+    const optionCards = document.querySelectorAll('#quiz-options-list .quiz-option');
     const submitBtn = document.getElementById('quiz-submit-btn');
     const nextBtn = document.getElementById('quiz-next-btn');
     
