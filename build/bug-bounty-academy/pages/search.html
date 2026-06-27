@@ -84,14 +84,19 @@
       }
 
       let count = 0;
+      const keywords = query.replace(/[^a-z0-9- ]/g, '').split(' ').filter(k => k.length > 0);
+
       window.scenariosDatabase.forEach(sc => {
-        // Query match checks (ID, Title, Category, Company, Target tags)
-        const matchId = sc.id.toLowerCase().includes(query);
-        const matchTitle = sc.title.toLowerCase().includes(query);
-        const matchCat = sc.category.toLowerCase().includes(query);
-        const matchCompany = sc.company.toLowerCase().includes(query);
+        const searchableText = `${sc.id} ${sc.title} ${sc.realisticTitle || ''} ${sc.category} ${sc.company} ${(sc.tags || []).join(' ')}`.toLowerCase();
         
-        if (!matchId && !matchTitle && !matchCat && !matchCompany) return;
+        let match = false;
+        if (keywords.length === 0) {
+          match = true;
+        } else {
+          match = keywords.every(kw => searchableText.includes(kw));
+        }
+        
+        if (!match) return;
         count++;
 
         const isSolved = solved.includes(sc.id);
