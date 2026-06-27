@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Payload Generator - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/index.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(90deg, #080f1e 0%, #0d1830 100%);
+      border-bottom: 1px solid rgba(6, 182, 212, 0.12);
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-family: var(--font-title);
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .main-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .controls-panel {
+      width: 350px;
+      background: rgba(10, 20, 38, 0.45);
+      border-left: 1px solid rgba(6, 182, 212, 0.15);
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .output-panel {
+      flex: 1;
+      padding: 20px 30px;
+      overflow-y: auto;
+      background: #040b17;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .form-group select, .form-group input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 6px;
+      padding: 10px;
+      color: var(--text-main);
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .form-group select:focus, .form-group input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.2);
+    }
+    .btn-generate {
+      width: 100%;
+      background: var(--accent-cyan);
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    }
+    
+    .code-box {
+      background: #020617;
+      border: 1px solid rgba(6, 182, 212, 0.15);
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+    .code-box pre {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: #4ade80;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      direction: ltr;
+      text-align: left;
+    }
+    .btn-copy {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: var(--text-secondary);
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+    
+    .explanation-box {
+      background: rgba(6, 182, 212, 0.05);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .explanation-box h3 {
+      margin-top: 0;
+      color: var(--accent-cyan);
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .explanation-box p {
+      margin-bottom: 0;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1><i class="bx bx-wrench"></i> Payload Generator</h1>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Interactive Exploit Builder</span>
+    <div style="flex-grow: 1;"></div>
+    <a href="../index.html" style="color: var(--accent-cyan); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
+      <i class="bx bx-home"></i> Back to Dashboard
+    </a>
+  </header>
+
+  <div class="main-content">
+    <aside class="controls-panel">
+      <div class="form-group">
+        <label for="vuln-class"><i class="bx bx-bug"></i> Vulnerability Type</label>
+        <select id="vuln-class">
+          <option value="xss">Cross-Site Scripting (XSS)</option>
+          <option value="sqli">SQL Injection (SQLi)</option>
+          <option value="ssrf">Server-Side Request Forgery (SSRF)</option>
+          <option value="lfi">Local File Inclusion (LFI)</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="context-group">
+        <label for="vuln-context"><i class="bx bx-target-lock"></i> Target Context</label>
+        <select id="vuln-context">
+          <!-- Populated dynamically -->
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="vuln-action"><i class="bx bx-play-circle"></i> Action / Objective</label>
+        <select id="vuln-action">
+          <!-- Populated dynamically -->
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="vuln-filter"><i class="bx bx-filter-alt"></i> Filter / WAF Bypass</label>
+        <select id="vuln-filter">
+          <option value="none">None (Standard Payload)</option>
+          <option value="urlencode">URL Encoding (Standard)</option>
+          <option value="doubleurlencode">Double URL Encoding</option>
+          <option value="base64">Base64 Encoding</option>
+        </select>
+      </div>
+
+      <button id="btn-generate" class="btn-generate">
+        <i class="bx bx-cog"></i> Generate Payload
+      </button>
+    </aside>
+
+    <main class="output-panel">
+      <div class="code-box">
+        <button class="btn-copy" id="btn-copy" title="Copy to Clipboard">
+          <i class="bx bx-copy"></i> Copy
+        </button>
+        <pre id="output-code">// Select options and click Generate...</pre>
+      </div>
+      
+      <div class="explanation-box">
+        <h3><i class="bx bx-info-circle"></i> How it works</h3>
+        <p id="output-explanation">
+          Select your vulnerability parameters on the left to see the generated payload and an explanation of the mechanics behind it.
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/payload-generator.js"></script>
+</body>
+</html>
