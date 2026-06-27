@@ -744,7 +744,13 @@ window.ScenarioEngine = {
     this.el.termBody.innerHTML = '';
     this.el.termControls.innerHTML = '';
 
-    if (step.terminalCommands) {
+    const termInput = document.getElementById('term-input');
+
+    if (step.terminalCommands && step.terminalCommands.length > 0) {
+      if (termInput) {
+        termInput.disabled = true;
+        termInput.placeholder = "Choose a command to run from the buttons on the right...";
+      }
       step.terminalCommands.forEach(cmd => {
         const btn = document.createElement('button');
         btn.className = 'hunt-btn';
@@ -755,10 +761,51 @@ window.ScenarioEngine = {
         });
         this.el.termControls.appendChild(btn);
       });
-    }
-  },
+    } else if (typeof this.scenario.simulateTerminal === 'function') {
+      // V3 Interactive Terminal
+      if (termInput) {
+        termInput.disabled = false;
+        termInput.placeholder = "Type your command here (e.g. nmap, curl, sqlmap) and press Enter...";
+        termInput.value = '';
+        termInput.focus();
 
-  executeTerminalCommand(cmd) {
+        // Clear previous event listeners by cloning
+        const newTermInput = termInput.cloneNode(true);
+        termInput.parentNode.replaceChild(newTermInput, termInput);
+
+        newTermInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const commandText = newTermInput.value.trim();
+            if (!commandText) return;
+            
+            newTermInput.disabled = true;
+            newTermInput.value = '';
+
+            // Run simulation
+            const result = this.scenario.simulateTerminal(commandText);
+            
+            // Format for executeTerminalCommand
+            const cmd = {
+              name: commandText,
+              output: result.output || [],
+              correct: result.correct || false,
+              evidence: result.evidence || null
+            };
+
+            this.executeTerminalCommand(cmd, () => {
+              newTermInput.disabled = false;
+              newTermInput.focus();
+              if (result.outcome) {
+                // Show notification or toast
+                console.log("[Terminal Outcome]", result.outcome);
+              }
+            });
+          }
+        });
+      }
+    }
+
+  executeTerminalCommand(cmd, callback) {
     let index = 0;
     this.el.termBody.innerHTML += `<div class="term-line term-cmd">hunter@recon:~$ ${cmd.name}</div>`;
     
@@ -774,6 +821,10 @@ window.ScenarioEngine = {
         
         if (cmd.correct) {
           this.el.nextBtn.disabled = false;
+        }
+
+        if (callback && typeof callback === 'function') {
+          callback();
         }
         return;
       }
