@@ -57,48 +57,6 @@ window.scenario_005 = {
       "workspace": "recon",
       "xpReward": 150,
       "description": "### 🔍 فحص وتأكيد SQL Injection تلقائياً\n\nسنقوم بتشغيل أداة الفحص للتأكد من إمكانية حقن القواعد تلقائياً أو يدوياً.\nاختر الأداة المناسبة لتشغيلها.",
-      "terminalCommands": [
-        {
-          "name": "curl \"https://shop.target.com/products?sort=price_asc\"",
-          "correct": false,
-          "output": [
-            {
-              "text": "HTTP/1.1 200 OK",
-              "type": "info"
-            },
-            {
-              "text": "[Product list returned instantly...]",
-              "type": "out"
-            }
-          ]
-        },
-        {
-          "name": "sqlmap -u \"https://shop.target.com/products?category=electronics&sort=price_asc\" --dbms=mysql --batch",
-          "correct": true,
-          "evidence": {
-            "title": "SQLMap Vulnerable Parameter",
-            "content": "Parameter: sort (GET)\nType: time-based blind\nTitle: MySQL >= 5.0.12 AND time-based blind (query SLEEP)"
-          },
-          "output": [
-            {
-              "text": "[INF] testing connection to the target URL",
-              "type": "info"
-            },
-            {
-              "text": "[INF] testing if the target URL is stable",
-              "type": "info"
-            },
-            {
-              "text": "[!] GET parameter 'sort' is vulnerable. Do you want to keep testing others? [y/N]",
-              "type": "success"
-            },
-            {
-              "text": "[!] MySQL database identified.",
-              "type": "success"
-            }
-          ]
-        }
-      ],
       "aiAdvisor": {
         "hint": "شغّل أداة sqlmap لفحص معامل الترتيب تلقائياً وتأكيد الثغرة.",
         "payloadExplanation": "sqlmap تقوم بإرسال مئات الطلبات التجريبية لكشف نوع الحقن تلقائياً.",
@@ -113,18 +71,6 @@ window.scenario_005 = {
       "description": "### 🌐 التحقق اليدوي من تأخير الوقت (Time Delay)\n\nسنقوم بحقن دالة `SLEEP(5)` يدوياً في معامل الـ `sort` ومراقبة زمن الاستجابة.\nاضغط على **Execute Sleep Payload** لمراقبة تأخر الخادم.",
       "burpRequest": "GET /products?category=electronics&sort=price_asc HTTP/1.1\nHost: shop.target.com\nUser-Agent: Mozilla/5.0\nAccept: */*",
       "burpResponse": "HTTP/1.1 200 OK\n[Returned in 0.3 seconds]",
-      "burpActions": [
-        {
-          "name": "Execute Sleep Payload",
-          "correct": true,
-          "modifiedRequest": "GET /products?category=electronics&sort=price_asc,SLEEP(5) HTTP/1.1\nHost: shop.target.com\nUser-Agent: Mozilla/5.0",
-          "modifiedResponse": "HTTP/1.1 200 OK\n[Returned in 5.2 seconds]\n\n{\n  \"status\": \"success\",\n  \"products\": [...]\n}",
-          "evidence": {
-            "title": "Time-Based SQLi Delay",
-            "content": "GET /products?sort=price_asc,SLEEP(5) -> Response delayed by 5.2 seconds"
-          }
-        }
-      ],
       "aiAdvisor": {
         "hint": "اضغط على زر Execute Sleep Payload لإرسال دالة النوم وتأكيد الحقن.",
         "payloadExplanation": "حقن دالة SLEEP(5) يجبر قاعدة البيانات على الانتظار قبل إرجاع الطلب.",
@@ -212,6 +158,40 @@ window.scenario_005 = {
       "order"
     ]
   },
+  simulateTerminal(command) {
+    const cmd = command.trim();
+    if (cmd.startsWith("sqlmap")) {
+      return {
+        output: [
+          { text: "[INF] testing connection to the target URL", type: "info" },
+          { text: "[INF] testing if the target URL is stable", type: "info" },
+          { text: "[!] GET parameter 'sort' is vulnerable. Do you want to keep testing others? [y/N]", type: "success" },
+          { text: "[!] MySQL database identified.", type: "success" }
+        ],
+        correct: true,
+        evidence: { title: "SQLMap Vulnerable Parameter", content: "Parameter: sort (GET)\nType: time-based blind\nTitle: MySQL >= 5.0.12 AND time-based blind (query SLEEP)" },
+        outcome: "تم التعرف على الثغرة بنجاح عبر sqlmap! يمكنك الآن الانتقال إلى أداة Burp Suite لتجربة حقن الوقت SLEEP() يدوياً ومراقبة النتيجة."
+      };
+    } else if (cmd.startsWith("curl")) {
+      return {
+        output: [
+          { text: "HTTP/1.1 200 OK", type: "info" },
+          { text: "[Product list returned instantly...]", type: "out" }
+        ],
+        correct: false,
+        outcome: "التطبيق يعمل بشكل طبيعي والرد سريع. جرب فحص المسار بحثاً عن ثغرات قواعد البيانات (SQLi) باستخدام أداة متخصصة مثل sqlmap."
+      };
+    } else {
+      return {
+        output: [
+          { text: `Command not found or not useful: ${cmd}`, type: "error" },
+          { text: "Try using 'sqlmap -u https://shop.target.com/products?sort=price_asc --batch' to automatically find SQL injection.", type: "info" }
+        ],
+        correct: false
+      };
+    }
+  },
+
   simulateBackend(requestText, bodyJson) {
     const parsed = window.HttpRequestParser.parse(requestText);
     const builder = new window.HttpResponseBuilder();

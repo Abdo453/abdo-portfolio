@@ -57,48 +57,6 @@ window.scenario_004 = {
       "workspace": "recon",
       "xpReward": 150,
       "description": "### 🔍 استخراج وكسر توقيع JWT\n\nسنقوم بالتقاط توكين عادي ومحاولة كسر المفتاح السري محلياً عبر هجوم القاموس.\nاختر الأداة المناسبة لتشغيلها.",
-      "terminalCommands": [
-        {
-          "name": "jwt_tool -t https://target-payment.com/api/v1/auth",
-          "correct": false,
-          "output": [
-            {
-              "text": "[INF] Running jwt_tool...",
-              "type": "info"
-            },
-            {
-              "text": "[!] Test for alg: none failed. Server rejected.",
-              "type": "error"
-            }
-          ]
-        },
-        {
-          "name": "hashcat -m 16500 jwt_hash.txt rockyou.txt",
-          "correct": true,
-          "evidence": {
-            "title": "JWT Cracked Key",
-            "content": "Secret Key Found: weak_secret_2024"
-          },
-          "output": [
-            {
-              "text": "Session..........: hashcat",
-              "type": "info"
-            },
-            {
-              "text": "Hash.Mode........: 16500 (JWT (JSON Web Token))",
-              "type": "info"
-            },
-            {
-              "text": "Cracked..........: weak_secret_2024",
-              "type": "success"
-            },
-            {
-              "text": "[!] Success: Cracked JWT HMAC-SHA256 signature key!",
-              "type": "success"
-            }
-          ]
-        }
-      ],
       "aiAdvisor": {
         "hint": "شغّل أداة hashcat لمحاولة كسر تشفير توقيع الـ JWT المستخرج.",
         "payloadExplanation": "الوضع 16500 في hashcat مخصص لكسر تواقيع الـ JWT عبر مطابقتها بقواميس الكلمات.",
@@ -111,20 +69,8 @@ window.scenario_004 = {
       "workspace": "burp",
       "xpReward": 200,
       "description": "### 🌐 إرسال التوكين المزور (Forge JWT)\n\nبعد كسر السري `weak_secret_2024`:\nقمنا بتزوير توكين جديد يحمل صلاحيات `role: \"superadmin\"` و `user: \"admin\"`.\nاضغط على **Send Forged JWT** لاختبار الدخول للوحة التحكم الحساسة.",
-      "burpRequest": "GET /api/v1/admin/dashboard HTTP/1.1\nHost: target-payment.com\nAuthorization: Bearer [attacker_token]\nAccept: application/json",
+      "burpRequest": "GET /api/v1/admin/dashboard HTTP/1.1\nHost: target-payment.com\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlcjEyMyIsInJvbGUiOiJ1c2VyIn0.OriginalSignature123\nAccept: application/json",
       "burpResponse": "HTTP/1.1 401 Unauthorized\nContent-Type: application/json\n\n{\n  \"error\": \"Access denied. Standard users are restricted.\"\n}",
-      "burpActions": [
-        {
-          "name": "Send Forged JWT",
-          "correct": true,
-          "modifiedRequest": "GET /api/v1/admin/dashboard HTTP/1.1\nHost: target-payment.com\nAuthorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4iLCJyb2xlIjoic3VwZXJhZG1pbiJ9.SignatureVerified\nAccept: application/json",
-          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"status\": \"success\",\n  \"data\": {\n    \"total_users\": 150000,\n    \"total_transactions\": \"$2.5M\",\n    \"admin_panel\": \"accessible\"\n  }\n}",
-          "evidence": {
-            "title": "Bypass Admin Auth JWT",
-            "content": "Access granted to /api/v1/admin/dashboard via forged JWT with role: superadmin"
-          }
-        }
-      ],
       "aiAdvisor": {
         "hint": "اضغط على زر Send Forged JWT لتمرير التوكين المزور وتأكيد صلاحيات الأدمن.",
         "payloadExplanation": "تمرير التوكين المعدل والموقع بالسري المستخرج لتخطي فحص المصادقة.",
@@ -212,6 +158,41 @@ window.scenario_004 = {
       "weak"
     ]
   },
+  simulateTerminal(command) {
+    const cmd = command.trim();
+    if (cmd.startsWith("jwt_tool")) {
+      return {
+        output: [
+          { text: "[INF] Running jwt_tool to test for alg: none...", type: "info" },
+          { text: "[!] Test for alg: none failed. Server rejected token.", type: "error" },
+          { text: "[INF] Extracting token for offline cracking...", type: "info" }
+        ],
+        correct: false,
+        outcome: "التطبيق يرفض ثغرة alg: none. نحتاج لتجربة كسر مفتاح التوقيع (Secret Key) محلياً لتزوير التوكين. جرب استخدام hashcat."
+      };
+    } else if (cmd.startsWith("hashcat") || cmd.startsWith("john")) {
+      return {
+        output: [
+          { text: "Session..........: hashcat", type: "info" },
+          { text: "Hash.Mode........: 16500 (JWT (JSON Web Token))", type: "info" },
+          { text: "Cracked..........: weak_secret_2024", type: "success" },
+          { text: "[!] Success: Cracked JWT HMAC-SHA256 signature key!", type: "success" }
+        ],
+        correct: true,
+        evidence: { title: "JWT Cracked Key", content: "Secret Key Found: weak_secret_2024" },
+        outcome: "تم كسر المفتاح السري بنجاح! المفتاح هو 'weak_secret_2024'. الآن اذهب إلى أداة Burp، قم بفك تشفير الـ Payload وتغيير role إلى superadmin، ثم أعد توقيعه باستخدام هذا المفتاح."
+      };
+    } else {
+      return {
+        output: [
+          { text: `Command not found or not useful: ${cmd}`, type: "error" },
+          { text: "Try using 'hashcat -m 16500 jwt_hash.txt rockyou.txt' to crack the signature.", type: "info" }
+        ],
+        correct: false
+      };
+    }
+  },
+
   simulateBackend(requestText, bodyJson) {
     const parsed = window.HttpRequestParser.parse(requestText);
     const builder = new window.HttpResponseBuilder();

