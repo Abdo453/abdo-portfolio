@@ -1173,31 +1173,52 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalHistory = document.getElementById("modal-history");
 
   window.closeModals = () => {
-    modalToolbox.style.display = "none";
-    modalFav.style.display = "none";
-    modalHistory.style.display = "none";
+    if (modalToolbox) modalToolbox.style.display = "none";
+    if (modalFav) modalFav.style.display = "none";
+    if (modalHistory) modalHistory.style.display = "none";
   };
 
-  document.getElementById("btn-modal-toolbox").addEventListener("click", () => {
-    closeModals();
-    modalToolbox.style.display = "flex";
+  [modalToolbox, modalFav, modalHistory].forEach(modal => {
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) window.closeModals();
+      });
+    }
   });
 
-  document.getElementById("btn-modal-fav").addEventListener("click", () => {
-    closeModals();
-    modalFav.style.display = "flex";
-    renderFavModal();
-  });
+  const btnTb = document.getElementById("btn-modal-toolbox");
+  if (btnTb) {
+    btnTb.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.closeModals();
+      if (modalToolbox) modalToolbox.style.display = "flex";
+    });
+  }
 
-  document.getElementById("btn-modal-history").addEventListener("click", () => {
-    closeModals();
-    modalHistory.style.display = "flex";
-    renderHistoryModal();
-  });
+  const btnFavM = document.getElementById("btn-modal-fav");
+  if (btnFavM) {
+    btnFavM.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.closeModals();
+      if (modalFav) modalFav.style.display = "flex";
+      renderFavModal();
+    });
+  }
+
+  const btnHistM = document.getElementById("btn-modal-history");
+  if (btnHistM) {
+    btnHistM.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.closeModals();
+      if (modalHistory) modalHistory.style.display = "flex";
+      renderHistoryModal();
+    });
+  }
 
   function renderFavModal() {
     const favs = getFavorites();
     const container = document.getElementById("fav-list-container");
+    if (!container) return;
     if (favs.length === 0) {
       container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No favorites saved yet. Click ⭐ on any payload!</div>`;
       return;
@@ -1213,6 +1234,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderHistoryModal() {
     const hist = getHistory();
     const container = document.getElementById("history-list-container");
+    if (!container) return;
     if (hist.length === 0) {
       container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No generation history yet.</div>`;
       return;
@@ -1235,33 +1257,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const tbHex = document.getElementById("toolbox-hex");
   const tbHtml = document.getElementById("toolbox-html");
 
-  tbInput.addEventListener("input", () => {
-    const val = tbInput.value;
-    if (!val) {
-      tbB64.value = tbUrl.value = tbHex.value = tbHtml.value = "";
-      return;
-    }
-    try { tbB64.value = btoa(unescape(encodeURIComponent(val))); } catch(e) { tbB64.value = "Error"; }
-    tbUrl.value = encodeURIComponent(val);
-    tbHex.value = val.split('').map(c => '%' + c.charCodeAt(0).toString(16)).join('');
-    tbHtml.value = val.replace(/[\u00A0-\u9999<>\&]/g, i => '&#'+i.charCodeAt(0)+';');
-  });
+  if (tbInput) {
+    tbInput.addEventListener("input", () => {
+      const val = tbInput.value;
+      if (!val) {
+        tbB64.value = tbUrl.value = tbHex.value = tbHtml.value = "";
+        return;
+      }
+      try { tbB64.value = btoa(unescape(encodeURIComponent(val))); } catch(e) { tbB64.value = "Error"; }
+      tbUrl.value = encodeURIComponent(val);
+      tbHex.value = val.split('').map(c => '%' + c.charCodeAt(0).toString(16)).join('');
+      tbHtml.value = val.replace(/[\u00A0-\u9999<>\&]/g, i => '&#'+i.charCodeAt(0)+';');
+    });
+  }
 
   // EXPORT ALL
-  document.getElementById("btn-export-all").addEventListener("click", () => {
-    const data = {
-      currentPayload: currentGeneratedPayload,
-      favorites: getFavorites(),
-      history: getHistory()
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "bba_payload_arsenal.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  });
+  const btnExp = document.getElementById("btn-export-all");
+  if (btnExp) {
+    btnExp.addEventListener("click", (e) => {
+      e.preventDefault();
+      const data = {
+        currentPayload: currentGeneratedPayload,
+        favorites: getFavorites(),
+        history: getHistory()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "bba_payload_arsenal.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
 
   // Initial Run
   generateAndSimulate();
