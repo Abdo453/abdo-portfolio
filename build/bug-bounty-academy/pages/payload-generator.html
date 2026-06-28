@@ -420,7 +420,33 @@
       font-size: 1.4rem;
       cursor: pointer;
     }
-    .modal-close:hover { color: #fff; }
+    /* Light Mode Overrides */
+    body.light-mode {
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    body.light-mode .header {
+      background: linear-gradient(90deg, #e2e8f0 0%, #cbd5e1 100%);
+      border-bottom-color: #cbd5e1;
+    }
+    body.light-mode .header h1 { color: #0284c7; }
+    body.light-mode .controls-panel {
+      background: #f1f5f9;
+      border-right-color: #cbd5e1;
+    }
+    body.light-mode .output-panel { background: #ffffff; }
+    body.light-mode .sim-card {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    body.light-mode .sim-card-title { color: #0284c7; }
+    body.light-mode .toolbar-btn {
+      background: #e2e8f0;
+      border-color: #cbd5e1;
+      color: #334155;
+    }
+    body.light-mode .toolbar-btn:hover { background: #cbd5e1; color: #0f172a; }
   </style>
 </head>
 <body>
@@ -429,6 +455,7 @@
     <div style="flex-grow: 1;"></div>
     
     <!-- Toolbar Buttons -->
+    <button class="toolbar-btn" id="theme-toggle" title="Toggle Theme">🌙</button>
     <button class="toolbar-btn btn-pro" id="btn-modal-report"><i class="bx bx-file"></i> HackerOne Report</button>
     <button class="toolbar-btn btn-pro" id="btn-modal-sandbox"><i class="bx bx-test-tube"></i> Custom Sandbox</button>
     <button class="toolbar-btn btn-pro" id="btn-modal-game"><i class="bx bx-joystick"></i> WAF Game (XP)</button>
@@ -733,6 +760,6 @@
     </div>
   </div>
 
-  <script src="../assets/js/payload-generator.js?v=6.1"></script>
+  <script src="../assets/js/payload-generator.js?v=6.2"></script>
 </body>
 </html>

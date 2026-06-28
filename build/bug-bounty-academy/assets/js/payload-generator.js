@@ -892,9 +892,24 @@ document.addEventListener("DOMContentLoaded", () => {
       a.href = url;
       a.download = "bba_payload_pro_suite.json";
       document.body.appendChild(a);
-      a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+    });
+  }
+
+  // Theme Toggle Engine
+  const themeToggleBtn = document.getElementById("theme-toggle");
+  if (themeToggleBtn) {
+    if (localStorage.getItem("bba_theme") === "light") {
+      document.body.classList.add("light-mode");
+      themeToggleBtn.textContent = "☀️";
+    }
+    themeToggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+      const isLight = document.body.classList.contains("light-mode");
+      themeToggleBtn.textContent = isLight ? "☀️" : "🌙";
+      localStorage.setItem("bba_theme", isLight ? "light" : "dark");
+      showToast(isLight ? "Light Mode Activated ☀️" : "Dark Mode Activated 🌙");
     });
   }
 
