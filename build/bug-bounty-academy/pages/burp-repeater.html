@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دليل Repeater الشامل والـ 10 مختبرات التفاعلية - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #0d1117; color: #c9d1d9; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; }
+    .doc-container { max-width: 1150px; margin: 0 auto; padding: 30px 20px; }
+    .doc-header { border-bottom: 2px solid #30363d; padding-bottom: 20px; margin-bottom: 30px; }
+    .doc-title { font-size: 2.2rem; color: #f97316; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+    .doc-subtitle { color: #8b949e; font-size: 1.1rem; }
+    .section-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .section-title { font-size: 1.4rem; color: #58a6ff; border-right: 4px solid #f97316; padding-right: 12px; margin-top: 0; margin-bottom: 20px; }
+    .pro-tip-box { background: rgba(168, 85, 247, 0.1); border-right: 4px solid #a855f7; padding: 15px; border-radius: 6px; margin: 15px 0; color: #d8b4fe; }
+    .code-snippet { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 15px; font-family: 'Fira Code', monospace; direction: ltr; text-align: left; color: #38bdf8; overflow-x: auto; }
+    
+    /* Grid for 10 Labs */
+    .labs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
+    .lab-card { background: #090d16; border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 8px; padding: 20px; position: relative; }
+    .lab-card-title { color: #f97316; font-weight: bold; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .btn-lab-action { background: #21262d; border: 1px solid #30363d; color: #fff; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; font-size: 0.82rem; }
+    .btn-lab-action:hover { background: #f97316; color: #000; }
+    
+    /* Workflow Timeline */
+    .workflow-step { background: #0d1117; border-right: 3px solid #58a6ff; padding: 12px 15px; margin-bottom: 10px; border-radius: 4px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="doc-container">
+    <header class="doc-header">
+      <a href="../index.html" style="color:#58a6ff; text-decoration:none; font-weight:bold;"><i class="bx bx-right-arrow-alt"></i> العودة للرئيسية</a>
+      <h1 class="doc-title"><i class="bx bx-infinite"></i> ⭐ Repeater Masterclass & 10 Interactive Labs</h1>
+      <p class="doc-subtitle">الدليل التكتيكي الشامل لمُكرر الطلبات وسلسلة الـ 10 مختبرات التفاعلية لصيد الثغرات.</p>
+    </header>
+
+    <!-- SECTION 1: INTRODUCTION & CONTROLS -->
+    <div class="section-card">
+      <h2 class="section-title">1. نظرة شاملة على أداة Burp Repeater ولوحة المفتش (Inspector)</h2>
+      <p>تُعد أداة <strong>Burp Repeater</strong> السلاح الأول والأساسي لباحثي الـ Bug Bounty. تتيح لك الأداة تعديل طلبات الـ HTTP وإعادة إرسالها مئات المرات مع مراقبة استجابة السيرفر لحظة بلحظة دون الحاجة لإعادة التفاعل مع المتصفح.</p>
+      
+      <h3>🔍 لوحة المفتش (Inspector Panel) وطرق العرض:</h3>
+      <ul>
+        <li><strong>Raw View:</strong> عرض كود الـ HTTP الخام للطلب والاستجابة كما ينقل عبر الشبكة.</li>
+        <li><strong>Pretty View:</strong> تنسيق الأكواد المرتجعة (HTML/JSON/XML) لتسهيل القراءة.</li>
+        <li><strong>Hex View:</strong> عرض القيم السداسية عشرية، وهو ممتاز لاكتشاف الحروف المخفية وقيم الـ Null Bytes.</li>
+        <li><strong>Inspector:</strong> لوحة جانبية ذكية تقسم الطلب لـ Request Headers و Query Parameters و Cookies، وتتيح لك تعديل أي عنصر بضغطتين.</li>
+      </ul>
+
+      <div class="pro-tip-box">
+        💡 <strong>اختصارات لوحة المفاتيح الذهبية:</strong>
+        <br>• `Ctrl + R`: إرسال الطلب المعترض فوراً من الـ Proxy إلى الـ Repeater.
+        <br>• `Ctrl + Space`: إرسال الطلب الحقيقي داخل الـ Repeater لرؤية الاستجابة.
+      </div>
+    </div>
+
+    <!-- SECTION 2: WORKFLOW -->
+    <div class="section-card">
+      <h2 class="section-title">💡 How Bug Bounty Hunters Actually Use Repeater</h2>
+      <p>كيف يفكر الباحث الأمني عند استخدام Repeater؟ إليك سير العمل العملي المتبع في الصيد الحقيقي:</p>
+      
+      <div class="workflow-step">1️⃣ <strong>Intercept Request:</strong> اعتراض طلب حسّاس (مثل الشراء، تعديل الملف، أو البحث) عبر الـ Proxy.</div>
+      <div class="workflow-step">2️⃣ <strong>Send to Repeater (Ctrl+R):</strong> تحويل الطلب للـ Repeater لعزله واختباره بحرية.</div>
+      <div class="workflow-step">3️⃣ <strong>Modify Parameter:</strong> تغيير معامل واحد فقط في كل مرة (مثل id أو role أو price) لعزل السبب والنتيجة.</div>
+      <div class="workflow-step">4️⃣ <strong>Observe Response (Status & Length):</strong> مراقبة رمز الاستجابة (200 vs 403 vs 500) وحجم الـ Response Length.</div>
+      <div class="workflow-step">5️⃣ <strong>Identify Vulnerability & Exploit:</strong> تأكيد وجود الثغرة وتطوير كود استغلال موثق (PoC) لتقديمه للمنصة!</div>
+    </div>
+
+    <!-- SECTION 3: THE 10 INTERACTIVE LABS -->
+    <div class="section-card">
+      <h2 class="section-title">🧪 سلسلة الـ 10 مختبرات التفاعلية (10 Interactive Labs)</h2>
+      <p>قم باختبار مهاراتك الميدانية في الـ 10 سيناريوهات التالية عبر تعديل الطلب وإعادة الإرسال لرؤية النتيجة فوراُ:</p>
+
+      <div class="labs-grid">
+        <!-- LAB 1 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-dollar-circle"></i> 1. Price Tampering Lab</div>
+          <textarea id="lab1-req" class="code-snippet" style="height:70px;">POST /checkout HTTP/1.1\nitem=phone&price=500</textarea>
+          <button class="btn-lab-action" onclick="runLab1()">Send in Repeater</button>
+          <div id="lab1-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+
+        <!-- LAB 2 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-user-voice"></i> 2. Role Escalation Lab</div>
+          <textarea id="lab2-req" class="code-snippet" style="height:70px;">POST /user/update HTTP/1.1\nusername=john&role=user</textarea>
+          <button class="btn-lab-action" onclick="runLab2()">Send in Repeater</button>
+          <div id="lab2-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+
+        <!-- LAB 3 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-shield-x"></i> 3. IDOR Direct Access Lab</div>
+          <textarea id="lab3-req" class="code-snippet" style="height:70px;">GET /api/v1/user/15 HTTP/1.1\nCookie: session=user15_token</textarea>
+          <button class="btn-lab-action" onclick="runLab3()">Send in Repeater</button>
+          <div id="lab3-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+
+        <!-- LAB 4 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-data"></i> 4. SQL Injection Lab</div>
+          <textarea id="lab4-req" class="code-snippet" style="height:70px;">GET /products?category=1 HTTP/1.1</textarea>
+          <button class="btn-lab-action" onclick="runLab4()">Send in Repeater</button>
+          <div id="lab4-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+
+        <!-- LAB 5 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-code-block"></i> 5. Reflected XSS Lab</div>
+          <textarea id="lab5-req" class="code-snippet" style="height:70px;">GET /search?q=laptops HTTP/1.1</textarea>
+          <button class="btn-lab-action" onclick="runLab5()">Send in Repeater</button>
+          <div id="lab5-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+
+        <!-- LAB 6 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-key"></i> 6. JWT Manipulation Lab</div>
+          <textarea id="lab6-req" class="code-snippet" style="height:70px;">GET /admin HTTP/1.1\nAuthorization: Bearer eyJhbGciOiJIUzI1NiJ9...</textarea>
+          <button class="btn-lab-action" onclick="runLab6()">Send in Repeater</button>
+          <div id="lab6-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+
+        <!-- LAB 7 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-globe"></i> 7. HTTP Headers Bypass Lab</div>
+          <textarea id="lab7-req" class="code-snippet" style="height:70px;">GET /internal/admin HTTP/1.1\nHost: target.com</textarea>
+          <button class="btn-lab-action" onclick="runLab7()">Send in Repeater</button>
+          <div id="lab7-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+
+        <!-- LAB 8 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-cookie"></i> 8. Cookie Hijacking Lab</div>
+          <textarea id="lab8-req" class="code-snippet" style="height:70px;">GET /profile HTTP/1.1\nCookie: sess_id=guest_99</textarea>
+          <button class="btn-lab-action" onclick="runLab8()">Send in Repeater</button>
+          <div id="lab8-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+
+        <!-- LAB 9 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-file"></i> 9. File Upload Bypass Lab</div>
+          <textarea id="lab9-req" class="code-snippet" style="height:70px;">POST /upload HTTP/1.1\nContent-Type: image/jpeg\n\nshell.php</textarea>
+          <button class="btn-lab-action" onclick="runLab9()">Send in Repeater</button>
+          <div id="lab9-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+
+        <!-- LAB 10 -->
+        <div class="lab-card">
+          <div class="lab-card-title"><i class="bx bx-time"></i> 10. Race Condition Lab</div>
+          <textarea id="lab10-req" class="code-snippet" style="height:70px;">POST /redeem-coupon HTTP/1.1\ncoupon=DISCOUNT50</textarea>
+          <button class="btn-lab-action" onclick="runLab10()">Send Parallel Group</button>
+          <div id="lab10-res" style="margin-top:8px; font-weight:bold; font-size:0.82rem;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: CHALLENGE MODE CTF -->
+    <div class="section-card" style="border-color:#facc15;">
+      <h2 class="section-title" style="color:#facc15;"><i class="bx bx-trophy"></i> Challenge Mode (Mini CTF)</h2>
+      <p>يوجد طلب HTTP أسفله يحتوي على ثغرة مستترة. استخدم حسك التكتيكي وقم بتعديل المعامل المناسب لاكتشاف الـ Flag!</p>
+      
+      <div class="code-snippet" id="ctf-req-box">
+GET /api/v2/discount?code=WELCOME10&user_id=8812 HTTP/1.1
+Host: shop-target.com
+User-Agent: Mozilla/5.0
+      </div>
+      
+      <div style="margin-top:15px; display:flex; gap:10px;">
+        <input type="text" id="ctf-flag-input" placeholder="أدخل الـ Flag المكتشف هنا..." style="background:#0d1117; border:1px solid #30363d; color:#fff; padding:8px 12px; border-radius:6px; flex:1;">
+        <button class="btn-lab-action" onclick="checkCtfFlag()" style="background:#facc15; color:#000; margin:0;">التحقق من الـ Flag</button>
+        <button class="btn-lab-action" onclick="alert('تلميح: جرب تغيير user_id إلى 1 أو إضافة بارامتر admin=true!')" style="margin:0;">عرض تلميح (Hint)</button>
+      </div>
+      <div id="ctf-feedback" style="margin-top:10px; font-weight:bold;"></div>
+    </div>
+
+  </div>
+
+  <script>
+    function runLab1() {
+      const v = document.getElementById("lab1-req").value;
+      const r = document.getElementById("lab1-res");
+      if(v.includes("price=1") || v.includes("price=0")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - Purchased at discounted price!</span>"; }
+      else { r.innerHTML = "<span style='color:#f87171;'>HTTP/1.1 200 OK - Standard Price Charged.</span>"; }
+    }
+    function runLab2() {
+      const v = document.getElementById("lab2-req").value;
+      const r = document.getElementById("lab2-res");
+      if(v.includes("role=admin")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - Role Escalated to Administrator!</span>"; }
+      else { r.innerHTML = "<span style='color:#38bdf8;'>HTTP/1.1 200 OK - User Profile Saved.</span>"; }
+    }
+    function runLab3() {
+      const v = document.getElementById("lab3-req").value;
+      const r = document.getElementById("lab3-res");
+      if(v.includes("/user/16") || v.includes("/user/1")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - IDOR Success! Exfiltrated victim profile data.</span>"; }
+      else { r.innerHTML = "<span style='color:#38bdf8;'>HTTP/1.1 200 OK - Own Profile Data Returned.</span>"; }
+    }
+    function runLab4() {
+      const v = document.getElementById("lab4-req").value;
+      const r = document.getElementById("lab4-res");
+      if(v.includes("'") || v.includes("UNION")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 500 SQL Syntax Error / Data Leaked!</span>"; }
+      else { r.innerHTML = "<span style='color:#38bdf8;'>HTTP/1.1 200 OK - Standard Products.</span>"; }
+    }
+    function runLab5() {
+      const v = document.getElementById("lab5-req").value;
+      const r = document.getElementById("lab5-res");
+      if(v.includes("<script>") || v.includes("alert")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - Reflected XSS Executed!</span>"; }
+      else { r.innerHTML = "<span style='color:#38bdf8;'>HTTP/1.1 200 OK - Normal Search.</span>"; }
+    }
+    function runLab6() {
+      const v = document.getElementById("lab6-req").value;
+      const r = document.getElementById("lab6-res");
+      if(v.includes("none") || v.includes("admin")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - JWT Authentication Bypassed!</span>"; }
+      else { r.innerHTML = "<span style='color:#f87171;'>HTTP/1.1 401 Unauthorized.</span>"; }
+    }
+    function runLab7() {
+      const v = document.getElementById("lab7-req").value;
+      const r = document.getElementById("lab7-res");
+      if(v.includes("X-Forwarded-For: 127.0.0.1")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - Internal Admin Panel Access Granted!</span>"; }
+      else { r.innerHTML = "<span style='color:#f87171;'>HTTP/1.1 403 Access Denied from external IP.</span>"; }
+    }
+    function runLab8() {
+      const v = document.getElementById("lab8-req").value;
+      const r = document.getElementById("lab8-res");
+      if(v.includes("sess_id=admin_99")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - Hijacked Admin Session!</span>"; }
+      else { r.innerHTML = "<span style='color:#38bdf8;'>HTTP/1.1 200 OK - Guest Session.</span>"; }
+    }
+    function runLab9() {
+      const v = document.getElementById("lab9-req").value;
+      const r = document.getElementById("lab9-res");
+      if(v.includes("application/x-php") || v.includes("shell.php")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - Web Shell Uploaded to /uploads/shell.php!</span>"; }
+      else { r.innerHTML = "<span style='color:#38bdf8;'>HTTP/1.1 200 OK - Standard Upload.</span>"; }
+    }
+    function runLab10() {
+      const r = document.getElementById("lab10-res");
+      r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK (x5 Parallel Requests) - Coupon redeemed 5 times! (Race Condition Confirmed).</span>";
+    }
+    function checkCtfFlag() {
+      const val = document.getElementById("ctf-flag-input").value.trim();
+      const fb = document.getElementById("ctf-feedback");
+      if(val === "FLAG{REPEATER_MASTER_IDOR_2026}") {
+        fb.innerHTML = "<span style='color:#4ade80;'>🎉 أسطوري! إجابة صحيحة، تم الحصول على الـ Flag بنجاح (+100 XP)!</span>";
+      } else {
+        fb.innerHTML = "<span style='color:#f87171;'>❌ الـ Flag غير صحيح. قم بتعديل الطلب في مخك وجرب user_id=1 للحصول عليه! (الرمز هو FLAG{REPEATER_MASTER_IDOR_2026})</span>";
+      }
+    }
+  </script>
+</body>
+</html>
