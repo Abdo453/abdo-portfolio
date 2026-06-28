@@ -73,6 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnSendToRepeater) {
     btnSendToRepeater.addEventListener("click", () => {
       repeaterRequestEditor.value = proxyRequestEditor.value;
+      if (typeof WorkflowEngine !== "undefined") {
+        WorkflowEngine.setGlobalRequest(proxyRequestEditor.value, "Proxy");
+        WorkflowEngine.addTimelineEntry("Proxy", "Sent Request to Repeater");
+      }
       switchTab("repeater");
     });
   }
@@ -80,6 +84,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnSendToIntruder) {
     btnSendToIntruder.addEventListener("click", () => {
       intruderPositionEditor.value = proxyRequestEditor.value.replace("admin' OR '1'='1", "§admin' OR '1'='1§");
+      if (typeof WorkflowEngine !== "undefined") {
+        WorkflowEngine.setGlobalRequest(proxyRequestEditor.value, "Proxy");
+        WorkflowEngine.addTimelineEntry("Proxy", "Sent Request to Intruder");
+      }
       switchTab("intruder");
     });
   }

@@ -230,6 +230,12 @@
     <div class="burp-tab" data-tab="collaborator"><i class="bx bx-radio-circle-marked"></i> Collaborator</div>
   </div>
 
+  <!-- Live Inter-Tool Activity Timeline Bar -->
+  <div style="background:#0d1117; border-bottom:1px solid #30363d; padding:4px 15px; display:flex; align-items:center; gap:10px; overflow-x:auto;" id="global-timeline-bar-wrapper">
+    <span style="font-size:0.75rem; font-weight:bold; color:#f97316; white-space:nowrap;"><i class="bx bx-time-five"></i> LIVE WORKFLOW TIMELINE:</span>
+    <div id="global-timeline-bar" style="display:flex; align-items:center; gap:6px; overflow-x:auto;"></div>
+  </div>
+
   <!-- Studio Viewport -->
   <div class="studio-viewport">
 
@@ -423,6 +429,14 @@ Content-Length: 125
 
   </div>
 
+  <script src="../assets/js/request-engine.js?v=1.0"></script>
+  <script src="../assets/js/response-engine.js?v=1.0"></script>
+  <script src="../assets/js/workflow-engine.js?v=1.0"></script>
   <script src="../assets/js/burp-simulator.js?v=1.0"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      WorkflowEngine.renderTimelineWidget();
+    });
+  </script>
 </body>
 </html>
