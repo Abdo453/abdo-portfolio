@@ -1,19 +1,44 @@
 // ==========================================
-// UNIFIED SIMULATION ENGINE CORE (v1.0)
+// UNIFIED SIMULATION ENGINE CORE (v2.0)
 // ==========================================
 
 const SimulationEngine = (function() {
-  // Stateful Mock Database
   const mockDB = {
     users: {
       "15": { id: 15, name: "John Doe (You)", email: "john@target.com", role: "user", balance: 500 },
       "16": { id: 16, name: "Sarah Connor (Victim)", email: "sarah@target.com", role: "user", balance: 9500, secret_token: "tok_sarah_991823" },
-      "1":  { id: 1,  name: "System Administrator", email: "admin@target.com", role: "admin", balance: 1000000, flag: "FLAG{IDOR_MASTER_EXPLORER_2026}" }
+      "1":  { id: 1,  name: "System Administrator", email: "admin@target.com", role: "admin", balance: 1000000 }
     },
     products: {
       "phone": { name: "iPhone 15 Pro", price: 500 }
     }
   };
+
+  // V2 Dynamic Flag Generator
+  function getDynamicFlag(ctfKey) {
+    let flags = JSON.parse(localStorage.getItem("bba_dynamic_flags") || "{}");
+    if (!flags[ctfKey]) {
+      const randStr = Math.random().toString(36).substring(2, 7).toUpperCase();
+      flags[ctfKey] = `FLAG-${ctfKey.toUpperCase()}-${randStr}`;
+      localStorage.setItem("bba_dynamic_flags", JSON.stringify(flags));
+    }
+    return flags[ctfKey];
+  }
+
+  // V2 Instructor Mode ("Explain My Mistake") Assistant
+  function explainMistake(labType, userInput) {
+    let explanation = "";
+    if (labType === "idor") {
+      explanation = "💡 **Instructor Feedback:**\n- **أين الخطأ؟** لقد قمت بإرسال رقم تعريفك الخاص (id=15).\n- **لماذا لم تنجح؟** ثغرة IDOR تحدث عندما تطلب الوصول لبيانات مستخدم آخر دون التثبت من الجلسة.\n- **ماذا كان يجب أن تفعل؟** قم بتغيير /user/15 إلى /user/16 في الطلب لاستخراج بيانات الضحية!";
+    } else if (labType === "role") {
+      explanation = "💡 **Instructor Feedback:**\n- **أين الخطأ؟** الـ Payload لا يزال يحتوي على role=user.\n- **لماذا لم تنجح؟** السيرفر يثق ببارامتر الدور المتبادل.\n- **ماذا كان يجب أن تفعل؟** قم بتعديل قيمة role=user إلى role=admin في جسم الطلب لتجاوز الصلاحيات!";
+    } else if (labType === "sqli") {
+      explanation = "💡 **Instructor Feedback:**\n- **أين الخطأ؟** الطلب عادي ولا يحتوي على حروف خاصة لاختبار الـ Database.\n- **ماذا كان يجب أن تفعل؟** أضف علامة التنصيص (') بعد رقم الكود لإحداث كسرة في استعلام قاعدة البيانات وشاهد خطأ الـ MySQL!";
+    } else {
+      explanation = "💡 **Instructor Feedback:** قم بمراجعة ترويسات الطلب والبارامترات وتأكد من تعديل القيمة الحسّاسة!";
+    }
+    return explanation;
+  }
 
   // Badges Management
   function unlockBadge(badgeId, badgeTitle) {
@@ -51,6 +76,7 @@ const SimulationEngine = (function() {
       if (mockDB.users[targetId]) {
         resData = { status: "success", data: mockDB.users[targetId] };
         if (targetId !== "15") {
+          resData.flag = getDynamicFlag("idor");
           unlockBadge("idor_hunter", "🛡️ IDOR Hunter");
         }
       } else {
@@ -60,7 +86,7 @@ const SimulationEngine = (function() {
     } 
     else if (labType === "role") {
       if (body.includes("role=admin")) {
-        resData = { status: "success", role: "admin", message: "Access Granted to Admin Dashboard!", flag: "FLAG{ROLE_ESCALATION_EXPERT}" };
+        resData = { status: "success", role: "admin", message: "Access Granted to Admin Dashboard!", flag: getDynamicFlag("role") };
         unlockBadge("priv_esc", "👑 Privilege Escalation Master");
       } else {
         resData = { status: "success", role: "user", message: "User profile updated." };
@@ -84,7 +110,7 @@ const SimulationEngine = (function() {
       }
     }
     else {
-      resData = { status: "success", message: "Request processed dynamically by SimulationEngine Core." };
+      resData = { status: "success", message: "Request processed dynamically by SimulationEngine Core V2." };
     }
 
     const jsonStr = JSON.stringify(resData, null, 2);
@@ -93,6 +119,8 @@ const SimulationEngine = (function() {
 
   return {
     processRequest: processRequest,
-    unlockBadge: unlockBadge
+    unlockBadge: unlockBadge,
+    getDynamicFlag: getDynamicFlag,
+    explainMistake: explainMistake
   };
 })();

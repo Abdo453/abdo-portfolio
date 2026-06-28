@@ -78,15 +78,43 @@
     <div class="section-card">
       <h2 class="section-title">2. معرض الأوسمة للشارات الذهبية المكتسبة (Unlocked Badges Showcase)</h2>
       <div class="badge-grid" id="badge-showcase-container">
-        <div class="badge-card"><div class="badge-icon"><i class="bx bx-award"></i></div><div style="font-weight:bold; color:#fff;">🛡️ IDOR Hunter</div></div>
-        <div class="badge-card"><div class="badge-icon"><i class="bx bx-award"></i></div><div style="font-weight:bold; color:#fff;">🔑 JWT Master</div></div>
-        <div class="badge-card"><div class="badge-icon"><i class="bx bx-award"></i></div><div style="font-weight:bold; color:#fff;">⚡ Race Specialist</div></div>
-        <div class="badge-card"><div class="badge-icon"><i class="bx bx-award"></i></div><div style="font-weight:bold; color:#fff;">🎯 Sniper Pro</div></div>
-        <div class="badge-card"><div class="badge-icon"><i class="bx bx-award"></i></div><div style="font-weight:bold; color:#fff;">🛰️ OOB Specialist</div></div>
-        <div class="badge-card"><div class="badge-icon"><i class="bx bx-award"></i></div><div style="font-weight:bold; color:#fff;">🏆 CTF Champion</div></div>
+        <!-- Dynamically loaded -->
       </div>
     </div>
 
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("badge-showcase-container");
+      const badges = JSON.parse(localStorage.getItem("bba_user_badges") || '["idor_hunter","jwt_master","race_hunter","sniper_pro","collab_pro","ctf_champion"]');
+      
+      const badgeTitles = {
+        "idor_hunter": "🛡️ IDOR Hunter",
+        "jwt_master": "🔑 JWT Master",
+        "race_hunter": "⚡ Race Specialist",
+        "sniper_pro": "🎯 Sniper Pro",
+        "collab_pro": "🛰️ OOB Specialist",
+        "ctf_champion": "🏆 CTF Champion",
+        "priv_esc": "👑 Privilege Escalation Master",
+        "sqli_master": "💉 SQLi Ninja",
+        "price_manipulator": "💰 Business Logic Specialist",
+        "target_master": "🎯 Target & Scope Master",
+        "cluster_master": "💣 Cluster Bomb Master",
+        "smart_decoder": "🔤 Smart Decoder Specialist",
+        "jwt_analyst": "🔑 JWT Inspector Specialist",
+        "comparer_pro": "📊 Comparer Diff Specialist",
+        "logger_auditor": "📡 Logger Forensic Auditor",
+        "scanner_pro": "🛡️ Automated Audit Specialist"
+      };
+
+      let html = "";
+      badges.forEach(b => {
+        const title = badgeTitles[b] || b;
+        html += `<div class="badge-card"><div class="badge-icon"><i class="bx bx-award"></i></div><div style="font-weight:bold; color:#fff;">${title}</div></div>`;
+      });
+      container.innerHTML = html;
+    });
+  </script>
 </body>
 </html>
