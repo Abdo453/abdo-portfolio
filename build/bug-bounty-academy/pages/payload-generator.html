@@ -2,8 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>Masterclass Payload Generator & Exploit Lifecycle Lab - Bug Bounty Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css?v=5.0">
+  <title>Pro Exploitation Arsenal & WAF Training Suite - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=6.0">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -51,6 +51,15 @@
     .toolbar-btn:hover {
       background: rgba(6, 182, 212, 0.2);
       border-color: var(--accent-cyan);
+      color: #fff;
+    }
+    .toolbar-btn.btn-pro {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: rgba(168, 85, 247, 0.35);
+      color: #d8b4fe;
+    }
+    .toolbar-btn.btn-pro:hover {
+      background: rgba(168, 85, 247, 0.3);
       color: #fff;
     }
 
@@ -191,10 +200,10 @@
       background: rgba(255,255,255,0.2);
       color: #fff;
     }
-    .btn-action-sm.active-fav {
-      color: #facc15;
-      background: rgba(250, 204, 21, 0.15);
-      border: 1px solid rgba(250, 204, 21, 0.3);
+    .btn-action-sm.active-view {
+      background: var(--accent-cyan);
+      color: #000;
+      font-weight: bold;
     }
 
     /* Syntax Highlighting */
@@ -246,7 +255,6 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
       margin-top: 10px;
-      position: relative;
     }
     .pipeline-step {
       background: #030712;
@@ -254,7 +262,6 @@
       border-radius: 8px;
       padding: 12px;
       text-align: center;
-      position: relative;
     }
     .pipeline-step-num {
       font-size: 0.7rem;
@@ -293,10 +300,6 @@
       align-items: center;
       gap: 6px;
     }
-    .star-rating {
-      color: #facc15;
-      letter-spacing: 2px;
-    }
 
     /* Browser Matrix */
     .browser-grid {
@@ -326,7 +329,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
 
     /* WAF Inspector */
@@ -354,13 +356,6 @@
       color: var(--text-secondary);
       margin-top: 10px;
       line-height: 1.5;
-    }
-
-    /* Explanation Box */
-    .explanation-text {
-      color: var(--text-secondary);
-      line-height: 1.65;
-      font-size: 0.92rem;
     }
 
     /* Diagnostic Terminal Box */
@@ -395,7 +390,7 @@
       border: 1px solid rgba(6, 182, 212, 0.3);
       border-radius: 12px;
       width: 90%;
-      max-width: 650px;
+      max-width: 700px;
       max-height: 85vh;
       overflow-y: auto;
       padding: 25px;
@@ -426,33 +421,17 @@
       cursor: pointer;
     }
     .modal-close:hover { color: #fff; }
-    
-    .list-item-row {
-      background: #030712;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 6px;
-      padding: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .list-item-code {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: #4ade80;
-      word-break: break-all;
-      direction: ltr;
-      text-align: left;
-    }
   </style>
 </head>
 <body>
   <header class="header">
-    <h1><i class="bx bx-wrench"></i> Masterclass Payload Generator & Exploit Lab</h1>
+    <h1><i class="bx bx-wrench"></i> Pro Exploitation Arsenal</h1>
     <div style="flex-grow: 1;"></div>
     
     <!-- Toolbar Buttons -->
+    <button class="toolbar-btn btn-pro" id="btn-modal-report"><i class="bx bx-file"></i> HackerOne Report</button>
+    <button class="toolbar-btn btn-pro" id="btn-modal-sandbox"><i class="bx bx-test-tube"></i> Custom Sandbox</button>
+    <button class="toolbar-btn btn-pro" id="btn-modal-game"><i class="bx bx-joystick"></i> WAF Game (XP)</button>
     <button class="toolbar-btn" id="btn-modal-toolbox"><i class="bx bx-wrench"></i> Encoder Toolbox</button>
     <button class="toolbar-btn" id="btn-modal-fav"><i class="bx bx-star" style="color:#facc15;"></i> Favorites</button>
     <button class="toolbar-btn" id="btn-modal-history"><i class="bx bx-history"></i> History</button>
@@ -529,11 +508,15 @@
         <!-- Live Diagnostic Logs -->
       </div>
 
-      <!-- Card 1: Generated Exploit Payload -->
+      <!-- Card 1: Generated Exploit Payload & Burp Repeater View -->
       <div class="sim-card code-box">
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-code-alt"></i> Generated Exploit Payload</span>
-          <div style="display:flex; gap:8px;">
+          <div style="display:flex; gap:8px; align-items:center;">
+            <!-- View Mode Toggles -->
+            <button class="btn-action-sm active-view" id="btn-view-code"><i class="bx bx-code"></i> Code View</button>
+            <button class="btn-action-sm" id="btn-view-burp"><i class="bx bx-wifi"></i> Burp Repeater View</button>
+            
             <button class="btn-action-sm" id="btn-fav" title="Save to Favorites">
               <i class="bx bx-star"></i> Favorite
             </button>
@@ -641,6 +624,57 @@
     </main>
   </div>
 
+  <!-- Modal: HackerOne Report Generator -->
+  <div class="modal-overlay" id="modal-report">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><i class="bx bx-file"></i> HackerOne Bug Bounty Report Generator</h2>
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+      </div>
+      <div style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.8rem; color:var(--text-secondary);">Markdown format ready for HackerOne / Bugcrowd submission</span>
+        <button class="btn-action-sm" id="btn-copy-report"><i class="bx bx-copy"></i> Copy Report Markdown</button>
+      </div>
+      <pre id="report-output" style="background:#030712; border:1px solid rgba(6,182,212,0.3); border-radius:6px; color:#38bdf8; padding:15px; font-family:var(--font-mono); font-size:0.8rem; white-space:pre-wrap; direction:ltr; text-align:left; max-height:400px; overflow-y:auto;"></pre>
+    </div>
+  </div>
+
+  <!-- Modal: Custom Sandbox Playground -->
+  <div class="modal-overlay" id="modal-sandbox">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><i class="bx bx-test-tube"></i> Custom Payload Sandbox & WAF Analyzer</h2>
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+      </div>
+      <div class="form-group">
+        <label>Type Custom Code / String to Test</label>
+        <textarea id="sandbox-input" style="width:100%; height:90px; background:#030712; border:1px solid rgba(6,182,212,0.3); border-radius:6px; color:#fff; padding:12px; font-family:var(--font-mono); direction:ltr; text-align:left;" placeholder="e.g. <svg onload=alert(1)> or ' OR '1'='1"></textarea>
+      </div>
+      <div id="sandbox-analysis-output" style="background:#020617; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:15px; font-family:var(--font-mono); font-size:0.85rem; min-height:100px;">
+        <span style="color:var(--text-muted);">Type string above to analyze risk score and WAF filtering...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: WAF Challenge Game -->
+  <div class="modal-overlay" id="modal-game">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><i class="bx bx-joystick"></i> Break the WAF Challenge Game (XP)</h2>
+        <button class="modal-close" onclick="closeModals()">&times;</button>
+      </div>
+      <div style="background:#030712; border:1px solid rgba(250,204,21,0.3); border-radius:8px; padding:15px; margin-bottom:15px;">
+        <div style="font-weight:bold; color:#facc15; margin-bottom:5px;" id="game-rule-title">Challenge Rule 01</div>
+        <div style="font-size:0.88rem; color:#cbd5e1;" id="game-rule-desc">Loading challenge...</div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.85rem; color:var(--accent-cyan);">Total XP Earned: <strong id="game-xp-count">100 XP</strong></span>
+        <button class="btn-generate" id="btn-submit-game" style="width:auto; padding:8px 20px;">Test Current Generator Config</button>
+      </div>
+      <div id="game-feedback" style="margin-top:12px; font-size:0.85rem; min-height:30px;"></div>
+    </div>
+  </div>
+
   <!-- Modal: Encoder Toolbox -->
   <div class="modal-overlay" id="modal-toolbox">
     <div class="modal-card">
@@ -699,6 +733,6 @@
     </div>
   </div>
 
-  <script src="../assets/js/payload-generator.js?v=5.0"></script>
+  <script src="../assets/js/payload-generator.js?v=6.0"></script>
 </body>
 </html>
