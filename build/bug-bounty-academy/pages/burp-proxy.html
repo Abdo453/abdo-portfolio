@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دليل Burp Proxy الشامل والمحاكي التفاعلي - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.8;
+    }
+    .doc-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+    .doc-header {
+      border-bottom: 2px solid #30363d;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .doc-title {
+      font-size: 2.2rem;
+      color: #f97316;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .doc-subtitle {
+      color: #8b949e;
+      font-size: 1.1rem;
+    }
+    .section-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .section-title {
+      font-size: 1.4rem;
+      color: #58a6ff;
+      border-right: 4px solid #f97316;
+      padding-right: 12px;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    .pro-tip-box {
+      background: rgba(168, 85, 247, 0.1);
+      border-right: 4px solid #a855f7;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+      color: #d8b4fe;
+    }
+    .warning-box {
+      background: rgba(239, 68, 68, 0.1);
+      border-right: 4px solid #ef4444;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+      color: #fca5a5;
+    }
+    .code-snippet {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 15px;
+      font-family: 'Fira Code', monospace;
+      direction: ltr;
+      text-align: left;
+      color: #38bdf8;
+      overflow-x: auto;
+    }
+    /* Interactive Lab Simulator */
+    .lab-box {
+      background: #090d16;
+      border: 2px solid #f97316;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .lab-title {
+      color: #f97316;
+      font-weight: bold;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    .btn-action {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .btn-action:hover { background: #f97316; color: #000; }
+  </style>
+</head>
+<body>
+  <div class="doc-container">
+    <header class="doc-header">
+      <a href="../index.html" style="color:#58a6ff; text-decoration:none; font-weight:bold;"><i class="bx bx-right-arrow-alt"></i> العودة للرئيسية</a>
+      <h1 class="doc-title"><i class="bx bx-transfer-alt"></i> الدليل الشامل لأداة Burp Proxy</h1>
+      <p class="doc-subtitle">الشرح النظري، آلية العمل الهيدروليكية، والمحاكي التفاعلي الميداني لثغرات الاعتراض والتعديل.</p>
+    </header>
+
+    <!-- SECTION 1: INTRODUCTION -->
+    <div class="section-card">
+      <h2 class="section-title">1. ما هي أداة Burp Proxy ولماذا تستخدم؟</h2>
+      <p>تُعتبر أداة <strong>Burp Proxy</strong> القلب النابض لبرنامج Burp Suite. تقع الأداة هندسياً بين متصفح الويب الخاص بك والسيرفر المستهدف (Man-in-the-Middle). تتيح لك الأداة التسمع واعتراض وتعديل جميع حركة مرور بيانات الـ HTTP/HTTPS والـ WebSockets في الوقت الفعلي قبل وصولها إلى خوادم الموقع.</p>
+      
+      <h3>🎯 متى تستخدم؟</h3>
+      <ul>
+        <li><strong>اختبار منطق الأعمال (Business Logic Flaws):</strong> لتعديل الأسعار، والكميات، وأدوار المستخدمين أثناء إرسال الطلب.</li>
+        <li><strong>تخطي الحمايات الطرفية (Client-Side Bypasses):</strong> لتخطي فلاتر الجافاسكريبت والـ HTML5 التي تمنع الحروف الخاصة.</li>
+        <li><strong>تحليل المعاملات المخفية:</strong> لاكتشاف الترويسات (Headers) وبارامترات الكوكيز السريعة.</li>
+      </ul>
+
+      <div class="pro-tip-box">
+        💡 <strong>نصيحة احترافية:</strong> في اختبارات Bug Bounty، لا تعتمد أبداً على ما تراه في الشاشة أمامك في المتصفح. السيرفر يثق فقط بما يصل إليه في طلب الـ HTTP الخام، وهنا يأتي دور الـ Proxy!
+      </div>
+    </div>
+
+    <!-- SECTION 2: CONTROLS & BUTTONS -->
+    <div class="section-card">
+      <h2 class="section-title">2. شرح الأزرار واللوحات التكتيكية في Burp Proxy</h2>
+      <table style="width:100%; border-collapse:collapse; text-align:right;">
+        <thead>
+          <tr style="background:#21262d; color:#58a6ff;">
+            <th style="padding:10px;">الزر / اللوحة</th>
+            <th style="padding:10px;">الوظيفة التكتيكية</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:10px; border-bottom:1px solid #30363d;"><strong>Intercept is ON / OFF</strong></td>
+            <td style="padding:10px; border-bottom:1px solid #30363d;">تفعيل أو إيقاف اعتراض الطلبات في الوقت الفعلي للوقوف والتعديل عليها.</td>
+          </tr>
+          <tr>
+            <td style="padding:10px; border-bottom:1px solid #30363d;"><strong>Forward</strong></td>
+            <td style="padding:10px; border-bottom:1px solid #30363d;">إرسال الطلب المعترض الحالي بعد تعديله إلى السيرفر المستهدف.</td>
+          </tr>
+          <tr>
+            <td style="padding:10px; border-bottom:1px solid #30363d;"><strong>Drop</strong></td>
+            <td style="padding:10px; border-bottom:1px solid #30363d;">تدمير وإلغاء الطلب المعترض حتى لا يصل للسيرفر إطلاقاً.</td>
+          </tr>
+          <tr>
+            <td style="padding:10px; border-bottom:1px solid #30363d;"><strong>HTTP History</strong></td>
+            <td style="padding:10px; border-bottom:1px solid #30363d;">سجل كامل وأرشيف تاريخي لكل الطلبات والاستجابات التي مرت عبر الـ Proxy.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SECTION 3: INTERACTIVE SIMULATOR LAB -->
+    <div class="section-card">
+      <h2 class="section-title">3. المختبر التفاعلي: محاكاة اعتراض وتعديل طلب تغيير السعر (Price Tampering Lab)</h2>
+      <p>في هذا المختبر التفاعلي، سنحاكي ثغرة تناسق الأسعار (Price Manipulation). قم بتفعيل الـ Intercept، اضغط على شراء المنتجات، وقم بتعديل السعر من 100$ إلى 1$ قبل التمرير!</p>
+      
+      <div class="lab-box">
+        <div class="lab-title"><i class="bx bx-flask"></i> Interactive Proxy Tampering Sandbox</div>
+        <div style="display:flex; gap:15px; margin-bottom:15px;">
+          <button class="btn-action" id="lab-intercept-toggle" style="background:#22c55e; color:#000;">Intercept is ON</button>
+          <button class="btn-action" id="lab-btn-buy">شراء منتج آيفون (100$)</button>
+        </div>
+
+        <div id="lab-editor-container" style="display:none; margin-top:15px;">
+          <div style="font-size:0.85rem; color:#f97316; font-weight:bold; margin-bottom:5px;">[الطلب المعترض حالياً - قم بتعديل قيمة price=100 إلى price=1]:</div>
+          <textarea id="lab-request-area" class="code-snippet" style="width:100%; height:120px; outline:none; font-family:'Fira Code';">POST /api/v1/checkout HTTP/1.1
+Host: e-shop.target.com
+Cookie: session=user_token_991823
+
+item=iPhone15&price=100&quantity=1</textarea>
+          <button class="btn-action" id="lab-btn-forward" style="background:#f97316; color:#000; margin-top:10px;">Forward Request</button>
+        </div>
+
+        <div id="lab-result-view" style="margin-top:15px; font-weight:bold; font-size:0.95rem;"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: REAL BUG BOUNTY SCENARIOS -->
+    <div class="section-card">
+      <h2 class="section-title">4. سيناريوهات Bug Bounty واقعية لاستغلال Burp Proxy</h2>
+      <h3>🔥 سيناريو 1: كسر الصلاحيات وتجاوز الـ IDOR</h3>
+      <p>عند زيارة ملفك الشخصي `GET /user/profile?id=105`، قم باعتراض الطلب وتغيير الرقم إلى `id=104` لرؤية بيانات المستخدم الآخر فوراً.</p>
+
+      <div class="warning-box">
+        ⚠️ <strong>تحذير هام:</strong> عند اختبار الـ Proxy على مواقع حقيقية، احرص على إبقاء نطاق الاستهداف (Target Scope) محدداً بدقة حتى لا تعترض طلبات نظام التشغيل المتطفلة أو المواقع الخارجية!
+      </div>
+    </div>
+
+    <!-- SECTION 5: QUIZ & GLOSSARY -->
+    <div class="section-card">
+      <h2 class="section-title">5. اختبر معلوماتك (Proxy Mastery Quiz)</h2>
+      <div style="font-weight:bold; margin-bottom:10px;">سؤال: ما هو الزر الذي يقوم بتدمير الطلب وإلغائه لمنعه من الوصول إلى خوادم الموقع؟</div>
+      <button class="btn-action" onclick="alert('إجابة خاطئة! زر Forward يرسل الطلب.')">Forward</button>
+      <button class="btn-action" onclick="alert('🎉 إجابة صحيحة! زر Drop يدمر الطلب تماماً.')">Drop</button>
+      <button class="btn-action" onclick="alert('إجابة خاطئة! زر Intercept يفعل الوقف فقط.')">Intercept</button>
+    </div>
+
+  </div>
+
+  <script>
+    let isIntercept = true;
+    const toggleBtn = document.getElementById("lab-intercept-toggle");
+    const buyBtn = document.getElementById("lab-btn-buy");
+    const editorContainer = document.getElementById("lab-editor-container");
+    const forwardBtn = document.getElementById("lab-btn-forward");
+    const resultView = document.getElementById("lab-result-view");
+    const reqArea = document.getElementById("lab-request-area");
+
+    toggleBtn.addEventListener("click", () => {
+      isIntercept = !isIntercept;
+      if(isIntercept) {
+        toggleBtn.style.background = "#22c55e";
+        toggleBtn.textContent = "Intercept is ON";
+      } else {
+        toggleBtn.style.background = "#21262d";
+        toggleBtn.textContent = "Intercept is OFF";
+      }
+    });
+
+    buyBtn.addEventListener("click", () => {
+      if(isIntercept) {
+        editorContainer.style.display = "block";
+        resultView.innerHTML = `<span style="color:#facc15;">⏳ تم اعتراض الطلب للوقوف وتعديله...</span>`;
+      } else {
+        resultView.innerHTML = `<span style="color:#f87171;">تم إرسال الطلب مباشرة وسحب 100$ من حسابك! (قم بتفعيل الـ Intercept للتعديل).</span>`;
+      }
+    });
+
+    forwardBtn.addEventListener("click", () => {
+      const val = reqArea.value;
+      editorContainer.style.display = "none";
+      if(val.includes("price=1") && !val.includes("price=100")) {
+        resultView.innerHTML = `<span style="color:#4ade80;">🎉 نجاح البلاغ! تم شراء الآيفون بـ 1$ فقط! تم إثبات وجود ثغرة Business Logic Flaw (Price Tampering).</span>`;
+      } else {
+        resultView.innerHTML = `<span style="color:#38bdf8;">تم تمرير الطلب بالسعر الأصلي. لم يتم تعديل السعر لـ 1$.</span>`;
+      }
+    });
+  </script>
+</body>
+</html>
