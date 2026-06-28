@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دليل Global Logger الشامل وسجل التتبع - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #0d1117; color: #c9d1d9; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; }
+    .doc-container { max-width: 1150px; margin: 0 auto; padding: 30px 20px; }
+    .doc-header { border-bottom: 2px solid #30363d; padding-bottom: 20px; margin-bottom: 30px; }
+    .doc-title { font-size: 2.2rem; color: #f97316; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+    .doc-subtitle { color: #8b949e; font-size: 1.1rem; }
+    .section-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .section-title { font-size: 1.4rem; color: #58a6ff; border-right: 4px solid #f97316; padding-right: 12px; margin-top: 0; margin-bottom: 20px; }
+    .pro-tip-box { background: rgba(168, 85, 247, 0.1); border-right: 4px solid #a855f7; padding: 15px; border-radius: 6px; margin: 15px 0; color: #d8b4fe; }
+    .code-snippet { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 15px; font-family: 'Fira Code', monospace; direction: ltr; text-align: left; color: #38bdf8; overflow-x: auto; }
+    .btn-lab-action { background: #21262d; border: 1px solid #30363d; color: #fff; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; font-size: 0.85rem; }
+    .btn-lab-action:hover { background: #f97316; color: #000; }
+    .log-table { width:100%; border-collapse:collapse; font-size:0.82rem; font-family:'Fira Code', monospace; direction:ltr; text-align:left; }
+    .log-table th { background:#21262d; color:#8b949e; padding:8px; border-bottom:1px solid #30363d; }
+    .log-table td { padding:8px; border-bottom:1px solid #21262d; color:#c9d1d9; }
+    .log-table tr:hover { background:#161b22; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="doc-container">
+    <header class="doc-header">
+      <a href="../index.html" style="color:#58a6ff; text-decoration:none; font-weight:bold;"><i class="bx bx-right-arrow-alt"></i> العودة للرئيسية</a>
+      <h1 class="doc-title"><i class="bx bx-list-check"></i> ⭐ Global Logger Masterclass & Telemetry Suite</h1>
+      <p class="doc-subtitle">الدليل التكتيكي الشامل لأداة سجل الحركة الشامل وتقنيات تصفية السجلات التعدلية.</p>
+    </header>
+
+    <!-- SECTION 1: CONCEPTS & LOGGER++ -->
+    <div class="section-card">
+      <h2 class="section-title">1. أهمية أداة Logger و Logger++ في الصيد والتحقيق</h2>
+      <p>تُعتبر أداة <strong>Burp Logger</strong> الصندوق الأسود (Black Box Log Engine) لأي اختبار اختراق. تقوم الأداة بتسجيل كل طلب واستجابة يتم إنشاؤها عبر جميع أدوات Burp (Proxy, Repeater, Intruder, Scanner) وتخزينها في سجل تاريخي حي وموحد.</p>
+      
+      <h3>🔍 لماذا تحتاج إلى Logger في Bug Bounty؟</h3>
+      <ul>
+        <li><strong>التوثيق الجنائي (Forensic Auditing):</strong> لإثبات وقت وكيفية إرسال الـ Payloads بدقة في تقارير الثغرات.</li>
+        <li><strong>تصفية الحركة المتقدمة (Advanced Filtering):</strong> تصفية الحركة حسب الـ Status Code أو تتبع الحسابات ذات الصلاحيات المتعددة.</li>
+        <li><strong>إعادة تحليل الاستجابات الضائعة:</strong> الوصول لطلب تم إرساله تلقائياً عبر السيرفر ولم تلاحظه في المتصفح.</li>
+      </ul>
+
+      <div class="pro-tip-box">
+        💡 <strong>إضافة Logger++ الشهيرة:</strong> تُعتبر إضافة Logger++ من أقوى الملحقات في BApp Store لأنها تتيح لك تصدير السجلات بصيغة CSV/JSON وكتابة قواعد تصفية معقدة بـ Regex!
+      </div>
+    </div>
+
+    <!-- SECTION 2: INTERACTIVE LAB 1 - LIVE TELEMETRY AUDIT -->
+    <div class="section-card">
+      <h2 class="section-title">🧪 مختبر 1: محاكي تتبع الحركة الحية الموحد (Global Telemetry Audit Sandbox)</h2>
+      <p>جدول السجلات التالي يعرض حركة المرور الحية المستمرة الملتقطة عبر المحرك الموحد (Phase 2 Workflow Engine):</p>
+
+      <div style="margin-bottom:12px; display:flex; gap:10px;">
+        <button class="btn-lab-action" onclick="filterLogs('ALL')" style="margin:0;">عرض الكل (ALL)</button>
+        <button class="btn-lab-action" onclick="filterLogs('200')" style="margin:0; background:#22c55e; color:#000;">200 OK Only</button>
+        <button class="btn-lab-action" onclick="filterLogs('403')" style="margin:0; background:#ef4444; color:#fff;">403 Forbidden</button>
+      </div>
+
+      <div style="background:#0d1117; border:1px solid #30363d; border-radius:6px; overflow-x:auto;">
+        <table class="log-table">
+          <thead>
+            <tr><th>#</th><th>Time</th><th>Tool</th><th>Method</th><th>URL</th><th>Status</th><th>Length</th></tr>
+          </thead>
+          <tbody id="logger-telemetry-tbody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: CHALLENGE MODE CTF -->
+    <div class="section-card" style="border-color:#facc15;">
+      <h2 class="section-title" style="color:#facc15;"><i class="bx bx-trophy"></i> Challenge Mode (Logger CTF)</h2>
+      <p>يوجد طلب حسّاس تم تسجيله في السجلات التاريخية يحتوي على توكن جلسة مسرب (`session_token`). ابحث في السجلات واستخرج الـ Flag!</p>
+      
+      <div style="margin-top:15px; display:flex; gap:10px;">
+        <input type="text" id="ctf-log-input" placeholder="أدخل الـ Flag المكتشف من السجلات..." style="background:#0d1117; border:1px solid #30363d; color:#fff; padding:8px 12px; border-radius:6px; flex:1;">
+        <button class="btn-lab-action" onclick="checkLoggerCtf()" style="background:#facc15; color:#000; margin:0;">التحقق من الـ Flag</button>
+      </div>
+      <div id="ctf-logger-feedback" style="margin-top:10px; font-weight:bold;"></div>
+    </div>
+
+  </div>
+
+  <script src="../assets/js/simulation-engine.js?v=1.0"></script>
+  <script src="../assets/js/workflow-engine.js?v=1.0"></script>
+  <script>
+    const mockLogs = [
+      { id: 1, time: "10:41:02", tool: "Proxy", method: "GET", url: "/index.php", status: "200 OK", len: "4,281" },
+      { id: 2, time: "10:41:15", tool: "Repeater", method: "POST", url: "/api/v1/checkout", status: "200 OK", len: "1,042" },
+      { id: 3, time: "10:42:01", tool: "Intruder", method: "GET", url: "/admin/users", status: "403 Forbidden", len: "312" },
+      { id: 4, time: "10:42:30", tool: "Repeater", method: "GET", url: "/user/16?token=FLAG{LOGGER_FORENSIC_AUDITOR_2026}", status: "200 OK", len: "2,840" }
+    ];
+
+    function renderLogs(list) {
+      const tb = document.getElementById("logger-telemetry-tbody");
+      let html = "";
+      list.forEach(l => {
+        const color = l.status.includes("200") ? "#4ade80" : "#f87171";
+        html += `<tr><td>${l.id}</td><td>${l.time}</td><td><strong style="color:#f97316;">${l.tool}</strong></td><td>${l.method}</td><td>${l.url}</td><td style="color:${color}; font-weight:bold;">${l.status}</td><td>${l.len}</td></tr>`;
+      });
+      tb.innerHTML = html;
+    }
+
+    function filterLogs(type) {
+      if(type === 'ALL') renderLogs(mockLogs);
+      else renderLogs(mockLogs.filter(l => l.status.includes(type)));
+    }
+
+    function checkLoggerCtf() {
+      const val = document.getElementById("ctf-log-input").value.trim();
+      const fb = document.getElementById("ctf-logger-feedback");
+      if(val === "FLAG{LOGGER_FORENSIC_AUDITOR_2026}") {
+        fb.innerHTML = "<span style='color:#4ade80;'>🎉 أسطوري! إجابة صحيحة، تم استخراج التوكن المسرب من السجلات بنجاح (+100 XP)!</span>";
+        SimulationEngine.unlockBadge("logger_auditor", "📡 Logger Forensic Auditor");
+      } else {
+        fb.innerHTML = "<span style='color:#f87171;'>❌ الـ Flag غير صحيح. فتش السجلات عند طلب /user/16 للحصول على الـ Token السرّي!</span>";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderLogs(mockLogs);
+    });
+  </script>
+</body>
+</html>
