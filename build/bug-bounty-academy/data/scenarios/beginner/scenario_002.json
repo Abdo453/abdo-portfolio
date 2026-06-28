@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "id": "scenario-002",
+    "title": "SSRF to AWS Metadata - EC2 IAM Keys Theft",
+    "category": "Cloud Security & SSRF",
+    "difficulty": "Intermediate",
+    "targetApp": "Airbnb Cloud Microservice",
+    "estimatedTime": "45 Mins",
+    "bountyReward": "$4,500",
+    "xpReward": 1500
+  },
+  "steps": [
+    {
+      "id": 0,
+      "name": "Mission Brief & Cloud Scope",
+      "workspace": "recon",
+      "content": "### 🎯 Mission Objective\nInvestigate a PDF preview microservice hosted on AWS EC2 to uncover Server-Side Request Forgery (SSRF) vulnerability and extract cloud IAM metadata keys (`169.254.169.254`).\n\n### 📜 Target Scope\n`https://cloud-preview.airbnb-target.com`",
+      "xpReward": 100
+    },
+    {
+      "id": 1,
+      "name": "Intercepting Preview Webhook",
+      "workspace": "burp",
+      "content": "### 📡 Burp Intercept\nIntercept the POST request sent to `/api/v2/fetch-preview` containing `url=https://public-doc.com/sample.pdf`.",
+      "xpReward": 300
+    },
+    {
+      "id": 2,
+      "name": "SSRF to AWS Metadata (169.254.169.254)",
+      "workspace": "repeater",
+      "content": "### 🔄 Repeater Exploitation\nModify `url` parameter to `http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role` to exfiltrate secret AWS AccessKeyId and SecretAccessKey!\n\nFlag: `FLAG{SSRF_AWS_METADATA_IAM_KEYS_THEFT_2026}`",
+      "xpReward": 1100
+    }
+  ]
+}
