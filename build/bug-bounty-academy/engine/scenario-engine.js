@@ -448,6 +448,11 @@ window.ScenarioEngine = {
     this.currentStepIndex = idx;
     const step = this.scenario.steps[idx];
 
+    if (typeof WorkflowEngine !== 'undefined') {
+      const toolLabel = step.workspace ? step.workspace.toUpperCase() : 'SCENARIO';
+      WorkflowEngine.addTimelineEntry(toolLabel, 'Step: ' + step.name);
+    }
+
     // Reset UI
     this.hideAllWorkspaces();
     this.el.stepTitle.innerText = step.name;
