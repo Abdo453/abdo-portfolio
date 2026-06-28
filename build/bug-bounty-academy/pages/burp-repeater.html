@@ -177,30 +177,31 @@ User-Agent: Mozilla/5.0
 
   </div>
 
+  <script src="../assets/js/simulation-engine.js?v=1.0"></script>
   <script>
     function runLab1() {
       const v = document.getElementById("lab1-req").value;
+      const res = SimulationEngine.processRequest(v, "price");
       const r = document.getElementById("lab1-res");
-      if(v.includes("price=1") || v.includes("price=0")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - Purchased at discounted price!</span>"; }
-      else { r.innerHTML = "<span style='color:#f87171;'>HTTP/1.1 200 OK - Standard Price Charged.</span>"; }
+      r.innerHTML = `<pre style="font-family:monospace; color:#4ade80; font-size:0.75rem; white-space:pre-wrap;">${res}</pre>`;
     }
     function runLab2() {
       const v = document.getElementById("lab2-req").value;
+      const res = SimulationEngine.processRequest(v, "role");
       const r = document.getElementById("lab2-res");
-      if(v.includes("role=admin")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - Role Escalated to Administrator!</span>"; }
-      else { r.innerHTML = "<span style='color:#38bdf8;'>HTTP/1.1 200 OK - User Profile Saved.</span>"; }
+      r.innerHTML = `<pre style="font-family:monospace; color:#4ade80; font-size:0.75rem; white-space:pre-wrap;">${res}</pre>`;
     }
     function runLab3() {
       const v = document.getElementById("lab3-req").value;
+      const res = SimulationEngine.processRequest(v, "idor");
       const r = document.getElementById("lab3-res");
-      if(v.includes("/user/16") || v.includes("/user/1")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - IDOR Success! Exfiltrated victim profile data.</span>"; }
-      else { r.innerHTML = "<span style='color:#38bdf8;'>HTTP/1.1 200 OK - Own Profile Data Returned.</span>"; }
+      r.innerHTML = `<pre style="font-family:monospace; color:#4ade80; font-size:0.75rem; white-space:pre-wrap;">${res}</pre>`;
     }
     function runLab4() {
       const v = document.getElementById("lab4-req").value;
+      const res = SimulationEngine.processRequest(v, "sqli");
       const r = document.getElementById("lab4-res");
-      if(v.includes("'") || v.includes("UNION")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 500 SQL Syntax Error / Data Leaked!</span>"; }
-      else { r.innerHTML = "<span style='color:#38bdf8;'>HTTP/1.1 200 OK - Standard Products.</span>"; }
+      r.innerHTML = `<pre style="font-family:monospace; color:${res.includes("500") ? '#f87171' : '#4ade80'}; font-size:0.75rem; white-space:pre-wrap;">${res}</pre>`;
     }
     function runLab5() {
       const v = document.getElementById("lab5-req").value;
@@ -211,7 +212,7 @@ User-Agent: Mozilla/5.0
     function runLab6() {
       const v = document.getElementById("lab6-req").value;
       const r = document.getElementById("lab6-res");
-      if(v.includes("none") || v.includes("admin")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - JWT Authentication Bypassed!</span>"; }
+      if(v.includes("none") || v.includes("admin")) { r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK - JWT Authentication Bypassed!</span>"; SimulationEngine.unlockBadge("jwt_master", "🔑 JWT Master"); }
       else { r.innerHTML = "<span style='color:#f87171;'>HTTP/1.1 401 Unauthorized.</span>"; }
     }
     function runLab7() {
@@ -235,12 +236,14 @@ User-Agent: Mozilla/5.0
     function runLab10() {
       const r = document.getElementById("lab10-res");
       r.innerHTML = "<span style='color:#4ade80;'>HTTP/1.1 200 OK (x5 Parallel Requests) - Coupon redeemed 5 times! (Race Condition Confirmed).</span>";
+      SimulationEngine.unlockBadge("race_hunter", "⚡ Race Condition Specialist");
     }
     function checkCtfFlag() {
       const val = document.getElementById("ctf-flag-input").value.trim();
       const fb = document.getElementById("ctf-feedback");
       if(val === "FLAG{REPEATER_MASTER_IDOR_2026}") {
         fb.innerHTML = "<span style='color:#4ade80;'>🎉 أسطوري! إجابة صحيحة، تم الحصول على الـ Flag بنجاح (+100 XP)!</span>";
+        SimulationEngine.unlockBadge("ctf_champion", "🏆 Repeater CTF Champion");
       } else {
         fb.innerHTML = "<span style='color:#f87171;'>❌ الـ Flag غير صحيح. قم بتعديل الطلب في مخك وجرب user_id=1 للحصول عليه! (الرمز هو FLAG{REPEATER_MASTER_IDOR_2026})</span>";
       }
