@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دليل Intruder الشامل ومحاكيات التخمين - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #0d1117; color: #c9d1d9; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; }
+    .doc-container { max-width: 1150px; margin: 0 auto; padding: 30px 20px; }
+    .doc-header { border-bottom: 2px solid #30363d; padding-bottom: 20px; margin-bottom: 30px; }
+    .doc-title { font-size: 2.2rem; color: #f97316; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+    .doc-subtitle { color: #8b949e; font-size: 1.1rem; }
+    .section-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .section-title { font-size: 1.4rem; color: #58a6ff; border-right: 4px solid #f97316; padding-right: 12px; margin-top: 0; margin-bottom: 20px; }
+    .pro-tip-box { background: rgba(168, 85, 247, 0.1); border-right: 4px solid #a855f7; padding: 15px; border-radius: 6px; margin: 15px 0; color: #d8b4fe; }
+    .code-snippet { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 15px; font-family: 'Fira Code', monospace; direction: ltr; text-align: left; color: #38bdf8; overflow-x: auto; }
+    .btn-lab-action { background: #21262d; border: 1px solid #30363d; color: #fff; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; font-size: 0.85rem; }
+    .btn-lab-action:hover { background: #f97316; color: #000; }
+    .attack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+    .attack-box { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 15px; }
+    .attack-title { font-weight: bold; color: #f97316; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div class="doc-container">
+    <header class="doc-header">
+      <a href="../index.html" style="color:#58a6ff; text-decoration:none; font-weight:bold;"><i class="bx bx-right-arrow-alt"></i> العودة للرئيسية</a>
+      <h1 class="doc-title"><i class="bx bx-crosshair"></i> ⭐ Intruder Masterclass & Fuzzing Suite</h1>
+      <p class="doc-subtitle">الدليل التكتيكي الشامل لمُخمن الثغرات والـ Fuzzer وأنواع الهجمات الأربعة.</p>
+    </header>
+
+    <!-- SECTION 1: POSITIONS & ATTACK TYPES -->
+    <div class="section-card">
+      <h2 class="section-title">1. علامات المواضع (§Positions§) وأنواع الهجمات الأربعة</h2>
+      <p>تُستخدم أداة <strong>Burp Intruder</strong> للأتمتة الهيدروليكية والتخريش (Fuzzing) وتخمين كلمات المرور والمعاملات المخفية. يتم تحديد موضع الحقن بإحاطة الكلمة بالرمز `§` مثل `§admin§`.</p>
+      
+      <h3>🎯 أنواع الهجمات الأربعة (The 4 Attack Types):</h3>
+      <div class="attack-grid">
+        <div class="attack-box">
+          <div class="attack-title">🎯 1. Sniper</div>
+          <div>يستهدف موضع حقن واحد فقط (أو عدة مواضع بالتتابع). يضع الـ Payload الأول في الموضع الأول، ثم ينقل للثاني. ممتاز لتخمين كلمات المرور أو ثغرات الـ Reflected XSS.</div>
+        </div>
+        <div class="attack-box">
+          <div class="attack-title">🔨 2. Battering Ram</div>
+          <div>يضع **نفس الـ Payload** في جميع المواضع المحددة في نفس الوقت! ممتاز إذا كان اسم المستخدم وكلمة المرور متطابقين في الاختبار.</div>
+        </div>
+        <div class="attack-box">
+          <div class="attack-title">🍴 3. Pitchfork</div>
+          <div>يستخدم قوائم متعددة بشكل متوازي (Parallel). يأخذ السطر الأول من القائمة A والسطر الأول من القائمة B معاً. ممتاز لاختبار الأزواج المعروفة.</div>
+        </div>
+        <div class="attack-box">
+          <div class="attack-title">💣 4. Cluster Bomb</div>
+          <div>يقوم بتجربة **مصفوفة تبادليات كاملة (Permutation Grid)**! يقارن كل عنصر من القائمة A مع كل عنصر في القائمة B. الأقوى في هجمات Credential Stuffing.</div>
+        </div>
+      </div>
+
+      <div class="pro-tip-box">
+        💡 <strong>نصيحة احترافية في الـ Grep Match:</strong> استخدم خيار `Grep - Match` للبحث التلقائي في الـ Response عن كلمات مثل `Invalid`, `Welcome`, أو `Access Denied` ليعلمك البرنامج فوراً بالإجابة الناجحة!
+      </div>
+    </div>
+
+    <!-- SECTION 2: INTERACTIVE LAB 1 - SNIPER BRUTE FORCE -->
+    <div class="section-card">
+      <h2 class="section-title">🧪 مختبر 1: محاكي تخمين كلمة المرور (Sniper Brute-Force Lab)</h2>
+      <p>قم باختيار قائمة كلمات المرور واضغط تشغيل الهجوم لرؤية الـ Intruder وهو يختبر القائمة آلياً ويستخرج الـ 200 OK:</p>
+
+      <div class="code-snippet">
+POST /login HTTP/1.1
+Host: target.com
+
+username=admin&password=§PAYLOAD§
+      </div>
+      <button class="btn-lab-action" onclick="runSniperLab()">تشغيل هجوم Sniper Fuzzer</button>
+
+      <div style="margin-top:15px; background:#0d1117; border:1px solid #30363d; border-radius:6px; padding:10px; max-height:180px; overflow-y:auto; font-family:'Fira Code'; font-size:0.8rem;" id="sniper-results-table">
+        <div style="color:#8b949e;">جدول النتائج المباشرة سينزل هنا عند تشغيل الهجوم...</div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: INTERACTIVE LAB 2 - CLUSTER BOMB MATRIX -->
+    <div class="section-card">
+      <h2 class="section-title">🧪 مختبر 2: محاكي مصفوفة التبادليات (Cluster Bomb Matrix Sandbox)</h2>
+      <p>محاكاة اختبار 3 أسماء مستخدمين × 3 كلمات مرور (9 محاولات تبادلية متكاملة):</p>
+      
+      <button class="btn-lab-action" onclick="runClusterBombLab()">تشغيل هجوم Cluster Bomb Matrix</button>
+      <div style="margin-top:15px; background:#0d1117; border:1px solid #30363d; border-radius:6px; padding:10px; max-height:180px; overflow-y:auto; font-family:'Fira Code'; font-size:0.8rem;" id="cluster-results-table">
+        <div style="color:#8b949e;">جدول مصفوفة التبادليات سينزل هنا...</div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: CHALLENGE MODE CTF -->
+    <div class="section-card" style="border-color:#facc15;">
+      <h2 class="section-title" style="color:#facc15;"><i class="bx bx-trophy"></i> Challenge Mode (Intruder CTF)</h2>
+      <p>يوجد حساب آدمن محمي برمز PIN مكون من رقمين (من 10 إلى 99). استخدم المحاكي لتخمين الـ PIN واكتشاف الـ Flag!</p>
+      
+      <button class="btn-lab-action" onclick="runPinCtf()" style="background:#facc15; color:#000;">تخمين الـ PIN الآلي (Fuzz PIN)</button>
+      <div id="ctf-intruder-feedback" style="margin-top:12px; font-weight:bold; font-family:'Fira Code';"></div>
+    </div>
+
+  </div>
+
+  <script src="../assets/js/simulation-engine.js?v=1.0"></script>
+  <script>
+    function runSniperLab() {
+      const tb = document.getElementById("sniper-results-table");
+      tb.innerHTML = "<div style='color:#38bdf8;'>جاري جاري تشغيل هجوم Sniper...</div>";
+      const passlist = ["123456", "password", "admin123", "secret2026", "letmein"];
+      
+      passlist.forEach((p, idx) => {
+        setTimeout(() => {
+          const isCorrect = p === "secret2026";
+          const status = isCorrect ? "<strong style='color:#4ade80;'>200 OK</strong>" : "<span style='color:#f87171;'>401 Unauthorized</span>";
+          const len = isCorrect ? "1,842" : "312";
+          tb.innerHTML += `<div>Payload #${idx+1}: <code>${p}</code> ➔ Status: ${status} | Length: ${len}</div>`;
+          tb.scrollTop = tb.scrollHeight;
+          if(isCorrect) SimulationEngine.unlockBadge("sniper_pro", "🎯 Sniper Fuzzing Specialist");
+        }, idx * 250);
+      });
+    }
+
+    function runClusterBombLab() {
+      const tb = document.getElementById("cluster-results-table");
+      tb.innerHTML = "<div style='color:#38bdf8;'>جاري بناء وتجربة مصفوفة التبادليات (Permutation Grid)...</div>";
+      const users = ["admin", "root", "user"];
+      const passes = ["1234", "admin", "pass123"];
+      let count = 1;
+
+      users.forEach((u) => {
+        passes.forEach((p) => {
+          setTimeout(() => {
+            const isCorrect = (u === "admin" && p === "admin");
+            const status = isCorrect ? "<strong style='color:#4ade80;'>200 OK (Match!)</strong>" : "<span style='color:#64748b;'>401</span>";
+            tb.innerHTML += `<div>Pair #${count++}: [${u}:${p}] ➔ ${status}</div>`;
+            tb.scrollTop = tb.scrollHeight;
+            if(isCorrect) SimulationEngine.unlockBadge("cluster_master", "💣 Cluster Bomb Master");
+          }, count * 150);
+        });
+      });
+    }
+
+    function runPinCtf() {
+      const fb = document.getElementById("ctf-intruder-feedback");
+      fb.innerHTML = "<span style='color:#facc15;'>جاري فحص وتخمين رموز الـ PIN...</span>";
+      setTimeout(() => {
+        fb.innerHTML = "<span style='color:#4ade80;'>🎉 تم اكتشاف الـ PIN بنجاح (PIN: 77)! الـ Flag الذهبي هو: FLAG{INTRUDER_FUZZING_CHAMPION_2026} (+100 XP)!</span>";
+        SimulationEngine.unlockBadge("intruder_ctf", "🏆 Intruder CTF Champion");
+      }, 1200);
+    }
+  </script>
+</body>
+</html>
