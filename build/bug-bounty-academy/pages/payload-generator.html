@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>Payload Generator - Bug Bounty Academy</title>
+  <title>Interactive Exploit & Context Simulator - Bug Bounty Academy</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
@@ -40,20 +40,20 @@
       overflow: hidden;
     }
     .controls-panel {
-      width: 350px;
-      background: rgba(10, 20, 38, 0.45);
-      border-left: 1px solid rgba(6, 182, 212, 0.15);
+      width: 360px;
+      background: rgba(10, 20, 38, 0.65);
+      border-right: 1px solid rgba(6, 182, 212, 0.15);
       padding: 20px;
       overflow-y: auto;
     }
     .output-panel {
       flex: 1;
-      padding: 20px 30px;
+      padding: 25px 35px;
       overflow-y: auto;
-      background: #040b17;
+      background: #030814;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 25px;
     }
     .form-group {
       margin-bottom: 20px;
@@ -67,7 +67,7 @@
     }
     .form-group select, .form-group input {
       width: 100%;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(6, 182, 212, 0.2);
       border-radius: 6px;
       padding: 10px;
@@ -82,7 +82,7 @@
     }
     .btn-generate {
       width: 100%;
-      background: var(--accent-cyan);
+      background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
       color: #000;
       border: none;
       padding: 12px;
@@ -101,17 +101,36 @@
       box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
     }
     
-    .code-box {
-      background: #020617;
-      border: 1px solid rgba(6, 182, 212, 0.15);
-      border-radius: 8px;
+    /* Card Styles */
+    .sim-card {
+      background: #081226;
+      border: 1px solid rgba(6, 182, 212, 0.18);
+      border-radius: 10px;
       padding: 20px;
       position: relative;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
+    .sim-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 10px;
+    }
+    .sim-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .code-box pre {
       margin: 0;
       font-family: var(--font-mono);
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: #4ade80;
       white-space: pre-wrap;
       word-wrap: break-word;
@@ -119,13 +138,10 @@
       text-align: left;
     }
     .btn-copy {
-      position: absolute;
-      top: 10px;
-      right: 10px;
       background: rgba(255,255,255,0.1);
       border: none;
       color: var(--text-secondary);
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 4px;
       cursor: pointer;
       font-size: 0.75rem;
@@ -139,32 +155,145 @@
       color: #fff;
     }
     
-    .explanation-box {
-      background: rgba(6, 182, 212, 0.05);
-      border: 1px solid rgba(6, 182, 212, 0.2);
-      border-radius: 8px;
-      padding: 20px;
+    /* Before / After Context Simulator */
+    .injection-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 10px;
     }
-    .explanation-box h3 {
-      margin-top: 0;
-      color: var(--accent-cyan);
-      font-size: 1rem;
+    .injection-block {
+      background: #030712;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 12px 15px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      direction: ltr;
+      text-align: left;
+      overflow-x: auto;
+    }
+    .injection-block-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      display: block;
+      font-family: var(--font-body);
+    }
+    .highlight-breakout {
+      background: rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
+      padding: 2px 4px;
+      border-radius: 3px;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      font-weight: bold;
+    }
+    .highlight-payload {
+      background: rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      padding: 2px 4px;
+      border-radius: 3px;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+
+    /* Live DOM / Execution Preview */
+    .dom-preview-box {
+      background: #0f172a;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 6px;
+      padding: 15px;
+      min-height: 80px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      position: relative;
     }
-    .explanation-box p {
-      margin-bottom: 0;
+    .simulated-dialog {
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      border-radius: 8px;
+      padding: 15px 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 350px;
+      width: 100%;
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .simulated-dialog-header {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .simulated-dialog-body {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: #38bdf8;
+      background: #0f172a;
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+    .simulated-dialog-btn {
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      padding: 4px 15px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    /* WAF Inspector */
+    .waf-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .waf-badge-bypassed {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .waf-badge-blocked {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .waf-analysis-text {
+      font-size: 0.88rem;
       color: var(--text-secondary);
-      line-height: 1.6;
-      font-size: 0.9rem;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    /* Explanation Box */
+    .explanation-text {
+      color: var(--text-secondary);
+      line-height: 1.65;
+      font-size: 0.92rem;
     }
   </style>
 </head>
 <body>
   <header class="header">
-    <h1><i class="bx bx-wrench"></i> Payload Generator</h1>
-    <span style="color: var(--text-muted); font-size: 0.85rem;">Interactive Exploit Builder</span>
+    <h1><i class="bx bx-wrench"></i> Payload Generator & Context Simulator</h1>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">Interactive Exploit & WAF Simulator</span>
     <div style="flex-grow: 1;"></div>
     <a href="../index.html" style="color: var(--accent-cyan); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
       <i class="bx bx-home"></i> Back to Dashboard
@@ -217,23 +346,70 @@
       </div>
 
       <button id="btn-generate" class="btn-generate">
-        <i class="bx bx-cog"></i> Generate Payload
+        <i class="bx bx-cog"></i> Simulate & Generate
       </button>
     </aside>
 
     <main class="output-panel">
-      <div class="code-box">
-        <button class="btn-copy" id="btn-copy" title="Copy to Clipboard">
-          <i class="bx bx-copy"></i> Copy
-        </button>
-        <pre id="output-code">// Select options and click Generate...</pre>
+      <!-- Card 1: Generated Exploit Payload -->
+      <div class="sim-card code-box">
+        <div class="sim-card-header">
+          <span class="sim-card-title"><i class="bx bx-code-alt"></i> Generated Exploit Payload</span>
+          <button class="btn-copy" id="btn-copy" title="Copy to Clipboard">
+            <i class="bx bx-copy"></i> Copy Payload
+          </button>
+        </div>
+        <pre id="output-code">// Select options on the left and click Simulate...</pre>
+      </div>
+
+      <!-- Card 2: Context Injection Simulator (Before vs After) -->
+      <div class="sim-card">
+        <div class="sim-card-header">
+          <span class="sim-card-title"><i class="bx bx-transfer"></i> Context Injection Simulator (Source Code Breakout)</span>
+        </div>
+        <div class="injection-grid">
+          <div class="injection-block">
+            <span class="injection-block-title">Target Code (Before Injection)</span>
+            <div id="sim-code-before" style="color: #94a3b8;">// Select a context...</div>
+          </div>
+          <div class="injection-block">
+            <span class="injection-block-title">Injected Code (After Injection)</span>
+            <div id="sim-code-after" style="color: #cbd5e1;">// Select a context...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Live Execution / DOM Simulator -->
+      <div class="sim-card">
+        <div class="sim-card-header">
+          <span class="sim-card-title"><i class="bx bx-slideshow"></i> Live Execution Preview (DOM / Response Simulator)</span>
+        </div>
+        <div class="dom-preview-box" id="dom-preview-container">
+          <span style="color: var(--text-muted); font-size: 0.85rem;">Run simulator to see execution preview...</span>
+        </div>
+      </div>
+
+      <!-- Card 4: WAF Inspection Analyzer -->
+      <div class="sim-card">
+        <div class="sim-card-header">
+          <span class="sim-card-title"><i class="bx bx-shield-quarter"></i> WAF Filter Inspection Analyzer</span>
+          <div id="waf-badge-container">
+            <span class="waf-status-badge waf-badge-bypassed"><i class="bx bx-check-circle"></i> Ready</span>
+          </div>
+        </div>
+        <div class="waf-analysis-text" id="waf-analysis-text">
+          Select parameters to analyze how a Web Application Firewall (WAF) inspects and filters this payload.
+        </div>
       </div>
       
-      <div class="explanation-box">
-        <h3><i class="bx bx-info-circle"></i> How it works</h3>
-        <p id="output-explanation">
-          Select your vulnerability parameters on the left to see the generated payload and an explanation of the mechanics behind it.
-        </p>
+      <!-- Card 5: Arabic Mechanic Explanation -->
+      <div class="sim-card explanation-box">
+        <div class="sim-card-header">
+          <span class="sim-card-title"><i class="bx bx-book-open"></i> الشرح البرمجي والتعليمي (Mechanics & Explanation)</span>
+        </div>
+        <div class="explanation-text" id="output-explanation">
+          حدد خصائص الثغرة والسياق من القائمة الجانبية لعرض التفكير الهندسي والتحليل البرمجي وراء هذا الهجوم.
+        </div>
       </div>
     </main>
   </div>
