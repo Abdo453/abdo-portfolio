@@ -176,5 +176,144 @@ window.LINUX_COMMANDS = (window.LINUX_COMMANDS || []).concat([
    ],
    examples:['file suspect_file','file -i script.py','file -b image.png'],
    note:'تحليل البرمجيات الخبيثة: لا تعتمد على امتداد الملف (.jpg, .exe)؛ لأن المخترقين يغيرون الامتداد للتمويه، بينما يكشف أمر file الحقيقة فوراً.'
+  },
+  {id:'chmod',name:'chmod',icon:'🔑',level:1,category:'Files & Directories',
+   desc:'تغيير أذونات وصلاحيات الوصول للملفات والمجلدات (Change Mode)',
+   syntax:'chmod [OPTIONS] MODE FILE...',
+   flags:[
+     {flag:'-R',desc:'تطبيق الصلاحيات بشكل تكراري على المجلدات والملفات الفرعية'},
+     {flag:'u+x',desc:'إعطاء المالك صلاحية التنفيذ (Execute)'},
+     {flag:'g-w',desc:'سحب صلاحية الكتابة من المجموعة'},
+     {flag:'o=r',desc:'جعل صلاحية الآخرين القراءة فقط'},
+     {flag:'755',desc:'صلاحيات شائعة: rwxr-xr-x (كاملة للمالك، وقراءة وتنفيذ للبقية)'},
+     {flag:'600',desc:'صلاحيات شائعة: rw------- (قراءة وكتابة للمالك فقط، مثالية للمفاتيح الخاصة)'}
+   ],
+   examples:['chmod +x script.sh','chmod -R 755 /var/www/html/','chmod 600 id_rsa'],
+  },
+  {id:'chown',name:'chown',icon:'👤',level:1,category:'Files & Directories',
+   desc:'تغيير مالك الملف أو المجلد والمجموعة المالكة له (Change Owner)',
+   syntax:'chown [OPTIONS] OWNER[:GROUP] FILE...',
+   flags:[
+     {flag:'-R',desc:'تطبيق تغيير الملكية تكرارياً للمجلدات بالكامل'},
+     {flag:'-h',desc:'تغيير مالك الرابط الرمزي نفسه بدل الملف الذي يشير إليه'}
+   ],
+   examples:['chown alice file.txt','chown -R www-data:www-data /var/www/html/'],
+  },
+  {id:'chgrp',name:'chgrp',icon:'👥',level:1,category:'Files & Directories',
+   desc:'تغيير المجموعة المالكة للملف أو المجلد (Change Group)',
+   syntax:'chgrp [OPTIONS] GROUP FILE...',
+   flags:[
+     {flag:'-R',desc:'تطبيق التغيير تكرارياً للمجلدات'}
+   ],
+   examples:['chgrp developers project/'],
+  },
+  {id:'strings',name:'strings',icon:'🔍',level:2,category:'Malware Analysis',
+   desc:'استخراج الحروف والنصوص المقروءة (ASCII/Unicode) المدمجة داخل الملفات الثنائية',
+   syntax:'strings [OPTIONS] FILE',
+   flags:[
+     {flag:'-n N',desc:'استخراج الكلمات التي طولها لا يقل عن N حروف (الافتراضي 4)'},
+     {flag:'-o',desc:'عرض موقع النص (offset) بالبايتات ثمانية التنسيق داخل الملف'},
+     {flag:'-d',desc:'عرض النصوص الموجودة في قسم البيانات فقط لتسريع الفحص'}
+   ],
+   examples:['strings malware.exe | grep http','strings -n 8 suspected_firmware.bin'],
+   note:'تحليل البرمجيات الخبيثة: فحص نصوص الملف يسهل كشف عناوين IPs، روابط الويب، كلمات المرور المدمجة، أو أوامر النظام المبطنة.'
+  },
+  {id:'cmp',name:'cmp',icon:'⚖️',level:2,category:'Files & Directories',
+   desc:'مقارنة ملفين بايت بايت لتحديد هل هما متطابقان تماماً أم مختلفان ومكان أول اختلاف',
+   syntax:'cmp [OPTIONS] FILE1 FILE2',
+   flags:[
+     {flag:'-l',desc:'عرض أرقام البايتات المختلفة وقيمها بالنظام الثماني لكل اختلاف'},
+     {flag:'-n LIMIT',desc:'مقارنة عدد محدد من البايتات فقط ثم التوقف'}
+   ],
+   examples:['cmp file1.bin file2.bin','cmp -l file1 file2'],
+  },
+  {id:'diff',name:'diff',icon:'⚖️',level:2,category:'Files & Directories',
+   desc:'مقارنة ملفين نصيين سطراً بسطر وعرض الاختلافات بدقة (مفيد لمراجعة التغييرات بالشيفرات)',
+   syntax:'diff [OPTIONS] FILE1 FILE2',
+   flags:[
+     {flag:'-u',desc:'عرض المخرجات بصيغة موحدة (Unified format) وهي الأسهل للقراءة'},
+     {flag:'-y',desc:'عرض الملفين جنباً إلى جنب مع إشارة للاختلافات (Side-by-side)'},
+     {flag:'-i',desc:'تجاهل حالة الأحرف (كبيرة/صغيرة) أثناء المقارنة'},
+     {flag:'-w',desc:'تجاهل الفراغات والمسافات البيضاء بالسطور'}
+   ],
+   examples:['diff -u old.conf new.conf','diff -y file1.txt file2.txt'],
+  },
+  {id:'grep',name:'grep',icon:'🔍',level:1,category:'Text Processing',
+   desc:'البحث عن نصوص أو أنماط معينة داخل الملفات أو المخرجات القياسية',
+   syntax:'grep [OPTIONS] PATTERN [FILE...]',
+   flags:[
+     {flag:'-i',desc:'تجاهل حالة الأحرف أثناء البحث (Case-insensitive)'},
+     {flag:'-v',desc:'عرض السطور التي لا تطابق النمط المحدد فقط (Invert match)'},
+     {flag:'-r',desc:'البحث تكرارياً في كافة الملفات بالمجلدات الفرعية'},
+     {flag:'-n',desc:'عرض رقم السطر المطابق بجانب النص المستخرج'},
+     {flag:'-E',desc:'تفعيل التعبيرات النمطية الموسعة (Extended Regex)'},
+     {flag:'-o',desc:'طباعة الجزء المطابق فقط من النص بدلاً من السطر بالكامل (مفيد للفرز)'}
+   ],
+   examples:[
+     'grep "error" /var/log/syslog',
+     'grep -ri "password" /etc/',
+     'grep -oE "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}" emails.txt'
+   ],
+  },
+  {id:'sed',name:'sed',icon:'✂️',level:2,category:'Text Processing',
+   desc:'محرر النصوص التدفقي لتعديل واستبدال النصوص داخل الملفات مباشرة (Stream Editor)',
+   syntax:'sed [OPTIONS] \'SCRIPT\' FILE...',
+   flags:[
+     {flag:'-i',desc:'تعديل الملف وكتابة التغيير فيه مباشرة بدلاً من الطباعة على الشاشة (In-place)'},
+     {flag:'s/old/new/g',desc:'أمر الاستبدال الشائع: استبدال old بـ new لجميع التكرارات بالسطر (g)'},
+     {flag:'-e',desc:'تنفيذ عدة سيناريوهات تعديل بالوقت نفسه'}
+   ],
+   examples:[
+     'sed "s/localhost/127.0.0.1/g" config.txt # عرض الاستبدال دون تعديل الملف',
+     'sed -i "s/DEBUG=true/DEBUG=false/g" app.env # تعديل مباشر للملف',
+     'sed -i "/^#/d" setup.sh # حذف كافة السطور التي تبدأ بعلامة التعليق #'
+   ],
+  },
+  {id:'awk',name:'awk',icon:'📊',level:2,category:'Text Processing',
+   desc:'لغة معالجة النصوص والتقارير القائمة على الأعمدة والأنماط القوية',
+   syntax:'awk \'PATTERN {ACTION}\' FILE',
+   flags:[
+     {flag:'-F CHAR',desc:'تحديد رمز الفصل بين الأعمدة (الافتراضي فراغ، مثل -F: للملف passwd)'},
+     {flag:'print $N',desc:'طباعة العمود رقم N (الرمز $0 يطبع السطر بالكامل)'}
+   ],
+   examples:[
+     'awk -F: \'{print $1}\' /etc/passwd # استخراج قائمة أسماء المستخدمين بالنظام',
+     'awk \'{sum += $5} END {print sum}\' files.txt # حساب إجمالي حجم الملفات بالعمود الخامس'
+   ],
+  },
+  {id:'find',name:'find',icon:'🔍',level:1,category:'Files & Directories',
+   desc:'البحث عن الملفات والمجلدات في شجرة النظام بناءً على الحجم، الاسم، النوع، أو الصلاحيات',
+   syntax:'find [PATH] [EXPRESSIONS]',
+   flags:[
+     {flag:'-name PATTERN',desc:'البحث بالاسم (يدعم الرموز التعبيرية مثل *.log)'},
+     {flag:'-type TYPE',desc:'تحديد النوع (f للملفات، d للمجلدات، l للروابط الرمزية)'},
+     {flag:'-size SIZE',desc:'البحث بالحجم (مثل +100M للأكبر من 100 ميجا)'},
+     {flag:'-perm MODE',desc:'البحث بالصلاحيات الدقيقة (مثل -perm -4000 لملفات SUID)'},
+     {flag:'-mtime N',desc:'البحث بآخر تاريخ تعديل بالملف بالأيام'},
+     {flag:'-exec CMD \\;',desc:'تنفيذ أمر مخصص فورياً على كل ملف يتم العثور عليه'}
+   ],
+   examples:[
+     'find /var/log -name "*.log"',
+     'find . -type f -perm -4000 # البحث عن ملفات SUID الخطيرة بالمجلد الحالي',
+     'find /tmp -type f -atime +30 -delete # حذف الملفات غير المستخدمة منذ 30 يوماً'
+   ],
+  },
+  {id:'tar',name:'tar',icon:'📦',level:1,category:'Files & Directories',
+   desc:'أرشفة وتجميع الملفات والمجلدات في ملف واحد أو فك الأرشيف (Tape Archive)',
+   syntax:'tar [OPTIONS] FILE.tar [FILES...]',
+   flags:[
+     {flag:'-c',desc:'إنشاء أرشيف جديد (Create)'},
+     {flag:'-x',desc:'فك ضغط واستخراج محتويات الأرشيف (Extract)'},
+     {flag:'-z',desc:'ضغط الأرشيف باستخدام خوارزمية gzip لتوفير المساحة (.tar.gz)'},
+     {flag:'-v',desc:'عرض تفاصيل الملفات أثناء المعالجة (Verbose)'},
+     {flag:'-f',desc:'تحديد اسم ملف الأرشيف المستهدف (إجباري)'},
+     {flag:'-C DIR',desc:'فك الأرشيف وتوجيه المخرجات لمجلد مخصص بدلاً من الحالي'}
+   ],
+   examples:[
+     'tar -cvf backup.tar /var/www/',
+     'tar -czvf backup.tar.gz /var/www/html/ # أرشفة وضغط بالوقت نفسه',
+     'tar -xzvf archive.tar.gz -C /opt/'
+   ],
   }
 ]);
+

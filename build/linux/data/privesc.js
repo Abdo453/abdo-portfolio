@@ -162,5 +162,42 @@ window.LINUX_COMMANDS = (window.LINUX_COMMANDS || []).concat([
    syntax:'pivot_root NEW_ROOT PUT_OLD',
    flags:[],
    examples:['sudo pivot_root /mnt/new_root /mnt/new_root/old_root'],
+  },
+  {id:'newuidmap',name:'newuidmap',icon:'👤',level:4,category:'Containers',
+   desc:'إعداد وتعيين مطابقة معرّفات المستخدمين (UID maps) لنطاقات الأسماء المخصصة للمستخدمين غير المتميزين (Rootless containers)',
+   syntax:'newuidmap PID UID LOWERUID COUNT [UID LOWERUID COUNT ...]',
+   flags:[],
+   examples:['newuidmap 2345 0 100000 65536'],
+  },
+  {id:'newgidmap',name:'newgidmap',icon:'👥',level:4,category:'Containers',
+   desc:'إعداد وتعيين مطابقة معرّفات المجموعات (GID maps) لنطاقات الأسماء للمستخدمين غير المتميزين',
+   syntax:'newgidmap PID GID LOWERGID COUNT [GID LOWERGID COUNT ...]',
+   flags:[],
+   examples:['newgidmap 2345 0 100000 65536'],
+  },
+  {id:'passwd',name:'passwd',icon:'🔑',level:2,category:'System Administration',
+   desc:'تعديل وتغيير كلمة مرور المستخدم الحالي أو مستخدمين آخرين بالنظام',
+   syntax:'passwd [OPTIONS] [USER]',
+   flags:[
+     {flag:'-d',desc:'حذف كلمة المرور للمستخدم وجعل حسابه يعمل بدون كلمة مرور (خطر جداً!)'},
+     {flag:'-l',desc:'قفل حساب المستخدم المحدد لمنعه من تسجيل الدخول (Lock)'},
+     {flag:'-u',desc:'إلغاء قفل حساب المستخدم وتفعيل الدخول مجدداً (Unlock)'},
+     {flag:'-e',desc:'إجبار المستخدم على تغيير كلمة المرور فوراً في الدخول التالي'}
+   ],
+   examples:['passwd','sudo passwd alice','sudo passwd -l bob'],
+  },
+  {id:'mount',name:'mount',icon:'🔌',level:2,category:'System Administration',
+   desc:'توصيل ودمج أنظمة الملفات والأقراص في شجرة أدلة النظام الحالية (Mount point)',
+   syntax:'mount [OPTIONS] DEVICE DIR',
+   flags:[
+     {flag:'-t TYPE',desc:'تحديد نوع نظام الملفات الخاص بالقرص (مثل ext4, ntfs, vfat)'},
+     {flag:'-o OPTIONS',desc:'تحديد خيارات إضافية للتوصيل (مثل ro للقراءة فقط، noexec لمنع تشغيل الملفات التنفيذية)'},
+     {flag:'-a',desc:'توصيل كافة الأجهزة المعرفة داخل ملف /etc/fstab تلقائياً'}
+   ],
+   examples:[
+     'sudo mount /dev/sdb1 /mnt/usb',
+     'sudo mount -o ro,noexec /dev/sdc1 /secure_mount # حماية القسم الموصول من تشغيل السكريبتات التنفيذية'
+   ],
+   note:'دفاعياً: إضافة خيارات noexec, nosuid, nodev في ملف fstab للأقسام العامة (مثل /tmp و /dev/shm) يمنع هجمات تشغيل الملفات التنفيذية المشبوهة.'
   }
 ]);

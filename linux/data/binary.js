@@ -120,5 +120,54 @@ window.LINUX_COMMANDS = (window.LINUX_COMMANDS || []).concat([
      'sudo perf record -p 1234 # مراقبة أداء عملية حية',
      'sudo perf report'
    ],
+  },
+  {id:'ar_bin',name:'ar',icon:'📦',level:2,category:'Reverse Engineering',
+   desc:'إنشاء وتعديل وتفكيك ملفات الأرشيف الثنائية (Archives) والمستخدمة لدمج ملفات الأكواد البرمجية البرمجية (.a)',
+   syntax:'ar [OPTIONS] ARCHIVE_FILE FILES...',
+   flags:[
+     {flag:'-r',desc:'إدراج أو استبدال ملفات محددة داخل الأرشيف ثنائي التكوين'},
+     {flag:'-t',desc:'سرد وعرض جدول المحتويات والملفات المخزنة بالأرشيف'},
+     {flag:'-x',desc:'استخراج واستخلاص ملفات معينة من الأرشيف'}
+   ],
+   examples:['ar -rcs libhelper.a utils.o core.o','ar -t libhelper.a'],
+  },
+  {id:'ranlib',name:'ranlib',icon:'⚙️',level:2,category:'Reverse Engineering',
+   desc:'إنشاء وتحديث جدول الرموز والدوال للأرشيفات الثنائية الساكنة (Static Libraries) لتسريع الربط البرمجي',
+   syntax:'ranlib ARCHIVE_FILE',
+   flags:[],
+   examples:['ranlib libhelper.a'],
+  },
+  {id:'sha1sum',name:'sha1sum',icon:'🔐',level:1,category:'Malware Analysis',
+   desc:'حساب ومقارنة البصمة الرقمية للملفات بخوارزمية SHA1 للتحقق من التعديلات المشبوهة',
+   syntax:'sha1sum [FILE]',
+   flags:[],
+   examples:['sha1sum patch.diff'],
+  },
+  {id:'b2sum',name:'b2sum',icon:'🔐',level:2,category:'Malware Analysis',
+   desc:'حساب ومقارنة البصمة الرقمية السريعة والآمنة للملفات باستخدام خوارزمية BLAKE2 الحديثة',
+   syntax:'b2sum [FILE]',
+   flags:[],
+   examples:['b2sum kernel.iso'],
+  },
+  {id:'gdb',name:'gdb',icon:'⚔️',level:4,category:'Debugging',
+   desc:'مصحح أخطاء ومفسر شيفرات غنو التفاعلي لتتبع استدعاءات المعالج وقراءة الذاكرة أثناء التشغيل (GNU Debugger)',
+   syntax:'gdb [OPTIONS] [PROGRAM [CORE|PID]]',
+   flags:[
+     {flag:'-q',desc:'وضع هادئ (Quiet) - عدم طباعة رسائل حقوق الملكية والبداية'},
+     {flag:'--args',desc:'تمرير متحولات وبارامترات التشغيل للبرنامج المستهدف مباشرة'},
+     {flag:'-p PID',desc:'الاتصال بعملية نشطة وجارية وتتبعها فورياً بالذاكرة'},
+     {flag:'run / r',desc:'أمر gdb: تشغيل البرنامج تحت المراقبة'},
+     {flag:'break / b',desc:'أمر gdb: تعيين نقطة توقف عند دالة أو عنوان محدد (Breakpoint)'},
+     {flag:'next / n',desc:'أمر gdb: الانتقال للسطر البرمجي التالي دون الدخول للدوال'},
+     {flag:'step / s',desc:'أمر gdb: الانتقال لخطوة المعالج التالية مع الدخول للدوال الفرعية'},
+     {flag:'info registers',desc:'أمر gdb: عرض قيم مسجلات المعالج (CPU Registers) الحالية'},
+     {flag:'x/s ADDRESS',desc:'أمر gdb: فحص وقراءة النص المخزن في عنوان الذاكرة المحدد'}
+   ],
+   examples:[
+     'gdb -q ./vulnerable_elf',
+     'gdb -p $(pgrep suspected_bin)',
+     '(gdb) break main\n(gdb) run'
+   ],
+   note:'الهندسة العكسية: gdb هو الأداة الأقوى لتجاوز حمايات التحقق من الرخص وكشف ثغرات تدمير الذاكرة (Buffer Overflow).'
   }
 ]);

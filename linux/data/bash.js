@@ -192,5 +192,90 @@ window.LINUX_COMMANDS = (window.LINUX_COMMANDS || []).concat([
    ],
    examples:['ulimit -a','ulimit -u 1000 # تحديد عمليات المستخدم لـ 1000 عملية فقط'],
    note:'دفاعياً: تعيين قيم ulimit صحيحة في /etc/security/limits.conf يمنع ثغرات الـ Fork Bomb من تجميد الخادم بالكامل.'
+  },
+  {id:'builtin',name:'builtin',icon:'⚙️',level:3,category:'Bash Internals',
+   desc:'إجبار الغلاف على تشغيل الأمر الداخلي (Builtin) المدمج في Bash وتجاهل أي دوال أو اختصارات بنفس الاسم',
+   syntax:'builtin BUILTIN_COMMAND [ARGS]',
+   flags:[],
+   examples:['builtin cd /tmp','builtin pwd'],
+  },
+  {id:'command',name:'command',icon:'⚙️',level:3,category:'Bash Internals',
+   desc:'تشغيل أمر النظام الخارجي وتجاهل أي دوال برمجية معرفة بنفس الاسم داخل الغلاف',
+   syntax:'command [OPTIONS] COMMAND [ARGS]',
+   flags:[
+     {flag:'-v',desc:'عرض مسار ومكان البرنامج التنفيذي الحقيقي دون تشغيله (مثالي لاختبار الوجود)'},
+     {flag:'-V',desc:'عرض وصف تفصيلي لطبيعة الأمر وكيف سيتم تفسيره'}
+   ],
+   examples:['command ls','command -v python3 # التحقق من تثبيت بايثون ومعرفة مساره'],
+  },
+  {id:'typeset',name:'typeset',icon:'🏷️',level:3,category:'Bash Internals',
+   desc:'تعيين وتعديل خصائص المتغيرات (نسخة قديمة ومطابقة تماماً لأمر declare)',
+   syntax:'typeset [OPTIONS] VAR=VALUE',
+   flags:[
+     {flag:'-i',desc:'تعيين المتغير كـ Integer حسابي'},
+     {flag:'-r',desc:'تعيين المتغير كـ للقراءة فقط (Read-only)'}
+   ],
+   examples:['typeset -i age=20'],
+  },
+  {id:'jobs',name:'jobs',icon:'📋',level:2,category:'Bash Internals',
+   desc:'عرض قائمة بالعمليات والمهام النشطة قيد التشغيل بالخلفية للغلاف الحالي حالياً',
+   syntax:'jobs [OPTIONS]',
+   flags:[
+     {flag:'-l',desc:'عرض الـ PIDs الخاصة بالعمليات بجانب معرفات المهام (Job IDs)'},
+     {flag:'-r',desc:'عرض المهام الجارية فقط (Running)'},
+     {flag:'-s',desc:'عرض المهام المتوقفة مؤقتاً فقط (Stopped)'}
+   ],
+   examples:['jobs','jobs -l'],
+  },
+  {id:'fg',name:'fg',icon:'🔄',level:2,category:'Bash Internals',
+   desc:'نقل وإحضار عملية تعمل بالخلفية لتصبح بالواجهة وتتفاعل مع إدخالك الحالي (Foreground)',
+   syntax:'fg [JOB_ID]',
+   flags:[],
+   examples:['fg %1 # إحضار المهمة رقم 1 للواجهة'],
+  },
+  {id:'bg',name:'bg',icon:'🔄',level:2,category:'Bash Internals',
+   desc:'استئناف تشغيل مهمة متوقفة مؤقتاً وجعلها تعمل في الخلفية دون حظر الطرفية (Background)',
+   syntax:'bg [JOB_ID]',
+   flags:[],
+   examples:['bg %1 # استئناف تشغيل المهمة بالخلفية'],
+  },
+  {id:'history',name:'history',icon:'📜',level:1,category:'Shell Tricks',
+   desc:'عرض وسرد قائمة الأوامر التي قام المستخدم بكتابتها وتشغيلها سابقاً في الجلسات',
+   syntax:'history [OPTIONS]',
+   flags:[
+     {flag:'-c',desc:'مسح وتصفير سجل الأوامر الحالي بالذاكرة بالكامل (Clear)'},
+     {flag:'-d OFFSET',desc:'حذف أمر محدد من السجل بناءً على رقمه'},
+     {flag:'-w',desc:'كتابة السجل الحالي فوراً لملف الحفظ المستمر ~/.bash_history'}
+   ],
+   examples:[
+     'history 20 # عرض آخر 20 أمراً تم كتابته',
+     'history -c && history -w # مسح تاريخ الأوامر بالكامل لأسباب أمنية لمنع كشف كلمات المرور'
+   ],
+  },
+  {id:'fc',name:'fc',icon:'📝',level:3,category:'Shell Tricks',
+   desc:'تعديل وتشغيل أو سرد الأوامر من سجل الـ history باستخدام محرر النصوص الافتراضي (Fix Command)',
+   syntax:'fc [OPTIONS] [FIRST] [LAST]',
+   flags:[
+     {flag:'-l',desc:'سرد الأوامر من السجل بدلاً من فتحها للتعديل'},
+     {flag:'-s',desc:'إعادة تشغيل آخر أمر مباشرة دون تعديله'}
+   ],
+   examples:['fc -l 100 120','fc -s # إعادة تشغيل آخر أمر تم إطلاقه بسرعة'],
+  },
+  {id:'enable',name:'enable',icon:'⚙️',level:3,category:'Bash Internals',
+   desc:'تفعيل أو إيقاف عمل أوامر Bash الداخلية المدمجة بالنظام (Builtins)',
+   syntax:'enable [OPTIONS] [BUILTIN]',
+   flags:[
+     {flag:'-n',desc:'إيقاف تفعيل الأمر المدمج وإجبار النظام للبحث عن أمر خارجي يحمل نفس الاسم'},
+     {flag:'-a',desc:'سرد جميع الأوامر المدمجة بالنظام وحالة تفعيلها حالياً'}
+   ],
+   examples:['enable -n kill # إيقاف أمر kill الداخلي واستخدام برنامج /bin/kill الخارجي'],
+  },
+  {id:'coproc',name:'coproc',icon:'⚡',level:4,category:'Bash Internals',
+   desc:'إنشاء عملية فرعية متزامنة بالخلفية مع ربطها بقنوات إدخال وإخراج تفاعلية ثنائية الاتجاه (Coprocess)',
+   syntax:'coproc [NAME] COMMAND [ARGS]',
+   flags:[],
+   examples:[
+     'coproc myjob { tcpdump -i eth0; } # تشغيل ومزامنة المهمة بالخلفية مع الاحتفاظ بمقابس الاتصال بها'
+   ],
   }
 ]);

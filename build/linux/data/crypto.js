@@ -75,5 +75,22 @@ window.LINUX_COMMANDS = (window.LINUX_COMMANDS || []).concat([
      'age -r age1ql8t62... secret.txt -o secret.age # تشفير للمستلم',
      'age -d -i key.txt secret.age > decrypted.txt'
    ],
+  },
+  {id:'ssh_keygen',name:'ssh-keygen',icon:'🔑',level:2,category:'Cryptography',
+   desc:'إنشاء وإدارة وفحص مفاتيح المصادقة الخاصة بالاتصال البعيد الآمن (SSH Keys)',
+   syntax:'ssh-keygen [OPTIONS]',
+   flags:[
+     {flag:'-t TYPE',desc:'تحديد نوع الخوارزمية (مثل rsa أو ed25519 الأحدث والأكثر أماناً)'},
+     {flag:'-b BITS',desc:'تحديد طول المفتاح بالبايت (مثل 4096 لـ rsa)'},
+     {flag:'-f FILE',desc:'تحديد مسار واسم ملف حفظ المفتاح الناتج'},
+     {flag:'-p',desc:'تغيير أو إعداد كلمة مرور جديدة للمفتاح الخاص الموجود حالياً'},
+     {flag:'-y',desc:'قراءة المفتاح الخاص واستخراج المفتاح العام المقابل له'},
+     {flag:'-F HOST',desc:'البحث عن بصمة السيرفر المستهدف داخل ملف known_hosts'}
+   ],
+   examples:[
+     'ssh-keygen -t ed25519 -C "admin@internal" # إنشاء مفتاح آمن وسريع',
+     'ssh-keygen -f ~/.ssh/id_rsa -y > ~/.ssh/id_rsa.pub # استخراج المفتاح العام'
+   ],
+   note:'أمنياً: يُنصح باستخدام ed25519 دائماً للمفاتيح الحديثة لأنها أسرع وأقوى تشفيراً من RSA التقليدي.'
   }
 ]);

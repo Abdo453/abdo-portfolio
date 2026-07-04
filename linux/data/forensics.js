@@ -127,5 +127,52 @@ window.LINUX_COMMANDS = (window.LINUX_COMMANDS || []).concat([
    syntax:'cat /proc/[PID]/mounts',
    flags:[],
    examples:['cat /proc/1/mounts'],
+  },
+  {id:'journalctl',name:'journalctl',icon:'📰',level:2,category:'Digital Forensics',
+   desc:'عرض وتحليل وفحص سجلات النظام الموحدة المدارة بواسطة systemd-journald بكفاءة عالية',
+   syntax:'journalctl [OPTIONS]',
+   flags:[
+     {flag:'-u UNIT',desc:'عرض السجلات الخاصة بخدمة معينة فقط (مثل -u sshd)'},
+     {flag:'-f',desc:'متابعة وعرض السجلات الحية مباشرة فور حدوثها (Follow)'},
+     {flag:'-n N',desc:'عرض آخر N أسطر فقط من السجل'},
+     {flag:'-p LEVEL',desc:'تصفية وعرض السجلات حسب مستوى الخطورة (مثل err, warning, crit)'},
+     {flag:'--since "DATE"',desc:'عرض السجلات منذ توقيت معين (مثل --since "1 hour ago" أو "2026-07-01")'},
+     {flag:'-k / --dmesg',desc:'عرض رسائل وسجلات النواة والكيرنل فقط'}
+   ],
+   examples:[
+     'journalctl -u sshd -n 20',
+     'journalctl -f -p err',
+     'journalctl --since "2 hours ago"'
+   ],
+  },
+  {id:'ausearch',name:'ausearch',icon:'🔍',level:4,category:'Digital Forensics',
+   desc:'البحث وفحص قاعدة بيانات سجلات التدقيق الأمني لـ Auditd بناءً على أحداث معينة (مثل تعديل ملف passwd)',
+   syntax:'ausearch [OPTIONS]',
+   flags:[
+     {flag:'-m TYPE',desc:'البحث حسب نوع الحدث الأمني (مثال: -m USER_LOGIN)'},
+     {flag:'-f FILE',desc:'البحث عن كافة الأحداث والعمليات التي تفاعلت أو عدلت الملف المحدد'},
+     {flag:'-ua UID',desc:'البحث عن الأحداث الجارية بواسطة مستخدم محدد برقم الـ UID الخاص به'},
+     {flag:'-c COMM',desc:'البحث حسب اسم البرنامج التنفيذي المسؤول عن الحدث'}
+   ],
+   examples:[
+     'sudo ausearch -f /etc/passwd',
+     'sudo ausearch -m USER_LOGIN -success no # رصد محاولات الدخول الفاشلة بـ auditd'
+   ],
+  },
+  {id:'lsof',name:'lsof',icon:'📂',level:3,category:'Digital Forensics',
+   desc:'سرد وعرض كافة الملفات والمقابس الشبكية المفتوحة بواسطة جميع العمليات الجارية بالنظام (List Open Files)',
+   syntax:'lsof [OPTIONS]',
+   flags:[
+     {flag:'-u USER',desc:'عرض الملفات المفتوحة بواسطة مستخدم محدد فقط'},
+     {flag:'-i [PROTO][@HOST][:PORT]',desc:'عرض العمليات التي تستخدم اتصالات شبكية (مثال: -i :22 أو -i tcp)'},
+     {flag:'-p PID',desc:'عرض جميع الملفات والشبكات المفتوحة بواسطة عملية محددة بالـ PID'},
+     {flag:'-t',desc:'طباعة أرقام الـ PIDs فقط لتسهيل تمريرها لأوامر أخرى مثل kill'}
+   ],
+   examples:[
+     'sudo lsof -i tcp:22 # معرفة من متصل حالياً بالـ SSH والعملية المالكة له',
+     'sudo lsof -u alice',
+     'sudo kill -9 $(sudo lsof -t -i :8080) # إنهاء أي عملية تحتل المنفذ 8080 فوراً'
+   ],
+   note:'تحليل جنائي: يفيد lsof في كشف الملفات المخفية المشبوهة أو السكريبتات الجارية بالخلفية والتي تستمع لمنافذ شبكية معينة.'
   }
 ]);

