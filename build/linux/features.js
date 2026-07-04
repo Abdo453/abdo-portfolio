@@ -466,3 +466,29 @@ function appendLessonNavArrows(lessonId) {
     `;
     articleBody.appendChild(navDiv);
 }
+
+/* --- Interactive Checkpoint Handler --- */
+window.checkCheckpoint = function(btn, lessonId, correctAnswer) {
+    const container = btn.closest('.checkpoint-container');
+    if (!container) return;
+    const input = container.querySelector('.checkpoint-input');
+    const feedback = container.querySelector('.checkpoint-feedback');
+    if (!input || !feedback) return;
+    
+    const userAns = input.value.trim().toLowerCase();
+    const correctAns = correctAnswer.trim().toLowerCase();
+    
+    if (userAns === correctAns) {
+        feedback.innerText = "✓ إجابة صحيحة! تم تسجيل إنجاز اللاب العملي بنجاح. أحسنت 🎯";
+        feedback.style.color = "#2da44e";
+        feedback.style.display = "block";
+        if (typeof updateLessonProgress === 'function') {
+            updateLessonProgress(lessonId, 'lab', true);
+            appendCompletionButton(lessonId);
+        }
+    } else {
+        feedback.innerText = "❌ إجابة خاطئة، راجع الأوامر وحاول مرة أخرى.";
+        feedback.style.color = "#cf222e";
+        feedback.style.display = "block";
+    }
+};
