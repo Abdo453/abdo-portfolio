@@ -2209,7 +2209,7 @@ window.LINUX_COMMANDS = [
 },
 
 // --- Rare, High-level, and Dangerous Commands ---
-{id:'chattr',name:'chattr',icon:'🔒',level:3,category:'الصلاحيات المتقدمة',
+{id:'chattr',name:'chattr',icon:'🔒',level:3,category:'أوامر حرجة ونادرة',
  desc:'تغيير خصائص الملفات الفريدة (مثل جعل الملف غير قابل للحذف حتى من قبل root)',
  syntax:'chattr [OPTIONS] [OPERATOR][ATTRIBUTE] FILE',
  flags:[
@@ -2226,7 +2226,7 @@ window.LINUX_COMMANDS = [
  ],
  note:'خيار +i هو سلاح قوي لحماية ملفات النظام الحساسة من التعديل العشوائي أو الخبيث.'
 },
-{id:'setfacl',name:'setfacl',icon:'🔑',level:3,category:'الصلاحيات المتقدمة',
+{id:'setfacl',name:'setfacl',icon:'🔑',level:3,category:'أوامر حرجة ونادرة',
  desc:'التحكم الدقيق في صلاحيات المستخدمين (Access Control Lists - ACLs) خارج نظام ugo التقليدي',
  syntax:'setfacl [OPTIONS] FILE',
  flags:[
@@ -2245,7 +2245,7 @@ window.LINUX_COMMANDS = [
  ],
  note:'مفيد جداً في بيئات العمل المشتركة لمنح صلاحيات فردية ومخصصة دون إدخال المستخدمين في مجموعات مشتركة.'
 },
-{id:'shred',name:'shred',icon:'☣️',level:3,category:'إتلاف البيانات',
+{id:'shred',name:'shred',icon:'☣️',level:3,category:'أوامر حرجة ونادرة',
  desc:'تدمير الملفات بشكل آمن عن طريق الكتابة فوقها ببيانات عشوائية لمنع استرجاعها جنائياً',
  syntax:'shred [OPTIONS] FILE...',
  flags:[
@@ -2261,7 +2261,7 @@ window.LINUX_COMMANDS = [
  ],
  note:'⚠️ تحذير: هذا الأمر مدمر نهائياً للبيانات، ولا يمكن التراجع عنه أو استعادة الملفات بعده بأي شكل.'
 },
-{id:'sysctl',name:'sysctl',icon:'⚙️',level:4,category:'النواة والـ Kernel',
+{id:'sysctl',name:'sysctl',icon:'⚙️',level:4,category:'أوامر حرجة ونادرة',
  desc:'تهيئة وتعديل إعدادات نواة لينكس (Kernel parameters) أثناء تشغيل النظام',
  syntax:'sysctl [OPTIONS] [VARIABLE[=VALUE]]',
  flags:[
@@ -2277,7 +2277,7 @@ window.LINUX_COMMANDS = [
    'sudo sysctl -p # تطبيق التغييرات الدائمة المكتوبة في /etc/sysctl.conf',
  ],
 },
-{id:'chroot',name:'chroot',icon:'🚪',level:4,category:'إدارة النظام',
+{id:'chroot',name:'chroot',icon:'🚪',level:4,category:'أوامر حرجة ونادرة',
  desc:'تغيير دليل الجذر (Root Directory) للعملية الحالية والعمليات الفرعية (إنشاء سجن Chroot)',
  syntax:'chroot NEWROOT [COMMAND [ARG...]]',
  flags:[
@@ -2290,7 +2290,7 @@ window.LINUX_COMMANDS = [
  ],
  note:'أداة أساسية في عمليات الإنقاذ (System Recovery) وحبس الخدمات الحساسة لتقليل أثر الاختراقات.'
 },
-{id:'dd',name:'dd',icon:'⚡',level:3,category:'إدارة الأقراص',
+{id:'dd',name:'dd',icon:'⚡',level:3,category:'أوامر حرجة ونادرة',
  desc:'نسخ وتحويل البيانات الخام على مستوى البايت (يطلق عليه مجازاً Data Destroyer لخطورته)',
  syntax:'dd if=INPUT_FILE of=OUTPUT_FILE [OPTIONS]',
  flags:[
@@ -2309,7 +2309,7 @@ window.LINUX_COMMANDS = [
  ],
  note:'⚠️ خطير جداً! خطأ بسيط في تسمية القرص (مثل sda بدلاً من sdb) قد يمسح نظام تشغيلك بالكامل دون أي تحذير.'
 },
-{id:'forkbomb',name:'Fork Bomb',icon:'💣',level:4,category:'أمن الأنظمة',
+{id:'forkbomb',name:'Fork Bomb',icon:'💣',level:4,category:'أوامر حرجة ونادرة',
  desc:'هجوم استنزاف الموارد التكراري (Denial of Service) الشهير في سطر أوامر Bash',
  syntax:':(){ :|:& };:',
  flags:[
@@ -2322,7 +2322,7 @@ window.LINUX_COMMANDS = [
  ],
  note:'⚠️ تحذير: تشغيل هذا الأمر سيؤدي لإنشاء عمليات لانهائية حتى تمتلئ ذاكرة النظام والـ CPU بالكامل ويقفز النظام ويتوقف عن الاستجابة تماماً. الطريقة الوحيدة للحل هي إعادة التشغيل الفيزيائي ما لم يكن هناك سقف محدد للعمليات في /etc/security/limits.conf.'
 },
-{id:'socat',name:'socat',icon:'🔗',level:5,category:'الاتصالات المتقدمة',
+{id:'socat',name:'socat',icon:'🔗',level:5,category:'أوامر حرجة ونادرة',
  desc:'أداة ربط وتوجيه تدفقات البيانات (Sockets) ثنائية الاتجاه (أقوى وأعقد من netcat)',
  syntax:'socat [OPTIONS] ADDRESS-1 ADDRESS-2',
  flags:[
@@ -2338,7 +2338,7 @@ window.LINUX_COMMANDS = [
    'socat TCP-LISTEN:80,fork TCP:10.0.0.5:80 # إعادة توجيه المنافذ (Port Forwarding) بكفاءة عالية لكل الاتصالات الواردة',
  ],
 },
-{id:'ltrace',name:'ltrace',icon:'🔬',level:4,category:'التشخيص المتقدم',
+{id:'ltrace',name:'ltrace',icon:'🔬',level:4,category:'أوامر حرجة ونادرة',
  desc:'تتبع استدعاءات المكتبات المشتركة الديناميكية (Library Calls) التي يطلبها البرنامج',
  syntax:'ltrace [OPTIONS] COMMAND',
  flags:[
@@ -2352,7 +2352,7 @@ window.LINUX_COMMANDS = [
    'ltrace -e strcmp ./auth_program # تتبع دالة المقارنة strcmp لكشف كلمات المرور المقارنة في الذاكرة',
  ],
 },
-{id:'dmidecode',name:'dmidecode',icon:'🖥️',level:3,category:'إدارة النظام',
+{id:'dmidecode',name:'dmidecode',icon:'🖥️',level:3,category:'أوامر حرجة ونادرة',
  desc:'فك تشفير وعرض معلومات اللوحة الأم والعتاد فيزيائياً من الـ BIOS/SMBIOS مباشرة',
  syntax:'dmidecode [OPTIONS]',
  flags:[
@@ -2384,7 +2384,7 @@ window.LINUX_COMMANDS = [
  ],
  note:'يُعد REISUB أفضل صديق لمدير النظام عند تجمد السيرفر بالكامل وتوقفه عن الاستجابة لـ SSH.'
 },
-{id:'knock',name:'knock',icon:'🚪',level:5,category:'الاستطلاع والتخفي',
+{id:'knock',name:'knock',icon:'🚪',level:5,category:'أوامر حرجة ونادرة',
  desc:'عميل طرق المنافذ (Port Knocking) لفتح منافذ جدار الحماية المغلقة بطريقة سرية',
  syntax:'knock [OPTIONS] TARGET PORT1:PROTO PORT2:PROTO...',
  flags:[
@@ -2397,7 +2397,7 @@ window.LINUX_COMMANDS = [
  ],
  note:'يعمل عن طريق إرسال حزم لمنافذ مغلقة بترتيب وتوقيت سري ومحدد، ويراقب خادم knockd السجلات لفتح المنفذ عند اكتمال التوقيع.'
 },
-{id:'capsh',name:'capsh',icon:'🛡️',level:4,category:'الصلاحيات المتقدمة',
+{id:'capsh',name:'capsh',icon:'🛡️',level:4,category:'أوامر حرجة ونادرة',
  desc:'إدارة وفحص قدرات وصلاحيات العمليات (Linux Capabilities) لتجنب منح صلاحية root كاملة',
  syntax:'capsh [OPTIONS]',
  flags:[
@@ -2413,7 +2413,7 @@ window.LINUX_COMMANDS = [
  ],
  note:'Linux Capabilities تقسم صلاحيات root لـ 40+ قدرة منفصلة، وهي مهمة جداً في فحص ثغرات الارتقاء بالصلاحيات.'
 },
-{id:'cryptsetup',name:'cryptsetup',icon:'🔒',level:4,category:'إدارة التخزين',
+{id:'cryptsetup',name:'cryptsetup',icon:'🔒',level:4,category:'أوامر حرجة ونادرة',
  desc:'تشفير الأقراص والأقسام على مستوى الهاردوير باستخدام نظام LUKS (Linux Unified Key Setup)',
  syntax:'cryptsetup [OPTIONS] COMMAND DEVICE [MAPNAME]',
  flags:[
