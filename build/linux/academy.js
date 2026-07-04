@@ -1,5 +1,5 @@
 // ==========================================
-// DOM Rendering Logic (Restored)
+// DOM Rendering Logic
 // ==========================================
 function renderSidebar() {
     const toc = document.getElementById('tocPanel');
@@ -35,7 +35,6 @@ function renderSidebar() {
             btn.className = 'lesson-btn';
             btn.id = 'btn-' + lesson.id;
             btn.innerText = lesson.title;
-            // Use window.renderLesson so features.js can hook into it
             btn.setAttribute('onclick', `window.renderLesson('${lesson.id}')`);
             lessonsContainer.appendChild(btn);
         });
@@ -56,6 +55,9 @@ window.renderLesson = function(id) {
                 const article = document.getElementById('articleBody');
                 if(!article) return;
                 article.innerHTML = less.content;
+                
+                // Update the URL hash without triggering full reload, to preserve current state on refresh
+                window.location.hash = id;
                 return;
             }
         }
@@ -64,6 +66,28 @@ window.renderLesson = function(id) {
 
 document.addEventListener('linuxDataReady', () => {
     renderSidebar();
+    
+    // Check if there is a specific lesson in the URL hash, if so render it, otherwise render the first lesson
+    let initialLessonId = null;
+    if (window.location.hash) {
+        initialLessonId = window.location.hash.substring(1);
+    }
+    
+    if (initialLessonId) {
+        // Verify the lesson exists
+        let exists = false;
+        for (let chap of academyData) {
+            if (chap.lessons.some(l => l.id === initialLessonId)) {
+                exists = true;
+                break;
+            }
+        }
+        if (exists) {
+            window.renderLesson(initialLessonId);
+            return;
+        }
+    }
+    
     if(typeof academyData !== 'undefined' && academyData[0] && academyData[0].lessons[0]) {
         window.renderLesson(academyData[0].lessons[0].id);
     }
