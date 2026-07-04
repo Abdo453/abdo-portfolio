@@ -98,20 +98,6 @@
             transform: rotateY(180deg);
             justify-content: flex-start;
         }
-        
-        .card-back h4 { color: #fff; margin-bottom: 10px; font-size: 1.2rem; }
-        
-        .ans-section {
-            margin-bottom: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            line-height: 1.6;
-            font-size: 1.05rem;
-        }
-        
-        .ans-ideal { background: rgba(46, 160, 67, 0.1); border-right: 4px solid var(--success); color: #c9d1d9; }
-        .ans-trap { background: rgba(248, 81, 73, 0.1); border-right: 4px solid #f85149; color: #ff7b72; }
-        .ans-short { background: rgba(88, 166, 255, 0.1); border-right: 4px solid var(--accent); color: #79c0ff; font-weight: bold; }
 
         .controls {
             display: flex;
@@ -130,12 +116,18 @@
             50% { opacity: 1; }
             100% { opacity: 0.5; }
         }
+        
+        .ans-section {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
     <header class="navbar">
         <div class="logo">
-            <h1>Linux Linux Academy</h1>
+            <h1>Linux Academy</h1>
             <span class="subtitle">أسئلة المقابلات - Flashcards</span>
         </div>
         <div class="nav-buttons">
@@ -160,17 +152,12 @@
                     <h4 style="color:var(--accent); border-bottom:1px solid #30363d; padding-bottom:10px; margin-bottom:20px;">الإجابة والتحليل:</h4>
                     
                     <div class="ans-section ans-ideal">
-                        <strong style="color:var(--success);">✅ الإجابة النموذجية:</strong><br>
+                        <strong style="color:var(--success);">✅ الإجابة والشرح:</strong><br>
                         <span id="ansIdeal"></span>
                     </div>
                     
-                    <div class="ans-section ans-trap">
-                        <strong>⚠️ فخ شائع (احذر منه):</strong><br>
-                        <span id="ansTrap"></span>
-                    </div>
-                    
                     <div class="ans-section ans-short">
-                        <strong>💡 الخلاصة (تذكرها دائماً):</strong><br>
+                        <strong>💡 نقاط وتلميحات مفتاحية:</strong><br>
                         <span id="ansShort"></span>
                     </div>
                 </div>
@@ -184,22 +171,23 @@
         </div>
     </div>
 
-    <script src="data_loader.js"></script>
+    <script src="data_loader.js?v=20"></script>
     <script>
         let currentCatIndex = 0;
         let currentQIndex = 0;
 
-        function toggleCard() {
+        window.toggleCard = function() {
             document.getElementById('flashcard').classList.toggle('flipped');
         }
 
         function buildCategories() {
             const selector = document.getElementById('categorySelector');
             selector.innerHTML = '';
+            
             interviewsData.forEach((cat, idx) => {
                 const btn = document.createElement('button');
                 btn.className = 'cat-btn' + (idx === 0 ? ' active' : '');
-                btn.innerText = cat.category;
+                btn.innerText = cat.chapter;
                 btn.onclick = () => selectCategory(idx);
                 selector.appendChild(btn);
             });
@@ -226,10 +214,16 @@
                 const cat = interviewsData[currentCatIndex];
                 const q = cat.questions[currentQIndex];
                 
-                document.getElementById('qText').innerText = q.q;
-                document.getElementById('ansIdeal').innerText = q.ideal;
-                document.getElementById('ansTrap').innerText = q.trap;
-                document.getElementById('ansShort').innerText = q.short;
+                document.getElementById('qText').innerText = q.question;
+                document.getElementById('ansIdeal').innerText = q.answer;
+                
+                let tipsHtml = '';
+                if (q.tips && Array.isArray(q.tips)) {
+                    tipsHtml = q.tips.map(t => `• ${t}`).join('<br>');
+                } else if (q.tips) {
+                    tipsHtml = q.tips;
+                }
+                document.getElementById('ansShort').innerHTML = tipsHtml || 'لا توجد تلميحات إضافية.';
                 
                 document.getElementById('progressText').innerText = `${currentQIndex + 1} / ${cat.questions.length}`;
                 
@@ -272,6 +266,6 @@
             }
         };
     </script>
-    <script src="features.js?v=16"></script>
+    <script src="features.js?v=20"></script>
 </body>
 </html>

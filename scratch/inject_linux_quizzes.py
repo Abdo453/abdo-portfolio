@@ -1,14 +1,12 @@
-window.quizzesData = {
+import json
+
+# Define RHEL/Linux quizzes matching all 28 lesson IDs
+quizzes = {
     "cli_ssh": {
         "easy": [
             {
                 "q": "ما هو الأمر المستخدم لإنشاء اتصال آمن مشفر بجهاز سيرفر عن بعد؟",
-                "options": [
-                    "telnet",
-                    "ssh",
-                    "ftp",
-                    "rlogin"
-                ],
+                "options": ["telnet", "ssh", "ftp", "rlogin"],
                 "answer": 1,
                 "explanation": "الأمر ssh (Secure Shell) يوفر اتصالاً آمناً ومشفراً، على عكس telnet الذي يرسل البيانات بنص واضح."
             }
@@ -16,12 +14,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "ما هو منفذ الاتصال الافتراضي (Default Port) لخدمة SSH؟",
-                "options": [
-                    "21",
-                    "22",
-                    "23",
-                    "80"
-                ],
+                "options": ["21", "22", "23", "80"],
                 "answer": 1,
                 "explanation": "يعمل بروتوكول SSH بشكل افتراضي على المنفذ رقم 22."
             }
@@ -29,12 +22,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "أي خيار في أمر ssh يسمح بتحديد منفذ مخصص للاتصال؟",
-                "options": [
-                    "-p",
-                    "-P",
-                    "-port",
-                    "-s"
-                ],
+                "options": ["-p", "-P", "-port", "-s"],
                 "answer": 0,
                 "explanation": "الخيار -p (حرف صغير) يستخدم لتحديد منفذ غير افتراضي، مثلاً: ssh -p 2222 user@host."
             }
@@ -44,12 +32,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "أي أمر يستخدم لمعرفة المجلد الحالي الذي تتواجد فيه الآن (Working Directory)؟",
-                "options": [
-                    "ls",
-                    "cd",
-                    "pwd",
-                    "dir"
-                ],
+                "options": ["ls", "cd", "pwd", "dir"],
                 "answer": 2,
                 "explanation": "الأمر pwd يعني (Print Working Directory) ويعرض المسار الكامل للمجلد الحالي."
             }
@@ -57,12 +40,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "كيف يمكنك الانتقال إلى المجلد الرئيسي للمستخدم الحالي (Home Directory) مباشرة؟",
-                "options": [
-                    "cd /",
-                    "cd ..",
-                    "cd ~",
-                    "cd ."
-                ],
+                "options": ["cd /", "cd ..", "cd ~", "cd ."],
                 "answer": 2,
                 "explanation": "الرمز ~ يرمز للمجلد الرئيسي للمستخدم الحالي (Home Directory)."
             }
@@ -85,12 +63,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر الأساسي لعرض دليل المساعدة والكتالوج لأي أمر في لينكس؟",
-                "options": [
-                    "help",
-                    "man",
-                    "info",
-                    "whatis"
-                ],
+                "options": ["help", "man", "info", "whatis"],
                 "answer": 1,
                 "explanation": "الأمر man (Manual) يعرض صفحات المساعدة المفصلة لأوامر النظام."
             }
@@ -98,12 +71,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "في صفحات المان (man pages)، أي قسم مخصص لعرض ملفات التكوين والإعدادات (Configuration files)؟",
-                "options": [
-                    "القسم 1",
-                    "القسم 5",
-                    "القسم 8",
-                    "القسم 2"
-                ],
+                "options": ["القسم 1", "القسم 5", "القسم 8", "القسم 2"],
                 "answer": 1,
                 "explanation": "القسم 5 في صفحات المان يحتوي على شروحات وتنسيقات ملفات التكوين والإعدادات مثل /etc/passwd."
             }
@@ -111,12 +79,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "كيف يمكنك البحث عن كلمة مفتاحية داخل جميع عناوين صفحات المساعدة (man pages)؟",
-                "options": [
-                    "man -k [keyword]",
-                    "man -f [keyword]",
-                    "man -s [keyword]",
-                    "man -g [keyword]"
-                ],
+                "options": ["man -k [keyword]", "man -f [keyword]", "man -s [keyword]", "man -g [keyword]"],
                 "answer": 0,
                 "explanation": "الخيار -k (أو الأمر apropos) يبحث عن الكلمة المفتاحية في ملخصات وعناوين صفحات المان."
             }
@@ -126,12 +89,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "أي رمز يستخدم لإضافة المخرجات إلى نهاية ملف قائم دون مسح محتوياته؟",
-                "options": [
-                    ">",
-                    ">>",
-                    "<",
-                    "|"
-                ],
+                "options": [">", ">>", "<", "|"],
                 "answer": 1,
                 "explanation": "الرمز >> (Append) يضيف المخرجات إلى نهاية الملف، بينما > يمسح المحتوى القديم ويكتب من جديد."
             }
@@ -139,12 +97,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "كيف يمكنك توجيه رسائل الخطأ فقط (Standard Error) إلى ملف محدد لتجنب ظهورها على الشاشة؟",
-                "options": [
-                    "> file.log",
-                    "1> file.log",
-                    "2> file.log",
-                    "stderr> file.log"
-                ],
+                "options": ["> file.log", "1> file.log", "2> file.log", "stderr> file.log"],
                 "answer": 2,
                 "explanation": "الرقم 2 يمثل الواصف القياسي للخطأ (File Descriptor 2)، وتوجيهه يكون بـ 2>."
             }
@@ -167,12 +120,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر المستخدم لإنشاء مستخدم محلي جديد في النظام؟",
-                "options": [
-                    "adduser",
-                    "useradd",
-                    "newuser",
-                    "createuser"
-                ],
+                "options": ["adduser", "useradd", "newuser", "createuser"],
                 "answer": 1,
                 "explanation": "الأمر الأساسي في توزيعات Red Hat لإنشاء مستخدم هو useradd."
             }
@@ -180,12 +128,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "أي ملف يحتوي على معلومات هوية المستخدمين، الـ UID، ومسار الشل الافتراضي لكل مستخدم؟",
-                "options": [
-                    "/etc/shadow",
-                    "/etc/passwd",
-                    "/etc/group",
-                    "/etc/sudoers"
-                ],
+                "options": ["/etc/shadow", "/etc/passwd", "/etc/group", "/etc/sudoers"],
                 "answer": 1,
                 "explanation": "يحتوي ملف /etc/passwd على معلومات الحسابات ومجلداتهم وهوياتهم بنص واضح."
             }
@@ -193,12 +136,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "أين يتم تخزين الهاش المشفر لكلمات مرور المستخدمين وتواريخ صلاحيتها؟",
-                "options": [
-                    "/etc/passwd",
-                    "/etc/shadow",
-                    "/etc/secure",
-                    "/etc/gshadow"
-                ],
+                "options": ["/etc/passwd", "/etc/shadow", "/etc/secure", "/etc/gshadow"],
                 "answer": 1,
                 "explanation": "يخزن ملف /etc/shadow الهاشات المشفرة لكلمات المرور ولا يمكن قراءته إلا بصلاحيات root لأسباب أمنية."
             }
@@ -208,12 +146,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هي القيمة الرقمية المقابلة لصلاحيات القراءة والكتابة فقط (Read & Write) للمالك دون التشغيل؟",
-                "options": [
-                    "7",
-                    "6",
-                    "5",
-                    "4"
-                ],
+                "options": ["7", "6", "5", "4"],
                 "answer": 1,
                 "explanation": "القراءة (4) + الكتابة (2) = 6."
             }
@@ -221,12 +154,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "إذا كان الـ Umask الافتراضي هو 022، ما هي الصلاحيات الافتراضية التي سيحصل عليها أي مجلد جديد عند إنشائه؟",
-                "options": [
-                    "644",
-                    "755",
-                    "700",
-                    "777"
-                ],
+                "options": ["644", "755", "700", "777"],
                 "answer": 1,
                 "explanation": "المجلدات تحصل افتراضياً على صلاحية كاملة 777 وتطرح منها قيمة الـ Umask (777 - 022 = 755)."
             }
@@ -249,12 +177,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر الذي يعرض العمليات النشطة حالياً في النظام بشكل شجري أو كجدول؟",
-                "options": [
-                    "kill",
-                    "ps",
-                    "top",
-                    "systemctl"
-                ],
+                "options": ["kill", "ps", "top", "systemctl"],
                 "answer": 1,
                 "explanation": "الأمر ps (Process Status) يعرض حالة العمليات الحالية بالكامل."
             }
@@ -262,12 +185,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "أي إشارة (Signal) يتم إرسالها للعملية عند استخدام الأمر `kill -9`؟",
-                "options": [
-                    "SIGTERM",
-                    "SIGINT",
-                    "SIGKILL",
-                    "SIGHUP"
-                ],
+                "options": ["SIGTERM", "SIGINT", "SIGKILL", "SIGHUP"],
                 "answer": 2,
                 "explanation": "الإشارة رقم 9 ترمز لـ SIGKILL والتي تجبر النواة على قتل العملية فوراً دون السماح لها بحفظ البيانات."
             }
@@ -290,12 +208,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هي الأداة القياسية في RHEL 9 لإدارة الخدمات وإيقافها وتشغيلها؟",
-                "options": [
-                    "service",
-                    "systemctl",
-                    "init",
-                    "chkconfig"
-                ],
+                "options": ["service", "systemctl", "init", "chkconfig"],
                 "answer": 1,
                 "explanation": "الأداة systemctl هي الواجهة الرئيسية لنظام الـ Init الحديث systemd."
             }
@@ -316,12 +229,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "كيف يمكنك التحقق مما إذا كانت خدمة معينة نشطة وتعمل الآن (Active) ومثبتة للعمل مع الإقلاع بطلب واحد؟",
-                "options": [
-                    "systemctl status [service]",
-                    "systemctl is-active [service]",
-                    "systemctl show [service]",
-                    "systemctl inspect [service]"
-                ],
+                "options": ["systemctl status [service]", "systemctl is-active [service]", "systemctl show [service]", "systemctl inspect [service]"],
                 "answer": 0,
                 "explanation": "الأمر systemctl status يعطي تقريراً كاملاً عن حالة الخدمة اللحظية وحالة إقلاعها وآخر السجلات الجنائية الخاصة بها."
             }
@@ -331,12 +239,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر المستخدم لتوليد مفاتيح تشفير SSH (عام وخاص) على جهازك؟",
-                "options": [
-                    "ssh-keygen",
-                    "ssh-copy-id",
-                    "ssh-add",
-                    "crypto key"
-                ],
+                "options": ["ssh-keygen", "ssh-copy-id", "ssh-add", "crypto key"],
                 "answer": 0,
                 "explanation": "الأمر ssh-keygen يولد زوج المفاتيح (المفتاح الخاص id_rsa والمفتاح العام id_rsa.pub) تلقائياً."
             }
@@ -344,12 +247,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "ما هو الأمر الصحيح والآمن لنقل مفتاحك العام إلى خادم بعيد لتفعيل تسجيل الدخول بدون باسورد؟",
-                "options": [
-                    "ssh-copy-id",
-                    "scp id_rsa.pub",
-                    "ssh-keygen",
-                    "cat id_rsa.pub > server"
-                ],
+                "options": ["ssh-copy-id", "scp id_rsa.pub", "ssh-keygen", "cat id_rsa.pub > server"],
                 "answer": 0,
                 "explanation": "الأمر ssh-copy-id يقوم بنقل وتأمين المفتاح العام وإضافته لملف authorized_keys على السيرفر البعيد بشكل تلقائي وسليم أمنياً."
             }
@@ -357,12 +255,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "ما هو الملف الذي تخزن فيه المفاتيح العامة المصرح لها بالاتصال بالسيرفر على حساب المستخدم؟",
-                "options": [
-                    "~/.ssh/authorized_keys",
-                    "~/.ssh/known_hosts",
-                    "~/.ssh/id_rsa",
-                    "/etc/ssh/sshd_config"
-                ],
+                "options": ["~/.ssh/authorized_keys", "~/.ssh/known_hosts", "~/.ssh/id_rsa", "/etc/ssh/sshd_config"],
                 "answer": 0,
                 "explanation": "يحتوي الملف ~/.ssh/authorized_keys على المفاتيح العامة للأجهزة المصرح لها بالولوج بدون كلمة مرور."
             }
@@ -372,12 +265,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر المستخدم في توزيعات Red Hat لاستعراض سجلات الأحداث التي يديرها نظام systemd؟",
-                "options": [
-                    "cat /var/log/messages",
-                    "journalctl",
-                    "dmesg",
-                    "syslog"
-                ],
+                "options": ["cat /var/log/messages", "journalctl", "dmesg", "syslog"],
                 "answer": 1,
                 "explanation": "الأداة journalctl هي الأداة الرسمية لقراءة وفحص سجلات النظام المخزنة بـ systemd-journald."
             }
@@ -385,12 +273,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "كيف يمكنك متابعة سجلات الأحداث لخدمة معينة بشكل حي ومستمر (Real-time monitoring)؟",
-                "options": [
-                    "journalctl -u [service] -f",
-                    "journalctl -u [service] -n 10",
-                    "journalctl -u [service] -e",
-                    "journalctl -u [service] -p err"
-                ],
+                "options": ["journalctl -u [service] -f", "journalctl -u [service] -n 10", "journalctl -u [service] -e", "journalctl -u [service] -p err"],
                 "answer": 0,
                 "explanation": "الخيار -f (Follow) يجعل المخرجات مستمرة وحية وتظهر على الشاشة فور وقوع الحدث."
             }
@@ -398,12 +281,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "أين تقع السجلات الجنائية المسؤولة عن تسجيل عمليات تسجيل الدخول الناجحة والفاشلة واستخدام sudo في RHEL 9؟",
-                "options": [
-                    "/var/log/secure",
-                    "/var/log/auth.log",
-                    "/var/log/messages",
-                    "/var/log/audit/audit.log"
-                ],
+                "options": ["/var/log/secure", "/var/log/auth.log", "/var/log/messages", "/var/log/audit/audit.log"],
                 "answer": 0,
                 "explanation": "في عائلة Red Hat يتم تسجيل عمليات المصادقة والأمان في ملف /var/log/secure (بينما في Debian/Ubuntu تسمى auth.log)."
             }
@@ -413,12 +291,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر المستخدم لعرض عناوين الـ IP لجميع بطاقات الشبكة في نظام لينكس الحديث؟",
-                "options": [
-                    "ifconfig",
-                    "ip a",
-                    "netstat",
-                    "route"
-                ],
+                "options": ["ifconfig", "ip a", "netstat", "route"],
                 "answer": 1,
                 "explanation": "الأمر ip a (أو ip address) هو البديل الحديث والمعتمد لعرض وضبط الشبكات عوضاً عن ifconfig القديم."
             }
@@ -426,12 +299,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "ما هي الأداة المفتاحية في Red Hat لإدارة اتصالات الشبكة وبطاقاتها عبر سطر الأوامر؟",
-                "options": [
-                    "ifup",
-                    "nmcli",
-                    "network-control",
-                    "ip route"
-                ],
+                "options": ["ifup", "nmcli", "network-control", "ip route"],
                 "answer": 1,
                 "explanation": "الأداة nmcli (NetworkManager CLI) هي الأداة الأساسية لإدارة الشبكات بالكامل في RHEL."
             }
@@ -439,12 +307,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "كيف يمكنك تفعيل تغييرات الشبكة التي أجريتها على بطاقة اتصال باستخدام nmcli؟",
-                "options": [
-                    "nmcli connection up [conn_name]",
-                    "nmcli connection reload",
-                    "systemctl restart network",
-                    "nmcli connection apply"
-                ],
+                "options": ["nmcli connection up [conn_name]", "nmcli connection reload", "systemctl restart network", "nmcli connection apply"],
                 "answer": 0,
                 "explanation": "لتطبيق التغييرات وتفعيل الاتصال نستخدم nmcli connection up متبوعاً باسم الاتصال."
             }
@@ -454,12 +317,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر الأساسي لإنشاء ملفات الأرشيف (تجميع الملفات) وضغطها؟",
-                "options": [
-                    "zip",
-                    "tar",
-                    "gzip",
-                    "compress"
-                ],
+                "options": ["zip", "tar", "gzip", "compress"],
                 "answer": 1,
                 "explanation": "الأمر tar (Tape Archive) هو الأداة القياسية لأرشفة وضغط الملفات والمجلدات في لينكس."
             }
@@ -467,12 +325,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "أي خيارات يجب تمريرها للأمر tar لإنشاء ملف مضغوط بصيغة gzip وتسميته؟",
-                "options": [
-                    "-xvf",
-                    "-czvf",
-                    "-tjvf",
-                    "-dzvf"
-                ],
+                "options": ["-xvf", "-czvf", "-tjvf", "-dzvf"],
                 "answer": 1,
                 "explanation": "الخيار -c لإنشاء أرشيف (Create)، و -z للضغط بـ gzip، و -v لعرض التفاصيل (Verbose)، و -f لتحديد اسم الملف (File)."
             }
@@ -495,12 +348,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو مدير الحزم الافتراضي والحديث لإدارة وتثبيت البرمجيات في RHEL 9؟",
-                "options": [
-                    "apt",
-                    "yum",
-                    "dnf",
-                    "rpm"
-                ],
+                "options": ["apt", "yum", "dnf", "rpm"],
                 "answer": 2,
                 "explanation": "الأداة dnf (Dandified YUM) هي مدير الحزم الافتراضي والحديث في RHEL 9."
             }
@@ -521,12 +369,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "كيف يمكنك استعلام النظام لمعرفة أي حزمة برمجية قامت بتثبيت ملف محدد بالكامل؟",
-                "options": [
-                    "rpm -qf /path/to/file",
-                    "dnf search /path/to/file",
-                    "rpm -qi /path/to/file",
-                    "dnf info /path/to/file"
-                ],
+                "options": ["rpm -qf /path/to/file", "dnf search /path/to/file", "rpm -qi /path/to/file", "dnf info /path/to/file"],
                 "answer": 0,
                 "explanation": "الخيار -qf (Query File) في أداة rpm يبحث في قاعدة بيانات النظام لمعرفة الحزمة المالكة لهذا الملف."
             }
@@ -536,12 +379,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر المستخدم لربط قرص صلب أو قسم خارجي بمجلد محدد داخل نظام الملفات؟",
-                "options": [
-                    "connect",
-                    "mount",
-                    "link",
-                    "attach"
-                ],
+                "options": ["connect", "mount", "link", "attach"],
                 "answer": 1,
                 "explanation": "الأمر mount يقوم بعملية التركيب والربط المباشر للأقراص بمجلد داخل شجرة النظام."
             }
@@ -549,12 +387,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "ما هو الملف المسؤول عن حفظ إعدادات تركيب الأقراص بشكل دائم لتعمل تلقائياً عند إقلاع النظام؟",
-                "options": [
-                    "/etc/mtab",
-                    "/etc/fstab",
-                    "/etc/hosts",
-                    "/etc/filesystems"
-                ],
+                "options": ["/etc/mtab", "/etc/fstab", "/etc/hosts", "/etc/filesystems"],
                 "answer": 1,
                 "explanation": "الملف /etc/fstab (File System Table) يحتوي على القواعد التي تحدد الأقراص والمسارات والخيارات التي يتم تركيبها تلقائياً عند الإقلاع."
             }
@@ -562,12 +395,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "عند تعديل ملف /etc/fstab، ما هو الأمر الذي يجب تشغيله للتأكد من عدم وجود أخطاء في التكوين قبل إعادة التشغيل؟",
-                "options": [
-                    "mount -a",
-                    "mount -all",
-                    "systemctl daemon-reload",
-                    "df -h"
-                ],
+                "options": ["mount -a", "mount -all", "systemctl daemon-reload", "df -h"],
                 "answer": 0,
                 "explanation": "الأمر mount -a يحاول تركيب كافة المدخلات المسجلة في fstab؛ فإذا كان هناك خطأ سيظهر فوراً، وهو ما يحميك من توقف إقلاع السيرفر."
             }
@@ -577,12 +405,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو السطر الذي يكتب في بداية سكريبتات Bash لتحديد المفسر الافتراضي لتشغيل الكود (Shebang)؟",
-                "options": [
-                    "#/bin/bash",
-                    "#!/bin/bash",
-                    "!/bin/bash",
-                    "#!bash"
-                ],
+                "options": ["#/bin/bash", "#!/bin/bash", "!/bin/bash", "#!bash"],
                 "answer": 1,
                 "explanation": "السطر القياسي هو #!/bin/bash ويسمى Shebang وهو يخبر النظام بمكان مفسر الأوامر المطلوب."
             }
@@ -590,12 +413,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "كيف يمكنك تمرير أول مدخل (Parameter) ممرر للسكريبت عند تشغيله داخل الكود؟",
-                "options": [
-                    "$0",
-                    "$1",
-                    "$@",
-                    "$#"
-                ],
+                "options": ["$0", "$1", "$@", "$#"],
                 "answer": 1,
                 "explanation": "$1 يرمز لأول مدخل ممرر، بينما $0 يرمز لاسم السكريبت نفسه، و $# لعدد المدخلات."
             }
@@ -603,12 +421,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "ما هي الطريقة الصحيحة للتحقق مما إذا كان ملف محدد موجوداً بالفعل داخل شرط if في Bash؟",
-                "options": [
-                    "if [ -d file.txt ]",
-                    "if [ -e file.txt ]",
-                    "if [ -f file.txt ]",
-                    "الخيار الثاني (أي نوع) أو الثالث (ملف عادي) صحيحان"
-                ],
+                "options": ["if [ -d file.txt ]", "if [ -e file.txt ]", "if [ -f file.txt ]", "الخيار الثاني (أي نوع) أو الثالث (ملف عادي) صحيحان"],
                 "answer": 3,
                 "explanation": "الخيار -f يتحقق من وجود ملف عادي (Regular file)، والخيارات -e تتحقق من الوجود العام (Exists)."
             }
@@ -618,12 +431,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر المستخدم لتعديل وكتابة المهام المجدولة الخاصة بالمستخدم الحالي؟",
-                "options": [
-                    "cron -e",
-                    "crontab -e",
-                    "crontab -l",
-                    "cronjob -write"
-                ],
+                "options": ["cron -e", "crontab -e", "crontab -l", "cronjob -write"],
                 "answer": 1,
                 "explanation": "الأمر crontab -e يفتح محرر النصوص المخصص لكتابة وتعديل المهام المجدولة للمستخدم الحالي."
             }
@@ -659,12 +467,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو نطاق الأولوية (Nice Values) للعمليات في نظام لينكس؟",
-                "options": [
-                    "من 0 إلى 100",
-                    "من -20 إلى 19",
-                    "من -10 إلى 10",
-                    "من 1 إلى 10"
-                ],
+                "options": ["من 0 إلى 100", "من -20 إلى 19", "من -10 إلى 10", "من 1 إلى 10"],
                 "answer": 1,
                 "explanation": "تبدأ قيمة Nice من -20 (أعلى أولوية ممكنة) إلى 19 (أقل أولوية ممكنة)."
             }
@@ -672,12 +475,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "ما هي أداة الضبط التلقائي لملفات الأداء (Performance Profiles) في Red Hat؟",
-                "options": [
-                    "tuned",
-                    "nice",
-                    "renice",
-                    "systemctl-tune"
-                ],
+                "options": ["tuned", "nice", "renice", "systemctl-tune"],
                 "answer": 0,
                 "explanation": "الأداة tuned تقوم بضبط أداء العتاد والنواة تلقائياً بناء على ملفات تعريف جاهزة مثل virtual-guest أو throughput-performance."
             }
@@ -700,12 +498,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر المستخدم لعرض قوائم التحكم بالوصول المتقدمة (ACLs) لملف معين؟",
-                "options": [
-                    "ls -l",
-                    "getfacl",
-                    "showfacl",
-                    "setfacl"
-                ],
+                "options": ["ls -l", "getfacl", "showfacl", "setfacl"],
                 "answer": 1,
                 "explanation": "الأمر getfacl يعرض تفاصيل الصلاحيات المتقدمة والمخصصة لمستخدمين أو مجموعات خارج النطاق الأساسي."
             }
@@ -741,12 +534,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو الأمر المستخدم لمعرفة الحالة الحالية لنظام الأمان المطور SELinux؟",
-                "options": [
-                    "getenforce",
-                    "setenforce",
-                    "selinux-status",
-                    "sestatus"
-                ],
+                "options": ["getenforce", "setenforce", "selinux-status", "sestatus"],
                 "answer": 0,
                 "explanation": "الأمر getenforce يعرض الحالة الحالية بسرعة (Enforcing, Permissive, Disabled)."
             }
@@ -767,12 +555,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "أي جزء في سياق الأمان الخاص بـ SELinux (Context) يعتبر الأهم ويحدد قواعد الوصول والتحكم بالخدمات (Type Enforcement)؟",
-                "options": [
-                    "المستخدم (User)",
-                    "الدور (Role)",
-                    "النوع (Type)",
-                    "الحساسية (Sensitivity)"
-                ],
+                "options": ["المستخدم (User)", "الدور (Role)", "النوع (Type)", "الحساسية (Sensitivity)"],
                 "answer": 2,
                 "explanation": "حقل النوع (Type) والذي ينتهي باللاحقة _t (مثل httpd_sys_content_t) هو الأهم ويتحكم بجميع قواعد الترخيص والوصول للعمليات."
             }
@@ -782,12 +565,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو نمط التقسيم الحديث للأقراص الذي يتجاوز حد الـ 2 تيرا بايت ويدعم حتى 128 قسماً أساسياً؟",
-                "options": [
-                    "MBR",
-                    "GPT",
-                    "FAT",
-                    "LVM"
-                ],
+                "options": ["MBR", "GPT", "FAT", "LVM"],
                 "answer": 1,
                 "explanation": "GPT (GUID Partition Table) هو النمط الحديث والبديل لنمط MBR القديم الذي كان محدوداً بـ 2 تيرا بايت و 4 أقسام فقط."
             }
@@ -795,12 +573,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "أي أداة مخصصة لإنشاء وتعديل الأقسام على الأقراص التي تستخدم نظام تقسيم GPT؟",
-                "options": [
-                    "fdisk",
-                    "gdisk",
-                    "parted",
-                    "الخيار الثاني والثالث صحيحان"
-                ],
+                "options": ["fdisk", "gdisk", "parted", "الخيار الثاني والثالث صحيحان"],
                 "answer": 3,
                 "explanation": "الأداة gdisk مخصصة لـ GPT خصيصاً، بينما parted أداة شاملة تدعم كلا النمطين MBR و GPT."
             }
@@ -808,12 +581,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "بعد تعديل تقسيم القرص الصلب، ما هو الأمر الذي يجب تشغيله لإجبار النواة على قراءة جدول التقسيم الجديد دون إعادة التشغيل؟",
-                "options": [
-                    "partprobe",
-                    "fdisk -l",
-                    "udevadm settle",
-                    "vgscan"
-                ],
+                "options": ["partprobe", "fdisk -l", "udevadm settle", "vgscan"],
                 "answer": 0,
                 "explanation": "الأمر partprobe يخبر النواة بإعادة قراءة جدول التقسيم للأقراص وتحديث الأقسام فوراً بالذاكرة."
             }
@@ -849,12 +617,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "بعد تكبير القسم المنطقي LVM، ما هو الأمر المناسب لتوسيع نظام ملفات من نوع XFS ليتطابق مع المساحة الجديدة؟",
-                "options": [
-                    "resize2fs",
-                    "xfs_growfs",
-                    "xfs_expand",
-                    "mount -o remount"
-                ],
+                "options": ["resize2fs", "xfs_growfs", "xfs_expand", "mount -o remount"],
                 "answer": 1,
                 "explanation": "نظام ملفات XFS يتم توسيعه باستخدام الأمر xfs_growfs متبوعاً بمسار مجلد التركيب (Mount point)، بينما resize2fs مخصص لأنظمة ext4."
             }
@@ -864,12 +627,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو البروتوكول القياسي لمشاركة الملفات شبكياً بين أنظمة لينكس المتعددة (Linux to Linux)؟",
-                "options": [
-                    "SMB",
-                    "NFS",
-                    "FTP",
-                    "SSH"
-                ],
+                "options": ["SMB", "NFS", "FTP", "SSH"],
                 "answer": 1,
                 "explanation": "بروتوكول NFS (Network File System) هو المعيار الأساسي والافتراضي لمشاركة المجلدات بين خوادم لينكس شبكياً."
             }
@@ -877,12 +635,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "ما هو البروتوكول القياسي لعمل مشاركة ملفات متوافقة مع أنظمة ويندوز (Linux to Windows)؟",
-                "options": [
-                    "NFS",
-                    "Samba / SMB",
-                    "HTTP",
-                    "LDAP"
-                ],
+                "options": ["NFS", "Samba / SMB", "HTTP", "LDAP"],
                 "answer": 1,
                 "explanation": "تستخدم حزمة Samba بروتوكول SMB (Server Message Block) لمشاركة الملفات والطابعات مع أجهزة ويندوز بسلاسة."
             }
@@ -890,12 +643,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "ما هو الخيار الذي يجب إضافته في سطر تركيب NFS بملف /etc/fstab لضمان عدم توقف إقلاع السيرفر في حال كان خادم المشاركة خارج الخدمة؟",
-                "options": [
-                    "defaults",
-                    "nofail",
-                    "sync",
-                    "ro"
-                ],
+                "options": ["defaults", "nofail", "sync", "ro"],
                 "answer": 1,
                 "explanation": "الخيار nofail يمنع السيرفر من الدخول في وضع الطوارئ أو الفشل في الإقلاع في حال عدم القدرة على الوصول للمشاركة الشبكية أثناء التشغيل."
             }
@@ -905,12 +653,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو بارامتر النواة الذي نكتبه في شاشة GRUB2 للدخول في وضع استعادة النظام وكسر الإقلاع؟",
-                "options": [
-                    "systemd.debug",
-                    "rd.break",
-                    "init=/bin/bash",
-                    "root=/dev/shm"
-                ],
+                "options": ["systemd.debug", "rd.break", "init=/bin/bash", "root=/dev/shm"],
                 "answer": 1,
                 "explanation": "البارامتر rd.break يوقف عملية الإقلاع قبل تسليم التحكم لنظام ملفات الـ Root الافتراضي، مما يمنحك موجه أوامر للإنقاذ."
             }
@@ -946,12 +689,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هي الأداة المخصصة لإدارة قواعد جدار الحماية في توزيعات Red Hat عبر سطر الأوامر؟",
-                "options": [
-                    "iptables",
-                    "firewall-cmd",
-                    "ufw",
-                    "nftables"
-                ],
+                "options": ["iptables", "firewall-cmd", "ufw", "nftables"],
                 "answer": 1,
                 "explanation": "الأداة firewall-cmd هي الواجهة الرسمية للتحكم بجدار الحماية الذكي firewalld."
             }
@@ -972,12 +710,7 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "أي خيار في جدار الحماية يسمح بإنشاء قواعد تصفية غنية ومتقدمة جداً (مثل السماح لـ IP معين فقط بالاتصال بـ منفذ مخصص)؟",
-                "options": [
-                    "--add-rich-rule",
-                    "--add-custom-rule",
-                    "--add-policy",
-                    "--add-rule-advanced"
-                ],
+                "options": ["--add-rich-rule", "--add-custom-rule", "--add-policy", "--add-rule-advanced"],
                 "answer": 0,
                 "explanation": "الخيار --add-rich-rule يتيح صياغة قواعد غنية ومفصلة ودقيقة للغاية للتحكم بالشبكة."
             }
@@ -987,12 +720,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هو البرنامج التنفيذي الأساسي في Sleuth Kit لعرض محتويات ملف محذوف بناءً على رقم الـ Inode الخاص به؟",
-                "options": [
-                    "fls",
-                    "icat",
-                    "ils",
-                    "ffind"
-                ],
+                "options": ["fls", "icat", "ils", "ffind"],
                 "answer": 1,
                 "explanation": "الأمر icat يقرأ ويعرض محتوى الملف المروّس برقم inode محدد مباشرة من القرص."
             }
@@ -1000,12 +728,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "أي أمر يستخدم لسرد جميع أسماء الملفات والمجلدات (بما فيها المحذوفة) داخل قرص أو قسم مهيأ؟",
-                "options": [
-                    "icat",
-                    "fls",
-                    "ils",
-                    "mactime"
-                ],
+                "options": ["icat", "fls", "ils", "mactime"],
                 "answer": 1,
                 "explanation": "الأمر fls (File List) يسرد أسماء الملفات والأدلة وهياكل المجلدات داخل صورة القرص."
             }
@@ -1028,12 +751,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "أين يتم تخزين محاولات الولوج وتفاصيل المصادقة واستخدام صلاحيات sudo في توزيعات دبيان وكالي لينكس؟",
-                "options": [
-                    "/var/log/secure",
-                    "/var/log/auth.log",
-                    "/var/log/messages",
-                    "/var/log/audit.log"
-                ],
+                "options": ["/var/log/secure", "/var/log/auth.log", "/var/log/messages", "/var/log/audit.log"],
                 "answer": 1,
                 "explanation": "في دبيان وكالي تسمى auth.log بينما في ريد هات تسمى secure."
             }
@@ -1069,12 +787,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هي الأداة الشهيرة والأكثر استخداماً في التحليل الجنائي للذاكرة العشوائية (RAM Forensics)؟",
-                "options": [
-                    "Autopsy",
-                    "Volatility",
-                    "Sleuth Kit",
-                    "Wireshark"
-                ],
+                "options": ["Autopsy", "Volatility", "Sleuth Kit", "Wireshark"],
                 "answer": 1,
                 "explanation": "إطار عمل Volatility هو المعيار القياسي والأقوى عالمياً لتحليل وفحص صور الذاكرة العشوائية RAM."
             }
@@ -1082,12 +795,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "أي أمر في Volatility يستخدم لعرض العمليات النشطة التي كانت تعمل في الذاكرة لحظة سحب العينة؟",
-                "options": [
-                    "linux.pslist",
-                    "linux.netscan",
-                    "linux.files",
-                    "linux.bash"
-                ],
+                "options": ["linux.pslist", "linux.netscan", "linux.files", "linux.bash"],
                 "answer": 0,
                 "explanation": "الأمر pslist (أو linux.pslist) يسرد العمليات النشطة المخزنة في الذاكرة العشوائية."
             }
@@ -1110,12 +818,7 @@ window.quizzesData = {
         "easy": [
             {
                 "q": "ما هي البوابة البرمجية التي تستخدمها البرامج في مساحة المستخدم (User Space) لطلب مهام من النواة (Kernel Space)؟",
-                "options": [
-                    "System Calls",
-                    "eBPF",
-                    "API",
-                    "Signals"
-                ],
+                "options": ["System Calls", "eBPF", "API", "Signals"],
                 "answer": 0,
                 "explanation": "استدعاءات النظام (System Calls) مثل sys_open أو fork هي البوابة الوحيدة لطلب العمليات المادية من النواة."
             }
@@ -1123,12 +826,7 @@ window.quizzesData = {
         "medium": [
             {
                 "q": "ما هي التقنية الحديثة التي تسمح بتشغيل برامج معزولة وآمنة (Sandboxed) داخل النواة مباشرة لمراقبة الأمان والأداء دون تعديل كود النواة؟",
-                "options": [
-                    "eBPF",
-                    "Kernel Modules",
-                    "Grub",
-                    "Docker"
-                ],
+                "options": ["eBPF", "Kernel Modules", "Grub", "Docker"],
                 "answer": 0,
                 "explanation": "تقنية eBPF (Extended Berkeley Packet Filter) ثورية، وتسمح بتشغيل أكواد للمراقبة والتدقيق الأمني مباشرة في النواة بسرعة وأمان كامل."
             }
@@ -1136,15 +834,18 @@ window.quizzesData = {
         "hard": [
             {
                 "q": "أي أداة تستخدم لكتابة سكربتات تتبع حية للـ System Calls باستخدام eBPF على النواة؟",
-                "options": [
-                    "bpftrace",
-                    "strace",
-                    "ltrace",
-                    "auditctl"
-                ],
+                "options": ["bpftrace", "strace", "ltrace", "auditctl"],
                 "answer": 0,
                 "explanation": "الأداة bpftrace تتيح كتابة برامج صغيرة بلغة تتبع خاصة لتتبع الأحداث واستدعاءات النواة لحظياً دون أدنى تأثير على الأداء."
             }
         ]
     }
-};
+}
+
+# Write quizzes database directly to linux/quizzes.js as JSON or JS object
+js_content = f"window.quizzesData = {json.dumps(quizzes, ensure_ascii=False, indent=4)};"
+
+with open('linux/quizzes.js', 'w', encoding='utf-8') as f:
+    f.write(js_content)
+
+print("quizzes.js successfully updated with Arabic Linux/RHEL 9 questions!")
