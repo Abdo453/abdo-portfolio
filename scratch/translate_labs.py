@@ -1,4 +1,6 @@
-[
+import json
+
+labs = [
     {
         "phase": "المرحلة الأولى: أساسيات لينكس وسطر الأوامر",
         "levels": [
@@ -76,3 +78,8 @@
         ]
     }
 ]
+
+with open('linux/data/labs.json', 'w', encoding='utf-8') as f:
+    json.dump(labs, f, ensure_ascii=False, indent=4)
+
+print("Labs successfully translated to Arabic!")
