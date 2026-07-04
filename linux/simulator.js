@@ -1090,12 +1090,26 @@ function applyModeUI() {
     let tc = document.getElementById('theoryContent');
     let cs = document.getElementById('challengeStatus');
     
+    if (routerState.isLinux) {
+        if (currentMode === 'guided') {
+            tc.innerHTML = `<h2>${currentLevel.title}</h2><p><strong>المطلوب:</strong> ${currentLevel.objective}</p><div style="background:rgba(0,0,0,0.2); padding:10px; border-radius:5px; margin-top:15px; border-left:4px solid var(--accent);"><b style="color:var(--accent);">💡 تلميح:</b><br><code>${currentLevel.hint}</code></div>`;
+            cs.innerHTML = currentLevel.objective;
+        } else if (currentMode === 'challenge') {
+            tc.innerHTML = "<h2>تحدي بدون مساعدة</h2><p>في هذا الوضع، لن يظهر لك تلميح الحل. اعتمد على مهارتك للوصول للهدف المذكور بالأسفل.</p>";
+            cs.innerHTML = currentLevel.objective;
+        } else if (currentMode === 'troubleshoot') {
+            tc.innerHTML = "<h2>حل المشكلات</h2><p>قم بالتحقق من حالة النظام لحل المشكلة المطلوبة.</p>";
+            cs.innerHTML = currentLevel.objective;
+        }
+        return;
+    }
+
     if (currentMode === 'guided') {
-        tc.innerHTML = currentLevel.theory;
-        cs.innerHTML = currentLevel.challengeText;
+        tc.innerHTML = currentLevel.theory || '';
+        cs.innerHTML = currentLevel.challengeText || '';
     } else if (currentMode === 'challenge') {
         tc.innerHTML = "<h2>تحدي بدون مساعدة</h2><p>في هذا الوضع، لن يظهر لك الشرح أو الأوامر. اعتمد على حفظك للوصول للهدف المذكور بالأسفل.</p>";
-        cs.innerHTML = currentLevel.challengeText;
+        cs.innerHTML = currentLevel.challengeText || '';
     } else if (currentMode === 'troubleshoot') {
         tc.innerHTML = "<h2>اكتشاف الأخطاء (Troubleshooting)</h2><p>هناك خطأ مقصود في إعدادات الراوتر. استخدم أوامر الـ show لتشخيص المشكلة وحلها.</p>";
         cs.innerHTML = "اكتشف الخطأ الموجود في الشبكة، ثم قم بإصلاحه لتلبية المتطلبات الخاصة بهذا اللاب.";
