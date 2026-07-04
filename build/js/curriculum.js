@@ -1,6 +1,124 @@
 /* Python for Hackers - Curriculum Database */
 const pythonCurriculum = [
   {
+    chapter: "Chapter 0: إعداد بيئة العمل (Setup)",
+    levels: [
+      {
+        id: "l_setup_1",
+        title: "تثبيت بايثون (Windows Installer)",
+        theory: `<h1 style="color:var(--py-yellow);">Level 0.1: تثبيت لغة بايثون</h1>
+          <div style="background:rgba(0,0,0,0.4); border-right:3px solid var(--py-yellow); padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.95rem; line-height:1.6;">
+            <h3 style="color:var(--py-yellow); margin-top:0;">خطوات التثبيت (Step by Step):</h3>
+            <ol style="margin-right:20px;">
+              <li>قم بزيارة الموقع الرسمي: <code>python.org/downloads</code> وقم بتحميل أحدث إصدار.</li>
+              <li>عند تشغيل المثبت (Installer)، <strong>من المهم جداً</strong> وضع علامة صح على الخيار:<br> <code style="color:#ffcc00; background:#222; padding:3px 6px; border-radius:4px;">☑ Add Python to PATH</code> <br> لكي تتمكن من تشغيل بايثون من أي مكان في موجه الأوامر.</li>
+              <li>اضغط على <strong>Install Now</strong> وانتظر حتى تظهر رسالة <code>Setup was successful</code>.</li>
+            </ol>
+            <h3 style="color:var(--py-yellow); margin-top:15px;">كيف نتأكد من التثبيت؟</h3>
+            <p>افتح موجه الأوامر (CMD) واكتب: <code>python --version</code> أو <code>python -V</code>. سيظهر لك رقم الإصدار إذا كان التثبيت صحيحاً.</p>
+            <h4 style="color:#ff5555; margin-bottom:5px;">مشاكل شائعة:</h4>
+            <ul style="margin-right:20px;">
+              <li><strong>'python' is not recognized:</strong> لم تقم بإضافة بايثون إلى الـ PATH. أعد التثبيت وتأكد من تحديد الخيار.</li>
+              <li><strong>Permission denied:</strong> تحتاج لتشغيل موجه الأوامر كمسؤول (Administrator).</li>
+            </ul>
+          </div>
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 التحدي المطلوب</div>
+            <p>لإثبات فهمك للدرس وفتح المستوى التالي، اطبع كلمة <code>Installed</code> باستخدام أمر <code>print</code>.</p>
+          </div>`,
+        initialCode: `# للنجاح في التحدي اطبع الكلمة:
+print("اكتب هنا")
+`,
+        validate: (out) => out.includes("Installed")
+      },
+      {
+        id: "l_setup_2",
+        title: "تشغيل بايثون لأول مرة (First Time)",
+        theory: `<h1 style="color:var(--py-yellow);">Level 0.2: تشغيل بايثون لأول مرة</h1>
+          <div style="background:rgba(0,0,0,0.4); border-right:3px solid var(--py-yellow); padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.95rem; line-height:1.6;">
+            <h3 style="color:var(--py-yellow); margin-top:0;">كيف تبدأ على Windows؟</h3>
+            <ul style="margin-right:20px;">
+              <li>اضغط <code>Win + R</code> واكتب <code>cmd</code>.</li>
+              <li>في موجه الأوامر، اكتب <code>python</code> واضغط Enter. سيفتح لك (Python Shell).</li>
+            </ul>
+            <h3 style="color:var(--py-yellow); margin-top:15px;">كيف تبدأ على macOS/Linux؟</h3>
+            <ul style="margin-right:20px;">
+              <li>افتح <code>Terminal</code> واكتب <code>python3</code>.</li>
+            </ul>
+            <h3 style="color:var(--py-yellow); margin-top:15px;">أوامر بسيطة للتجربة:</h3>
+            <ul style="margin-right:20px;">
+              <li><code>print("Hello, Python!")</code> - تطبع نصاً على الشاشة.</li>
+              <li><code>2 + 3</code> - تقوم بعملية حسابية وتعطيك 5.</li>
+              <li><code>type(123)</code> - تخبرك بنوع البيانات (سيظهر <code>&lt;class 'int'&gt;</code>).</li>
+              <li><code>exit()</code> - للخروج من الشل (Shell).</li>
+            </ul>
+          </div>
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 التحدي المطلوب</div>
+            <p>جرب الآن! قم بطباعة ناتج جمع الرقمين 2 و 3.</p>
+          </div>`,
+        initialCode: `# يمكنك كتابة العملية الحسابية مباشرة داخل دالة الطباعة
+print()
+`,
+        validate: (out) => out.includes("5")
+      },
+      {
+        id: "l_setup_3",
+        title: "كتابة وتشغيل أول سكريبت (Script)",
+        theory: `<h1 style="color:var(--py-yellow);">Level 0.3: كتابة السكريبت الأول</h1>
+          <div style="background:rgba(0,0,0,0.4); border-right:3px solid var(--py-yellow); padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.95rem; line-height:1.6;">
+            <h3 style="color:var(--py-yellow); margin-top:0;">1. إنشاء ملف بايثون:</h3>
+            <p>افتح أي محرر نصوص (مثل VS Code أو Notepad++) واكتب كودك. احفظ الملف بامتداد <code>.py</code> مثل <code>hello.py</code>.</p>
+            <h3 style="color:var(--py-yellow); margin-top:15px;">2. هيكلة الملف:</h3>
+            <pre style="background:#111; padding:10px; border-radius:5px; border:1px solid #333;"><code style="color:#ccc;"># This is a comment (تعليق لا يتم تنفيذه)
+import sys # (اختياري) استدعاء مكتبات
+
+x = 10     # الكود الأساسي
+print("Result:", x)</code></pre>
+            <h3 style="color:var(--py-yellow); margin-top:15px;">3. تشغيل الملف:</h3>
+            <p>افتح سطر الأوامر وتوجه للمجلد الذي به الملف، ثم اكتب <code>python hello.py</code> (أو <code>python3 hello.py</code> للينكس/ماك).</p>
+            <p style="color:#00e5ff;">بايثون سيقرأ الكود <strong>سطراً بسطر</strong> وينفذه ويطبع المخرجات.</p>
+          </div>
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 التحدي المطلوب</div>
+            <p>اكتب سكريبت بسيط يطبع <code>Hello, Python!</code> للتدرب على هيكل السكريبت.</p>
+          </div>`,
+        initialCode: `# This is my first Python program
+print("اكتب هنا")
+`,
+        validate: (out) => out.includes("Hello, Python!")
+      },
+      {
+        id: "l_setup_4",
+        title: "كيف تعمل الأوامر (PATH)",
+        theory: `<h1 style="color:var(--py-yellow);">Level 0.4: أسرار مسار الـ PATH</h1>
+          <div style="background:rgba(0,0,0,0.4); border-right:3px solid var(--py-yellow); padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.95rem; line-height:1.6;">
+            <h3 style="color:var(--py-yellow); margin-top:0;">ماذا يحدث عندما نكتب python؟</h3>
+            <ol style="margin-right:20px;">
+              <li>يستلم النظام الأمر ويبحث عنه داخل مجلدات <strong>PATH</strong> بالترتيب.</li>
+              <li>إذا وجده: ينفذ الأمر بنجاح ويفتح بايثون.</li>
+              <li>إذا لم يجده: يعطي خطأ <code>Command not recognized</code>.</li>
+            </ol>
+            <h3 style="color:var(--py-yellow); margin-top:15px;">كيف نفحص مسار PATH؟</h3>
+            <ul style="margin-right:20px;">
+              <li><strong>Windows CMD:</strong> <code>echo %PATH%</code></li>
+              <li><strong>PowerShell:</strong> <code>$env:PATH</code></li>
+              <li><strong>Linux/macOS:</strong> <code>echo $PATH</code></li>
+            </ul>
+            <h3 style="color:var(--py-yellow); margin-top:15px;">وجود أكثر من إصدار:</h3>
+            <p>في ويندوز، يمكنك استخدام أداة <code>py</code> للتحكم بالإصدارات: <code>py -3</code> لتشغيل بايثون 3، أو <code>py -0p</code> لعرض النسخ المثبتة ومساراتها.</p>
+          </div>
+          <div class="mini-challenge">
+            <div class="challenge-title">🎯 التحدي المطلوب</div>
+            <p>أثبت فهمك لبيئة العمل بطباعة الجملة: <code>PATH understood</code>.</p>
+          </div>`,
+        initialCode: `print("اكتب هنا")
+`,
+        validate: (out) => out.includes("PATH understood")
+      }
+    ]
+  },
+  {
     chapter: "Chapter 1: The Absolute Basics",
     levels: [
       {

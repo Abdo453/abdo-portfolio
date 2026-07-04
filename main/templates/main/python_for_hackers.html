@@ -79,6 +79,7 @@
     let fitAddon = null;
     let currentLevelId = 'l1';
     let allLevels = [];
+    let placeholderCleared = false; // tracks if "اكتب هنا" placeholder was cleared for current level
 
     // --- Load Progress from localStorage ---
     const savedProgress = localStorage.getItem('pyhackers_unlocked');
@@ -176,9 +177,12 @@
         if(editor) {
             editor.setValue(levelData.initialCode);
         }
+        // Reset placeholder flag so it clears "اكتب هنا" on first focus of the new level
+        placeholderCleared = false;
         term.clear();
         term.writeln(`\x1b[36m[*] Loaded ${levelId}.py\x1b[0m\n`);
     }
+
 
     // --- Unlock Next Level ---
     function unlockNextLevel(currentId) {
@@ -239,6 +243,30 @@
         scrollBeyondLastLine: false,
         padding: { top: 15 }
       });
+
+      // --- Placeholder clearing: on first focus, remove any "اكتب هنا" placeholder text ---
+      editor.onDidFocusEditorText(() => {
+        if (placeholderCleared) return;
+        placeholderCleared = true;
+        const model = editor.getModel();
+        if (!model) return;
+        const fullText = model.getValue();
+        if (fullText.includes('اكتب هنا')) {
+          // Replace the placeholder line(s) with empty string preserving surrounding lines
+          const newText = fullText
+            .split('\n')
+            .map(line => line.includes('اكتب هنا') ? '' : line)
+            .join('\n');
+          model.setValue(newText);
+          // Move cursor to the first empty line created
+          const lines = newText.split('\n');
+          const emptyLineIdx = lines.findIndex(l => l.trim() === '');
+          if (emptyLineIdx >= 0) {
+            editor.setPosition({ lineNumber: emptyLineIdx + 1, column: 1 });
+          }
+        }
+      });
+
 
       switchLevel(currentLevelId);
       initPyodide();

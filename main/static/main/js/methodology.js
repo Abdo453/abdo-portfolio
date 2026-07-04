@@ -1793,7 +1793,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // Inject accordion button into long cards for mobile
   if (window.innerWidth <= 900) {
     document.querySelectorAll('.cyber-card').forEach(function(card) {
-      if (card.scrollHeight > 450) {
+      if (card.scrollHeight > 500) {
+        card.classList.add('collapsible');
         var btn = document.createElement('button');
         btn.className = 'accordion-btn';
         btn.innerHTML = '📖 Read More';
