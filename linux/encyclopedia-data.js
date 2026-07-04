@@ -1911,7 +1911,7 @@ window.LINUX_COMMANDS = [
    {flag:'-w N',desc:'مستوى العمل (1-4، 3=افتراضي)'},
    {flag:'--show',desc:'اعرض الهاشات المكسورة'},
    {flag:'-o FILE',desc:'احفظ الناتج'},
-   {flag:'-r RULE',desc:'استخدم قواعد تحويل'),},
+   {flag:'-r RULE',desc:'استخدم قواعد تحويل'},
    {flag:'--force',desc:'تجاهل تحذيرات البيئة'},
  ],
  examples:[
