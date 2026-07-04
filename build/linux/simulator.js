@@ -1134,7 +1134,21 @@ function injectTroubleshootingBug() {
 }
 
 window.showDiagram = function() {
-    let diagramText = currentLevel.topology || "[Router] --- (fa0/0) --- [Switch]";
+    let defaultTopology = 
+        "+-------------------------------------------------------+\n" +
+        "|              بنية بيئة العمل (Lab Topology)          |\n" +
+        "+-------------------------------------------------------+\n" +
+        "|                                                       |\n" +
+        "|   [ Kali Linux Client ] (192.168.1.100)               |\n" +
+        "|            │                                          |\n" +
+        "|            ▼ (SSH, HTTP, Nmap Scanning)               |\n" +
+        "|   [ Firewalld / SELinux (Hardening Layer) ]           |\n" +
+        "|            │                                          |\n" +
+        "|            ▼ (Enforcing Policies)                     |\n" +
+        "|   [ RHEL 9 Target Server ] (192.168.1.50)             |\n" +
+        "|                                                       |\n" +
+        "+-------------------------------------------------------+";
+    let diagramText = currentLevel.topology || defaultTopology;
     document.getElementById('diagramContent').innerText = diagramText;
     document.getElementById('diagramModal').classList.add('active');
 }
