@@ -6,7 +6,7 @@
 
 window.linuxDataLoading = true;
 
-async function loadCcnaData() {
+async function loadLinuxData() {
     try {
         console.log("Fetching Linux Data...");
         
@@ -79,11 +79,11 @@ async function loadCcnaData() {
         }));
         
     } catch (err) {
-        console.error("Critical Error in loadCcnaData:", err);
+        console.error("Critical Error in loadLinuxData:", err);
         window.linuxDataLoading = false;
         document.dispatchEvent(new Event('linuxDataReady'));
     }
 }
 
 // Start loading immediately
-loadCcnaData();
+loadLinuxData();

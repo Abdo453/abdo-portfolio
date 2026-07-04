@@ -51,7 +51,13 @@ let routerState = {
 
 function getPrompt() {
     if (routerState.isLinux) {
-        return `\x1b[31mroot@kali\x1b[0m:\x1b[34m~\x1b[0m# `;
+        let dirName = routerState.currentDir || '/root';
+        if (dirName === '/root') dirName = '~';
+        else if (dirName !== '/') {
+            let parts = dirName.split('/');
+            dirName = parts[parts.length - 1];
+        }
+        return `\x1b[1;31m[root@${routerState.hostname || 'rhel9'} \x1b[1;34m${dirName}\x1b[1;31m]# \x1b[0m`;
     }
 
     let suffix = '>';
@@ -87,9 +93,9 @@ function initTerminal() {
         fitAddon.fit();
     });
 
-    term.writeln('System Bootstrap, Version 15.1(4)M4, RELEASE SOFTWARE (fc1)');
-    term.writeln('Copyright (c) 1986-2026 by Linux Systems, Inc.');
-    term.writeln('Press RETURN to get started.');
+    term.writeln('Red Hat Enterprise Linux 9.0 (Ootpa) Kernel 5.14.0-70.22.1.el9_0.x86_64');
+    term.writeln('Active Console Session. Copyright (c) Red Hat, Inc.');
+    term.writeln('Press Enter to get started.');
     term.write('\r\n' + getPrompt());
 
     term.onData(e => {
@@ -156,9 +162,15 @@ function handleTabCompletion() {
     const input = currentInput.trim().toLowerCase();
     if (!input) return;
 
-    const modeKey = routerState.mode.startsWith('config') ? 'config' : routerState.mode;
-    const candidates = (IOS_COMMANDS[modeKey] || IOS_COMMANDS['priv'])
-        .filter(cmd => cmd.toLowerCase().startsWith(input));
+    let candidates = [];
+    if (routerState.isLinux) {
+        const LINUX_COMMANDS = ['ls', 'cd', 'pwd', 'cat', 'grep', 'chmod', 'chown', 'ps', 'kill', 'ip', 'systemctl', 'journalctl', 'tar', 'dnf', 'yum', 'clear', 'whoami', 'uname', 'hostname', 'nmap', 'ping', 'ssh', 'curl', 'hydra', 'help'];
+        candidates = LINUX_COMMANDS.filter(cmd => cmd.toLowerCase().startsWith(input));
+    } else {
+        const modeKey = routerState.mode.startsWith('config') ? 'config' : routerState.mode;
+        candidates = (IOS_COMMANDS[modeKey] || IOS_COMMANDS['priv'])
+            .filter(cmd => cmd.toLowerCase().startsWith(input));
+    }
 
     if (candidates.length === 1) {
         // Complete the command
@@ -180,38 +192,294 @@ function processCommand(cmd) {
     let mainCmd = parts[0].toLowerCase();
     
     // Support Attacker PC mode (Linux)
+    // Support Attacker PC mode (Linux)
     if (routerState.isLinux) {
-        if (mainCmd === 'nmap') {
+        // Track history of commands for validation checks
+        if (!routerState.history) routerState.history = [];
+        routerState.history.push(cmd.trim());
+
+        // Virtual Filesystem
+        const virtualFS = {
+            '/': { type: 'dir', children: ['bin', 'etc', 'home', 'root', 'var', 'tmp'] },
+            '/bin': { type: 'dir', children: ['ls', 'cd', 'pwd', 'cat', 'grep', 'chmod', 'chown', 'ps', 'kill', 'ip', 'systemctl', 'journalctl', 'tar', 'dnf', 'nmap', 'hydra'] },
+            '/etc': { type: 'dir', children: ['passwd', 'shadow', 'fstab', 'hosts', 'sshd_config'] },
+            '/etc/passwd': { type: 'file', content: 'root:x:0:0:root:/root:/bin/bash\nbin:x:1:1:bin:/bin:/sbin/nologin\ndaemon:x:2:2:daemon:/sbin:/sbin/nologin\nadmin:x:1000:1000:admin:/home/admin:/bin/bash\napache:x:48:48:Apache:/usr/share/httpd:/sbin/nologin' },
+            '/etc/shadow': { type: 'file', content: 'root:$6$rounds=40000$hacker123...:19240:0:99999:7:::\nadmin:$6$rounds=40000$admin123...:19240:0:99999:7:::\napache:*:19240:0:99999:7:::' },
+            '/etc/fstab': { type: 'file', content: '# /etc/fstab\nUUID=3a7b6c5d-1e2f-4a3b-8c9d-0e1f2a3b4c5d  /  xfs  defaults  0  0\nUUID=4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d  /boot  xfs  defaults  0  0\nUUID=5b6c7d8e-9f0a-1b2c-3d4e-5f6a7b8c9d0e  /home  xfs  defaults  0  0\nUUID=1234-5678  /mnt/data  xfs  defaults,nofail  0  0' },
+            '/etc/hosts': { type: 'file', content: '127.0.0.1   localhost localhost.localdomain\n::1         localhost localhost.localdomain\n10.0.0.5    server.local server' },
+            '/etc/sshd_config': { type: 'file', content: 'Port 22\nPermitRootLogin no\nPasswordAuthentication no\nPubkeyAuthentication yes' },
+            '/home': { type: 'dir', children: ['admin'] },
+            '/home/admin': { type: 'dir', children: ['backup.sh'] },
+            '/home/admin/backup.sh': { type: 'file', content: '#!/bin/bash\ntar -czvf /backup/logs.tar.gz /var/log\necho "Backup completed successfully!"' },
+            '/root': { type: 'dir', children: ['flag.txt', '.bashrc'] },
+            '/root/flag.txt': { type: 'file', content: 'FLAG{linux_administration_mastery_rhel9}' },
+            '/root/.bashrc': { type: 'file', content: '# .bashrc\nalias ls="ls --color=auto"\nalias ll="ls -la"' },
+            '/var': { type: 'dir', children: ['log'] },
+            '/var/log': { type: 'dir', children: ['auth.log', 'syslog', 'audit'] },
+            '/var/log/auth.log': { type: 'file', content: 'Jul  4 10:00:15 rhel9 sshd[1234]: Accepted publickey for admin from 192.168.1.100 port 54321 ssh2\nJul  4 10:05:22 rhel9 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/bash\nJul  4 10:12:44 rhel9 sshd[1567]: Failed password for invalid user hacker from 203.0.113.50 port 38291 ssh2' },
+            '/var/log/syslog': { type: 'file', content: 'Jul  4 10:00:01 rhel9 systemd[1]: Started System Logging Service.\nJul  4 10:05:00 rhel9 systemd[1]: Starting Periodic Command Scheduler...' },
+            '/var/log/audit': { type: 'dir', children: ['audit.log'] },
+            '/var/log/audit/audit.log': { type: 'file', content: 'type=SYSCALL msg=audit(1672531200.123:45): arch=c000003e syscall=2 success=yes exit=3 a0=7ffcd5a6a3b0 a1=0 a2=1fffffffffff a3=7ffcd5a698a0 items=1 ppid=1234 pid=1567 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=1 comm="cat" exe="/usr/bin/cat" key="passwd_changes"' },
+            '/tmp': { type: 'dir', children: ['script.sh'] },
+            '/tmp/script.sh': { type: 'file', content: '#!/bin/bash\necho "Hello World!"' }
+        };
+
+        if (mainCmd === 'pwd') {
+            term.writeln(routerState.currentDir || '/root');
+        } 
+        else if (mainCmd === 'clear') {
+            term.clear();
+        }
+        else if (mainCmd === 'whoami') {
+            term.writeln('root');
+        }
+        else if (mainCmd === 'uname') {
+            term.writeln('Linux rhel9 5.14.0-70.22.1.el9_0.x86_64 #1 SMP PREEMPT RHEL 9.0 x86_64 GNU/Linux');
+        }
+        else if (mainCmd === 'hostname') {
+            if (parts[1]) {
+                routerState.hostname = parts[1];
+            } else {
+                term.writeln(routerState.hostname || 'rhel9');
+            }
+        }
+        else if (mainCmd === 'cd') {
+            let targetDir = parts[1] || '/root';
+            if (targetDir === '~') targetDir = '/root';
+            
+            // Resolve relative paths simply
+            let resolved = targetDir;
+            if (!targetDir.startsWith('/')) {
+                let current = routerState.currentDir || '/root';
+                if (current === '/') current = '';
+                resolved = current + '/' + targetDir;
+            }
+            
+            // Normalize path (like removing trailing slash or double slashes)
+            resolved = resolved.replace(/\/+/g, '/');
+            if (resolved.endsWith('/') && resolved.length > 1) resolved = resolved.slice(0, -1);
+            if (resolved.includes('..')) {
+                let steps = resolved.split('/');
+                let stack = [];
+                for (let step of steps) {
+                    if (step === '..') stack.pop();
+                    else if (step !== '.' && step !== '') stack.push(step);
+                }
+                resolved = '/' + stack.join('/');
+            }
+            
+            if (virtualFS[resolved] && virtualFS[resolved].type === 'dir') {
+                routerState.currentDir = resolved;
+            } else {
+                term.writeln(`bash: cd: ${parts[1] || ''}: No such file or directory`);
+            }
+        } 
+        else if (mainCmd === 'ls') {
+            let path = routerState.currentDir || '/root';
+            let target = parts[1];
+            if (target) {
+                if (!target.startsWith('/')) {
+                    path = (path === '/' ? '' : path) + '/' + target;
+                } else {
+                    path = target;
+                }
+                path = path.replace(/\/+/g, '/');
+            }
+            
+            if (virtualFS[path] && virtualFS[path].type === 'dir') {
+                term.writeln(virtualFS[path].children.join('   '));
+            } else if (virtualFS[path] && virtualFS[path].type === 'file') {
+                term.writeln(target);
+            } else {
+                term.writeln(`ls: cannot access '${target || ''}': No such file or directory`);
+            }
+        } 
+        else if (mainCmd === 'cat') {
+            let filename = parts[1];
+            if (!filename) {
+                term.writeln('cat: missing operand');
+            } else {
+                let path = routerState.currentDir || '/root';
+                if (!filename.startsWith('/')) {
+                    path = (path === '/' ? '' : path) + '/' + filename;
+                } else {
+                    path = filename;
+                }
+                path = path.replace(/\/+/g, '/');
+                
+                if (virtualFS[path] && virtualFS[path].type === 'file') {
+                    term.writeln(virtualFS[path].content);
+                } else if (virtualFS[path] && virtualFS[path].type === 'dir') {
+                    term.writeln(`cat: ${filename}: Is a directory`);
+                } else {
+                    term.writeln(`cat: ${filename}: No such file or directory`);
+                }
+            }
+        } 
+        else if (mainCmd === 'grep') {
+            let pattern = parts[1];
+            let filename = parts[2];
+            let isCaseInsensitive = false;
+            
+            if (parts[1] === '-i') {
+                pattern = parts[2];
+                filename = parts[3];
+                isCaseInsensitive = true;
+            }
+            
+            if (!pattern || !filename) {
+                term.writeln('Usage: grep [-i] [pattern] [file]');
+            } else {
+                let path = routerState.currentDir || '/root';
+                if (!filename.startsWith('/')) {
+                    path = (path === '/' ? '' : path) + '/' + filename;
+                } else {
+                    path = filename;
+                }
+                path = path.replace(/\/+/g, '/');
+                
+                if (virtualFS[path] && virtualFS[path].type === 'file') {
+                    let lines = virtualFS[path].content.split('\n');
+                    let found = false;
+                    for (let line of lines) {
+                        let matches = isCaseInsensitive 
+                            ? line.toLowerCase().includes(pattern.toLowerCase())
+                            : line.includes(pattern);
+                        if (matches) {
+                            term.writeln(line);
+                            found = true;
+                        }
+                    }
+                } else {
+                    term.writeln(`grep: ${filename}: No such file or directory`);
+                }
+            }
+        }
+        else if (mainCmd === 'chmod') {
+            let perms = parts[1];
+            let filename = parts[2];
+            if (!perms || !filename) {
+                term.writeln('chmod: missing operand');
+            } else {
+                term.writeln(`chmod: mode of '${filename}' changed to ${perms}`);
+            }
+        }
+        else if (mainCmd === 'chown') {
+            let owner = parts[1];
+            let filename = parts[2];
+            if (!owner || !filename) {
+                term.writeln('chown: missing operand');
+            } else {
+                term.writeln(`chown: owner of '${filename}' changed to ${owner}`);
+            }
+        }
+        else if (mainCmd === 'ps') {
+            term.writeln('USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND');
+            term.writeln('root         1  0.0  0.1 168244  9820 ?        Ss   10:00   0:02 /usr/lib/systemd/systemd --switched-root --system');
+            term.writeln('root         2  0.0  0.0      0     0 ?        S    10:00   0:00 [kthreadd]');
+            term.writeln('root       720  0.0  0.1  89244  6120 ?        Ss   10:01   0:01 /usr/sbin/auditd');
+            term.writeln('root       840  0.0  0.1  45120  4120 ?        Ss   10:01   0:00 /usr/sbin/sshd -D');
+            term.writeln('admin     1234  0.1  0.2 115720  8920 pts/0    Ss   10:05   0:00 -bash');
+            term.writeln('root      1567  0.0  0.2 116844  9120 pts/0    S    10:12   0:00 sudo -i');
+            term.writeln('root      1568  0.0  0.2 115720  8924 pts/0    S    10:12   0:00 -bash');
+            term.writeln('root      1890  0.0  0.0 152844  3120 pts/0    R+   10:15   0:00 ps ' + parts.slice(1).join(' '));
+        }
+        else if (mainCmd === 'kill') {
+            let pid = parts[1] || parts[2];
+            if (!pid) {
+                term.writeln('kill: missing job or process ID');
+            } else {
+                term.writeln(`Process ${pid} terminated.`);
+            }
+        }
+        else if (mainCmd === 'ip') {
+            let sub = parts[1];
+            if (sub === 'a' || sub === 'addr' || sub === 'address') {
+                term.writeln('1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000');
+                term.writeln('    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00');
+                term.writeln('    inet 127.0.0.1/8 scope host lo');
+                term.writeln('       valid_lft forever preferred_lft forever');
+                term.writeln('2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000');
+                term.writeln('    link/ether 52:54:00:fa:1b:2c brd ff:ff:ff:ff:ff:ff');
+                term.writeln('    inet 192.168.1.50/24 brd 192.168.1.255 scope global dynamic noprefixroute eth0');
+                term.writeln('       valid_lft 86320sec preferred_lft 86320sec');
+            } else {
+                term.writeln('Usage: ip [addr|link|route]');
+            }
+        }
+        else if (mainCmd === 'systemctl') {
+            let action = parts[1];
+            let service = parts[2];
+            if (!action || !service) {
+                term.writeln('Usage: systemctl [start|stop|restart|status] [service]');
+            } else {
+                if (action === 'status') {
+                    term.writeln(`● ${service}.service - Daemon for ${service}`);
+                    term.writeln(`   Loaded: loaded (/usr/lib/systemd/system/${service}.service; enabled)`);
+                    term.writeln(`   Active: active (running) since Sat 2026-07-04 10:01:15 UTC; 4h ago`);
+                    term.writeln(` Main PID: 840 (${service})`);
+                } else {
+                    term.writeln(`Service ${service} ${action}ed successfully.`);
+                }
+            }
+        }
+        else if (mainCmd === 'journalctl') {
+            term.writeln('Jul  4 10:00:01 rhel9 systemd[1]: Started System Logging Service.');
+            term.writeln('Jul  4 10:00:15 rhel9 sshd[1234]: Accepted publickey for admin from 192.168.1.100 port 54321 ssh2');
+            term.writeln('Jul  4 10:05:00 rhel9 systemd[1]: Starting Periodic Command Scheduler...');
+            term.writeln('Jul  4 10:05:22 rhel9 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/bin/bash');
+            term.writeln('Jul  4 10:12:44 rhel9 sshd[1567]: Failed password for invalid user hacker from 203.0.113.50 port 38291 ssh2');
+        }
+        else if (mainCmd === 'tar') {
+            term.writeln('tar: Removing leading `/\' from member names');
+            term.writeln('var/log/');
+            term.writeln('var/log/auth.log');
+            term.writeln('var/log/syslog');
+            term.writeln('var/log/audit/');
+            term.writeln('var/log/audit/audit.log');
+        }
+        else if (mainCmd === 'dnf' || mainCmd === 'yum') {
+            let action = parts[1];
+            let pkg = parts[2];
+            if (action === 'install' && pkg) {
+                term.writeln(`Installing: ${pkg}`);
+                term.writeln('Resolving Dependencies...');
+                term.writeln('Transaction Summary: Install 1 Package');
+                term.writeln('Downloading Packages...');
+                term.writeln(`Running transaction: Installing ${pkg}-1.0.0`);
+                term.writeln('Complete!');
+            } else {
+                term.writeln('Usage: dnf install [package]');
+            }
+        }
+        else if (mainCmd === 'nmap') {
             term.writeln('Starting Nmap 7.93 ( https://nmap.org )');
-            routerState.lastNmap = cmd; // Save command for validation
+            routerState.lastNmap = cmd;
             if (cmd.includes('-sS')) term.writeln('Stealth SYN scan initiated...');
             setTimeout(() => { term.writeln('Host is up. Ports: 22/tcp, 80/tcp.'); checkChallenge(); }, 1000);
-        } else if (mainCmd === 'ping') {
+        } 
+        else if (mainCmd === 'ping') {
             term.writeln('PING ' + (parts[1] || 'target') + ' 56(84) bytes of data.');
             term.writeln('64 bytes from target: icmp_seq=1 ttl=64 time=0.03 ms');
             routerState.lastPing = cmd;
-        } else if (mainCmd === 'ssh') {
+        } 
+        else if (mainCmd === 'ssh') {
             term.writeln('admin@' + (parts[1] || 'target') + ' password: ');
             routerState.lastSsh = cmd;
-        } else if (mainCmd === 'route-injector') {
-            term.writeln('Injecting LSA packets into OSPF process...');
-            term.writeln('Success! Target routing table poisoned.');
-            routerState.lastPing = cmd; // Storing here for simplicity in validation
-        } else if (mainCmd === 'curl') {
+        } 
+        else if (mainCmd === 'curl') {
             term.writeln('{"interfaces": {"GigabitEthernet0/0": {"ip": "192.168.1.1", "status": "up"}}}');
             routerState.lastCurl = cmd;
-        } else if (mainCmd === 'hydra') {
-            term.writeln('Hydra v9.1 (c) 2020 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.');
-            term.writeln('Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at ' + new Date().toISOString());
-            setTimeout(() => { term.writeln('[22][ssh] host: 192.168.1.1   login: admin   password: linux\n1 of 1 target successfully completed, 1 valid password found'); checkChallenge(); }, 1500);
+        } 
+        else if (mainCmd === 'hydra') {
+            term.writeln('Hydra v9.1 (c) 2020 by van Hauser/THC');
+            term.writeln('[22][ssh] host: 192.168.1.1   login: admin   password: linux\n1 valid password found');
             routerState.lastHydra = cmd;
-        } else if (mainCmd === 'hping3') {
-            term.writeln('HPING 192.168.1.1 (eth0 192.168.1.1): S set, 40 headers + 0 data bytes');
-            term.writeln('hping in flood mode, no replies will be shown');
-            routerState.lastHping = cmd;
-        } else {
+        } 
+        else {
             term.writeln('bash: ' + mainCmd + ': command not found');
         }
+        
         checkChallenge();
         return;
     }
@@ -776,11 +1044,13 @@ window.loadPhase = function(val) {
 
     // Reset Router State
     routerState = {
-        hostname: 'Router',
-        mode: 'user',
+        hostname: 'rhel9',
+        mode: 'root',
         interfaces: {},
         runningConfig: '',
-        isLinux: currentLevel.isLinux || false
+        isLinux: true,
+        currentDir: '/root',
+        history: []
     };
 
     // Inject bugs based on Mode
@@ -796,9 +1066,9 @@ window.loadPhase = function(val) {
 
     if (term) {
         term.clear();
-        term.writeln('\x1b[36m╔══════════════════════════════════════════════════╗\x1b[0m');
-        term.writeln('\x1b[36m║  Linux IOS Software, Version 15.1(4)M4           ║\x1b[0m');
-        term.writeln('\x1b[36m╚══════════════════════════════════════════════════╝\x1b[0m');
+        term.writeln('\x1b[31m╔══════════════════════════════════════════════════╗\x1b[0m');
+        term.writeln('\x1b[31m║  Red Hat Enterprise Linux 9 (RHEL 9)             ║\x1b[0m');
+        term.writeln('\x1b[31m╚══════════════════════════════════════════════════╝\x1b[0m');
         term.writeln('\x1b[33mLevel: ' + currentLevel.title + ' [' + currentMode.toUpperCase() + ']\x1b[0m');
         term.writeln('\x1b[90mTip: Use Tab for completion, ↑↓ for history, ? for help\x1b[0m');
         term.writeln('');
