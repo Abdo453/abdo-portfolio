@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RHCSA (RHEL 9) Flashcards — بطاقات الاستذكار</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="features.css">
+    <style>
+        body {
+            overflow: auto;
+            padding: 0;
+            background: radial-gradient(circle at top center, #0b1a30 0%, #030816 100%);
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Stats & Header Panel */
+        .dashboard-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .stats-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .stat-card .num {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        /* Progress Circle/Bar */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-bar-outer {
+            width: 200px;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #10b981);
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-percentage {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        /* Filter Controls */
+        .controls-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .filter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .search-box::after {
+            content: "🔍";
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            opacity: 0.6;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: #c9d1d9;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: var(--accent);
+            color: #0d1117;
+            border-color: var(--accent);
+        }
+
+        /* Card Grid View */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .flashcard-wrapper {
+            perspective: 1000px;
+            height: 280px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+
+        .card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .card-front-side {
+            background: linear-gradient(145deg, #111b27, #080f19);
+            justify-content: space-between;
+        }
+
+        .card-back-side {
+            background: #0d1624;
+            transform: rotateY(180deg);
+            overflow-y: auto;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .card-cat {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 700;
+            background: var(--accent-glow);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .card-num {
+            font-size: 0.85rem;
+            color: #8b949e;
+        }
+
+        .card-question {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #f0f6fc;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .card-answer {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #c9d1d9;
+            flex-grow: 1;
+            padding-bottom: 10px;
+        }
+
+        .card-answer code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(0,0,0,0.3);
+            color: #58a6ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .card-answer ul {
+            margin-right: 20px;
+            margin-top: 5px;
+        }
+
+        .card-footer-hint {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #8b949e;
+            animation: pulse-light 2s infinite;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .card-action-btn {
+            flex: 1;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-need-review {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .btn-need-review:hover {
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .btn-mastered {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-mastered:hover {
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .card-state-badge {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        .badge-mastered {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .badge-review {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        /* Focus View Layout */
+        .focus-view {
+            display: none;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .focus-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            background: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .focus-card-wrapper {
+            height: 380px;
+        }
+
+        .focus-card-wrapper .card-question {
+            font-size: 1.4rem;
+        }
+
+        .focus-card-wrapper .card-answer {
+            font-size: 1.1rem;
+        }
+
+        @keyframes pulse-light {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; }
+        }
+
+        /* Reset all elements to display block or none based on active state */
+        .hidden-card {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Linux Academy</h1>
+            <span class="subtitle">RHCSA (RHEL 9) Flashcards — بطاقات الاستذكار</span>
+        </div>
+        <div class="nav-buttons">
+            <a href="index.html" class="top-btn">🏠 الرئيسية</a>
+            <a href="academy.html" class="top-btn">📚 الدروس</a>
+            <a href="encyclopedia.html" class="top-btn">📖 الموسوعة</a>
+            <a href="cheatsheet.html" class="top-btn">📝 ورقة الغش</a>
+            <a href="exam.html" class="top-btn">⚔️ المحاكي</a>
+            <a href="interview.html" class="top-btn">💬 المقابلات</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Dashboard Panel -->
+        <div class="dashboard-panel">
+            <div class="stats-group">
+                <div class="stat-card">
+                    <span class="num" id="statTotal">100</span>
+                    <span class="label">إجمالي البطاقات</span>
+                </div>
+                <div class="stat-card">
+                    <span class="num" id="statMastered" style="color: var(--success);">0</span>
+                    <span class="label">تم حفظها</span>
+                </div>
+                <div class="stat-card">
+                    <span class="num" id="statReview" style="color: var(--warning);">0</span>
+                    <span class="label">تحتاج مراجعة</span>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <span class="label">نسبة الإتقان:</span>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner" id="statProgress"></div>
+                </div>
+                <span class="progress-percentage" id="statPercent">0%</span>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="filter-row">
+                <select id="categoryFilter" style="min-width: 250px;">
+                    <option value="all">📂 كل الفصول والأقسام</option>
+                    <option value="1️⃣ التفاعل مع النظام وCLI">1️⃣ التفاعل مع النظام وCLI</option>
+                    <option value="2️⃣ معالجة النصوص وBash Scripting">2️⃣ معالجة النصوص وBash Scripting</option>
+                    <option value="3️⃣ الهوية والصلاحيات (DAC)">3️⃣ الهوية والصلاحيات (DAC)</option>
+                    <option value="4️⃣ العمليات والخدمات">4️⃣ العمليات والخدمات</option>
+                    <option value="5️⃣ البرمجيات والمستودعات">5️⃣ البرمجيات والمستودعات</option>
+                    <option value="6️⃣ الشبكات">6️⃣ الشبكات</option>
+                    <option value="7️⃣ جدار الحماية والوصول عن بعد">7️⃣ جدار الحماية والوصول عن بعد</option>
+                    <option value="8️⃣ التخزين">8️⃣ التخزين</option>
+                    <option value="9️⃣ الأرشفة والجدولة">9️⃣ الأرشفة والجدولة</option>
+                    <option value="🔟 SELinux">🔟 SELinux</option>
+                    <option value="1️⃣1️⃣ الإقلاع والإصلاح">1️⃣1️⃣ الإقلاع والإصلاح</option>
+                    <option value="1️⃣2️⃣ الأتمتة والحاويات">1️⃣2️⃣ الأتمتة والحاويات</option>
+                    <option value="🏆 أسئلة سيناريو (Scenario-Based)">🏆 أسئلة سيناريو (Scenario-Based)</option>
+                </select>
+
+                <select id="stateFilter">
+                    <option value="all">👁️ عرض كل البطاقات</option>
+                    <option value="unstarted">🆕 لم تبدأ بعد</option>
+                    <option value="review">🔄 قيد المراجعة</option>
+                    <option value="mastered">✅ المحفوظة فقط</option>
+                </select>
+
+                <div class="view-toggle">
+                    <button class="view-btn active" id="btnGridView" onclick="switchView('grid')">📱 عرض الشبكة</button>
+                    <button class="view-btn" id="btnFocusView" onclick="switchView('focus')">🎯 وضع التركيز</button>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <div class="search-box">
+                    <input type="text" id="cardSearch" placeholder="ابحث عن أمر، موضوع، أو سيناريو...">
+                </div>
+                <button class="btn" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: var(--danger);" onclick="resetProgress()">🔄 تصفير التقدم الدراسي</button>
+            </div>
+        </div>
+
+        <!-- Grid View -->
+        <div class="cards-grid" id="cardsGrid">
+            <!-- Cards injected here -->
+        </div>
+
+        <!-- Focus View -->
+        <div class="focus-view" id="focusView">
+            <div class="flashcard-wrapper focus-card-wrapper" onclick="toggleFocusCard()">
+                <div class="card-inner" id="focusCardInner">
+                    <!-- Front -->
+                    <div class="card-side card-front-side">
+                        <div class="card-header">
+                            <span class="card-cat" id="focusCardCat"></span>
+                            <span class="card-num" id="focusCardIndex">Card 1 / 100</span>
+                        </div>
+                        <div class="card-question" id="focusCardQ"></div>
+                        <div class="card-footer-hint">👆 اضغط لقلب البطاقة ومعاينة الإجابة الشاملة</div>
+                    </div>
+                    <!-- Back -->
+                    <div class="card-side card-back-side" onclick="event.stopPropagation()">
+                        <div class="card-header">
+                            <span class="card-cat" id="focusCardCatBack"></span>
+                            <span class="card-num" id="focusCardIndexBack">Card 1 / 100</span>
+                        </div>
+                        <div class="card-answer" id="focusCardA"></div>
+                        <div class="card-actions" id="focusCardActions"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="focus-controls">
+                <button class="btn" id="btnFocusPrev" onclick="navigateFocus(-1)">◀ السابق</button>
+                <span class="progress-text" id="focusProgressText">0 / 0</span>
+                <button class="btn" id="btnFocusNext" onclick="navigateFocus(1)">التالي ▶</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database
+        const flashcardsData = [
+            // 1
+            {id:1, cat:"1️⃣ التفاعل مع النظام وCLI", q:"ما هو FHS وما هي أهم الأدلة فيه؟", a:"<strong>Filesystem Hierarchy Standard — الهيكل القياسي لأنظمة الملفات:</strong><br><ul><li><code>/etc</code> — ملفات التهيئة والإعدادات للنظام.</li><li><code>/var</code> — بيانات متغيرة باستمرار (سجلات النظام Logs، قواعد البيانات).</li><li><code>/usr</code> — برمجيات ومكتبات المستخدم المشتركة.</li><li><code>/home</code> — مساحات الأدلة الشخصية للمستخدمين العاديين.</li><li><code>/tmp</code> — ملفات مؤقتة تُحذف عادةً بشكل دوري.</li><li><code>/boot</code> — ملفات الإقلاع (Kernel, initramfs, GRUB).</li></ul>"},
+            {id:2, cat:"1️⃣ التفاعل مع النظام وCLI", q:"ما الفرق بين man و pinfo؟", a:"<ul><li><code>man</code> — صفحات التوثيق التقليدية المباشرة للأوامر.</li><li><code>pinfo</code> — واجهة متطورة وأكثر تفاعلية لقراءة صفحات Info بشكل شجري ومنسق مع روابط للانتقال السريع.</li></ul>"},
+            {id:3, cat:"1️⃣ التفاعل مع النظام وCLI", q:"ما هي RHEL Lightspeed؟", a:"مساعد ذكاء اصطناعي مدمج في نظام Red Hat (RHEL) يساعد مسؤولي النظام وأخصائيي الـ DevOps في كتابة سيناريوهات الأتمتة وأوامر التشخيص وحل المشاكل التقنية بناءً على سياق المشكلة والدروس المستفادة."},
+            {id:4, cat:"1️⃣ التفاعل مع النظام وCLI", q:"كيف تنشئ هيكل مجلدات معقد بأمر واحد؟", a:"عن طريق خاصية <strong>Brace Expansion</strong> في الغلاف:<br><code>mkdir -p /project/{docs,src,tests}/{2024,2025}</code><br>هذا سينشئ المجلدات الفرعية docs و src و tests ويحتوي كل منها على المجلدين 2024 و 2025 في خطوة واحدة وبشكل تكراري (-p)."},
+            
+            // 2
+            {id:5, cat:"2️⃣ معالجة النصوص وBash Scripting", q:"ما هي الثلاثة مسارات افتراضية للبيانات في Linux؟", a:"<ul><li><strong>STDIN (0):</strong> الإدخال القياسي (المدخلات من لوحة المفاتيح عادةً).</li><li><strong>STDOUT (1):</strong> الإخراج القياسي (مخرجات الأوامر الناجحة إلى الشاشة).</li><li><strong>STDERR (2):</strong> الأخطاء القياسية (مخرجات رسائل الفشل أو الخطأ إلى الشاشة).</li></ul>"},
+            {id:6, cat:"2️⃣ معالجة النصوص وBash Scripting", q:"ما الفرق بين > و >>؟", a:"<ul><li><code>&gt;</code> — يقوم بإعادة توجيه المخرجات وكتابتها فوق المحتوى الأصلي للملف بالكامل (Overwrite).</li><li><code>&gt;&gt;</code> — يقوم بإلحاق المخرجات في نهاية الملف دون حذف أو المساس بالمحتوى السابق (Append).</li></ul>"},
+            {id:7, cat:"2️⃣ معالجة النصوص وBash Scripting", q:"ما هو Shebang وما هي صيغته القياسية في RHEL؟", a:"السطر الأول في السكربت الذي يحدد المفسر البرمجي المطلوب استخدامه لتنفيذ الكود. صيغته القياسية في RHEL:<br><code>#!/usr/bin/bash</code> أو <code>#!/bin/bash</code>"},
+            {id:8, cat:"2️⃣ معالجة النصوص وBash Scripting", q:"ما الفرق بين علامات الاقتباس المفردة '' والمزدوجة \"\" في Bash؟", a:"<ul><li><code>''</code> (Single Quotes): تقوم بتجريد كافة الرموز والمتغيرات داخلها من معانيها الخاصة وتتعامل مع المحتوى كنص حرفي جامد.</li><li><code>\"\"</code> (Double Quotes): تحافظ على قيم واستبدال المتغيرات (Variable Substitution) وتنفيذ الأوامر الفرعية مثل <code>$()</code>.</li></ul>"},
+            {id:9, cat:"2️⃣ معالجة النصوص وBash Scripting", q:"ما هو كود الخروج (Exit Code) وما هو كود النجاح؟", a:"هو رمز رقمي ترجعه العملية عند انتهائها لبيان حالتها، ويُخزن في المتغير <code>$?</code>.<br><ul><li><strong>0:</strong> يعني النجاح التام للعملية.</li><li><strong>أي قيمة أخرى (1-255):</strong> تعني حدوث فشل أو خطأ محدد أثناء التنفيذ.</li></ul>"},
+            {id:10, cat:"2️⃣ معالجة النصوص وBash Scripting", q:"كيف تستخدم حلقة for لتطبيق إعدادات على عدة خوادم؟", a:"يمكن صياغتها برمجياً كالتالي:<br><code>for HOST in servera serverb serverc; do<br>&nbsp;&nbsp;ssh $HOST 'sudo systemctl restart httpd'<br>done</code>"},
+            {id:11, cat:"2️⃣ معالجة النصوص وBash Scripting", q:"ما هي Regex وما الفرق بين Basic و Extended؟", a:"<strong>Regular Expressions (التعبيرات النمطية):</strong> أنماط بحث متطورة لمطابقة النصوص وفلترتها.<br><ul><li><strong>Basic Regex (BRE):</strong> التنسيق الأساسي (الافتراضي مع <code>grep</code>)، ويتطلب إضافة مائلة عكسية <code>\\</code> قبل بعض الرموز لتفعيل خواصها.</li><li><strong>Extended Regex (ERE):</strong> التنسيق الموسع (يفعل مع <code>grep -E</code> أو <code>egrep</code>)، ويدعم الرموز المتقدمة مثل <code>|</code> (أو)، <code>+</code>، <code>?</code>، و <code>{}</code> مباشرة دون هروب.</li></ul>"},
+            {id:12, cat:"2️⃣ معالجة النصوص وBash Scripting", q:"ما معنى ^ و $ في Regex؟", a:"<ul><li><code>^</code> — يطابق بداية السطر (مثال: <code>^error</code> يبحث عن السطور التي تبدأ بكلمة error).</li><li><code>$</code> — يطابق نهاية السطر (مثال: <code>false$</code> يبحث عن السطور التي تنتهي بكلمة false).</li></ul>"},
+            
+            // 3
+            {id:13, cat:"3️⃣ الهوية والصلاحيات (DAC)", q:"أين تُحفظ بيانات المستخدمين المحليين وكلمات المرور؟", a:"<ul><li>بيانات المستخدمين الأساسية (الاسم، المعرف، الدليل المنزلي): تُحفظ في ملف <code>/etc/passwd</code>.</li><li>كلمات المرور المشفرة وإعدادات الصلاحية والانتهاء: تُحفظ في ملف <code>/etc/shadow</code> ولا يمكن قراءته إلا بواسطة الـ root.</li></ul>"},
+            {id:14, cat:"3️⃣ الهوية والصلاحيات (DAC)", q:"ما هي سياسة User Private Groups في RHEL؟", a:"سياسة افتراضية عند إنشاء مستخدم جديد؛ حيث يقابل كل مستخدم إنشاء مجموعة خاصة به فريدة تحمل نفس اسمه تماماً ويكون هو العضو الوحيد فيها لتسهيل ضبط ومشاركة الصلاحيات لاحقاً."},
+            {id:15, cat:"3️⃣ الهوية والصلاحيات (DAC)", q:"ما هي أدوات إدارة المستخدمين؟", a:"<ul><li><strong>للمستخدمين:</strong> <code>useradd</code> (إنشاء)، <code>usermod</code> (تعديل)، <code>userdel</code> (حذف).</li><li><strong>للمجموعات:</strong> <code>groupadd</code> (إنشاء)، <code>groupmod</code> (تعديل)، <code>groupdel</code> (حذف).</li></ul>"},
+            {id:16, cat:"3️⃣ الهوية والصلاحيات (DAC)", q:"ما هي مستويات الأذونات الثلاثة؟", a:"<ul><li><strong>المستخدم المالك (u - User)</strong></li><li><strong>المجموعة المالكة (g - Group)</strong></li><li><strong>الآخرين (o - Others)</strong></li></ul>ولكل مستوى أذونات: القراءة (r=4)، الكتابة (w=2)، التنفيذ (x=1)."},
+            {id:17, cat:"3️⃣ الهوية والصلاحيات (DAC)", q:"كيف تحسب الأذونات الرقمية 755؟", a:"<ul><li><strong>7 (للمالك):</strong> rwx (4 + 2 + 1) = صلاحية كاملة.</li><li><strong>5 (للمجموعة):</strong> r-x (4 + 0 + 1) = قراءة وتنفيذ فقط.</li><li><strong>5 (للآخرين):</strong> r-x (4 + 0 + 1) = قراءة وتنفيذ فقط.</li></ul>"},
+            {id:18, cat:"3️⃣ الهوية والصلاحيات (DAC)", q:"ما هو SetGID على مجلد وما فائدته؟", a:"عند تفعيل <strong>SetGID</strong> على مجلد بالخيار <code>chmod g+s /dir</code>، فإن أي ملف أو مجلد جديد يتم إنشاؤه بداخله يرث تلقائياً ملكية المجموعة الخاصة بالمجلد الأب، بدلاً من المجموعة الافتراضية للمستخدم الذي أنشأ الملف."},
+            {id:19, cat:"3️⃣ الهوية والصلاحيات (DAC)", q:"ما الفرق بين chmod و chown؟", a:"<ul><li><code>chmod</code> — يغير صلاحيات وأذونات الوصول للملفات والمجلدات (r, w, x).</li><li><code>chown</code> — يغير المالك (Owner) للملف أو المجلد و/أو المجموعة المالكة (Group).</li></ul>"},
+            
+            // 4
+            {id:20, cat:"4️⃣ العمليات والخدمات", q:"ما هو PID وكيف تراقب العمليات؟", a:"<strong>Process ID (معرف العملية):</strong> رقم فريد تسنده النواة لكل عملية نشطة بالنظام.<br>المراقبة تتم عبر:<br><ul><li><code>ps</code>: لقطة لحظية ثابتة للعمليات.</li><li><code>top</code> / <code>htop</code>: عرض تفاعلي محدث باستمرار لاستهلاك الموارد.</li><li><code>pgrep</code>: للبحث عن الـ PID الخاص بعملية معينة باستخدام اسمها.</li></ul>"},
+            {id:21, cat:"4️⃣ العمليات والخدمات", q:"ما هي خوارزمية CFS في Linux؟", a:"<strong>Completely Fair Scheduler (مجدول العدالة المطلقة):</strong> مجدول مهام افتراضي في كيرنل لينكس يهدف لتوزيع وقت المعالجة بعدالة بين العمليات باستخدام شجرة بحث ثنائية متوازنة (Red-Black Tree) لتقليل وقت الانتظار."},
+            {id:22, cat:"4️⃣ العمليات والخدمات", q:"ما هو Nice Value وما هو نطاقه؟", a:"قيمة تحدد أولوية جدولة العملية وتأثيرها على العمليات الأخرى.<br><ul><li>النطاق: <code>-20</code> (أعلى أولوية واستئثار بالمعالج) إلى <code>19</code> (أقل أولوية وإيثار للغير).</li><li>الافتراضي: <code>0</code>.</li></ul>"},
+            {id:23, cat:"4️⃣ العمليات والخدمات", q:"ما الفرق بين nice و renice؟", a:"<ul><li><code>nice</code> — تستخدم لبدء تشغيل برنامج جديد بأولوية (Nice value) مخصصة من البداية.</li><li><code>renice</code> — تستخدم لتعديل وتغيير أولوية عملية قيد التشغيل بالفعل بالنظام باستخدام الـ PID الخاص بها.</li></ul>"},
+            {id:24, cat:"4️⃣ العمليات والخدمات", q:"ما الفرق بين SIGTERM و SIGKILL؟", a:"<ul><li><code>SIGTERM (15):</code> طلب إنهاء ودود للعملية يسمح لها بحفظ بياناتها وإغلاق ملفاتها بأمان والتوقف المنظم.</li><li><code>SIGKILL (9):</code> إنهاء قسري مباشر وعنيف من النواة للعملية دون منحها أي فرصة لحفظ حالتها أو تنظيف الذاكرة.</li></ul>"},
+            {id:25, cat:"4️⃣ العمليات والخدمات", q:"ما هو systemd وما يحل محله؟", a:"هو نظام إدارة الخدمات والإقلاع الرئيسي والمعاصر في توزيعات Linux الحديثة. يحل محل نظام <strong>SysVinit</strong> القديم، ويتميز بتشغيل الخدمات بشكل متوازي وإدارة الوحدات (Unit files) بكفاءة."},
+            {id:26, cat:"4️⃣ العمليات والخدمات", q:"ما هي أوامر systemctl الأساسية؟", a:"الأوامر الأساسية لإدارة الخدمات:<br><code>start</code> (تشغيل)، <code>stop</code> (إيقاف)، <code>restart</code> (إعادة تشغيل)، <code>reload</code> (تحديث الإعدادات)، <code>enable</code> (تشغيل تلقائي مع الإقلاع)، <code>disable</code> (إلغاء التشغيل التلقائي)، <code>status</code> (عرض الحالة بالتفصيل)."},
+            {id:27, cat:"4️⃣ العمليات والخدمات", q:"ما هي ملفات تعريف Tuned المتاحة؟", a:"أداة ضبط الأداء الديناميكي للنظام وتوفر ملفات تعريف مسبقة مثل:<br><ul><li><code>throughput-performance</code> (لزيادة كفاءة الإرسال والمعالجة الشاملة).</li><li><code>latency-performance</code> (لتقليل زمن الاستجابة والـ delay).</li><li><code>virtual-guest</code> (لتحسين أداء الأنظمة الوهمية).</li><li><code>powersave</code> (لتوفير الطاقة).</li><li><code>balanced</code> (موازنة افتراضية).</li></ul>"},
+            {id:28, cat:"4️⃣ العمليات والخدمات", q:"ما هي الإشارات (Signals) وكيف ترسلها?", a:"رسائل برمجية تُرسل للعمليات للتحكم بحالتها. يتم إرسالها بأمر <code>kill</code>:<br><code>kill -15 PID</code> (إرسال SIGTERM للإنهاء الودود).<br><code>kill -9 PID</code> (إرسال SIGKILL للإنهاء الفوري القسري)."},
+            
+            // 5
+            {id:29, cat:"5️⃣ البرمجيات والمستودعات", q:"ما هو DNF وما يحل محله؟", a:"<strong>Dandified YUM (DNF):</strong> الجيل الحديث والمطور لإدارة حزم البرامج في توزيعات Red Hat. يحل محل أداة <code>yum</code> القديمة ويتميز بأداء أسرع وإدارة أفضل للتبعيات والذاكرة العشوائية."},
+            {id:30, cat:"5️⃣ البرمجيات والمستودعات", q:"ما الفرق بين BaseOS و AppStream؟", a:"في مستودعات RHEL 9:<br><ul><li><strong>BaseOS:</strong> يحتوي على الحزم الأساسية ونظام التشغيل الجذري الذي يمتلك دورة حياة طويلة ومستقرة جداً.</li><li><strong>AppStream:</strong> يحتوي على حزم التطبيقات، قواعد البيانات، واللغات البرمجية المتعددة الإصدارات التي يمكن تحديثها بشكل مستقل (Application Streams).</li></ul>"},
+            {id:31, cat:"5️⃣ البرمجيات والمستودعات", q:"ما هي Flatpak وما ميزتها؟", a:"نظام معاصر لتوزيع وتثبيت تطبيقات واجهات المستخدم الرسومية داخل حاوية معزولة (Sandbox) تحتوي على كل مكتباتها وتبعياتها، مما يحمي النظام المستضيف من التداخل والتخريب ويضمن استقرار الخدمات."},
+            {id:32, cat:"5️⃣ البرمجيات والمستودعات", q:"كيف تثبت تطبيق Flatpak؟", a:"بإضافة مستودع flathub وتثبيت التطبيق:<br><code>flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo</code><br>... GIMP...<br><code>flatpak install flathub org.gimp.GIMP</code>"},
+            
+            // 6
+            {id:33, cat:"6️⃣ الشبكات", q:"ما هو التحول الجذري في RHEL 9 لإدارة الشبكة؟", a:"تم إلغاء واستبعاد ملفات الإعدادات التقليدية <code>ifcfg-*</code> في المسار <code>/etc/sysconfig/network-scripts/</code> بالكامل، والاعتماد الكلي على ملفات التكوين بصيغة <strong>Keyfile</strong> في مسار <code>/etc/NetworkManager/system-connections/</code>."},
+            {id:34, cat:"6️⃣ الشبكات", q:"ما هو NetworkManager keyfile؟", a:"ملف نصي منظم بتنسيق يشبه ملفات <code>.INI</code> يحمل الامتداد <code>.nmconnection</code> ويخزن كافة إعدادات الكروت والشبكات (أيقونات الـ IP، بوابات العبور، DNS، والشهادات للواجهات)."},
+            {id:35, cat:"6️⃣ الشبكات", q:"كيف ترحل إعدادات ifcfg القديمة إلى keyfile؟", a:"عن طريق الأمر الخاص بالترحيل الذاتي لنظام NetworkManager:<br><code>nmcli connection migrate</code>"},
+            {id:36, cat:"6️⃣ الشبكات", q:"ما هي أدوات إدارة الشبكة في RHEL 9؟", a:"<ul><li><code>nmcli</code>: واجهة سطر الأوامر الأقوى لإدارة وتعديل الشبكات.</li><li><code>nmtui</code>: واجهة رسومية بسيطة داخل الطرفية (Text User Interface).</li><li><code>ip</code> (حزمة iproute2): لاستعراض حالة الكروت وجداول التوجيه الفورية.</li></ul>"},
+            {id:37, cat:"6️⃣ الشبكات", q:"ما هي صلاحيات ملفات keyfile الموصى بها؟", a:"أمنياً، يجب حماية ملفات التكوين وصلاحيتها بحدود قصوى لمنع كشف كلمات مرور الواي فاي ومفاتيح الـ VPN:<br><code>chmod 600 /etc/NetworkManager/system-connections/*</code>"},
+            
+            // 7
+            {id:38, cat:"7️⃣ جدار الحماية والوصول عن بعد", q:"ما هو firewalld وما هي Zones؟", a:"هو جدار الحماية الديناميكي الافتراضي للنظام. يعتمد على مفهوم <strong>Zones (المناطق الأمنية)</strong> لتصنيف الأجهزة والشبكات حسب مستوى الثقة، مثل:<br><ul><li><code>public</code>: المنطقة العامة الافتراضية للشبكات غير الآمنة.</li><li><code>drop</code>: إسقاط كافة الحزم الواردة دون إشعار أو رد.</li><li><code>trusted</code>: قبول كافة حزم البيانات والاتصالات بلا قيد.</li></ul>"},
+            {id:39, cat:"7️⃣ جدار الحماية والوصول عن بعد", q:"ما الفرق بين --permanent و Runtime في firewalld؟", a:"<ul><li><strong>Runtime (الافتراضي):</strong> تطبق القواعد فوراً بالذاكرة وتختفي وتتلاشى بمجرد إعادة تشغيل الخدمة أو السيرفر.</li><li><strong>--permanent:</strong> تكتب القواعد في ملفات التكوين الدائمة على القرص، ولا تفعل إلا بعد تحديث وجلب القواعد بأمر <code>firewall-cmd --reload</code>.</li></ul>"},
+            {id:40, cat:"7️⃣ جدار الحماية والوصول عن بعد", q:"كيف تضيف خدمة بشكل دائم في firewalld؟", a:"ننفذ الأمرين كالتالي:<br><code>sudo firewall-cmd --permanent --add-service=http</code><br>ثم نقوم بإعادة تحميل الإعدادات لتفعيلها:<br><code>sudo firewall-cmd --reload</code>"},
+            {id:41, cat:"7️⃣ جدار الحماية والوصول عن بعد", q:"ما هو SSH وما هي المصادقة بالمفاتيح؟", a:"<strong>Secure Shell (SSH):</strong> بروتوكول مشفر وآمن للاتصال بالخوادم البعيدة وإدارتها. المصادقة بالمفاتيح تعتمد على تشفير المفاتيح العام/الخاص بدلاً من كتابة كلمات المرور التقليدية العرضة للهجمات التخمينية."},
+            {id:42, cat:"7️⃣ جدار الحماية والوصول عن بعد", q:"ما الفرق بين المفتاح العام والخاص في SSH؟", a:"<ul><li><strong>المفتاح الخاص (Private Key):</strong> يُحفظ بشكل سري للغاية على جهاز المستخدم المسؤول ولا يشارك أبداً.</li><li><strong>المفتاح العام (Public Key):</strong> يُنسخ ويُرفع على الخوادم البعيدة المراد الاتصال بها داخل ملف <code>authorized_keys</code> الخاص بالمستخدم المستهدف.</li></ul>"},
+            {id:43, cat:"7️⃣ جدار الحماية والوصول عن بعد", q:"ما هي Passphrase في SSH Keys؟", a:"كلمة مرور إضافية لتشفير وحماية ملف المفتاح الخاص نفسه على جهازك؛ بحيث إذا تمت سرقة المفتاح الخاص أو الاستحواذ عليه فيزيائياً، لا يمكن للمخترق استخدامه دون معرفة الـ Passphrase."},
+            
+            // 8
+            {id:44, cat:"8️⃣ التخزين", q:"ما الفرق بين MBR و GPT؟", a:"<ul><li><strong>MBR (Master Boot Record):</strong> يدعم حتى 4 أقسام رئيسية كحد أقصى، وبسعة قرص لا تتجاوز 2 تيرا بايت.</li><li><strong>GPT (GUID Partition Table):</strong> يدعم لغاية 128 قسماً كحد أقصى، وبسعة تخزين ضخمة بالـ Zettabytes، ويدعم التحقق الأمني من سلامة جدول الأقسام عبر الـ CRC Checksums.</li></ul>"},
+            {id:45, cat:"8️⃣ التخزين", q:"ما هي أداة التقسيم الحديثة في RHEL؟", a:"أداة <code>parted</code> هي الأداة الشاملة والحديثة المعتمدة للتقسيم وتدعم جداول أقسام MBR و GPT. كما أن أداة <code>fdisk</code> تدعم GPT في تحديثاتها الأخيرة بـ RHEL 9."},
+            {id:46, cat:"8️⃣ التخزين", q:"ما هو نظام الملفات الافتراضي في RHEL؟", a:"هو نظام <strong>XFS</strong>، ويتميز بالأداء الفائق والقدرة على التعامل مع أحجام الملفات والأقراص العملاقة ودعم الـ metadata journaling. تنبيه: <strong>XFS لا يدعم التقليص (Shrink) نهائياً!</strong>"},
+            {id:47, cat:"8️⃣ التخزين", q:"كيف تُنشئ مساحة Swap؟", a:"نقوم بتهيئة القسم:<br><code>sudo mkswap /dev/sdb2</code><br>ثم نقوم بتفعيلها فوراً:<br><code>sudo swapon /dev/sdb2</code><br>ولجعلها دائمة، نقوم بإدراج الـ UUID الخاص بالقسم في ملف <code>/etc/fstab</code> بالخيار swap."},
+            {id:48, cat:"8️⃣ التخزين", q:"ما هو LVM وما هي طبقاته الثلاث؟", a:"<strong>Logical Volume Manager (إدارة الأقراص المنطقية):</strong> نظام مرن لدمج وتوسيع الأقراص الساخنة. طبقاته الثلاث هي:<br><ul><li><strong>PV (Physical Volume):</strong> تهيئة الأقراص الحقيقية عبر <code>pvcreate</code>.</li><li><strong>VG (Volume Group):</strong> دمج الـ PVs في مجموعة واحدة كبيرة عبر <code>vgcreate</code>.</li><li><strong>LV (Logical Volume):</strong> اقتطاع أقسام منطقية مرنة من الـ VG عبر <code>lvcreate</code> وتهيئتها بنظام ملفات.</li></ul>"},
+            {id:49, cat:"8️⃣ التخزين", q:"كيف توسع LV على XFS؟", a:"نقوم بتوسيع الحجم المنطقي أولاً:<br><code>sudo lvextend -L +10G /dev/vgname/lvname</code><br>ثم نمدد نظام الملفات XFS الحي والنشط دون إيقاف تشغيل الخادم:<br><code>sudo xfs_growfs /mount/point</code>"},
+            {id:50, cat:"8️⃣ التخزين", q:"ما هو Stratis وما ميزته؟", a:"نظام لإدارة التخزين الحديث يوفر ميزات متقدمة مبنية على أتمتة ودمج LVM ونظام ملفات XFS، ويدعم الـ Thin Provisioning، والـ Snapshots، ومراقبة استهلاك الأقراص ذاتياً وبطريقة ذكية وسريعة."},
+            {id:51, cat:"8️⃣ التخزين", q:"ما هو Thin Provisioning؟", a:"تقنية لحجز وتخصيص المساحات بشكل افتراضي وديناميكي؛ بحيث يرى نظام التشغيل حجماً وهمياً كبيراً جداً للقسم التخزيني، بينما لا يستهلك القسم مساحة حقيقية من القرص الصلب إلا عند كتابة البيانات الفعلية عليه."},
+            {id:52, cat:"8️⃣ التخزين", q:"ما هو NFS وما هو Autofs؟", a:"<ul><li><strong>NFS (Network File System):</strong> بروتوكول لمشاركة الأدلة والملفات مع السيرفرات الأخرى عبر الشبكة.</li><li><strong>Autofs:</strong> خدمة للتركيب والربط الديناميكي لمشاركات الملفات عند الحاجة (On-demand)، وتقوم بإلغاء التوصيل ذاتياً بعد فترة خمول محددة لتوفير موارد الشبكة والأمان.</li></ul>"},
+            {id:53, cat:"8️⃣ التخزين", q:"كيف تُعد Autofs؟", a:"نقوم بإضافة مسار الخريطة الرئيسي في <code>/etc/auto.master.d/sharing.autofs</code>:<br><code>/mnt/shares /etc/auto.sharing</code><br>ثم ننشئ ملف الربط الفرعي <code>/etc/auto.sharing</code> ونربط فيه المجلد وموقع الـ NFS البعيد."},
+            {id:54, cat:"8️⃣ التخزين", q:"ما هو UUID ولماذا نستخدمه في /etc/fstab؟", a:"معرف فريد عالمي (Universally Unique Identifier) يتم إسناده للأقسام وأنظمة الملفات. نستخدمه في ملف <code>fstab</code> لضمان استقرار إقلاع وربط الأقسام بشكل صحيح حتى لو تغير اسم المنفذ أو ترتيب كابلات الأقراص."},
+            
+            // 9
+            {id:55, cat:"9️⃣ الأرشفة والجدولة", q:"ما الفرق بين tar و gzip؟", a:"<ul><li><code>tar</code> — يقوم بتجميع وحزم مجموعة ملفات ومجلدات في ملف واحد أرشيفي دون أي ضغط للحجم.</li><li><code>gzip</code> — أداة مخصصة لضغط حجم ملف واحد أو تقليص حجم أرشيف <code>.tar</code> ناتج لتوفير مساحة التخزين.</li></ul>"},
+            {id:56, cat:"9️⃣ الأرشفة والجدولة", q:"كيف تضغط أرشيف بأقصى ضغط؟", a:"باستخدام خوارزمية الضغط الفائقة <code>xz</code>:<br><code>tar -cJf archive.tar.xz /source_dir</code><br>(حيث أن xz يوفر أعلى ضغط للملفات ولكنه يستهلك وقتاً أطول ومعالجة أعلى مقارنة بـ gzip)."},
+            {id:57, cat:"9️⃣ الأرشفة والجدولة", q:"ما هي ميزة rsync؟", a:"تعتمد على خوارزمية ذكية لمزامنة ونقل الملفات تقوم بفحص ومقارنة الملفات ونقل الأجزاء والكتل المعدلة فقط (Delta Transfer Algorithm)، مما يوفر استهلاك الشبكة ووقت النسخ الاحتياطي."},
+            {id:58, cat:"9️⃣ الأرشفة والجدولة", q:"ما هو journalctl وما هو rsyslog؟", a:"<ul><li><code>journalctl</code>: أداة لقراءة وفلترة سجلات النظام الهيكلية المخزنة بواسطة خدمة <code>systemd-journald</code> في الذاكرة المؤقتة.</li><li><code>rsyslog</code>: خدمة تقوم باستقبال السجلات وتصنيفها وحفظها بشكل دائم كملفات نصية على القرص مثل <code>/var/log/messages</code>.</li></ul>"},
+            {id:59, cat:"9️⃣ الأرشفة والجدولة", q:"ما الفرق بين at و cron؟", a:"<ul><li><code>at</code> — أداة لجدولة مهمة برمجية ليتم تشغيلها لمرة واحدة فقط في المستقبل وتنقضي بعد ذلك.</li><li><code>cron</code> — أداة لإدارة وجدولة مهام متكررة ودورية (ساعات، أيام، شهور) بناءً على إعدادات ملف crontab.</li></ul>"},
+            {id:60, cat:"9️⃣ الأرشفة والجدولة", q:"كيف تُعد مهمة cron؟", a:"عبر تحرير ملف الجدولة للمستخدم: <code>crontab -e</code><br>ويحتوي التنسيق على 5 حقول أساسية بالترتيب:<br><code>* * * * * command_to_execute</code><br>(الدقيقة، الساعة، يوم الشهر، الشهر، يوم الأسبوع)."},
+            {id:61, cat:"9️⃣ الأرشفة والجدولة", q:"ما هو anacron ومتى يُستخدم؟", a:"أداة لإدارة المهام المجدولة (يومية، أسبوعية، شهرية) التي فات موعد تنفيذها بسبب إغلاق السيرفر أو انقطاع الطاقة؛ حيث تقوم بتشغيلها فوراً عند إقلاع السيرفر مجدداً."},
+            {id:62, cat:"9️⃣ الأرشفة والجدولة", q:"ما هي systemd timers وما مثال عليها؟", a:"بديل حديث وقوي لجدولة المهام في نظام systemd يعتمد على ملفات تعريفية، ويوفر تحكماً أفضل وتتبعاً دقيقاً للأخطاء. مثال عليها:<br><code>systemd-tmpfiles-clean.timer</code> (المسؤول عن تنظيف الملفات المؤقتة)."},
+            
+            // 10
+            {id:63, cat:"🔟 SELinux", q:"ما هو SELinux وما الفرق بين MAC و DAC؟", a:"آلية أمنية قوية بنواة النظام.<br><ul><li><strong>DAC (التحكم التقليدي):</strong> صلاحيات مبنية على المستخدم والمالك ويمكن لمالك الملف التنازل عنها أو تغييرها.</li><li><strong>MAC (التحكم الإلزامي لـ SELinux):</strong> قيود أمنية صارمة تفرضها النواة على كافة العمليات بناءً على سياسات محددة مسبقاً، ولا يمكن تجاوزها حتى بواسطة الـ root.</li></ul>"},
+            {id:64, cat:"🔟 SELinux", q:"ما هي فلسفة SELinux؟", a:"فلسفة <strong>Deny by Default (المنع الافتراضي):</strong> حيث يمنع SELinux أي عملية أو تطبيق من الوصول لأي ملف أو مسار ما لم يكن هناك تصريح وقاعدة أمنية صريحة تسمح بهذا السلوك."},
+            {id:65, cat:"🔟 SELinux", q:"ما هي أوضاع SELinux الثلاثة؟", a:"<ul><li><strong>Enforcing:</strong> الوضع الافتراضي؛ يطبق القواعد ويحظر أي محاولات وصول مشبوهة ويسجلها.</li><li><strong>Permissive:</strong> لا يحظر محاولات الوصول ولكنه يسجلها بالكامل كتحذيرات للتشخيص.</li><li><strong>Disabled:</strong> معطل بالكامل ولا يقوم بأي تتبع أو فحص.</li></ul>"},
+            {id:66, cat:"🔟 SELinux", q:"ما هو Security Context وما هي مكوناته؟", a:"تصنيف أمني يُسند لكل ملف وعملية ومقبس شبكي بالنظام. مكوناته الأربعة هي:<br><code>المستخدم:الدور:النوع:المستوى</code><br>مثال: <code>system_u:object_r:httpd_sys_content_t:s0</code> (والنوع Type هو الأهم في الفحص)."},
+            {id:67, cat:"🔟 SELinux", q:"ما هي Targeted Policy؟", a:"السياسة الأمنية الافتراضية والشائعة في RHEL؛ حيث تركز القيود وفحص سياق الحماية بالكامل على العمليات والخدمات العامة المستهدفة بالنظام (Targeted processes) بينما تترك العمليات العادية بدون قيود إضافية."},
+            {id:68, cat:"🔟 SELinux", q:"ما هي SELinux Booleans ولماذا نستخدمها؟", a:"مفاتيح تبديل منطقية (تشغيل/إيقاف) لتعديل سلوك وسياسة SELinux فورياً ودون الحاجة لتعديل أو إعادة كتابة سياق الملفات.<br>مثال تفعيل المجلدات المنزلية للويب:<br><code>sudo setsebool -P httpd_enable_homedirs on</code>"},
+            {id:69, cat:"🔟 SELinux", q:"كيف تضيف قاعدة سياق دائمة لمجلد؟", a:"نقوم بتعريف السياق في قاعدة بيانات النظام أولاً:<br><code>sudo semanage fcontext -a -t httpd_sys_content_t \"/web(/.*)?\"</code><br>ثم نطبق ونعيد فرض السياق على المجلد والملفات بداخله:<br><code>sudo restorecon -Rv /web</code>"},
+            {id:70, cat:"🔟 SELinux", q:"كيف تحلل أخطاء SELinux?", a:"عن طريق فحص وتوليد تقرير تفصيلي بأداة sealert:<br><code>sudo sealert -a /var/log/audit/audit.log</code><br>أو البحث السريع عن أحداث الرفض:<br><code>sudo ausearch -m avc -ts recent</code>"},
+            {id:71, cat:"🔟 SELinux", q:"كيف تعطل SELinux بشكل صحيح في RHEL 9؟", a:"لم يعد RHEL 9 يدعم التعطيل عبر ملف <code>/etc/selinux/config</code> بنجاح تام، والطريقة الصحيحة والآمنة هي تعطيله كلياً عبر إضافة المعامل <code>selinux=0</code> لسطر إقلاع الكيرنل في محمل الإقلاع GRUB."},
+            
+            // 11
+            {id:72, cat:"1️⃣1️⃣ الإقلاع والإصلاح", q:"ما هي مراحل الإقلاع في RHEL؟", a:"تتم وفق المخطط التالي:<br><code>POST</code> (فحص العتاد) &gt; <code>UEFI/BIOS</code> (تحميل الكود التأسيسي) &gt; <code>GRUB2</code> (شاشة الاختيار والمحمل) &gt; <code>Kernel + Initramfs</code> (النواة وصورة العتاد) &gt; <code>systemd</code> &gt; <code>Target</code> (الوصول لواجهة المستخدم)."},
+            {id:73, cat:"1️⃣1️⃣ الإقلاع والإصلاح", q:"ما هو Initramfs؟", a:"نظام ملفات أولي مؤقت في الذاكرة العشوائية يحتوي على برمجيات العتاد والمشغلات الأساسية اللازمة لتمكين الكيرنل من الوصول للقرص الحقيقي وتركيب نظام الملفات الجذري (Root filesystem)."},
+            {id:74, cat:"1️⃣1️⃣ الإقلاع والإصلاح", q:"ما هي أهداف systemd (Targets) المهمة؟", a:"<ul><li><code>graphical.target</code>: تشغيل النظام بالواجهة الرسومية الكاملة (المستوى 5 سابقاً).</li><li><code>multi-user.target</code>: تشغيل النظام بالواجهة السطرية التفاعلية للشبكة (المستوى 3).</li><li><code>rescue.target</code>: بيئة صيانة محلية بمحرك تشغيل محدود.</li></ul>"},
+            {id:75, cat:"1️⃣1️⃣ الإقلاع والإصلاح", q:"كيف تغير الهدف الافتراضي؟", a:"باستخدام أمر التحكم بنظام systemd:<br><code>sudo systemctl set-default multi-user.target</code>"},
+            {id:76, cat:"1️⃣1️⃣ الإقلاع والإصلاح", q:"كيف تستعيد كلمة مرور root بدون قرص خارجي؟", a:"<ol><li>أعد تشغيل السيرفر واضغط <code>e</code> عند شاشة GRUB لتعديل خيارات الإقلاع.</li><li>ابحث عن سطر الكيرنل وأضف <code>rd.break</code> في نهايته ثم اضغط <code>Ctrl+X</code>.</li><li>أعد تركيب مجلد الجذر بصلاحية كتابة:<br><code>mount -o remount,rw /sysroot</code></li><li>انتقل لجذر النظام:<br><code>chroot /sysroot</code></li><li>عدل كلمة المرور:<br><code>passwd root</code></li><li>أعد تفعيل سياق SELinux:<br><code>touch /.autorelabel</code></li><li>أدخل <code>exit</code> مرتين للمتابعة والإقلاع.</li></ol>"},
+            {id:77, cat:"1️⃣1️⃣ الإقلاع والإصلاح", q:"لماذا touch /.autorelabel ضروري بعد تغيير كلمة مرور root؟", a:"لأن تغيير كلمة مرور الـ root يؤدي لكتابة ملف <code>/etc/shadow</code> جديد تماماً، وهذا الملف الجديد يفقد سياق حماية SELinux الخاص به. ملف <code>/.autorelabel</code> يجبر النظام في الإقلاع التالي على إعادة وسم سياقات الحماية لكامل الملفات لتجنب حظر الدخول."},
+            {id:78, cat:"1️⃣1️⃣ الإقلاع والإصلاح", q:"كيف تصلح خطأ في /etc/fstab يمنع الإقلاع؟", a:"يقوم النظام بنقلك تلقائياً لـ Emergency Shell. قم بإعادة تركيب مجلد الجذر بصلاحيات تعديل وكتابة:<br><code>mount -o remount,rw /</code><br>    ثم افتح ملف <code>/etc/fstab</code> بمحرر النصوص وعدل السطر التالف، ثم أعد الإقلاع."},
+            
+            // 12
+            {id:79, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما هو Kickstart وما مكونات ملفه؟", a:"طريقة أتمتة لتهيئة وتثبيت RHEL بشكل تلقائي دون تدخل بشري. يحتوي ملف <code>ks.cfg</code> على:<br><ul><li>خيارات تثبيت النظام (اللغة، المنطقة الزمنية، تقسيم القرص).</li><li>قسم الحزم <code>%packages</code> لتحديد البرامج المراد تنزيلها.</li><li>قسم السكريبت <code>%post</code> لتنفيذ أوامر برمجية مخصصة فور انتهاء التثبيت.</li></ul>"},
+            {id:80, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"كيف تتحقق من صحة ملف Kickstart؟", a:"عن طريق تشغيل أداة التحقق والتدقيق المخصصة:<br><code>ksvalidator /path/to/ks.cfg</code>"},
+            {id:81, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما هو KVM وما ميزته؟", a:"<strong>Kernel-based Virtual Machine:</strong> بنية مدمجة بالنواة تحول نظام Linux إلى Hypervisor من النوع الأول (Type-1). ميزته الأداء الفائق والسرعة العالية لقربه المباشر من العتاد وعزل الخوادم الافتراضية أمنياً عبر sVirt."},
+            {id:82, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما هي Cockpit وما تضيفه حزمة cockpit-machines؟", a:"<strong>Cockpit:</strong> واجهة رسومية مذهلة وقوية لإدارة خوادم RHEL بالكامل من خلال المتصفح. حزمة <code>cockpit-machines</code> تضيف قسماً متكاملاً للتحكم وإدارة الأجهزة الافتراضية والـ VMs بسهولة (إنشاء، تعديل، وحذف)."},
+            {id:83, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما الفرق بين VMs والحاويات (Containers)?", a:"<ul><li><strong>الأجهزة الافتراضية (VMs):</strong> تحتوي على كيرنل ونظام تشغيل كامل خاص بكل جهاز افتراضي مما يزيد الحجم واستهلاك الرام.</li><li><strong>الحاويات (Containers):</strong> تتشارك كيرنل النظام المستضيف وتقوم بعزل التطبيق ومكتباته فقط داخل بيئة خفيفة وسريعة جداً.</li></ul>"},
+            {id:84, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما هي آليات عزل الحاويات في Linux؟", a:"<ul><li><strong>Namespaces:</strong> لعزل العمليات، الشبكات، ونقاط التوصيل عن بقية النظام.</li><li><strong>Control Groups (cgroups):</strong> لتقنين ووضع حدود قصوى لاستخدام موارد العتاد (RAM, CPU, I/O) لكل حاوية.</li></ul>"},
+            {id:85, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما هي أدوات Podman الثلاثة؟", a:"<ul><li><code>podman</code>: لإدارة وتشغيل وبناء الحاويات (بديل Docker المعتمد).</li><li><code>skopeo</code>: لفحص صور الحاويات البعيدة في السجلات ودون الحاجة لتحميلها محلياً.</li><li><code>buildah</code>: لبناء وإنتاج صور الحاويات المخصصة بكفاءة ومرونة عالية.</li></ul>"},
+            {id:86, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما هي Rootless Containers؟", a:"حاويات يتم تشغيلها وإدارتها بالكامل وصلاحياتها محددة للمستخدم العادي دون الحاجة لـ root؛ وبالتالي إذا تم اختراق الحاوية، لا يمتلك المهاجم أي صلاحيات على السيرفر المستضيف."},
+            {id:87, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما معنى -v host_dir:container_dir:Z في Podman؟", a:"خيار لربط مجلد المضيف بالحاوية، والوسم <code>:Z</code> يخبر Podman بإعادة كتابة وتعديل سياق SELinux الخاص بالمجلد تلقائياً لتمكين الحاوية المعزولة من القراءة والكتابة فيه بشكل آمن وبدون حظر."},
+            {id:88, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"كيف تدمج حاوية Podman مع systemd؟", a:"نقوم بتوليد ملف الخدمة للحاوية أولاً:<br><code>podman generate systemd --new --name container_name -f</code><br>ثم ننسخ الملف للمسار الخاص بالمستخدم:<br><code>~/.config/systemd/user/</code><br>ونقوم بتفعيل الخدمة كأي خدمة مستخدم عادية بالخيار <code>--user</code>."},
+            {id:89, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما هو loginctl enable-linger ولماذا نستخدمه؟", a:"خيار يُفعل للمستخدم العادي لإبقاء العمليات وخدمات الـ systemd الخاصة به نشطة قيد التشغيل بالخلفية حتى بعد تسجيل خروجه بالكامل من السيرفر، وهو أساسي لضمان بقاء الحاويات rootless تعمل بشكل مستمر."},
+            {id:90, cat:"1️⃣2️⃣ الأتمتة والحاويات", q:"ما هي netavark في Podman؟", a:"أداة الشبكات الافتراضية والـ Network stack الافتراضية المدمجة في Podman بدءاً من RHEL 9، وهي بديل متفوق للأداة القديمة حيث توفر إدارة ممتازة لترجمة وعزل شبكات الحاويات."},
+            
+            // Scenario
+            {id:91, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: خادمك بطيء جداً بسبب استهلاك موارد العتاد. كيف تكتشف وتنهي العملية المشبوهة؟", a:"<ol><li>افتح أداة <code>htop</code> أو <code>top</code> للفرز والمشاهدة التفاعلية.</li><li>أو ابحث ورتب العمليات حسب استهلاك المعالج بـ <code>ps</code>:<br><code>ps aux --sort=-%cpu | head -10</code></li><li>انسخ الـ PID للعملية المشبوهة وأرسل إشارة إنهاء ودية أولاً:<br><code>kill -15 PID</code></li><li>إذا لم تستجب العملية، أنهها قسرياً:<br><code>kill -9 PID</code></li></ol>"},
+            {id:92, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: تريد إنشاء مجلد مشترك للمشاركة الفعالة والتعديل بين أعضاء فريق العمل 'team'. ما الخطوات؟", a:"<ol><li>أنشئ المجلد وغيّر المجموعة المالكة له:<br><code>sudo mkdir /shared && sudo chgrp team /shared</code></li><li>اضبط الصلاحيات بحيث يمتلك المالك والمجموعة كافة الصلاحيات ويُحرم البقية:<br><code>sudo chmod 2770 /shared</code></li><li>فعّل خيار SetGID ليرث أي ملف جديد ملكية المجموعة تلقائياً:<br><code>sudo chmod g+s /shared</code></li><li>تأكد من إضافة الموظفين للمجموعة:<br><code>sudo usermod -aG team username</code></li></ol>"},
+            {id:93, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: تريد توسيع مساحة قسم البيانات /data بمقدار 20% حية ودون الحاجة لإيقاف نظام التشغيل.", a:"<ol><li>تأكد من وجود مساحة حرة كافية بالـ Volume Group:<br><code>vgdisplay</code></li><li>قم بتوسيع الحجم المنطقي LV مع إضافة المساحة المستهدفة:<br><code>sudo lvextend -L +10G /dev/vgname/lvname</code></li><li>قم بزيادة وتوسيع نظام الملفات XFS الحي:<br><code>sudo xfs_growfs /data</code></li></ol>"},
+            {id:94, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: تطبيق ويب لا يعمل بسبب حظر SELinux. كيف تشخص وتصلح العطل بخطوات هندسية؟", a:"<ol><li>سجل الرفض الأمني لتحديد المشكلة بدقة:<br><code>sudo sealert -a /var/log/audit/audit.log</code></li><li>إذا كان الحظر ناتجاً عن Boolean، فقم بتفعيله بشكل دائم:<br><code>sudo setsebool -P httpd_can_network_connect on</code></li><li>وإذا كان بسبب سياق ملف خاطئ، فقم بإعادة الوسم وتصحيحه للمسار:<br><code>sudo restorecon -Rv /var/www/html/</code></li></ol>"},
+            {id:95, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: تريد مزامنة وأخذ نسخة احتياطية يومية من المجلدات المنزلية /home إلى سيرفر بعيد في الساعة 2 صباحاً.", a:"<ol><li>أنشئ سكريبت مزامنة بسيط بـ rsync:<br><code>rsync -avz --delete /home/ root@backupserver:/backups/</code></li><li>افتح Crontab الخاص بالنظام لتسجيل المهمة:<br><code>crontab -e</code></li><li>أضف سطر الجدولة للمزامنة اليومية بدقة:<br><code>0 2 * * * rsync -avz --delete /home/ root@backupserver:/backups/</code></li></ol>"},
+            {id:96, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: تريد أتمتة وتثبيت RHEL 9 بالكامل على 100 خادم جديد. كيف تفعل ذلك هندسياً؟", a:"<ol><li>قم ببناء وتخصيص ملف إعدادات التثبيت التلقائي للـ Kickstart (مثل <code>anaconda-ks.cfg</code>).</li><li>قم بنشر ورفع ملف الـ Kickstart على مخدم ويب محلي نشط بالشبكة.</li><li>عند تشغيل الخوادم الجديدة بـ PXE Boot، أضف رابط الملف لخيارات الإقلاع بمحمل GRUB:<br><code>inst.ks=http://192.168.1.100/ks.cfg</code></li></ol>"},
+            {id:97, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: تريد تشغيل حاوية MariaDB (Rootless) مع ربط البيانات على المضيف وتفعيلها للعمل تلقائياً مع إقلاع الخادم.", a:"<ol><li>شغل الحاوية مع خيار إعادة كتابة سياق SELinux للمجلد المشترك:<br><code>podman run -d --name mariadb_db -v /dbdata:/var/lib/mysql:Z -p 3306:3306 mariadb</code></li><li>ولد ملف الخدمة المتوافق مع systemd:<br><code>podman generate systemd --new --name mariadb_db -f</code></li><li>انقل الملف للمسار الخاص بالخدمات للمستخدم:<br><code>mv container-mariadb_db.service ~/.config/systemd/user/</code></li><li>فعّل الخدمة ليتم تشغيلها تلقائياً:<br><code>systemctl --user enable --now container-mariadb_db.service</code></li><li>فعّل خاصية linger لضمان عمل الخدمة عند خروج المستخدم:<br><code>loginctl enable-linger</code></li></ol>"},
+            {id:98, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: تريد حظر وإغلاق كافة المنافذ والاتصالات الواردة للسيرفر ما عدا خادم الويب HTTP والـ SSH.", a:"<ol><li>اجعل المنطقة العامة الافتراضية تحظر وتسقط الحزم الواردة كافتراضي:<br><code>sudo firewall-cmd --set-default-zone=drop</code></li><li>أضف الخدمات الموثوقة والمسموحة للمنطقة العامة:<br><code>sudo firewall-cmd --permanent --add-service=ssh</code><br><code>sudo firewall-cmd --permanent --add-service=http</code></li><li>أعد تحميل جدار الحماية لتثبيت وتفعيل القواعد الجديدة فوراً:<br><code>sudo firewall-cmd --reload</code></li></ol>"},
+            {id:99, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: تريد ترقية كافة الحزم والتطبيقات وتثبيت تحديثات الأمان الطارئة للنظام بشكل آمن وفعال.", a:"<ol><li>افحص وقم بتثبيت تحديثات الأمان الحرجة فقط للنظام لتجنب المشاكل:<br><code>sudo dnf update --security -y</code></li><li>أو قم بترقية النظام والحزم بالكامل للإصدارات المعتمدة:<br><code>sudo dnf update -y</code></li><li>إذا تضمن التحديث ترقية الكيرنل (Kernel)، فأعد تشغيل السيرفر لتفعيل النواة الجديدة:<br><code>sudo reboot</code></li></ol>"},
+            {id:100, cat:"🏆 أسئلة سيناريو (Scenario-Based)", q:"سيناريو: كيف تراقب وترصد محاولات تسجيل الدخول الفاشلة والمشبوهة للسيرفر عبر المنافذ المختلفة؟", a:"<ul><li>افحص محاولات تسجيل دخول الـ SSH الفاشلة بالوقت الفعلي عبر سجلات الـ systemd:<br><code>journalctl -u sshd | grep -i 'failed'</code></li><li>أو ابحث في ملف السجلات الأمنية للنظام المعتمد:<br><code>sudo grep "Failed password" /var/log/secure</code></li><li>أو اعرض جدول تفصيلي للمحاولات الفاشلة والمسجلة بقاعدة البيانات للنظام:<br><code>sudo lastb</code></li></ul>"}
+        ];
+
+        // State Manager
+        let currentView = 'grid'; // 'grid' or 'focus'
+        let currentFocusIndex = 0;
+        let filteredCards = [];
+        let cardStates = {}; // id -> 'mastered' or 'review' or 'unstarted'
+
+        // Load progress from localStorage
+        function loadStates() {
+            const saved = localStorage.getItem('rhcsa_flashcards_progress');
+            if (saved) {
+                try {
+                    cardStates = JSON.parse(saved);
+                } catch (e) {
+                    cardStates = {};
+                }
+            }
+            // Fill defaults
+            flashcardsData.forEach(card => {
+                if (!cardStates[card.id]) {
+                    cardStates[card.id] = 'unstarted';
+                }
+            });
+            updateStats();
+        }
+
+        // Save progress to localStorage
+        function saveStates() {
+            localStorage.setItem('rhcsa_flashcards_progress', JSON.stringify(cardStates));
+            updateStats();
+        }
+
+        // Update stats dashboard
+        function updateStats() {
+            let mastered = 0;
+            let review = 0;
+            let total = flashcardsData.length;
+
+            flashcardsData.forEach(card => {
+                if (cardStates[card.id] === 'mastered') mastered++;
+                else if (cardStates[card.id] === 'review') review++;
+            });
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statMastered').innerText = mastered;
+            document.getElementById('statReview').innerText = review;
+
+            const percentage = Math.round((mastered / total) * 100);
+            document.getElementById('statProgress').style.width = percentage + '%';
+            document.getElementById('statPercent').innerText = percentage + '%';
+        }
+
+        // Reset progress
+        window.resetProgress = function() {
+            if (confirm("هل أنت متأكد من رغبتك في تصفير تقدمك الدراسي وإلغاء تصنيف كافة البطاقات؟")) {
+                cardStates = {};
+                flashcardsData.forEach(card => {
+                    cardStates[card.id] = 'unstarted';
+                });
+                saveStates();
+                applyFilters();
+            }
+        }
+
+        // Switch Views
+        window.switchView = function(view) {
+            currentView = view;
+            document.getElementById('btnGridView').classList.toggle('active', view === 'grid');
+            document.getElementById('btnFocusView').classList.toggle('active', view === 'focus');
+
+            if (view === 'grid') {
+                document.getElementById('cardsGrid').style.display = 'grid';
+                document.getElementById('focusView').style.display = 'none';
+            } else {
+                document.getElementById('cardsGrid').style.display = 'none';
+                document.getElementById('focusView').style.display = 'block';
+                currentFocusIndex = 0;
+                loadFocusCard();
+            }
+        }
+
+        // Render Grid Cards
+        function renderGrid() {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            filteredCards.forEach(card => {
+                const stateClass = cardStates[card.id] === 'mastered' ? 'badge-mastered' : (cardStates[card.id] === 'review' ? 'badge-review' : '');
+                const stateText = cardStates[card.id] === 'mastered' ? '✅ محفوظ' : (cardStates[card.id] === 'review' ? '🔄 مراجعة' : '🆕 جديد');
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'flashcard-wrapper';
+                wrapper.id = `card-wrapper-${card.id}`;
+                wrapper.onclick = () => toggleGridCard(card.id);
+
+                wrapper.innerHTML = `
+                    <div class="card-inner" id="card-inner-${card.id}">
+                        <!-- Front -->
+                        <div class="card-side card-front-side">
+                            <div class="card-header">
+                                <span class="card-cat">${card.cat}</span>
+                                <span class="card-state-badge ${stateClass}">${stateText}</span>
+                            </div>
+                            <div class="card-question">Q${card.id}: ${card.q}</div>
+                            <div class="card-footer-hint">👆 اضغط لمعاينة الإجابة</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-side card-back-side" onclick="event.stopPropagation()">
+                            <div class="card-header">
+                                <span class="card-cat">${card.cat}</span>
+                                <span class="card-num">Q${card.id}</span>
+                            </div>
+                            <div class="card-answer">${card.a}</div>
+                            <div class="card-actions">
+                                <button class="card-action-btn btn-need-review" onclick="setCardState(${card.id}, 'review')">🔄 مراجعة</button>
+                                <button class="card-action-btn btn-mastered" onclick="setCardState(${card.id}, 'mastered')">✅ حفظت</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(wrapper);
+            });
+
+            if (filteredCards.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #8b949e; font-size: 1.2rem;">🔍 لم يتم العثور على بطاقات تطابق فلاتر البحث الحالية.</div>`;
+            }
+        }
+
+        // Toggle Grid Card Flip
+        window.toggleGridCard = function(id) {
+            document.getElementById(`card-inner-${id}`).classList.toggle('flipped');
+        }
+
+        // Toggle Focus Card Flip
+        window.toggleFocusCard = function() {
+            document.getElementById('focusCardInner').classList.toggle('flipped');
+        }
+
+        // Set Card State (Mastered or Review)
+        window.setCardState = function(id, state) {
+            cardStates[id] = state;
+            saveStates();
+            // Optional: immediately update status display in the card if in grid view
+            applyFilters();
+        }
+
+        // Apply Filters (Search, Category, State)
+        function applyFilters() {
+            const catVal = document.getElementById('categoryFilter').value;
+            const stateVal = document.getElementById('stateFilter').value;
+            const searchVal = document.getElementById('cardSearch').value.trim().toLowerCase();
+
+            filteredCards = flashcardsData.filter(card => {
+                // Category match
+                const catMatch = (catVal === 'all' || card.cat === catVal);
+                
+                // State match
+                const stateMatch = (stateVal === 'all' || 
+                                    (stateVal === 'unstarted' && cardStates[card.id] === 'unstarted') ||
+                                    (stateVal === 'review' && cardStates[card.id] === 'review') ||
+                                    (stateVal === 'mastered' && cardStates[card.id] === 'mastered'));
+
+                // Search match
+                const searchMatch = (!searchVal || 
+                                     card.q.toLowerCase().includes(searchVal) || 
+                                     card.a.toLowerCase().includes(searchVal) || 
+                                     card.cat.toLowerCase().includes(searchVal));
+
+                return catMatch && stateMatch && searchMatch;
+            });
+
+            if (currentView === 'grid') {
+                renderGrid();
+            } else {
+                currentFocusIndex = 0;
+                loadFocusCard();
+            }
+        }
+
+        // Focus View Navigation & Rendering
+        function loadFocusCard() {
+            const inner = document.getElementById('focusCardInner');
+            inner.classList.remove('flipped');
+
+            setTimeout(() => {
+                if (filteredCards.length === 0) {
+                    document.getElementById('focusCardQ').innerText = "لم يتم العثور على بطاقات.";
+                    document.getElementById('focusCardA').innerText = "";
+                    document.getElementById('focusCardCat').innerText = "";
+                    document.getElementById('focusCardCatBack').innerText = "";
+                    document.getElementById('focusProgressText').innerText = "0 / 0";
+                    document.getElementById('focusCardIndex').innerText = "";
+                    document.getElementById('focusCardIndexBack').innerText = "";
+                    document.getElementById('focusCardActions').innerHTML = "";
+                    return;
+                }
+
+                const card = filteredCards[currentFocusIndex];
+                document.getElementById('focusCardCat').innerText = card.cat;
+                document.getElementById('focusCardCatBack').innerText = card.cat;
+                document.getElementById('focusCardQ').innerText = `Q${card.id}: ${card.q}`;
+                document.getElementById('focusCardA').innerHTML = card.a;
+                document.getElementById('focusProgressText').innerText = `${currentFocusIndex + 1} / ${filteredCards.length}`;
+                
+                document.getElementById('focusCardIndex').innerText = `بطاقة ${currentFocusIndex + 1} / ${filteredCards.length}`;
+                document.getElementById('focusCardIndexBack').innerText = `بطاقة ${currentFocusIndex + 1} / ${filteredCards.length}`;
+
+                // Set actions
+                document.getElementById('focusCardActions').innerHTML = `
+                    <button class="card-action-btn btn-need-review" onclick="setCardState(${card.id}, 'review'); nextFocusAfterSelect();">🔄 مراجعة</button>
+                    <button class="card-action-btn btn-mastered" onclick="setCardState(${card.id}, 'mastered'); nextFocusAfterSelect();">✅ حفظت</button>
+                `;
+
+                // Update navigation buttons status
+                document.getElementById('btnFocusPrev').disabled = (currentFocusIndex === 0);
+                document.getElementById('btnFocusPrev').style.opacity = (currentFocusIndex === 0) ? 0.5 : 1;
+                document.getElementById('btnFocusNext').disabled = (currentFocusIndex === filteredCards.length - 1);
+                document.getElementById('btnFocusNext').style.opacity = (currentFocusIndex === filteredCards.length - 1) ? 0.5 : 1;
+            }, 150);
+        }
+
+        window.navigateFocus = function(dir) {
+            const nextIdx = currentFocusIndex + dir;
+            if (nextIdx >= 0 && nextIdx < filteredCards.length) {
+                currentFocusIndex = nextIdx;
+                loadFocusCard();
+            }
+        }
+
+        window.nextFocusAfterSelect = function() {
+            if (currentFocusIndex < filteredCards.length - 1) {
+                setTimeout(() => {
+                    navigateFocus(1);
+                }, 300);
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStates();
+            applyFilters();
+
+            // Event Listeners
+            document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+            document.getElementById('stateFilter').addEventListener('change', applyFilters);
+            document.getElementById('cardSearch').addEventListener('input', applyFilters);
+        });
+    </script>
+    <script src="features.js?v=20"></script>
+</body>
+</html>
