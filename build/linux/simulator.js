@@ -276,7 +276,8 @@ function processCommand(cmd) {
         } 
         else if (mainCmd === 'ls') {
             let path = routerState.currentDir || '/root';
-            let target = parts[1];
+            let nonFlagParts = parts.slice(1).filter(p => !p.startsWith('-'));
+            let target = nonFlagParts[0];
             if (target) {
                 if (!target.startsWith('/')) {
                     path = (path === '/' ? '' : path) + '/' + target;
