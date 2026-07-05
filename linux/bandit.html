@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OTW Bandit Walkthrough - حلول وأسرار تحديات Bandit</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="features.css">
+    <style>
+        body {
+            overflow: auto;
+            padding-bottom: 40px;
+        }
+        .bandit-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: var(--glass-blur);
+        }
+        .search-filter-box {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            width: 100%;
+        }
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+            font-weight: 600;
+        }
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        .level-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            backdrop-filter: var(--glass-blur);
+        }
+        .level-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(46, 160, 67, 0.15);
+        }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .level-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge.beginner { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge.intermediate { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .badge.advanced { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .concepts-list {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .concept-tag {
+            font-size: 0.75rem;
+            background: rgba(56, 189, 248, 0.08);
+            color: #38bdf8;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(56, 189, 248, 0.12);
+            font-family: 'Fira Code', monospace;
+        }
+        .card-body {
+            flex: 1;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .section-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+        .code-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #a5d6ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            direction: ltr;
+            margin-bottom: 15px;
+        }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            color: var(--accent);
+            background: rgba(46, 160, 67, 0.1);
+        }
+        .secret-container {
+            background: rgba(14, 25, 45, 0.5);
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .secret-val {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: #fff;
+            filter: blur(5px);
+            transition: filter 0.3s ease;
+            user-select: none;
+            direction: ltr;
+        }
+        .secret-val.revealed {
+            filter: none;
+            user-select: text;
+        }
+        .reveal-btn {
+            padding: 6px 12px;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .reveal-btn:hover {
+            background: #38bdf8;
+            color: #000;
+        }
+        .note-alert {
+            background: rgba(245, 158, 11, 0.05);
+            border-right: 4px solid var(--warning);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            color: #cbd5e1;
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Linux Academy</h1>
+            <span class="subtitle">أسرار وحلول تحديات OverTheWire Bandit</span>
+        </div>
+        <div class="nav-buttons" id="navbarButtons">
+            <a href="academy.html" class="top-btn">📚 النظري</a>
+            <a href="syllabus.html" class="top-btn">📖 الخطة</a>
+            <a href="cheatsheet.html" class="top-btn">📝 ملخص</a>
+            <a href="encyclopedia.html" class="top-btn">📖 الموسوعة</a>
+            <a href="exam.html" class="top-btn">⏳ امتحن</a>
+            <a href="interview.html" class="top-btn">💼 مقابلات</a>
+            <a href="flashcards.html" class="top-btn">🎴 البطاقات</a>
+            <a href="bandit.html" class="top-btn active">🕵️‍♂️ Bandit</a>
+            <a href="resources.html" class="top-btn">📦 ملحقات</a>
+        </div>
+    </header>
+
+    <div class="bandit-container">
+        <div class="note-alert">
+            <strong>⚠️ تنبيه هام:</strong> 
+            كلمات المرور الخاصة بتحديات Bandit قد تتغير دورياً على خوادم OverTheWire من وقت لآخر لضمان عدم الغش. 
+            إذا لم تعمل كلمة المرور مباشرة، يرجى تتبع <strong>خطوات الحل والأوامر</strong> المذكورة لكل مستوى لتستخرج كلمة المرور الصحيحة بنفسك، حيث أن طريقة الحل والمنطق البرمجي ثابتان تماماً ولا يتغيران!
+        </div>
+
+        <div class="dashboard-header">
+            <div class="search-filter-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="ابحث بالأمر أو اسم التحدي... (مثال: grep, SUID, Level 5)">
+                
+                <div class="filter-group">
+                    <span style="align-self: center; font-weight: bold; margin-left: 5px; color: #94a3b8;">مجموعة:</span>
+                    <button class="filter-btn active" onclick="setGroupFilter('all', this)">الكل</button>
+                    <button class="filter-btn" onclick="setGroupFilter('0-10', this)">0-10</button>
+                    <button class="filter-btn" onclick="setGroupFilter('11-20', this)">11-20</button>
+                    <button class="filter-btn" onclick="setGroupFilter('21-30', this)">21-30</button>
+                    <button class="filter-btn" onclick="setGroupFilter('31-33', this)">31-33</button>
+                </div>
+
+                <div class="filter-group" style="margin-right: auto;">
+                    <span style="align-self: center; font-weight: bold; margin-left: 5px; color: #94a3b8;">الصعوبة:</span>
+                    <button class="filter-btn active" onclick="setDiffFilter('all', this)">الكل</button>
+                    <button class="filter-btn" onclick="setDiffFilter('Beginner', this)">Beginner</button>
+                    <button class="filter-btn" onclick="setDiffFilter('Intermediate', this)">Intermediate</button>
+                    <button class="filter-btn" onclick="setDiffFilter('Advanced', this)">Advanced</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="levelsGrid" class="levels-grid">
+            <!-- Dynamic levels injected here -->
+        </div>
+    </div>
+
+    <script src="data_loader.js?v=20"></script>
+    <script src="features.js?v=20"></script>
+
+    <script>
+        const banditData = [
+  {
+    "id": 0,
+    "title": "Level 0",
+    "difficulty": "Beginner",
+    "concepts": [
+      "SSH",
+      "Connection"
+    ],
+    "goal": "تسجيل الدخول إلى خادم Bandit عبر SSH للبدء.",
+    "walkthrough": "اتصل بالخادم باستخدام منفذ SSH المخصص 2220. استخدم اسم المستخدم <code>bandit0</code> وكلمة المرور <code>bandit0</code>.",
+    "command": "ssh bandit0@bandit.labs.overthewire.org -p 2220",
+    "password": "bandit0"
+  },
+  {
+    "id": 1,
+    "title": "Level 0 → Level 1",
+    "difficulty": "Beginner",
+    "concepts": [
+      "ls",
+      "cat",
+      "Filesystem"
+    ],
+    "goal": "العثور على كلمة مرور المستوى التالي المخزنة في ملف باسم readme في المجلد الشخصي.",
+    "walkthrough": "استخدم الأمر <code>ls</code> لاستعراض المجلد الشخصي، ثم <code>cat readme</code> لقراءة محتويات الملف ونسخ كلمة المرور.",
+    "command": "cat readme",
+    "password": "boJ9jbbUNNfktd78OOpsqOltutMc3MY1"
+  },
+  {
+    "id": 2,
+    "title": "Level 1 → Level 2",
+    "difficulty": "Beginner",
+    "concepts": [
+      "Dash Filename",
+      "File Paths"
+    ],
+    "goal": "قراءة ملف باسم - (شرطة) في المجلد الشخصي.",
+    "walkthrough": "بما أن الشرطة <code>-</code> تُستخدم كرمز للمدخلات القياسية في لينكس، سيفشل الأمر <code>cat -</code>. لتجاوز ذلك، حدد مسار الملف صراحة باستخدام <code>./-</code>.",
+    "command": "cat ./-",
+    "password": "CV1DtqXWVFXTvM2F0k09SHz0YwRINYA9"
+  },
+  {
+    "id": 3,
+    "title": "Level 2 → Level 3",
+    "difficulty": "Beginner",
+    "concepts": [
+      "Spaces in Filename",
+      "Escaping"
+    ],
+    "goal": "قراءة ملف يحتوي اسمه على مسافات: spaces in this filename.",
+    "walkthrough": "يجب إحاطة الاسم بعلامات اقتباس مزدوجة أو استخدام الشرطة المائلة العكسية <code>\\</code> للهروب من المسافات.",
+    "command": "cat \"spaces in this filename\"",
+    "password": "UmHadQclWmgdLOKQ3YNgjWxGoRMb5luK"
+  },
+  {
+    "id": 4,
+    "title": "Level 3 → Level 4",
+    "difficulty": "Beginner",
+    "concepts": [
+      "ls -a",
+      "Hidden Files"
+    ],
+    "goal": "العثور على كلمة المرور في ملف مخفي داخل مجلد inhere.",
+    "walkthrough": "ادخل إلى المجلد عبر <code>cd inhere</code>، ثم استخدم الأمر <code>ls -a</code> لعرض كل الملفات بما فيها المخفية (التي تبدأ بنقطة)، واقرأ ملف <code>.hidden</code>.",
+    "command": "cd inhere && ls -a && cat .hidden",
+    "password": "pIwrPrtPN36QITSp3EQaw936yaFoFgAB"
+  },
+  {
+    "id": 5,
+    "title": "Level 4 → Level 5",
+    "difficulty": "Beginner",
+    "concepts": [
+      "file",
+      "ASCII text"
+    ],
+    "goal": "البحث عن الملف الوحيد المقروء بشرياً (ASCII text) داخل مجلد inhere.",
+    "walkthrough": "ادخل مجلد <code>inhere</code> واستخدم أمر <code>file</code> لفحص جميع الملفات: <code>file ./*</code>. ستجد أن الملف <code>-file07</code> هو الوحيد بنوع ASCII text.",
+    "command": "cd inhere && file ./* && cat ./-file07",
+    "password": "koReBOKuIDDepwhWk7jZC0RTdopnAYKh"
+  },
+  {
+    "id": 6,
+    "title": "Level 5 → Level 6",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "find",
+      "File Size",
+      "Non-executable"
+    ],
+    "goal": "البحث عن ملف حجمه 1033 بايت وغير قابل للتنفيذ ومقروء داخل مجلد inhere.",
+    "walkthrough": "استخدم الأمر <code>find</code> مع تحديد نوع الملف (f) والحجم (1033c) واستبعاد التنفيذي (! -executable).",
+    "command": "find inhere -type f -size 1033c ! -executable",
+    "password": "DXjZPULLxYr17uwoI01bNLQbtFemEgo7"
+  },
+  {
+    "id": 7,
+    "title": "Level 6 → Level 7",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "find",
+      "Permissions",
+      "Ownership"
+    ],
+    "goal": "البحث عن ملف في كامل النظام مملوك للمستخدم bandit7 والمجموعة bandit6 وحجمه 33 بايت.",
+    "walkthrough": "استخدم أمر <code>find</code> من الجذر <code>/</code> مع تحديد المستخدم والمجموعة والحجم، مع تصفية أخطاء الصلاحيات عبر توجيهها إلى <code>/dev/null</code>.",
+    "command": "find / -user bandit7 -group bandit6 -size 33c 2>/dev/null",
+    "password": "HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs"
+  },
+  {
+    "id": 8,
+    "title": "Level 7 → Level 8",
+    "difficulty": "Beginner",
+    "concepts": [
+      "grep",
+      "Pattern Matching"
+    ],
+    "goal": "البحث عن كلمة المرور بجانب كلمة millionth داخل ملف data.txt.",
+    "walkthrough": "استخدم أداة <code>grep</code> للبحث عن السطر المطابق للكلمة المطلوبة مباشرة.",
+    "command": "grep \"millionth\" data.txt",
+    "password": "cvX2JJa4CFALtqS87jk27qwqGhBM9plV"
+  },
+  {
+    "id": 9,
+    "title": "Level 8 → Level 9",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "sort",
+      "uniq",
+      "Pipes"
+    ],
+    "goal": "العثور على السطر الوحيد الذي تكرر لمرة واحدة فقط (غير مكرر) في ملف data.txt.",
+    "walkthrough": "أمر <code>uniq</code> يتطلب ترتيباً مسبقاً للعمل بشكل صحيح، لذا قم بترتيب الملف أولاً باستخدام <code>sort</code> ثم مرره إلى <code>uniq -u</code> لعرض الفريد فقط.",
+    "command": "sort data.txt | uniq -u",
+    "password": "UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR"
+  },
+  {
+    "id": 10,
+    "title": "Level 9 → Level 10",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "strings",
+      "grep",
+      "Binary Analysis"
+    ],
+    "goal": "البحث عن كلمة مرور مقروءة داخل ملف ثنائي data.txt مسبوقة بعدة رموز =.",
+    "walkthrough": "استخرج النصوص المقروءة أولاً عبر <code>strings data.txt</code> ثم فلتر النتيجة باستخدام <code>grep</code> والتعبير النمطي للبحث عن إشارة <code>=</code>.",
+    "command": "strings data.txt | grep \"^=\\+\"",
+    "password": "truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk"
+  },
+  {
+    "id": 11,
+    "title": "Level 10 → Level 11",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "base64",
+      "Decoding"
+    ],
+    "goal": "فك تشفير ملف data.txt المكتوب بصيغة Base64.",
+    "walkthrough": "استخدم خيار فك التشفير <code>-d</code> أو <code>--decode</code> المرفق مع أداة <code>base64</code> لقراءة المحتوى الفعلي.",
+    "command": "base64 -d data.txt",
+    "password": "IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR"
+  },
+  {
+    "id": 12,
+    "title": "Level 11 → Level 12",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "ROT13",
+      "tr",
+      "Cryptography"
+    ],
+    "goal": "فك تشفير نص في ملف data.txt مشفر بنظام ROT13 (إزاحة 13 حرفاً).",
+    "walkthrough": "نستخدم أمر <code>tr</code> لاستبدال الحروف الهجائية بالمدى المزاح بمقدار 13 حرفاً.",
+    "command": "cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'",
+    "password": "5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu"
+  },
+  {
+    "id": 13,
+    "title": "Level 12 → Level 13",
+    "difficulty": "Advanced",
+    "concepts": [
+      "Hexdump",
+      "Compression",
+      "tar",
+      "gzip",
+      "bzip2"
+    ],
+    "goal": "فك تشفير ملف data.txt الذي يمثل Hexdump لملف تم ضغطه بشكل متداخل متكرر.",
+    "walkthrough": "قم بإنشاء مجلد مؤقت في <code>/tmp</code>، انسخ الملف إليه، ثم استخدم <code>xxd -r</code> لعكس الهكس ديمب. بعد ذلك، افحص نوع الملف بـ <code>file</code> وقم بفك الضغط بالتناوب حسب الأداة المناسبة (gzip, bzip2, tar) حتى تصل للملف النصي النهائي.",
+    "command": "mkdir /tmp/bandit12_work && cp data.txt /tmp/bandit12_work && cd /tmp/bandit12_work && xxd -r data.txt reverted && file reverted",
+    "password": "8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL"
+  },
+  {
+    "id": 14,
+    "title": "Level 13 → Level 14",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "SSH Keys",
+      "localhost"
+    ],
+    "goal": "الاتصال بالخادم المحلي localhost بالمستخدم bandit14 باستخدام مفتاح الـ SSH الخاص sshkey.private.",
+    "walkthrough": "استخدم خيار <code>-i</code> لتحديد مفتاح الـ SSH الخاص للاتصال بالمستخدم الجديد على localhost. بعد الدخول، اقرأ ملف كلمة المرور المحمي.",
+    "command": "ssh -i sshkey.private bandit14@localhost -p 2220 && cat /etc/bandit_pass/bandit14",
+    "password": "4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e"
+  },
+  {
+    "id": 15,
+    "title": "Level 14 → Level 15",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "netcat",
+      "Networking"
+    ],
+    "goal": "إرسال كلمة مرور المستوى الحالي إلى المنفذ 30000 على localhost للحصول على الكلمة التالية.",
+    "walkthrough": "استخدم أداة <code>nc</code> (Netcat) للاتصال بالمنفذ المفتوح، ثم قم بإرسال كلمة مرور bandit14.",
+    "command": "echo \"4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e\" | nc localhost 30000",
+    "password": "BfMYroe26WYalil77FoDi9qh59eK5xNr"
+  },
+  {
+    "id": 16,
+    "title": "Level 15 → Level 16",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "openssl s_client",
+      "SSL/TLS"
+    ],
+    "goal": "إرسال كلمة مرور المستوى الحالي إلى المنفذ 30001 على localhost باستخدام اتصال محمي بـ SSL.",
+    "walkthrough": "المنفذ 30001 يستمع فقط للاتصالات الآمنة المشفرة، لذا نستخدم <code>openssl s_client</code> عوضاً عن netcat العادي.",
+    "command": "echo \"BfMYroe26WYalil77FoDi9qh59eK5xNr\" | openssl s_client -connect localhost:30001 -quiet",
+    "password": "cluFn7wTiGryunymYOu4RcffSxQluehd"
+  },
+  {
+    "id": 17,
+    "title": "Level 16 → Level 17",
+    "difficulty": "Advanced",
+    "concepts": [
+      "nmap",
+      "openssl",
+      "RSA Key"
+    ],
+    "goal": "عمل مسح للمنافذ بين 31000 و32000 لمعرفة أي منها يستمع لـ SSL وإرسال كلمة المرور إليه للحصول على مفتاح RSA.",
+    "walkthrough": "امسح المنافذ بـ <code>nmap -p 31000-32000 localhost</code> (ستجد المنفذ 31790 يستمع للـ SSL). اتصل به عبر <code>openssl s_client -connect localhost:31790</code> وأرسل الكلمة الحالية، واحفظ مفتاح RSA الناتج في ملف خاص مع إعطائه صلاحية 600 لتسجيل الدخول.",
+    "command": "nmap -p 31000-32000 localhost && openssl s_client -connect localhost:31790 -quiet",
+    "password": "[مفتاح RSA خاص - يتم استخدامه للاتصال كـ bandit17]"
+  },
+  {
+    "id": 18,
+    "title": "Level 17 → Level 18",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "diff",
+      "File Comparison"
+    ],
+    "goal": "مقارنة ملف passwords.old و passwords.new ومعرفة السطر الوحيد الذي تم تعديله.",
+    "walkthrough": "استخدم الأمر <code>diff</code> لمقارنة الملفين مباشرة، السطر الذي يسبقه إشارة <code>></code> هو التعديل والكلمة المطلوبة.",
+    "command": "diff passwords.old passwords.new",
+    "password": "kfBf3eY2F5VGA3a8x5tY3qGhBM9plV"
+  },
+  {
+    "id": 19,
+    "title": "Level 18 → Level 19",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "Restricted Shell",
+      "SSH Commands"
+    ],
+    "goal": "تخطي تسجيل الخروج التلقائي الفوري عند الاتصال عبر SSH نتيجة شل معطل.",
+    "walkthrough": "عند الاتصال بـ SSH، مرر الأمر المراد تنفيذه مباشرة في نهاية سطر الاتصال لتخطي الشل التلقائي، مثل استدعاء bash أو قراءة الملف.",
+    "command": "ssh bandit18@bandit.labs.overthewire.org -p 2220 /bin/bash",
+    "password": "3Njap0pFhF3NJ9AVKe0dmk45nxy20cvU"
+  },
+  {
+    "id": 20,
+    "title": "Level 19 → Level 20",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "SUID",
+      "Privilege Escalation"
+    ],
+    "goal": "استغلال ملف ثنائي يحمل صلاحية SUID لتشغيل أمر نيابة عن مستخدم أعلى.",
+    "walkthrough": "الملف <code>bandit20-do</code> يتيح لك تنفيذ الأوامر بصلاحية bandit20. قم بتشغيله لقراءة ملف كلمة المرور المحمي مباشرة.",
+    "command": "./bandit20-do cat /etc/bandit_pass/bandit20",
+    "password": "0cvUa6EGHWasnPhtq9AVKe0dmk45nxy2"
+  },
+  {
+    "id": 21,
+    "title": "Level 20 → Level 21",
+    "difficulty": "Advanced",
+    "concepts": [
+      "suconnect",
+      "Background Jobs",
+      "nc listener"
+    ],
+    "goal": "الاتصال ببرنامج SUID يقوم بالتحقق من كلمة مرور bandit20 على منفذ محلي وإرسال كلمة مرور bandit21.",
+    "walkthrough": "افتح منفذ استماع محلي يرسل كلمة مرور bandit20 عند الاتصال به: <code>echo [pass] | nc -l -p 12345 &</code> ثم شغل برنامج suconnect متصلاً بذلك المنفذ <code>./suconnect 12345</code>.",
+    "command": "echo \"[bandit20_password]\" | nc -l -p 12345 & ./suconnect 12345",
+    "password": "HWasnPhtq9AVKe0dmk45nxy20cvUa6EG"
+  },
+  {
+    "id": 22,
+    "title": "Level 21 → Level 22",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "cron",
+      "Scheduled Tasks"
+    ],
+    "goal": "فحص مهام cron ومعرفة مسار السكريبت الجاري تنفيذه دورياً وقراءة مخرجاته.",
+    "walkthrough": "افحص المجلد <code>/etc/cron.d/</code> واقرأ ملف الإعدادات للمستوى 22 لتحديد مكان السكريبت، ثم اقرأ السكريبت لتعرف المسار المؤقت الذي يكتب فيه كلمة المرور.",
+    "command": "cat /etc/cron.d/cronjob_bandit22 && cat /usr/bin/cronjob_bandit22.sh",
+    "password": "EGo7DXjZPULLxYr17uwoI01bNLQbtFem"
+  },
+  {
+    "id": 23,
+    "title": "Level 22 → Level 23",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "cron",
+      "MD5 hashing",
+      "Scripting"
+    ],
+    "goal": "تتبع سكريبت cronjob يقوم بتوليد اسم ملف مخرجات ديناميكي بناءً على هاش MD5 لاسم المستخدم.",
+    "walkthrough": "اقرأ سكريبت الكرون <code>/usr/bin/cronjob_bandit23.sh</code> واعرف كيف يتم احتساب اسم الملف. احسب قيمة الهاش لـ bandit23 ثم اقرأ الملف من المسار الناتج في <code>/tmp</code>.",
+    "command": "echo \"I am user bandit23\" | md5sum && cat /tmp/[hash_value]",
+    "password": "jc1OIX8pi7KAGL6gAvawJjGOiokJF5bD"
+  },
+  {
+    "id": 24,
+    "title": "Level 23 → Level 24",
+    "difficulty": "Advanced",
+    "concepts": [
+      "cron",
+      "Privilege Abuse",
+      "Shell Scripting"
+    ],
+    "goal": "استغلال مهمة cronjob تقوم بتشغيل أي سكريبت يوضع في مجلد /var/spool/bandit24/d/.",
+    "walkthrough": "اكتب سكريبت شل بسيط ينسخ ملف كلمة مرور bandit24 إلى ملف عام في <code>/tmp</code>، اعطه صلاحية التنفيذ <code>chmod +x</code> وضعه في المجلد المخصص وانتظر حتى ينفذه النظام.",
+    "command": "echo -e '#!/bin/bash\\ncat /etc/bandit_pass/bandit24 > /tmp/pass24\\nchmod 666 /tmp/pass24' > /var/spool/bandit24/d/myscript.sh && chmod +x /var/spool/bandit24/d/myscript.sh",
+    "password": "U4RcffSxQluehdcluFn7wTiGryunymYO"
+  },
+  {
+    "id": 25,
+    "title": "Level 24 → Level 25",
+    "difficulty": "Advanced",
+    "concepts": [
+      "Brute Force",
+      "netcat",
+      "Loops"
+    ],
+    "goal": "تخمين رمز PIN مكون من 4 أرقام بجانب كلمة مرور bandit24 عبر المنفذ 30002.",
+    "walkthrough": "اكتب حلقة تكرار برمجية في الشل لترسل كل الاحتمالات من 0000 إلى 9999 بجانب كلمة المرور دفعة واحدة عبر بايب إلى منفذ netcat.",
+    "command": "for i in {0000..9999}; do echo \"[bandit24_password] $i\"; done | nc localhost 30002",
+    "password": "u4RcffSxQluehdcluFn7wTiGryunymYO"
+  },
+  {
+    "id": 26,
+    "title": "Level 25 → Level 26",
+    "difficulty": "Advanced",
+    "concepts": [
+      "showtext",
+      "more command",
+      "vi escape"
+    ],
+    "goal": "تخطي تسجيل الخروج الفوري للشل الافتراضي الذي يعرض ملفاً باستخدام more.",
+    "walkthrough": "صغر حجم الطرفية لسطرين فقط ثم اتصل بـ SSH. سيتوقف برنامج <code>more</code> بانتظار إدخال. اضغط على <code>v</code> لفتح محرر <code>vi</code>، ومن داخله قم بتهيئة متغيرات الشل عبر <code>:set shell=/bin/bash</code> ثم اكتب <code>:shell</code>.",
+    "command": ":set shell=/bin/bash ثم اكتب :shell",
+    "password": "5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu"
+  },
+  {
+    "id": 27,
+    "title": "Level 26 → Level 27",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "SUID",
+      "Restricted Shell"
+    ],
+    "goal": "استخدام برنامج SUID لتشغيل أمر في شل محدود.",
+    "walkthrough": "استخدم برنامج <code>./bandit27-do</code> لقراءة ملف كلمة المرور المحمي بمساره المباشر.",
+    "command": "./bandit27-do cat /etc/bandit_pass/bandit27",
+    "password": "3Njap0pFhF3NJ9AVKe0dmk45nxy20cvU"
+  },
+  {
+    "id": 28,
+    "title": "Level 27 → Level 28",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "git clone",
+      "Version Control"
+    ],
+    "goal": "استنساخ مستودع git محلي وقراءة ملفات التوصيف للحصول على كلمة المرور.",
+    "walkthrough": "أنشئ مجلداً مؤقتاً في <code>/tmp</code> واستنسخ المستودع عبر <code>git clone</code> ثم اقرأ ملف <code>README.md</code>.",
+    "command": "mkdir /tmp/myrepo && git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo /tmp/myrepo",
+    "password": "0cvUa6EGHWasnPhtq9AVKe0dmk45nxy2"
+  },
+  {
+    "id": 29,
+    "title": "Level 28 → Level 29",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "git log",
+      "git history"
+    ],
+    "goal": "استنساخ مستودع وقراءة كلمة المرور التي تم حذفها وتعديلها في سجل التعديلات.",
+    "walkthrough": "استنسخ المستودع، واستخدم أمر <code>git log -p</code> أو <code>git show</code> لاستعراض سجل التعديلات السابقة التي تم إجراؤها على الملفات واسترجاع الكلمة المحذوفة.",
+    "command": "git log -p",
+    "password": "HWasnPhtq9AVKe0dmk45nxy20cvUa6EG"
+  },
+  {
+    "id": 30,
+    "title": "Level 29 → Level 30",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "git branch",
+      "git checkout"
+    ],
+    "goal": "البحث عن كلمة المرور في فرع git آخر غير الفرع الرئيسي.",
+    "walkthrough": "استعرض الفروع المتاحة محلياً وعن بعد باستخدام <code>git branch -a</code>، ثم انتقل للفرع المطلوب (مثل dev) باستخدام <code>git checkout</code>.",
+    "command": "git branch -a && git checkout dev",
+    "password": "EGo7DXjZPULLxYr17uwoI01bNLQbtFem"
+  },
+  {
+    "id": 31,
+    "title": "Level 30 → Level 31",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "git tags",
+      "git show"
+    ],
+    "goal": "العثور على كلمة المرور المخزنة في وسم (git tag).",
+    "walkthrough": "استعرض جميع الوسوم (Tags) في المستودع بـ <code>git tag</code>، ثم اعرض تفاصيل الوسم المطلوب باستخدام <code>git show [tag]</code>.",
+    "command": "git tag && git show secret",
+    "password": "jc1OIX8pi7KAGL6gAvawJjGOiokJF5bD"
+  },
+  {
+    "id": 32,
+    "title": "Level 31 → Level 32",
+    "difficulty": "Advanced",
+    "concepts": [
+      "git push",
+      "gitignore"
+    ],
+    "goal": "دفع ملف key.txt لمستودع الـ git للحصول على كلمة المرور بعد تجاوز قيود .gitignore.",
+    "walkthrough": "أنشئ ملف key.txt واكتب النص المطلوب. بما أن صيغة txt متجاهلة، استخدم الإضافة القسرية <code>git add -f key.txt</code>، ثم قم بعمل commit ودفع للمستودع ليرد الخادم بالحل.",
+    "command": "echo \"May I come in?\" > key.txt && git add -f key.txt && git commit -m \"add key\" && git push",
+    "password": "U4RcffSxQluehdcluFn7wTiGryunymYO"
+  },
+  {
+    "id": 33,
+    "title": "Level 32 → Level 33",
+    "difficulty": "Advanced",
+    "concepts": [
+      "Uppercase Shell",
+      "Bypassing restrictions"
+    ],
+    "goal": "تخطي الشل الذي يحول كافة المدخلات إلى أحرف كبيرة وقراءة كلمة المرور الأخيرة.",
+    "walkthrough": "اكتب <code>$0</code> أو <code>$SHELL</code> في الشل لتجبر النظام على إعادة تشغيل الشل الأساسي بدون تطبيق كود التحويل الحرفي.",
+    "command": "$0",
+    "password": "c9c3199ddf4121b10cf581a98d51caee"
+  },
+  {
+    "id": 34,
+    "title": "Level 33 → Level 34",
+    "difficulty": "Beginner",
+    "concepts": [
+      "Victory",
+      "Game End"
+    ],
+    "goal": "المستوى الأخير الترحيبي بنهاية لعبة Bandit.",
+    "walkthrough": "سجل الدخول كـ <code>bandit33</code> واقرأ ملف <code>README.txt</code> الذي يهنئك بإنهاء لعبة المحاكاة بنجاح.",
+    "command": "cat README.txt",
+    "password": "تهانينا! لقد أنهيت اللعبة بنجاح! 🏆"
+  }
+];
+
+        let currentGroup = 'all';
+        let currentDiff = 'all';
+        let searchQuery = '';
+
+        function renderCards() {
+            const grid = document.getElementById('levelsGrid');
+            grid.innerHTML = '';
+
+            const filtered = banditData.filter(item => {
+                // Group Filter
+                if (currentGroup !== 'all') {
+                    const range = currentGroup.split('-').map(Number);
+                    if (item.id < range[0] || item.id > range[1]) return false;
+                }
+
+                // Difficulty Filter
+                if (currentDiff !== 'all' && item.difficulty !== currentDiff) return false;
+
+                // Search Filter
+                if (searchQuery) {
+                    const q = searchQuery.toLowerCase();
+                    const titleMatch = item.title.toLowerCase().includes(q);
+                    const conceptMatch = item.concepts.some(c => c.toLowerCase().includes(q));
+                    const goalMatch = item.goal.toLowerCase().includes(q);
+                    const cmdMatch = item.command.toLowerCase().includes(q);
+                    if (!titleMatch && !conceptMatch && !goalMatch && !cmdMatch) return false;
+                }
+
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #94a3b8; font-size: 1.2rem;">لا توجد تحديات تطابق معايير البحث والفلترة 🔍</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const diffClass = item.difficulty.toLowerCase();
+                const card = document.createElement('div');
+                card.className = 'level-card';
+                card.innerHTML = `
+                    <div class="card-top">
+                        <span class="level-title">${item.title}</span>
+                        <span class="badge ${diffClass}">${item.difficulty}</span>
+                    </div>
+                    <div class="concepts-list">
+                        ${item.concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
+                    </div>
+                    <div class="card-body">
+                        <div class="section-title">الهدف من المستوى:</div>
+                        <div class="section-text">${item.goal}</div>
+                        <div class="section-title">طريقة التفكير والحل:</div>
+                        <div class="section-text">${item.walkthrough}</div>
+                        <div class="section-title">أمر الحل المباشر:</div>
+                        <div class="code-box">
+                            <span id="cmd-${item.id}">${item.command}</span>
+                            <button class="copy-btn" onclick="copyText('cmd-${item.id}', this)" title="نسخ الأمر">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="secret-container">
+                        <span style="font-size: 0.9rem; color: #94a3b8; font-weight: bold;">كلمة المرور (السر):</span>
+                        <span id="secret-${item.id}" class="secret-val">${item.password}</span>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button id="reveal-btn-${item.id}" class="reveal-btn" onclick="toggleReveal(${item.id})">إظهار</button>
+                            <button class="copy-btn" onclick="copySecret(${item.id}, this)" title="نسخ الكلمة" style="padding: 6px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function setGroupFilter(group, btn) {
+            document.querySelectorAll('.filter-group:nth-of-type(1) .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentGroup = group;
+            renderCards();
+        }
+
+        function setDiffFilter(diff, btn) {
+            document.querySelectorAll('.filter-group:nth-of-type(2) .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentDiff = diff;
+            renderCards();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderCards();
+        });
+
+        function toggleReveal(id) {
+            const secretEl = document.getElementById(`secret-${id}`);
+            const btn = document.getElementById(`reveal-btn-${id}`);
+            if (secretEl.classList.contains('revealed')) {
+                secretEl.classList.remove('revealed');
+                btn.innerText = 'إظهار';
+            } else {
+                secretEl.classList.add('revealed');
+                btn.innerText = 'إخفاء';
+            }
+        }
+
+        function copyText(elId, btn) {
+            const text = document.getElementById(elId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalSvg = btn.innerHTML;
+                btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                setTimeout(() => { btn.innerHTML = originalSvg; }, 1500);
+            });
+        }
+
+        function copySecret(id, btn) {
+            const secretEl = document.getElementById(`secret-${id}`);
+            const text = secretEl.innerText;
+            
+            // Auto reveal briefly when copying
+            const wasRevealed = secretEl.classList.contains('revealed');
+            if (!wasRevealed) {
+                secretEl.classList.add('revealed');
+                document.getElementById(`reveal-btn-${id}`).innerText = 'إخفاء';
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                const originalSvg = btn.innerHTML;
+                btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                setTimeout(() => {
+                    btn.innerHTML = originalSvg;
+                    if (!wasRevealed) {
+                        secretEl.classList.remove('revealed');
+                        document.getElementById(`reveal-btn-${id}`).innerText = 'إظهار';
+                    }
+                }, 1500);
+            });
+        }
+
+        // Initial Render
+        renderCards();
+    </script>
+</body>
+</html>
