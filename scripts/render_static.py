@@ -86,3 +86,5 @@ linux_dest = os.path.join(build_dir, 'linux')
 if os.path.exists(linux_src):
     shutil.copytree(linux_src, linux_dest, dirs_exist_ok=True)
     print(f"Copied Linux Academy to {linux_dest}")
+
+# Trigger redeployment
