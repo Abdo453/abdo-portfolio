@@ -148,11 +148,74 @@
             box-shadow: 0 0 10px var(--accent-glow);
             font-weight: 600;
         }
-        .levels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+
+        /* Split-screen Layout */
+        .bandit-layout {
+            display: flex;
             gap: 25px;
-            align-items: stretch; /* Cards in same row will have uniform height */
+            margin-top: 20px;
+            align-items: flex-start;
+        }
+        .bandit-sidebar {
+            flex: 0 0 300px;
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 700px;
+            overflow-y: auto;
+            backdrop-filter: blur(12px);
+        }
+        .sidebar-level-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: right;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            direction: rtl;
+        }
+        .sidebar-level-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(56, 189, 248, 0.2);
+            color: #fff;
+        }
+        .sidebar-level-item.active {
+            background: rgba(46, 160, 67, 0.1) !important;
+            border-color: var(--accent) !important;
+            color: var(--accent) !important;
+            font-weight: 700;
+            box-shadow: 0 0 10px rgba(46, 160, 67, 0.15);
+        }
+        .sidebar-level-item .solve-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1.5px solid #64748b;
+            transition: all 0.2s ease;
+        }
+        .sidebar-level-item.solved-item .solve-dot {
+            background: #10b981;
+            border-color: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+        .bandit-main-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .bandit-main-content .level-card {
+            margin: 0;
+            width: 100%;
         }
         
         /* Card Glassmorphic HUD with micro-interactions */
@@ -170,7 +233,6 @@
             perspective: 1000px;
         }
         .level-card:hover {
-            transform: translateY(-8px) scale(1.02);
             border-color: var(--accent);
             box-shadow: 0 15px 35px rgba(46, 160, 67, 0.2);
         }
@@ -571,6 +633,17 @@
             display: block;
             margin-bottom: 4px;
         }
+
+        @media (max-width: 768px) {
+            .bandit-layout {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .bandit-sidebar {
+                flex: none;
+                max-height: 250px;
+            }
+        }
     </style>
     <!-- Add Canvas Confetti library for completion celebration -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -646,8 +719,13 @@
             </div>
         </div>
 
-        <div id="levelsGrid" class="levels-grid">
-            <!-- Dynamic levels injected here -->
+        <div class="bandit-layout">
+            <div class="bandit-sidebar" id="banditSidebar">
+                <!-- Sidebar levels list -->
+            </div>
+            <div class="bandit-main-content" id="banditMainContent">
+                <!-- Selected level details -->
+            </div>
         </div>
     </div>
 
@@ -1653,6 +1731,7 @@
         let currentGroup = 'all';
         let currentDiff = 'all';
         let searchQuery = '';
+        let activeLevelId = 0;
         
         // Progress tracking loaded from localStorage
         let solvedLevels = JSON.parse(localStorage.getItem('bandit_solved_levels')) || [];
@@ -1673,9 +1752,16 @@
             document.getElementById(`btn-${tabName}-${cardId}`).classList.add('active');
         }
 
+        function selectLevel(id) {
+            activeLevelId = id;
+            renderCards();
+        }
+
         function renderCards() {
-            const grid = document.getElementById('levelsGrid');
-            grid.innerHTML = '';
+            const sidebar = document.getElementById('banditSidebar');
+            const mainContent = document.getElementById('banditMainContent');
+            sidebar.innerHTML = '';
+            mainContent.innerHTML = '';
 
             const filtered = banditData.filter(item => {
                 // Group Filter
@@ -1694,118 +1780,138 @@
                     const conceptMatch = item.concepts.some(c => c.toLowerCase().includes(q));
                     const goalMatch = item.goal.toLowerCase().includes(q);
                     const cmdMatch = item.command.toLowerCase().includes(q);
-                    if (!titleMatch && conceptMatch && !goalMatch && !cmdMatch) return false;
+                    if (!titleMatch && !conceptMatch && !goalMatch && !cmdMatch) return false;
                 }
 
                 return true;
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #94a3b8; font-size: 1.2rem;">لا توجد تحديات تطابق معايير البحث والفلترة 🔍</div>`;
+                sidebar.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 0.9rem; padding: 10px;">لا توجد نتائج</div>`;
+                mainContent.innerHTML = `<div style="text-align: center; padding: 40px; color: #94a3b8; font-size: 1.2rem;">لا توجد تحديات تطابق معايير البحث والفلترة 🔍</div>`;
                 return;
             }
 
+            // Ensure activeLevelId is still in the filtered list
+            const isStillAvailable = filtered.some(item => item.id === activeLevelId);
+            if (!isStillAvailable) {
+                activeLevelId = filtered[0].id;
+            }
+
+            // Render Sidebar
             filtered.forEach(item => {
-                const diffClass = item.difficulty.toLowerCase();
                 const isSolved = solvedLevels.includes(item.id);
+                const isActive = item.id === activeLevelId;
                 
-                const card = document.createElement('div');
-                card.className = `level-card ${isSolved ? 'solved-card' : ''}`;
-                card.id = `card-${item.id}`;
-                card.innerHTML = `
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `sidebar-level-item ${isActive ? 'active' : ''} ${isSolved ? 'solved-item' : ''}`;
+                itemDiv.onclick = () => selectLevel(item.id);
+                itemDiv.innerHTML = `
+                    <span>${item.title}</span>
+                    <span class="solve-dot"></span>
+                `;
+                sidebar.appendChild(itemDiv);
+            });
+
+            // Render Active card detail
+            const activeItem = filtered.find(item => item.id === activeLevelId) || filtered[0];
+            const diffClass = activeItem.difficulty.toLowerCase();
+            const isSolved = solvedLevels.includes(activeItem.id);
+
+            mainContent.innerHTML = `
+                <div class="level-card ${isSolved ? 'solved-card' : ''}" id="card-${activeItem.id}">
                     <div class="card-top">
-                        <span class="level-title">${item.title}</span>
-                        <span class="badge ${diffClass}">${item.difficulty}</span>
+                        <span class="level-title">${activeItem.title}</span>
+                        <span class="badge ${diffClass}">${activeItem.difficulty}</span>
                     </div>
                     <div class="concepts-list">
-                        ${item.concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
+                        ${activeItem.concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
                     </div>
                     
                     <div class="card-tabs-header">
-                        <button class="card-tab-btn active" id="btn-info-${item.id}" onclick="switchCardTab(${item.id}, 'info')">📖 الشرح</button>
-                        <button class="card-tab-btn" id="btn-term-${item.id}" onclick="switchCardTab(${item.id}, 'term')">💻 الطرفية</button>
-                        <button class="card-tab-btn" id="btn-quiz-${item.id}" onclick="switchCardTab(${item.id}, 'quiz')">🧠 الاختبار</button>
+                        <button class="card-tab-btn active" id="btn-info-${activeItem.id}" onclick="switchCardTab(${activeItem.id}, 'info')">📖 الشرح</button>
+                        <button class="card-tab-btn" id="btn-term-${activeItem.id}" onclick="switchCardTab(${activeItem.id}, 'term')">💻 الطرفية</button>
+                        <button class="card-tab-btn" id="btn-quiz-${activeItem.id}" onclick="switchCardTab(${activeItem.id}, 'quiz')">🧠 الاختبار</button>
                     </div>
 
                     <div class="card-body">
                         <!-- Tab 1: Info -->
-                        <div class="card-tab-content" id="tab-info-${item.id}" style="display: flex;">
+                        <div class="card-tab-content" id="tab-info-${activeItem.id}" style="display: flex;">
                             <div class="section-title">الهدف من المستوى:</div>
-                            <div class="section-text">${item.goal}</div>
+                            <div class="section-text">${activeItem.goal}</div>
                             
                             <div class="section-title">أمر الحل المباشر:</div>
                             <div class="code-box">
-                                <span id="cmd-${item.id}" style="font-size:0.85rem;">${item.command}</span>
-                                <button class="copy-btn" onclick="copyText('cmd-${item.id}', this)" title="نسخ الأمر">
+                                <span id="cmd-${activeItem.id}" style="font-size:0.85rem;">${activeItem.command}</span>
+                                <button class="copy-btn" onclick="copyText('cmd-${activeItem.id}', this)" title="نسخ الأمر">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                 </button>
                             </div>
                             
                             <div class="section-title">طريقة التفكير والحل:</div>
-                            <div class="section-text">${item.walkthrough}</div>
+                            <div class="section-text">${activeItem.walkthrough}</div>
 
                             <details class="rich-details">
                                 <summary>🔍 الشرح التفصيلي والسيناريو الأمني</summary>
                                 <div class="details-content">
-                                    <p><strong>💡 لماذا استخدمنا هذه الخدعة؟</strong>${item.why_trick}</p>
-                                    <p><strong>📉 النتائج المترتبة على ذلك:</strong>${item.consequences}</p>
-                                    <p><strong>🛠️ تفكيك الأمر وتبسيطه:</strong>${item.cmd_explain}</p>
-                                    <p><strong>🎯 سيناريو واقعي (كيف تتصرف؟):</strong>${item.real_scenario}</p>
+                                    <p><strong>💡 لماذا استخدمنا هذه الخدعة؟</strong>${activeItem.why_trick}</p>
+                                    <p><strong>📉 النتائج المترتبة على ذلك:</strong>${activeItem.consequences}</p>
+                                    <p><strong>🛠️ تفكيك الأمر وتبسيطه:</strong>${activeItem.cmd_explain}</p>
+                                    <p><strong>🎯 سيناريو واقعي (كيف تتصرف؟):</strong>${activeItem.real_scenario}</p>
                                 </div>
                             </details>
                         </div>
 
                         <!-- Tab 2: Terminal -->
-                        <div class="card-tab-content" id="tab-term-${item.id}" style="display: none;">
+                        <div class="card-tab-content" id="tab-term-${activeItem.id}" style="display: none;">
                             <div class="terminal-emulator">
                                 <div class="terminal-titlebar">
                                     <span class="dot red"></span>
                                     <span class="dot yellow"></span>
                                     <span class="dot green"></span>
-                                    <span class="term-title">terminal — bandit${item.id}@localhost</span>
+                                    <span class="term-title">terminal — bandit${activeItem.id}@localhost</span>
                                 </div>
-                                <div class="terminal-screen" id="term-screen-${item.id}">
+                                <div class="terminal-screen" id="term-screen-${activeItem.id}">
                                     <div class="term-line">
-                                        <span>bandit${item.id}@localhost:~$</span>
-                                        <input type="text" class="term-input" id="term-input-${item.id}" placeholder="اكتب أو انسخ أمر الحل هنا واضغط Enter..." onkeydown="handleTermInput(event, ${item.id})">
+                                        <span>bandit${activeItem.id}@localhost:~$</span>
+                                        <input type="text" class="term-input" id="term-input-${activeItem.id}" placeholder="اكتب أو انسخ أمر الحل هنا واضغط Enter..." onkeydown="handleTermInput(event, ${activeItem.id})">
                                     </div>
-                                    <div class="term-output" id="term-output-${item.id}"></div>
+                                    <div class="term-output" id="term-output-${activeItem.id}"></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Tab 3: Quiz -->
-                        <div class="card-tab-content" id="tab-quiz-${item.id}" style="display: none;">
-                            <div class="mini-quiz-box" id="quiz-box-${item.id}">
-                                <div class="quiz-question">🧠 اختبار سريع: ${item.quiz.question}</div>
+                        <div class="card-tab-content" id="tab-quiz-${activeItem.id}" style="display: none;">
+                            <div class="mini-quiz-box" id="quiz-box-${activeItem.id}">
+                                <div class="quiz-question">🧠 اختبار سريع: ${activeItem.quiz.question}</div>
                                 <div class="quiz-options">
-                                    ${item.quiz.options.map((opt, oIdx) => `
-                                        <button class="quiz-opt-btn" onclick="checkQuizAnswer(${item.id}, ${oIdx}, ${item.quiz.correct}, this)">${opt}</button>
+                                    ${activeItem.quiz.options.map((opt, oIdx) => `
+                                        <button class="quiz-opt-btn" onclick="checkQuizAnswer(${activeItem.id}, ${oIdx}, ${activeItem.quiz.correct}, this)">${opt}</button>
                                     `).join('')}
                                 </div>
-                                <div class="quiz-feedback" id="quiz-feedback-${item.id}"></div>
+                                <div class="quiz-feedback" id="quiz-feedback-${activeItem.id}"></div>
                             </div>
                         </div>
                     </div>
                     
-                    <button class="solve-btn ${isSolved ? 'solved' : ''}" id="solve-btn-${item.id}" onclick="toggleSolve(${item.id})">
+                    <button class="solve-btn ${isSolved ? 'solved' : ''}" id="solve-btn-${activeItem.id}" onclick="toggleSolve(${activeItem.id})">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span id="solve-text-${item.id}">${isSolved ? 'تم الحل بنجاح ✔️' : 'تحديد كـ محلول'}</span>
+                        <span id="solve-text-${activeItem.id}">${isSolved ? 'تم الحل بنجاح ✔️' : 'تحديد كـ محلول'}</span>
                     </button>
 
                     <div class="secret-container">
                         <span style="font-size: 0.9rem; color: #94a3b8; font-weight: bold;">كلمة السر (السر):</span>
-                        <span id="secret-${item.id}" class="secret-val">${item.password}</span>
+                        <span id="secret-${activeItem.id}" class="secret-val">${activeItem.password}</span>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <button id="reveal-btn-${item.id}" class="reveal-btn" onclick="toggleReveal(${item.id})">إظهار</button>
-                            <button class="copy-btn" onclick="copySecret(${item.id}, this)" title="نسخ الكلمة" style="padding: 6px;">
+                            <button id="reveal-btn-${activeItem.id}" class="reveal-btn" onclick="toggleReveal(${activeItem.id})">إظهار</button>
+                            <button class="copy-btn" onclick="copySecret(${activeItem.id}, this)" title="نسخ الكلمة" style="padding: 6px;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                             </button>
                         </div>
                     </div>
-                `;
-                grid.appendChild(card);
-            });
+                </div>
+            `;
         }
 
         // Handle Terminal Sandbox Input - dynamically look up commands from database
@@ -1882,6 +1988,7 @@
             
             localStorage.setItem('bandit_solved_levels', JSON.stringify(solvedLevels));
             updateProgressHUD();
+            renderCards(); // Refresh sidebar solve indicators
         }
 
         // Update progress ring and statistics
@@ -1928,6 +2035,8 @@
                 }
             }());
         }
+
+        font_size_selector = null; // Mocking variable
 
         function setGroupFilter(group, btn) {
             document.querySelectorAll('.filter-group:nth-of-type(1) .filter-btn').forEach(b => b.classList.remove('active'));
