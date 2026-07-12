@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Web Application Hacker's Handbook — HunterOS Book Guide</title>
+  <title>The Web Application Hacker's Handbook — Interactive Encyclopedia</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,7 +22,7 @@
       padding-bottom: 60px;
     }
     .book-container {
-      max-width: 1100px;
+      max-width: 1350px;
       margin: 40px auto;
       padding: 0 20px;
     }
@@ -50,45 +50,46 @@
       transform: translateX(4px);
     }
     .book-header {
-      background: linear-gradient(135deg, rgba(255, 170, 0, 0.05) 0%, rgba(3, 3, 8, 0.5) 100%);
-      border: 1px solid rgba(255, 170, 0, 0.15);
+      background: linear-gradient(135deg, rgba(255, 170, 0, 0.12) 0%, rgba(3, 3, 8, 0.6) 100%);
+      border: 1px solid rgba(255, 170, 0, 0.3);
       border-radius: 12px;
-      padding: 35px;
-      margin-bottom: 35px;
+      padding: 40px;
+      margin-bottom: 45px;
       display: flex;
       gap: 30px;
       align-items: center;
       flex-wrap: wrap;
     }
     .book-cover-art {
-      font-size: 6rem;
+      font-size: 7rem;
       background: rgba(255, 170, 0, 0.08);
       border: 1px dashed var(--accent-orange);
       border-radius: 8px;
-      width: 150px;
-      height: 200px;
+      width: 170px;
+      height: 230px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(255, 170, 0, 0.1);
+      box-shadow: 0 12px 35px rgba(255, 170, 0, 0.25);
     }
     .book-meta-info {
       flex: 1;
-      min-width: 250px;
+      min-width: 300px;
     }
     .book-title {
       font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
-      font-size: 2.2rem;
-      font-weight: 800;
+      font-size: 2.5rem;
+      font-weight: 900;
       color: #fff;
-      margin: 0 0 8px 0;
-      text-shadow: 0 0 15px rgba(255,170,0,0.25);
+      margin: 0 0 12px 0;
+      text-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
     }
     .book-author {
       font-family: 'Fira Code', monospace;
       color: var(--accent-orange);
-      font-size: 1rem;
-      margin-bottom: 15px;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      font-weight: 600;
     }
     .book-stats {
       display: flex;
@@ -96,18 +97,18 @@
       flex-wrap: wrap;
     }
     .stat-badge {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
       border-radius: 4px;
-      font-size: 0.78rem;
+      font-size: 0.82rem;
     }
     .reading-grid {
       display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 30px;
+      grid-template-columns: 340px 1fr;
+      gap: 35px;
     }
-    @media (max-width: 900px) {
+    @media (max-width: 1000px) {
       .reading-grid {
         grid-template-columns: 1fr;
       }
@@ -118,401 +119,370 @@
       }
     }
     .book-sidebar {
-      background: rgba(6, 6, 16, 0.6);
+      background: rgba(6, 6, 16, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 10px;
-      padding: 20px;
+      padding: 25px;
       height: fit-content;
+      position: sticky;
+      top: 30px;
     }
     .toc-title {
       font-family: 'Outfit', sans-serif;
       color: var(--accent-orange);
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 12px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 15px;
       letter-spacing: 1px;
+      border-bottom: 1px solid rgba(255, 170, 0, 0.25);
+      padding-bottom: 8px;
     }
     .toc-item {
       display: block;
       color: var(--text-secondary);
       text-decoration: none;
       font-size: 0.88rem;
-      padding: 8px 0;
+      padding: 9px 0;
       border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
       transition: all 0.2s ease;
     }
     .toc-item:hover {
       color: #fff;
-      padding-right: 4px;
+      padding-right: 6px;
     }
     .book-content {
-      background: rgba(6, 6, 16, 0.3);
+      background: rgba(6, 6, 16, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.03);
       border-radius: 12px;
-      padding: 30px;
+      padding: 40px;
     }
     .content-sec {
-      margin-bottom: 50px;
+      margin-bottom: 70px;
       scroll-margin-top: 40px;
     }
     .sec-title {
       color: #fff;
-      font-size: 1.4rem;
-      border-bottom: 1px solid rgba(255, 170, 0, 0.15);
-      padding-bottom: 10px;
-      margin-bottom: 20px;
+      font-size: 1.6rem;
+      border-bottom: 1px solid rgba(255, 170, 0, 0.3);
+      padding-bottom: 12px;
+      margin-bottom: 25px;
+      font-weight: 800;
+    }
+    .sub-sec-title {
+      color: #fff;
+      font-size: 1.2rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-weight: 700;
+      border-right: 4px solid var(--accent-orange);
+      padding-right: 12px;
     }
     .code-box {
       font-family: 'Fira Code', monospace;
       background: #06060c;
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 15px;
       border-radius: 6px;
-      color: var(--accent-orange);
+      color: var(--accent-cyan);
       font-size: 0.88rem;
       overflow-x: auto;
-      margin: 15px 0;
+      margin: 20px 0;
+      direction: ltr;
+      text-align: left;
+      line-height: 1.6;
+      position: relative;
     }
     .key-point {
-      border-right: 3px solid var(--accent-orange);
-      background: rgba(255, 170, 0, 0.03);
-      padding: 12px 18px;
+      border-right: 4px solid var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.04);
+      padding: 15px 20px;
       border-radius: 0 6px 6px 0;
-      margin: 20px 0;
+      margin: 25px 0;
     }
     .benefit-box {
-      border-right: 3px solid var(--accent-cyan);
-      background: rgba(0, 229, 255, 0.03);
-      padding: 12px 18px;
+      border-right: 4px solid var(--accent-orange);
+      background: rgba(255, 170, 0, 0.04);
+      padding: 15px 20px;
       border-radius: 0 6px 6px 0;
-      margin: 20px 0;
+      margin: 25px 0;
+    }
+    
+    /* Interactive Dashboard Panel */
+    .dashboard-panel {
+      background: linear-gradient(135deg, rgba(255,170,0,0.08) 0%, rgba(0,229,255,0.02) 100%);
+      border: 1px solid rgba(255, 170, 0, 0.25);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 40px;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .input-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .input-field {
+      background: rgba(6, 6, 16, 0.8);
+      border: 1px solid rgba(255, 170, 0, 0.3);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+    .copy-btn {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      background: rgba(255, 170, 0, 0.15);
+      border: 1px solid rgba(255, 170, 0, 0.4);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #030308;
+    }
+
+    /* Interactive Audit Checklist */
+    .checklist-container {
+      background: rgba(0, 229, 255, 0.02);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+    .checklist-title {
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 8px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+    }
+    .check-box {
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
     }
     
     /* Interactive Quiz Accordion Styles */
     .quiz-container {
       background: rgba(255, 170, 0, 0.02);
-      border: 1px solid rgba(255, 170, 0, 0.1);
+      border: 1px solid rgba(255, 170, 0, 0.12);
       border-radius: 8px;
-      padding: 20px;
-      margin: 25px 0;
+      padding: 25px;
+      margin: 30px 0;
     }
     .quiz-title {
       font-family: 'Outfit', sans-serif;
-      color: var(--accent-orange);
-      font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding-bottom: 12px;
     }
     .quiz-question-btn {
       width: 100%;
       background: none;
       border: none;
-      padding: 12px 0;
-      font-family: inherit;
       text-align: right;
       color: #fff;
-      font-weight: 600;
       font-size: 0.95rem;
+      font-weight: 600;
+      padding: 12px 0;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: color 0.2s ease;
+      font-family: inherit;
     }
-    .quiz-question-btn:hover {
-      color: var(--accent-orange);
+    .quiz-question-btn:focus {
+      outline: none;
     }
     .toggle-icon {
-      color: var(--accent-orange);
       font-family: 'Fira Code', monospace;
+      color: var(--accent-orange);
       font-weight: 700;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
     }
     .quiz-answer-panel {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease-out, padding 0.3s ease;
-      padding: 0 15px;
-      border-right: 3px solid var(--accent-orange);
-      background: rgba(255, 170, 0, 0.01);
-      border-radius: 0 6px 6px 0;
-      font-size: 0.88rem;
+      transition: max-height 0.3s ease-out;
+      font-size: 0.9rem;
       color: var(--text-secondary);
-      margin-top: 0;
+      line-height: 1.7;
+      padding: 0 15px;
     }
     .quiz-answer-panel.open {
-      max-height: 200px;
-      padding: 12px 15px;
-      margin-top: 10px;
+      max-height: 550px;
+      padding: 15px 15px;
+      border-right: 3px solid var(--accent-orange);
+      margin-top: 8px;
+      margin-bottom: 20px;
+      background: rgba(255,255,255,0.015);
     }
   </style>
 </head>
 <body>
 
-  <!-- Matrix Grid & Background Orbs -->
-  <div class="grid-bg" aria-hidden="true"></div>
-
   <div class="book-container">
     
-    <!-- Back button -->
+    <!-- Back Button -->
     <div class="back-btn-wrap">
-      <a href="../index.html" class="back-link">
-        ← العودة للوحة التحكم
+      <a href="../index.html#pane-books" class="back-link">
+        <span>&larr;</span>
+        <span>العودة للمكتبة الأمنية</span>
       </a>
     </div>
 
     <!-- Header Block -->
     <header class="book-header">
-      <div class="book-cover-art">📖</div>
+      <div class="book-cover-art">
+        <span>📚</span>
+      </div>
       <div class="book-meta-info">
         <h1 class="book-title">The Web Application Hacker's Handbook</h1>
-        <div class="book-author">By Dafydd Stuttard & Marcus Pinto</div>
+        <div class="book-author">By Dafydd Stuttard & Marcus Pinto — النسخة التفاعلية الموسعة</div>
         <div class="book-stats">
-          <span class="stat-badge text-neon-orange">اللغة: العربية / الإنجليزية</span>
-          <span class="stat-badge text-neon-cyan">المستوى: متوسط إلى متقدم</span>
-          <span class="stat-badge text-neon-green">الموضوع: منهجية اختبار الاختراق المتكاملة</span>
+          <span class="stat-badge" style="color: var(--accent-orange);">الصعوبة: متوسط إلى متقدم</span>
+          <span class="stat-badge">مولد بايلودز تفاعلي مدمج</span>
+          <span class="stat-badge">التركيز: ثغرات الويب والتلاعب بالطلبات</span>
         </div>
       </div>
     </header>
 
-    <!-- Reading Grid -->
+    <!-- Interactive Planner Dashboard -->
+    <div class="dashboard-panel">
+      <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px; font-weight: 800;">🎮 لوحة التخطيط ومولد بايلودز ثغرات الويب</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;">
+        أدخل متغيراتك في الأسفل لتخصيص بايلودز حقن قواعد البيانات (SQLi) وتضمين الملفات (LFI) والـ XSS وغيرها تلقائياً:
+      </p>
+      <div class="dashboard-grid">
+        <div class="input-group">
+          <label class="input-label">اسم المستخدم المستهدف (Username to Hack):</label>
+          <input type="text" id="wahh-user" class="input-field" value="admin" oninput="updateWahhPayloads()">
+        </div>
+        <div class="input-group">
+          <label class="input-label">المسار أو الملف المراد قراءته (File path):</label>
+          <input type="text" id="wahh-file" class="input-field" value="/etc/passwd" oninput="updateWahhPayloads()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
     <div class="reading-grid">
       
-      <!-- Sidebar Table of Contents -->
+      <!-- Right Sidebar (TOC) -->
       <aside class="book-sidebar">
-        <div class="toc-title">الوحدات التعليمية</div>
-        <a href="#module1" class="toc-item">1. رسم خريطة التطبيق</a>
-        <a href="#module2" class="toc-item">2. مهاجمة أنظمة المصادقة</a>
-        <a href="#module3" class="toc-item">3. مهاجمة إدارة الجلسات</a>
-        <a href="#module4" class="toc-item">4. مهاجمة مخازن البيانات</a>
-        <a href="#module5" class="toc-item">5. أدوات الاعتراض والبروكسي</a>
+        <div class="toc-title">فهرس فصول الكتاب</div>
+        <nav>
+          <a href="#module1" class="toc-item">الوحدة 1: المنهجية الأساسية للمهاجم</a>
+          <a href="#module2" class="toc-item">الوحدة 2: تدمير وحقن آليات التوثيق والاستيقان</a>
+          <a href="#module3" class="toc-item">الوحدة 3: التلاعب بالروابط والـ Sessions</a>
+          <a href="#module4" class="toc-item">الوحدة 4: ثغرات الـ Injection الحيوية</a>
+          <a href="#module5" class="toc-item">الوحدة 5: Burp Suite Pro Tricks</a>
+        </nav>
       </aside>
 
-      <!-- Main Content Area -->
+      <!-- Left Main Content -->
       <main class="book-content">
-        
-        <!-- Module 1: Mapping -->
+
+        <!-- Module 1 -->
         <section id="module1" class="content-sec">
-          <h2 class="sec-title">الوحدة الأولى: رسم خريطة التطبيق وتحليله (Mapping & Analyzing)</h2>
-          
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>قبل أن تطلق هجوماً واحداً، يجب أن تفهم تضاريس الهدف بالكامل. رسم خريطة التطبيق يكشف لك عن المسارات والصفحات والمعاملات (Parameters) المخفية في خوادم الويب، وهي المساحة التي تقع فيها معظم الأخطاء البرمجية للمطورين.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>يشير الكتاب إلى أن الهجوم الفعال يبدأ بـ Mapping دقيق. يتضمن ذلك تحديد:</p>
+          <h2 class="sec-title">الوحدة الأولى: المنهجية الأساسية للمهاجم (Core Web Hacking Methodology)</h2>
+          <p>يركز الكتاب على أهمية اتباع منهجية صارمة بدلاً من مجرد إطلاق بايلودز عشوائية. تتكون المنهجية من خطوتين رئيسيتين:</p>
           <ul>
-            <li><strong>نقاط الإدخال (Entry Points):</strong> تحديد كل معامل (Parameter) يستقبل منه التطبيق بيانات في ترويسات الطلب، الرابط، أو جسم الطلب.</li>
-            <li><strong>التقنيات المستخدمة (Tech Stack):</strong> تحديد لغات البرمجة (مثل PHP, Python)، وخوادم الويب (مثل Nginx, IIS)، وقاعدة البيانات.</li>
+            <li><strong>رسم خريطة التطبيق (Mapping):</strong> كشف كافة المسارات، الملفات، الـ parameters، والـ APIs.</li>
+            <li><strong>تحليل مساحة الهجوم (Analyzing the Attack Surface):</strong> معرفة أين يتم معالجة البيانات، وكيف تتم عملية التحقق من الهوية والصلاحيات.</li>
           </ul>
-          <p>أفضل طريقة للقيام بذلك هي تصفح الموقع بالكامل يدوياً مع تشغيل أداة <code>Burp Suite</code> لبناء خريطة شجرية تفاعلية للموقع (Site Map) تحت تبويب Target.</p>
-
-          <!-- Quiz 1 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q1-1')">
-                <span>1. ما أهمية بناء خريطة شجرية للموقع (Site Map) قبل البدء في الهجوم؟</span>
-                <span class="toggle-icon" id="icon-q1-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q1-1">
-                <strong>الإجابة النموذجية:</strong> تمنح المختبر رؤية كاملة لكافة المسارات والصفحات والملفات التي تم اكتشافها وتفاعلاتها، وتكشف المسارات القديمة أو المخفية التي قد تحتوي على ثغرات أمنية مهملة دون تكرار العمل اليدوي.
-              </div>
-            </div>
-
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q1-2')">
-                <span>2. كيف يساعد فحص الرؤوس (HTTP Headers) في معرفة مكونات الـ Tech Stack للهدف؟</span>
-                <span class="toggle-icon" id="icon-q1-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q1-2">
-                <strong>الإجابة النموذجية:</strong> تحتوي بعض الرؤوس مثل <code>Server</code> أو <code>X-Powered-By</code> على معلومات تفصيلية عن نوع خادم الويب وإصداره (مثل Apache/2.4.41) أو لغة البرمجة (مثل PHP/7.4)، مما يوجه الباحث الأمني للبحث عن ثغرات معروفة وعلنية لهذه الإصدارات المحددة.
-              </div>
-            </div>
-          </div>
         </section>
 
-        <!-- Module 2: Auth -->
+        <!-- Module 2 -->
         <section id="module2" class="content-sec">
-          <h2 class="sec-title">الوحدة الثانية: مهاجمة أنظمة المصادقة (Attacking Authentication)</h2>
-          
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>آليات المصادقة هي البوابة الرئيسية لحماية حسابات المستخدمين. كشف الأخطاء في هذه الأنظمة يعني القدرة على تخطي شاشات تسجيل الدخول، أو انتحال هويات المستخدمين، أو الاستيلاء على الحسابات (Account Takeover) بالكامل.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>تتمحور هجمات المصادقة حول التغلب على الحماية المفروضة على الحسابات، وتضم:</p>
-          <ul>
-            <li><strong>تخمين كلمات المرور (Brute Force):</strong> محاولة إدخال كلمات مرور عشوائية أو شهيرة لحساب معين.</li>
-            <li><strong>تجاوز حظر المحاولات المتكررة (Rate Limiting Bypass):</strong> استغلال التلاعب بالرؤوس لإيهام النظام بأن الطلبات قادمة من عناوين IP مختلفة.</li>
-            <li><strong>ثغرات استعادة كلمة المرور (Password Reset Flaws):</strong> التلاعب بالمعاملات لتوجيه رابط الاستعادة لخادم خارجي.</li>
-          </ul>
+          <h2 class="sec-title">الوحدة الثانية: تدمير وحقن آليات التوثيق والاستيقان (Bypassing Authentication)</h2>
+          <p>معظم الهجمات تركز على تخطي صفحات تسجيل الدخول إما عبر التخمين أو التلاعب بالمنطق البرمجي (Logical flaws).</p>
+          <h3 class="sub-sec-title">أ. تجاوز لوحة تسجيل الدخول بالحقن (SQLi Auth Bypass)</h3>
+          <p>بايلود مخصص لتخطي فحص كلمة المرور وجعل الاستعلام يعود بـ True دائماً:</p>
           <div class="code-box">
-            # مثال على رأس HTTP لتغيير عنوان الـ IP المزعوم
-            X-Forwarded-For: 127.0.0.1
-          </div>
-
-          <!-- Quiz 2 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q2-1')">
-                <span>1. كيف يمكن للمهاجم تخطي حظر المحاولات المتكررة (Rate Limiting) على صفحة تسجيل الدخول؟</span>
-                <span class="toggle-icon" id="icon-q2-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q2-1">
-                <strong>الإجابة النموذجية:</strong> من خلال التلاعب بالرؤوس الأمنية التي تحدد هوية العميل مثل <code>X-Forwarded-For</code> أو <code>X-Real-IP</code> وتغيير قيمها بشكل عشوائي مع كل طلب لمنع أنظمة كشف التخمين من رصد وتثبيت الـ IP الفعلي.
-              </div>
-            </div>
-
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q2-2')">
-                <span>2. ما هي الثغرة الشائعة في آليات استعادة كلمة المرور عبر البريد الإلكتروني؟</span>
-                <span class="toggle-icon" id="icon-q2-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q2-2">
-                <strong>الإجابة النموذجية:</strong> ثغرات Host Header Injection، حيث يستبدل المهاجم ترويسة <code>Host</code> في طلب الاستعادة بنطاق خبيث يمتلكه. إذا استخدم المطور هذه الترويسة لإنشاء رابط التفعيل، فسيتم إرسال الرابط للضحية مشيراً لخادم المهاجم، وعند الضغط عليه يتم تسريب رمز التفعيل (Token) للمهاجم.
-              </div>
-            </div>
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre id="payload-sqli-auth">admin' OR '1'='1'--</pre>
           </div>
         </section>
 
-        <!-- Module 3: Session -->
+        <!-- Module 3 -->
         <section id="module3" class="content-sec">
-          <h2 class="sec-title">الوحدة الثالثة: مهاجمة إدارة الجلسات (Attacking Session Management)</h2>
-          
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>حتى لو كان نظام تسجيل الدخول آمناً، فإن إدارة الجلسة السيئة قد تهدم هذا الأمان. تعلم هذا الجانب يتيح لك فهم كيفية سرقة رموز الجلسات (Session Tokens) وانتحال شخصيات المستخدمين النشطين دون الحاجة لمعرفة كلمات مرورهم.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>تركز إدارة الجلسة على التحقق من هوية المستخدم بعد تسجيل الدخول عبر الرموز (Tokens/Cookies). تقع الثغرات في هذا القسم عند:</p>
-          <ul>
-            <li><strong>التنبؤ بالرموز (Predictable Tokens):</strong> إذا لم تكن الرموز عشوائية (مثلاً مشفرة بـ Base64 أو تعتمد على وقت تسجيل الدخول فقط).</li>
-            <li><strong>غياب العلامات الأمنية (Flags):</strong> عدم تفعيل علامات مثل <code>HttpOnly</code> (لحمايتها من الـ XSS) أو <code>Secure</code> (لضمان إرسالها عبر HTTPS فقط).</li>
-          </ul>
-
-          <!-- Quiz 3 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q3-1')">
-                <span>1. ما هي الخطورة الأمنية المترتبة على جعل قيمة الـ Session Token متوقعة أو غير عشوائية؟</span>
-                <span class="toggle-icon" id="icon-q3-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q3-1">
-                <strong>الإجابة النموذجية:</strong> تمكن المهاجمين من التنبؤ برموز الجلسات الخاصة بالمستخدمين الآخرين وتوليد رموز صحيحة يدوياً، مما يسمح لهم بانتحال شخصية المستخدمين دون معرفة كلمة مرورهم (Session Hijacking).
-              </div>
-            </div>
-
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q3-2')">
-                <span>2. ما هو الخيار (Flag) الأمني الذي يجب تعيينه على ملفات تعريف الارتباط لمنع قراءتها عبر ثغرات XSS؟</span>
-                <span class="toggle-icon" id="icon-q3-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q3-2">
-                <strong>الإجابة النموذجية:</strong> وسم <code>HttpOnly</code>، حيث يمنع المتصفح لغة جافا سكريبت من الوصول لملف تعريف الارتباط (Cookie)، مما يحميه من السرقة حتى لو كان الموقع مصاباً بثغرة XSS.
-              </div>
-            </div>
-          </div>
+          <h2 class="sec-title">الوحدة الثالث: التلاعب بالروابط والـ Sessions (Session Hijacking & Fixing)</h2>
+          <p>الجلسات (Sessions) هي الطريقة التي يتعرف بها السيرفر على المستخدم بعد تسجيل الدخول. إذا تم سرقتها أو التلاعب بها، يمكن للمهاجم تقمص دور الضحية بالكامل.</p>
+          <p>يوضح الكتاب كيفية التحقق من أمن الـ Session tokens وتخطي آليات توليد الـ Session IDs الضعيفة (تخمين قيم الـ Cookie المتعاقبة أو الضعيفة التشفير).</p>
         </section>
 
-        <!-- Module 4: Datastores -->
+        <!-- Module 4 -->
         <section id="module4" class="content-sec">
-          <h2 class="sec-title">الوحدة الرابعة: مهاجمة مخازن البيانات (SQL Injection & XML Injection)</h2>
+          <h2 class="sec-title">الوحدة الرابعة: ثغرات الـ Injection الحيوية (SQLi, XXE & Command Inj)</h2>
+          <p>عندما يقبل السيرفر مدخلات من المستخدم ويمررها لمفسر أوامر أو قاعدة بيانات دون فحص صارم.</p>
           
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>مخازن البيانات هي القلب النابض لأي تطبيق ويب. مهاجمتها تعني الوصول المباشر لمعلومات المستخدمين وسجلات النظام والقدرة على تعديل قاعدة البيانات أو قراءة ملفات الخادم الحساسة.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>يغطي المرجع بعمق هجمات الحقن التي تستهدف قواعد البيانات (SQLi) ومحللات البيانات (XML Parsers):</p>
-          <ul>
-            <li><strong>حقن الـ SQL الأعمى (Blind SQLi):</strong> عندما لا يعرض التطبيق أخطاءً أو نتائج مباشرة، بل يستلزم إرسال شروط منطقية (True/False) أو استعلامات زمنية (Time-based SQLi) لاستنتاج الحروف حرفاً بحرف.</li>
-            <li><strong>حقن الكيانات الخارجية لـ XML (XXE):</strong> استغلال محلل XML غير آمن لقراءة ملفات الخادم المحلية أو عمل طلبات داخلية (SSRF).</li>
-          </ul>
+          <h3 class="sub-sec-title">أ. تضمين الملفات المحلية (Local File Inclusion)</h3>
+          <p>بايلود LFI مخصص لقراءة الملف الذي حددته في لوحة التخطيط:</p>
           <div class="code-box">
-            # مثال على payload للحقن الأعمى المعتمد على الوقت
-            admin' AND SLEEP(5)--
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre id="payload-lfi">../../../../../../etc/passwd</pre>
           </div>
 
-          <!-- Quiz 4 -->
           <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
+            <div class="quiz-title">🧪 أسئلة المراجعة (انقر لعرض الإجابة النموذجية)</div>
             
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q4-1')">
-                <span>1. ما الفرق بين حقن SQL الكلاسيكي (In-band SQLi) والحقن الأعمى (Blind SQLi)؟</span>
-                <span class="toggle-icon" id="icon-q4-1">[ + ]</span>
+              <button class="quiz-question-btn" onclick="toggleAnswer('wahh-q1')">
+                <span>1. ما الفرق بين حقن SQL الكلاسيكي والحقن الأعمى (Blind SQLi)؟</span>
+                <span class="toggle-icon" id="icon-wahh-q1">[ + ]</span>
               </button>
-              <div class="quiz-answer-panel" id="ans-q4-1">
-                <strong>الإجابة النموذجية:</strong> في SQLi الكلاسيكي، تظهر البيانات المستخرجة مباشرة في محتوى صفحة الويب أو رسائل الخطأ. أما في Blind SQLi، لا تظهر أي بيانات على الشاشة، ويجب على المهاجم استنتاج البيانات من خلال طرح أسئلة منطقية (True/False) ومراقبة تغير استجابة الصفحة أو الوقت المستغرق للمعالجة (Time-based).
-              </div>
-            </div>
-
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q4-2')">
-                <span>2. كيف يمكن استغلال ثغرة حقن الكيانات الخارجية (XXE) لقراءة ملفات النظام الداخلية للخادم؟</span>
-                <span class="toggle-icon" id="icon-q4-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q4-2">
-                <strong>الإجابة النموذجية:</strong> من خلال إرسال ملف XML يحتوي على تعريف كيان خارجي (External Entity) يشير إلى مسار ملف محلي على الخادم (مثل <code>file:///etc/passwd</code> في لينكس)، ثم استدعاء هذا الكيان داخل الطلب ليقوم المحلل بقراءته وعرض محتواه في الاستجابة.
+              <div class="quiz-answer-panel" id="ans-wahh-q1">
+                <strong>الإجابة النموذجية:</strong> في SQLi الكلاسيكي، تظهر البيانات المستخرجة مباشرة في محتوى صفحة الويب أو رسائل الخطأ. أما في Blind SQLi، لا تظهر أي بيانات على الشاشة، ويجب على المهاجم استنتاج البيانات من خلال طرح أسئلة منطقية (True/False) ومراقبة تغير استجابة الصفحة أو الوقت المستغرق للمعالجة.
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Module 5: Tools -->
+        <!-- Module 5 -->
         <section id="module5" class="content-sec">
-          <h2 class="sec-title">الوحدة الخامسة: استخدام البروكسي وأدوات الاعتراض (Burp Suite Pro Tricks)</h2>
+          <h2 class="sec-title">الوحدة الخامسة: Burp Suite Pro Tricks</h2>
+          <p>يعتبر <code>Burp Suite</code> هو البرنامج الأساسي الذي يتمحور حوله الكتاب لتنفيذ الاعتراض والتعديل التلقائي واليدوي للطلبات.</p>
           
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>البروكسي هو العين التي ترى بها حركة البيانات بين متصفحك والخادم. بدون إتقان أدوات الاعتراض، ستظل فحصك محدوداً بالواجهة الأمامية ولن تتمكن من تعديل الطلبات وفهم طريقة استجابة النظام الخلفي للبيانات الخبيثة.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>يعتبر <code>Burp Suite</code> هو البرنامج الأساسي الذي يتمحور حوله الكتاب. يجب على المختبر معرفة كيفية استخدام مكوناته باحترافية:</p>
-          <ul>
-            <li><strong>Burp Intruder:</strong> للقيام بالهجمات التلقائية المخصصة (Brute forcing, fuzzing).</li>
-            <li><strong>Burp Repeater:</strong> لتعديل طلب فردي وإعادة إرساله يدوياً ومراقبة التغير في الاستجابة.</li>
-            <li><strong>Burp Comparer:</strong> لمقارنة استجابتين مختلفتين ورصد التغيرات البسيطة بايت ببايت.</li>
-          </ul>
-
-          <!-- Quiz 5 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q5-1')">
-                <span>1. متى نفضل استخدام Burp Intruder بدلاً من Burp Repeater؟</span>
-                <span class="toggle-icon" id="icon-q5-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q5-1">
-                <strong>الإجابة النموذجية:</strong> نفضل استخدام Intruder عند الحاجة لإجراء عمليات هجومية آلية ومتكررة تعتمد على قوائم كلمات مرور (Wordlists) أو معاملات متعددة (مثل brute forcing أو fuzzing). بينما نستخدم Repeater لإجراء اختبار يدوي دقيق لطلب فردي وتعديله ومراقبة الاستجابة مراراً وتكراراً.
-              </div>
-            </div>
-
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q5-2')">
-                <span>2. كيف يساعد استخدام Burp Comparer في تحليل الفروق الدقيقة في استجابات خوادم الويب؟</span>
-                <span class="toggle-icon" id="icon-q5-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q5-2">
-                <strong>الإجابة النموذجية:</strong> يتيح مقارنة استجابتين برمجياً بايت ببايت أو كلمة بكلمة، مما يسهل رصد الاختلافات الطفيفة جداً في الحجم أو المحتوى والتي تشير غالباً إلى نجاح أو فشل هجمات الحقن الأعمى (Blind SQLi/Auth bypass).
-              </div>
-            </div>
+          <div class="checklist-container">
+            <div class="checklist-title">📋 قائمة مهام فحص الويب الميداني بـ Burp Suite</div>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckWahh(this, 'w1')"> تشغيل البروكسي واعتراض طلب تسجيل الدخول</label>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckWahh(this, 'w2')"> اختبار فك تشفير وتعديل الـ Cookies والتلاعب بالـ Session</label>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckWahh(this, 'w3')"> فحص معالجة المدخلات ضد ثغرات SQLi و XSS و LFI</label>
           </div>
         </section>
 
@@ -522,8 +492,35 @@
 
   </div>
 
-  <!-- Interactive Quiz Accordion Logic -->
   <script>
+    function updateWahhPayloads() {
+      const user = document.getElementById('wahh-user').value.trim() || 'admin';
+      const file = document.getElementById('wahh-file').value.trim() || '/etc/passwd';
+      
+      document.getElementById('payload-sqli-auth').innerText = `${user}' OR '1'='1'--`;
+      
+      // Build LFI payload recursively
+      let lfiDepth = "../../../../../..";
+      document.getElementById('payload-lfi').innerText = `${lfiDepth}${file}`;
+    }
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.innerText;
+        btn.innerText = "تم النسخ! ✓";
+        btn.style.background = "var(--accent-green)";
+        btn.style.borderColor = "var(--accent-green)";
+        btn.style.color = "#030308";
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.style.background = "";
+          btn.style.borderColor = "";
+          btn.style.color = "";
+        }, 1500);
+      });
+    }
+
     function toggleAnswer(ansId) {
       const panel = document.getElementById('ans-' + ansId);
       const icon = document.getElementById('icon-' + ansId);
@@ -538,6 +535,26 @@
         icon.style.color = 'var(--accent-cyan)';
       }
     }
+
+    function saveCheckWahh(box, id) {
+      localStorage.setItem('wahh_' + id, box.checked ? 'true' : 'false');
+    }
+
+    function loadChecklistWahh() {
+      const checkboxes = document.querySelectorAll('.checklist-container .check-box');
+      checkboxes.forEach((box, index) => {
+        const id = 'w' + (index + 1);
+        const saved = localStorage.getItem('wahh_' + id);
+        if (saved === 'true') {
+          box.checked = true;
+        }
+      });
+    }
+
+    window.onload = function() {
+      updateWahhPayloads();
+      loadChecklistWahh();
+    };
   </script>
 
 </body>

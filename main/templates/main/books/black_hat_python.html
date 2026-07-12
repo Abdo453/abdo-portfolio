@@ -1,0 +1,382 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Hat Python — Interactive Script Generator</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;900&family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../css/style.css?v=4" />
+  
+  <style>
+    body {
+      font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+      background-color: #030308;
+      color: #e2e8f0;
+      line-height: 1.8;
+      padding-bottom: 60px;
+    }
+    .book-container {
+      max-width: 1350px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .back-btn-wrap {
+      margin-bottom: 25px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: rgba(0, 229, 255, 0.02);
+      transition: all 0.2s ease;
+    }
+    .back-link:hover {
+      background: rgba(0, 229, 255, 0.08);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+      transform: translateX(4px);
+    }
+    .book-header {
+      background: linear-gradient(135deg, rgba(57, 255, 20, 0.12) 0%, rgba(3, 3, 8, 0.6) 100%);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 45px;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .book-cover-art {
+      font-size: 7rem;
+      background: rgba(57, 255, 20, 0.08);
+      border: 1px dashed #39ff14;
+      border-radius: 8px;
+      width: 170px;
+      height: 230px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 35px rgba(57, 255, 20, 0.25);
+    }
+    .book-meta-info {
+      flex: 1;
+      min-width: 300px;
+    }
+    .book-title {
+      font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 0 0 12px 0;
+      text-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+    }
+    .book-author {
+      font-family: 'Fira Code', monospace;
+      color: #39ff14;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .book-stats {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+    }
+    .reading-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 35px;
+    }
+    @media (max-width: 1000px) {
+      .reading-grid {
+        grid-template-columns: 1fr;
+      }
+      .book-sidebar {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+      }
+    }
+    .book-sidebar {
+      background: rgba(6, 6, 16, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 25px;
+      height: fit-content;
+      position: sticky;
+      top: 30px;
+    }
+    .toc-title {
+      font-family: 'Outfit', sans-serif;
+      color: #39ff14;
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(57, 255, 20, 0.25);
+      padding-bottom: 8px;
+    }
+    .toc-item {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+      transition: all 0.2s ease;
+    }
+    .toc-item:hover {
+      color: #fff;
+      padding-right: 6px;
+    }
+    .book-content {
+      background: rgba(6, 6, 16, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 40px;
+    }
+    .content-sec {
+      margin-bottom: 70px;
+      scroll-margin-top: 40px;
+    }
+    .sec-title {
+      color: #fff;
+      font-size: 1.6rem;
+      border-bottom: 1px solid rgba(57, 255, 20, 0.3);
+      padding-bottom: 12px;
+      margin-bottom: 25px;
+      font-weight: 800;
+    }
+    .sub-sec-title {
+      color: #fff;
+      font-size: 1.2rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-weight: 700;
+      border-right: 4px solid #39ff14;
+      padding-right: 12px;
+    }
+    .code-box {
+      font-family: 'Fira Code', monospace;
+      background: #06060c;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 15px;
+      border-radius: 6px;
+      color: var(--accent-cyan);
+      font-size: 0.88rem;
+      overflow-x: auto;
+      margin: 20px 0;
+      direction: ltr;
+      text-align: left;
+      line-height: 1.6;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      background: rgba(57, 255, 20, 0.15);
+      border: 1px solid rgba(57, 255, 20, 0.4);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #030308;
+    }
+    
+    /* Interactive Dashboard Panel */
+    .dashboard-panel {
+      background: linear-gradient(135deg, rgba(57,255,20,0.08) 0%, rgba(0,229,255,0.02) 100%);
+      border: 1px solid rgba(57, 255, 20, 0.25);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 40px;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .input-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .input-field {
+      background: rgba(6, 6, 16, 0.8);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="book-container">
+    
+    <!-- Back Button -->
+    <div class="back-btn-wrap">
+      <a href="../index.html#pane-books" class="back-link">
+        <span>&larr;</span>
+        <span>العودة للمكتبة الأمنية</span>
+      </a>
+    </div>
+
+    <!-- Header Block -->
+    <header class="book-header">
+      <div class="book-cover-art">
+        <span>📚</span>
+      </div>
+      <div class="book-meta-info">
+        <h1 class="book-title">Black Hat Python</h1>
+        <div class="book-author">By Justin Seitz — البرمجة الهجومية لشبكات بايتون</div>
+        <div class="book-stats">
+          <span class="stat-badge" style="color: #39ff14;">الصعوبة: متقدم</span>
+          <span class="stat-badge">مولد سكربتات بايثون المدمج</span>
+          <span class="stat-badge">التركيز: أدوات الهجوم والأتمتة بلغة بايثون</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Interactive Planner Dashboard -->
+    <div class="dashboard-panel">
+      <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px; font-weight: 800;">🎮 لوحة التخطيط ومولد سكربتات بايثون</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;">
+        أدخل المتغيرات لتوليد كود الاتصال بالشبكة مباشرة:
+      </p>
+      <div class="dashboard-grid">
+        <div class="input-group">
+          <label class="input-label">العنوان المستهدف للاتصال (Server IP):</label>
+          <input type="text" id="py-ip" class="input-field" value="10.10.10.25" oninput="updatePythonScript()">
+        </div>
+        <div class="input-group">
+          <label class="input-label">منفذ الاتصال (Server Port):</label>
+          <input type="text" id="py-port" class="input-field" value="9999" oninput="updatePythonScript()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="reading-grid">
+      
+      <!-- Right Sidebar (TOC) -->
+      <aside class="book-sidebar">
+        <div class="toc-title">فهرس فصول الكتاب</div>
+        <nav>
+          <a href="#network" class="toc-item">1. شبكات بايثون والـ Sockets</a>
+          <a href="#sniffing" class="toc-item">2. اعتراض الحزم (Packet Sniffing)</a>
+          <a href="#trojan" class="toc-item">3. بناء طروادة بالبايثون (Trojan builder)</a>
+        </nav>
+      </aside>
+
+      <!-- Left Main Content -->
+      <main class="book-content">
+
+        <!-- Network -->
+        <section id="network" class="content-sec">
+          <h2 class="sec-title">1. شبكات بايثون والـ Sockets</h2>
+          <p>كود بايثون تفاعلي كامل لإجراء اتصال TCP Socket مخصص بالهدف:</p>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ الكود</button>
+            <pre id="py-net-code">import socket
+
+target_host = "10.10.10.25"
+target_port = 9999
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect((target_host, target_port))
+client.send(b"GET / HTTP/1.1\r\nHost: 10.10.10.25\r\n\r\n")
+response = client.recv(4096)
+print(response.decode())</pre>
+          </div>
+        </section>
+
+        <!-- Sniffing -->
+        <section id="sniffing" class="content-sec">
+          <h2 class="sec-title">2. اعتراض الحزم (Packet Sniffing)</h2>
+          <p>كتابة أدوات قراءة البيانات والتقاط كلمات المرور المارة في الشبكة المحلية.</p>
+        </section>
+
+        <!-- Trojan -->
+        <section id="trojan" class="content-sec">
+          <h2 class="sec-title">3. بناء طروادة بالبايثون (Trojan)</h2>
+          <p>كيفية تصميم وإعداد سكربتات استدعاء الأوامر للتحكم عن بعد وتجاوز الحمايات.</p>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <script>
+    function updatePythonScript() {
+      const ip = document.getElementById('py-ip').value.trim() || '10.10.10.25';
+      const port = document.getElementById('py-port').value.trim() || '9999';
+      
+      document.getElementById('py-net-code').innerText = `import socket\n\ntarget_host = "${ip}"\ntarget_port = ${port}\n\nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nclient.connect((target_host, target_port))\nclient.send(b"GET / HTTP/1.1\\r\\nHost: ${ip}\\r\\n\\r\\n")\nresponse = client.recv(4096)\nprint(response.decode())`;
+    }
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.innerText;
+        btn.innerText = "تم النسخ! ✓";
+        btn.style.background = "var(--accent-green)";
+        btn.style.borderColor = "var(--accent-green)";
+        btn.style.color = "#030308";
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.style.background = "";
+          btn.style.borderColor = "";
+          btn.style.color = "";
+        }, 1500);
+      });
+    }
+
+    window.onload = function() {
+      updatePythonScript();
+    };
+  </script>
+
+</body>
+</html>
