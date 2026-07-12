@@ -767,33 +767,125 @@ puredns resolve generated_perms.txt -r trusted_resolvers.txt -o resolved_perms.t
           </div>
           
           <div class="terminal-header-bar">
-            <span>💻 محاكي فحص منافذ الويب بـ httpx</span>
-            <span style="color: #ff0055;">• Live Simulation</span>
-          </div>
-          <div class="terminal-sim" id="sim-httpx">
-https://api.example.com [200] [1450] [example-api] [nginx, node.js]
-https://dev.example.com [403] [230] [Forbidden] [Apache]
-https://blog.example.com [301] [0] [Redirect] [Cloudflare]
+            <span>💻 محاكي فحص منافذ الويب        <!-- Takeovers -->
+        <section id="takeovers" class="content-sec">
+          <h2 class="sec-title">10. ثغرات السيطرة على النطاقات الفرعية (Subdomain Takeover)</h2>
+          <p>تعد ثغرة السيطرة على النطاقات الفرعية من أخطر ثغرات الاستطلاع والـ DNS، وتمنح المهاجم القدرة على انتحال هوية الموقع بالكامل وتثبيت ملفات خبيثة أو سرقة الكوكيز الخاصة بالنطاق الرئيسي.</p>
+          
+          <h3 class="sub-sec-title">أ. آلية حدوث الثغرة هندسياً (Visual Attack Flow)</h3>
+          
+          <!-- Visual Simulation Arena -->
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,229,255,0.15); border-radius: 8px; padding: 20px; margin: 25px 0;">
+            <h4 style="color: #fff; margin-top: 0; margin-bottom: 15px; font-size: 0.95rem; font-weight: 700;">🌐 محاكي تفاعلي لمسار الثغرة والسيطرة عليها</h4>
+            
+            <div style="display: flex; gap: 15px; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+              <div style="background: rgba(3, 3, 8, 0.9); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 6px; text-align: center; flex: 1; min-width: 140px;">
+                <div style="font-size: 1.5rem;">💻</div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: #fff; margin-top: 5px;">متصفح الزائر</div>
+                <code style="font-size: 0.72rem; color: var(--accent-cyan);">docs.target.com</code>
+              </div>
+              
+              <div style="color: var(--accent-cyan); font-size: 1.2rem;">&rarr;</div>
+
+              <div style="background: rgba(3, 3, 8, 0.9); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 6px; text-align: center; flex: 1; min-width: 140px;">
+                <div style="font-size: 1.5rem;">🔗</div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: #fff; margin-top: 5px;">سجل CNAME المعلق</div>
+                <code style="font-size: 0.72rem; color: var(--accent-green);">target.github.io</code>
+              </div>
+
+              <div style="color: var(--accent-cyan); font-size: 1.2rem;">&rarr;</div>
+
+              <div id="takeover-status-node" style="background: rgba(255, 0, 85, 0.1); border: 1px dashed #ff0055; padding: 12px; border-radius: 6px; text-align: center; flex: 1; min-width: 140px; transition: all 0.5s ease;">
+                <div style="font-size: 1.5rem;" id="takeover-status-icon">❌</div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: #fff; margin-top: 5px;" id="takeover-status-title">مستودع محذوف (404)</div>
+                <code style="font-size: 0.72rem; color: #ff0055;" id="takeover-status-desc">NoSuchBucket / 404 Error</code>
+              </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 15px;">
+              <button id="btn-simulate-takeover" onclick="runTakeoverSimulation()" style="background: linear-gradient(135deg, #ff0055 0%, var(--accent-cyan) 100%); border: none; padding: 10px 24px; border-radius: 6px; color: #fff; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+                🚀 محاكاة السيطرة وحجز النطاق الفرعي
+              </button>
+            </div>
+
+            <!-- Virtual Browser Window -->
+            <div style="margin-top: 25px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; background: #030308;">
+              <div style="background: #0d0d1a; padding: 8px 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#ff5f56;"></span>
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#ffbd2e;"></span>
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#27c93f;"></span>
+                <div style="background: rgba(255,255,255,0.04); border-radius: 4px; padding: 2px 10px; font-size: 0.72rem; color: var(--text-secondary); margin-right: 15px; direction: ltr; font-family: monospace;">
+                  https://docs.target.com/
+                </div>
+              </div>
+              <div id="virtual-browser-content" style="padding: 40px 20px; text-align: center; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.5s ease;">
+                <h1 style="color: #a0aec0; font-size: 1.8rem; margin: 0 0 10px 0;">404 Not Found</h1>
+                <p style="color: #718096; font-size: 0.88rem; margin: 0;">The GitHub Pages site you are looking for does not exist.</p>
+              </div>
+            </div>
+
           </div>
 
-          <h3 class="sub-sec-title">ب. فحص المنافذ بسرعة البرق باستخدام Masscan</h3>
-          <p>يقوم <code>masscan</code> بإرسال حزم SYN بمعدل ضخم لكشف المنافذ المفتوحة، ثم نقوم بتوجيه المنافذ المفتوحة فقط إلى Nmap لفحص تفصيلي للمنافذ:</p>
+          <h3 class="sub-sec-title">ب. جدول البصمات والـ Signatures للخدمات السحابية المشهورة</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 15px;">
+            استخدم حقل التصفية السريع لتصفية بصمات الخدمات السحابية ونوع سجلاتها للتنقيب الفعلي:
+          </p>
+          <input type="text" id="takeover-search-input" oninput="filterTakeoverTable()" placeholder="ابحث عن خدمة (AWS, GitHub, Heroku)..." style="width: 100%; max-width: 400px; background: rgba(3, 3, 8, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 10px; color: #fff; font-size: 0.82rem; margin-bottom: 20px; outline: none; box-sizing: border-box;">
+          
+          <table class="cheat-sheet-table" id="takeover-signatures-table">
+            <thead>
+              <tr>
+                <th>الخدمة السحابية</th>
+                <th>نوع السجل (Type)</th>
+                <th>البصمة / نص الخطأ (Signature)</th>
+                <th>حالة السيطرة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GitHub Pages</td>
+                <td>CNAME</td>
+                <td><code>There is not a GitHub Pages site here</code></td>
+                <td><span style="color: #00ff66; font-weight: 700;">متاح أمنياً (Yes)</span></td>
+              </tr>
+              <tr>
+                <td>AWS S3 Buckets</td>
+                <td>CNAME / Alias</td>
+                <td><code>The specified bucket does not exist</code></td>
+                <td><span style="color: #00ff66; font-weight: 700;">متاح أمنياً (Yes)</span></td>
+              </tr>
+              <tr>
+                <td>Heroku Apps</td>
+                <td>CNAME</td>
+                <td><code>There is no app configured at this address</code></td>
+                <td><span style="color: #00ff66; font-weight: 700;">متاح أمنياً (Yes)</span></td>
+              </tr>
+              <tr>
+                <td>Shopify Store</td>
+                <td>CNAME</td>
+                <td><code>Sorry, this shop is currently unavailable</code></td>
+                <td><span style="color: #00ff66; font-weight: 700;">متاح أمنياً (Yes)</span></td>
+              </tr>
+              <tr>
+                <td>Zendesk Support</td>
+                <td>CNAME</td>
+                <td><code>Help Center Closed / Page not found</code></td>
+                <td><span style="color: #00ff66; font-weight: 700;">متاح أمنياً (Yes)</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-sec-title">ج. الفحص التلقائي والأمن</h3>
+          <p>يتم الفحص التلقائي بالاستعانة بأداة `subjack` وقائمة البصمات المحدثة:</p>
           <div class="code-box">
             <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre id="cmd-masscan"># تحويل أسماء النطاقات إلى IPs
-cat subs.txt | dnsx -a -resp-only -o ips.txt
-
-# فحص المنافذ الـ 65535 كاملة بمعدل 2000 حزمة في الثانية
-masscan -iL ips.txt -p1-65535 --rate 2000 -oG masscan_results.txt</pre>
+            <pre>subjack -w active_subs.txt -t 80 -o takeovers.txt -ssl -c fingerprints.json</pre>
+          </div>
+          <div class="key-point">
+            <strong>قاعدة الأخلاقيات (Proof of Concept):</strong> عند تأكيد الثغرة والسيطرة على النطاق، لا تقم برفع أي محتوى خبيث أو سرقة بيانات. فقط ضع ملف HTML بسيطاً يحمل رسالة تفيد بوجود الثغرة مع شعار موقعك كدليل أمني لتقديمه للشركة.
           </div>
         </section>
-
-        <!-- Directories -->
-        <section id="directories" class="content-sec">
-          <h2 class="sec-title">8. فحص المسارات واسترجاع ملفات Git (Directory Fuzzing)</h2>
-          <p>العديد من المطورين يتركون ملفات نسخ احتياطية أو مجلدات تطوير داخل السيرفر العام دون قيود صلاحية.</p>
-          
-          <h3 class="sub-sec-title">أ. فحص المسارات باستخدام Ffuf</h3>
+ص المسارات باستخدام Ffuf</h3>
           <p>تخمين مجلدات الموقع مع تحديد الامتدادات الحساسة وعزل الاستجابات الكاذبة:</p>
           <div class="code-box">
             <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
@@ -1444,11 +1536,59 @@ http://spoof.127.0.0.1.nip.io</pre>
       });
     }
     
+
+    function runTakeoverSimulation() {
+      const statusNode = document.getElementById('takeover-status-node');
+      const statusIcon = document.getElementById('takeover-status-icon');
+      const statusTitle = document.getElementById('takeover-status-title');
+      const statusDesc = document.getElementById('takeover-status-desc');
+      const browserContent = document.getElementById('virtual-browser-content');
+      const btn = document.getElementById('btn-simulate-takeover');
+
+      // Update Node status
+      statusNode.style.background = 'rgba(0, 255, 102, 0.15)';
+      statusNode.style.borderColor = '#00ff66';
+      statusIcon.innerText = '🛡️';
+      statusTitle.innerText = 'تمت السيطرة بنجاح';
+      statusTitle.style.color = '#00ff66';
+      statusDesc.innerText = 'Controlled by Researcher';
+      statusDesc.style.color = '#00ff66';
+
+      // Update Virtual Browser Frame
+      browserContent.style.background = 'rgba(0, 255, 102, 0.03)';
+      browserContent.innerHTML = `
+        <h1 style="color: #00ff66; font-size: 1.8rem; margin: 0 0 10px 0; font-weight:900; text-shadow:0 0 15px rgba(0,255,102,0.4);">Hijacked Successfully</h1>
+        <p style="color: #e2e8f0; font-size: 0.95rem; margin: 0 0 15px 0;">This subdomain is currently pointing to a resource controlled by <strong>Security Researcher</strong>.</p>
+        <div style="border:1px dashed #00ff66; padding: 8px 16px; border-radius: 4px; display:inline-block; font-family:monospace; color:#00ff66; font-size:0.8rem; background:rgba(0,255,102,0.05);">
+          PoC Verified: CNAME target hijacked
+        </div>
+      `;
+
+      // Disable button
+      btn.innerText = '✓ تمت المحاكاة بنجاح';
+      btn.style.background = 'linear-gradient(135deg, #00ff66 0%, #00e5ff 100%)';
+      btn.disabled = true;
+    }
+
+    function filterTakeoverTable() {
+      const q = document.getElementById('takeover-search-input').value.toLowerCase().trim();
+      const rows = document.querySelectorAll('#takeover-signatures-table tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        if (text.includes(q)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
     // Initial call to populate values
     window.onload = function() {
       updateCommands();
       loadChecklist();
     };
+
   </script>
 
 
