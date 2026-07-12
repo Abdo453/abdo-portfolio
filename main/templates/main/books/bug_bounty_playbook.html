@@ -1,0 +1,479 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Bounty Playbook — HunterOS Book Guide</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;900&family=Noto+Kufi+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../css/style.css?v=4" />
+  
+  <style>
+    body {
+      font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+      background-color: #030308;
+      color: #e2e8f0;
+      line-height: 1.8;
+      padding-bottom: 60px;
+    }
+    .book-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .back-btn-wrap {
+      margin-bottom: 25px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: rgba(0, 229, 255, 0.02);
+      transition: all 0.2s ease;
+    }
+    .back-link:hover {
+      background: rgba(0, 229, 255, 0.08);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+      transform: translateX(4px);
+    }
+    .book-header {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, rgba(3, 3, 8, 0.5) 100%);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      margin-bottom: 35px;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .book-cover-art {
+      font-size: 6rem;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px dashed var(--accent-cyan);
+      border-radius: 8px;
+      width: 150px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0, 229, 255, 0.1);
+    }
+    .book-meta-info {
+      flex: 1;
+      min-width: 250px;
+    }
+    .book-title {
+      font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 8px 0;
+      text-shadow: 0 0 15px rgba(0, 229, 255, 0.25);
+    }
+    .book-author {
+      font-family: 'Fira Code', monospace;
+      color: var(--accent-cyan);
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+    .book-stats {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+    }
+    .reading-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 30px;
+    }
+    @media (max-width: 900px) {
+      .reading-grid {
+        grid-template-columns: 1fr;
+      }
+      .book-sidebar {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+      }
+    }
+    .book-sidebar {
+      background: rgba(6, 6, 16, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      height: fit-content;
+    }
+    .toc-title {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .toc-item {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+      transition: all 0.2s ease;
+    }
+    .toc-item:hover {
+      color: #fff;
+      padding-right: 4px;
+    }
+    .book-content {
+      background: rgba(6, 6, 16, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 30px;
+    }
+    .content-sec {
+      margin-bottom: 50px;
+      scroll-margin-top: 40px;
+    }
+    .sec-title {
+      color: #fff;
+      font-size: 1.4rem;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .code-box {
+      font-family: 'Fira Code', monospace;
+      background: #06060c;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 12px;
+      border-radius: 6px;
+      color: var(--accent-cyan);
+      font-size: 0.88rem;
+      overflow-x: auto;
+      margin: 15px 0;
+      direction: ltr;
+      text-align: left;
+    }
+    .key-point {
+      border-right: 3px solid var(--accent-cyan);
+      background: rgba(0, 229, 255, 0.03);
+      padding: 12px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+    }
+    .benefit-box {
+      border-right: 3px solid #ffaa00;
+      background: rgba(255, 170, 0, 0.03);
+      padding: 12px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+    }
+    
+    /* Interactive Quiz Accordion Styles */
+    .quiz-container {
+      background: rgba(0, 229, 255, 0.02);
+      border: 1px solid rgba(0, 229, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+    .quiz-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 10px;
+    }
+    .quiz-question-btn {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: right;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 10px 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: inherit;
+    }
+    .quiz-question-btn:focus {
+      outline: none;
+    }
+    .toggle-icon {
+      font-family: 'Fira Code', monospace;
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+    .quiz-answer-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding: 0 10px;
+    }
+    .quiz-answer-panel.open {
+      max-height: 300px;
+      padding: 10px 10px;
+      border-right: 2px solid var(--accent-cyan);
+      margin-top: 5px;
+      margin-bottom: 15px;
+      background: rgba(255,255,255,0.01);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="book-container">
+    
+    <!-- Back Button -->
+    <div class="back-btn-wrap">
+      <a href="../index.html#pane-books" class="back-link">
+        <span>&larr;</span>
+        <span>العودة للمكتبة الأمنية</span>
+      </a>
+    </div>
+
+    <!-- Header Block -->
+    <header class="book-header">
+      <div class="book-cover-art">
+        <span>📘</span>
+      </div>
+      <div class="book-meta-info">
+        <h1 class="book-title">The Bug Bounty Playbook</h1>
+        <div class="book-author">By Alex Thomas (Ghostlulz)</div>
+        <div class="book-stats">
+          <span class="stat-badge" style="color: var(--accent-cyan);">الصعوبة: متوسط إلى متقدم</span>
+          <span class="stat-badge">مدة القراءة: 3 ساعات</span>
+          <span class="stat-badge">التركيز الأساسي: الاستطلاع والاستغلال العملي</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Grid -->
+    <div class="reading-grid">
+      
+      <!-- Right Sidebar (TOC) -->
+      <aside class="book-sidebar">
+        <div class="toc-title">فهرس الدليل الدراسي</div>
+        <nav>
+          <a href="#intro" class="toc-item">1. مقدمة وهيكل الكتاب</a>
+          <a href="#pregame" class="toc-item">2. مرحلة التجهيز (Pre-Game)</a>
+          <a href="#recon" class="toc-item">3. استراتيجية الاستطلاع الذكي (Recon)</a>
+          <a href="#takeover" class="toc-item">4. صيد الأهداف السهلة (Easy Wins)</a>
+          <a href="#owasp" class="toc-item">5. استغلال ثغرات الويب الشهيرة (OWASP)</a>
+          <a href="#advanced" class="toc-item">6. الثغرات المتقدمة وإدارة الـ API</a>
+          <a href="#quizzes" class="toc-item">7. أسئلة اختبار الفهم التفاعلية</a>
+        </nav>
+      </aside>
+
+      <!-- Left Main Content -->
+      <main class="book-content">
+
+        <!-- Intro -->
+        <section id="intro" class="content-sec">
+          <h2 class="sec-title">1. مقدمة وهيكل الكتاب</h2>
+          <p>كتاب <strong>Bug Bounty Playbook</strong> يمثل دليلاً انتقالياً رائعاً لمن يمتلك أساسيات الشبكات والويب ويريد البدء الفعلي في كسب مكافآت برامج Bug Bounty. يتميز هذا الكتاب بتركيزه التقني والتطبيقي المباشر بعيداً عن التنظير البحت، حيث يركز الكاتب <strong>Alex Thomas (Ghostlulz)</strong> على بناء خطة لعب منظمة مقسمة إلى ثلاث مراحل أساسية:</p>
+          <ol>
+            <li><strong>مرحلة التجهيز (Pre-Game):</strong> إعداد الأدوات والبيئة الخاصة بك.</li>
+            <li><strong>مرحلة جمع المعلومات (Reconnaissance):</strong> رسم الخريطة الكاملة للهدف.</li>
+            <li><strong>مرحلة استكشاف الثغرات واستغلالها (Exploitation):</strong> الهجوم الحقيقي للوصول للثغرة وإثبات الأثر.</li>
+          </ol>
+          <div class="benefit-box">
+            <strong>القيمة الجوهرية للكتاب:</strong>
+            يساعدك الكتاب على تجنب العشوائية في الفحص والتنقل بين الأنظمة، ويعطيك "كتيب إرشادات" واضحاً للتحقق من ثغرات محددة بناءً على نوع النظام والتقنية المكتشفة.
+          </div>
+        </section>
+
+        <!-- Pre-Game -->
+        <section id="pregame" class="content-sec">
+          <h2 class="sec-title">2. مرحلة التجهيز (Pre-Game)</h2>
+          <p>يركز الكاتب على أن الفشل في إعداد بيئتك بشكل احترافي سيتسبب في ضياع الكثير من الثغرات. يوصي الكتاب بالآتي:</p>
+          <ul>
+            <li><strong>إعداد سيرفر VPS خاص بك:</strong> لتشغيل سكريبتات الفحص والاستطلاع بشكل دائم (24/7) دون الاعتماد على موارد جهازك الشخصي وسرعة الإنترنت لديك.</li>
+            <li><strong>إعداد نطاق شخصي (Custom Domain):</strong> ضروري لتلقي اتصالات الـ Out-Of-Band (مثل تفاعلات ثغرات Blind XSS أو SSRF) باستخدام أدوات مثل Interactsh أو إعداد خادم DNS خاص بك.</li>
+            <li><strong>ترتيب وتنظيم البيانات:</strong> تنظيم المخرجات في مجلدات مقسمة لكل هدف، وتوثيق جميع النطاقات الفرعية المكتشفة لمتابعة الفحص لاحقاً.</li>
+          </ul>
+          <div class="key-point">
+            <strong>نصيحة الكاتب:</strong> استخدم خوادم VPS رخيصة (مثل DigitalOcean أو Linode) وقم بتنصيب أدوات الاستطلاع الأساسية بها مع عمل حماية قوية للسيرفر عبر SSH keys.
+          </div>
+        </section>
+
+        <!-- Recon -->
+        <section id="recon" class="content-sec">
+          <h2 class="sec-title">3. استراتيجية الاستطلاع الذكي (Recon)</h2>
+          <p>يشرح الكتاب منهجية صارمة لعملية جمع المعلومات مقسمة إلى مرحلتين أساسيتين:</p>
+          
+          <p><strong>أولاً: جمع النطاقات الفرعية (Subdomain Enumeration):</strong></p>
+          <p>الجمع يعتمد على الدمج بين الاستطلاع السلبي (Passive Recon) باستخدام قواعد البيانات السحابية، والاستطلاع النشط (Active Recon) عبر تخمين الأسماء:</p>
+          <ul>
+            <li>الاستطلاع السلبي: استخدام أدوات مثل <code>amass</code> و <code>subfinder</code> و <code>assetfinder</code> لجمع النطاقات الفرعية المؤرشفة مسبقاً.</li>
+            <li>الاستطلاع النشط: فحص تخميني عبر قواميس كلمات ضخمة باستخدام أداة دمج ذكية وسريعة مثل <code>shuffledns</code> أو <code>gobuster</code>.</li>
+          </ul>
+
+          <p><strong>ثانياً: التحقق وفحص المنافذ والخدمات (Port Scanning & Fingerprinting):</strong></p>
+          <p>بمجرد جمع النطاقات الفرعية، يجب التحقق من النطاقات التي تعمل بالفعل وتستجيب لطلبات HTTP/HTTPS باستخدام أداة مثل <code>httpx</code>، ثم فحص المنافذ المفتوحة للخدمات غير المرتبطة بالويب باستخدام Nmap:</p>
+          <div class="code-box">
+# فحص سريع للمنافذ المفتوحة
+nmap -sV -sC -p- -T4 target-subdomain.com
+          </div>
+        </section>
+
+        <!-- Takeover -->
+        <section id="takeover" class="content-sec">
+          <h2 class="sec-title">4. صيد الأهداف السهلة (Easy Wins)</h2>
+          <p>يركز هذا القسم على الثغرات التي يمكن اكتشافها بسرعة فائقة بمجرد الانتهاء من مرحلة الاستطلاع وقبل الخوض في اختبارات الثغرات المعقدة:</p>
+          
+          <p><strong>1. ثغرات السيطرة على النطاقات الفرعية (Subdomain Takeover):</strong></p>
+          <p>تحدث عندما يشير سجل الـ DNS (سواء سجل CNAME أو A) لنطاق فرعي معين إلى خدمة سحابية خارجية (مثل GitHub Pages، أو AWS S3، أو Heroku)، ولكن هذه الخدمة تم حذفها أو لم يتم إعدادها بشكل صحيح بداخل حساب مالك النطاق. يمكن للمهاجم تسجيل حساب في تلك الخدمة وحجز الاسم لصالحه ليعرض محتوى خبيث تحت اسم النطاق الأصلي للشركة!</p>
+          
+          <div class="key-point">
+            <strong>كيف تكتشفها؟</strong> ابحث عن الأخطاء الشهيرة مثل <code>"NoSuchBucket"</code> (في أمازون) أو <code>"There is no app here at this subdomain"</code> (في هيروكو) أثناء استعراض النطاقات الفرعية عبر متصفحك أو أدوات الفحص التلقائي مثل <code>subjack</code>.
+          </div>
+
+          <p><strong>2. استغلال أنظمة إدارة المحتوى (CMS Exploitation):</strong></p>
+          <p>تطبيقات الويب التي تستخدم أنظمة مشهورة مثل WordPress أو Joomla تمثل هدفاً متكرراً. يوضح الكتاب كيفية فحص المكونات الإضافية (Plugins) والقوالب القديمة والبحث عن ثغرات عامة معروفة لها (1-days) باستخدام أدوات مثل <code>wpscan</code>:</p>
+          <div class="code-box">
+# فحص موقع ووردبريس وكشف الإضافات الضعيفة بشكل كامل
+wpscan --url https://target.com --enumerate vp,vt,u
+          </div>
+        </section>
+
+        <!-- OWASP -->
+        <section id="owasp" class="content-sec">
+          <h2 class="sec-title">5. استغلال ثغرات الويب الشهيرة (OWASP)</h2>
+          <p>يفصل الكتاب طرق البحث والاستغلال اليدوي لأخطر ثغرات تطبيقات الويب:</p>
+          
+          <p><strong>1. ثغرات حقن قواعد البيانات (SQL Injection):</strong></p>
+          <p>يشرح الكتاب كيف يتم فحص المدخلات والـ Parameters للتأكد من تأثرها بالحقن، ويغطي الأنواع المختلفة:</p>
+          <ul>
+            <li><strong>In-band SQLi:</strong> حيث تظهر نتائج الاستعلام مباشرة في محتوى الصفحة.</li>
+            <li><strong>Blind SQLi:</strong> عندما لا تظهر النتائج بالصفحة ولكن يمكن استنتاج البيانات من خلال تغييرات في منطق الصفحة (Boolean-based) أو فترات الانتظار الزمنية للاستجابة (Time-based).</li>
+          </ul>
+          <div class="code-box">
+# مثال لاختبار حقن زمني في قاعدة البيانات
+http://target.com/item.php?id=1' AND (SELECT 502 FROM (SELECT(SLEEP(5)))b)--
+          </div>
+
+          <p><strong>2. ثغرات الملفات والممرات (LFI & Path Traversal):</strong></p>
+          <p>تحدث عندما يسمح التطبيق للمستخدم بإدخال مسار ملف يتم تحميله داخلياً دون تنقية كافية. يوضح الكتاب كيفية قراءة الملفات الحساسة في السيرفر مثل ملف الإعدادات أو ملف المستخدمين:</p>
+          <div class="code-box">
+# قراءة ملف المستخدمين في سيرفرات لينكس
+http://target.com/page.php?file=../../../../etc/passwd
+          </div>
+
+          <p><strong>3. ثغرات حقن النصوص البرمجية عبر المواقع (XSS):</strong></p>
+          <p>يقوم المهاجم بحقن أكواد جافا سكريبت لتنفيذها داخل متصفح زوار الموقع الآخرين. يركز الكتاب على طرق تخطي حمايات المواقع (WAF Bypass) واستهداف الـ DOM XSS بشكل ذكي.</p>
+        </section>
+
+        <!-- Advanced -->
+        <section id="advanced" class="content-sec">
+          <h2 class="sec-title">6. الثغرات المتقدمة وإدارة الـ API</h2>
+          <p>ينتقل الكتاب في الفصول الأخيرة لشرح ثغرات بالغة الأثر الأمني وتعتبر من أكثر الثغرات قيمة مالية في برامج المكافآت حالياً:</p>
+          
+          <p><strong>1. ثغرة تزييف الطلبات من جهة الخادم (SSRF):</strong></p>
+          <p>تحدث عندما يجبر المهاجم خادم الويب على إرسال طلب HTTP إلى خوادم داخلية في شبكة الشركة لا يمكن الوصول إليها من الخارج مباشرة (مثل الوصول لبيانات خوادم إدارة الهوية AWS Metadata بقيمة <code>http://169.254.169.254/latest/meta-data/</code>).</p>
+
+          <p><strong>2. ثغرة حقن كيانات XML الخارجية (XXE):</strong></p>
+          <p>عندما يقبل التطبيق ملفات XML ويقوم بمعالجتها دون تعطيل الكيانات الخارجية، مما يتيح للمهاجم قراءة ملفات السيرفر الداخلية أو إحداث هجمات SSRF.</p>
+
+          <p><strong>3. ثغرات التحكم بالوصول والـ IDOR:</strong></p>
+          <p>تلاعب بالمعرفات الحساسة (مثل معرفات الحسابات والطلبات) للوصول لبيانات مستخدمين آخرين دون قيود أو صلاحيات صحيحة.</p>
+        </section>
+
+        <!-- Quizzes -->
+        <section id="quizzes" class="content-sec">
+          <h2 class="sec-title">7. أسئلة اختبار الفهم التفاعلية</h2>
+          
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 أسئلة مراجعة الكتاب (انقر لعرض الإجابة النموذجية)</div>
+            
+            <!-- Q1 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('qp-1')">
+                <span>1. ما هو الفرق الأساسي بين الاستطلاع السلبي (Passive Recon) والاستطلاع النشط (Active Recon) وفقاً للكتاب؟</span>
+                <span class="toggle-icon" id="icon-qp-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-1">
+                <strong>الإجابة النموذجية:</strong> الاستطلاع السلبي يجمع المعلومات عن الهدف دون التفاعل معه مباشرة (مثال: الاستعلام من سجلات شهادات SSL أو محركات البحث)، بينما الاستطلاع النشط يتضمن إرسال طلبات وحزم مباشرة للهدف (مثال: فحص المنافذ Nmap وتخمين المجلدات Ffuf) مما قد يؤدي لتسجيل عنوان IP الخاص بك في سجلات الهدف.
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('qp-2')">
+                <span>2. كيف تحدث ثغرة الـ Subdomain Takeover وكيف يمكن التحقق منها برمجياً؟</span>
+                <span class="toggle-icon" id="icon-qp-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-2">
+                <strong>الإجابة النموذجية:</strong> تحدث عندما يشير سجل CNAME الخاص بنطاق فرعي لخدمة خارجية تم إلغاؤها أو لم يتم حجزها بالخدمة. يمكن التحقق منها برمجياً باستخدام أدوات مثل `subjack` أو `nuclei` والتي تقارن استجابة الخادم مع بصمات أخطاء الخدمات الشهيرة (مثل رسائل أخطاء GitHub Pages أو AWS).
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswer('qp-3')">
+                <span>3. لماذا تعد ثغرات الـ SSRF ذات خطورة بالغة في بيئات السحابة (Cloud Environments)؟</span>
+                <span class="toggle-icon" id="icon-qp-3">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-3">
+                <strong>الإجابة النموذجية:</strong> لأنها تسمح للمهاجم بالوصول لخدمات البيانات الوصفية للمثيل السحابي (Metadata Services) مثل عنوان `169.254.169.254` في AWS، والتي قد تحتوي على كلمات مرور مؤقتة وصلاحيات ربط واستيقان (IAM credentials) تتيح للمهاجم السيطرة الكاملة على البنية السحابية للشركة.
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- Interactive Quiz Accordion Logic -->
+  <script>
+    function toggleAnswer(ansId) {
+      const panel = document.getElementById('ans-' + ansId);
+      const icon = document.getElementById('icon-' + ansId);
+      
+      if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+        icon.innerText = '[ + ]';
+        icon.style.color = 'var(--accent-cyan)';
+      } else {
+        panel.classList.add('open');
+        icon.innerText = '[ - ]';
+        icon.style.color = 'var(--accent-orange)';
+      }
+    }
+  </script>
+
+</body>
+</html>
