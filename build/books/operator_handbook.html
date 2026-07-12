@@ -885,8 +885,8 @@ aws ec2 describe-instances</pre>
           if (href && href.startsWith('#')) {
             const targetId = href.substring(1);
             showSection(targetId);
-            window.location.hash = targetId;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Use pushState to update the URL hash silently without scrolling
+            history.pushState(null, null, '#' + targetId);
           }
         });
       });

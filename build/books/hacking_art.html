@@ -876,8 +876,8 @@ eip            0x0804845b   0x0804845b &lt;main+27&gt;
           if (href && href.startsWith('#')) {
             const targetId = href.substring(1);
             showSection(targetId);
-            window.location.hash = targetId;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Use pushState to update the URL hash silently without scrolling
+            history.pushState(null, null, '#' + targetId);
           }
         });
       });
