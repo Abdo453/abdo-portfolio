@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bug Bounty Bootcamp — The Ultimate Interactive Study Guide</title>
+  <title>Bug Bounty Bootcamp — The Ultimate Interactive Study Guide (Master Edition)</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -176,7 +176,7 @@
       color: #00ff66;
       padding: 12px 15px;
       overflow-x: auto;
-      max-height: 180px;
+      max-height: 250px;
       direction: ltr;
       text-align: left;
     }
@@ -483,21 +483,21 @@
         <span>📚</span>
       </div>
       <div class="book-meta-info">
-        <h1 class="book-title">Bug Bounty Bootcamp</h1>
-        <div class="book-author">دليل التدريب العملي المنهجي للمبتدئين — لـ Vickie Li</div>
+        <h1 class="book-title">Bug Bounty Bootcamp (Master Edition)</h1>
+        <div class="book-author">الدليل الشامل والأكثر تفصيلاً للتنقيب الفعلي عن الثغرات — لـ Vickie Li</div>
         <div class="book-stats">
-          <span class="stat-badge" style="color: var(--accent-green);">الصعوبة: مبتدئ إلى متوسط</span>
-          <span class="stat-badge">مرجع صيد الثغرات والتنقيب</span>
-          <span class="stat-badge">دليل تفاعلي متطور</span>
+          <span class="stat-badge" style="color: var(--accent-green);">الصعوبة: مبتدئ إلى متقدم</span>
+          <span class="stat-badge">مرجع صيد الثغرات المتكامل</span>
+          <span class="stat-badge">لوحة تفاعلية + محاكي شبكات معزز</span>
         </div>
       </div>
     </header>
 
     <!-- Interactive Planner Dashboard -->
     <div class="dashboard-panel">
-      <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px; font-weight: 800;">🎮 لوحة التخطيط ومولد أوامر الاستطلاع وصيد الثغرات للمبتدئين</h3>
+      <h3 style="color: #fff; margin-top: 0; margin-bottom: 15px; font-weight: 800;">🎮 لوحة التخطيط ومولد أوامر الاستطلاع المتقدم للمحترفين</h3>
       <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;">
-        أدخل بيانات هدفك بالأسفل لتوليد أوامر الفحص والـ Directory Brute-forcing والترويسات تلقائياً:
+        أدخل النطاق المستهدف، واسم أداة الفحص، وقائمة الكلمات لتوليد كافة أوامر الاستطلاع السلبي والنشط وتصفية النتائج تلقائياً:
       </p>
       <div class="dashboard-grid">
         <div class="input-group">
@@ -505,12 +505,12 @@
           <input type="text" id="bc-domain" class="input-field" value="example.com" oninput="updateBcData()">
         </div>
         <div class="input-group">
-          <label class="input-label">أداة الفحص (Scanner Tool):</label>
-          <input type="text" id="bc-tool" class="input-field" value="dirsearch" oninput="updateBcData()">
+          <label class="input-label">أداة الفحص والتخمين (Fuzzing Tool):</label>
+          <input type="text" id="bc-tool" class="input-field" value="ffuf" oninput="updateBcData()">
         </div>
         <div class="input-group">
-          <label class="input-label">الملف المستهدف بقائمة الفحص (Wordlist):</label>
-          <input type="text" id="bc-wordlist" class="input-field" value="common.txt" oninput="updateBcData()">
+          <label class="input-label">قائمة الكلمات المستهدفة (Wordlist Path):</label>
+          <input type="text" id="bc-wordlist" class="input-field" value="/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt" oninput="updateBcData()">
         </div>
       </div>
     </div>
@@ -521,18 +521,20 @@
       <!-- Right Sidebar (TOC with Search) -->
       <aside class="book-sidebar">
         <input type="text" id="sec-search-bc" class="sidebar-search-box" placeholder="ابحث في الموسوعة (أداة، ثغرة، أمر)..." oninput="searchBcSections()">
-        <div class="toc-title">فصول الكتاب والوحدات</div>
+        <div class="toc-title">فصول الكتاب والوحدات بالتفصيل</div>
         <nav id="toc-list-bc">
-          <a href="#bc-intro" class="toc-item">1. مقدمة وعقلية صائد الثغرات</a>
-          <a href="#bc-recon" class="toc-item">2. استكشاف النطاق وجمع المعلومات Recon</a>
-          <a href="#bc-xss" class="toc-item">3. ثغرات XSS وتصنيفاتها للمبتدئين</a>
-          <a href="#bc-idor" class="toc-item">4. ثغرات التحكم بالوصول IDOR بالتفصيل</a>
-          <a href="#bc-csrf" class="toc-item">5. ثغرات CSRF وكشف ضعف التوثيق</a>
-          <a href="#bc-ssrf" class="toc-item">6. ثغرات SSRF وكشف الشبكات الداخلية</a>
-          <a href="#bc-sqli" class="toc-item">7. ثغرات SQL Injection وفهم قواعد البيانات</a>
-          <a href="#bc-reporting" class="toc-item">8. كتابة التقارير وصياغة الأثر الأمني</a>
-          <a href="#bc-cheat" class="toc-item">9. ملخص الأوامر والبايلودز للمبتدئين</a>
-          <a href="#bc-quiz" class="toc-item">10. بنك الأسئلة والاختبارات التفاعلية الـ 10</a>
+          <a href="#bc-intro" class="toc-item">1. مقدمة ومنهجية عمل صائدي الثغرات</a>
+          <a href="#bc-recon-passive" class="toc-item">2. الاستطلاع السلبي وجمع البيانات الحساسة</a>
+          <a href="#bc-recon-active" class="toc-item">3. الاستطلاع النشط وفحص المنافذ والتخمين</a>
+          <a href="#bc-takeover" class="toc-item">4. ثغرات السيطرة على النطاقات الفرعية</a>
+          <a href="#bc-xss-deep" class="toc-item">5. ثغرات XSS وأنواعها وتخطي الفلاتر</a>
+          <a href="#bc-idor-deep" class="toc-item">6. ثغرات التحكم بالوصول IDOR في الـ APIs</a>
+          <a href="#bc-csrf-deep" class="toc-item">7. ثغرات CSRF وتجاوز الـ Anti-CSRF Tokens</a>
+          <a href="#bc-ssrf-deep" class="toc-item">8. ثغرات SSRF واختراق السيرفرات السحابية</a>
+          <a href="#bc-sqli-deep" class="toc-item">9. ثغرات SQLi وتخطي WAF يدوياً</a>
+          <a href="#bc-reporting" class="toc-item">10. كتابة التقارير وحساب الـ CVSS وإثبات الأثر</a>
+          <a href="#bc-cheat" class="toc-item">11. جدول بايلودز الاستغلال وتجاوز الحمايات</a>
+          <a href="#bc-quiz" class="toc-item">12. بنك الأسئلة والاختبارات التفاعلية الـ 10</a>
         </nav>
       </aside>
 
@@ -541,131 +543,199 @@
 
         <!-- Section 1 -->
         <section id="bc-intro" class="content-sec">
-          <h2 class="sec-title">1. مقدمة وعقلية صائد الثغرات (The Bootcamp Mindset)</h2>
-          <p>يشرح هذا الفصل الأول للمبتدئين كيفية الدخول لعالم الـ Bug Bounty. تشمل النقاط الجوهرية:</p>
+          <h2 class="sec-title">1. مقدمة ومنهجية عمل صائدي الثغرات (The Hacker's Lifecycle)</h2>
+          <p>يركز هذا الفصل على الأساسيات والأخلاقيات وقوانين برامج مكافآت الثغرات (Bug Bounty). يوضح بالتفصيل الخطوات التالية:</p>
           <ul>
-            <li><strong>قراءة الـ Policy Scope:</strong> التحقق من الملفات والنطاقات المسموح بفحصها أمنياً.</li>
-            <li><strong>اختيار المنصة المناسبة:</strong> مثل HackerOne و Bugcrowd والبدء ببرامج VDP (غير المدفوعة) لاكتساب الخبرة.</li>
+            <li><strong>قراءة الـ Policy Scope بدقة:</strong> معرفة النطاقات المصرح بفحصها (In-Scope) والمحظورة (Out-of-Scope)، ومعرفة أنواع الهجمات الممنوعة (مثل هجمات حجب الخدمة DoS والهندسة الاجتماعية).</li>
+            <li><strong>فهم الـ Vulnerability Disclosure Policy (VDP):</strong> البرامج التي لا تقدم مكافآت مالية ولكن توفر نقاط تقييم وشهادات تقدير ترفع من شأنك في المنصات كـ HackerOne و Bugcrowd.</li>
           </ul>
         </section>
 
         <!-- Section 2 -->
-        <section id="bc-recon" class="content-sec">
-          <h2 class="sec-title">2. استكشاف النطاق وجمع المعلومات Recon</h2>
-          <p>تعليم المبتدئين كيفية بناء قاعدة بيانات بالنطاقات الفرعية والمسارات المخفية.</p>
-          
-          <h3 class="sub-sec-title">أ. فحص المسارات واستكشاف مجلدات الويب</h3>
-          <p>أوامر تشغيل فحص المسارات تلقائياً بالاعتماد على لوحة التخطيط:</p>
+        <section id="bc-recon-passive" class="content-sec">
+          <h2 class="sec-title">2. الاستطلاع السلبي وجمع البيانات الحساسة (Passive Reconnaissance)</h2>
+          <p>الاستطلاع السلبي يهدف لجمع أكبر قدر من المعلومات دون إرسال أي حزم مباشرة قد تثير شكوك أنظمة حماية الهدف (IDS/WAF).</p>
+          <h3 class="sub-sec-title">أ. الاستعلام عن النطاقات عبر سجلات الشهادات (Certificate Transparency Logs)</h3>
+          <p>البحث السلبي باستخدام أدوات مثل Subfinder وسجلات crt.sh لكشف المواقع الفرعية المخفية:</p>
           <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre id="cmd-bc-recon">dirsearch -u example.com -w common.txt -e php,txt,zip</pre>
+            <button class="copy-btn" onclick="copyCode(this)">نسخ الأمر</button>
+            <pre id="cmd-bc-subfinder">subfinder -d example.com -all -recursive -o subs.txt</pre>
           </div>
-          
-          <div class="terminal-header-bar">
-            <span>💻 محاكي مخرجات فحص المسارات</span>
-            <span style="color: #00ff66;">• Live Simulation</span>
-          </div>
-          <div class="terminal-sim" id="sim-bc-recon">
-[12:45:01] Starting directory scan...
-[12:45:03] 200 OK - example.com/robots.txt (142 bytes)
-[12:45:08] 301 Redirect - example.com/admin -> example.com/admin/
-[12:45:12] 403 Forbidden - example.com/.env
+          <h3 class="sub-sec-title">ب. استخدام محركات البحث الأمني والـ Dorking</h3>
+          <p>أدوات البحث الذكي باستخدام Google Dorks لكشف الملفات الحساسة المفتوحة للعامة:</p>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ البايلود</button>
+            <pre>site:example.com filetype:sql | filetype:env | filetype:log | filetype:bkp</pre>
           </div>
         </section>
 
         <!-- Section 3 -->
-        <section id="bc-xss" class="content-sec">
-          <h2 class="sec-title">3. ثغرات XSS وتصنيفاتها للمبتدئين (Cross-Site Scripting)</h2>
-          <p>شرح مبسط لكيفية حقن كود جافا سكريبت في متصفح الضحية.</p>
-          <h3 class="sub-sec-title">أ. تصنيفات الـ XSS الأساسية</h3>
-          <ul>
-            <li><strong>Stored XSS:</strong> تخزين البايلود في قاعدة بيانات السيرفر ليعود للزوار لاحقاً.</li>
-            <li><strong>Reflected XSS:</strong> إرسال البايلود في الرابط ليعود وينعكس مباشرة في متصفح الضحية.</li>
-          </ul>
+        <section id="bc-recon-active" class="content-sec">
+          <h2 class="sec-title">3. الاستطلاع النشط وفحص المنافذ والتخمين (Active Reconnaissance)</h2>
+          <p>التفاعل المباشر مع خوادم الهدف لتحديد الخدمات النشطة والمسارات المخفية.</p>
+          <h3 class="sub-sec-title">أ. فحص المسارات باستخدام FFUF / Gobuster</h3>
+          <p>أمر تشغيل أداة التخمين الفعالة بناءً على مدخلات لوحة التحكم التفاعلية:</p>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ الأمر المولد</button>
+            <pre id="cmd-bc-active-recon">ffuf -u https://example.com/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -mc 200,301,302,403 -t 50</pre>
+          </div>
+          
+          <div class="terminal-header-bar">
+            <span>💻 محاكي مخرجات أداة التخمين FFUF</span>
+            <span style="color: #00ff66;">• Live Simulation</span>
+          </div>
+          <div class="terminal-sim" id="sim-bc-active">
+:: Progress: [1420/220500] :: Job ADDR: https://example.com/FUZZ :: wordlist size: 220500
+[Status: 200, Size: 1420, Words: 240, Lines: 42, Duration: 45ms]
+  * FUZZ: robots.txt
+
+[Status: 301, Size: 242, Words: 20, Lines: 5, Duration: 52ms]
+  * FUZZ: admin -> redirecting to https://example.com/admin/
+
+[Status: 403, Size: 280, Words: 15, Lines: 4, Duration: 40ms]
+  * FUZZ: .env (Forbidden file detected)
+          </div>
         </section>
 
         <!-- Section 4 -->
-        <section id="bc-idor" class="content-sec">
-          <h2 class="sec-title">4. ثغرات التحكم بالوصول IDOR بالتفصيل</h2>
-          <p>عندما يثق التطبيق بمعرفات الـ ID الممرة من المستخدم دون تدقيق الصلاحيات بالخلفية.</p>
+        <section id="bc-takeover" class="content-sec">
+          <h2 class="sec-title">4. ثغرات السيطرة على النطاقات الفرعية (Subdomain Takeover)</h2>
+          <p>تحدث هذه الثغرة عندما يشير نطاق فرعي للشركة (عبر سجل CNAME) إلى خدمة سحابية خارجية (مثل AWS S3 أو GitHub Pages أو Heroku) تم إلغاء تفعيلها أو حذفها من قبل الشركة ولكن السجل في الـ DNS لا يزال فعالاً.</p>
           <div class="key-point">
-            <strong>قاعدة كشف الـ IDOR للمبتدئين:</strong> ابحث عن الـ parameters التي تحتوي على أرقام أو معرفات مثل <code>?id=123</code> أو <code>/user/105/profile</code> وقم بالتعديل عليها لتشاهد هل يمكنك قراءة بيانات الآخرين.
+            <strong>منهجية الفحص:</strong> ابحث عن الأخطاء الشائعة مثل <code>"There is no app configured at this address"</code> (Heroku) أو <code>"NoSuchBucket"</code> (AWS S3). إذا وجدت هذا الخطأ، يمكنك حجز حساب في الخدمة الخارجية بنفس الاسم لتسيطر على النطاق بالكامل.
           </div>
         </section>
 
         <!-- Section 5 -->
-        <section id="bc-csrf" class="content-sec">
-          <h2 class="sec-title">5. ثغرات CSRF وكشف ضعف التوثيق</h2>
-          <p>إجبار متصفح المستخدم على إجراء طلبات حساسة في المواقع دون علمه.</p>
-          <p>يوضح الكتاب كيفية التحقق من عدم وجود Anti-CSRF Tokens أو ضعف تكوينها لتنفيذ عمليات مثل تغيير كلمة المرور بالنيابة عن الضحية.</p>
+        <section id="bc-xss-deep" class="content-sec">
+          <h2 class="sec-title">5. ثغرات XSS وأنواعها وتخطي الفلاتر (Cross-Site Scripting Bypass)</h2>
+          <p>حقن نصوص برمجية (JavaScript) في صفحة الويب لتنفذ في متصفح الضحية.</p>
+          <h3 class="sub-sec-title">أ. البايلودز المتقدمة لتجاوز فلاتر الحظر (WAF Bypass)</h3>
+          <ul>
+            <li><strong>تخطي فلاتر استبعاد الكلمة المفتاحية <code>&lt;script&gt;</code>:</strong></li>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+              <pre>&lt;svg onload="alert(document.domain)"&gt;</pre>
+            </div>
+            <li><strong>تخطي فلاتر استبعاد الفراغات (Whitespace Bypass):</strong></li>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+              <pre>&lt;img/src=x/onerror=alert(1)&gt;</pre>
+            </div>
+          </ul>
         </section>
 
         <!-- Section 6 -->
-        <section id="bc-ssrf" class="content-sec">
-          <h2 class="sec-title">6. ثغرات SSRF وكشف الشبكات الداخلية</h2>
-          <p>عندما يقوم السيرفر بطلب روابط خارجية بالنيابة عن المستخدم، مما يمكن المهاجم من التسلل واستكشاف سيرفرات السحابة والشبكات الداخلية.</p>
+        <section id="bc-idor-deep" class="content-sec">
+          <h2 class="sec-title">6. ثغرات التحكم بالوصول IDOR في الـ APIs (Insecure Direct Object Reference)</h2>
+          <p>عندما يمرر التطبيق معرفاً (مثل ID المستخدم) في الطلب دون إجراء فحص صلاحيات بالخلفية.</p>
+          <h3 class="sub-sec-title">أ. سيناريوهات استغلال متقدمة</h3>
+          <ul>
+            <li><strong>التحويل من POST إلى PUT/GET:</strong> تعديل نوع الطلب لتجاوز فلاتر الصلاحيات.</li>
+            <li><strong>تخمين معرفات الـ UUID / GUID:</strong> محاولة تسريب المعرفات عبر واجهات البحث العامة أو لوحات الاستعراض العام.</li>
+          </ul>
         </section>
 
         <!-- Section 7 -->
-        <section id="bc-sqli" class="content-sec">
-          <h2 class="sec-title">7. ثغرات SQL Injection وفهم قواعد البيانات</h2>
-          <p>شرح آلية دمج بايلودز قواعد البيانات يدوياً لاستخراج الجداول والأعمدة وتخطي لوحات التحكم.</p>
+        <section id="bc-csrf-deep" class="content-sec">
+          <h2 class="sec-title">7. ثغرات CSRF وتجاوز الـ Anti-CSRF Tokens</h2>
+          <p>إجبار متصفح الضحية على إرسال طلبات تعديل البيانات أوتوماتيكياً دون علمه.</p>
+          <h3 class="sub-sec-title">أ. تجاوز حمايات الـ CSRF Tokens الشائعة</h3>
+          <ol>
+            <li><strong>إزالة الـ Token بالكامل:</strong> بعض التطبيقات تتحقق من صحة الـ token فقط في حال وجوده، وإذا قمت بحذفه من الطلب تماماً يتم تمرير الطلب بنجاح.</li>
+            <li><strong>تغيير نوع الطلب:</strong> تحويل الطلب من POST (حيث يتم التحقق من الـ token) إلى طلب GET لتتخلى المنصة عن التدقيق بالكامل.</li>
+          </ol>
         </section>
 
         <!-- Section 8 -->
-        <section id="bc-reporting" class="content-sec">
-          <h2 class="sec-title">8. كتابة التقارير وصياغة الأثر الأمني</h2>
-          <p>التقرير الاحترافي هو أداة إثبات قيمتك للشركة. يجب تزويد التقرير بخطوات مفصلة وأثر أمني حقيقي لإثبات نجاح الهجمة.</p>
-          
-          <div class="checklist-container">
-            <div class="checklist-title">📋 قائمة مهام صيد ثغرات الويب للمبتدئين</div>
-            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBc(this, 'b1')"> التحقق من شروط نطاق البرنامج والـ Scope</label>
-            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBc(this, 'b2')"> تشغيل فحص الاستطلاع الأولي وبحث المسارات</label>
-            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBc(this, 'b3')"> صياغة تقرير منظم شامل الخطوات عند العثور على أي ثغرة</label>
+        <section id="bc-ssrf-deep" class="content-sec">
+          <h2 class="sec-title">8. ثغرات SSRF واختراق السيرفرات السحابية (Server-Side Request Forgery)</h2>
+          <p>إجبار السيرفر على سحب روابط داخلية أو خارجية بالنيابة عنا.</p>
+          <h3 class="sub-sec-title">أ. تجاوز فلاتر الحظر المحلية (Local IP Filter Bypass)</h3>
+          <p>في حال حظر العنوان <code>127.0.0.1</code>، يمكن استخدام البايلودز التالية لتخطي الحماية:</p>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre>http://[::]/
+http://0.0.0.0/
+http://127.127.127.127/
+http://spoofed.burpcollaborator.net (DNS Rebinding)</pre>
+          </div>
+          <h3 class="sub-sec-title">ب. سحب الـ Metadata لسحابة AWS (AWS Cloud Metadata Extraction)</h3>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre>http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role</pre>
           </div>
         </section>
 
         <!-- Section 9 -->
-        <section id="bc-cheat" class="content-sec">
-          <h2 class="sec-title">9. ملخص الأوامر والبايلودز للمبتدئين (Bootcamp Cheat Sheet)</h2>
-          <p>جدول مرجعي سريع لأهم أدوات وأوامر الاستطلاع وصيد الثغرات للمبتدئين:</p>
+        <section id="bc-sqli-deep" class="content-sec">
+          <h2 class="sec-title">9. ثغرات SQLi وتخطي WAF يدوياً (SQL Injection Manual Bypass)</h2>
+          <p>حقن أوامر الاستعلام بقواعد البيانات لاستخراج المعلومات أو تخطي الحماية.</p>
+          <h3 class="sub-sec-title">أ. تجاوز حظر كلمة OR و AND يدوياً</h3>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre>' || '1'='1
+' && '1'='1
+' UNION/**/SELECT/**/null,username,password/**/FROM/**/users--</pre>
+          </div>
+        </section>
+
+        <!-- Section 10 -->
+        <section id="bc-reporting" class="content-sec">
+          <h2 class="sec-title">10. كتابة التقارير وحساب الـ CVSS وإثبات الأثر (Writing Quality Reports)</h2>
+          <p>أسرار كتابة التقرير الأمني الاحترافي الذي يجبر الشركات على الإشادة بك ورفع قيمة المكافأة (Bounty Boost):</p>
+          <div class="benefit-box">
+            <strong>سر النجاح:</strong> تجنب التقارير النظرية. أرفق دائماً كود إثبات مفهوم تفاعلي (PoC) يوضح تأثير الثغرة الفعلي وحساب قيمة الـ CVSS Score بدقة لإقناع المراجع الأمني بخطورتها.
+          </div>
           
+          <div class="checklist-container">
+            <div class="checklist-title">📋 قائمة مراجعة واختبار ثغرات الويب للمحترفين</div>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBc(this, 'b1')"> التحقق من النطاق وسجلات CNAME للنطاقات الفرعية (Subdomain Takeover)</label>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBc(this, 'b2')"> تشغيل فحص المسارات وتخمين الملفات الحساسة المفتوحة</label>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBc(this, 'b3')"> اختبار معلمات الدخول وتخطي حمايات CSRF و IDOR في الـ APIs</label>
+            <label class="check-item"><input type="checkbox" class="check-box" onchange="saveCheckBc(this, 'b4')"> التحقق من إمكانية تنفيذ SSRF وسحب بيانات السحابة (Metadata)</label>
+          </div>
+        </section>
+
+        <!-- Section 11 -->
+        <section id="bc-cheat" class="content-sec">
+          <h2 class="sec-title">11. جدول بايلودز الاستغلال وتجاوز الحمايات</h2>
           <table class="cheat-sheet-table">
             <thead>
               <tr>
-                <th>الأداة / الثغرة</th>
-                <th>أمر التشغيل أو البايلود</th>
-                <th>الهدف الأساسي</th>
+                <th>الثغرة / الهدف</th>
+                <th>بايلود تجاوز الفلاتر والـ WAF</th>
+                <th>التفسير التقني للاستغلال</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Dirsearch</td>
-                <td id="td-bc-dir"><code>dirsearch -u example.com -w common.txt</code></td>
-                <td>كشف الملفات والمجلدات الحساسة</td>
+                <td>Subdomain Takeover</td>
+                <td>CNAME pointing to dead service</td>
+                <td>حجز الاسم الشاغر في الخدمة الخارجية</td>
               </tr>
               <tr>
-                <td>Subfinder</td>
-                <td id="td-bc-sub"><code>subfinder -d example.com -o subs.txt</code></td>
-                <td>جمع النطاقات الفرعية سلبياً</td>
+                <td>Reflected XSS Bypass</td>
+                <td><code>&lt;body onload=alert(document.domain)&gt;</code></td>
+                <td>تخطي فلاتر استبعاد الـ &lt;script&gt;</td>
               </tr>
               <tr>
-                <td>Reflected XSS</td>
-                <td><code>&lt;script&gt;alert(document.domain)&lt;/script&gt;</code></td>
-                <td>التحقق من حقن جافا سكريبت</td>
+                <td>SSRF Metadata Bypass</td>
+                <td><code>http://2852039166/</code></td>
+                <td>تمثيل الـ IP 169.254.169.254 بالصيغة العشرية Decimal</td>
               </tr>
               <tr>
-                <td>IDOR Check</td>
-                <td><code>?user_id=target_id</code></td>
-                <td>محاولة قراءة بيانات الآخرين</td>
+                <td>SQLi Auth Bypass</td>
+                <td><code>admin'--</code></td>
+                <td>تعليق بقية استعلام التحقق من الهوية بالكامل</td>
               </tr>
             </tbody>
           </table>
         </section>
 
-        <!-- Section 10 -->
+        <!-- Section 12 -->
         <section id="bc-quiz" class="content-sec">
-          <h2 class="sec-title">10. بنك الأسئلة والاختبارات التفاعلية الـ 10</h2>
+          <h2 class="sec-title">12. بنك الأسئلة والاختبارات التفاعلية الـ 10</h2>
           
           <div class="quiz-container">
             <div class="quiz-title">🧪 بنك أسئلة مراجعة كتاب Bug Bounty Bootcamp (انقر لعرض الإجابة النموذجية)</div>
@@ -673,110 +743,110 @@
             <!-- Q1 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-1')">
-                <span>1. ما هو المعنى الفعلي لنطاق الفحص (In-Scope) و (Out-Of-Scope)؟</span>
+                <span>1. كيف يمكن استغلال سجلات CNAME المتروكة (Dangling DNS Records) للسيطرة على نطاق فرعي لشركة كبرى؟</span>
                 <span class="toggle-icon" id="icon-qb-1">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-1">
-                <strong>الإجابة النموذجية:</strong> الـ In-Scope هو النطاق المحدد من قبل الشركة والذي يسمح لك بفحصه وتقديم تقارير عنه للحصول على مكافآت. بينما الـ Out-Of-Scope هو النطاقات والخدمات التي يحظر فحصها تماماً، وقد يؤدي فحصها للمساءلة القانونية أو الحظر من المنصة.
+                <strong>الإجابة النموذجية:</strong> يحدث ذلك عندما تلغي الشركة اشتراكها في خدمة سحابية خارجية (مثل Zendesk أو Shopify) ولكنها تنسى إزالة سجل الـ CNAME التابع للخدمة من إعدادات الـ DNS الخاصة بنطاقها. يمكن للمهاجم الذهاب للخدمة وإنشاء حساب وحجز النطاق الفرعي الشاغر ليتحكم بمحتواه بالكامل ويرسل شهادات SSL صحيحة.
               </div>
             </div>
 
             <!-- Q2 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-2')">
-                <span>2. كيف تساعد أداة Dirsearch في كشف الملفات المنسية والمرفوعة بالخطأ؟</span>
+                <span>2. كيف يتخطى المهاجم فلاتر منع الـ XSS التي تقوم بتنظيف (sanitize) المدخلات عن طريق استبدال الكلمات الأساسية مثل &lt;script&gt; بفراغ؟</span>
                 <span class="toggle-icon" id="icon-qb-2">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-2">
-                <strong>الإجابة النموذجية:</strong> تقوم بإجراء طلبات تخمين سريعة على السيرفر مستعينة بقاموس كلمات (Wordlist) للبحث عن ملفات نسخ احتياطية مثل `.zip` أو ملفات التكوين الحساسة مثل `.env` أو مسارات التطوير المهجورة التي نسيها المطورون.
+                <strong>الإجابة النموذجية:</strong> يتم ذلك من خلال كتابة بايلود متداخل يعيد بناء نفسه بعد التطهير (Nested Tags)، مثل حقن البايلود `<scr<script>ipt>alert(1)</script>`، حيث تقوم الفلاتر بحذف كلمة `script` الوسطى، مما يؤدي لدمج الأحرف المتبقية تلقائياً لتصبح `<script>alert(1)` وتعمل بنجاح.
               </div>
             </div>
 
             <!-- Q3 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-3')">
-                <span>3. ما هو الـ Open Redirect وكيف يمكن صياغة بايلود بسيط لاختباره؟</span>
+                <span>3. كيف تؤثر ثغرات الـ DOM-based XSS على أمان المستخدم ولماذا لا تستطيع الفلاتر العادية بالسيرفر كشفها؟</span>
                 <span class="toggle-icon" id="icon-qb-3">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-3">
-                <strong>الإجابة النموذجية:</strong> هو ثغرة تسمح للمهاجم بالتلاعب بمتغير التحويل في الرابط (مثل `?next=http://malicious.com`) ليقوم الموقع الرسمي بتحويل الزائر تلقائياً لموقع خارجي خبيث، مما يسهل عمليات الهندسة الاجتماعية والتصيد.
+                <strong>الإجابة النموذجية:</strong> تحدث ثغرات DOM XSS بالكامل في متصفح الضحية (Client-Side) عندما يقرأ كود جافا سكريبت مدخلات من مصدر غير آمن (مثل `location.hash`) ويمررها مباشرة إلى بيئة تنفيذ (Sink) مثل `innerHTML` دون تدقيق. السيرفر لا يصله البايلود لأن ما بعد علامة `#` في الرابط لا يرسل للخادم بالطلبات، مما يجعل فلاتر السيرفر عاجزة تماماً عن رصدها.
               </div>
             </div>
 
             <!-- Q4 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-4')">
-                <span>4. كيف تكتشف ثغرات الـ IDOR في واجهات الـ REST APIs للمبتدئين؟</span>
+                <span>4. كيف يمكن للمهاجم تخطي حماية الـ CSRF عندما يتحقق الموقع فقط من ترويسة Referer؟</span>
                 <span class="toggle-icon" id="icon-qb-4">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-4">
-                <strong>الإجابة النموذجية:</strong> ابحث عن عناوين الطلبات التي تحتوي على معرفات المستخدمين (مثل `/api/v1/profile/1001`) وقم بتغيير الرقم لمعرف مستخدم آخر مع استخدام حساب مستخدم عادي، للتحقق هل يعود السيرفر ببيانات الضحية أم يمنع الدخول بـ 403 Forbidden.
+                <strong>الإجابة النموذجية:</strong> يمكن للمهاجم تخطي حماية الـ Referer عن طريق إجبار متصفح الضحية على إخفاء ترويسة الـ Referer بالكامل عبر إضافة وسم الـ HTML التالي في صفحة الاستغلال الخبيثة `<meta name="referrer" content="no-referrer">`. بعض المواقع الضعيفة إذا وجدت الترويسة غائبة تتجاوز الفحص وتمرر الطلب بنجاح.
               </div>
             </div>
 
             <!-- Q5 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-5')">
-                <span>5. ما هو هجوم الـ CSRF وكيف يعمل استغلاله لتنفيذ عمليات بالنيابة عن الضحية؟</span>
+                <span>5. ما هو هجوم الـ DNS Rebinding في ثغرات الـ SSRF وكيف يتجاوز الحظر المفروض على عناوين الشبكة المحلية؟</span>
                 <span class="toggle-icon" id="icon-qb-5">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-5">
-                <strong>الإجابة النموذجية:</strong> هو هجوم يستغل ثقة الموقع بمتصفح المستخدم الجاري (عن طريق كوكيز الجلسة المخزنة). يقوم المهاجم بإنشاء صفحة ويب خبيثة ترسل طلباً تلقائياً للموقع المستهدف (مثل تغيير البريد الإلكتروني)، وبمجرد زيارة الضحية للصفحة يتم تنفيذ الطلب تلقائياً لأن المتصفح يرسل كوكيز الجلسة تلقائياً.
+                <strong>الإجابة النموذجية:</strong> يقوم المهاجم بإعداد خادم DNS خاص به يتحكم بردوده. عندما يقوم السيرفر بحل العنوان للتحقق من خلوه من القائمة السوداء، يعيد خادم المهاجم عنوان IP عام آمن (مثل `8.8.8.8`). ولكن عندما يقوم السيرفر بطلب المحتوى الفعلي بعد أجزاء من الثانية، يعيد خادم المهاجم عنوان IP محلي (مثل `127.0.0.1`) مستغلاً انتهاء قيمة الـ TTL القصيرة، مما يسمح بتجاوز الفلتر الأولي بنجاح.
               </div>
             </div>
 
             <!-- Q6 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-6')">
-                <span>6. كيف يمكن استخدام ثغرات الـ SSRF للوصول للخدمات الداخلية مثل Redis أو Memcached؟</span>
+                <span>6. كيف يمكن استغلال الـ IDOR لتغيير بيانات حسابات المستخدمين في بيئة تعتمد على الـ GraphQL؟</span>
                 <span class="toggle-icon" id="icon-qb-6">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-6">
-                <strong>الإجابة النموذجية:</strong> عندما نقوم بحقن روابط للخدمات الداخلية (مثل `http://localhost:6379`) عبر السيرفر المستهدف بالـ SSRF. في حال عدم وجود حماية داخلية، سيتصل السيرفر بـ Redis داخلياً، ويمكننا استخدام بروتوكولات أخرى مثل `gopher://` لتمرير أوامر معقدة وقراءة البيانات الداخلية.
+                <strong>الإجابة النموذجية:</strong> يتم ذلك من خلال التعديل على معاملات الاستعلام (Variables) أو الـ Mutations بداخل طلب الـ GraphQL الموجه للسيرفر، مثل تغيير المتغير `userId` الممرر في متغيرات الـ query إلى معرف مستخدم الضحية للتأكد من قيام السيرفر بتعديل حساب الضحية دون مراجعة الصلاحيات الأمنية.
               </div>
             </div>
 
             <!-- Q7 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-7')">
-                <span>7. ما هو فحص الـ Port Scanning ولماذا يجب تجنب الفحص العدواني (-T5)؟</span>
+                <span>7. لماذا يعتبر تمثيل عناوين الـ IP بصيغة الأرقام العشرية (Decimal IPs) بايلوداً فعالاً لتجاوز فلاتر الـ SSRF؟</span>
                 <span class="toggle-icon" id="icon-qb-7">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-7">
-                <strong>الإجابة النموذجية:</strong> هو فحص المنافذ المفتوحة لمعرفة الخدمات التي تعمل على السيرفر. يجب تجنب الخيار العدواني (-T5) لأنه يرسل حزم فحص بمعدل ضخم جداً وسريع، مما يؤدي لـتنبيه أنظمة الدفاع (IDS/IPS) وحظر الآي بي الخاص بك مباشرة، فضلاً عن احتمالية التسبب في ضغط زائد على السيرفر.
+                <strong>الإجابة النموذجية:</strong> لأن الفلاتر تعتمد عادة على مطابقة النصوص (Regex) للتحقق من الكلمات المحظورة مثل `127.0.0.1` أو `localhost`. تمثيل العنوان بالصيغة العشرية (مثلاً `http://2130706433/` للـ IP 127.0.0.1) يتجاوز فلترة النصوص ولكن متصفح ومكتبات السيرفر تقوم بتحليله وحلّه للـ IP المحلي الصحيح والاتصال به.
               </div>
             </div>
 
             <!-- Q8 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-8')">
-                <span>8. كيف يعمل هجوم الـ XML External Entity (XXE) وما هو الكيان الخارجي؟</span>
+                <span>8. كيف يعمل استغلال ثغرة الـ SQL Injection الأعمى (Blind SQLi) المبني على عامل الوقت (Time-Based)؟</span>
                 <span class="toggle-icon" id="icon-qb-8">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-8">
-                <strong>الإجابة النموذجية:</strong> الكيان الخارجي هو وسيلة في ملف XML لاستدعاء محتوى خارجي أو محلي (مثل ملف). يحدث الهجوم عندما يقوم محلل XML غير الآمن بالسيرفر بمعالجة الطلب وقراءة الملف المحلي (مثل `file:///etc/passwd`) المشر إليه وعرض محتوياته في الاستجابة للمستخدم.
+                <strong>الإجابة النموذجية:</strong> في حال عدم ظهور أخطاء أو نتائج مباشرة بالصفحة، نقوم بحقن استعلام يطلب من قاعدة البيانات الانتظار لفترة زمنية محددة (مثل `pg_sleep(5)` في Postgres) إذا تحقق شرط معين (مثلاً أول حرف من كلمة المرور هو 'a'). إذا تأخر استجابة السيرفر لـ 5 ثوانٍ، نتأكد من صحة الحرف ونكرر العملية لاستخراج البيانات بالكامل.
               </div>
             </div>
 
             <!-- Q9 -->
             <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-9')">
-                <span>9. كيف يساعدك فهم الـ CVSS Score في كتابة تقاريرك؟</span>
+                <span>9. ما هو الفرق الجوهري بين ثغرات الـ Blind SSRF والـ Full SSRF؟</span>
                 <span class="toggle-icon" id="icon-qb-9">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-9">
-                <strong>الإجابة النموذجية:</strong> الـ CVSS (Common Vulnerability Scoring System) هو مقياس دولي لحساب مدى خطورة الثغرة (من 0 إلى 10). فهمه يساعدك في صياغة خطورة ثغرتك في التقرير بشكل علمي ومقنع، لتقوم الشركة بحساب المكافأة العادلة لك بناءً على نقاط الـ CVSS المكتسبة.
+                <strong>الإجابة النموذجية:</strong> في الـ Full SSRF، يقوم السيرفر بعرض استجابة ومحتويات الصفحة المطلوبة داخل الموقع، مما يسهل قراءة ملفات السيرفر والـ Cloud Metadata مباشرة. بينما في الـ Blind SSRF، لا يعرض السيرفر أي استجابة بالصفحة، ونكتشف وجود الثغرة فقط من خلال مراقبة اتصالات السيرفر الخارجية بخادم الاستماع الخاص بنا (DNS/HTTP interact).
               </div>
             </div>
 
             <!-- Q10 -->
             <div class="quiz-item">
               <button class="quiz-question-btn" onclick="toggleAnswerBc('qb-10')">
-                <span>10. ما هي الاستراتيجية الصحيحة لتجنب الـ Duplicate Reports (التقارير المكررة)؟</span>
+                <span>10. كيف يؤدي ضعف تهيئة الـ CORS (Cross-Origin Resource Sharing) لسرقة بيانات المستخدمين الحساسة؟</span>
                 <span class="toggle-icon" id="icon-qb-10">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-10">
-                <strong>الإجابة النموذجية:</strong> الاستراتيجية الصحيحة هي التركيز على الأصول الفرعية والمهملة (Subdomains/APIs) التي لا يفحصها معظم الباحثين، وتجنب فحص لوحة تسجيل الدخول الرئيسية أو المسارات المشهورة التي تم فحصها آلاف المرات من قبلك، مع الحرص على متابعة تحديثات بروتوكول البرنامج فور صدوره.
+                <strong>الإجابة النموذجية:</strong> يحدث ذلك عندما يرجع السيرفر ترويسة الاستجابة بالتكوين الضعيف `Access-Control-Allow-Origin: *` أو يثق تلقائياً بالمرسل عبر عكس قيمة ترويسة الـ Origin المرسلة بالطلب وتفعيل `Access-Control-Allow-Credentials: true`. هذا يسمح لأي موقع ويب خبيث يزوره المستخدم بقراءة طلبات وجلب بيانات المستخدم الشخصية من الموقع المصاب عبر طلبات AJAX بسيطة.
               </div>
             </div>
 
@@ -793,18 +863,15 @@
   <script>
     function updateBcData() {
       const domain = document.getElementById('bc-domain').value.trim() || 'example.com';
-      const tool = document.getElementById('bc-tool').value.trim() || 'dirsearch';
-      const wordlist = document.getElementById('bc-wordlist').value.trim() || 'common.txt';
+      const tool = document.getElementById('bc-tool').value.trim() || 'ffuf';
+      const wordlist = document.getElementById('bc-wordlist').value.trim() || '/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt';
       
       // Update commands
-      document.getElementById('cmd-bc-recon').innerHTML = `${tool} -u ${domain} -w ${wordlist} -e php,txt,zip`;
-      
-      // Update table cells
-      document.getElementById('td-bc-dir').innerHTML = `<code>${tool} -u ${domain} -w ${wordlist}</code>`;
-      document.getElementById('td-bc-sub').innerHTML = `<code>subfinder -d ${domain} -o subs.txt</code>`;
+      document.getElementById('cmd-bc-subfinder').innerHTML = `subfinder -d ${domain} -all -recursive -o subs.txt`;
+      document.getElementById('cmd-bc-active-recon').innerHTML = `${tool} -u https://${domain}/FUZZ -w ${wordlist} -mc 200,301,302,403 -t 50`;
 
       // Update simulator outputs
-      document.getElementById('sim-bc-recon').innerHTML = `[12:45:01] Starting directory scan using ${tool}...\n[12:45:03] 200 OK - ${domain}/robots.txt (142 bytes)\n[12:45:08] 301 Redirect - ${domain}/admin -> ${domain}/admin/\n[12:45:12] 403 Forbidden - ${domain}/.env (using ${wordlist})`;
+      document.getElementById('sim-bc-active').innerHTML = `:: Progress: [1420/220500] :: Job ADDR: https://${domain}/FUZZ :: wordlist size: 220500\n[Status: 200, Size: 1420, Words: 240, Lines: 42, Duration: 45ms]\n  * FUZZ: robots.txt\n\n[Status: 301, Size: 242, Words: 20, Lines: 5, Duration: 52ms]\n  * FUZZ: admin -> redirecting to https://${domain}/admin/\n\n[Status: 403, Size: 280, Words: 15, Lines: 4, Duration: 40ms]\n  * FUZZ: .env (Forbidden file detected using ${wordlist})`;
     }
 
     function copyCode(btn) {
@@ -834,6 +901,8 @@
         icon.style.color = 'var(--accent-green)';
       } else {
         panel.classList.add('open');
+        icon.parent = panel;
+        panel.style.maxHeight = panel.scrollHeight + "px";
         icon.innerText = '[ - ]';
         icon.style.color = 'var(--accent-cyan)';
       }
