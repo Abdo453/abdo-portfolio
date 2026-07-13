@@ -313,7 +313,7 @@
     // Auto-close sidebar on menu link click on mobile
     document.querySelectorAll('.toc-item').forEach(item => {
       item.addEventListener('click', () => {
-        if (window.innerWidth <= 992) {
+        if (window.innerWidth <= 1000) {
           const sidebar = document.querySelector('.book-sidebar');
           if (sidebar) sidebar.style.left = '-300px';
           btn.innerHTML = '☰';
