@@ -272,9 +272,45 @@
         <div class="workspace-pane active" id="pane-dashboard">
           
           <!-- Obsidian Header -->
-          <div class="dashboard-hero">
-            <h2 class="hero-main-title">🎯 HunterOS</h2>
-            <p class="hero-tagline">Learn • Hunt • Practice</p>
+          <div class="dashboard-hero" style="position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(6, 6, 16, 0.9), rgba(15, 15, 35, 0.8)); border: 1px solid rgba(0, 229, 255, 0.15); border-radius: 12px; padding: 30px; margin-bottom: 25px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.05);">
+            <div style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+              <div>
+                <h1 class="hero-main-title" style="margin: 0; font-size: 2.2rem; font-weight: 900; background: linear-gradient(to right, #ffffff, var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(0,229,255,0.3); font-family: 'Outfit', sans-serif;">🎯 HunterOS Cyber Academy</h1>
+                <p class="hero-tagline" style="margin: 8px 0 20px; color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6;">
+                  مرحباً بك في المنصة التفاعلية المتقدمة لدراسة ثغرات الويب واختبار الاختراق العملي. تصفح الكتب، نفذ الاختراق في اللابات، واجمع نقاط الخبرة XP لرفع تصنيفك.
+                </p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                  <button class="hunt-btn primary" onclick="switchTab('academy')" style="font-size: 0.95rem; padding: 12px 24px; border-radius: 6px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <span>🟢 ابدأ التعلم الآن</span>
+                  </button>
+                  <button class="hunt-btn" onclick="switchTab('books')" style="font-size: 0.95rem; padding: 12px 24px; border-radius: 6px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                    <span>📚 تصفح الموسوعة</span>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Quick Stats Grid in Hero -->
+              <div class="hero-stats-panel" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; min-width: 250px;">
+                <div style="text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-cyan); font-family: monospace;">10</div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: bold;">📚 كتب مرجعية</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-green); font-family: monospace;">10</div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: bold;">🧪 لابات تفاعلية</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: bold; color: #ffaa00; font-family: monospace;">10</div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: bold;">📝 تقارير ثغرات</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="font-size: 1.5rem; font-weight: bold; color: #e500ff; font-family: monospace;">100+</div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: bold;">🎮 سيناريوهات تفاعلية</div>
+                </div>
+              </div>
+            </div>
+            <!-- Glow indicator line -->
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(to right, transparent, var(--accent-cyan), transparent);"></div>
           </div>
 
           <!-- Search Bar Widget -->
@@ -343,22 +379,39 @@
                 </div>
               </div>
 
-              <!-- Today's Progress Card -->
-              <div class="cyber-card progress-card">
-                <div class="card-header"><h3>📈 Today's Learning Progress</h3></div>
-                <div class="progress-card-body">
-                  <div class="progress-details-row">
-                    <span class="progress-label">Academy Completion:</span>
-                    <span class="progress-val text-neon-cyan" id="dashProgressPct">0%</span>
+              <!-- SOC Learning Operations Center Card -->
+              <div class="cyber-card progress-card" style="box-shadow: 0 0 15px rgba(0, 229, 255, 0.08); border-color: rgba(0, 229, 255, 0.35);">
+                <div class="card-header" style="border-bottom: 1px solid rgba(0, 229, 255, 0.15); padding-bottom: 10px; display:flex; justify-content:space-between; align-items:center;">
+                  <h3 style="margin:0; font-size:1.05rem; display:flex; align-items:center; gap:8px;">🛡️ SOC Operations & Progress</h3>
+                  <span class="badge" style="background: rgba(0, 229, 255, 0.1); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); font-size: 0.65rem; font-family: monospace;">ONLINE</span>
+                </div>
+                <div class="progress-card-body" style="padding-top: 15px;">
+                  <!-- Main Completion Meter -->
+                  <div class="progress-details-row" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="progress-label" style="font-size:0.85rem; color:var(--text-secondary);">إكمال المنصة (Overall Progress):</span>
+                    <span class="progress-val text-neon-cyan" id="dashProgressPct" style="font-family:monospace; font-size:1.1rem; font-weight:bold;">0%</span>
                   </div>
-                  <div class="lab-progress-bar" style="margin: 8px 0 14px;">
-                    <div class="lab-progress-fill" id="dashProgressFill" style="width: 0%;"></div>
+                  <div class="lab-progress-bar" style="margin: 8px 0 16px; height: 10px; background: rgba(255,255,255,0.05); border-radius: 5px; overflow:hidden;">
+                    <div class="lab-progress-fill" id="dashProgressFill" style="width: 0%; height:100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green)); box-shadow: 0 0 8px var(--accent-cyan); transition: width 0.4s ease;"></div>
                   </div>
-                  <div class="active-mission" id="dashActiveMissionBox">
-                    <span class="mission-bullet">[+]</span> Next Chapter: <span id="dashNextChapter" class="text-neon-green">Think Like a Hacker: Why Recon Fails?</span>
+                  
+                  <!-- Grid stats -->
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 6px; text-align:right;">
+                      <div style="font-size: 0.65rem; color: var(--text-muted);">المختبرات المنجزة</div>
+                      <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent-green); font-family: monospace;" id="dashCompletedLabs">0 / 10</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 6px; text-align:right;">
+                      <div style="font-size: 0.65rem; color: var(--text-muted);">مجموع نقاط الـ XP</div>
+                      <div style="font-size: 1.1rem; font-weight: bold; color: #ffaa00; font-family: monospace;" id="dashTotalXP">0 XP</div>
+                    </div>
                   </div>
-                  <button class="hunt-btn primary" onclick="switchTab('academy')" style="width:100%; margin-top: 10px; font-size: 0.85rem;">
-                    Continue Learning Path →
+
+                  <div class="active-mission" id="dashActiveMissionBox" style="font-size:0.75rem; background:rgba(0,255,102,0.03); border:1px solid rgba(0,255,102,0.1); border-radius:6px; padding:10px; margin-bottom: 12px; line-height:1.5;">
+                    <span class="mission-bullet" style="color:var(--accent-green);">[+]</span> المهمة النشطة: <span id="dashNextChapter" class="text-neon-green" style="font-weight:bold;">لم تبدأ بعد</span>
+                  </div>
+                  <button class="hunt-btn primary" onclick="switchTab('academy')" style="width:100%; font-size: 0.85rem; padding:10px; border-radius:6px; cursor:pointer;">
+                    استمر في خريطة الطريق (Continue Path) →
                   </button>
                 </div>
               </div>
@@ -16702,7 +16755,17 @@
                   </div>
                 </div>
 
-                <!-- Actions -->
+                                <!-- Actions -->
+                                <!-- Linked Assets -->
+                <div class="roadmap-card-meta-section" style="margin-bottom: 20px;">
+                  <div class="book-modal-section-title">🔗 أصول ومختبرات المنصة المرتبطة (Linked Assets)</div>
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                     <a href="labs/sql-injection-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر حقن SQL التفاعلي</a>
+                     <a href="labs/idor-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر ثغرة IDOR العملي</a>
+                     <a href="writeups/api-hacking.html" target="_blank" style="font-size:0.78rem; color:var(--accent-cyan); text-decoration:none; display:flex; align-items:center; gap:6px;">📝 تقرير ثغرة: تسريب البيانات في الواجهات البرمجية API</a>
+                  </div>
+                </div>
+
                 <div class="book-modal-section-title">🚀 الاختصارات والأنشطة التفاعلية</div>
                 <div class="book-modal-actions">
                   <a href="books/real_world_bug_hunting.html" target="_blank" class="modal-act-btn btn-read">📖 اقرأ الكتاب</a>
@@ -16782,6 +16845,16 @@
                     <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Recon Automation</span>
                     <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Burp Suite Proxy</span>
                     <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">OWASP Top 10</span>
+                  </div>
+                </div>
+
+                                <!-- Linked Assets -->
+                <div class="roadmap-card-meta-section" style="margin-bottom: 20px;">
+                  <div class="book-modal-section-title">🔗 أصول ومختبرات المنصة المرتبطة (Linked Assets)</div>
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                     <a href="labs/ssrf-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر محاكاة ثغرات SSRF السحابية</a>
+                     <a href="labs/jwt-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر استغلال وتزوير توكن JWT</a>
+                     <a href="writeups/recon-mastery.html" target="_blank" style="font-size:0.78rem; color:var(--accent-cyan); text-decoration:none; display:flex; align-items:center; gap:6px;">📝 استراتيجية: دليل الاحتراف في جمع النطاقات الفرعية Recon</a>
                   </div>
                 </div>
 
@@ -16868,6 +16941,16 @@
                   </div>
                 </div>
 
+                                <!-- Linked Assets -->
+                <div class="roadmap-card-meta-section" style="margin-bottom: 20px;">
+                  <div class="book-modal-section-title">🔗 أصول ومختبرات المنصة المرتبطة (Linked Assets)</div>
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                     <a href="labs/graphql-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر استعلام وتسريب معلومات GraphQL</a>
+                     <a href="labs/race-condition-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر استغلال Race Condition في بوابات الدفع</a>
+                     <a href="writeups/graphql-attack.html" target="_blank" style="font-size:0.78rem; color:var(--accent-cyan); text-decoration:none; display:flex; align-items:center; gap:6px;">📝 تقرير ثغرة: تسريب البيانات الحساسة عبر GraphQL إلى P1</a>
+                  </div>
+                </div>
+
                 <div class="book-modal-section-title">🚀 الاختصارات والأنشطة التفاعلية</div>
                 <div class="book-modal-actions">
                   <a href="books/web_hackers_handbook.html" target="_blank" class="modal-act-btn btn-read">📖 اقرأ الكتاب</a>
@@ -16948,6 +17031,16 @@
                     <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Subdomain Takeover</span>
                     <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">DNS Permutations</span>
                     <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Bucket Leaks</span>
+                  </div>
+                </div>
+
+                                <!-- Linked Assets -->
+                <div class="roadmap-card-meta-section" style="margin-bottom: 20px;">
+                  <div class="book-modal-section-title">🔗 أصول ومختبرات المنصة المرتبطة (Linked Assets)</div>
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                     <a href="labs/api-security-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر ثغرات وحماية واجهات الـ API</a>
+                     <a href="labs/command-injection-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر استغلال وحقن الأوامر البرمجية Command Injection</a>
+                     <a href="writeups/cloud-ssrf.html" target="_blank" style="font-size:0.78rem; color:var(--accent-cyan); text-decoration:none; display:flex; align-items:center; gap:6px;">📝 تقرير ثغرة: استغلال Cloud SSRF للوصول لـ Cloud Metadata</a>
                   </div>
                 </div>
 
@@ -17034,6 +17127,15 @@
                   </div>
                 </div>
 
+                                <!-- Linked Assets -->
+                <div class="roadmap-card-meta-section" style="margin-bottom: 20px;">
+                  <div class="book-modal-section-title">🔗 أصول ومختبرات المنصة المرتبطة (Linked Assets)</div>
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                     <a href="labs/linux-security-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر فحص صلاحيات SUID وتصعيد الامتيازات Linux</a>
+                     <a href="writeups/linux-suid-root.html" target="_blank" style="font-size:0.78rem; color:var(--accent-cyan); text-decoration:none; display:flex; align-items:center; gap:6px;">📝 تقرير ثغرة: تصعيد الصلاحيات عبر ملفات SUID لـ Root</a>
+                  </div>
+                </div>
+
                 <div class="book-modal-section-title">🚀 الاختصارات والأنشطة التفاعلية</div>
                 <div class="book-modal-actions">
                   <a href="books/rtfm.html" target="_blank" class="modal-act-btn btn-read">📖 اقرأ الكتاب</a>
@@ -17114,6 +17216,15 @@
                     <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Incident Response</span>
                     <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Log Auditing</span>
                     <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Defense Commands</span>
+                  </div>
+                </div>
+
+                                <!-- Linked Assets -->
+                <div class="roadmap-card-meta-section" style="margin-bottom: 20px;">
+                  <div class="book-modal-section-title">🔗 أصول ومختبرات المنصة المرتبطة (Linked Assets)</div>
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                     <a href="labs/linux-security-lab.html" target="_blank" style="font-size:0.78rem; color:var(--accent-green); text-decoration:none; display:flex; align-items:center; gap:6px;">🧪 مختبر تدقيق الأنظمة وإغلاق ملفات SUID Linux</a>
+                     <a href="writeups/linux-suid-root.html" target="_blank" style="font-size:0.78rem; color:var(--accent-cyan); text-decoration:none; display:flex; align-items:center; gap:6px;">📝 تقرير ثغرة: تحليل PoC لتصعيد الصلاحيات وإغلاق الثغرة</a>
                   </div>
                 </div>
 
@@ -19172,7 +19283,7 @@
       
       // Articles
       { text: "Article: Why Recon Fails?", action: "article:why-recon-fails", icon: "🧠", category: "Articles" },
-      { text: "Article: 15min Attack Surface", action: "article:attack-surface-15", icon: "article:attack-surface-15", category: "Articles" },
+      { text: "Article: 15min Attack Surface", action: "article:attack-surface-15", icon: "🧠", category: "Articles" },
       { text: "Article: Read JS like Hacker", action: "article:js-attacker-mind", icon: "🧠", category: "Articles" },
       { text: "Article: When to leave endpoint", action: "article:when-to-leave-endpoint", icon: "🧠", category: "Articles" },
       
@@ -19180,7 +19291,43 @@
       { text: "Run system audit", action: "cmd:audit", icon: "▶", category: "Terminal Command" },
       { text: "Check SUID binaries", action: "cmd:suid", icon: "▶", category: "Terminal Command" },
       { text: "View flags solved", action: "cmd:flags", icon: "▶", category: "Terminal Command" },
-      { text: "Reset terminal game", action: "cmd:reset", icon: "▶", category: "Terminal Command" }
+      { text: "Reset terminal game", action: "cmd:reset", icon: "▶", category: "Terminal Command" },
+
+      // Books (All 10 Books)
+      { text: "Book: Real-World Bug Hunting", action: "book:real_world_bug_hunting", icon: "📖", category: "Books" },
+      { text: "Book: Bug Bounty Bootcamp", action: "book:bug_bounty_bootcamp", icon: "📖", category: "Books" },
+      { text: "Book: Web Application Hacker's Handbook", action: "book:web_hackers_handbook", icon: "📖", category: "Books" },
+      { text: "Book: The Bug Bounty Playbook", action: "book:bug_bounty_playbook", icon: "📖", category: "Books" },
+      { text: "Book: Red Team Field Manual (RTFM)", action: "book:rtfm", icon: "📖", category: "Books" },
+      { text: "Book: Blue Team Field Manual (BTFM)", action: "book:btfm", icon: "📖", category: "Books" },
+      { text: "Book: Hacking: The Art of Exploitation", action: "book:hacking_art", icon: "📖", category: "Books" },
+      { text: "Book: Practical Malware Analysis", action: "book:malware_analysis", icon: "📖", category: "Books" },
+      { text: "Book: Black Hat Python", action: "book:black_hat_python", icon: "📖", category: "Books" },
+      { text: "Book: Operator Handbook", action: "book:operator_handbook", icon: "📖", category: "Books" },
+
+      // Labs (All 10 Labs)
+      { text: "Lab: SQL Injection Playground", action: "link:labs/sql-injection-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Lab: SSRF Vulnerability Simulator", action: "link:labs/ssrf-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Lab: IDOR Manipulation Lab", action: "link:labs/idor-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Lab: Command Injection Simulator", action: "link:labs/command-injection-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Lab: API Security Sandbox", action: "link:labs/api-security-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Lab: JWT Token Exploiter", action: "link:labs/jwt-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Lab: Linux PrivEsc Auditing Room", action: "link:labs/linux-security-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Lab: Race Condition Payment Hack", action: "link:labs/race-condition-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Lab: GraphQL Query Leak Sandbox", action: "link:labs/graphql-lab.html", icon: "🧪", category: "Labs" },
+      { text: "Lab: AI LLM Jailbreak Lab", action: "link:labs/ai-security-lab.html", icon: "🧪", category: "Labs" },
+
+      // Writeups (All 10 Writeups)
+      { text: "Writeup: Recon Master - Subdomain Enum", action: "link:writeups/recon-mastery.html", icon: "📝", category: "Writeups" },
+      { text: "Writeup: Active Directory Domain Admin Takeover", action: "link:writeups/ad-to-domain.html", icon: "📝", category: "Writeups" },
+      { text: "Writeup: API Exploitation - B2B Business Leak", action: "link:writeups/api-hacking.html", icon: "📝", category: "Writeups" },
+      { text: "Writeup: Cloud SSRF via Metadata Instance", action: "link:writeups/cloud-ssrf.html", icon: "📝", category: "Writeups" },
+      { text: "Writeup: GraphQL Vulnerability to P1 Bug", action: "link:writeups/graphql-attack.html", icon: "📝", category: "Writeups" },
+      { text: "Writeup: SUID Root Binaries Exploitation Guide", action: "link:writeups/linux-suid-root.html", icon: "📝", category: "Writeups" },
+      { text: "Writeup: JWT Advanced Session Bypass", action: "link:writeups/jwt-advanced.html", icon: "📝", category: "Writeups" },
+      { text: "Writeup: Race Conditions in Payment Logic", action: "link:writeups/race-payments.html", icon: "📝", category: "Writeups" },
+      { text: "Writeup: AI LLM Prompt Injection Bypasses", action: "link:writeups/ai-prompt-inj.html", icon: "📝", category: "Writeups" },
+      { text: "Writeup: Escalating Nuclei Scans to P1 Bugs", action: "link:writeups/nuclei-to-p1.html", icon: "📝", category: "Writeups" }
     ];
 
     function openCommandPalette() {
@@ -19258,7 +19405,14 @@
         switchTab('articles');
         setTimeout(() => {
           openArticleDirect(value);
+        } else if (type === 'book') {
+        switchTab('books');
+        setTimeout(() => {
+          if (window.openBookModal) {
+            window.openBookModal(value);
+          }
         }, 150);
+      }, 150);
       } else if (type === 'cmd') {
         switchTab('labs');
         const input = document.getElementById('consoleInput');
@@ -19645,45 +19799,82 @@
 
     // Calculate dynamic completion progress
     function updateDashboardProgress() {
+      // 1. Visited methodology count
       const visited = JSON.parse(localStorage.getItem('meth_visited') || '[]');
       const totalPhases = 26;
       const count = visited.length;
-      const pct = Math.min(Math.round((count / totalPhases) * 100), 100);
       
-      const pctEl = document.getElementById('dashProgressPct');
-      const fillEl = document.getElementById('dashProgressFill');
-      const nextChEl = document.getElementById('dashNextChapter');
+      // 2. Books progress (from bookSectionMap)
+      const bookSections = {
+        'bug_bounty_playbook': 21,
+        'web_hackers_handbook': 9,
+        'bug_bounty_bootcamp': 11,
+        'real_world_bug_hunting': 9,
+        'rtfm': 5,
+        'btfm': 5,
+        'hacking_art': 5,
+        'malware_analysis': 5,
+        'black_hat_python': 5,
+        'operator_handbook': 5
+      };
       
-      if (pctEl) pctEl.textContent = pct + '%';
-      if (fillEl) fillEl.style.width = pct + '%';
-      
-      if (nextChEl) {
-        let nextChapter = "Think Like a Hacker: Why Recon Fails?";
-        const session = JSON.parse(localStorage.getItem('bb_hunt_session') || 'null');
-        if (session) {
-          let currentPhase = 'p0';
-          const phases = ['p0', 'p1', 'p2', 'p3', 'p4', 'p5'];
-          const phaseNames = {
-            'p0': 'Subdomains Enumeration',
-            'p1': 'JS Analysis',
-            'p2': 'API Discovery',
-            'p3': 'Vulnerabilities Identification',
-            'p4': 'Reporting & Mitigation',
-            'p5': 'Engagement Completed'
-          };
-          for (let phaseId of phases) {
-            if (localStorage.getItem('bb_phase_done_' + phaseId) !== '1') {
-              currentPhase = phaseId;
-              break;
-            }
-          }
-          if (currentPhase === 'p5') {
-            nextChapter = "All Hunt Phases Done! Try TryHackMe/HackTheBox Labs.";
-          } else {
-            nextChapter = "Workflow Checklist: " + phaseNames[currentPhase];
+      let totalBookSections = 0;
+      let completedBookSections = 0;
+      let completedBooksCount = 0;
+      for (const [bookId, total] of Object.entries(bookSections)) {
+        totalBookSections += total;
+        let read = 0;
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith(`read_${bookId}_`) && localStorage.getItem(key) === 'true') {
+            read++;
           }
         }
-        nextChEl.textContent = nextChapter;
+        completedBookSections += read;
+        if (read === total) {
+          completedBooksCount++;
+        }
+      }
+
+      // 3. Labs progress (10 labs)
+      const labsList = ['sql-injection', 'ssrf', 'idor', 'command-injection', 'api-security', 'jwt', 'linux-security', 'race-condition', 'graphql', 'ai-security'];
+      let completedLabsCount = 0;
+      labsList.forEach(labId => {
+        if (localStorage.getItem(`lab_completed_${labId}`) === 'true') {
+          completedLabsCount++;
+        }
+      });
+      
+      // 4. Calculate dynamic global percent
+      const totalItems = totalPhases + totalBookSections + labsList.length;
+      const completedItems = count + completedBookSections + completedLabsCount;
+      const globalPct = Math.min(Math.round((completedItems / totalItems) * 100), 100);
+
+      // XP calculation
+      const totalXP = (count * 10) + (completedBookSections * 50) + (completedBooksCount * 1000) + (completedLabsCount * 200);
+
+      const pctEl = document.getElementById('dashProgressPct');
+      const fillEl = document.getElementById('dashProgressFill');
+      const completedLabsEl = document.getElementById('dashCompletedLabs');
+      const totalXpEl = document.getElementById('dashTotalXP');
+      const nextChEl = document.getElementById('dashNextChapter');
+
+      if (pctEl) pctEl.textContent = globalPct + '%';
+      if (fillEl) fillEl.style.width = globalPct + '%';
+      if (completedLabsEl) completedLabsEl.textContent = completedLabsCount + ' / 10';
+      if (totalXpEl) totalXpEl.textContent = totalXP + ' XP';
+
+      // Set last active mission text
+      if (nextChEl) {
+        let lastReadBook = 'لم يبدأ بعد';
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith('last_read_title_')) {
+            const title = localStorage.getItem(key);
+            lastReadBook = title;
+          }
+        }
+        nextChEl.textContent = lastReadBook;
       }
     }
 
