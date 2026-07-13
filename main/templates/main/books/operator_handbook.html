@@ -515,7 +515,17 @@
     <div class="reading-grid">
       
       <!-- Right Sidebar (TOC with Search) -->
-      <aside class="book-sidebar">
+            <aside class="book-sidebar">
+        <!-- Theme Swapper HUD -->
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+          <label for="theme-select" style="font-size: 0.72rem; color: var(--text-muted); font-weight: bold; display: block; margin-bottom: 5px;">🎨 مظهر الواجهة:</label>
+          <select id="theme-select" onchange="setHackerTheme(this.value)" style="width: 100%; background: #030308; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 6px; color: #fff; font-size: 0.78rem; outline: none; cursor: pointer; font-family: sans-serif;">
+            <option value="theme-cyan">Cyber Cyan</option>
+            <option value="theme-green">Matrix Green</option>
+            <option value="theme-red">Ruby Red</option>
+            <option value="theme-purple">Royal Purple</option>
+          </select>
+        </div>
         <input type="text" id="sec-search-op" class="sidebar-search-box" placeholder="ابحث في الموسوعة (أداة، ثغرة، أمر)..." oninput="searchOpSections()">
         <div class="toc-title">فصول الكتاب والوحدات</div>
         <nav id="toc-list-op">
@@ -622,7 +632,124 @@ aws ec2 describe-instances</pre>
         </section>
 
         <!-- Section 6 -->
-                <!-- Author Strategic Tips -->
+                        <!-- Flashcards Section -->
+        <section id="operator_handbook-flashcards" class="content-sec">
+          <h2 class="sec-title">🎴 كروت المراجعة السيبرانية الذكية (Interactive 3D Flashcards)</h2>
+          <p>كروت مراجعة تفاعلية لحفظ الأوامر والبصمات. انقر على أي كرت لقلبه ومعرفة الإجابة النموذجية:</p>
+          
+          <div class="flashcards-grid">
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هو خطر مشاركة /var/run/docker.sock بالـ Container؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">يتيح للحاوية التحكم بالـ Docker الرئيسي والهروب والحصول على Root بالكامل</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف نتأكد من تشفير سجلات الـ Kubernetes Secrets؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">التحقق من تفعيل الـ EncryptionConfiguration بسيرفر API للـ K8s</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هو دور سياسات الـ IAM بالـ Cloud Security؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">تحديد الصلاحيات والموارد التي يمكن للخدمات السحابية الوصول لها وإدارتها</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف يتم عمل Privilege Escalation داخل البيئات السحابية؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">البحث عن أدوار (Roles) زائدة عن الحاجة تسمح بإعادة ربط وتوسيع الصلاحيات</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هي أفضل ممارسة لتخزين المفاتيح المشفرة سحابياً؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">استخدام أنظمة إدارة المفاتيح السحابية (KMS) أو أداة HashiCorp Vault</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Payload Sandbox Section -->
+        <section id="operator_handbook-sandbox" class="content-sec">
+          <h2 class="sec-title">🧪 مختبر حقن البايلودز الحي (Interactive Payload Sandbox)</h2>
+          <p>مختبر محاكاة تفاعلي لاختبار وتحليل البايلودز ورؤية الاستجابة المباشرة للخوادم:</p>
+          
+          <div style="background: rgba(3,3,8,0.9); border: 1px solid var(--border-glass); border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <div style="margin-bottom: 15px;">
+              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">اختر نوع الثغرة للاختبار:</label>
+              <select id="sandbox-type-operator_handbook" onchange="updateSandboxPayloads('operator_handbook')" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:8px; border-radius:4px; width:100%; outline:none; font-size:0.85rem;">
+                <option value="sqli">SQL Injection (SQLi)</option>
+                <option value="xss">Cross-Site Scripting (XSS)</option>
+                <option value="ssrf">Server-Side Request Forgery (SSRF)</option>
+              </select>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">البايلود (Payload Input):</label>
+              <input type="text" id="sandbox-payload-operator_handbook" value="' OR '1'='1" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:var(--accent-cyan); padding:10px; border-radius:4px; width:100%; outline:none; font-family:monospace; font-size:0.85rem; box-sizing:border-box;">
+            </div>
+
+            <button onclick="runSandboxExploit('operator_handbook')" style="background:var(--gradient-primary); border:none; color:#fff; padding:10px 20px; border-radius:4px; font-weight:700; cursor:pointer; width:100%; font-size:0.88rem;">
+              ⚡ تنفيذ الهجوم ومحاكاة الاستجابة
+            </button>
+
+            <!-- Terminal Output -->
+            <div style="margin-top: 20px; background:#000; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden;">
+              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace; display:flex; justify-content:space-between;">
+                <span>CONSOLE OUTPUT</span>
+                <span>STATUS: ACTIVE</span>
+              </div>
+              <div id="sandbox-terminal-operator_handbook" style="padding:15px; font-family:monospace; font-size:0.8rem; color:#00ff66; min-height:120px; max-height:200px; overflow-y:auto; line-height:1.5; text-align:left; direction:ltr;">
+                [+] System ready. Input payload and click Execute to begin simulation...
+              </div>
+            </div>
+
+            <!-- Virtual Browser Frame if XSS -->
+            <div id="sandbox-browser-wrap-operator_handbook" style="margin-top: 20px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; display:none;">
+              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace;">
+                🖥️ VIRTUAL BROWSER FRAME
+              </div>
+              <div id="sandbox-browser-content-operator_handbook" style="background:#fff; color:#000; padding:20px; text-align:center; min-height:80px; font-size:0.9rem;">
+                Virtual Viewport
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+<!-- Author Strategic Tips -->
         <section id="op-tips" class="content-sec">
           <h2 class="sec-title">💡 نصائح وتوجيهات الكاتب الميدانية (Operator Golden Advice)</h2>
           <p>جمعنا لك هنا زبدة الخبرة العملية والنصائح الذهبية التي يركز عليها الكاتب في فصول كتابه للتنقيب والعمل الميداني الفعلي:</p>
@@ -934,5 +1061,6 @@ aws ec2 describe-instances</pre>
       }
     });
   </script>
+  <script src="../js/library_dashboard.js"></script>
 </body>
 </html>
