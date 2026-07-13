@@ -231,7 +231,37 @@
       } else if (type === 'ssrf') {
         terminal.innerHTML += `[+] Outbound network connection initiated...\n[+] Bypassing local filter validation...\n[+] Resolving target: 169.254.169.254\n[+] Meta-data service responded!\n[+] Internal AWS keys retrieved:\n----------------------------------------\nAccessKeyId: ASIAIOSFODNN7EXAMPLE\nSecretAccessKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\nToken: FwoGZXIvYXdzE... (Critical P1)`;
       }
+      
+      // Reset scroll of sandbox terminal
+      terminal.scrollLeft = 0;
     }, 1000);
   };
+
+  // ── 4. Fix RTL Horizontal Scrollbar Bug ───────────────────
+  function resetCodeScrolls() {
+    document.querySelectorAll('.code-box').forEach(box => {
+      box.scrollLeft = 0;
+    });
+    document.querySelectorAll('.code-box pre').forEach(pre => {
+      pre.scrollLeft = 0;
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    resetCodeScrolls();
+    // Re-run after a small delay to override browser layout defaults
+    setTimeout(resetCodeScrolls, 100);
+    setTimeout(resetCodeScrolls, 500);
+  });
+
+  window.addEventListener("load", resetCodeScrolls);
+
+  // Hook into tab changes to reset scroll when showing sections
+  const tocItems = document.querySelectorAll('.toc-item');
+  tocItems.forEach(item => {
+    item.addEventListener('click', () => {
+      setTimeout(resetCodeScrolls, 50);
+    });
+  });
 
 })();
