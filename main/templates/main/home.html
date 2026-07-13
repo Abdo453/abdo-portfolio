@@ -19405,14 +19405,15 @@
         switchTab('articles');
         setTimeout(() => {
           openArticleDirect(value);
-        } else if (type === 'book') {
+        }, 150);
+      } else if (type === 'book') {
         switchTab('books');
         setTimeout(() => {
           if (window.openBookModal) {
             window.openBookModal(value);
           }
         }, 150);
-      }, 150);
+      }
       } else if (type === 'cmd') {
         switchTab('labs');
         const input = document.getElementById('consoleInput');
