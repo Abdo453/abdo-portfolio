@@ -324,6 +324,64 @@
 
   document.addEventListener("DOMContentLoaded", function() {
     initMobileDrawer();
+    initReadingMode();
   });
+
+  // ── 6. Distraction-Free Reading Mode Engine ───────────────
+  window.toggleReadingMode = function() {
+    const active = document.body.classList.toggle('reading-mode-active');
+    localStorage.setItem('reading_mode_enabled', active ? 'true' : 'false');
+    
+    const btns = document.querySelectorAll('.reading-mode-btn');
+    btns.forEach(btn => {
+      btn.innerHTML = active ? '✕ العودة للوضع العادي' : '📖 وضع القراءة';
+    });
+  };
+
+  function initReadingMode() {
+    const pathParts = window.location.pathname.split('/');
+    const bookId = pathParts[pathParts.length - 1].replace('.html', '');
+    if (bookSectionMap[bookId] === undefined) return;
+
+    const contentArea = document.querySelector('.book-content');
+    if (!contentArea) return;
+
+    const header = document.createElement('div');
+    header.className = 'reading-mode-header';
+    header.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.06);';
+
+    const label = document.createElement('span');
+    label.style.cssText = 'font-size:0.8rem; color:var(--text-secondary); font-weight:700;';
+    label.innerHTML = '📚 وضع القراءة الميسر للثغرات والأكواد';
+
+    const isEnabled = localStorage.getItem('reading_mode_enabled') === 'true';
+
+    const btn = document.createElement('button');
+    btn.className = 'reading-mode-btn';
+    btn.innerHTML = isEnabled ? '✕ العودة للوضع العادي' : '📖 وضع القراءة';
+    btn.style.cssText = `
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--accent-cyan);
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 700;
+      transition: all 0.3s ease;
+    `;
+
+    btn.addEventListener('click', toggleReadingMode);
+
+    header.appendChild(label);
+    header.appendChild(btn);
+
+    contentArea.insertBefore(header, contentArea.firstChild);
+
+    if (isEnabled) {
+      document.body.classList.add('reading-mode-active');
+    }
+  }
 
 })();
