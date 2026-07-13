@@ -4264,32 +4264,34 @@ ul, ol {
   color: var(--text-secondary);
 }
 
+/* ── Upgraded Card Actions (Decluttered Layout) ────────────── */
 .roadmap-card-actions {
   display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr 1fr;
-  gap: 5px;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
   margin-top: auto;
   border-top: 1px solid rgba(255,255,255,0.05);
-  padding-top: 15px;
+  padding-top: 12px;
 }
 .roadmap-card-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 6px 4px;
-  border-radius: 4px;
-  font-size: 0.68rem;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.02);
   color: var(--text-secondary);
+  font-family: var(--font-body);
 }
 .roadmap-card-btn:hover {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.06);
   color: #fff;
   border-color: rgba(255,255,255,0.15);
 }
@@ -4300,7 +4302,280 @@ ul, ol {
 }
 .roadmap-card-btn.btn-main:hover {
   box-shadow: var(--shadow-glow-cyan);
+  transform: translateY(-1px);
 }
+
+/* Increase progress bar visibility */
+.roadmap-card-progress-bar {
+  height: 8px !important;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px !important;
+  overflow: hidden;
+}
+
+/* ── Academy Stats Dashboard ──────────────────────────────── */
+.academy-stats-banner {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+  background: rgba(6, 6, 16, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding: 15px 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+@media (max-width: 900px) {
+  .academy-stats-banner {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .academy-stats-banner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.academy-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 10px;
+  border-left: 1px dashed rgba(255, 255, 255, 0.08);
+}
+.academy-stat-card:last-child {
+  border-left: none;
+}
+@media (max-width: 600px) {
+  .academy-stat-card {
+    border-left: none;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+  }
+  .academy-stat-card:last-child {
+    border-bottom: none;
+  }
+}
+.academy-stat-val {
+  font-family: 'Fira Code', monospace;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+  text-shadow: 0 0 10px rgba(0, 255, 229, 0.2);
+}
+.academy-stat-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+/* ── Detailed Book Overlay Modal ──────────────────────────── */
+.book-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(2, 2, 5, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.book-modal-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+.book-modal-container {
+  background: rgba(10, 10, 26, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--modal-glow-color, rgba(0, 229, 255, 0.15));
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+}
+.book-modal-overlay.active .book-modal-container {
+  transform: scale(1);
+}
+.book-modal-close-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px; /* RTL close button on left */
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10002;
+}
+.book-modal-close-btn:hover {
+  background: rgba(255, 0, 85, 0.1);
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+}
+.book-modal-header {
+  padding: 25px 25px 15px 25px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.book-modal-header-icon {
+  font-size: 3.5rem;
+  padding: 10px;
+  background: rgba(255,255,255,0.01);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.book-modal-header-info {
+  flex-grow: 1;
+}
+.book-modal-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 6px 0;
+}
+.book-modal-author {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+}
+.book-modal-body {
+  padding: 25px;
+}
+.book-modal-section-title {
+  font-size: 0.85rem;
+  color: #fff;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  border-right: 3px solid var(--accent-cyan);
+  padding-right: 8px;
+}
+.book-modal-grid-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  background: rgba(255,255,255,0.01);
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+@media (max-width: 480px) {
+  .book-modal-grid-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.book-modal-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.book-modal-stat-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.book-modal-stat-val {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ── Modal Quick-Actions Color Code Override ───────────────── */
+.book-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 25px;
+}
+@media (max-width: 480px) {
+  .book-modal-actions {
+    grid-template-columns: 1fr;
+  }
+}
+.modal-act-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+/* Read: Orange */
+.modal-act-btn.btn-read {
+  background: rgba(255, 170, 0, 0.08);
+  border: 1px solid #ffaa00;
+  color: #ffaa00;
+}
+.modal-act-btn.btn-read:hover {
+  background: #ffaa00;
+  color: #020205;
+  box-shadow: 0 0 15px rgba(255, 170, 0, 0.3);
+}
+/* Summary: Purple */
+.modal-act-btn.btn-summary {
+  background: rgba(186, 85, 211, 0.08);
+  border: 1px solid #ba55d3;
+  color: #ba55d3;
+}
+.modal-act-btn.btn-summary:hover {
+  background: #ba55d3;
+  color: #020205;
+  box-shadow: 0 0 15px rgba(186, 85, 211, 0.3);
+}
+/* Labs: Green */
+.modal-act-btn.btn-labs {
+  background: rgba(0, 255, 102, 0.08);
+  border: 1px solid var(--accent-green);
+  color: var(--accent-green);
+}
+.modal-act-btn.btn-labs:hover {
+  background: var(--accent-green);
+  color: #020205;
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+}
+/* Quiz: Cyan */
+.modal-act-btn.btn-quiz {
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+.modal-act-btn.btn-quiz:hover {
+  background: var(--accent-cyan);
+  color: #020205;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+}
+
 
 
 
