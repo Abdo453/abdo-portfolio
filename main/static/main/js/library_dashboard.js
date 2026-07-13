@@ -124,7 +124,60 @@
       else if (stats.progressPercent >= 20) badge = 'مخترق تحت التدريب (Script Kiddie)';
       badgeText.innerText = badge;
     }
+
+    // ── Individual Book Progress Update ───────────────────────
+    document.querySelectorAll('.roadmap-book-card').forEach(card => {
+      const bookId = card.getAttribute('data-book-id');
+      if (!bookId || bookSectionMap[bookId] === undefined) return;
+
+      const total = bookSectionMap[bookId];
+      let read = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith(`read_${bookId}_`) && localStorage.getItem(key) === 'true') {
+          read++;
+        }
+      }
+
+      const percent = Math.min(Math.round((read / total) * 100), 100);
+      
+      const fill = card.querySelector('.roadmap-card-progress-fill');
+      const text = card.querySelector('.roadmap-card-progress-percent');
+      const lastReadText = card.querySelector('.roadmap-card-last-read');
+
+      if (fill) fill.style.width = `${percent}%`;
+      if (text) text.innerText = `${percent}%`;
+      
+      const lastReadTitle = localStorage.getItem(`last_read_title_${bookId}`) || 'لم يبدأ بعد';
+      if (lastReadText) lastReadText.innerText = lastReadTitle;
+    });
   };
+
+  // ── Book Filter Logic ──────────────────────────────────────
+  function initBookFilters() {
+    const filterBtns = document.querySelectorAll('.book-filter-btn');
+    if (filterBtns.length === 0) return;
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Toggle active class
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filterVal = btn.getAttribute('data-filter');
+        const cards = document.querySelectorAll('.roadmap-book-card');
+
+        cards.forEach(card => {
+          const level = card.getAttribute('data-level');
+          if (filterVal === 'all' || level === filterVal) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  }
 
   // Inject section footer buttons dynamically in book template views
   document.addEventListener("DOMContentLoaded", function() {
@@ -177,6 +230,11 @@
             btn.style.background = 'rgba(0,255,102,0.1)';
             btn.style.borderColor = 'var(--accent-green)';
             btn.style.color = 'var(--accent-green)';
+
+            // Save last read section title
+            const titleEl = sec.querySelector('h2, h3, .sub-sec-title');
+            const titleText = titleEl ? titleEl.innerText.replace(/^[أ-يA-Z0-9\.\-\s]+[\)\-\.]\s*/, '') : 'قسم غير معروف';
+            localStorage.setItem(`last_read_title_${bookId}`, titleText);
           }
           updateTOCReadBadges();
         });
@@ -189,6 +247,7 @@
     } else {
       // We are in home.html (the dashboard view)
       updateDashboardUI();
+      initBookFilters();
     }
   });
 

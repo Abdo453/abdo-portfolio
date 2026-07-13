@@ -16077,204 +16077,724 @@
           </div>
 
           
-          <div class="visual-projects-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 15px;">
+          <!-- Book Filters -->
+          <div class="book-filter-wrap">
+            <button class="book-filter-btn active" data-filter="all">الكل (All)</button>
+            <button class="book-filter-btn" data-filter="beginner">🟢 مبتدئ (Beginner)</button>
+            <button class="book-filter-btn" data-filter="intermediate">🟡 متوسط (Intermediate)</button>
+            <button class="book-filter-btn" data-filter="advanced">🔴 متقدم (Advanced)</button>
+            <button class="book-filter-btn" data-filter="expert">🏆 خبير (Expert)</button>
+          </div>
+
+          <div class="visual-projects-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 20px; margin-top: 15px;">
             
-            <!-- Book 1 -->
-            <div class="visual-project-card" style="--project-glow: #00e5ff;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(0,229,255,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #00e5ff1a"></div>
+            <!-- Book 1: Real-World Bug Hunting -->
+            <div class="roadmap-book-card" data-book-id="real_world_bug_hunting" data-level="beginner" style="--card-glow-color: #00e5ff;">
+              <div class="roadmap-card-banner" style="background: rgba(0,229,255,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-beginner">Beginner</span>
+                <div class="project-glow-layer" style="background: #00e5ff0d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">Real-World Bug Hunting</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">تحليل للثغرات المكتشفة في الحياة الحقيقية، وشرح مفصل لإثبات المفهوم وطريقة الإبلاغ عنها.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Peter Yaworski
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">Real-World Bug Hunting</h3>
+                <div class="roadmap-card-author">Author: Peter Yaworski</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/real_world_bug_hunting.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★☆</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">4/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">15 ساعة</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">260</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">HTTP Basics</span>
+                    <span class="roadmap-card-tag">Web Basics</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Exploit Web Bugs</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Write PoCs</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Bug Hunting Workflow</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/real_world_bug_hunting.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/real_world_bug_hunting.html#real_world_bug_hunting-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/real_world_bug_hunting.html#real_world_bug_hunting-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/real_world_bug_hunting.html#real_world_bug_hunting-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>
 
-            <!-- Book 2 -->
-            <div class="visual-project-card" style="--project-glow: #00ff66;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(0,255,102,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #00ff661a"></div>
+            <!-- Book 2: Bug Bounty Bootcamp -->
+            <div class="roadmap-book-card" data-book-id="bug_bounty_bootcamp" data-level="beginner" style="--card-glow-color: #00ff66;">
+              <div class="roadmap-card-banner" style="background: rgba(0,255,102,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-beginner">Beginner</span>
+                <div class="project-glow-layer" style="background: #00ff660d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">Bug Bounty Bootcamp</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">دليل تدريبي شامل للمبتدئين للتعرف على أدوات وتقنيات الاستطلاع وكشف الثغرات.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Vickie Li
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">Bug Bounty Bootcamp</h3>
+                <div class="roadmap-card-author">Author: Vickie Li</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/bug_bounty_bootcamp.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★☆</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">3/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">20 ساعة</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">320</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">No prerequisites</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Recon Automation</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Burp Suite Proxy</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">OWASP Top 10</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/bug_bounty_bootcamp.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/bug_bounty_bootcamp.html#bug_bounty_bootcamp-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/bug_bounty_bootcamp.html#bug_bounty_bootcamp-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/bug_bounty_bootcamp.html#bug_bounty_bootcamp-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>
 
-            <!-- Book 3 -->
-            <div class="visual-project-card" style="--project-glow: #ffaa00;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,170,0,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #ffaa001a"></div>
+            <!-- Book 3: The Web Application Hacker's Handbook -->
+            <div class="roadmap-book-card" data-book-id="web_hackers_handbook" data-level="intermediate" style="--card-glow-color: #ffaa00;">
+              <div class="roadmap-card-banner" style="background: rgba(255,170,0,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-intermediate">Intermediate</span>
+                <div class="project-glow-layer" style="background: #ffaa000d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">The Web Application Hacker's Handbook</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">إنجيل ومرجع اختبار اختراق تطبيقات الويب، يغطي جميع أنواع الثغرات والاستغلال.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Dafydd Stuttard & Marcus Pinto
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">The Web Application Hacker's Handbook</h3>
+                <div class="roadmap-card-author">Author: Dafydd Stuttard & Marcus Pinto</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/web_hackers_handbook.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★★</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">7/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">50 ساعة</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">800</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">HTTP Protocol</span>
+                    <span class="roadmap-card-tag">HTML/JS Basics</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Advanced WAF Bypass</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Session Manipulation</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Parameter Tampering</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/web_hackers_handbook.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/web_hackers_handbook.html#web_hackers_handbook-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/web_hackers_handbook.html#web_hackers_handbook-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/web_hackers_handbook.html#web_hackers_handbook-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>
 
-            <!-- Book 4 -->
-            <div class="visual-project-card" style="--project-glow: #e500ff;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(229,0,255,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #e500ff1a"></div>
+            <!-- Book 4: The Bug Bounty Playbook -->
+            <div class="roadmap-book-card" data-book-id="bug_bounty_playbook" data-level="intermediate" style="--card-glow-color: #e500ff;">
+              <div class="roadmap-card-banner" style="background: rgba(229,0,255,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-intermediate">Intermediate</span>
+                <div class="project-glow-layer" style="background: #e500ff0d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">The Bug Bounty Playbook</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">دليل متكامل لبناء البنية التحتية والاستطلاع والأدوات وتخطي جدران الحماية WAF.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Alex Thomas (Ghostlulz)
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">The Bug Bounty Playbook</h3>
+                <div class="roadmap-card-author">Author: Alex Thomas (Ghostlulz)</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/bug_bounty_playbook.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★☆</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">6/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">25 ساعة</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">280</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">Linux Cmdline</span>
+                    <span class="roadmap-card-tag">Networking</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Subdomain Takeover</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">DNS Permutations</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Bucket Leaks</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/bug_bounty_playbook.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/bug_bounty_playbook.html#bug_bounty_playbook-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/bug_bounty_playbook.html#bug_bounty_playbook-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/bug_bounty_playbook.html#bug_bounty_playbook-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>
 
-            <!-- Book 5 -->
-            <div class="visual-project-card" style="--project-glow: #ff0055;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,0,85,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #ff00551a"></div>
+            <!-- Book 5: Red Team Field Manual (RTFM) -->
+            <div class="roadmap-book-card" data-book-id="rtfm" data-level="advanced" style="--card-glow-color: #ff0055;">
+              <div class="roadmap-card-banner" style="background: rgba(255,0,85,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-advanced">Advanced</span>
+                <div class="project-glow-layer" style="background: #ff00550d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">Red Team Field Manual (RTFM)</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">الدليل الميداني والمختصر لأهم أوامر الاختراق والتحكم للأنظمة والشبكات المختلفة.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Ben Clark
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">Red Team Field Manual (RTFM)</h3>
+                <div class="roadmap-card-author">Author: Ben Clark</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/rtfm.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★☆</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">8/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">10 ساعات</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">100</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">Linux/Win Terminal</span>
+                    <span class="roadmap-card-tag">Networking Basics</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Exploit Payloads</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Privilege Escalation</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Command Cheat Sheets</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/rtfm.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/rtfm.html#rtfm-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/rtfm.html#rtfm-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/rtfm.html#rtfm-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>
 
-            <!-- Book 6 -->
-            <div class="visual-project-card" style="--project-glow: #0088ff;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(0,136,255,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #0088ff1a"></div>
+            <!-- Book 6: Blue Team Field Manual (BTFM) -->
+            <div class="roadmap-book-card" data-book-id="btfm" data-level="advanced" style="--card-glow-color: #0088ff;">
+              <div class="roadmap-card-banner" style="background: rgba(0,136,255,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-advanced">Advanced</span>
+                <div class="project-glow-layer" style="background: #0088ff0d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">Blue Team Field Manual (BTFM)</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">المرجع الميداني للتحقيق الجنائي الرقمي، تحليل الحوادث، وتأمين وإدارة السيرفرات.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Alan White & Ben Clark
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">Blue Team Field Manual (BTFM)</h3>
+                <div class="roadmap-card-author">Author: Alan White & Ben Clark</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/btfm.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★☆</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">8/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">10 ساعات</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">130</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">Sysadmin Basics</span>
+                    <span class="roadmap-card-tag">Log Analysis</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Incident Response</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Log Auditing</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Defense Commands</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/btfm.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/btfm.html#btfm-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/btfm.html#btfm-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/btfm.html#btfm-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>
 
-            <!-- Book 7 -->
-            <div class="visual-project-card" style="--project-glow: #ffff00;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,255,0,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #ffff001a"></div>
+            <!-- Book 7: Hacking: The Art of Exploitation -->
+            <div class="roadmap-book-card" data-book-id="hacking_art" data-level="advanced" style="--card-glow-color: #ffff00;">
+              <div class="roadmap-card-banner" style="background: rgba(255,255,0,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-advanced">Advanced</span>
+                <div class="project-glow-layer" style="background: #ffff000d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">Hacking: The Art of Exploitation</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">فهم آلية عمل الذاكرة والهندسة العكسية وكتابة استغلال ثغرات الـ Buffer Overflow.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Jon Erickson
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">Hacking: The Art of Exploitation</h3>
+                <div class="roadmap-card-author">Author: Jon Erickson</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/hacking_art.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★★</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">9/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">60 ساعة</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">480</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">C Programming</span>
+                    <span class="roadmap-card-tag">x86 Assembly</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Stack Overflows</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Exploit Dev</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Assembly Debugging</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/hacking_art.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/hacking_art.html#hacking_art-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/hacking_art.html#hacking_art-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/hacking_art.html#hacking_art-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>
 
-            <!-- Book 8 -->
-            <div class="visual-project-card" style="--project-glow: #ff00ff;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,0,255,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #ff00ff1a"></div>
+            <!-- Book 8: Practical Malware Analysis -->
+            <div class="roadmap-book-card" data-book-id="malware_analysis" data-level="expert" style="--card-glow-color: #ff00ff;">
+              <div class="roadmap-card-banner" style="background: rgba(255,0,255,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-expert">Expert</span>
+                <div class="project-glow-layer" style="background: #ff00ff0d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">Practical Malware Analysis</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">الدليل العملي لتشريح وفك تشفير البرمجيات الخبيثة وتحليل سلوك الفيروسات ساكناً ونشطاً.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Michael Sikorski
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">Practical Malware Analysis</h3>
+                <div class="roadmap-card-author">Author: Michael Sikorski & Andrew Honig</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/malware_analysis.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★★</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">10/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">80 ساعة</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">800</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">Assembly Lang</span>
+                    <span class="roadmap-card-tag">Reverse Eng</span>
+                    <span class="roadmap-card-tag">OS Internals</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Static/Dynamic Analysis</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Unpack Obfuscation</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">IDA Pro & Ghidra</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/malware_analysis.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/malware_analysis.html#malware_analysis-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/malware_analysis.html#malware_analysis-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/malware_analysis.html#malware_analysis-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>
 
-            <!-- Book 9 -->
-            <div class="visual-project-card" style="--project-glow: #39ff14;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(57,255,20,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #39ff141a"></div>
+            <!-- Book 9: Black Hat Python -->
+            <div class="roadmap-book-card" data-book-id="black_hat_python" data-level="intermediate" style="--card-glow-color: #39ff14;">
+              <div class="roadmap-card-banner" style="background: rgba(57,255,20,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-intermediate">Intermediate</span>
+                <div class="project-glow-layer" style="background: #39ff140d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">Black Hat Python</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">توظيف بايثون لكتابة أدوات اختراق الشبكات وسحب البيانات وتخطي الصلاحيات آلياً.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Justin Seitz
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">Black Hat Python</h3>
+                <div class="roadmap-card-author">Author: Justin Seitz</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/black_hat_python.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★☆</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">6/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">30 ساعة</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">220</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">Python Basics</span>
+                    <span class="roadmap-card-tag">Network Sockets</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Exploit Automation</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Custom Scanners</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Shellcode & Sockets</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/black_hat_python.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/black_hat_python.html#black_hat_python-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/black_hat_python.html#black_hat_python-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/black_hat_python.html#black_hat_python-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>
 
-            <!-- Book 10 -->
-            <div class="visual-project-card" style="--project-glow: #ffffff;">
-              <div class="project-card-image-wrap" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05);">
-                <span style="font-size: 4rem;">📖</span>
-                <div class="project-glow-layer" style="background: #ffffff1a"></div>
+            <!-- Book 10: Operator Handbook -->
+            <div class="roadmap-book-card" data-book-id="operator_handbook" data-level="expert" style="--card-glow-color: #ffffff;">
+              <div class="roadmap-card-banner" style="background: rgba(255,255,255,0.02);">
+                <span class="book-icon">📖</span>
+                <span class="roadmap-card-level-badge level-expert">Expert</span>
+                <div class="project-glow-layer" style="background: #ffffff0d"></div>
               </div>
-              <div class="project-card-info" style="padding: 15px;">
-                <h3 class="project-title-name" style="margin: 0 0 8px 0;">Operator Handbook</h3>
-                <p class="project-desc-txt" style="font-size: 0.82rem; color: var(--text-secondary); min-height: 50px;">الدليل الشامل للـ Cloud والـ containers وإدارة خوادم Linux والشبكات باحترافية.</p>
-                <div style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 12px;">
-                  Author: Joshua Long
+              <div class="roadmap-card-body">
+                <h3 class="roadmap-card-title">Operator Handbook</h3>
+                <div class="roadmap-card-author">Author: Joshua Long</div>
+                
+                <!-- Progress Bar -->
+                <div class="roadmap-card-progress-wrap">
+                  <div class="roadmap-card-progress-info">
+                    <span>نسبة القراءة: <strong class="roadmap-card-progress-percent">0%</strong></span>
+                    <span>آخر فصل: <strong class="roadmap-card-last-read" style="color:var(--accent-green);">لم يبدأ</strong></span>
+                  </div>
+                  <div class="roadmap-card-progress-bar">
+                    <div class="roadmap-card-progress-fill" style="width: 0%;"></div>
+                  </div>
                 </div>
-                <div class="project-card-action">
-                  <a href="books/operator_handbook.html" target="_blank" class="cyber-btn ghost-btn" style="width: 100%; text-align: center; text-decoration: none; display: block; box-sizing: border-box;">
-                    📖 اقرأ ملخص الكتاب &gt;&gt;
-                  </a>
+
+                <!-- Stats Grid -->
+                <div class="roadmap-card-stats-grid">
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⭐ التقييم</span>
+                    <span class="roadmap-card-stat-val" style="color: #ffaa00;">★★★★☆</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⚡ الصعوبة</span>
+                    <span class="roadmap-card-stat-val">9/10</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">⏱️ مدة الدراسة</span>
+                    <span class="roadmap-card-stat-val">35 ساعة</span>
+                  </div>
+                  <div class="roadmap-card-stat-item">
+                    <span class="roadmap-card-stat-label">📄 الصفحات</span>
+                    <span class="roadmap-card-stat-val">400</span>
+                  </div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🔑 المتطلبات (Prerequisites):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag">Sysadmin Basics</span>
+                    <span class="roadmap-card-tag">Kubernetes/Docker</span>
+                    <span class="roadmap-card-tag">Cloud Security</span>
+                  </div>
+                </div>
+
+                <!-- Outcomes -->
+                <div class="roadmap-card-meta-section">
+                  <div class="roadmap-card-meta-title">🎯 ماذا ستتعلم؟ (Outcomes):</div>
+                  <div class="roadmap-card-tags">
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Cloud Auditing</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Kubernetes Exploits</span>
+                    <span class="roadmap-card-tag" style="border-color: rgba(0,255,102,0.15); color: var(--accent-green);">Multi-System Operations</span>
+                  </div>
+                </div>
+
+                <!-- Icon/Link Actions -->
+                <div class="roadmap-card-actions">
+                  <a href="books/operator_handbook.html" target="_blank" class="roadmap-card-btn btn-main" title="اقرأ الكتاب">📖 اقرأ</a>
+                  <a href="books/operator_handbook.html#operator_handbook-tips" target="_blank" class="roadmap-card-btn" title="الملخص الاستراتيجي">🧠 ملخص</a>
+                  <a href="books/operator_handbook.html#operator_handbook-sandbox" target="_blank" class="roadmap-card-btn" title="المختبر التفاعلي">🧪 لابات</a>
+                  <a href="books/operator_handbook.html#operator_handbook-quiz" target="_blank" class="roadmap-card-btn" title="بنك الاختبارات">❓ اختبار</a>
                 </div>
               </div>
             </div>

@@ -4062,6 +4062,247 @@ ul, ol {
   padding-left: 0 !important;
 }
 
+/* ── Book Filter Tabs ──────────────────────────────────────── */
+.book-filter-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+.book-filter-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--font-body);
+}
+.book-filter-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+.book-filter-btn.active {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--shadow-glow-cyan);
+}
+
+/* ── Upgraded Security Roadmap Card Styles ────────────────── */
+.roadmap-book-card {
+  background: rgba(6, 6, 16, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.roadmap-book-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--card-glow-color, var(--accent-cyan)) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 15px var(--card-glow-color, rgba(0, 229, 255, 0.15));
+}
+.roadmap-card-banner {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.01);
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.roadmap-card-banner .book-icon {
+  font-size: 3rem;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+.roadmap-book-card:hover .roadmap-card-banner .book-icon {
+  transform: scale(1.1) rotate(3deg);
+}
+.roadmap-card-level-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  z-index: 3;
+}
+.roadmap-card-level-badge.level-beginner {
+  background: rgba(0, 255, 102, 0.08);
+  border: 1px solid var(--accent-green);
+  color: var(--accent-green);
+  box-shadow: 0 0 8px rgba(0, 255, 102, 0.1);
+}
+.roadmap-card-level-badge.level-intermediate {
+  background: rgba(255, 170, 0, 0.08);
+  border: 1px solid #ffaa00;
+  color: #ffaa00;
+  box-shadow: 0 0 8px rgba(255, 170, 0, 0.1);
+}
+.roadmap-card-level-badge.level-advanced {
+  background: rgba(255, 0, 85, 0.08);
+  border: 1px solid var(--accent-red);
+  color: var(--accent-red);
+  box-shadow: 0 0 8px rgba(255, 0, 85, 0.1);
+}
+.roadmap-card-level-badge.level-expert {
+  background: rgba(186, 85, 211, 0.08);
+  border: 1px solid #ba55d3;
+  color: #ba55d3;
+  box-shadow: 0 0 8px rgba(186, 85, 211, 0.1);
+}
+
+.roadmap-card-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.roadmap-card-title {
+  margin: 0 0 6px 0;
+  font-size: 1.05rem;
+  color: #fff;
+  font-weight: 700;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+}
+.roadmap-card-author {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.72rem;
+  color: var(--accent-cyan);
+  margin-bottom: 12px;
+}
+.roadmap-card-progress-wrap {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+.roadmap-card-progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+.roadmap-card-progress-bar {
+  height: 5px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.roadmap-card-progress-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.roadmap-card-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 15px;
+  background: rgba(255,255,255,0.01);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.roadmap-card-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.roadmap-card-stat-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+.roadmap-card-stat-val {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.roadmap-card-meta-section {
+  margin-bottom: 15px;
+}
+.roadmap-card-meta-title {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-weight: 800;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.roadmap-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.roadmap-card-tag {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+.roadmap-card-actions {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: 5px;
+  margin-top: auto;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 15px;
+}
+.roadmap-card-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 4px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.02);
+  color: var(--text-secondary);
+}
+.roadmap-card-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  border-color: rgba(255,255,255,0.15);
+}
+.roadmap-card-btn.btn-main {
+  background: var(--gradient-primary);
+  color: #fff;
+  border: none;
+}
+.roadmap-card-btn.btn-main:hover {
+  box-shadow: var(--shadow-glow-cyan);
+}
+
+
 
 
 
