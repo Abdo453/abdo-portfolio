@@ -4042,10 +4042,26 @@ body.reading-mode-active .content-sec p {
 }
 
 /* ── RTL Headers and Content Alignment Fixes ───────────────── */
+:root, body {
+  direction: rtl;
+}
+
 h1, h2, h3, h4, h5, h6 {
   direction: rtl !important;
   unicode-bidi: normal !important;
 }
+
+pre, code, .command, .bash, .terminal, .code-box, .code-box pre {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: embed !important;
+}
+
+ul, ol {
+  padding-right: 20px !important;
+  padding-left: 0 !important;
+}
+
 
 
 
