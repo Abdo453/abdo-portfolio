@@ -264,4 +264,66 @@
     });
   });
 
+  // ── 5. Dynamic Mobile Hamburger Menu Drawer ───────────────
+  function initMobileDrawer() {
+    const pathParts = window.location.pathname.split('/');
+    const bookId = pathParts[pathParts.length - 1].replace('.html', '');
+    
+    // Only initialize inside book templates
+    if (bookSectionMap[bookId] === undefined) return;
+    if (document.getElementById('mobile-nav-toggle')) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'mobile-nav-toggle';
+    btn.innerHTML = '☰';
+    btn.style.cssText = `
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9999;
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+    `;
+
+    btn.addEventListener('click', function() {
+      const sidebar = document.querySelector('.book-sidebar');
+      if (!sidebar) return;
+      if (sidebar.style.left === '0px') {
+        sidebar.style.left = '-300px';
+        btn.innerHTML = '☰';
+      } else {
+        sidebar.style.left = '0px';
+        btn.innerHTML = '✕';
+      }
+    });
+
+    document.body.appendChild(btn);
+
+    // Auto-close sidebar on menu link click on mobile
+    document.querySelectorAll('.toc-item').forEach(item => {
+      item.addEventListener('click', () => {
+        if (window.innerWidth <= 992) {
+          const sidebar = document.querySelector('.book-sidebar');
+          if (sidebar) sidebar.style.left = '-300px';
+          btn.innerHTML = '☰';
+        }
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    initMobileDrawer();
+  });
+
 })();
