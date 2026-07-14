@@ -4305,6 +4305,30 @@ ul, ol {
   transform: translateY(-1px);
 }
 
+/* Tablet / Touch Screen Fixes */
+.roadmap-card-btn {
+  touch-action: manipulation; /* Eliminate 300ms tap delay on tablets */
+  -webkit-tap-highlight-color: transparent;
+}
+.roadmap-book-card {
+  -webkit-tap-highlight-color: transparent;
+}
+.book-modal-overlay {
+  /* Ensure overlay works on iOS Safari scroll-lock quirk */
+  -webkit-overflow-scrolling: touch;
+  touch-action: none;
+}
+.book-modal-container {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+.book-modal-close-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  min-width: 44px; /* Apple HIG minimum touch target */
+  min-height: 44px;
+}
+
 /* Increase progress bar visibility */
 .roadmap-card-progress-bar {
   height: 8px !important;

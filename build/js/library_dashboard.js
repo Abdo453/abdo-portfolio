@@ -414,6 +414,25 @@
     }
   });
 
+  // ── Fix: Teleport modals to <body> to fix iOS/Android tablet stacking ──
+  // On tablets, position:fixed inside a parent with transform/backdrop-filter
+  // doesn't escape the stacking context, causing modals to be hidden or clipped.
+  // Moving them directly to <body> fixes this.
+  function teleportModalsToBody() {
+    document.querySelectorAll('.book-modal-overlay').forEach(function(modal) {
+      if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+      }
+    });
+  }
+
+  // Run immediately on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', teleportModalsToBody);
+  } else {
+    teleportModalsToBody();
+  }
+
   // Inject section footer buttons dynamically in book template views
   document.addEventListener("DOMContentLoaded", function() {
     initTheme();
