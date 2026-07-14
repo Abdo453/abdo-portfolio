@@ -778,13 +778,8 @@
     btn.addEventListener('click', function() {
       const sidebar = document.querySelector('.book-sidebar');
       if (!sidebar) return;
-      if (sidebar.style.left === '0px') {
-        sidebar.style.left = '-300px';
-        btn.innerHTML = '☰';
-      } else {
-        sidebar.style.left = '0px';
-        btn.innerHTML = '✕';
-      }
+      const isOpen = sidebar.classList.toggle('open');
+      btn.innerHTML = isOpen ? '✕' : '☰';
     });
 
     document.body.appendChild(btn);
@@ -794,7 +789,9 @@
       item.addEventListener('click', () => {
         if (window.innerWidth <= 1000) {
           const sidebar = document.querySelector('.book-sidebar');
-          if (sidebar) sidebar.style.left = '-300px';
+          if (sidebar) {
+            sidebar.classList.remove('open');
+          }
           btn.innerHTML = '☰';
         }
       });
