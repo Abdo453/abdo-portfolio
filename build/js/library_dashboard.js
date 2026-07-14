@@ -606,7 +606,7 @@
               }
               if (checked) {
                 const titleEl = section.querySelector('h2, h3, .sub-sec-title');
-                const titleText = titleEl ? titleEl.innerText.replace(/^[أ-يA-Z0-9\\.\\-\s]+[\\)\\-\.]\\s*/, '') : 'قسم غير معروف';
+                const titleText = titleEl ? titleEl.innerText.replace(/^[أ-يA-Z0-9\.\-\s]+[\)\-\.]\s*/, '') : 'قسم غير معروف';
                 safeStorage.setItem(`last_read_title_${bookId}`, titleText);
               }
             }
