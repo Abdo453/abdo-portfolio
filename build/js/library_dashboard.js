@@ -2,6 +2,45 @@
 // Handles: Theme Swapping, Dynamic "Mark as Read" status, and Global Progress calculations.
 
 (function() {
+  // ── Safe Storage Wrapper (avoids crashes in blocked environments) ──
+  const safeStorage = {
+    getItem: function(key) {
+      try {
+        return safeStorage.getItem(key);
+      } catch (e) {
+        return null;
+      }
+    },
+    setItem: function(key, value) {
+      try {
+        safeStorage.setItem(key, value);
+      } catch (e) {
+        // block
+      }
+    },
+    removeItem: function(key) {
+      try {
+        safeStorage.removeItem(key);
+      } catch (e) {
+        // block
+      }
+    },
+    getLength: function() {
+      try {
+        return safeStorage.getLength();
+      } catch (e) {
+        return 0;
+      }
+    },
+    getKey: function(index) {
+      try {
+        return safeStorage.getKey(index);
+      } catch (e) {
+        return null;
+      }
+    }
+  };
+
   const bookRoadmap = [
     { id: 'real_world_bug_hunting', title: 'Real-World Bug Hunting', duration: 15, badge: 'Real-World Bug Hunter' },
     { id: 'bug_bounty_bootcamp', title: 'Bug Bounty Bootcamp', duration: 20, badge: 'Bootcamp Graduate' },
@@ -16,7 +55,7 @@
   ];
   // ── 1. Theme Swapper Engine ────────────────────────────────
   function initTheme() {
-    const savedTheme = localStorage.getItem('hacker_theme') || 'theme-cyan';
+    const savedTheme = safeStorage.getItem('hacker_theme') || 'theme-cyan';
     document.body.classList.remove('theme-green', 'theme-cyan', 'theme-red', 'theme-purple');
     document.body.classList.add(savedTheme);
     
@@ -28,7 +67,7 @@
   }
 
   window.setHackerTheme = function(themeName) {
-    localStorage.setItem('hacker_theme', themeName);
+    safeStorage.setItem('hacker_theme', themeName);
     document.body.classList.remove('theme-green', 'theme-cyan', 'theme-red', 'theme-purple');
     document.body.classList.add(themeName);
     
@@ -69,7 +108,7 @@
       const href = item.getAttribute('href');
       if (href && href.startsWith('#')) {
         const secId = href.substring(1);
-        const isRead = localStorage.getItem(`read_${bookId}_${secId}`) === 'true';
+        const isRead = safeStorage.getItem(`read_${bookId}_${secId}`) === 'true';
         
         // Sync checkbox if exists
         const checkbox = item.querySelector('.toc-item-checkbox');
@@ -103,9 +142,9 @@
     if (total === undefined) return;
     
     let read = 0;
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith(`read_${bookId}_`) && localStorage.getItem(key) === 'true') {
+    for (let i = 0; i < safeStorage.getLength(); i++) {
+      const key = safeStorage.getKey(i);
+      if (key && key.startsWith(`read_${bookId}_`) && safeStorage.getItem(key) === 'true') {
         read++;
       }
     }
@@ -175,9 +214,9 @@
 
   function calculateGlobalProgress() {
     let readCount = 0;
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith('read_') && localStorage.getItem(key) === 'true') {
+    for (let i = 0; i < safeStorage.getLength(); i++) {
+      const key = safeStorage.getKey(i);
+      if (key && key.startsWith('read_') && safeStorage.getItem(key) === 'true') {
         readCount++;
       }
     }
@@ -247,9 +286,9 @@
 
       const total = bookSectionMap[bookId];
       let read = 0;
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith(`read_${bookId}_`) && localStorage.getItem(key) === 'true') {
+      for (let i = 0; i < safeStorage.getLength(); i++) {
+        const key = safeStorage.getKey(i);
+        if (key && key.startsWith(`read_${bookId}_`) && safeStorage.getItem(key) === 'true') {
           read++;
         }
       }
@@ -274,7 +313,7 @@
       if (fill) fill.style.width = `${percent}%`;
       if (text) text.innerText = `${percent}%`;
       
-      const lastReadTitle = localStorage.getItem(`last_read_title_${bookId}`) || 'لم يبدأ بعد';
+      const lastReadTitle = safeStorage.getItem(`last_read_title_${bookId}`) || 'لم يبدأ بعد';
       if (lastReadText) lastReadText.innerText = lastReadTitle;
 
       // Update card title text for chapters count
@@ -374,9 +413,9 @@
       // Load progress into modal
       const total = bookSectionMap[bookId];
       let read = 0;
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith(`read_${bookId}_`) && localStorage.getItem(key) === 'true') {
+      for (let i = 0; i < safeStorage.getLength(); i++) {
+        const key = safeStorage.getKey(i);
+        if (key && key.startsWith(`read_${bookId}_`) && safeStorage.getItem(key) === 'true') {
           read++;
         }
       }
@@ -390,7 +429,7 @@
       if (text) text.innerText = `${percent}%`;
       if (chapterStatusEl) chapterStatusEl.innerText = `الفصول: ${read} / ${total}`;
       
-      const lastReadTitle = localStorage.getItem(`last_read_title_${bookId}`) || 'لم يبدأ بعد';
+      const lastReadTitle = safeStorage.getItem(`last_read_title_${bookId}`) || 'لم يبدأ بعد';
       if (lastReadText) lastReadText.innerText = lastReadTitle;
     }
   };
@@ -452,7 +491,7 @@
         btnContainer.className = 'read-status-container';
         btnContainer.style.cssText = 'display:flex; justify-content:flex-end; margin-top:25px; border-top:1px dashed rgba(255,255,255,0.08); padding-top:15px;';
 
-        const isRead = localStorage.getItem(`read_${bookId}_${sec.id}`) === 'true';
+        const isRead = safeStorage.getItem(`read_${bookId}_${sec.id}`) === 'true';
 
         const btn = document.createElement('button');
         btn.className = 'read-toggle-btn';
@@ -471,15 +510,15 @@
         btn.innerText = isRead ? '✓ مقروء' : '○ تحديد كمقروء';
 
         btn.addEventListener('click', function() {
-          const currentlyRead = localStorage.getItem(`read_${bookId}_${sec.id}`) === 'true';
+          const currentlyRead = safeStorage.getItem(`read_${bookId}_${sec.id}`) === 'true';
           if (currentlyRead) {
-            localStorage.setItem(`read_${bookId}_${sec.id}`, 'false');
+            safeStorage.setItem(`read_${bookId}_${sec.id}`, 'false');
             btn.innerText = '○ تحديد كمقروء';
             btn.style.background = 'rgba(255,255,255,0.02)';
             btn.style.borderColor = 'rgba(255,255,255,0.08)';
             btn.style.color = 'var(--text-secondary)';
           } else {
-            localStorage.setItem(`read_${bookId}_${sec.id}`, 'true');
+            safeStorage.setItem(`read_${bookId}_${sec.id}`, 'true');
             btn.innerText = '✓ مقروء';
             btn.style.background = 'rgba(0,255,102,0.1)';
             btn.style.borderColor = 'var(--accent-green)';
@@ -488,7 +527,7 @@
             // Save last read section title
             const titleEl = sec.querySelector('h2, h3, .sub-sec-title');
             const titleText = titleEl ? titleEl.innerText.replace(/^[أ-يA-Z0-9\.\-\s]+[\)\-\.]\s*/, '') : 'قسم غير معروف';
-            localStorage.setItem(`last_read_title_${bookId}`, titleText);
+            safeStorage.setItem(`last_read_title_${bookId}`, titleText);
           }
           updateTOCReadBadges();
         });
@@ -546,7 +585,7 @@
           checkbox.style.accentColor = 'var(--accent-cyan)';
           checkbox.style.marginLeft = '10px';
           
-          checkbox.checked = localStorage.getItem(`read_${bookId}_${secId}`) === 'true';
+          checkbox.checked = safeStorage.getItem(`read_${bookId}_${secId}`) === 'true';
           
           checkbox.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -554,7 +593,7 @@
           
           checkbox.addEventListener('change', function() {
             const checked = checkbox.checked;
-            localStorage.setItem(`read_${bookId}_${secId}`, checked ? 'true' : 'false');
+            safeStorage.setItem(`read_${bookId}_${secId}`, checked ? 'true' : 'false');
             
             const section = document.getElementById(secId);
             if (section) {
@@ -568,7 +607,7 @@
               if (checked) {
                 const titleEl = section.querySelector('h2, h3, .sub-sec-title');
                 const titleText = titleEl ? titleEl.innerText.replace(/^[أ-يA-Z0-9\\.\\-\s]+[\\)\\-\.]\\s*/, '') : 'قسم غير معروف';
-                localStorage.setItem(`last_read_title_${bookId}`, titleText);
+                safeStorage.setItem(`last_read_title_${bookId}`, titleText);
               }
             }
             updateTOCReadBadges();
@@ -595,9 +634,9 @@
         
         const textarea = document.getElementById('bookPageNotesArea');
         if (textarea) {
-          textarea.value = localStorage.getItem(`notes_${bookId}`) || '';
+          textarea.value = safeStorage.getItem(`notes_${bookId}`) || '';
           textarea.addEventListener('input', function() {
-            localStorage.setItem(`notes_${bookId}`, textarea.value);
+            safeStorage.setItem(`notes_${bookId}`, textarea.value);
           });
         }
       }
@@ -770,7 +809,7 @@
   // ── 6. Distraction-Free Reading Mode Engine ───────────────
   window.toggleReadingMode = function() {
     const active = document.body.classList.toggle('reading-mode-active');
-    localStorage.setItem('reading_mode_enabled', active ? 'true' : 'false');
+    safeStorage.setItem('reading_mode_enabled', active ? 'true' : 'false');
     
     const btns = document.querySelectorAll('.reading-mode-btn');
     btns.forEach(btn => {
@@ -794,7 +833,7 @@
     label.style.cssText = 'font-size:0.8rem; color:var(--text-secondary); font-weight:700;';
     label.innerHTML = '📚 وضع القراءة الميسر للثغرات والأكواد';
 
-    const isEnabled = localStorage.getItem('reading_mode_enabled') === 'true';
+    const isEnabled = safeStorage.getItem('reading_mode_enabled') === 'true';
 
     const btn = document.createElement('button');
     btn.className = 'reading-mode-btn';
@@ -919,7 +958,7 @@
       });
 
       const nextUnread = sections.find(sec => {
-        return localStorage.getItem(`read_${bookId}_${sec.id}`) !== 'true';
+        return safeStorage.getItem(`read_${bookId}_${sec.id}`) !== 'true';
       });
 
       if (nextUnread) {
@@ -943,7 +982,7 @@
     notesContainer.className = 'sidebar-notes-panel';
     notesContainer.style.cssText = 'margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;';
 
-    const savedNotes = localStorage.getItem(`notes_${bookId}`) || '';
+    const savedNotes = safeStorage.getItem(`notes_${bookId}`) || '';
 
     notesContainer.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -974,7 +1013,7 @@
     if (textarea) {
       textarea.value = savedNotes;
       textarea.addEventListener('input', function() {
-        localStorage.setItem(`notes_${bookId}`, textarea.value);
+        safeStorage.setItem(`notes_${bookId}`, textarea.value);
         if (charCount) charCount.innerText = textarea.value.length + ' حرف';
       });
       textarea.addEventListener('focus', function() {
@@ -990,7 +1029,7 @@
     if (clearBtn) {
       clearBtn.addEventListener('click', function() {
         if (confirm('مسح كل الملاحظات المحفوظة لهذا الكتاب؟')) {
-          localStorage.removeItem(`notes_${bookId}`);
+          safeStorage.removeItem(`notes_${bookId}`);
           if (textarea) textarea.value = '';
           if (charCount) charCount.innerText = '0 حرف';
         }
@@ -1014,6 +1053,7 @@
 
   // ── Wire enhanced features into DOMContentLoaded ───────────
   document.addEventListener('DOMContentLoaded', function() {
+    teleportModalsToBody();
     const pathParts = window.location.pathname.split('/');
     const bookId = pathParts[pathParts.length - 1].replace('.html', '');
     if (bookSectionMap[bookId] === undefined) return;
