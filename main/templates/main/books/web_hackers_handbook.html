@@ -551,427 +551,50 @@
 
       <!-- Left Main Content -->
       <main class="book-content" id="main-content-wahh">
-
         <!-- Section 1 -->
-        <section id="wahh-mapping" class="content-sec">
-          <h2 class="sec-title">1. منهجية رسم خريطة الويب وتحليلها (Web Mapping & Footprinting)</h2>
-          <p>تتمحور الخطوة الأولى والأهم في اختراق تطبيقات الويب حول رسم خريطة كاملة للمدخلات والمخرجات. يشدد الكاتب على أنه لا يمكن اختراق ما لا تراه.</p>
-          
-          <h3 class="sub-sec-title">أ. الاستكشاف اليدوي وتحليل العناوين والـ API endpoints</h3>
-          <p>أوامر استخدام curl لتتبع الطلبات ورؤية ترويسات الاستجابة التفصيلية ومحاولة التلاعب بالترويسات الحساسة:</p>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre id="cmd-wahh-curl">curl -i -X OPTIONS https://example.com/
-curl -i -H "X-Forwarded-For: 127.0.0.1" -H "X-Custom-IP-Authorization: 127.0.0.1" https://example.com/</pre>
-          </div>
-          
-          <div class="terminal-header-bar">
-            <span>💻 محاكي مخرجات curl لتتبع الترويسات</span>
-            <span style="color: #ffaa00;">• Live Simulation</span>
-          </div>
-          <div class="terminal-sim" id="sim-wahh-curl">
-HTTP/2 200 OK
-Allow: GET, POST, OPTIONS, HEAD
-Server: nginx
-X-Frame-Options: SAMEORIGIN
-X-Content-Type-Options: nosniff
-          </div>
+        <section id="whh-intro" class="content-sec">
+          <h2 class="sec-title">1. مقدمة ونظام عمل بروتوكول الويب والدفاع الأساسي (Core Web Defense)</h2>
+          <p>يفصل this الجزء الهياكل الداخلية لتطبيقات الويب الحديثة، وكيفية معالجة الطلبات والاستجابات (HTTP Requests & Responses)، بالإضافة إلى آليات الدفاع الثلاثة الأساسية: التحكم في المدخلات (Input Handling)، إدارة المستخدمين والجلسات (Session Management)، وإجراء التحقق من الصلاحيات (Access Control).</p>
         </section>
 
         <!-- Section 2 -->
-        <section id="wahh-auth" class="content-sec">
-          <h2 class="sec-title">2. كسر آليات التوثيق وإدارة الجلسات (Bypassing Auth & Session)</h2>
-          <p>تعتبر ثغرات كسر آلية التوثيق من أخطر ثغرات الويب لأنها تسمح للمهاجم بالدخول لحساب الأدمن مباشرة.</p>
-          
-          <h3 class="sub-sec-title">أ. التلاعب بالتوكن والتحقق من العشوائية (Burp Sequencer)</h3>
-          <p>تعتمد المواقع على قيم عشوائية (Session Tokens). يوضح الكتاب كيفية تجميع 20,000 توكن عبر Burp Suite وإجراء تحليل إحصائي للتحقق من العشوائية (Entropy) للتنبؤ بالتوكن التالي.</p>
-          
-          <h3 class="sub-sec-title">ب. تجاوز قفل الحساب (Lockout Bypass)</h3>
-          <p>لتجنب الحظر أثناء التخمين، نستخدم ترويسات تغيير الـ IP مع كل محاولة تخمين:</p>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre>X-Originating-IP: 127.0.0.1
-X-Forwarded-For: 127.0.0.1
-X-Remote-IP: 127.0.0.1
-X-Remote-Addr: 127.0.0.1</pre>
-          </div>
+        <section id="whh-bypass" class="content-sec">
+          <h2 class="sec-title">2. تخطي الفلاتر والتحقق من المدخلات (Bypassing Client-side Validation)</h2>
+          <p>يتناول هذا الفصل كيفية تخطي حمايات التحقق من المدخلات المعتمدة على المتصفح (JavaScript Client-side Validation) عن طريق اعتراض الطلبات باستخدام البروكسي (مثل Burp Suite) وتعديلها يدوياً قبل إرسالها للسيرفر.</p>
         </section>
 
         <!-- Section 3 -->
-        <section id="wahh-sqli" class="content-sec">
-          <h2 class="sec-title">3. ثغرات الحقن SQL Injection وتخطي WAF</h2>
-          <p>الحقن بقاعدة البيانات يسمح بالسيطرة الكاملة وسحب البيانات الحساسة أو حتى الحصول على شل (Shell) في السيرفر.</p>
-          
-          <h3 class="sub-sec-title">أ. حقن SQL Injection عبر المعامل المصاب</h3>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre id="cmd-wahh-sqli">http://example.com/item.php?id=-1 UNION SELECT 1,2,database(),version()--</pre>
-          </div>
-          
-          <h3 class="sub-sec-title">ب. تخطي جدران حماية الـ WAF (WAF Bypassing)</h3>
-          <p>ترميز المدخلات لحماية البايلود من جدران الحماية:</p>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre id="cmd-wahh-sqli-waf"># ترميز البايلود بالـ URL المزدوج
-http://example.com/item.php?id=-1%2520UNION%2520SELECT%25201,2,3--</pre>
-          </div>
+        <section id="whh-session" class="content-sec">
+          <h2 class="sec-title">3. ثغرات إدارة الجلسات والتوثيق (Session Management Flaws)</h2>
+          <p>ثغرات خطيرة تتيح للمهاجمين انتحال هوية المستخدمين الآخرين أو الأدمن نتيجة لإنشاء توكن جلسات ضعيف أو تخزينها بشكل غير آمن.</p>
+          <h3 class="sub-sec-title">اختراق وتخطي الـ JWT Tokens (JSON Web Tokens):</h3>
+          <ul>
+            <li><strong>تخطي خوارزمية التوقيع (None Algorithm Exploit):</strong> تغيير قيمة معامل الـ <code>"alg"</code> في الهيدر إلى <code>"none"</code> وحذف التوقيع بالكامل.</li>
+            <li><strong>تخمين المفتاح السري (Brute-forcing HS256 Secret):</strong> تخمين الباسورد السري لتوقيع التوكن باستخدام أداة مثل Hashcat.</li>
+          </ul>
         </section>
 
         <!-- Section 4 -->
-        <section id="wahh-lfi" class="content-sec">
-          <h2 class="sec-title">4. تضمين الملفات وثغرات المسار LFI/RFI</h2>
-          <p>قراءة الملفات الحساسة والتنقل داخل مجلدات خادم الويب.</p>
-          
-          <h3 class="sub-sec-title">أ. تجاوز فلاتر الحظر المحلية وقراءة الملف المستهدف</h3>
-          <p>توليد البايلود المخصص لقراءة الملف المحدد:</p>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre id="cmd-wahh-lfi">http://example.com/index.php?page=../../../../etc/passwd</pre>
-          </div>
+        <section id="whh-access" class="content-sec">
+          <h2 class="sec-title">4. ثغرات التحكم بالوصول وحجب الصلاحيات (Access Control Vulnerabilities)</h2>
+          <p>الفرق الشاسع بين مصادقة الهوية (Authentication) وتخويل الصلاحيات (Authorization). يوضح الكاتب طرق اكتشاف وتخطي جدران الأمان العمودية (Vertical) والأفقية (Horizontal).</p>
         </section>
 
         <!-- Section 5 -->
-        <section id="wahh-xss" class="content-sec">
-          <h2 class="sec-title">5. ثغرات XSS وتجاوز فلاتر جافا سكريبت</h2>
-          <p>حقن نصوص برمجية لتنفيذها في متصفحات المستخدمين الآخرين.</p>
-          
-          <h3 class="sub-sec-title">أ. بايلودات XSS متطورة لتجاوز الحظر</h3>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre>&lt;svg onload="alert(document.domain)"&gt;
-&lt;img src=x onerror=confirm(1)&gt;
-&lt;body onload=prompt(1)&gt;</pre>
+        <section id="whh-business" class="content-sec">
+          <h2 class="sec-title">5. ثغرات المنطق البرمجي (Business Logic Flaws)</h2>
+          <p>تنشأ هذه الثغرات نتيجة لافتراضات خاطئة وضعها المطورون أثناء تصميم سير العمليات. لا يتم كشفها غالباً بواسطة الماسحات الآلية للثغرات.</p>
+          <div class="benefit-box">
+            <strong>💵 مثال عملي (التلاعب بالعمليات المالية):</strong> شراء منتجات بسعر سالب أو صفر عن طريق تعديل قيمة معامل السعر المرسل في الطلب <code>{"price": -100, "quantity": 1}</code>، مما يجبر النظام على إضافة أموال لحساب المهاجم بدلاً من خصمها!
           </div>
         </section>
 
         <!-- Section 6 -->
-        <section id="wahh-csrf" class="content-sec">
-          <h2 class="sec-title">6. ثغرات CSRF وكشف التلاعب بالرموز</h2>
-          <p>إجبار متصفح المستخدم على تنفيذ إجراءات ضارة دون علمه.</p>
-          
-          <h3 class="sub-sec-title">أ. تكتيكات تخطي الـ Anti-CSRF Tokens</h3>
-          <ul>
-            <li><strong>Method Swap:</strong> تحويل طلب POST إلى GET لتخطي فحص التوكن.</li>
-            <li><strong>Token Removal:</strong> إزالة التوكن بالكامل من الطلب لمعرفة هل يقبله السيرفر كطلب صالح.</li>
-          </ul>
+        <section id="whh-crypto" class="content-sec">
+          <h2 class="sec-title">6. ثغرات التشفير وقواعد البيانات (Cryptographic Vulnerabilities)</h2>
+          <p>شرح لكيفية استغلال برمجيات التشفير ضعيفة التهيئة مثل هجمات الـ Padding Oracle وهجمات الـ CBC Byte-Flipping للتلاعب بالبيانات المشفرة دون معرفة مفتاح فك التشفير الأصلي.</p>
         </section>
-
-        <!-- Section 7 -->
-        <section id="wahh-ssrf-xxe" class="content-sec">
-          <h2 class="sec-title">7. ثغرات SSRF و XML Entity (XXE)</h2>
-          <p>إجبار السيرفر على الاتصال بأنظمة داخلية معزولة أو تسريب محتويات الملفات عبر معالجة XML.</p>
-          
-          <h3 class="sub-sec-title">أ. بايلود استغلال ثغرات الـ XXE</h3>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre id="cmd-wahh-xxe">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
-&lt;!DOCTYPE foo [
-  &lt;!ELEMENT foo ANY &gt;
-  &lt;!ENTITY xxe SYSTEM "file:///etc/passwd" &gt;]&gt;
-&lt;foo&gt;&amp;xxe;&lt;/foo&gt;</pre>
-          </div>
-        </section>
-
-        <!-- Section 8 -->
-        <section id="wahh-logic" class="content-sec">
-          <h2 class="sec-title">8. الثغرات المنطقية (Business Logic Flaws)</h2>
-          <p>الثغرات المنطقية تحدث عندما يقوم النظام بمعالجة البيانات بطريقة صحيحة برمجياً ولكنها خاطئة منطقياً.</p>
-          <div class="benefit-box">
-            <strong>مثال على ثغرة منطقية:</strong>
-            شراء منتجات بقيمة سالبة (Negative Price) حيث يقوم الموقع بإرجاع المال لحسابك بدلاً من خصمه، أو التلاعب بالكمية في سلة المشتريات لتخفيض القيمة الإجمالية إلى صفر.
-          </div>
-        </section>
-
-        <!-- Section 9 -->
-        <section id="wahh-cheat" class="content-sec">
-          <h2 class="sec-title">9. جدول ملخص ثغرات الويب الكبرى (WAHH Cheat Sheet)</h2>
-          <p>جدول مرجعي سريع لأهم البايلودز والأوامر المستعملة في فحص ثغرات الويب الكبرى:</p>
-          
-          <table class="cheat-sheet-table">
-            <thead>
-              <tr>
-                <th>الثغرة</th>
-                <th>البايلود المستعمل</th>
-                <th>طريقة التحقق</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>SQL Injection</td>
-                <td id="td-wahh-sqli"><code>http://example.com/item.php?id=-1 UNION SELECT 1,2,database(),version()--</code></td>
-                <td>ظهور اسم قاعدة البيانات أو الخطأ</td>
-              </tr>
-              <tr>
-                <td>LFI (تضمين ملفات)</td>
-                <td id="td-wahh-lfi"><code>http://example.com/index.php?page=../../../../etc/passwd</code></td>
-                <td>قراءة محتويات الملف المستهدف</td>
-              </tr>
-              <tr>
-                <td>XML External Entity (XXE)</td>
-                <td id="td-wahh-xxe-td"><code>&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;</code></td>
-                <td>تسريب الملف عبر استجابة XML</td>
-              </tr>
-              <tr>
-                <td>SSRF</td>
-                <td><code>http://169.254.169.254/latest/meta-data/</code></td>
-                <td>سحب بيانات الـ AWS metadata</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Section 10 -->
-                        <!-- Flashcards Section -->
-        <section id="web_hackers_handbook-flashcards" class="content-sec">
-          <h2 class="sec-title">🎴 كروت المراجعة السيبرانية الذكية (Interactive 3D Flashcards)</h2>
-          <p>كروت مراجعة تفاعلية لحفظ الأوامر والبصمات. انقر على أي كرت لقلبه ومعرفة الإجابة النموذجية:</p>
-          
-          <div class="flashcards-grid">
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف نتجاوز حماية الـ Same Origin Policy (SOP)؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">استغلال ثغرة CORS Misconfiguration</div>
-                </div>
-              </div>
-            </div>
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هي ثغرة تثبيت الجلسة (Session Fixation)؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">تثبيت معرف الجلسة للمستهدف قبل تسجيل دخوله</div>
-                </div>
-              </div>
-            </div>
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هو خط الدفاع الأول ضد ثغرات الـ CSRF؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">استخدام الـ Anti-CSRF Token الفريد لكل طلب</div>
-                </div>
-              </div>
-            </div>
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف يتم حقن ثغرات الـ XXE في السيرفر؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">إرسال ملف XML يحتوي على System Entity تشير لملف محلي</div>
-                </div>
-              </div>
-            </div>
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هي وظيفة الـ Web Application Firewall (WAF)؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">فحص وتصفية الطلبات الواردة ومنع البايلودز المعروفة</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Payload Sandbox Section -->
-        <section id="web_hackers_handbook-sandbox" class="content-sec">
-          <h2 class="sec-title">🧪 مختبر حقن البايلودز الحي (Interactive Payload Sandbox)</h2>
-          <p>مختبر محاكاة تفاعلي لاختبار وتحليل البايلودز ورؤية الاستجابة المباشرة للخوادم:</p>
-          
-          <div style="background: rgba(3,3,8,0.9); border: 1px solid var(--border-glass); border-radius: 8px; padding: 20px; margin: 20px 0;">
-            <div style="margin-bottom: 15px;">
-              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">اختر نوع الثغرة للاختبار:</label>
-              <select id="sandbox-type-web_hackers_handbook" onchange="updateSandboxPayloads('web_hackers_handbook')" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:8px; border-radius:4px; width:100%; outline:none; font-size:0.85rem;">
-                <option value="sqli">SQL Injection (SQLi)</option>
-                <option value="xss">Cross-Site Scripting (XSS)</option>
-                <option value="ssrf">Server-Side Request Forgery (SSRF)</option>
-              </select>
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">البايلود (Payload Input):</label>
-              <input type="text" id="sandbox-payload-web_hackers_handbook" value="' OR '1'='1" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:var(--accent-cyan); padding:10px; border-radius:4px; width:100%; outline:none; font-family:monospace; font-size:0.85rem; box-sizing:border-box;">
-            </div>
-
-            <button onclick="runSandboxExploit('web_hackers_handbook')" style="background:var(--gradient-primary); border:none; color:#fff; padding:10px 20px; border-radius:4px; font-weight:700; cursor:pointer; width:100%; font-size:0.88rem;">
-              ⚡ تنفيذ الهجوم ومحاكاة الاستجابة
-            </button>
-
-            <!-- Terminal Output -->
-            <div style="margin-top: 20px; background:#000; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden;">
-              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace; display:flex; justify-content:space-between;">
-                <span>CONSOLE OUTPUT</span>
-                <span>STATUS: ACTIVE</span>
-              </div>
-              <div id="sandbox-terminal-web_hackers_handbook" style="padding:15px; font-family:monospace; font-size:0.8rem; color:#00ff66; min-height:120px; max-height:200px; overflow-y:auto; line-height:1.5; text-align:left; direction:ltr;">
-                [+] System ready. Input payload and click Execute to begin simulation...
-              </div>
-            </div>
-
-            <!-- Virtual Browser Frame if XSS -->
-            <div id="sandbox-browser-wrap-web_hackers_handbook" style="margin-top: 20px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; display:none;">
-              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace;">
-                🖥️ VIRTUAL BROWSER FRAME
-              </div>
-              <div id="sandbox-browser-content-web_hackers_handbook" style="background:#fff; color:#000; padding:20px; text-align:center; min-height:80px; font-size:0.9rem;">
-                Virtual Viewport
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-<!-- Author Strategic Tips -->
-        <section id="web-tips" class="content-sec">
-          <h2 class="sec-title">💡 نصائح وتوجيهات الكاتب الميدانية (WAHH Golden Advice)</h2>
-          <p>جمعنا لك هنا زبدة الخبرة العملية والنصائح الذهبية التي يركز عليها الكاتب في فصول كتابه للتنقيب والعمل الميداني الفعلي:</p>
-          
-          <div class="benefit-box">
-            <ul style="margin: 0; padding-right: 20px;">
-              <li style='margin-bottom: 12px;'><strong>ارسم خريطة كاملة لحالة التطبيق (Application State Machine):</strong> تتبع جميع مراحل تسجيل الدفع واسترجاع الحسابات للبحث عن الثغرات المنطقية.</li>
-              <li style='margin-bottom: 12px;'><strong>اختبر الثغرات المنطقية بالتلاعب بالافتراضات:</strong> يفترض المطور دائماً أن الخطوة (أ) تسبق الخطوة (ب)، حاول كسر هذا الترتيب وإرسال طلبات عشوائية.</li>
-              <li style='margin-bottom: 12px;'><strong>لا تثق أبداً بالتحقق من المدخلات في جهة العميل (Client-Side):</strong> اعترض كل طلب بـ Burp Suite وعدل القيم والمعاملات قبل وصولها للسيرفر.</li>
-            </ul>
-          </div>
-        </section>
-
-        <section id="wahh-quiz" class="content-sec">
-          <h2 class="sec-title">10. بنك الأسئلة والاختبارات التفاعلية الـ 10</h2>
-          
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 بنك أسئلة مراجعة موسوعة Web Application Hacker's Handbook (انقر لعرض الإجابة النموذجية)</div>
-            
-            <!-- Q1 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-1')">
-                <span>1. كيف يعمل هجوم الـ HTTP Parameter Pollution (HPP) لتجاوز جدران الحماية؟</span>
-                <span class="toggle-icon" id="icon-qw-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-1">
-                <strong>الإجابة النموذجية:</strong> يعمل من خلال إرسال نفس المعامل مرتين بقيم مختلفة (مثل `/search?q=select&q=union`). بعض الخوادم والـ WAF تفحص المعامل الأول فقط، بينما التطبيق الخلفي يجمع القيمتين معاً (لتصبح `select union`) مما يسمح بتجاوز الفلتر وتشغيل الاستعلام بنجاح.
-              </div>
-            </div>
-
-            <!-- Q2 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-2')">
-                <span>2. لماذا تعتبر ثغرة الـ DOM-based XSS أصعب في الكشف والمنع من الأنواع الأخرى؟</span>
-                <span class="toggle-icon" id="icon-qw-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-2">
-                <strong>الإجابة النموذجية:</strong> لأنها تحدث بالكامل داخل متصفح المستخدم (Client-Side) عبر تعديل الـ DOM بواسطة نصوص جافا سكريبت الضعيفة، والطلب لا يرسل البايلود إلى الخادم في كثير من الأحيان (مثل استخدام `#` في العنوان)، وبالتالي لا تستطيع جدران الحماية للويب (WAF) رصدها أو منعها.
-              </div>
-            </div>
-
-            <!-- Q3 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-3')">
-                <span>3. كيف يمكن استغلال ثغرات الـ Blind SQL Injection باستخدام الدوال الزمنية (Time-based SQLi)؟</span>
-                <span class="toggle-icon" id="icon-qw-3">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-3">
-                <strong>الإجابة النموذجية:</strong> نقوم بحقن استعلام يحتوي على شرط، وإذا كان الشرط صحيحاً نقوم بإجبار خادم قاعدة البيانات على الانتظار (مثل `SLEEP(5)`). من خلال رصد وقت استجابة السيرفر، نستنتج ما إذا كانت الإجابة صحيحة أم خاطئة، وبالتالي نستخرج البيانات حرفاً بحرف.
-              </div>
-            </div>
-
-            <!-- Q4 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-4')">
-                <span>4. ما هو الفرق الجوهري بين ثغرة الـ Local File Inclusion (LFI) وثغرة الـ Path Traversal؟</span>
-                <span class="toggle-icon" id="icon-qw-4">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-4">
-                <strong>الإجابة النموذجية:</strong> ثغرة الـ Path Traversal تسمح للمهاجم بقراءة الملفات من نظام التشغيل فقط، بينما ثغرة الـ LFI تقوم بـ "تضمين وتشغيل" الملف ككود برمجى داخل التطبيق (مثل ملفات PHP)، مما يفتح المجال للوصول لتنفيذ الأوامر بالكامل (RCE).
-              </div>
-            </div>
-
-            <!-- Q5 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-5')">
-                <span>5. كيف يمكن للمهاجم تخطي حماية الـ SameSite Lax الخاصة بالكوكيز لتنفيذ هجوم CSRF؟</span>
-                <span class="toggle-icon" id="icon-qw-5">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-5">
-                <strong>الإجابة النموذجية:</strong> حماية `SameSite=Lax` تسمح بإرسال الكوكيز مع طلبات GET الخارجية التي يقوم بها المستخدم بالضغط على روابط صريحة. إذا كان الموقع المستهدف يقبل طلبات GET لتنفيذ عمليات حساسة (مثل تغيير كلمة المرور عبر GET)، يمكن استغلال الـ CSRF بنجاح بالرغم من وجود Lax.
-              </div>
-            </div>
-
-            <!-- Q6 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-6')">
-                <span>6. كيف يمكن استخدام ثغرة الـ XXE لتنفيذ هجوم SSRF؟</span>
-                <span class="toggle-icon" id="icon-qw-6">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-6">
-                <strong>الإجابة النموذجية:</strong> نقوم بتعريف كيان خارجي يشير لعنوان داخلي بدلاً من ملف محلي (مثل `&lt;!ENTITY xxe SYSTEM "http://169.254.169.254/latest/meta-data/"&gt;`). عندما يقوم السيرفر بمعالجة الطلب، فإنه سيرسل طلب HTTP داخلي إلى هذا العنوان، مما يمكننا من الوصول للخدمات الداخلية والـ metadata.
-              </div>
-            </div>
-
-            <!-- Q7 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-7')">
-                <span>7. ما هي ثغرة الـ Session Fixation وكيف يمكن للمهاجم استغلالها للسيطرة على الحساب؟</span>
-                <span class="toggle-icon" id="icon-qw-7">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-7">
-                <strong>الإجابة النموذجية:</strong> تحدث عندما يقبل التطبيق معرف جلسة (Session ID) محدد من قبل المهاجم بدلاً من توليد معرف جديد عند تسجيل الدخول. يقوم المهاجم بإعطاء الضحية رابطاً يحتوي على معرف جلسة ثابت، وبمجرد تسجيل الضحية للدخول، تصبح الجلسة صالحة ويستخدم المهاجم نفس المعرف للدخول للحساب.
-              </div>
-            </div>
-
-            <!-- Q8 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-8')">
-                <span>8. كيف يعمل فحص الـ Burp Sequencer بالتفصيل لتقييم قوة الـ Session Tokens؟</span>
-                <span class="toggle-icon" id="icon-qw-8">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-8">
-                <strong>الإجابة النموذجية:</strong> يقوم Sequencer بتجميع عدد ضخم من التوكنز المتتالية (عادة 20,000 توكن) ثم يطبق عليها اختبارات رياضية معقدة (مثل اختبارات FIPS 140-2) للتأكد من درجة العشوائية وعيار الـ Entropy، ليكشف هل قيم التوكنز قابلة للتنبؤ أم عشوائية بالكامل.
-              </div>
-            </div>
-
-            <!-- Q9 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-9')">
-                <span>9. ما هو هجوم الـ XML Entity Expansion (Billion Laughs Attack) وكيف يسبب حجب الخدمة (DoS)؟</span>
-                <span class="toggle-icon" id="icon-qw-9">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-9">
-                <strong>الإجابة النموذجية:</strong> هو هجوم يعتمد على تعريف كيانات XML متداخلة بشكل متكرر (كل كيان يستدعي الكيان السابق 10 مرات). عند محاولة المعالج فك هذه الكيانات، يتضخم حجم البيانات في الذاكرة بشكل أسي (Exponentially) ليستهلك كافة موارد الذاكرة والمعالج في السيرفر ويسبب توقفه تماماً عن العمل.
-              </div>
-            </div>
-
-            <!-- Q10 -->
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswerWahh('qw-10')">
-                <span>10. كيف تمنع ثغرات الـ SQL Injection بشكل نهائي وجذري في كود التطبيق؟</span>
-                <span class="toggle-icon" id="icon-qw-10">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qw-10">
-                <strong>الإجابة النموذجية:</strong> المنع الجذري يتم عبر استخدام الاستعلامات المجهزة والمعلمة (Parameterized Queries / Prepared Statements) في لغة البرمجة. هذا يضمن أن يتم التعامل مع مدخلات المستخدم كـ Data فقط وليس كجزء من كود الاستعلام الهيكلي، مما يمنع مفسر SQL من تشغيل أي بايلود خارجي.
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-      </main>
+</main>
 
     </div>
 

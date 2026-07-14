@@ -543,349 +543,71 @@
 
       <!-- Left Main Content -->
       <main class="book-content" id="main-content-btfm">
-
         <!-- Section 1 -->
-        <section id="btfm-audit" class="content-sec">
-          <h2 class="sec-title">1. مراجعة العمليات والأنشطة المشبوهة (Host Auditing)</h2>
-          <p>أوامر تتبع العمليات المشبوهة التي تعمل بصلاحيات عالية وفحص سجلات المستخدمين النشطين:</p>
+        <section id="btfm-windows" class="content-sec">
+          <h2 class="sec-title">1. الجنايات الرقمية وتحليل سجلات Windows (Windows Forensics & Logs)</h2>
+          <p>أوامر الفحص والتحقق من العمليات النشطة وسجلات النظام لاستخراج آثار المخترقين:</p>
           <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre id="cmd-btfm-audit">ps -u root -f</pre>
-          </div>
-          
-          <div class="terminal-header-bar">
-            <span>💻 محاكي مخرجات مراجعة العمليات</span>
-            <span style="color: #0088ff;">• Live Simulation</span>
-          </div>
-          <div class="terminal-sim" id="sim-btfm-audit">
-UID        PID  PPID  C STIME TTY          TIME CMD
-root         1     0  0 00:02 ?        00:00:02 /sbin/init
-root      1204     1  0 00:05 ?        00:00:00 /usr/sbin/sshd -D
-root      2432  1204  0 01:10 pts/0    00:00:00 ps -u root -f
+            <button class="copy-btn" onclick="copyCode(this)">نسخ الأوامر</button>
+            <pre># Query the Event Logs for failed login attempts (Event ID 4625)
+wevtutil qe Security "/q:*[System[(EventID=4625)]]" /c:15 /f:text
+
+# Check running processes with command lines and owners
+wmic process get name,parentprocessid,processid,executablepath
+
+# Find files modified in the last 7 days
+forfiles /P C:\\ /S /M * /D +7 /C "cmd /c echo @path @fdate @ftime"</pre>
           </div>
         </section>
 
         <!-- Section 2 -->
-        <section id="btfm-traffic" class="content-sec">
-          <h2 class="sec-title">2. مراقبة حركة الشبكة والاتصالات المفتوحة (Traffic Monitor)</h2>
-          <p>رصد الاتصالات المفتوحة ومحاولات الاتصال الخارجية المشبوهة لمعرفة ما إذا كان السيرفر متصلاً بشل عكسي:</p>
+        <section id="btfm-linux" class="content-sec">
+          <h2 class="sec-title">2. تحليل وتأمين خوادم Linux (Linux Hardening & Investigation)</h2>
+          <p>كيفية التحقق من الاتصالات الخارجية والمستخدمين وسجلات النظام:</p>
           <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre id="cmd-btfm-traffic">netstat -antp | grep :80</pre>
+            <button class="copy-btn" onclick="copyCode(this)">نسخ الأوامر</button>
+            <pre># Audit open ports and matching programs
+ss -tulpn
+
+# Check all authenticated users and active login records
+who && w && last
+
+# Audit the authentication logs for successful root logins
+grep "Accepted password for root" /var/log/auth.log
+
+# List all established network connections
+lsof -i -P -n | grep ESTABLISHED</pre>
           </div>
         </section>
 
         <!-- Section 3 -->
-        <section id="btfm-hardening" class="content-sec">
-          <h2 class="sec-title">3. تأمين وسد ثغرات الأنظمة (Hardening)</h2>
-          <p>أوامر تفقد الصلاحيات الضعيفة وتأمين النواة والملفات الهامة المانعة لهجمات رفع الصلاحيات:</p>
+        <section id="btfm-network" class="content-sec">
+          <h2 class="sec-title">3. مراقبة حركة الشبكة وكشف الهجمات بـ Wireshark / Tshark</h2>
+          <p>فلاتر متقدمة لتحليل الاتصالات المشبوهة واستخراج الملفات المهربة:</p>
           <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre># سد صلاحيات القراءة لملف shadow
-chmod 600 /etc/shadow
-# تفعيل حماية النواة ضد هجمات IP Spoofing
-echo 1 > /proc/sys/net/ipv4/conf/all/rp_filter</pre>
+            <button class="copy-btn" onclick="copyCode(this)">نسخ الفلاتر</button>
+            <pre># Filter DNS queries for abnormal TXT records (often used for C2)
+dns.flags.response == 0 && dns.qry.type == 16
+
+# Filter HTTP requests with large POST parameters (data exfiltration)
+http.request.method == "POST" && http.content_length > 1000
+
+# Filter TLS Client Hello to inspect certificate domain matches
+ssl.handshake.type == 1</pre>
           </div>
         </section>
 
         <!-- Section 4 -->
-        <section id="btfm-logs" class="content-sec">
-          <h2 class="sec-title">4. تحليل السجلات وكشف هجمات التخمين (Logs Analysis)</h2>
-          <p>فحص سجلات نظام التشغيل لتتبع محاولات التخمين والدخول الفاشلة للـ SSH:</p>
-          <div class="code-box">
-            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-            <pre>grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -nr</pre>
-          </div>
+        <section id="btfm-incident" class="content-sec">
+          <h2 class="sec-title">4. إدارة الحوادث والـ Hardening (Incident Response Checklist)</h2>
+          <p>خطوات عملية متتالية للاستجابة السريعة لعزل الأجهزة المصابة وتطهيرها:</p>
+          <ul>
+            <li><strong>عزل الجهاز الفوري:</strong> قطع الاتصال بالإنترنت مع الحفاظ على الجهاز قيد التشغيل لحفظ محتويات الذاكرة العشوائية (RAM).</li>
+            <li><strong>إيقاف العمليات الخبيثة:</strong> استخدام <code>kill -9 [PID]</code> أو <code>Taskkill /F /PID [PID]</code>.</li>
+            <li><strong>حفظ الأدلة (Evidence Preservation):</strong> عمل Dump لمساحة الذاكرة العشوائية وسجل النظام لممراجعته لاحقاً.</li>
+          </ul>
         </section>
-
-        <!-- Section 5 -->
-        <section id="btfm-cheat" class="content-sec">
-          <h2 class="sec-title">5. جدول الأوامر الموحد للمدافعين (BTFM Cheat Sheet)</h2>
-          <table class="cheat-sheet-table">
-            <thead>
-              <tr>
-                <th>المهمة</th>
-                <th>الأمر المستعمل</th>
-                <th>فائدة الأمر</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>رصد الاتصالات المفتوحة</td>
-                <td id="td-btfm-net"><code>netstat -antp | grep :80</code></td>
-                <td>كشف اتصالات الـ Reverse Shells</td>
-              </tr>
-              <tr>
-                <td>فحص العمليات النشطة</td>
-                <td id="td-btfm-ps"><code>ps -u root -f</code></td>
-                <td>كشف العمليات غير المصرح بها</td>
-              </tr>
-              <tr>
-                <td>مراقبة حركة الشبكة الحية</td>
-                <td><code>tcpdump -i eth0 -n</code></td>
-                <td>تحليل الباكتات الحية على الكارت</td>
-              </tr>
-              <tr>
-                <td>فحص تعديلات الملفات</td>
-                <td><code>find / -mmin -60 -type f 2>/dev/null</code></td>
-                <td>البحث عن الملفات المعدلة بآخر ساعة</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <!-- Section 6 -->
-                        <!-- Flashcards Section -->
-        <section id="btfm-flashcards" class="content-sec">
-          <h2 class="sec-title">🎴 كروت المراجعة السيبرانية الذكية (Interactive 3D Flashcards)</h2>
-          <p>كروت مراجعة تفاعلية لحفظ الأوامر والبصمات. انقر على أي كرت لقلبه ومعرفة الإجابة النموذجية:</p>
-          
-          <div class="flashcards-grid">
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هو خط الدفاع الأهم لحماية سجلات الـ Event Logs؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">تأمين ونقل السجلات فوراً لخادم خروج خارجي SIEM</div>
-                </div>
-              </div>
-            </div>
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف نكشف هجمات التخمين Brute Force بالويندوز؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">مراقبة سجلات الأحداث Event ID 4625 (فشل تسجيل الدخول)</div>
-                </div>
-              </div>
-            </div>
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هو الـ Hardening للأنظمة والشبكات؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">تعطيل كافة الخدمات غير المستخدمة وسد المنافذ المفتوحة وتحديث الأنظمة</div>
-                </div>
-              </div>
-            </div>
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">كيف نرصد هجمات الـ DNS Tunneling؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">مراقبة الاستعلامات الطويلة غير المعتادة أو كثرة استعلامات TXT للهدف</div>
-                </div>
-              </div>
-            </div>
-            <div class="flashcard-wrapper" onclick="toggleFlashcard(this)">
-              <div class="flashcard-inner">
-                <div class="flashcard-front">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">❓</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4;">ما هو دور الـ Endpoint Detection & Response (EDR)؟</div>
-                </div>
-                <div class="flashcard-back">
-                  <div style="font-size: 1.5rem; margin-bottom: 8px;">💡</div>
-                  <div style="font-size: 0.85rem; font-weight: bold; line-height: 1.4; font-family: monospace;">مراقبة العمليات الجارية بالذاكرة وسلوك البرامج بالوقت الفعلي وسد الثغرات</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Payload Sandbox Section -->
-        <section id="btfm-sandbox" class="content-sec">
-          <h2 class="sec-title">🧪 مختبر حقن البايلودز الحي (Interactive Payload Sandbox)</h2>
-          <p>مختبر محاكاة تفاعلي لاختبار وتحليل البايلودز ورؤية الاستجابة المباشرة للخوادم:</p>
-          
-          <div style="background: rgba(3,3,8,0.9); border: 1px solid var(--border-glass); border-radius: 8px; padding: 20px; margin: 20px 0;">
-            <div style="margin-bottom: 15px;">
-              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">اختر نوع الثغرة للاختبار:</label>
-              <select id="sandbox-type-btfm" onchange="updateSandboxPayloads('btfm')" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:#fff; padding:8px; border-radius:4px; width:100%; outline:none; font-size:0.85rem;">
-                <option value="sqli">SQL Injection (SQLi)</option>
-                <option value="xss">Cross-Site Scripting (XSS)</option>
-                <option value="ssrf">Server-Side Request Forgery (SSRF)</option>
-              </select>
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-              <label style="color:#fff; font-size:0.85rem; font-weight:700; display:block; margin-bottom:5px;">البايلود (Payload Input):</label>
-              <input type="text" id="sandbox-payload-btfm" value="' OR '1'='1" style="background:#0d0d1a; border:1px solid rgba(255,255,255,0.15); color:var(--accent-cyan); padding:10px; border-radius:4px; width:100%; outline:none; font-family:monospace; font-size:0.85rem; box-sizing:border-box;">
-            </div>
-
-            <button onclick="runSandboxExploit('btfm')" style="background:var(--gradient-primary); border:none; color:#fff; padding:10px 20px; border-radius:4px; font-weight:700; cursor:pointer; width:100%; font-size:0.88rem;">
-              ⚡ تنفيذ الهجوم ومحاكاة الاستجابة
-            </button>
-
-            <!-- Terminal Output -->
-            <div style="margin-top: 20px; background:#000; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden;">
-              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace; display:flex; justify-content:space-between;">
-                <span>CONSOLE OUTPUT</span>
-                <span>STATUS: ACTIVE</span>
-              </div>
-              <div id="sandbox-terminal-btfm" style="padding:15px; font-family:monospace; font-size:0.8rem; color:#00ff66; min-height:120px; max-height:200px; overflow-y:auto; line-height:1.5; text-align:left; direction:ltr;">
-                [+] System ready. Input payload and click Execute to begin simulation...
-              </div>
-            </div>
-
-            <!-- Virtual Browser Frame if XSS -->
-            <div id="sandbox-browser-wrap-btfm" style="margin-top: 20px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; display:none;">
-              <div style="background:#0d0d1a; padding:6px 12px; font-size:0.72rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.08); font-family:monospace;">
-                🖥️ VIRTUAL BROWSER FRAME
-              </div>
-              <div id="sandbox-browser-content-btfm" style="background:#fff; color:#000; padding:20px; text-align:center; min-height:80px; font-size:0.9rem;">
-                Virtual Viewport
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-<!-- Author Strategic Tips -->
-        <section id="btfm-tips" class="content-sec">
-          <h2 class="sec-title">💡 نصائح وتوجيهات الكاتب الميدانية (Blue Team Golden Advice)</h2>
-          <p>جمعنا لك هنا زبدة الخبرة العملية والنصائح الذهبية التي يركز عليها الكاتب في فصول كتابه للتنقيب والعمل الميداني الفعلي:</p>
-          
-          <div class="benefit-box">
-            <ul style="margin: 0; padding-right: 20px;">
-              <li style='margin-bottom: 12px;'><strong>احمِ سجلات النظام أولاً (Log Integrity):</strong> تأمين خادم جمع السجلات المركزي يضمن عدم قدرة المخترق على مسح أدلة تسلله.</li>
-              <li style='margin-bottom: 12px;'><strong>طبق مبدأ الصلاحيات الأدنى (Least Privilege):</strong> يجب ألا يملك أي حساب صلاحية دائمة، واجعل كلمات مرور الحسابات الحساسة تتغير دورياً.</li>
-              <li style='margin-bottom: 12px;'><strong>راقب حركة البيانات الخارجة (Outbound Traffic):</strong> ركز على رصد اتصالات الـ DNS Tunneling وحزم الـ ICMP Beacons لكشف وجود مخترق بالداخل.</li>
-            </ul>
-          </div>
-        </section>
-
-        <section id="btfm-quiz" class="content-sec">
-          <h2 class="sec-title">6. بنك الأسئلة والاختبارات التفاعلية الـ 10</h2>
-          
-          <div class="quiz-container">
-            <div class="quiz-title">🧪 بنك أسئلة مراجعة كتاب BTFM (انقر لعرض الإجابة النموذجية)</div>
-            
-            <!-- Q1 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-1')">
-                <span>1. كيف يساعد استخدام tcpdump في التقاط وتحليل الحزم المشبوهة على كرت شبكة محدد؟</span>
-                <span class="toggle-icon" id="icon-qb-1">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-1">
-                <strong>الإجابة النموذجية:</strong> يساعد `tcpdump` في الإنصات المباشر للحزم عبر واجهة الشبكة وتصفيتها (مثل `tcpdump -i eth0 port 80`) لتسجيل حركة البيانات المشبوهة وحفظها بصيغة `.pcap` لتحليلها لاحقاً ببرنامج Wireshark لرصد هجمات الاختراق والـ Shells.
-              </div>
-            </div>
-
-            <!-- Q2 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-2')">
-                <span>2. كيف تكتشف ما إذا كان هناك مستخدم أخر متصل بالسيرفر بالـ SSH بالوقت الحالي؟</span>
-                <span class="toggle-icon" id="icon-qb-2">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-2">
-                <strong>الإجابة النموذجية:</strong> يمكن استخدام الأوامر السريعة مثل `who` أو `w` أو `last` لعرض قائمة بالمستخدمين المتصلين حالياً وعناوين الـ IP الخاصة بهم وتاريخ تسجيل الدخول ومنافذ الـ TTY المستخدمة لرصد أي دخول غير مصرح به.
-              </div>
-            </div>
-
-            <!-- Q3 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-3')">
-                <span>3. ما فائدة مراقبة ملف `/etc/passwd` بشكل دوري للـ Blue Team؟</span>
-                <span class="toggle-icon" id="icon-qb-3">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-3">
-                <strong>الإجابة النموذجية:</strong> مراقبته تعتبر حيوية للتأكد من عدم قيام المهاجمين بإنشاء مستخدمين جدد يملكون صلاحيات الـ Root (UID=0) لتأمين بقائهم على الخادم (Persistence)، ويمكن استخدام أدوات المراقبة الحية مثل `incron` أو `auditd` لرصد أي تعديل بالملف.
-              </div>
-            </div>
-
-            <!-- Q4 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-4')">
-                <span>4. كيف تمنع هجمات التخمين (Brute Force) على منفذ الـ SSH باستخدام أداة Fail2ban؟</span>
-                <span class="toggle-icon" id="icon-qb-4">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-4">
-                <strong>الإجابة النموذجية:</strong> تقوم Fail2ban بمراقبة سجلات النظام (مثل `/var/log/auth.log`). بمجرد رصد عدد محدد من محاولات الدخول الفاشلة من نفس الـ IP (مثلاً 5 محاولات فاشلة خلال دقيقة)، تقوم الأداة بإضافة قاعدة في جدار الحماية (iptables) لحظر الـ IP تلقائياً لفترة محددة.
-              </div>
-            </div>
-
-            <!-- Q5 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-5')">
-                <span>5. ما هو الـ Port Knocking وكيف يستخدم لحماية المنافذ المفتوحة؟</span>
-                <span class="toggle-icon" id="icon-qb-5">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-5">
-                <strong>الإجابة النموذجية:</strong> هي طريقة لتأمين منفذ (مثل منفذ SSH 22) بإبقائه مغلقاً تماماً بجدار الحماية، ولا يفتح إلا للمستخدم الذي يرسل سلسلة محددة من حزم الاتصال (Knocks) لمنافذ مغلقة أخرى بترتيب معين، وبمجرد إرسال السلسلة يفتح جدار الحماية المنفذ المخصص للـ IP الخاص به تلقائياً.
-              </div>
-            </div>
-
-            <!-- Q6 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-6')">
-                <span>6. ما هو الفرق بين أنظمة كشف التسلل (IDS) وأنظمة منع التسلل (IPS)؟</span>
-                <span class="toggle-icon" id="icon-qb-6">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-6">
-                <strong>الإجابة النموذجية:</strong> نظام كشف التسلل (IDS) يقوم بمراقبة الشبكة وتحليل الحزم وتنبيه مسؤولي النظام عند رصد حركة مرور مشبوهة دون التدخل لحظرها. بينما نظام منع التسلل (IPS) يتدخل بشكل مباشر ويقوم بحظر حزم البيانات المشبوهة أو قطع الاتصال تلقائياً لمنع نجاح الهجمة.
-              </div>
-            </div>
-
-            <!-- Q7 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-7')">
-                <span>7. كيف تمنع استغلال الـ IP Spoofing على السيرفر الخاص بك؟</span>
-                <span class="toggle-icon" id="icon-qb-7">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-7">
-                <strong>الإجابة النموذجية:</strong> يتم منعها عن طريق تفعيل حماية النواة ضد انتحال العناوين (Reverse Path Filtering) عبر ضبط المعيار `net.ipv4.conf.all.rp_filter = 1` في إعدادات النواة، مما يجبر السيرفر على التحقق من أن حزم البيانات الواردة تعود عبر نفس الواجهة التي خرجت منها.
-              </div>
-            </div>
-
-            <!-- Q8 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-8')">
-                <span>8. لماذا يفضل الـ Blue Team الاحتفاظ بالسجلات (Logs) في سيرفر منفصل (Centralized Log Server)؟</span>
-                <span class="toggle-icon" id="icon-qb-8">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-8">
-                <strong>الإجابة النموذجية:</strong> لأن أول ما يفعله المهاجم عند اختراق السيرفر هو محاولة مسح السجلات (auth.log, access.log) لإخفاء آثار جريمته وتجنب التحقيق. وجود سيرفر سجلات مركزي يضمن بقاء السجلات آمنة وبعيدة عن متناول يد المخترق لإجراء التحقيق الجنائي الرقمي بنجاح.
-              </div>
-            </div>
-
-            <!-- Q9 -->
-            <div class="quiz-item" style="margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:15px;">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-9')">
-                <span>9. كيف تكشف ما إذا تم التلاعب بنظام التشغيل أو تنزيل برمجيات خبيثة حديثاً باستخدام أداة Find؟</span>
-                <span class="toggle-icon" id="icon-qb-9">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-9">
-                <strong>الإجابة النموذجية:</strong> يمكن الاستعانة بأمر البحث عن الملفات التي تم إنشاؤها أو تعديلها حديثاً (مثلاً خلال آخر 60 دقيقة) عبر الأمر `find / -mmin -60 -type f 2>/dev/null` لاستعراض الملفات الجديدة ورصد ملفات الشيل أو الـ backdoors التي تم رفعها.
-              </div>
-            </div>
-
-            <!-- Q10 -->
-            <div class="quiz-item">
-              <button class="quiz-question-btn" onclick="toggleAnswerBtfm('qb-10')">
-                <span>10. ما هي فائدة تفعيل بروتوكول HTTPS فقط (HSTS) في حماية حركة المرور؟</span>
-                <span class="toggle-icon" id="icon-qb-10">[ + ]</span>
-              </button>
-              <div class="quiz-answer-panel" id="ans-qb-10">
-                <strong>الإجابة النموذجية:</strong> الـ HSTS (HTTP Strict Transport Security) يجبر متصفحات الزوار على الاتصال بالموقع بشكل مشفر بالكامل عبر HTTPS فقط، مما يمنع هجمات الـ SSL Stripping أو محاولات اعتراض حركة البيانات الحساسة وفك تشفيرها بالشبكة المحلية.
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-      </main>
+</main>
 
     </div>
 
