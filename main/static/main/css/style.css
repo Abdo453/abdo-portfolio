@@ -3175,8 +3175,8 @@ body.light-theme .meta-badge {
    📱 PHASE 1 — MOBILE-FIRST RESPONSIVE MEDIA QUERIES
    ============================================================ */
 
-/* Mobile & Tablet Breakpoint (≤ 1024px) */
-@media (max-width: 1024px) {
+/* Mobile Breakpoint (≤ 768px) */
+@media (max-width: 768px) {
   body {
     font-size: 16px !important;
     padding-bottom: 80px !important; /* Spacing for bottom navigation bar */
@@ -3746,7 +3746,7 @@ body.light-theme .meta-badge {
 .mobile-menu-btn:hover {
   background: rgba(0, 229, 255, 0.2);
 }
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .mobile-menu-btn { display: flex !important; }
 }
 
@@ -4707,19 +4707,21 @@ ul, ol {
   }
 }
 
-/* ── Fluid Typography and Layout scaling via CSS functions ── */
-body {
-  font-size: clamp(14px, 1.05vw, 16px) !important;
-}
-.profile-name {
-  font-size: clamp(1.2rem, 1.8vw, 1.6rem) !important;
-}
-.hero-main-title {
-  font-size: clamp(1.8rem, 3.5vw, 2.5rem) !important;
-}
-.pane-view-title {
-  font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
-}
-.tab-link {
-  font-size: clamp(0.72rem, 1.2vw, 0.88rem) !important;
+/* ── Fluid Typography and Layout scaling via CSS functions (Desktop Only) ── */
+@media (min-width: 1025px) {
+  body {
+    font-size: clamp(14px, 1.05vw, 16px) !important;
+  }
+  .profile-name {
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem) !important;
+  }
+  .hero-main-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem) !important;
+  }
+  .pane-view-title {
+    font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
+  }
+  .tab-link {
+    font-size: clamp(0.72rem, 1.2vw, 0.88rem) !important;
+  }
 }
