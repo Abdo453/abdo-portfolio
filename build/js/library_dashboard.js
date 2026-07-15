@@ -1043,6 +1043,24 @@
         }
       });
     }
+
+    if (exportBtn) {
+      exportBtn.addEventListener('click', function() {
+        const text = textarea ? textarea.value.trim() : '';
+        if (!text) {
+          alert('الملاحظات فارغة حالياً! اكتب شيئاً أولاً لتصديره.');
+          return;
+        }
+        const blob = new Blob([`# Security Notes: ${bookId}\n\n${text}`], { type: 'text/markdown;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `notes_${bookId}.md`;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    }
   }
 
   // ── 10. Dynamic Progress Color by Completion Level ─────────
