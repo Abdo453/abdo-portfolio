@@ -998,7 +998,12 @@
         placeholder="اكتب ملاحظاتك، Payloads، أو الاستنتاجات هنا..."
         style="width:100%; height:110px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.08); border-radius:6px; color:#e2e8f0; font-family:var(--font-body); font-size:0.78rem; padding:10px; resize:vertical; outline:none; box-sizing:border-box; line-height:1.5; transition: border-color 0.2s ease;"
       ></textarea>
-      <div style="display:flex; justify-content:flex-end; margin-top:6px;">
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:6px;">
+        <button id="exportBookNotes" style="background:none; border:1px solid rgba(0,229,255,0.2); color:rgba(0,229,255,0.7); font-size:0.7rem; padding:3px 8px; border-radius:4px; cursor:pointer; font-family:inherit; transition: all 0.2s ease;"
+          onmouseover="this.style.borderColor='var(--accent-cyan)';this.style.color='#fff'"
+          onmouseout="this.style.borderColor='rgba(0,229,255,0.2)';this.style.color='rgba(0,229,255,0.7)'">
+          📥 تصدير الملاحظات
+        </button>
         <button id="clearBookNotes" style="background:none; border:1px solid rgba(255,80,80,0.2); color:rgba(255,80,80,0.6); font-size:0.7rem; padding:3px 8px; border-radius:4px; cursor:pointer; font-family:inherit; transition: all 0.2s ease;" 
           onmouseover="this.style.borderColor='rgba(255,80,80,0.6)';this.style.color='rgba(255,80,80,0.9)'" 
           onmouseout="this.style.borderColor='rgba(255,80,80,0.2)';this.style.color='rgba(255,80,80,0.6)'">
@@ -1011,6 +1016,7 @@
     const textarea = document.getElementById('bookPageNotesArea');
     const charCount = document.getElementById('bookNotesCharCount');
     const clearBtn = document.getElementById('clearBookNotes');
+    const exportBtn = document.getElementById('exportBookNotes');
 
     if (textarea) {
       textarea.value = savedNotes;
@@ -1091,7 +1097,234 @@
         applyProgressColor(pct, fillEl);
       }
     };
+
+    // ── 5. Global Book Content Search Engine & Achievements ──
+    const bookIndex = [
+      {
+        bookId: 'real_world_bug_hunting',
+        title: 'Real-World Bug Hunting',
+        chapters: [
+          { id: 'rwbh-subdomain', title: 'البحث عن النطاقات الفرعية (Subdomain Takeover)', keywords: 'subdomain takeover cloud amazon aws heroku takeover' },
+          { id: 'rwbh-smuggling', title: 'تهريب طلبات HTTP (Request Smuggling)', keywords: 'http request smuggling cl.te te.cl smuggling request' },
+          { id: 'rwbh-oauth', title: 'ثغرات OAuth 2.0 وتخطي الـ Redirect', keywords: 'oauth redirect uri bypass authentication state parameter' },
+          { id: 'rwbh-graphql', title: 'حقن واختراق GraphQL (GraphQL Injections)', keywords: 'graphql introspection nested queries injection query' }
+        ]
+      },
+      {
+        bookId: 'bug_bounty_bootcamp',
+        title: 'Bug Bounty Bootcamp',
+        chapters: [
+          { id: 'bbb-recon', title: 'منهجية الاستطلاع المتقدمة (Active & Passive Recon)', keywords: 'recon passive active subfinder amass assetfinder shodan' },
+          { id: 'bbb-waf', title: 'تكتيكات تخطي أنظمة الحماية والـ WAF', keywords: 'waf bypass filter evasion waf bypass regex cloudflare' },
+          { id: 'bbb-xss', title: 'ثغرات حقن النصوص (Cross-Site Scripting)', keywords: 'xss cross site scripting bypass csrf payload dom' }
+        ]
+      },
+      {
+        bookId: 'web_hackers_handbook',
+        title: 'The Web Application Hacker\'s Handbook',
+        chapters: [
+          { id: 'wahh-auth', title: 'كسر آليات المصادقة والتحكم بالجلسة (Authentication)', keywords: 'jwt session token hijack authentication brute force cookies' },
+          { id: 'wahh-logic', title: 'ثغرات المنطق البرمجي (Business Logic Flaws)', keywords: 'business logic price manipulation bypass checkout flow logic' },
+          { id: 'wahh-crypto', title: 'هجمات التشفير وفك التعمية (Crypto Attacks)', keywords: 'padding oracle cbc byte flipping cbc oracle encryption decryption' }
+        ]
+      },
+      {
+        bookId: 'black_hat_python',
+        title: 'Black Hat Python',
+        chapters: [
+          { id: 'bhp-proxy', title: 'بناء TCP Proxy متعدد المسارات بايثون', keywords: 'bhp proxy tcp network threads sockets multiprocess python' },
+          { id: 'bhp-keylogger', title: 'بناء Keylogger لنظام Windows بايثون', keywords: 'keylogger win32 ctypes user32 hooks keyboard logging' },
+          { id: 'bhp-dll', title: 'حقن الـ DLL في الذاكرة بايثون', keywords: 'dll injection memory virtualalloc writeprocessmemory process' }
+        ]
+      },
+      {
+        bookId: 'hacking_art',
+        title: 'Hacking: The Art of Exploitation',
+        chapters: [
+          { id: 'art-bof', title: 'ثغرات طفح المخزن المؤقت (Buffer Overflow)', keywords: 'buffer overflow stack heap memory overflow assembly gdb shellcode' },
+          { id: 'art-shellcode', title: 'برمجة الـ Shellcode بالـ Assembly', keywords: 'shellcode assembly assembly language execve shell sh syscall' },
+          { id: 'art-format', title: 'ثغرات حقن التنسيق (Format String Vulnerabilities)', keywords: 'format string printf memory read memory write bypass leak x' }
+        ]
+      },
+      {
+        bookId: 'malware_analysis',
+        title: 'Practical Malware Analysis',
+        chapters: [
+          { id: 'mal-pe', title: 'هندسة PE File Structure وتحليل البرمجيات', keywords: 'pe headers portable executable sections import table exports disassembly' },
+          { id: 'mal-antivm', title: 'تكتيكات تخطي بيئات التحليل (Anti-VM/Anti-Debug)', keywords: 'anti vm anti debug detection isdebuggerpresent registry checking sandbox' },
+          { id: 'mal-xor', title: 'فك تشفير النصوص والـ XOR في البرمجيات الخبيثة', keywords: 'xor decryption obfuscation base64 payload strings crypt' }
+        ]
+      },
+      {
+        bookId: 'rtfm',
+        title: 'RTFM (Red Team Field Manual)',
+        chapters: [
+          { id: 'rtfm-ad', title: 'أوامر الـ Active Directory الاستطلاعية والهجومية', keywords: 'active directory kerberoasting bloodhound mimikatz powershell domain' },
+          { id: 'rtfm-bypass', title: 'تخطي حماية PowerShell Execution Policy', keywords: 'powershell bypass execution policy bypass unrestricted ep' },
+          { id: 'rtfm-lateral', title: 'أوامر الترقية والانتشار الجانبي (Lateral Movement)', keywords: 'lateral movement wmic winrm psexec passthehash credentials' }
+        ]
+      },
+      {
+        bookId: 'btfm',
+        title: 'BTFM (Blue Team Field Manual)',
+        chapters: [
+          { id: 'btfm-audit', title: 'تحليل سجلات Windows Event Logs وكشف التسلل', keywords: 'event log audit security logs windows forensics sysmon events' },
+          { id: 'btfm-network', title: 'تحليل الشبكات وكتابة قواعد Wireshark & tshark', keywords: 'wireshark tshark filter pcap network analysis captures sniff' },
+          { id: 'btfm-process', title: 'التحقق من سلامة العمليات (Process Auditing)', keywords: 'process audit tasklist wmic netstat connections auditing hunter' }
+        ]
+      },
+      {
+        bookId: 'operator_handbook',
+        title: 'Operator Handbook',
+        chapters: [
+          { id: 'operator-docker', title: 'أوامر Docker & Kubernetes الأمنية', keywords: 'docker kubernetes k8s container escape hardening namespaces' },
+          { id: 'operator-cloud', title: 'أوامر فحص خوادم السحاب AWS / GCP / Azure', keywords: 'cloud aws gcp azure cli audit s3 buckets metadata credentials' },
+          { id: 'operator-c2', title: 'أوامر التحكم والسيطرة (C2 Cobalt Strike / Empire)', keywords: 'c2 cobalt strike empire agent listener beacon post exploitation' }
+        ]
+      },
+      {
+        bookId: 'bug_bounty_playbook',
+        title: 'Bug Bounty Playbook',
+        chapters: [
+          { id: 'playbook-methodology', title: 'منهجية صيد الثغرات والتنقل في الهدف', keywords: 'methodology recon scoping bug hunting playbook workflow maps' },
+          { id: 'playbook-automation', title: 'أتمتة الفحص الشامل وسكريبتات المراقبة', keywords: 'automation cron python bash nuclei notify massdns automation' }
+        ]
+      }
+    ];
+
+    function initGlobalSearch() {
+      const searchInput = document.getElementById('global-book-search-input');
+      const dropdown = document.getElementById('global-search-results-dropdown');
+      const resultsList = document.getElementById('global-search-results-list');
+
+      if (!searchInput || !dropdown || !resultsList) return;
+
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query) {
+          dropdown.style.display = 'none';
+          return;
+        }
+
+        const matches = [];
+        bookIndex.forEach(book => {
+          const bookMatchesChapter = [];
+          book.chapters.forEach(chap => {
+            if (chap.title.toLowerCase().includes(query) || chap.keywords.toLowerCase().includes(query)) {
+              bookMatchesChapter.push(chap);
+            }
+          });
+
+          if (book.title.toLowerCase().includes(query) || bookMatchesChapter.length > 0) {
+            matches.push({
+              bookId: book.bookId,
+              bookTitle: book.title,
+              chapters: bookMatchesChapter
+            });
+          }
+        });
+
+        if (matches.length === 0) {
+          resultsList.innerHTML = `<div style="padding: 10px; color: var(--text-muted); font-size: 0.82rem;">❌ لا توجد نتائج مطابقة للبحث...</div>`;
+        } else {
+          let html = '';
+          matches.forEach(m => {
+            html += `
+              <div style="margin-bottom: 10px; border-bottom: 1px dashed rgba(255,255,255,0.03); padding-bottom: 8px;">
+                <div style="font-weight: 800; color: #ffaa00; font-size: 0.8rem; margin-bottom: 4px;">📖 ${m.bookTitle}</div>
+            `;
+            if (m.chapters.length > 0) {
+              m.chapters.forEach(c => {
+                html += `
+                  <a href="books/${m.bookId}.html#${c.id}" class="search-result-link" style="display: block; font-size: 0.78rem; color: var(--accent-cyan); padding: 5px 8px; border-radius: 4px; text-decoration: none; margin-bottom: 3px; background: rgba(0, 229, 255, 0.02); transition: all 0.2s;" onmouseover="this.style.background='rgba(0, 229, 255, 0.08)'" onmouseout="this.style.background='rgba(0, 229, 255, 0.02)'">
+                    ⚡ ${c.title}
+                  </a>
+                `;
+              });
+            } else {
+              html += `
+                <a href="books/${m.bookId}.html" class="search-result-link" style="display: block; font-size: 0.78rem; color: var(--text-secondary); padding: 5px 8px; border-radius: 4px; text-decoration: none; margin-bottom: 3px; background: rgba(255, 255, 255, 0.02);" onmouseover="this.style.background='rgba(255, 255, 255, 0.06)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.02)'">
+                  ⚡ فتح الكتاب بالكامل
+                </a>
+              `;
+            }
+            html += `</div>`;
+          });
+          resultsList.innerHTML = html;
+        }
+        dropdown.style.display = 'block';
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.style.display = 'none';
+        }
+      });
+    }
+
+    function updateAchievements() {
+      let xp = parseInt(localStorage.getItem('academy_xp')) || 0;
+      
+      let completedBooksCount = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('book_progress_')) {
+          try {
+            const val = JSON.parse(localStorage.getItem(key)) || {};
+            if (val.pct === 100) completedBooksCount++;
+          } catch(e) {}
+        }
+      }
+
+      const rookieBadge = document.getElementById('badge-rookie');
+      const rootBadge = document.getElementById('badge-root');
+      const legendBadge = document.getElementById('badge-legend');
+
+      if (rookieBadge) {
+        if (xp >= 100) {
+          rookieBadge.style.opacity = '1';
+          rookieBadge.style.filter = 'none';
+          rookieBadge.style.borderColor = 'var(--accent-green)';
+          rookieBadge.style.boxShadow = '0 0 10px rgba(0, 255, 102, 0.2)';
+        } else {
+          rookieBadge.style.opacity = '0.4';
+          rookieBadge.style.filter = 'grayscale(100%)';
+          rookieBadge.style.borderColor = 'rgba(255,255,255,0.05)';
+          rookieBadge.style.boxShadow = 'none';
+        }
+      }
+
+      if (rootBadge) {
+        if (completedBooksCount >= 1) {
+          rootBadge.style.opacity = '1';
+          rootBadge.style.filter = 'none';
+          rootBadge.style.borderColor = 'var(--accent-cyan)';
+          rootBadge.style.boxShadow = '0 0 10px rgba(0, 229, 255, 0.2)';
+        } else {
+          rootBadge.style.opacity = '0.4';
+          rootBadge.style.filter = 'grayscale(100%)';
+          rootBadge.style.borderColor = 'rgba(255,255,255,0.05)';
+          rootBadge.style.boxShadow = 'none';
+        }
+      }
+
+      if (legendBadge) {
+        if (completedBooksCount >= 10) {
+          legendBadge.style.opacity = '1';
+          legendBadge.style.filter = 'none';
+          legendBadge.style.borderColor = '#ffaa00';
+          legendBadge.style.boxShadow = '0 0 15px rgba(255, 170, 0, 0.3)';
+        } else {
+          legendBadge.style.opacity = '0.4';
+          legendBadge.style.filter = 'grayscale(100%)';
+          legendBadge.style.borderColor = 'rgba(255,255,255,0.05)';
+          legendBadge.style.boxShadow = 'none';
+        }
+      }
+    }
+
+    initGlobalSearch();
+    updateAchievements();
+    setInterval(updateAchievements, 2000);
   });
-
 })();
-
