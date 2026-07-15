@@ -15,6 +15,7 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css?v=8" />
+  <link rel="stylesheet" href="css/arena.css?v=1" />
   
   <style>
     /* Inline animations to completely bypass any external CSS caching */
@@ -255,6 +256,9 @@
         </button>
         <button class="tab-link" onclick="switchTab('books')" data-tab="books">
           <span class="tab-icon">📖</span> Books
+        </button>
+        <button class="tab-link" onclick="switchTab('arena')" data-tab="arena">
+          <span class="tab-icon">🎯</span> Arena
         </button>
         <button class="tab-link" onclick="switchTab('about')" data-tab="about">
           <span class="tab-icon">👤</span> About
@@ -17620,7 +17624,151 @@
             </div>
           </div>
 
-                <!-- 6. ABOUT VIEW (CONSOLIDATED PORTFOLIO) -->
+        <!-- 5. CYBER ARENA VIEW -->
+        <div class="workspace-pane" id="pane-arena">
+          <h2 class="pane-view-title">// ساحة التدريب السيبرانية (Cyber Arena)</h2>
+          
+          <div class="arena-container">
+            <div class="arena-subtabs">
+              <button class="arena-subtab-btn active" data-subtab="roadmap" onclick="switchArenaTab('roadmap')">🗺️ خريطة المسارات</button>
+              <button class="arena-subtab-btn" data-subtab="builder" onclick="switchArenaTab('builder')">🛠️ منشئ البايلودز</button>
+              <button class="arena-subtab-btn" data-subtab="memory" onclick="switchArenaTab('memory')">🎮 لعبة الذاكرة</button>
+              <button class="arena-subtab-btn" data-subtab="scanner" onclick="switchArenaTab('scanner')">🔍 محاكي الفحص</button>
+              <button class="arena-subtab-btn" data-subtab="challenge" onclick="switchArenaTab('challenge')">🔥 التحدي اليومي</button>
+            </div>
+
+            <div class="arena-pane active" id="arena-roadmap">
+              <div class="cyber-card" style="padding: 20px;">
+                <h3 style="color:var(--accent-cyan); margin-bottom:10px; text-align:right;">🗺️ خريطة المسارات الأمنية التفاعلية</h3>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:20px; text-align:right; direction:rtl;">اضغط على العقد المكتملة لتعليمها كمنتهية والحصول على +20 XP لكل عقدة!</p>
+                
+                <div class="roadmap-tree">
+                  <div class="roadmap-node" data-node-id="web-basics" onclick="toggleRoadmapNode(this, 'web-basics')">
+                    <h4 style="color:#fff; margin-bottom:5px;">1. أساسيات اختراق الويب (Web Hacking Basics)</h4>
+                    <p style="font-size:0.75rem; color:var(--text-secondary);">فهم HTTP/S, Burp Suite, ثغرات التحقق</p>
+                  </div>
+                  
+                  <div class="roadmap-node" data-node-id="owasp-top10" onclick="toggleRoadmapNode(this, 'owasp-top10')">
+                    <h4 style="color:#fff; margin-bottom:5px;">2. ثغرات OWASP Top 10 المتقدمة</h4>
+                    <p style="font-size:0.75rem; color:var(--text-secondary);">SQL Injection, XSS, CSRF, IDOR, SSRF</p>
+                  </div>
+                  
+                  <div class="roadmap-node" data-node-id="active-directory" onclick="toggleRoadmapNode(this, 'active-directory')">
+                    <h4 style="color:#fff; margin-bottom:5px;">3. اختراق الشبكات والـ Active Directory</h4>
+                    <p style="font-size:0.75rem; color:var(--text-secondary);">Kerberoasting, Bloodhound, Mimikatz, Lateral Movement</p>
+                  </div>
+                  
+                  <div class="roadmap-node" data-node-id="malware-reverse" onclick="toggleRoadmapNode(this, 'malware-reverse')">
+                    <h4 style="color:#fff; margin-bottom:5px;">4. الهندسة العكسية وتحليل البرمجيات الخبيثة</h4>
+                    <p style="font-size:0.75rem; color:var(--text-secondary);">تحليل PE Header, Anti-VM, XOR base64 decompiling</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arena-pane" id="arena-builder">
+              <div class="cyber-card" style="padding: 20px;">
+                <h3 style="color:var(--accent-cyan); margin-bottom:15px; text-align:right;">🛠️ مولد البايلودز وتخطي الـ WAF (Payload Builder)</h3>
+                
+                <div class="builder-layout">
+                  <div class="builder-output">
+                    <div>
+                      <h4 style="color:var(--accent-cyan); margin-bottom:10px; text-align:right;">⚡ البايلود الناتج (Generated Payload):</h4>
+                      <div id="generated-payload-box" style="background:#030308; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:15px; font-family:'Fira Code', monospace; font-size:0.85rem; color:var(--accent-green); word-break:break-all; min-height:80px; text-align:left;">1' UNION SELECT null, username, password FROM users--</div>
+                    </div>
+                    <button class="hunt-btn primary" onclick="copyPayloadToClipboard()" style="margin-top:15px; width:100%; min-height:44px;">📋 نسخ البايلود</button>
+                  </div>
+
+                  <div class="builder-options" style="direction:rtl; text-align:right;">
+                    <div style="margin-bottom:15px;">
+                      <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:6px;">نوع الثغرة المستهدفة:</label>
+                      <select id="payload-type" onchange="updatePayload()" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; font-family:inherit;">
+                        <option value="sqli">حقن قواعد البيانات (SQL Injection)</option>
+                        <option value="xss">ثغرات النصوص البرمجية (XSS)</option>
+                        <option value="lfi">تضمين الملفات المحلية (LFI)</option>
+                      </select>
+                    </div>
+
+                    <div class="toggle-group">
+                      <span style="font-size:0.85rem; color:#e2e8f0;">تفعيل تقنيات تخطي الـ WAF:</span>
+                      <label class="switch">
+                        <input type="checkbox" id="waf-bypass-toggle" onchange="updatePayload()">
+                        <span class="slider"></span>
+                      </label>
+                    </div>
+
+                    <div class="toggle-group">
+                      <span style="font-size:0.85rem; color:#e2e8f0;">ترميز العناوين URL Encoding:</span>
+                      <label class="switch">
+                        <input type="checkbox" id="url-encode-toggle" onchange="updatePayload()">
+                        <span class="slider"></span>
+                      </label>
+                    </div>
+
+                    <div class="toggle-group">
+                      <span style="font-size:0.85rem; color:#e2e8f0;">تشفير Base64:</span>
+                      <label class="switch">
+                        <input type="checkbox" id="base64-toggle" onchange="updatePayload()">
+                        <span class="slider"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arena-pane" id="arena-memory">
+              <div class="cyber-card" style="padding: 20px;">
+                <h3 style="color:var(--accent-cyan); margin-bottom:10px; text-align:right;">🎮 لعبة مطابقة المفاهيم الأمنية (Cyber Memory)</h3>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:20px; text-align:right; direction:rtl;">طابق كل مصطلح أمني (مثل SQLi) بالوصف والتعريف المناسب له لكسب +50 XP!</p>
+                
+                <div id="memory-game-grid" class="memory-grid"></div>
+              </div>
+            </div>
+
+            <div class="arena-pane" id="arena-scanner">
+              <div class="cyber-card" style="padding: 20px;">
+                <h3 style="color:var(--accent-cyan); margin-bottom:10px; text-align:right;">🔍 محاكي فحص الثغرات التفاعلي (Mock Vuln Scanner)</h3>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:15px; text-align:right; direction:rtl;">أدخل نطاق الهدف لمحاكاة فحص شامل وكشف الثغرات بشكل حي وتحصيل +30 XP.</p>
+                
+                <div style="display:flex; gap:10px; margin-bottom:15px; direction:rtl;">
+                  <input type="text" id="scan-domain-input" placeholder="e.g. vulnerable-target.com" style="flex:1; padding:10px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; font-family:'Fira Code', monospace; min-height:44px;" />
+                  <button class="hunt-btn primary" onclick="startMockScan()" style="min-height:44px;">🚀 بدء الفحص</button>
+                </div>
+
+                <div class="scanner-progress-bar">
+                  <div id="scan-progress-fill" class="scanner-progress-fill"></div>
+                </div>
+
+                <div id="scanner-console-logs" class="scanner-terminal">
+                  [+] Console ready. Enter target and click 'بدء الفحص'...
+                </div>
+
+                <div id="scan-reports-list" style="margin-top:20px;"></div>
+              </div>
+            </div>
+
+            <div class="arena-pane" id="arena-challenge">
+              <div class="challenge-box">
+                <span style="font-size:2rem;">🔥</span>
+                <h3 style="color:var(--accent-orange); margin:10px 0;">التحدي الأمني اليومي (Daily Cyber Challenge)</h3>
+                <p style="font-size:0.85rem; color:var(--text-secondary); direction:rtl;">قم بفك شفرة ROT13 التالية لاستخراج رمز العلم (Flag) الصحيح والحصول على +100 XP!</p>
+                
+                <div class="challenge-code">
+                  # Flag cipher: noqb_frp (ROT13 Caesar Cipher shift of 13)
+                </div>
+
+                <div style="margin: 20px 0;">
+                  <input type="text" id="challenge-flag-input" placeholder="Flag{...}" style="width:100%; padding:12px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; font-family:'Fira Code', monospace; font-size:1rem; box-sizing:border-box; text-align:center; min-height:44px;" />
+                </div>
+
+                <button class="hunt-btn primary" onclick="checkDailyChallenge()" style="width:100%; min-height:44px;">⚡ تحقق من العلم (Submit Flag)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. ABOUT VIEW (CONSOLIDATED PORTFOLIO) -->
         <div class="workspace-pane" id="pane-about">
           <h2 class="pane-view-title">// About the Author</h2>
           <div class="about-grid">
@@ -19219,6 +19367,7 @@
         else if (tabId === 'articles') path = 'Home &gt; Strategy Articles';
         else if (tabId === 'writeups') path = 'Home &gt; Writeups Database';
         else if (tabId === 'books') path = 'Home &gt; Books Collection';
+        else if (tabId === 'arena') path = 'Home &gt; Cyber Training Arena';
         else if (tabId === 'about') path = 'Home &gt; About Profile';
         breadcrumb.innerHTML = path;
       }
@@ -20275,5 +20424,6 @@ function exitSimulator() {
   </div>
 
   <script src="/static/main/js/library_dashboard.js"></script>
+  <script src="/static/main/js/training_arena.js"></script>
 </body>
 </html>

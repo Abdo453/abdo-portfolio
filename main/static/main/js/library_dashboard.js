@@ -355,9 +355,11 @@
     if (statCompleted) statCompleted.innerText = completedCount;
     if (statRemaining) statRemaining.innerText = remainingTime + ' ساعة';
     
-    // XP: 1000 XP per completed book, 50 XP per completed chapter
-    const computedXp = (completedCount * 1000) + (totalChaptersRead * 50);
+    // XP: 1000 XP per completed book, 50 XP per completed chapter + Arena XP
+    const arenaXp = parseInt(localStorage.getItem('arena_xp')) || 0;
+    const computedXp = (completedCount * 1000) + (totalChaptersRead * 50) + arenaXp;
     if (statXp) statXp.innerText = computedXp;
+    localStorage.setItem('academy_xp', computedXp);
   };
 
   // ── Book Filter Logic & Live Counters ──────────────────────
