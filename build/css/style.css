@@ -3994,17 +3994,20 @@ body.theme-purple {
     position: fixed !important;
     top: 0 !important;
     bottom: 0 !important;
-    left: -300px !important;
+    right: -300px !important;
+    left: auto !important;
     width: 280px !important;
     z-index: 9999 !important;
     background: #060610 !important;
-    border-right: 1px solid var(--border-glass) !important;
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-left: 1px solid var(--border-glass) !important;
+    border-right: none !important;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     padding: 20px !important;
     max-height: 100vh !important;
   }
   .book-sidebar.open {
-    left: 0 !important;
+    right: 0 !important;
+    left: auto !important;
   }
   .book-content {
     padding: 15px !important;
@@ -4728,3 +4731,110 @@ ul, ol {
     font-size: clamp(0.72rem, 1.2vw, 0.88rem) !important;
   }
 }
+
+/* ── Mobile Responsive Overrides for Security Library Books ── */
+@media screen and (max-width: 768px) {
+  .book-container {
+    padding: 0 10px !important;
+    margin: 15px auto !important;
+  }
+  .book-header {
+    padding: 20px !important;
+    gap: 15px !important;
+    margin-bottom: 25px !important;
+    flex-direction: column !important;
+    text-align: center !important;
+    align-items: center !important;
+  }
+  .book-cover-art {
+    width: 120px !important;
+    height: 160px !important;
+    font-size: 5rem !important;
+  }
+  .book-meta-info {
+    min-width: 100% !important;
+    text-align: center !important;
+  }
+  .book-title {
+    font-size: 1.6rem !important;
+    text-align: center !important;
+  }
+  .book-author {
+    font-size: 0.9rem !important;
+    margin-bottom: 12px !important;
+    text-align: center !important;
+  }
+  .book-stats {
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+  .stat-badge {
+    font-size: 0.72rem !important;
+    padding: 4px 8px !important;
+  }
+  .dashboard-panel {
+    padding: 15px !important;
+    margin-bottom: 25px !important;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .input-field {
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+  }
+  .book-content {
+    padding: 20px 15px !important;
+  }
+  .sec-title {
+    font-size: 1.30rem !important;
+    padding-bottom: 8px !important;
+  }
+  .sub-sec-title {
+    font-size: 1.05rem !important;
+    margin-top: 25px !important;
+  }
+  .code-box {
+    padding: 35px 12px 12px 12px !important;
+    font-size: 0.78rem !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .cheat-sheet-table {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+  }
+  .cheat-sheet-table th, .cheat-sheet-table td {
+    padding: 8px !important;
+    font-size: 0.75rem !important;
+  }
+  .quiz-container {
+    padding: 15px !important;
+  }
+  .quiz-title {
+    font-size: 1.1rem !important;
+  }
+  .quiz-question-btn {
+    font-size: 0.82rem !important;
+  }
+  .quiz-answer-panel {
+    font-size: 0.8rem !important;
+  }
+  .flashcards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .book-title {
+    font-size: 1.35rem !important;
+  }
+  .book-header {
+    padding: 15px !important;
+  }
+}
+

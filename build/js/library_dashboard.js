@@ -99,9 +99,16 @@
     'operator_handbook': 5
   };
 
+  function getCurrentBookId() {
+    const path = window.location.pathname;
+    const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
+    const parts = cleanPath.split('/');
+    const lastPart = parts[parts.length - 1] || '';
+    return lastPart.replace('.html', '');
+  }
+
   function updateTOCReadBadges() {
-    const pathParts = window.location.pathname.split('/');
-    const bookId = pathParts[pathParts.length - 1].replace('.html', '');
+    const bookId = getCurrentBookId();
     const tocItems = document.querySelectorAll('.toc-item');
     
     tocItems.forEach(item => {
@@ -476,8 +483,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     initTheme();
 
-    const pathParts = window.location.pathname.split('/');
-    const bookId = pathParts[pathParts.length - 1].replace('.html', '');
+    const bookId = getCurrentBookId();
     
     // Only inject inside book templates
     if (bookSectionMap[bookId] !== undefined) {
@@ -745,8 +751,7 @@
 
   // ── 5. Dynamic Mobile Hamburger Menu Drawer ───────────────
   function initMobileDrawer() {
-    const pathParts = window.location.pathname.split('/');
-    const bookId = pathParts[pathParts.length - 1].replace('.html', '');
+    const bookId = getCurrentBookId();
     
     // Only initialize inside book templates
     if (bookSectionMap[bookId] === undefined) return;
@@ -759,8 +764,9 @@
       display: none;
       position: fixed;
       bottom: 20px;
-      left: 20px;
-      z-index: 9999;
+      right: 20px;
+      left: auto;
+      z-index: 10000;
       background: var(--gradient-primary);
       border: none;
       border-radius: 50%;
@@ -815,8 +821,7 @@
   };
 
   function initReadingMode() {
-    const pathParts = window.location.pathname.split('/');
-    const bookId = pathParts[pathParts.length - 1].replace('.html', '');
+    const bookId = getCurrentBookId();
     if (bookSectionMap[bookId] === undefined) return;
 
     const contentArea = document.querySelector('.book-content');
@@ -1051,8 +1056,7 @@
   // ── Wire enhanced features into DOMContentLoaded ───────────
   document.addEventListener('DOMContentLoaded', function() {
     teleportModalsToBody();
-    const pathParts = window.location.pathname.split('/');
-    const bookId = pathParts[pathParts.length - 1].replace('.html', '');
+    const bookId = getCurrentBookId();
     if (bookSectionMap[bookId] === undefined) return;
 
     const sidebar = document.querySelector('.book-sidebar');
