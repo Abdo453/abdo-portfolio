@@ -432,23 +432,59 @@
     let currentTab = 'login';
     let uploadedAvatarBase64 = null;
 
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const max_size = 150; // Max dimension for avatar
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > max_size) {
+              height *= max_size / width;
+              width = max_size;
+            }
+          } else {
+            if (height > max_size) {
+              width *= max_size / height;
+              height = max_size;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Compress to JPEG with 70% quality (great ratio of quality to small file size)
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          callback(compressedDataUrl);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const avatarFileInput = document.getElementById('avatarFile');
       if (avatarFileInput) {
         avatarFileInput.addEventListener('change', function(e) {
           const file = e.target.files[0];
           if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-              uploadedAvatarBase64 = event.target.result;
+            logTerminal('OPTIMIZING PROFILE PHOTO...');
+            compressImage(file, function(compressedBase64) {
+              uploadedAvatarBase64 = compressedBase64;
               const preview = document.getElementById('avatarPreview');
               const previewContainer = document.getElementById('avatarPreviewContainer');
               if (preview && previewContainer) {
                 preview.src = uploadedAvatarBase64;
                 previewContainer.style.display = 'block';
+                logTerminal('PHOTO OPTIMIZED SUCCESSFULLY // READY');
               }
-            };
-            reader.readAsDataURL(file);
+            });
           }
         });
       }
@@ -524,23 +560,29 @@
       const username = usernameInput.value.trim();
       const password = passwordInput.value;
 
+      if (!username || !password) {
+        errBanner.innerText = 'خطأ: الرجاء إدخال اسم المستخدم وكلمة المرور.';
+        errBanner.style.display = 'block';
+        return;
+      }
+
       errBanner.style.display = 'none';
       submitBtn.disabled = true;
       
       logTerminal('INITIATING SECURITY HANDSHAKE...');
       logTerminal('VERIFYING CODENAME SYMMETRICS...');
 
-      if (IS_KALI_SERVER) {
-        // Django Real DB Authentication
-        const endpoint = currentTab === 'login' ? '/api/auth/login' : '/api/auth/register';
-        const payload = { username, password };
-        if (currentTab === 'register') {
-          payload.email = document.getElementById('email').value.trim();
-          payload.whatsapp = document.getElementById('whatsapp').value.trim();
-          payload.gender = document.querySelector('input[name="gender"]:checked').value;
-          payload.avatar = uploadedAvatarBase64;
-        }
-        try {
+      try {
+        if (IS_KALI_SERVER) {
+          // Django Real DB Authentication
+          const endpoint = currentTab === 'login' ? '/api/auth/login' : '/api/auth/register';
+          const payload = { username, password };
+          if (currentTab === 'register') {
+            payload.email = document.getElementById('email').value.trim();
+            payload.whatsapp = document.getElementById('whatsapp').value.trim();
+            payload.gender = document.querySelector('input[name="gender"]:checked').value;
+            payload.avatar = uploadedAvatarBase64;
+          }
           const response = await fetch(endpoint, {
             method: 'POST',
             headers: { 
@@ -572,69 +614,76 @@
             errBanner.innerText = 'خطأ: ' + errMsg;
             errBanner.style.display = 'block';
           }
-        } catch (e) {
-          submitBtn.disabled = false;
-          logTerminal('SERVER CONNECTION REFUSED', 'error');
-          errBanner.innerText = 'خطأ: تعذر الاتصال بسيرفر التحقق المباشر.';
-          errBanner.style.display = 'block';
-        }
-      } else {
-        // Simulated Client-Side Auth for Static Previews (GitHub Pages)
-        setTimeout(() => {
-          let mockUsers = JSON.parse(localStorage.getItem('mock_users') || '{}');
-          if (currentTab === 'register') {
-            if (mockUsers[username.toLowerCase()]) {
-              submitBtn.disabled = false;
-              logTerminal('CODENAME CONFLICT DETECTED', 'error');
-              errBanner.innerText = 'خطأ: اسم الكود هذا مستخدم بالفعل من قبل عميل آخر.';
-              errBanner.style.display = 'block';
-            } else {
-              // Create mock user
-              const newUser = {
-                username: username,
-                password: password,
-                email: document.getElementById('email').value.trim(),
-                whatsapp: document.getElementById('whatsapp').value.trim(),
-                gender: document.querySelector('input[name="gender"]:checked').value,
-                avatar: uploadedAvatarBase64,
-                xp: 0,
-                completed_challenges: []
-              };
-              mockUsers[username.toLowerCase()] = newUser;
-              localStorage.setItem('mock_users', JSON.stringify(mockUsers));
-              localStorage.setItem('current_user', JSON.stringify(newUser));
-              localStorage.setItem('arena_xp', 0);
-              
-              logTerminal('CODENAME REGISTERED SUCCESSFULLY!', 'success');
-              logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
-              setTimeout(() => {
-                window.location.href = HOME_URL + '?t=' + Date.now();
-              }, 1000);
-            }
-          } else {
-            // Login
-            const userObj = mockUsers[username.toLowerCase()];
-            if (userObj && userObj.password === password) {
-              localStorage.setItem('current_user', JSON.stringify(userObj));
-              if (userObj.xp !== undefined) {
-                localStorage.setItem('arena_xp', userObj.xp);
-                const completed = userObj.completed_challenges || [];
-                completed.forEach(cId => localStorage.setItem(cId, 'true'));
+        } else {
+          // Simulated Client-Side Auth for Static Previews (GitHub Pages)
+          setTimeout(() => {
+            try {
+              let mockUsers = JSON.parse(localStorage.getItem('mock_users') || '{}');
+              if (currentTab === 'register') {
+                if (mockUsers[username.toLowerCase()]) {
+                  submitBtn.disabled = false;
+                  logTerminal('CODENAME CONFLICT DETECTED', 'error');
+                  errBanner.innerText = 'خطأ: اسم الكود هذا مستخدم بالفعل من قبل عميل آخر.';
+                  errBanner.style.display = 'block';
+                } else {
+                  // Create mock user
+                  const newUser = {
+                    username: username,
+                    password: password,
+                    email: document.getElementById('email').value.trim(),
+                    whatsapp: document.getElementById('whatsapp').value.trim(),
+                    gender: document.querySelector('input[name="gender"]:checked').value,
+                    avatar: uploadedAvatarBase64,
+                    xp: 0,
+                    completed_challenges: []
+                  };
+                  mockUsers[username.toLowerCase()] = newUser;
+                  localStorage.setItem('mock_users', JSON.stringify(mockUsers));
+                  localStorage.setItem('current_user', JSON.stringify(newUser));
+                  localStorage.setItem('arena_xp', 0);
+                  
+                  logTerminal('CODENAME REGISTERED SUCCESSFULLY!', 'success');
+                  logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
+                  setTimeout(() => {
+                    window.location.href = HOME_URL + '?t=' + Date.now();
+                  }, 1000);
+                }
+              } else {
+                // Login
+                const userObj = mockUsers[username.toLowerCase()];
+                if (userObj && userObj.password === password) {
+                  localStorage.setItem('current_user', JSON.stringify(userObj));
+                  if (userObj.xp !== undefined) {
+                    localStorage.setItem('arena_xp', userObj.xp);
+                    const completed = userObj.completed_challenges || [];
+                    completed.forEach(cId => localStorage.setItem(cId, 'true'));
+                  }
+                  
+                  logTerminal('AUTHENTICATION ACCEPTED!', 'success');
+                  logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
+                  setTimeout(() => {
+                    window.location.href = HOME_URL + '?t=' + Date.now();
+                  }, 1000);
+                } else {
+                  submitBtn.disabled = false;
+                  logTerminal('ACCESS DENIED: INVALID KEYS', 'error');
+                  errBanner.innerText = 'خطأ: اسم الكود أو الرمز السري غير صحيح.';
+                  errBanner.style.display = 'block';
+                }
               }
-              
-              logTerminal('AUTHENTICATION ACCEPTED!', 'success');
-              logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
-              setTimeout(() => {
-                window.location.href = HOME_URL + '?t=' + Date.now();
-              }, 1000);
-            } else {
+            } catch (storageErr) {
               submitBtn.disabled = false;
-              logTerminal('ACCESS DENIED: INVALID KEYS', 'error');
-              errBanner.innerText = 'خطأ: اسم الكود أو الرمز السري غير صحيح.';
+              logTerminal('LOCAL STORE FAILURE: ' + storageErr.message, 'error');
+              errBanner.innerText = 'خطأ في المتصفح: ' + storageErr.message;
               errBanner.style.display = 'block';
             }
-          }
-        }, 800);
+          }, 800);
+        }
+      } catch (e) {
+        submitBtn.disabled = false;
+        logTerminal('HANDSHAKE CRITICAL ERROR: ' + e.message, 'error');
+        errBanner.innerText = 'حدث خطأ استثنائي: ' + e.message;
+        errBanner.style.display = 'block';
       }
     }
 
