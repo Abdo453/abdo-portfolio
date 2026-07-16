@@ -1,14 +1,19 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.static import serve
+import os
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += staticfiles_urlpatterns()
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# Force serving static files in all conditions (including DEBUG=False)
+static_root = settings.STATIC_ROOT
+if not os.path.exists(static_root):
+    static_root = os.path.join(settings.BASE_DIR, 'main', 'static')
+
+urlpatterns += [
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': static_root}),
+]
