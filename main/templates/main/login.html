@@ -297,7 +297,7 @@
       </div>
 
       <div style="text-align: center;">
-        <a href="/" class="back-btn">← العودة للرئيسية</a>
+        <a href="/" id="backBtn" class="back-btn">← العودة للرئيسية</a>
       </div>
     </div>
   </div>
@@ -368,6 +368,8 @@
     // Auth Tab & Form Logic
     // ─────────────────────────────────────────────────────────
     let currentTab = 'login';
+    const HOME_URL = (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') ? 'index.html' : '/';
+    document.getElementById('backBtn').href = HOME_URL;
     const IS_KALI_SERVER = window.location.hostname === '37.60.230.245' || 
                            window.location.hostname === 'localhost' || 
                            window.location.hostname.includes('192.168.') ||
@@ -450,7 +452,7 @@
             }
 
             setTimeout(() => {
-              window.location.href = '/';
+              window.location.href = HOME_URL;
             }, 1000);
           } else {
             submitBtn.disabled = false;
@@ -491,7 +493,7 @@
               logTerminal('CODENAME REGISTERED SUCCESSFULLY!', 'success');
               logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
               setTimeout(() => {
-                window.location.href = '/';
+                window.location.href = HOME_URL;
               }, 1000);
             }
           } else {
@@ -508,7 +510,7 @@
               logTerminal('AUTHENTICATION ACCEPTED!', 'success');
               logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
               setTimeout(() => {
-                window.location.href = '/';
+                window.location.href = HOME_URL;
               }, 1000);
             } else {
               submitBtn.disabled = false;
