@@ -273,7 +273,7 @@
       <div id="errorBanner" class="error-banner"></div>
 
       <form id="authForm" onsubmit="handleAuth(event)">
-        <input type="hidden" name="csrfmiddlewaretoken" value="xuLDa1vr8qTWrSDwZkMvoY6hf9T3fjng80Mth78LjUt9cIm93V2mrnGtB5SKWxQU">
+        <input type="hidden" name="csrfmiddlewaretoken" value="HTRZio9etzg0CFOKeAQZ7YElfyw3N2q4vO9z23awiHgTM04WQBebWrghw067R3Yt">
         <div class="form-group">
           <label class="form-label" for="username">اسم المستخدم (CODENAME)</label>
           <div class="input-wrapper">
@@ -471,7 +471,7 @@
             }
 
             setTimeout(() => {
-              window.location.href = HOME_URL;
+              window.location.href = HOME_URL + '?t=' + Date.now();
             }, 1000);
           } else {
             submitBtn.disabled = false;
@@ -512,7 +512,7 @@
               logTerminal('CODENAME REGISTERED SUCCESSFULLY!', 'success');
               logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
               setTimeout(() => {
-                window.location.href = HOME_URL;
+                window.location.href = HOME_URL + '?t=' + Date.now();
               }, 1000);
             }
           } else {
@@ -529,7 +529,7 @@
               logTerminal('AUTHENTICATION ACCEPTED!', 'success');
               logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
               setTimeout(() => {
-                window.location.href = HOME_URL;
+                window.location.href = HOME_URL + '?t=' + Date.now();
               }, 1000);
             } else {
               submitBtn.disabled = false;
@@ -594,7 +594,7 @@
         localStorage.setItem('arena_xp', 0);
         
         setTimeout(() => {
-          window.location.href = HOME_URL;
+          window.location.href = HOME_URL + '?t=' + Date.now();
         }, 1000);
       } catch (err) {
         logTerminal('TOKEN DECODING FAILED: ' + err.message, 'error');
@@ -628,7 +628,7 @@
         localStorage.setItem('arena_xp', 250);
         
         setTimeout(() => {
-          window.location.href = HOME_URL;
+          window.location.href = HOME_URL + '?t=' + Date.now();
         }, 1000);
       }, 800);
     }

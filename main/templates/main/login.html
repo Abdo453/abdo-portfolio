@@ -471,7 +471,7 @@
             }
 
             setTimeout(() => {
-              window.location.href = HOME_URL;
+              window.location.href = HOME_URL + '?t=' + Date.now();
             }, 1000);
           } else {
             submitBtn.disabled = false;
@@ -512,7 +512,7 @@
               logTerminal('CODENAME REGISTERED SUCCESSFULLY!', 'success');
               logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
               setTimeout(() => {
-                window.location.href = HOME_URL;
+                window.location.href = HOME_URL + '?t=' + Date.now();
               }, 1000);
             }
           } else {
@@ -529,7 +529,7 @@
               logTerminal('AUTHENTICATION ACCEPTED!', 'success');
               logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
               setTimeout(() => {
-                window.location.href = HOME_URL;
+                window.location.href = HOME_URL + '?t=' + Date.now();
               }, 1000);
             } else {
               submitBtn.disabled = false;
@@ -594,7 +594,7 @@
         localStorage.setItem('arena_xp', 0);
         
         setTimeout(() => {
-          window.location.href = HOME_URL;
+          window.location.href = HOME_URL + '?t=' + Date.now();
         }, 1000);
       } catch (err) {
         logTerminal('TOKEN DECODING FAILED: ' + err.message, 'error');
@@ -628,7 +628,7 @@
         localStorage.setItem('arena_xp', 250);
         
         setTimeout(() => {
-          window.location.href = HOME_URL;
+          window.location.href = HOME_URL + '?t=' + Date.now();
         }, 1000);
       }, 800);
     }
