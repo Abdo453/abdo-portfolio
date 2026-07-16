@@ -21378,6 +21378,12 @@ function exitSimulator() {
       profileInd.style.display = 'flex';
       document.getElementById('authUsername').innerText = user.username;
 
+      // Update profile name to logged-in user's name
+      const profileNameEl = document.querySelector('.profile-name');
+      if (profileNameEl) {
+        profileNameEl.innerText = user.username;
+      }
+
       // Sync progress variables to current user values
       if (user.xp !== undefined) {
         localStorage.setItem('arena_xp', user.xp);
@@ -21404,6 +21410,12 @@ function exitSimulator() {
 
       document.getElementById('authBtn').style.display = 'flex';
       document.getElementById('userProfileIndicator').style.display = 'none';
+
+      // Restore original profile name on logout
+      const profileNameEl = document.querySelector('.profile-name');
+      if (profileNameEl) {
+        profileNameEl.innerText = 'Abdo Ramdan';
+      }
       
       if (window.updateDashboardUI) window.updateDashboardUI();
       triggerLeaderboardUpdate();
