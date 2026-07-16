@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template.exceptions import TemplateDoesNotExist
 from django.http import Http404
 from .portfolio_data import get_portfolio_context
@@ -171,3 +171,8 @@ def api_leaderboard(request):
             
     unique_combined.sort(key=lambda x: x['xp'], reverse=True)
     return JsonResponse({'success': True, 'leaderboard': unique_combined[:5]})
+
+def login_page(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    return render(request, 'main/login.html')

@@ -13,6 +13,7 @@ def scan_templates():
         ('main/python_for_hackers.html', 'python-for-hackers.html', ''),
         ('main/bug_bounty_writeups.html', 'bug-bounty-writeups.html', ''),
         ('main/profile.html', 'profile.html', ''),
+        ('main/login.html', 'login.html', ''),
     ]
     
     # 1. Scan vulnerabilities

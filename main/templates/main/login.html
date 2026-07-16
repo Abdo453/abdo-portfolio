@@ -1,0 +1,525 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HunterOS // بوابة الوصول الآمن</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #030308;
+      --accent-cyan: #00e5ff;
+      --accent-cyan-glow: rgba(0, 229, 255, 0.4);
+      --accent-pink: #ff3366;
+      --accent-green: #00ff66;
+      --text-muted: #8892b0;
+      --text-color: #ccd6f6;
+      --border-color: rgba(0, 229, 255, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-color);
+      font-family: 'Cairo', 'Fira Code', monospace;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      direction: rtl;
+    }
+
+    #particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 460px;
+      padding: 20px;
+    }
+
+    .cyber-card {
+      background: rgba(10, 10, 20, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 0 35px rgba(0, 229, 255, 0.15);
+      backdrop-filter: blur(12px);
+      padding: 35px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cyber-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+      animation: scanline-move 3s linear infinite;
+    }
+
+    @keyframes scanline-move {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px var(--accent-cyan-glow);
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
+
+    .logo-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+      letter-spacing: 1px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 25px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-bottom: 2px solid transparent;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
+      text-shadow: 0 0 8px var(--accent-cyan-glow);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-family: 'Fira Code', 'Cairo', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-cyan);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(3, 3, 8, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 12px 35px 12px 12px; /* Right padding for RTL icon */
+      color: #fff;
+      font-family: 'Fira Code', 'Cairo', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent-cyan), #0088cc);
+      color: #030308;
+      border: none;
+      border-radius: 4px;
+      padding: 14px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .terminal-output {
+      margin-top: 25px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      padding: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--accent-green);
+      min-height: 70px;
+      max-height: 100px;
+      overflow-y: auto;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .terminal-line {
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid transparent;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.3s;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .back-btn:hover {
+      color: var(--accent-cyan);
+    }
+
+    .error-banner {
+      display: none;
+      background: rgba(255, 51, 102, 0.1);
+      border: 1px solid var(--accent-pink);
+      color: var(--accent-pink);
+      padding: 10px 15px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-bottom: 20px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particles"></canvas>
+
+  <div class="login-container">
+    <div class="cyber-card">
+      <div class="logo-container">
+        <div class="logo-title">&lt;HUNTER_OS/&gt;</div>
+        <div class="logo-sub">SECURE SYSTEM AUTHENTICATION</div>
+      </div>
+
+      <div class="auth-tabs">
+        <button id="tab-login" class="tab-btn active" onclick="switchTab('login')">تسجيل الدخول</button>
+        <button id="tab-register" class="tab-btn" onclick="switchTab('register')">إنشاء حساب جديد</button>
+      </div>
+
+      <div id="errorBanner" class="error-banner"></div>
+
+      <form id="authForm" onsubmit="handleAuth(event)">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label" for="username">اسم المستخدم (CODENAME)</label>
+          <div class="input-wrapper">
+            <span class="input-icon">USR&gt;</span>
+            <input type="text" id="username" class="form-input" required placeholder="ادخل كود اسمك..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">كلمة المرور (ACCESS CODE)</label>
+          <div class="input-wrapper">
+            <span class="input-icon">KEY&gt;</span>
+            <input type="password" id="password" class="form-input" required placeholder="ادخل كلمة المرور...">
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-btn">بدء الاتصال الآمن // CONNECT</button>
+      </form>
+
+      <div class="terminal-output" id="terminalOutput">
+        <div class="terminal-line">[+] READY FOR HANDSHAKE.</div>
+      </div>
+
+      <div style="text-align: center;">
+        <a href="/" class="back-btn">← العودة للرئيسية</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // Particle Grid Background Effect
+    // ─────────────────────────────────────────────────────────
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const count = 75;
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        radius: Math.random() * 1.5 + 0.5
+      });
+    }
+
+    function animate() {
+      ctx.fillStyle = 'rgba(3, 3, 8, 0.2)';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.04)';
+      ctx.fillStyle = 'rgba(0, 229, 255, 0.2)';
+
+      for (let i = 0; i < count; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < count; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // ─────────────────────────────────────────────────────────
+    // Auth Tab & Form Logic
+    // ─────────────────────────────────────────────────────────
+    let currentTab = 'login';
+    const IS_KALI_SERVER = window.location.hostname === '37.60.230.245' || 
+                           window.location.hostname === 'localhost' || 
+                           window.location.hostname.includes('192.168.') ||
+                           window.location.hostname === '127.0.0.1';
+
+    function logTerminal(msg, type = 'info') {
+      const output = document.getElementById('terminalOutput');
+      const prefix = type === 'error' ? '[-] ' : type === 'success' ? '[+] ' : '[*] ';
+      const color = type === 'error' ? '#ff3366' : type === 'success' ? '#00ff66' : '#00e5ff';
+      
+      const line = document.createElement('div');
+      line.className = 'terminal-line';
+      line.style.color = color;
+      line.innerText = prefix + msg;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      const tabLogin = document.getElementById('tab-login');
+      const tabRegister = document.getElementById('tab-register');
+      const submitBtn = document.getElementById('submitBtn');
+      const errBanner = document.getElementById('errorBanner');
+
+      errBanner.style.display = 'none';
+
+      if (tab === 'login') {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        submitBtn.innerText = 'بدء الاتصال الآمن // CONNECT';
+        logTerminal('MODE SWITCHED: SECURE LOGIN INTERFACE');
+      } else {
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+        submitBtn.innerText = 'تسجيل كود جديد // REGISTER';
+        logTerminal('MODE SWITCHED: CODENAME CREATION INTERFACE');
+      }
+    }
+
+    async function handleAuth(event) {
+      event.preventDefault();
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const submitBtn = document.getElementById('submitBtn');
+      const errBanner = document.getElementById('errorBanner');
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      errBanner.style.display = 'none';
+      submitBtn.disabled = true;
+      
+      logTerminal('INITIATING SECURITY HANDSHAKE...');
+      logTerminal('VERIFYING CODENAME SYMMETRICS...');
+
+      if (IS_KALI_SERVER) {
+        // Django Real DB Authentication
+        const endpoint = currentTab === 'login' ? '/api/auth/login' : '/api/auth/register';
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ username, password })
+          });
+          const result = await response.json();
+          if (result.success) {
+            logTerminal('AUTHENTICATION ACCEPTED!', 'success');
+            logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
+            
+            // Sync values to localStorage for compatibility
+            localStorage.setItem('current_user', JSON.stringify(result.user));
+            if (result.user.xp !== undefined) {
+              localStorage.setItem('arena_xp', result.user.xp);
+              const completed = result.user.completed_challenges || [];
+              completed.forEach(cId => localStorage.setItem(cId, 'true'));
+            }
+
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1000);
+          } else {
+            submitBtn.disabled = false;
+            const errMsg = result.error || 'خطأ في عملية التحقق';
+            logTerminal('HANDSHAKE FAILED: ' + errMsg, 'error');
+            errBanner.innerText = 'خطأ: ' + errMsg;
+            errBanner.style.display = 'block';
+          }
+        } catch (e) {
+          submitBtn.disabled = false;
+          logTerminal('SERVER CONNECTION REFUSED', 'error');
+          errBanner.innerText = 'خطأ: تعذر الاتصال بسيرفر التحقق المباشر.';
+          errBanner.style.display = 'block';
+        }
+      } else {
+        // Simulated Client-Side Auth for Static Previews (GitHub Pages)
+        setTimeout(() => {
+          let mockUsers = JSON.parse(localStorage.getItem('mock_users') || '{}');
+          if (currentTab === 'register') {
+            if (mockUsers[username.toLowerCase()]) {
+              submitBtn.disabled = false;
+              logTerminal('CODENAME CONFLICT DETECTED', 'error');
+              errBanner.innerText = 'خطأ: اسم الكود هذا مستخدم بالفعل من قبل عميل آخر.';
+              errBanner.style.display = 'block';
+            } else {
+              // Create mock user
+              const newUser = {
+                username: username,
+                password: password,
+                xp: 0,
+                completed_challenges: []
+              };
+              mockUsers[username.toLowerCase()] = newUser;
+              localStorage.setItem('mock_users', JSON.stringify(mockUsers));
+              localStorage.setItem('current_user', JSON.stringify(newUser));
+              localStorage.setItem('arena_xp', 0);
+              
+              logTerminal('CODENAME REGISTERED SUCCESSFULLY!', 'success');
+              logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
+              setTimeout(() => {
+                window.location.href = '/';
+              }, 1000);
+            }
+          } else {
+            // Login
+            const userObj = mockUsers[username.toLowerCase()];
+            if (userObj && userObj.password === password) {
+              localStorage.setItem('current_user', JSON.stringify(userObj));
+              if (userObj.xp !== undefined) {
+                localStorage.setItem('arena_xp', userObj.xp);
+                const completed = userObj.completed_challenges || [];
+                completed.forEach(cId => localStorage.setItem(cId, 'true'));
+              }
+              
+              logTerminal('AUTHENTICATION ACCEPTED!', 'success');
+              logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
+              setTimeout(() => {
+                window.location.href = '/';
+              }, 1000);
+            } else {
+              submitBtn.disabled = false;
+              logTerminal('ACCESS DENIED: INVALID KEYS', 'error');
+              errBanner.innerText = 'خطأ: اسم الكود أو الرمز السري غير صحيح.';
+              errBanner.style.display = 'block';
+            }
+          }
+        }, 800);
+      }
+    }
+  </script>
+</body>
+</html>
