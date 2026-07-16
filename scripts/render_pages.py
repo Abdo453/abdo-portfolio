@@ -73,25 +73,34 @@ def fix_static_paths(html, css_prefix=''):
 def inject_auth_check(html, is_login_page=False):
     if is_login_page:
         return html
-    if 'localStorage.getItem(\'current_user\')' in html:
+    if 'JSON.parse(userStr)' in html or 'localStorage.getItem(\'current_user\')' in html:
         return html
     auth_script = """  <script>
     (function() {
-      const user = localStorage.getItem('current_user');
-      if (!user) {
-        const isStatic = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
-        let loginUrl = '';
-        if (isStatic) {
-          const path = window.location.pathname;
-          if (path.includes('/vulnerabilities/') || path.includes('/labs/') || path.includes('/linux-security/') || path.includes('/writeups/') || path.includes('/books/')) {
-            loginUrl = '../login.html';
-          } else {
-            loginUrl = 'login.html';
-          }
-        } else {
-          loginUrl = '/login';
+      try {
+        const userStr = localStorage.getItem('current_user');
+        let user = null;
+        if (userStr) {
+          user = JSON.parse(userStr);
         }
-        window.location.href = loginUrl;
+        if (!user || !user.username) {
+          const isStatic = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+          let loginUrl = '';
+          if (isStatic) {
+            const path = window.location.pathname;
+            if (path.includes('/vulnerabilities/') || path.includes('/labs/') || path.includes('/linux-security/') || path.includes('/writeups/') || path.includes('/books/')) {
+              loginUrl = '../login.html';
+            } else {
+              loginUrl = 'login.html';
+            }
+          } else {
+            loginUrl = '/login';
+          }
+          window.location.href = loginUrl;
+        }
+      } catch (e) {
+        const isStatic = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+        window.location.href = isStatic ? 'login.html' : '/login';
       }
     })();
   </script>
