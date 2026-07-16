@@ -273,7 +273,7 @@
       <div id="errorBanner" class="error-banner"></div>
 
       <form id="authForm" onsubmit="handleAuth(event)">
-        <input type="hidden" name="csrfmiddlewaretoken" value="imhj8D27wx82gdCMPlHUbb02hbRHc7CB6g6Xrd9yEmOfvHKCSOTGLifttNMuWOEg">
+        <input type="hidden" name="csrfmiddlewaretoken" value="I2APtabxeEOm4R5OuOm1srPLWcoh1CWx7GU0QTzR1PbRR1Cvj3kWIStRhr7sZqKK">
         <div class="form-group">
           <label class="form-label" for="username">اسم المستخدم (CODENAME)</label>
           <div class="input-wrapper">
@@ -287,6 +287,49 @@
           <div class="input-wrapper">
             <span class="input-icon">KEY&gt;</span>
             <input type="password" id="password" class="form-input" required placeholder="ادخل كلمة المرور...">
+          </div>
+        </div>
+
+        <!-- Extra Fields for Registration Only -->
+        <div id="registerFields" style="display: none; border-top: 1px solid rgba(0, 229, 255, 0.1); margin-top: 15px; padding-top: 15px;">
+          <div class="form-group">
+            <label class="form-label" for="email">البريد الإلكتروني (EMAIL)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">@&gt;</span>
+              <input type="email" id="email" class="form-input" placeholder="ادخل البريد الإلكتروني...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="whatsapp">رقم الواتساب (WHATSAPP)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">WA&gt;</span>
+              <input type="tel" id="whatsapp" class="form-input" placeholder="ادخل رقم الواتساب...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" style="margin-bottom: 8px; display: block;">الجنس (GENDER)</label>
+            <div style="display: flex; gap: 30px; margin-top: 5px; margin-bottom: 10px;">
+              <label style="color: var(--text-color); font-family: 'Cairo', sans-serif; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="radio" name="gender" value="male" checked style="accent-color: var(--accent-cyan); cursor: pointer;"> ذكر // MALE
+              </label>
+              <label style="color: var(--text-color); font-family: 'Cairo', sans-serif; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="radio" name="gender" value="female" style="accent-color: var(--accent-cyan); cursor: pointer;"> أنثى // FEMALE
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="avatarFile">الصورة الشخصية (PROFILE PHOTO)</label>
+            <div class="input-wrapper" style="border: 1px dashed rgba(0, 229, 255, 0.3); padding: 12px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; gap: 8px; background: rgba(3,3,8,0.4);">
+              <span style="color: var(--accent-cyan); font-size: 0.72rem; font-family: 'Fira Code', monospace; letter-spacing: 0.5px;">IMG&gt; UPLOAD AVATAR (.png, .jpg, .jpeg)</span>
+              <input type="file" id="avatarFile" accept="image/*" class="form-input" style="border: none; padding: 0; background: none; font-size: 0.8rem; width: 100%; cursor: pointer;">
+              <div id="avatarPreviewContainer" style="display: none; position: relative; margin-top: 5px;">
+                <img id="avatarPreview" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-cyan); object-fit: cover;">
+                <button type="button" onclick="removeAvatarFile()" style="position: absolute; top: -5px; right: -5px; background: #ff3366; color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold;">×</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -387,6 +430,39 @@
     // Auth Tab & Form Logic
     // ─────────────────────────────────────────────────────────
     let currentTab = 'login';
+    let uploadedAvatarBase64 = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const avatarFileInput = document.getElementById('avatarFile');
+      if (avatarFileInput) {
+        avatarFileInput.addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              uploadedAvatarBase64 = event.target.result;
+              const preview = document.getElementById('avatarPreview');
+              const previewContainer = document.getElementById('avatarPreviewContainer');
+              if (preview && previewContainer) {
+                preview.src = uploadedAvatarBase64;
+                previewContainer.style.display = 'block';
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+    });
+
+    function removeAvatarFile() {
+      uploadedAvatarBase64 = null;
+      const avatarFileInput = document.getElementById('avatarFile');
+      const preview = document.getElementById('avatarPreview');
+      const previewContainer = document.getElementById('avatarPreviewContainer');
+      if (avatarFileInput) avatarFileInput.value = '';
+      if (preview) preview.src = '';
+      if (previewContainer) previewContainer.style.display = 'none';
+    }
     const HOME_URL = (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') ? 'index.html' : '/';
     document.getElementById('backBtn').href = HOME_URL;
     const IS_KALI_SERVER = window.location.hostname === '37.60.230.245' || 
@@ -413,6 +489,9 @@
       const tabRegister = document.getElementById('tab-register');
       const submitBtn = document.getElementById('submitBtn');
       const errBanner = document.getElementById('errorBanner');
+      const registerFields = document.getElementById('registerFields');
+      const emailInput = document.getElementById('email');
+      const whatsappInput = document.getElementById('whatsapp');
 
       errBanner.style.display = 'none';
 
@@ -420,11 +499,17 @@
         tabLogin.classList.add('active');
         tabRegister.classList.remove('active');
         submitBtn.innerText = 'بدء الاتصال الآمن // CONNECT';
+        if (registerFields) registerFields.style.display = 'none';
+        if (emailInput) emailInput.required = false;
+        if (whatsappInput) whatsappInput.required = false;
         logTerminal('MODE SWITCHED: SECURE LOGIN INTERFACE');
       } else {
         tabRegister.classList.add('active');
         tabLogin.classList.remove('active');
         submitBtn.innerText = 'تسجيل كود جديد // REGISTER';
+        if (registerFields) registerFields.style.display = 'block';
+        if (emailInput) emailInput.required = true;
+        if (whatsappInput) whatsappInput.required = true;
         logTerminal('MODE SWITCHED: CODENAME CREATION INTERFACE');
       }
     }
@@ -448,6 +533,13 @@
       if (IS_KALI_SERVER) {
         // Django Real DB Authentication
         const endpoint = currentTab === 'login' ? '/api/auth/login' : '/api/auth/register';
+        const payload = { username, password };
+        if (currentTab === 'register') {
+          payload.email = document.getElementById('email').value.trim();
+          payload.whatsapp = document.getElementById('whatsapp').value.trim();
+          payload.gender = document.querySelector('input[name="gender"]:checked').value;
+          payload.avatar = uploadedAvatarBase64;
+        }
         try {
           const response = await fetch(endpoint, {
             method: 'POST',
@@ -455,7 +547,7 @@
               'Content-Type': 'application/json',
               'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify(payload)
           });
           const result = await response.json();
           if (result.success) {
@@ -501,6 +593,10 @@
               const newUser = {
                 username: username,
                 password: password,
+                email: document.getElementById('email').value.trim(),
+                whatsapp: document.getElementById('whatsapp').value.trim(),
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                avatar: uploadedAvatarBase64,
                 xp: 0,
                 completed_challenges: []
               };

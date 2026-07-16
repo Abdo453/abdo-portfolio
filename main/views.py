@@ -74,6 +74,11 @@ def api_register(request):
         data = json.loads(request.body)
         username = data.get('username').strip()
         password = data.get('password')
+        email = data.get('email')
+        whatsapp = data.get('whatsapp')
+        gender = data.get('gender', 'male')
+        avatar = data.get('avatar')
+        
         if not username or not password:
             return JsonResponse({'success': False, 'error': 'Username and password required'}, status=400)
         
@@ -81,13 +86,24 @@ def api_register(request):
             return JsonResponse({'success': False, 'error': 'Username already exists'}, status=400)
         
         user = User.objects.create_user(username=username, password=password)
+        profile = user.profile
+        profile.email = email
+        profile.whatsapp = whatsapp
+        profile.gender = gender
+        profile.avatar = avatar
+        profile.save()
+        
         auth_login(request, user)
         return JsonResponse({
             'success': True,
             'user': {
                 'username': user.username,
-                'xp': user.profile.xp,
-                'completed_challenges': json.loads(user.profile.completed_challenges or '[]')
+                'xp': profile.xp,
+                'completed_challenges': json.loads(profile.completed_challenges or '[]'),
+                'email': profile.email,
+                'whatsapp': profile.whatsapp,
+                'gender': profile.gender,
+                'avatar': profile.avatar
             }
         })
     except Exception as e:
@@ -109,7 +125,11 @@ def api_login(request):
                 'user': {
                     'username': user.username,
                     'xp': user.profile.xp,
-                    'completed_challenges': json.loads(user.profile.completed_challenges or '[]')
+                    'completed_challenges': json.loads(user.profile.completed_challenges or '[]'),
+                    'email': user.profile.email,
+                    'whatsapp': user.profile.whatsapp,
+                    'gender': user.profile.gender,
+                    'avatar': user.profile.avatar
                 }
             })
         else:
@@ -151,7 +171,11 @@ def api_profile(request):
         'user': {
             'username': user.username,
             'xp': user.profile.xp,
-            'completed_challenges': json.loads(user.profile.completed_challenges or '[]')
+            'completed_challenges': json.loads(user.profile.completed_challenges or '[]'),
+            'email': user.profile.email,
+            'whatsapp': user.profile.whatsapp,
+            'gender': user.profile.gender,
+            'avatar': user.profile.avatar
         }
     })
 

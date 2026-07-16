@@ -21718,6 +21718,20 @@ function exitSimulator() {
         profileNameEl.innerText = user.username;
       }
 
+      // Update profile avatar image
+      const avatarEl = document.querySelector('.profile-avatar');
+      if (avatarEl) {
+        if (user.avatar) {
+          avatarEl.src = user.avatar;
+        } else {
+          if (user.gender === 'female') {
+            avatarEl.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username) + '&background=ff3366&color=fff&size=200&bold=true';
+          } else {
+            avatarEl.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.username) + '&background=00e5ff&color=030308&size=200&bold=true';
+          }
+        }
+      }
+
       // Sync progress variables to current user values
       if (user.xp !== undefined) {
         localStorage.setItem('arena_xp', user.xp);
@@ -21749,6 +21763,12 @@ function exitSimulator() {
       const profileNameEl = document.querySelector('.profile-name');
       if (profileNameEl) {
         profileNameEl.innerText = 'Abdo Ramdan';
+      }
+
+      // Restore original profile avatar on logout
+      const avatarEl = document.querySelector('.profile-avatar');
+      if (avatarEl) {
+        avatarEl.src = 'images/profile.png';
       }
       
       if (window.updateDashboardUI) window.updateDashboardUI();
