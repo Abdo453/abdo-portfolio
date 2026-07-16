@@ -355,9 +355,10 @@
     if (statCompleted) statCompleted.innerText = completedCount;
     if (statRemaining) statRemaining.innerText = remainingTime + ' ساعة';
     
-    // XP: 1000 XP per completed book, 50 XP per completed chapter + Arena XP
+    // XP: 1000 XP per completed book, 50 XP per completed chapter + Arena XP + Burp XP
     const arenaXp = parseInt(localStorage.getItem('arena_xp')) || 0;
-    const computedXp = (completedCount * 1000) + (totalChaptersRead * 50) + arenaXp;
+    const burpXp = localStorage.getItem('lab_completed_burp') === 'true' ? 40 : 0;
+    const computedXp = (completedCount * 1000) + (totalChaptersRead * 50) + arenaXp + burpXp;
     if (statXp) statXp.innerText = computedXp;
     localStorage.setItem('academy_xp', computedXp);
   };
