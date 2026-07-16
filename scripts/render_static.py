@@ -14,7 +14,7 @@ django.setup()
 from django.template.loader import render_to_string
 from django.test import RequestFactory
 from main.views import get_portfolio_context
-from render_pages import scan_templates, scan_books, render_page, fix_static_paths
+from render_pages import scan_templates, scan_books, render_page, fix_static_paths, inject_auth_check
 
 factory = RequestFactory()
 request = factory.get('/')
@@ -32,6 +32,7 @@ BOOKS = scan_books()
 html = render_to_string('main/home.html', context, request=request)
 html = fix_static_paths(html)
 html = re.sub(r'<input[^>]*csrfmiddlewaretoken[^>]*/>', '', html)
+html = inject_auth_check(html, is_login_page=False)
 
 output_path = os.path.join(build_dir, 'index.html')
 with open(output_path, 'w', encoding='utf-8') as f:
@@ -53,6 +54,7 @@ os.makedirs(books_dir, exist_ok=True)
 for book in BOOKS:
     book_html = render_to_string(f'main/books/{book}', context, request=request)
     book_html = fix_static_paths(book_html, '../')
+    book_html = inject_auth_check(book_html, is_login_page=False)
     book_output_path = os.path.join(books_dir, book)
     with open(book_output_path, 'w', encoding='utf-8') as f:
         f.write(book_html)

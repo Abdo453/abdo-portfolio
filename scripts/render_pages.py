@@ -70,9 +70,41 @@ def fix_static_paths(html, css_prefix=''):
     html = html.replace('/static/main/', css_prefix)
     return html
 
+def inject_auth_check(html, is_login_page=False):
+    if is_login_page:
+        return html
+    if 'localStorage.getItem(\'current_user\')' in html:
+        return html
+    auth_script = """  <script>
+    (function() {
+      const user = localStorage.getItem('current_user');
+      if (!user) {
+        const isStatic = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+        let loginUrl = '';
+        if (isStatic) {
+          const path = window.location.pathname;
+          if (path.includes('/vulnerabilities/') || path.includes('/labs/') || path.includes('/linux-security/') || path.includes('/writeups/') || path.includes('/books/')) {
+            loginUrl = '../login.html';
+          } else {
+            loginUrl = 'login.html';
+          }
+        } else {
+          loginUrl = '/login';
+        }
+        window.location.href = loginUrl;
+      }
+    })();
+  </script>
+"""
+    if '<head>' in html:
+        return html.replace('<head>', '<head>\n' + auth_script, 1)
+    return html
+
 def render_page(render_to_string, template, context, request, output_path, css_prefix=''):
     html = render_to_string(template, context, request=request)
     html = fix_static_paths(html, css_prefix)
+    is_login = 'login.html' in template
+    html = inject_auth_check(html, is_login)
     os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(html)
