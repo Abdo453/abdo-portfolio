@@ -1,5 +1,9 @@
+import os
+
 def get_portfolio_context():
+    google_client_id = os.environ.get('GOOGLE_CLIENT_ID', '1008091811651-placeholder.apps.googleusercontent.com')
     return {
+        'google_client_id': google_client_id,
         'name': 'Abdo Ramdan',
         'title': 'Cybersecurity Learner | OSCP Track | Web Developer',
         'tagline': '> "I break systems to understand how to build secure ones."',

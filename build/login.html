@@ -273,7 +273,7 @@
       <div id="errorBanner" class="error-banner"></div>
 
       <form id="authForm" onsubmit="handleAuth(event)">
-        <input type="hidden" name="csrfmiddlewaretoken" value="pz7FA40jlZ1zAOk6egAYk9w3VWSC6ekcoNCC2ZQ6JGELoUtKrdAjBOtsO6UD6Aut">
+        <input type="hidden" name="csrfmiddlewaretoken" value="xuLDa1vr8qTWrSDwZkMvoY6hf9T3fjng80Mth78LjUt9cIm93V2mrnGtB5SKWxQU">
         <div class="form-group">
           <label class="form-label" for="username">اسم المستخدم (CODENAME)</label>
           <div class="input-wrapper">
@@ -306,6 +306,9 @@
         <button type="button" onclick="loginWithGoogleDemo()" class="submit-btn" style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); box-shadow: 0 0 10px rgba(0, 229, 255, 0.1); font-size: 0.85rem; margin-top: 0; padding: 10px;">
           بوابة الدخول السريع (جوجل التجريبي) // DEMO GOOGLE BYPASS
         </button>
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 2px; font-family: 'Cairo', sans-serif; line-height: 1.4; max-width: 390px;">
+          💡 لتجربة الدخول بجوجل مباشرة دون إعداد Google Cloud Console، استخدم زر **الممر التجريبي (DEMO BYPASS)** أعلاه.
+        </div>
       </div>
 
       <div class="terminal-output" id="terminalOutput">
@@ -544,8 +547,14 @@
     // ─────────────────────────────────────────────────────────
     window.onload = function() {
       if (typeof google !== 'undefined') {
+        const clientId = "1008091811651-placeholder.apps.googleusercontent.com";
+        if (clientId.includes('placeholder')) {
+          logTerminal('WARNING: Google OAuth Client ID is not configured.', 'info');
+          logTerminal('Please add GOOGLE_CLIENT_ID to your .env file to enable real OAuth.', 'info');
+          logTerminal('Use DEMO BYPASS below to sign in instantly.', 'success');
+        }
         google.accounts.id.initialize({
-          client_id: "1008091811651-placeholder.apps.googleusercontent.com",
+          client_id: clientId,
           callback: handleCredentialResponse
         });
         
