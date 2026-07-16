@@ -29,16 +29,17 @@
       background-color: var(--bg-dark);
       color: var(--text-color);
       font-family: 'Cairo', 'Fira Code', monospace;
-      overflow: hidden;
-      height: 100vh;
+      overflow-y: auto;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       direction: rtl;
+      padding: 20px 0; /* Add padding to prevent clipping at top/bottom on small screens */
     }
 
     #particles {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -273,7 +274,7 @@
       <div id="errorBanner" class="error-banner"></div>
 
       <form id="authForm" onsubmit="handleAuth(event)" novalidate>
-        <input type="hidden" name="csrfmiddlewaretoken" value="IaRJ5vJLZyLuhRzEWS3uD8CZXxCdi9V9R8lxl3uEBVCPQSh1HvyCIAhxmOVf5nqW">
+        <input type="hidden" name="csrfmiddlewaretoken" value="bIfW7A1GpkR4AzMnErhrlBE50B7nj8bf1zgryhGemCQTjEX15apdvaqkARXOhhXt">
         <div class="form-group">
           <label class="form-label" for="username">اسم المستخدم (CODENAME)</label>
           <div class="input-wrapper">
