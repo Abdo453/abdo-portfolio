@@ -272,8 +272,8 @@
 
       <div id="errorBanner" class="error-banner"></div>
 
-      <form id="authForm" onsubmit="handleAuth(event)">
-        <input type="hidden" name="csrfmiddlewaretoken" value="xFpSAUt8XbvNTyvfA6PBYT0Fkq7lH8VFd9zqAWTMemtcQrZqLWvPT60k0HhaSUKG">
+      <form id="authForm" onsubmit="handleAuth(event)" novalidate>
+        <input type="hidden" name="csrfmiddlewaretoken" value="IaRJ5vJLZyLuhRzEWS3uD8CZXxCdi9V9R8lxl3uEBVCPQSh1HvyCIAhxmOVf5nqW">
         <div class="form-group">
           <label class="form-label" for="username">اسم المستخدم (CODENAME)</label>
           <div class="input-wrapper">
@@ -564,6 +564,16 @@
         errBanner.innerText = 'خطأ: الرجاء إدخال اسم المستخدم وكلمة المرور.';
         errBanner.style.display = 'block';
         return;
+      }
+
+      if (currentTab === 'register') {
+        const email = document.getElementById('email').value.trim();
+        const whatsapp = document.getElementById('whatsapp').value.trim();
+        if (!email || !whatsapp) {
+          errBanner.innerText = 'خطأ: يرجى كتابة البريد الإلكتروني ورقم الواتساب للتسجيل.';
+          errBanner.style.display = 'block';
+          return;
+        }
       }
 
       errBanner.style.display = 'none';

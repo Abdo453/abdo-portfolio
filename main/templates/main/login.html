@@ -272,7 +272,7 @@
 
       <div id="errorBanner" class="error-banner"></div>
 
-      <form id="authForm" onsubmit="handleAuth(event)">
+      <form id="authForm" onsubmit="handleAuth(event)" novalidate>
         {% csrf_token %}
         <div class="form-group">
           <label class="form-label" for="username">اسم المستخدم (CODENAME)</label>
@@ -564,6 +564,16 @@
         errBanner.innerText = 'خطأ: الرجاء إدخال اسم المستخدم وكلمة المرور.';
         errBanner.style.display = 'block';
         return;
+      }
+
+      if (currentTab === 'register') {
+        const email = document.getElementById('email').value.trim();
+        const whatsapp = document.getElementById('whatsapp').value.trim();
+        if (!email || !whatsapp) {
+          errBanner.innerText = 'خطأ: يرجى كتابة البريد الإلكتروني ورقم الواتساب للتسجيل.';
+          errBanner.style.display = 'block';
+          return;
+        }
       }
 
       errBanner.style.display = 'none';
