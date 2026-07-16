@@ -861,6 +861,7 @@
                   <button class="research-item" onclick="loadResearch('cve', 'CVE-2026-44342')"><span dir="ltr">CVE-2026-44342 (ثغرة ربط الحسابات)</span></button>
                   <button class="research-item" onclick="loadResearch('cve', 'CVE-2026-33655')"><span dir="ltr">CVE-2026-33655 (تجاوز SSRF)</span></button>
                   <button class="research-item" onclick="loadResearch('cve', 'CVE-2026-48564')"><span dir="ltr">CVE-2026-48564 (ثغرة DHCP)</span></button>
+                  <button class="research-item" onclick="loadResearch('cve', 'CVE-2026-49167')"><span dir="ltr">CVE-2026-49167 (تجاوز صلاحيات Windows)</span></button>
                 </div>
               </div>
               <div class="research-menu-section">
@@ -22340,6 +22341,70 @@ Option 55 (Parameter Request List): [1024 bytes of padding + RetAddress + Shellc
                   <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) تعطيل خادم DHCP بالكامل في الشبكة</button>
                   <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) تثبيت التحديثات الأمنية الرسمية الصادرة من مايكروسوفت فوراً وتفعيل تقنيات حماية الذاكرة مثل DEP و ASLR</button>
                   <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) استخدام جدران الحماية الخارجية لحظر منفذ 67 فقط</button>
+                </div>
+                <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
+              `
+            }
+          },
+          'CVE-2026-49167': {
+            title: "Windows Kernel Use-After-Free (LPE)",
+            severity: "HIGH",
+            score: "7.8",
+            vector: "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+            tabs: {
+              details: `
+                <h3>الوصف</h3>
+                <p>ثغرة أمنية من نوع الاستخدام بعد التحرير (Use-After-Free) في نواة نظام التشغيل Windows (Windows Kernel). تسمح هذه الثغرة لمهاجم لديه صلاحيات وصول محلية منخفضة برفع امتيازاته إلى صلاحيات SYSTEM الكاملة من خلال استغلال خلل في إدارة الذاكرة داخل النواة.</p>
+                <div style="margin-top: 15px;">
+                  <strong>الأثر:</strong> السيطرة الكاملة على نظام التشغيل محلياً وتجاوز كافة قيود الصلاحيات للمستخدم الحالي.
+                </div>
+              `,
+              flow: `
+                <h3>محاكي مسار الهجوم</h3>
+                <div class="attack-flow-visual">
+                  <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-body">
+                      <h4>حجز كائن في ذاكرة النواة</h4>
+                      <p>يقوم برنامج المهاجم باستدعاء دوال النظام (System Calls) لحجز كائن معين (Object) في مساحة ذاكرة النواة (Kernel Space).</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-body">
+                      <h4>تحرير الكائن مبكراً</h4>
+                      <p>يستغل المهاجم خللاً في منطق النظام لإجبار النواة على تحرير (Free) ذاكرة الكائن مع إبقاء المؤشر (Pointer) نشطاً ويشير لنفس العنوان.</p>
+                    </div>
+                  </div>
+                  <div class="flow-arrow">↓</div>
+                  <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-body">
+                      <h4>الكتابة فوق الذاكرة الشاغرة</h4>
+                      <p>يقوم المهاجم بحجز كائن آخر خبيث يحتل نفس مكان الذاكرة الشاغر، ثم يستدعي المؤشر القديم لتنفيذ كود رفع الامتيازات بصلاحيات SYSTEM.</p>
+                    </div>
+                  </div>
+                </div>
+              `,
+              poc: `
+                <h3>نموذج لآلية استغلال الذاكرة (UAF)</h3>
+                <div style="position: relative;">
+                  <button class="btn-copy-code" onclick="copyResearchCode('poc_uaf_code')">Copy</button>
+                  <pre id="poc_uaf_code" style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.8rem; color: #ff5555;">// خطوتين أساسيتين في كود الاستغلال لتجاوز حماية الذاكرة
+HANDLE hObject = CreateKernelObject();
+FreeKernelObject(hObject); // يتم تحرير الكائن
+// المؤشر لا يزال يشير للعنوان (Dangling Pointer)
+TriggerPayloadViaDanglingPointer(hObject);</pre>
+                </div>
+              `,
+              quiz: `
+                <h3>تقييم المعرفة</h3>
+                <p>ما هو السبب الجذري لحدوث ثغرات الاستخدام بعد التحرير (Use-After-Free)؟</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">أ) استخدام بروتوكولات شبكة غير مشفرة</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, true)">ب) الإبقاء على مؤشر الذاكرة (Pointer) يشير إلى موقع تم تحريره وإعادة تخصيصه لكائن آخر</button>
+                  <button class="quiz-opt-btn" onclick="evaluateQuizOption(this, false)">ج) ضعف كلمة مرور حساب المسؤول</button>
                 </div>
                 <div class="quiz-feedback" style="margin-top: 15px; font-weight: bold; min-height: 20px;"></div>
               `
