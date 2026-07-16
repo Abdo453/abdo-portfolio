@@ -67,6 +67,18 @@
       <button onclick="openCommandPalette()" style="background: rgba(0,229,255,0.05); color: var(--accent-cyan); border: 1px solid rgba(0,229,255,0.25); padding: 5px 10px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 6px;" aria-label="Search Palette">
         🔍 <span class="status-text" style="opacity:0.6; font-size:0.7rem;">Ctrl+K</span>
       </button>
+      
+      <!-- User Auth Section -->
+      <div id="userAuthSection" style="display: flex; align-items: center; gap: 8px;">
+        <button id="authBtn" onclick="openAuthModal()" style="background: linear-gradient(135deg, var(--accent-cyan), #0088cc); color: #030308; border: none; font-weight: 600; padding: 6px 14px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 0 10px rgba(0,229,255,0.2);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          🔑 <span id="authBtnText">Sign In</span>
+        </button>
+        <span id="userProfileIndicator" style="display: none; align-items: center; gap: 6px; font-family: 'Fira Code', monospace; font-size: 0.75rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px;">
+          <span style="color: var(--accent-green); animation: pulse-green 2s infinite;">●</span> <span id="authUsername" style="color: var(--text-color);">Guest</span>
+          <button onclick="logoutUser()" style="background: none; border: none; color: #ff3366; cursor: pointer; font-size: 0.75rem; padding: 0 0 0 5px; font-weight: bold;" title="Logout">🚪</button>
+        </span>
+      </div>
+
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Theme">🌙</button>
       <span class="status-indicator"></span>
       <span class="status-text">SECURE TUNNEL ACTIVE // ETH0: 10.10.10.15</span>
@@ -21155,6 +21167,34 @@ function exitSimulator() {
     </div>
   </div>
 
+  <!-- Auth Modal (Login / Register) -->
+  <div class="writeup-modal" id="authModal" onclick="closeAuthModal(event)">
+    <div class="writeup-modal-card" onclick="event.stopPropagation()" style="max-width: 400px; border: 1px solid var(--border-color); background: rgba(10, 10, 20, 0.95); backdrop-filter: blur(10px); box-shadow: 0 0 30px rgba(0, 229, 255, 0.15);">
+      <button class="modal-close-btn" onclick="closeAuthModalDirect()">×</button>
+      
+      <div style="display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+        <button id="tab-login" class="auth-tab-btn active" onclick="switchAuthTab('login')" style="flex: 1; padding: 12px; background: none; border: none; color: var(--text-color); font-family: 'Fira Code', monospace; font-size: 0.9rem; font-weight: 600; cursor: pointer; border-bottom: 2px solid var(--accent-cyan); transition: all 0.3s;">SIGN IN</button>
+        <button id="tab-register" class="auth-tab-btn" onclick="switchAuthTab('register')" style="flex: 1; padding: 12px; background: none; border: none; color: var(--text-muted); font-family: 'Fira Code', monospace; font-size: 0.9rem; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s;">REGISTER</button>
+      </div>
+
+      <h2 id="authModalTitle" class="modal-content-title" style="font-size: 1.1rem; color: var(--accent-cyan); margin-bottom: 15px;">// ACCESS PORTAL</h2>
+
+      <div id="authErrorMsg" style="display: none; background: rgba(255, 51, 102, 0.1); border: 1px solid #ff3366; color: #ff3366; padding: 10px; border-radius: 4px; font-size: 0.8rem; font-family: 'Fira Code', monospace; margin-bottom: 15px;"></div>
+      
+      <form id="authForm" onsubmit="handleAuthSubmit(event)">
+        <div style="margin-bottom: 15px;">
+          <label for="authUsernameInput" style="display: block; font-family: 'Fira Code', monospace; font-size: 0.75rem; margin-bottom: 6px; color: var(--text-muted);">CODENAME / USERNAME:</label>
+          <input type="text" id="authUsernameInput" required placeholder="Enter username..." style="width: 100%; padding: 10px; background: rgba(3,3,8,0.6); border: 1px solid var(--border-color); border-radius: 4px; color: #fff; font-family: 'Fira Code', monospace; font-size: 0.9rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--accent-cyan)'" onblur="this.style.borderColor='var(--border-color)'" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label for="authPasswordInput" style="display: block; font-family: 'Fira Code', monospace; font-size: 0.75rem; margin-bottom: 6px; color: var(--text-muted);">ACCESS PASSWORD:</label>
+          <input type="password" id="authPasswordInput" required placeholder="Enter password..." style="width: 100%; padding: 10px; background: rgba(3,3,8,0.6); border: 1px solid var(--border-color); border-radius: 4px; color: #fff; font-family: 'Fira Code', monospace; font-size: 0.9rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--accent-cyan)'" onblur="this.style.borderColor='var(--border-color)'" />
+        </div>
+        <button type="submit" id="authSubmitBtn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, var(--accent-cyan), #0088cc); color: #030308; border: none; font-weight: 600; font-family: 'Fira Code', monospace; font-size: 0.9rem; border-radius: 4px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">INITIALIZE ACCESS</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Writeup Modal -->
   <div class="writeup-modal" id="writeupModal">
     <div class="writeup-modal-card">
@@ -21182,5 +21222,304 @@ function exitSimulator() {
 
   <script src="js/library_dashboard.js"></script>
   <script src="js/training_arena.js"></script>
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // USER AUTHENTICATION & DATABASE SYNC LOGIC
+    // ─────────────────────────────────────────────────────────
+    let currentAuthTab = 'login';
+    const IS_KALI_SERVER = window.location.hostname === '37.60.230.245' || 
+                           window.location.hostname === 'localhost' || 
+                           window.location.hostname.includes('192.168.') ||
+                           window.location.hostname === '127.0.0.1';
+
+    function openAuthModal() {
+      const modal = document.getElementById('authModal');
+      const errEl = document.getElementById('authErrorMsg');
+      if (errEl) errEl.style.display = 'none';
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.offsetHeight;
+        modal.classList.add('active');
+      }
+    }
+
+    function closeAuthModalDirect() {
+      const modal = document.getElementById('authModal');
+      if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 300);
+      }
+    }
+
+    function closeAuthModal(event) {
+      if (event.target.id === 'authModal') {
+        closeAuthModalDirect();
+      }
+    }
+
+    function switchAuthTab(tab) {
+      currentAuthTab = tab;
+      const tabLogin = document.getElementById('tab-login');
+      const tabRegister = document.getElementById('tab-register');
+      const title = document.getElementById('authModalTitle');
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const errEl = document.getElementById('authErrorMsg');
+      
+      if (errEl) errEl.style.display = 'none';
+
+      if (tab === 'login') {
+        tabLogin.classList.add('active');
+        tabLogin.style.borderColor = 'var(--accent-cyan)';
+        tabLogin.style.color = 'var(--text-color)';
+        
+        tabRegister.classList.remove('active');
+        tabRegister.style.borderColor = 'transparent';
+        tabRegister.style.color = 'var(--text-muted)';
+        
+        title.innerText = '// ACCESS PORTAL';
+        submitBtn.innerText = 'INITIALIZE ACCESS';
+      } else {
+        tabRegister.classList.add('active');
+        tabRegister.style.borderColor = 'var(--accent-cyan)';
+        tabRegister.style.color = 'var(--text-color)';
+        
+        tabLogin.classList.remove('active');
+        tabLogin.style.borderColor = 'transparent';
+        tabLogin.style.color = 'var(--text-muted)';
+        
+        title.innerText = '// REGISTER NEW CODENAME';
+        submitBtn.innerText = 'CREATE CODENAME';
+      }
+    }
+
+    async function handleAuthSubmit(event) {
+      event.preventDefault();
+      const usernameInput = document.getElementById('authUsernameInput');
+      const passwordInput = document.getElementById('authPasswordInput');
+      const errEl = document.getElementById('authErrorMsg');
+      const submitBtn = document.getElementById('authSubmitBtn');
+      
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      
+      if (errEl) errEl.style.display = 'none';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'PROCESSING...';
+      }
+
+      if (IS_KALI_SERVER) {
+        // Real Server Authentication using fetch APIs
+        const endpoint = currentAuthTab === 'login' ? '/api/auth/login' : '/api/auth/register';
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+          const result = await response.json();
+          if (result.success) {
+            onAuthSuccess(result.user);
+          } else {
+            showAuthError(result.error || 'Authentication failed');
+          }
+        } catch (e) {
+          showAuthError('Connection to server authentication portal failed.');
+        }
+      } else {
+        // Mock client-side authentication for static GitHub Pages deployment
+        let mockUsers = JSON.parse(localStorage.getItem('mock_users') || '{}');
+        if (currentAuthTab === 'register') {
+          if (mockUsers[username.toLowerCase()]) {
+            showAuthError('Codename already taken. Choose another.');
+          } else {
+            // Save mock user
+            mockUsers[username.toLowerCase()] = {
+              username: username,
+              password: password,
+              xp: 0,
+              completed_challenges: []
+            };
+            localStorage.setItem('mock_users', JSON.stringify(mockUsers));
+            onAuthSuccess(mockUsers[username.toLowerCase()]);
+          }
+        } else {
+          // Login
+          const userObj = mockUsers[username.toLowerCase()];
+          if (userObj && userObj.password === password) {
+            onAuthSuccess(userObj);
+          } else {
+            showAuthError('Access denied: Invalid codename or password.');
+          }
+        }
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = currentAuthTab === 'login' ? 'INITIALIZE ACCESS' : 'CREATE CODENAME';
+      }
+    }
+
+    function showAuthError(msg) {
+      const errEl = document.getElementById('authErrorMsg');
+      if (errEl) {
+        errEl.innerText = '[-] ERROR: ' + msg;
+        errEl.style.display = 'block';
+      }
+    }
+
+    function onAuthSuccess(user) {
+      // Save current user state
+      localStorage.setItem('current_user', JSON.stringify(user));
+      
+      // Update UI elements
+      document.getElementById('authBtn').style.display = 'none';
+      const profileInd = document.getElementById('userProfileIndicator');
+      profileInd.style.display = 'flex';
+      document.getElementById('authUsername').innerText = user.username;
+
+      // Sync progress variables to current user values
+      if (user.xp !== undefined) {
+        localStorage.setItem('arena_xp', user.xp);
+        const completed = user.completed_challenges || [];
+        completed.forEach(cId => {
+          localStorage.setItem(cId, 'true');
+        });
+      }
+
+      closeAuthModalDirect();
+      if (window.updateDashboardUI) window.updateDashboardUI();
+      triggerLeaderboardUpdate();
+    }
+
+    async function logoutUser() {
+      localStorage.removeItem('current_user');
+      localStorage.removeItem('arena_xp');
+      
+      if (IS_KALI_SERVER) {
+        try {
+          await fetch('/api/auth/logout', { method: 'POST' });
+        } catch (e) {}
+      }
+
+      document.getElementById('authBtn').style.display = 'flex';
+      document.getElementById('userProfileIndicator').style.display = 'none';
+      
+      if (window.updateDashboardUI) window.updateDashboardUI();
+      triggerLeaderboardUpdate();
+    }
+
+    async function triggerLeaderboardUpdate() {
+      if (IS_KALI_SERVER) {
+        try {
+          const res = await fetch('/api/auth/leaderboard');
+          const data = await res.json();
+          if (data.success && data.leaderboard) {
+            renderLeaderboardRows(data.leaderboard);
+            return;
+          }
+        } catch (e) {}
+      }
+      
+      const localXP = parseInt(localStorage.getItem('academy_xp')) || 0;
+      if (window.updateLeaderboard) window.updateLeaderboard(localXP);
+    }
+
+    function renderLeaderboardRows(leaderboard) {
+      const container = document.getElementById('ctf-leaderboard-rows');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      const currentUser = JSON.parse(localStorage.getItem('current_user') || '{}');
+      
+      leaderboard.forEach((c, index) => {
+        const rank = index + 1;
+        let rankColor = '#fff';
+        if (rank === 1) rankColor = '#ffd700';
+        else if (rank === 2) rankColor = '#c0c0c0';
+        else if (rank === 3) rankColor = '#cd7f32';
+
+        const isUserMatch = currentUser.username && currentUser.username.toLowerCase() === c.username.toLowerCase();
+        
+        const row = document.createElement('div');
+        row.style.cssText = `
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 12px;
+          background: ${isUserMatch ? 'rgba(0, 229, 255, 0.08)' : 'rgba(255,255,255,0.02)'};
+          border: 1px solid ${isUserMatch ? 'var(--accent-cyan)' : 'rgba(255,255,255,0.05)'};
+          border-radius: 6px;
+          font-size: 0.85rem;
+        `;
+        
+        const avatar = isUserMatch ? '👤' : (c.is_user ? '🥷' : '💀');
+        const displayName = isUserMatch ? `${c.username} (أنت)` : c.username;
+
+        row.innerHTML = `
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-family:monospace; font-weight:bold; color:${rankColor}; width:20px;">#${rank}</span>
+            <span>${avatar} ${displayName}</span>
+          </div>
+          <span style="font-family:monospace; font-weight:bold; color:${isUserMatch ? 'var(--accent-cyan)' : 'var(--text-secondary)'};">${c.xp} XP</span>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    async function syncProgressWithDatabase() {
+      const currentUser = JSON.parse(localStorage.getItem('current_user') || '{}');
+      if (!currentUser.username) return;
+
+      const localXP = parseInt(localStorage.getItem('academy_xp')) || 0;
+      
+      const completed = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.startsWith('arena_roadmap_') || key.startsWith('read_') || key === 'lab_completed_burp' || key === 'arena_match_completed' || key === 'arena_scanner_completed' || key === 'arena_rot13_completed')) {
+          if (localStorage.getItem(key) === 'true') {
+            completed.push(key);
+          }
+        }
+      }
+
+      if (IS_KALI_SERVER) {
+        try {
+          await fetch('/api/auth/save-progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ xp: localXP, completed_challenges: completed })
+          });
+        } catch (e) {}
+      } else {
+        let mockUsers = JSON.parse(localStorage.getItem('mock_users') || '{}');
+        const uKey = currentUser.username.toLowerCase();
+        if (mockUsers[uKey]) {
+          mockUsers[uKey].xp = localXP;
+          mockUsers[uKey].completed_challenges = completed;
+          localStorage.setItem('mock_users', JSON.stringify(mockUsers));
+        }
+      }
+    }
+    window.syncProgressWithDatabase = syncProgressWithDatabase;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (IS_KALI_SERVER) {
+        try {
+          const res = await fetch('/api/auth/profile');
+          const data = await res.json();
+          if (data.authenticated && data.user) {
+            onAuthSuccess(data.user);
+          }
+        } catch (e) {}
+      } else {
+        const user = localStorage.getItem('current_user');
+        if (user) {
+          onAuthSuccess(JSON.parse(user));
+        }
+      }
+      triggerLeaderboardUpdate();
+    });
+  </script>
 </body>
 </html>

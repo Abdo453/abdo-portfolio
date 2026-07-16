@@ -361,6 +361,9 @@
     const computedXp = (completedCount * 1000) + (totalChaptersRead * 50) + arenaXp + burpXp;
     if (statXp) statXp.innerText = computedXp;
     localStorage.setItem('academy_xp', computedXp);
+    if (window.syncProgressWithDatabase) {
+      window.syncProgressWithDatabase();
+    }
   };
 
   // ── Book Filter Logic & Live Counters ──────────────────────

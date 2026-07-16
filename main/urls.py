@@ -12,4 +12,10 @@ urlpatterns = [
     path('labs/<str:page>', views.academy_lab, name='lab_page'),
     path('linux-security/<str:page>', views.academy_linux, name='linux_page'),
     path('writeups/<str:page>', views.academy_writeup, name='writeup_page'),
+    path('api/auth/register', views.api_register, name='api_register'),
+    path('api/auth/login', views.api_login, name='api_login'),
+    path('api/auth/logout', views.api_logout, name='api_logout'),
+    path('api/auth/save-progress', views.api_save_progress, name='api_save_progress'),
+    path('api/auth/profile', views.api_profile, name='api_profile'),
+    path('api/auth/leaderboard', views.api_leaderboard, name='api_leaderboard'),
 ]
