@@ -19185,18 +19185,21 @@ Authorization: Basic <span id="burp-payload-marker" style="background:rgba(0,255
     function printCertsLog() {
       let log = '<strong>Accreditations & Professional Ranks:</strong><br><br>';
       
-        log += `[+] <span class="text-neon-green">OSCP (Offensive Security Certified Professional)</span> (${cert.issuer})<br>` +
-               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+        log += `[+] <span class="text-neon-green">OSCP (Offensive Security Certified Professional)</span> (Offensive Security)<br>` +
+               `Status: In Progress | Date: 2026<br><br>`;
+
       
-        log += `[+] <span class="text-neon-green">RHCSA (Red Hat Certified System Administrator)</span> (${cert.issuer})<br>` +
-               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+        log += `[+] <span class="text-neon-green">RHCSA (Red Hat Certified System Administrator)</span> (Red Hat)<br>` +
+               `Status: In Progress | Date: 2026<br><br>`;
+
       
-        log += `[+] <span class="text-neon-green">TryHackMe (Top 1%)</span> (${cert.issuer})<br>` +
-               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
+        log += `[+] <span class="text-neon-green">TryHackMe (Top 1%)</span> (TryHackMe Platform)<br>` +
+               `Status: Active | Date: 2026<br><br>`;
+
       
-        log += `[+] <span class="text-neon-green">HackTheBox Pro Hacker</span> (${cert.issuer})<br>` +
-               `Status: ${cert.status} | Date: ${cert.date}<br><br>`;
-      
+        log += `[+] <span class="text-neon-green">HackTheBox Pro Hacker</span> (HackTheBox Platform)<br>` +
+               `Status: Active | Date: 2026<br><br>`;
+
       printLineToTerminal(log);
     }
 
@@ -20755,7 +20758,10 @@ Authorization: Basic <span id="burp-payload-marker" style="background:rgba(0,255
     }
 
     // Calculate dynamic completion progress
+    let _dashDebounceTimer = null;
     function updateDashboardProgress() {
+      if (_dashDebounceTimer) return;
+      _dashDebounceTimer = setTimeout(() => { _dashDebounceTimer = null; }, 200);
       // 1. Visited methodology count
       const visited = JSON.parse(localStorage.getItem('meth_visited') || '[]');
       const totalPhases = 26;
@@ -20778,19 +20784,12 @@ Authorization: Basic <span id="burp-payload-marker" style="background:rgba(0,255
       let totalBookSections = 0;
       let completedBookSections = 0;
       let completedBooksCount = 0;
+      const allLsKeys = Object.keys(localStorage);
       for (const [bookId, total] of Object.entries(bookSections)) {
         totalBookSections += total;
-        let read = 0;
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key.startsWith(`read_${bookId}_`) && localStorage.getItem(key) === 'true') {
-            read++;
-          }
-        }
+        const read = allLsKeys.filter(k => k.startsWith(`read_${bookId}_`) && localStorage.getItem(k) === 'true').length;
         completedBookSections += read;
-        if (read === total) {
-          completedBooksCount++;
-        }
+        if (read === total) completedBooksCount++;
       }
 
       // 3. Labs progress (10 labs)
@@ -20831,15 +20830,8 @@ Authorization: Basic <span id="burp-payload-marker" style="background:rgba(0,255
 
       // Set last active mission text
       if (nextChEl) {
-        let lastReadBook = 'لم يبدأ بعد';
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key.startsWith('last_read_title_')) {
-            const title = localStorage.getItem(key);
-            lastReadBook = title;
-          }
-        }
-        nextChEl.textContent = lastReadBook;
+        const lastReadKey = Object.keys(localStorage).find(k => k.startsWith('last_read_title_'));
+        nextChEl.textContent = lastReadKey ? localStorage.getItem(lastReadKey) : 'لم يبدأ بعد';
       }
     }
 
