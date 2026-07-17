@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category Focus | Bug Bounty Scenarios Academy</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css?v=8">
+</head>
+<body>
+
+  <!-- Visual decoration -->
+  <div class="bg-glow">
+    <div class="glow-orb orb-1"></div>
+  </div>
+  <div class="scanlines"></div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="logo">
+      <i class="bx bx-target-lock logo-icon"></i>
+      <span class="logo-text" onclick="window.location.href='../index.html'" style="cursor:pointer;">Bug Bounty Scenarios Academy</span>
+      <span class="logo-subtext">Simulator V2</span>
+    </div>
+    
+    <div class="header-stats" id="global-stats-drawer">
+      <!-- Injected stats -->
+    </div>
+  </header>
+
+  <main class="view-panel active">
+    <!-- Sub-header -->
+    <div class="simulator-controls" style="margin-bottom: 30px;">
+      <button class="control-btn" onclick="window.location.href='../index.html'">
+        <i class="bx bx-left-arrow-alt"></i> Back to Dashboard
+      </button>
+      <div class="simulator-title" id="category-title">Topic: Loading...</div>
+    </div>
+
+    <!-- Scenarios under this category -->
+    <section class="scenarios-grid" id="scenarios-category-list">
+      <!-- Injected dynamically -->
+    </section>
+  </main>
+
+  <script src="../assets/js/db.js?v=8"></script>
+  <script src="../engine/state-manager.js?v=8"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      // Load stats
+      const solved = JSON.parse(localStorage.getItem('bb_sim_solved')) || [];
+      const xp = parseInt(localStorage.getItem('bb_sim_xp')) || 0;
+      const bounty = parseInt(localStorage.getItem('bb_sim_bounty')) || 0;
+      
+      let rank = 'Recon Rookie';
+      if (xp >= 15000) rank = 'Elite Bug Hunter';
+      else if (xp >= 8000) rank = 'Master Hunter';
+      else if (xp >= 3000) rank = 'Security Researcher';
+      else if (xp >= 1000) rank = 'Triage Expert';
+      else if (xp >= 300) rank = 'Bug Hunter';
+
+      document.getElementById('global-stats-drawer').innerHTML = `
+        <div class="stat-badge xp-badge"><i class="bx bxs-zap"></i> <span class="stat-label">XP:</span> <span class="stat-value">${xp}</span></div>
+        <div class="stat-badge bounty-badge"><i class="bx bx-dollar-circle"></i> <span class="stat-label">Bounty:</span> <span class="stat-value">$${bounty.toLocaleString()}</span></div>
+        <div class="stat-badge rank-badge"><i class="bx bxs-medal"></i> <span class="stat-label">Rank:</span> <span class="stat-value">${rank}</span></div>
+      `;
+
+      // Read URL Parameter
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('cat') || 'Recon Driven';
+      document.getElementById('category-title').innerText = `Category: ${cat}`;
+
+      const listContainer = document.getElementById('scenarios-category-list');
+      listContainer.innerHTML = '';
+
+      window.scenariosDatabase.forEach(sc => {
+        if(sc.category !== cat) return;
+
+        const isSolved = solved.includes(sc.id);
+        let statusHtml = '';
+        if (isSolved) {
+          statusHtml = `<span class="card-status completed"><i class="bx bx-check-circle"></i> Solved</span>`;
+        } else if (sc.status === 'Unlocked') {
+          statusHtml = `<span class="card-status unlocked"><i class="bx bx-lock-open-alt"></i> Play</span>`;
+        } else if (sc.status === 'Premium') {
+          statusHtml = `<span class="card-status premium"><i class="bx bxs-crown"></i> Premium</span>`;
+        } else {
+          statusHtml = `<span class="card-status locked"><i class="bx bx-lock-alt"></i> Locked</span>`;
+        }
+
+        const diffClass = sc.level.toLowerCase().replace(' ', '');
+
+        const card = document.createElement('div');
+        card.className = 'scenario-card';
+        card.innerHTML = `
+          <div class="card-header-row">
+            <span class="scenario-id">${sc.id.toUpperCase()}</span>
+            <span class="difficulty-badge ${diffClass}">${sc.level}</span>
+          </div>
+          <h3 class="scenario-title">${sc.title}</h3>
+          <div class="scenario-meta">
+            <span class="category-tag">${sc.category}</span>
+            <span class="company-tag">${sc.company}</span>
+          </div>
+          <div class="card-footer-row">
+            <span class="bounty-amount">${sc.reward}</span>
+            ${statusHtml}
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          if (sc.status === 'Unlocked' || isSolved) {
+            window.location.href = `scenario.html?id=${sc.id}`;
+          } else if (sc.status === 'Premium') {
+            alert("🔒 Premium target. Unlock Academy access.");
+          } else {
+            alert("🔒 Solve preceding scenarios first.");
+          }
+        });
+
+        listContainer.appendChild(card);
+      });
+    });
+  </script>
+</body>
+</html>

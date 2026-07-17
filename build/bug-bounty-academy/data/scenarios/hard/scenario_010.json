@@ -1,0 +1,193 @@
+{
+  "metadata": {
+    "id": "scenario-010",
+    "title": "Race Condition - Promo Coupon Double-Redeem",
+    "level": "Hard",
+    "category": "Business Logic",
+    "company": "Stripe",
+    "reward": "$5,000",
+    "time": "3+ Hours"
+  },
+  "decisionLog": [
+    {
+      "hypothesis": "التطبيق يتحقق من حالة الكوبون قبل تنفيذه ولا يمكن استغلاله مرتين.",
+      "whyFailed": "التطبيق يتحقق من القيمة المخزنة أولاً ثم يقوم بالتعديل، وبإرسال طلبات متوازية بسرعة عالية جداً (Concurrency)، يمر أكثر من طلب لمرحلة التحقق قبل إتمام تحديث القيمة.",
+      "planB": "استخدام Turbo Intruder لإرسال 30 طلباً متوازياً في جزء من الثانية (Single-Packet Attack).",
+      "ignored": "البحث عن ثغرات XSS في حقل الكوبون."
+    }
+  ],
+  "payloads": [
+    {
+      "code": "Turbo Intruder Script:\nconcurrentConnections=30\nrequestsPerConnection=1\npipeline=False\nengine.queue(target.req, target.baseInput)",
+      "explanation": "سكريبت Turbo Intruder لإرسال طلبات متزامنة في نفس جزء من الثانية لتجاوز الفحص المتتابع.",
+      "whyWorked": "عدم وجود قفل متزامن ذري (Atomic Database Lock) يسمح بعدة عمليات قراءة متزامنة لنفس الحالة قبل التحديث.",
+      "alternatives": [
+        "Burp Intruder Pitchfork",
+        "Python ThreadPoolExecutor"
+      ]
+    }
+  ],
+  "mistakes": [
+    {
+      "mistake": "استخدام Burp Intruder العادي لفحص ثغرات الـ Concurrency.",
+      "whyWrong": "Burp Intruder يرسل الطلبات بشكل متتابع وببطء مما يمنع حدوث السباق (Race).",
+      "betterWay": "استخدام Turbo Intruder أو كتابة سكريبت مخصص يدعم المعالجة المتوازية الحقيقية."
+    }
+  ],
+  "steps": [
+    {
+      "name": "Mission Brief",
+      "time": "09:00",
+      "workspace": "markdown",
+      "xpReward": 100,
+      "description": "### 🎯 الهدف: استغلال Race Condition في استخدام الكوبونات\n\nمرحباً بك! اليوم سنقوم بفحص لوحة تحكم التجار في Stripe.\nتحتوي اللوحة على ميزة \"كوبونات الخصم\" التي يمكن استخدامها مرة واحدة فقط للحصول على خصومات الرسوم بقيمة $20,000.\n\n#### قواعد الفحص:\n- مسار قبول الكوبون: `POST /api/coupons/accept`\n- الـ Request يحتوي على: `coupon_id` و `account_id`.\n- ابحث عن ثغرة **Race Condition** لتكرار الاستخدام والحصول على أرصدة مضاعفة.\n\nاضغط على **Next Step** للبدء.",
+      "aiAdvisor": {
+        "hint": "فكر في كيفية إرسال طلبات متزامنة لخداع الخادم قبل تسجيل استخدام الكوبون.",
+        "payloadExplanation": "لا توجد أكواد حالياً.",
+        "failureExplanation": "لا يوجد."
+      }
+    },
+    {
+      "name": "Passive Recon",
+      "time": "09:15",
+      "workspace": "recon",
+      "xpReward": 150,
+      "description": "### 🔍 فحص تكوين ومعدل الطلبات\n\nسنقوم باختبار فحص بسيط وتجربة مسار الاستدعاء أولاً.\nاختر الأداة المناسبة لتشغيلها.",
+      "terminalCommands": [
+        {
+          "name": "curl -I https://dashboard.stripe.com/api/coupons/accept",
+          "correct": true,
+          "evidence": {
+            "title": "Coupon API Active",
+            "content": "Status: 405 Method Not Allowed\nAllow: POST"
+          },
+          "output": [
+            {
+              "text": "HTTP/1.1 405 Method Not Allowed",
+              "type": "info"
+            },
+            {
+              "text": "Allow: POST",
+              "type": "out"
+            },
+            {
+              "text": "[!] Success: POST Endpoint is active and accepts coupon parameter!",
+              "type": "success"
+            }
+          ]
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "شغّل curl لفحص المسار والتأكد من نشاط واجهة قبول الكوبونات.",
+        "payloadExplanation": "طلب فحص الهيدر للتحقق من البروتوكولات والمسارات المدعومة.",
+        "failureExplanation": "تأكد من فحص المسار بنجاح."
+      }
+    },
+    {
+      "name": "Burp Verification",
+      "time": "09:40",
+      "workspace": "burp",
+      "xpReward": 200,
+      "description": "### 🌐 إرسال طلبات متزامنة بـ Turbo Intruder\n\nسنقوم بالتقاط طلب قبول الكوبون وإرسال 30 طلب متوازٍ باستخدام سكريبت الـ Turbo Intruder.\nاضغط على **Send Parallel Requests** لمعرفة النتائج.",
+      "burpRequest": "POST /api/coupons/accept HTTP/1.1\nHost: dashboard.stripe.com\nContent-Type: application/json\nAuthorization: Bearer merchant_token\n\n{\n  \"coupon_id\": \"coupon_20k_fees\",\n  \"account_id\": \"acct_1234567890\"\n}",
+      "burpResponse": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"applied_discount\": 20000,\n  \"remaining\": 0\n}",
+      "burpActions": [
+        {
+          "name": "Send Parallel Requests",
+          "correct": true,
+          "modifiedRequest": "[Turbo Intruder 30x Concurrency Active...]",
+          "modifiedResponse": "Request 1:  {\"status\": \"success\", \"applied_discount\": 20000}\nRequest 2:  {\"status\": \"success\", \"applied_discount\": 20000}\nRequest 3:  {\"status\": \"success\", \"applied_discount\": 20000}\n...\nRequest 30: {\"status\": \"success\", \"applied_discount\": 20000}\n\n[Successfully redeemed coupon 30 times! Total credits: $600,000]",
+          "evidence": {
+            "title": "Coupon Race Condition Successful",
+            "content": "POST /api/coupons/accept applied 30 times -> Yields $600,000 in fee credits"
+          }
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "اضغط على زر Send Parallel Requests لتنفيذ هجوم Concurrency ورؤية النجاح المتعدد.",
+        "payloadExplanation": "إرسال 30 طلب متزامن في نفس الوقت يجعل قاعدة البيانات تقرأ القيمة 'غير مستخدم' 30 مرة قبل التحديث.",
+        "failureExplanation": "تأكد من نجاح توازي الطلبات."
+      }
+    },
+    {
+      "name": "Exploitation & Flag",
+      "time": "10:05",
+      "workspace": "lab",
+      "xpReward": 300,
+      "instructions": "أدخل الـ Flag المسترد بعد الحصول على رصيد خصم بقيمة $600,000 بنجاح.",
+      "targetUrl": "https://dashboard.stripe.com/api/coupons/accept",
+      "correctFlag": "FLAG{race_condition_coupon_double_redeem}",
+      "aiAdvisor": {
+        "hint": "أدخل العلم الصحيح: FLAG{race_condition_coupon_double_redeem}",
+        "payloadExplanation": "إثبات تخطي منطق معالجة العمليات التزامنية بنجاح.",
+        "failureExplanation": "تأكد من كتابة العلم بدقة."
+      }
+    },
+    {
+      "name": "Report Writing",
+      "time": "10:30",
+      "workspace": "report",
+      "xpReward": 250,
+      "aiAdvisor": {
+        "hint": "الكلمات المفتاحية المطلوبة هي 'race' و 'coupon'.",
+        "payloadExplanation": "توضيح الخطورة المالية الناتجة عن تكرار استخدام الكوبونات ذات الاستخدام الواحد.",
+        "failureExplanation": "يجب وضع الكلمات المفتاحية بالتقرير للتقييم الصحيح."
+      }
+    },
+    {
+      "name": "Triage & Verdict",
+      "time": "7 Days Later",
+      "workspace": "review",
+      "aiAdvisor": {
+        "hint": "راجع قرار الفحص والمكافأة الممنوحة.",
+        "payloadExplanation": "تم التقييم بـ High لوجود أثر مالي مباشر.",
+        "failureExplanation": "لا يوجد."
+      }
+    },
+    {
+      "name": "Lessons Learned",
+      "time": "Post-Incident",
+      "workspace": "quiz",
+      "quizData": [
+        {
+          "question": "ما هو السبب البرمجي الجوهري لحدوث ثغرة Race Condition؟",
+          "options": [
+            "بطء خوادم الويب.",
+            "عدم استخدام المعالجة الذرية (Atomic Transactions) أو آلية الأقفال لقواعد البيانات (Mutex/Locking) عند فحص وتحديث الحالة بشكل متزامن.",
+            "استخدام جدار حماية ضعيف.",
+            "تسريب ملفات التكوين."
+          ],
+          "answer": 1
+        },
+        {
+          "question": "كيف يمكن للمطور منع هجمات Concurrency على الكوبونات؟",
+          "options": [
+            "تقليل قيمة الكوبون.",
+            "تطبيق Atomic update في قاعدة البيانات مثل: UPDATE accounts SET used = true WHERE coupon = X AND used = false.",
+            "حظر استخدام متصفح تور.",
+            "حظر استخدام البريد الإلكتروني."
+          ],
+          "answer": 1
+        }
+      ],
+      "aiAdvisor": {
+        "hint": "الإجابة لكلا السؤالين هي الخيار الثاني (ب).",
+        "payloadExplanation": "التحقق من الفهم التقني للعمليات التزامنية وطريقة تأمينها.",
+        "failureExplanation": "خطأ في الإجابة يؤدي لخصم XP."
+      }
+    }
+  ],
+  "realReport": {
+    "title": "Race condition in coupon redemption allows multiple applications of single-use coupon",
+    "severity": "High",
+    "type": "IDOR",
+    "desc": "The coupon application endpoint /api/coupons/accept is vulnerable to a race condition. By executing parallel requests, a single-use coupon can be redeemed multiple times.",
+    "steps": "1. Intercept a valid coupon redemption request.\n2. Send 30 parallel requests using Turbo Intruder.\n3. Verify multiple applications in merchants credits dashboard.",
+    "impact": "Unlimited application of coupon credits leading to direct financial loss.",
+    "feedback": "Confirmed. We patched this by enforcing transaction locks and applying atomic statements. Bounty awarded.",
+    "keywords": [
+      "race",
+      "coupon"
+    ]
+  }
+}

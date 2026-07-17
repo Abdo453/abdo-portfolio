@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دليل Burp Collaborator الشامل ومحاكي اتصالات OOB - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #0d1117; color: #c9d1d9; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; }
+    .doc-container { max-width: 1150px; margin: 0 auto; padding: 30px 20px; }
+    .doc-header { border-bottom: 2px solid #30363d; padding-bottom: 20px; margin-bottom: 30px; }
+    .doc-title { font-size: 2.2rem; color: #f97316; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+    .doc-subtitle { color: #8b949e; font-size: 1.1rem; }
+    .section-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .section-title { font-size: 1.4rem; color: #58a6ff; border-right: 4px solid #f97316; padding-right: 12px; margin-top: 0; margin-bottom: 20px; }
+    .pro-tip-box { background: rgba(168, 85, 247, 0.1); border-right: 4px solid #a855f7; padding: 15px; border-radius: 6px; margin: 15px 0; color: #d8b4fe; }
+    .code-snippet { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 15px; font-family: 'Fira Code', monospace; direction: ltr; text-align: left; color: #38bdf8; overflow-x: auto; }
+    .btn-lab-action { background: #21262d; border: 1px solid #30363d; color: #fff; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; font-size: 0.85rem; }
+    .btn-lab-action:hover { background: #f97316; color: #000; }
+    .vuln-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px; }
+    .vuln-box { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 15px; }
+    .vuln-title { font-weight: bold; color: #f97316; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div class="doc-container">
+    <header class="doc-header">
+      <a href="../index.html" style="color:#58a6ff; text-decoration:none; font-weight:bold;"><i class="bx bx-right-arrow-alt"></i> العودة للرئيسية</a>
+      <h1 class="doc-title"><i class="bx bx-radio-circle-marked"></i> ⭐ Burp Collaborator Masterclass</h1>
+      <p class="doc-subtitle">الدليل التكتيكي الشامل لاختبارات Out-of-Band (OOB) واكتشاف الثغرات العمياء.</p>
+    </header>
+
+    <!-- SECTION 1: CONCEPTS & OOB -->
+    <div class="section-card">
+      <h2 class="section-title">1. مفاهيم اتصالات الـ Out-of-Band (OOB) واكتشاف الثغرات العمياء</h2>
+      <p>تُعتبر أداة <strong>Burp Collaborator</strong> المحرك السري لاكتشاف الثغرات التي لا ترجع أي إجابة مباشرة في الـ HTTP Response (تُسمى Blind Vulnerabilities). تعمل الأداة كسيرفر مستقل يستمع لاتصالات الـ DNS, HTTP, و SMTP الخارجية.</p>
+      
+      <h3>🔥 الثغرات العمياء الأكبر التي يتم صيدها بـ Collaborator:</h3>
+      <div class="vuln-grid">
+        <div class="vuln-box">
+          <div class="vuln-title">🌐 1. Blind SSRF</div>
+          <div>عندما يطلب السيرفر رابطاً خارجي دون عرض النتيجة لك. يتم إجبار السيرفر على الاتصال بـ Collaborator لإثبات وجود الثغرة.</div>
+        </div>
+        <div class="vuln-box">
+          <div class="vuln-title">📄 2. Blind XXE</div>
+          <div>استغلال معالجات الـ XML الخاطئة لإجبار السيرفر على قراءة واستخراج الملفات السرية وإرسالها عبر استعلامات الـ DNS الخارجية.</div>
+        </div>
+        <div class="vuln-box">
+          <div class="vuln-title">💥 3. Blind RCE</div>
+          <div>تنفيذ أوامر نظام تشغيل دون رؤية المخرجات، وذلك بعزل المخرجات وتحويلها لاستعلامات نطاقات فرعية تلقائية.</div>
+        </div>
+      </div>
+
+      <div class="pro-tip-box">
+        💡 <strong>آلية العمل التكتيكية:</strong> انسخ دومين الـ Collaborator العشوائي (مثل `bx91823.burpcollaborator.net`) واحقنه في الترويسات (مثل `Referer` أو `X-Forwarded-For`) وافحص الاتصالات!
+      </div>
+    </div>
+
+    <!-- SECTION 2: INTERACTIVE LAB 1 - OOB CAPTURE SANDBOX -->
+    <div class="section-card">
+      <h2 class="section-title">🧪 مختبر 1: محاكي التقاط اتصالات הـ OOB المباشر (OOB Interaction Capture Sandbox)</h2>
+      <p>اضغط توليد دومين الـ Collaborator ثم اضغط تجربة الحقن لمراقبة التقاط اتصالات الـ DNS والـ HTTP حياً في الجدول:</p>
+
+      <div style="display:flex; gap:10px; margin-bottom:12px;">
+        <input type="text" id="collab-payload-domain" value="bx91823.burpcollaborator.net" readonly style="background:#0d1117; border:1px solid #30363d; color:#38bdf8; padding:8px 12px; border-radius:6px; flex:1; font-family:'Fira Code'; font-weight:bold;">
+        <button class="btn-lab-action" onclick="pollCollaboratorEvents()" style="margin:0; background:#f97316; color:#000;">Poll Interactions Now</button>
+      </div>
+
+      <div style="background:#0d1117; border:1px solid #30363d; border-radius:6px; overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.82rem; font-family:'Fira Code'; direction:ltr; text-align:left;">
+          <thead>
+            <tr style="background:#21262d; color:#8b949e;">
+              <th style="padding:8px;">#</th><th style="padding:8px;">Type</th><th style="padding:8px;">Client IP</th><th style="padding:8px;">Timestamp</th><th style="padding:8px;">Exfiltrated Details</th>
+            </tr>
+          </thead>
+          <tbody id="collab-events-tbody">
+            <tr><td colspan="5" style="text-align:center; color:#8b949e; padding:15px;">Click "Poll Interactions Now" to simulate captured DNS/HTTP interactions...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: CHALLENGE MODE CTF -->
+    <div class="section-card" style="border-color:#facc15;">
+      <h2 class="section-title" style="color:#facc15;"><i class="bx bx-trophy"></i> Challenge Mode (Collaborator CTF)</h2>
+      <p>تم إجبار السيرفر على تسريب مفتاح سري عبر استعلام DNS خارجي. قم بتحليل الاتصال واستخرج الـ Flag!</p>
+      
+      <button class="btn-lab-action" onclick="runCollabCtf()" style="background:#facc15; color:#000;">التقاط استعلامات الـ DNS السرية (Capture Secret DNS Lookup)</button>
+      <div id="ctf-collab-feedback" style="margin-top:12px; font-weight:bold; font-family:'Fira Code';"></div>
+    </div>
+
+  </div>
+
+  <script src="../assets/js/simulation-engine.js?v=1.0"></script>
+  <script src="../assets/js/workflow-engine.js?v=1.0"></script>
+  <script>
+    function pollCollaboratorEvents() {
+      const tb = document.getElementById("collab-events-tbody");
+      tb.innerHTML = `
+        <tr><td>1</td><td><strong style="color:#38bdf8;">DNS Query</strong></td><td>192.168.1.105</td><td>${new Date().toLocaleTimeString()} GMT</td><td>A Record query for bx91823.burpcollaborator.net</td></tr>
+        <tr><td>2</td><td><strong style="color:#4ade80;">HTTP GET</strong></td><td>192.168.1.105</td><td>${new Date().toLocaleTimeString()} GMT</td><td>GET /ping?c=session_token_xyz99 HTTP/1.1 (Host: bx91823)</td></tr>
+      `;
+      SimulationEngine.unlockBadge("collab_pro", "🛰️ OOB Interaction Specialist");
+    }
+
+    function runCollabCtf() {
+      const fb = document.getElementById("ctf-collab-feedback");
+      fb.innerHTML = "<span style='color:#facc15;'>جاري الاستماع لسيرفر الـ Collaborator واكتشاف الـ DNS Subdomain Exfiltration...</span>";
+      setTimeout(() => {
+        fb.innerHTML = "<span style='color:#4ade80;'>🎉 تم التقاط استعلام الـ DNS الخارجي بنجاح! الـ Flag الذهبي هو: FLAG{COLLABORATOR_OOB_EXFILTRATION_EXPERT_2026} (+100 XP)!</span>";
+        SimulationEngine.unlockBadge("collab_ctf", "🏆 Collaborator CTF Champion");
+      }, 1100);
+    }
+  </script>
+</body>
+</html>

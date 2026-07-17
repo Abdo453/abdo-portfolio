@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <script>
+    (function() {
+      try {
+        const userStr = localStorage.getItem('current_user');
+        let user = null;
+        if (userStr) {
+          user = JSON.parse(userStr);
+        }
+        if (!user || !user.username) {
+          const isStatic = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+          let loginUrl = '';
+          if (isStatic) {
+            const path = window.location.pathname;
+            if (path.includes('/vulnerabilities/') || path.includes('/labs/') || path.includes('/linux-security/') || path.includes('/writeups/') || path.includes('/books/')) {
+              loginUrl = '../login.html';
+            } else {
+              loginUrl = 'login.html';
+            }
+          } else {
+            loginUrl = '/login';
+          }
+          window.location.href = loginUrl;
+        }
+      } catch (e) {
+        const isStatic = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+        window.location.href = isStatic ? 'login.html' : '/login';
+      }
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Bounty Writeups | Abdo Ramdan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon-cyan: #00e5ff;
+      --neon-purple: #9b59ff;
+      --neon-green: #00ff66;
+      --neon-red: #ff0055;
+      --neon-orange: #ff8c00;
+      --neon-yellow: #ffd700;
+      --bg-dark: #020205;
+      --bg-card: rgba(10, 10, 20, 0.6);
+      --border-color: rgba(0, 229, 255, 0.15);
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: #e2e8f0;
+      font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .wu-header {
+      background: rgba(4, 4, 8, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .wu-logo {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .back-btn {
+      background: rgba(0, 229, 255, 0.05);
+      color: var(--neon-cyan);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .back-btn:hover {
+      background: rgba(0, 229, 255, 0.15);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+    }
+    .wu-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    .cyber-hero {
+      border-bottom: 2px solid rgba(0, 229, 255, 0.2);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+    .hero-title {
+      font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 10px 0;
+    }
+    .hero-tagline {
+      color: rgba(0, 229, 255, 0.7);
+      margin: 0 0 16px 0;
+    }
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .stat-chip {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    .stat-chip span { color: var(--neon-cyan); font-weight: 700; }
+
+    /* Filter & Search Toolbar */
+    .filter-toolbar {
+      background: rgba(4, 4, 10, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin-bottom: 28px;
+      position: sticky;
+      top: 62px;
+      z-index: 90;
+      backdrop-filter: blur(10px);
+    }
+    .search-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .search-wrap input {
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 6px;
+      padding: 12px 16px 12px 44px;
+      color: #e2e8f0;
+      font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .search-wrap input:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.12);
+    }
+    .search-wrap input::placeholder { color: #64748b; }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .filter-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: rgba(0, 229, 255, 0.5);
+      margin-left: 4px;
+    }
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-btn:hover {
+      border-color: rgba(0, 229, 255, 0.25);
+      color: #e2e8f0;
+    }
+    .filter-btn.active {
+      background: rgba(0, 229, 255, 0.1);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+    }
+    .filter-btn.sev-critical.active { border-color: var(--neon-red); color: var(--neon-red); background: rgba(255,0,85,0.1); }
+    .filter-btn.sev-high.active { border-color: var(--neon-orange); color: var(--neon-orange); background: rgba(255,140,0,0.1); }
+    .filter-btn.sev-medium.active { border-color: var(--neon-yellow); color: var(--neon-yellow); background: rgba(255,215,0,0.08); }
+    .filter-count {
+      margin-right: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+    .filter-count span { color: var(--neon-cyan); }
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+      color: #64748b;
+      border: 1px dashed rgba(255,255,255,0.08);
+      border-radius: 8px;
+    }
+    .no-results.visible { display: block; }
+    .writeup-card.hidden { display: none; }
+
+    /* Writeup Cards */
+    .writeup-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 28px;
+      position: relative;
+      transition: border-color 0.3s ease;
+    }
+    .writeup-card:hover { border-color: rgba(0, 229, 255, 0.12); }
+    .writeup-card.critical { border-right: 3px solid var(--neon-red); }
+    .writeup-card.high { border-right: 3px solid var(--neon-orange); }
+    .writeup-card.medium { border-right: 3px solid var(--neon-yellow); }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-family: 'Outfit', 'Noto Kufi Arabic', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin: 0;
+      flex: 1;
+    }
+    .severity-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .badge-critical { background: rgba(255,0,85,0.15); color: var(--neon-red); border: 1px solid rgba(255,0,85,0.3); }
+    .badge-high { background: rgba(255,140,0,0.12); color: var(--neon-orange); border: 1px solid rgba(255,140,0,0.3); }
+    .badge-medium { background: rgba(255,215,0,0.1); color: var(--neon-yellow); border: 1px solid rgba(255,215,0,0.25); }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 14px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 6px;
+    }
+    .meta-item { font-size: 0.92rem; }
+    .meta-label { color: rgba(0,229,255,0.6); font-weight: 600; }
+    .meta-value { color: #cbd5e1; }
+
+    .vuln-type-badge {
+      display: inline-block;
+      background: rgba(155,89,255,0.12);
+      color: var(--neon-purple);
+      border: 1px solid rgba(155,89,255,0.25);
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      margin-left: 6px;
+    }
+
+    .card-actions {
+      margin-top: 15px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .tools-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .tool-tag {
+      background: rgba(0,229,255,0.06);
+      border: 1px solid rgba(0,229,255,0.15);
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--neon-cyan);
+    }
+  </style>
+</head>
+<body>
+
+<header class="wu-header">
+  <a class="wu-logo" href="index.html">🎯 Bug Bounty Academy</a>
+  <a class="back-btn" href="index.html">← العودة للرئيسية / Back to Home</a>
+</header>
+
+<div class="wu-container">
+
+  <div class="cyber-hero">
+    <h1 class="hero-title">تقارير ثغرات الحماية (Bug Bounty Writeups)</h1>
+    <p class="hero-tagline">تحليل فني عربي وإنجليزي لأهم الثغرات المكتشفة مع خطوات الاستغلال الكاملة.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-chip"><span>10</span> writeups</div>
+    <div class="stat-chip"><span>3</span> Critical</div>
+    <div class="stat-chip"><span>7</span> High</div>
+  </div>
+
+  <div class="filter-toolbar">
+    <div class="search-wrap">
+      <input type="search" id="wuSearch" placeholder="ابحث بالعنوان، البرنامج، أو نوع الثغرة..." autocomplete="off">
+    </div>
+    <div class="filter-row">
+      <span class="filter-count">عرض <span id="visibleCount">10</span> / 10</span>
+      <span class="filter-label">Severity:</span>
+      <button class="filter-btn sev-all active" data-filter="all">All</button>
+      <button class="filter-btn sev-critical" data-filter="critical">Critical</button>
+      <button class="filter-btn sev-high" data-filter="high">High</button>
+      <button class="filter-btn sev-medium" data-filter="medium">Medium</button>
+    </div>
+  </div>
+
+  <div class="no-results" id="noResults">
+    <p style="font-size:1.2rem;margin:0 0 8px;">لا توجد نتائج</p>
+    <p style="margin:0;font-size:0.9rem;">جرّب كلمة بحث أو فلتر مختلف</p>
+  </div>
+
+  <div id="writeupsList">
+    <!-- #1 Critical — AD Domain Takeover -->
+    <article class="writeup-card critical" data-severity="critical">
+      <div class="card-top">
+        <h2 class="card-title">Active Directory: From Guest to Domain Admin</h2>
+        <span class="severity-badge badge-critical">CRITICAL</span>
+      </div>
+      <span class="vuln-type-badge">Active Directory</span>
+      <span class="vuln-type-badge">Kerberoasting</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Domain Controller</span></div>
+        <div class="meta-item"><span class="meta-label">الصعوبة:</span> <span class="meta-value">Critical</span></div>
+      </div>
+      
+      <p>سلسلة هجمات متكاملة تبدأ من مستخدم عادي وتصل إلى السيطرة الكاملة على الـ Domain Controller في بيئة عمل محلية.</p>
+
+      <div class="card-actions">
+        <a href="writeups/ad-to-domain.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #2 Critical — Nuclei to RCE -->
+    <article class="writeup-card critical" data-severity="critical">
+      <div class="card-top">
+        <h2 class="card-title">From Nuclei Automation to P1 Critical RCE</h2>
+        <span class="severity-badge badge-critical">CRITICAL</span>
+      </div>
+      <span class="vuln-type-badge">Automation</span>
+      <span class="vuln-type-badge">RCE</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Web Application</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$3,000</span></div>
+      </div>
+      
+      <p>كيف تم استخدام أداة Nuclei لاكتشاف تكوينات Git مكشوفة، وتحويلها إلى RCE كامل على خادم الويب.</p>
+
+      <div class="card-actions">
+        <a href="writeups/nuclei-to-p1.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #3 Critical — Cloud Security / SSRF -->
+    <article class="writeup-card critical" data-severity="critical">
+      <div class="card-top">
+        <h2 class="card-title">Cloud SSRF: AWS Metadata Leakage via PDF Engine</h2>
+        <span class="severity-badge badge-critical">CRITICAL</span>
+      </div>
+      <span class="vuln-type-badge">SSRF</span>
+      <span class="vuln-type-badge">Cloud</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">AWS Infrastructure</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$4,000</span></div>
+      </div>
+      
+      <p>استغلال محرك توليد ملفات PDF غير آمن لاستدعاء خادم الميتا داتا 169.254.169.254 وتسريب مفاتيح AWS.</p>
+
+      <div class="card-actions">
+        <a href="writeups/cloud-ssrf.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #4 High — Recon Mastery -->
+    <article class="writeup-card high" data-severity="high">
+      <div class="card-top">
+        <h2 class="card-title">Reconnaissance Mastery: Takeovers & Scans</h2>
+        <span class="severity-badge badge-high">HIGH</span>
+      </div>
+      <span class="vuln-type-badge">Recon</span>
+      <span class="vuln-type-badge"> takeovers</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">DNS Infrastructure</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$1,500</span></div>
+      </div>
+      
+      <p>شرح عملي لاكتشاف النطاقات الفرعية المعلقة وإجراء عمليات فحص المنافذ واستغلال ثغرات Subdomain Takeover.</p>
+
+      <div class="card-actions">
+        <a href="writeups/recon-mastery.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #5 High — Advanced JWT -->
+    <article class="writeup-card high" data-severity="high">
+      <div class="card-top">
+        <h2 class="card-title">Advanced JWT Forgery Attacks on Web Apps</h2>
+        <span class="severity-badge badge-high">HIGH</span>
+      </div>
+      <span class="vuln-type-badge">JWT</span>
+      <span class="vuln-type-badge">Authentication</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Auth System</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$2,000</span></div>
+      </div>
+      
+      <p>تجاوز طبقات الحقق من التوقيع بالـ JWT وتزوير توكنات المسؤولين.</p>
+
+      <div class="card-actions">
+        <a href="writeups/jwt-advanced.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #6 High — API Hacking -->
+    <article class="writeup-card high" data-severity="high">
+      <div class="card-top">
+        <h2 class="card-title">API Hacking: Bypassing OAuth and IDOR</h2>
+        <span class="severity-badge badge-high">HIGH</span>
+      </div>
+      <span class="vuln-type-badge">APIs</span>
+      <span class="vuln-type-badge">IDOR</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">API Endpoint</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$2,500</span></div>
+      </div>
+      
+      <p>استغلال ثغرات تخطي التحقق من الصلاحيات BOLA وتعديل حسابات المستخدمين الآخرين.</p>
+
+      <div class="card-actions">
+        <a href="writeups/api-hacking.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #7 High — Race Conditions -->
+    <article class="writeup-card high" data-severity="high">
+      <div class="card-top">
+        <h2 class="card-title">Race Conditions in Payment Gateways</h2>
+        <span class="severity-badge badge-high">HIGH</span>
+      </div>
+      <span class="vuln-type-badge">Race Conditions</span>
+      <span class="vuln-type-badge">Billing</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Payment Gateway</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$3,500</span></div>
+      </div>
+      
+      <p>إرسال طلبات متزامنة في نفس اللحظة لشراء منتجات مجانية أو تكرار استبدال القسائم.</p>
+
+      <div class="card-actions">
+        <a href="writeups/race-payments.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #8 Medium — GraphQL Introspection -->
+    <article class="writeup-card medium" data-severity="medium">
+      <div class="card-top">
+        <h2 class="card-title">GraphQL Schema Leakage & Introspection Bypasses</h2>
+        <span class="severity-badge badge-medium">MEDIUM</span>
+      </div>
+      <span class="vuln-type-badge">GraphQL</span>
+      <span class="vuln-type-badge">Introspection</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">GraphQL API</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$1,200</span></div>
+      </div>
+      
+      <p>تجميع مخطط وهيكل قاعدة البيانات بالكامل باستغلال ميزة Introspection Queries.</p>
+
+      <div class="card-actions">
+        <a href="writeups/graphql-attack.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #9 Medium — AI Prompt Injection -->
+    <article class="writeup-card medium" data-severity="medium">
+      <div class="card-top">
+        <h2 class="card-title">AI Prompt Injection & Prompt Leaking</h2>
+        <span class="severity-badge badge-medium">MEDIUM</span>
+      </div>
+      <span class="vuln-type-badge">AI Security</span>
+      <span class="vuln-type-badge">LLM</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">LLM Chatbot</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$800</span></div>
+      </div>
+      
+      <p>خداع نماذج اللغة الضخمة (LLMs) وإرغامها على تسريب تعليمات النظام الداخلية والمفاتيح.</p>
+
+      <div class="card-actions">
+        <a href="writeups/ai-prompt-inj.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+    <!-- #10 Medium — Linux SUID PrivEsc -->
+    <article class="writeup-card medium" data-severity="medium">
+      <div class="card-top">
+        <h2 class="card-title">Linux Local Privilege Escalation via SUID</h2>
+        <span class="severity-badge badge-medium">MEDIUM</span>
+      </div>
+      <span class="vuln-type-badge">Linux</span>
+      <span class="vuln-type-badge">PrivEsc</span>
+      
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">الهدف:</span> <span class="meta-value">Alpine Linux Host</span></div>
+        <div class="meta-item"><span class="meta-label">المكافأة:</span> <span class="meta-value">$1,000</span></div>
+      </div>
+      
+      <p>استغلال الملفات المساعدة التي تعمل بصلاحيات root لعمل حقن PATH وترقية الصلاحيات.</p>
+
+      <div class="card-actions">
+        <a href="writeups/linux-suid-root.html" class="back-btn">📖 Open Full Writeup / فتح التقرير كامل</a>
+      </div>
+    </article>
+
+  </div><!-- /writeupsList -->
+
+</div>
+
+<script>
+  (function() {
+    var cards = document.querySelectorAll('.writeup-card');
+    var searchInput = document.getElementById('wuSearch');
+    var filterBtns = document.querySelectorAll('.filter-btn');
+    var visibleCount = document.getElementById('visibleCount');
+    var noResults = document.getElementById('noResults');
+    var activeFilter = 'all';
+
+    function applyFilters() {
+      var query = (searchInput.value || '').trim().toLowerCase();
+      var visible = 0;
+
+      cards.forEach(function(card) {
+        var severity = card.getAttribute('data-severity') || '';
+        var text = card.textContent.toLowerCase();
+        var matchSeverity = activeFilter === 'all' || severity === activeFilter;
+        var matchSearch = !query || text.indexOf(query) !== -1;
+        var show = matchSeverity && matchSearch;
+
+        card.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+
+      visibleCount.textContent = visible;
+      noResults.classList.toggle('visible', visible === 0);
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+
+    filterBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeFilter = btn.getAttribute('data-filter');
+        applyFilters();
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

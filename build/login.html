@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HunterOS // بوابة الوصول الآمن</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #030308;
+      --accent-cyan: #00e5ff;
+      --accent-cyan-glow: rgba(0, 229, 255, 0.4);
+      --accent-pink: #ff3366;
+      --accent-green: #00ff66;
+      --text-muted: #8892b0;
+      --text-color: #ccd6f6;
+      --border-color: rgba(0, 229, 255, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-color);
+      font-family: 'Cairo', 'Fira Code', monospace;
+      overflow-y: auto;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      direction: rtl;
+      padding: 20px 0; /* Add padding to prevent clipping at top/bottom on small screens */
+    }
+
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 460px;
+      padding: 20px;
+    }
+
+    .cyber-card {
+      background: rgba(10, 10, 20, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 0 35px rgba(0, 229, 255, 0.15);
+      backdrop-filter: blur(12px);
+      padding: 35px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cyber-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+      animation: scanline-move 3s linear infinite;
+    }
+
+    @keyframes scanline-move {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px var(--accent-cyan-glow);
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
+
+    .logo-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+      letter-spacing: 1px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 25px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-bottom: 2px solid transparent;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
+      text-shadow: 0 0 8px var(--accent-cyan-glow);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-family: 'Fira Code', 'Cairo', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-cyan);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(3, 3, 8, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 12px 35px 12px 12px; /* Right padding for RTL icon */
+      color: #fff;
+      font-family: 'Fira Code', 'Cairo', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent-cyan), #0088cc);
+      color: #030308;
+      border: none;
+      border-radius: 4px;
+      padding: 14px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .terminal-output {
+      margin-top: 25px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      padding: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--accent-green);
+      min-height: 70px;
+      max-height: 100px;
+      overflow-y: auto;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .terminal-line {
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid transparent;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.3s;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .back-btn:hover {
+      color: var(--accent-cyan);
+    }
+
+    .error-banner {
+      display: none;
+      background: rgba(255, 51, 102, 0.1);
+      border: 1px solid var(--accent-pink);
+      color: var(--accent-pink);
+      padding: 10px 15px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-bottom: 20px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particles"></canvas>
+
+  <div class="login-container">
+    <div class="cyber-card">
+      <div class="logo-container">
+        <div class="logo-title">&lt;HUNTER_OS/&gt;</div>
+        <div class="logo-sub">SECURE SYSTEM AUTHENTICATION</div>
+      </div>
+
+      <div class="auth-tabs">
+        <button id="tab-login" class="tab-btn active" onclick="switchTab('login')">تسجيل الدخول</button>
+        <button id="tab-register" class="tab-btn" onclick="switchTab('register')">إنشاء حساب جديد</button>
+      </div>
+
+      <div id="errorBanner" class="error-banner"></div>
+
+      <form id="authForm" onsubmit="handleAuth(event)" novalidate>
+        <input type="hidden" name="csrfmiddlewaretoken" value="qCS9FwUveSo3iXaqkxnZABuEVN9Hpj9oF8ztT8TNQkC4PlYRKFs6FF4QwR1Zfb19">
+        <div class="form-group">
+          <label class="form-label" for="username">اسم المستخدم (CODENAME)</label>
+          <div class="input-wrapper">
+            <span class="input-icon">USR&gt;</span>
+            <input type="text" id="username" class="form-input" required placeholder="ادخل كود اسمك..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">كلمة المرور (ACCESS CODE)</label>
+          <div class="input-wrapper">
+            <span class="input-icon">KEY&gt;</span>
+            <input type="password" id="password" class="form-input" required placeholder="ادخل كلمة المرور...">
+          </div>
+        </div>
+
+        <!-- Extra Fields for Registration Only -->
+        <div id="registerFields" style="display: none; border-top: 1px solid rgba(0, 229, 255, 0.1); margin-top: 15px; padding-top: 15px;">
+          <div class="form-group">
+            <label class="form-label" for="email">البريد الإلكتروني (EMAIL)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">@&gt;</span>
+              <input type="email" id="email" class="form-input" placeholder="ادخل البريد الإلكتروني...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="whatsapp">رقم الواتساب (WHATSAPP)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">WA&gt;</span>
+              <input type="tel" id="whatsapp" class="form-input" placeholder="ادخل رقم الواتساب...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" style="margin-bottom: 8px; display: block;">الجنس (GENDER)</label>
+            <div style="display: flex; gap: 30px; margin-top: 5px; margin-bottom: 10px;">
+              <label style="color: var(--text-color); font-family: 'Cairo', sans-serif; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="radio" name="gender" value="male" checked style="accent-color: var(--accent-cyan); cursor: pointer;"> ذكر // MALE
+              </label>
+              <label style="color: var(--text-color); font-family: 'Cairo', sans-serif; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="radio" name="gender" value="female" style="accent-color: var(--accent-cyan); cursor: pointer;"> أنثى // FEMALE
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="avatarFile">الصورة الشخصية (PROFILE PHOTO)</label>
+            <div class="input-wrapper" style="border: 1px dashed rgba(0, 229, 255, 0.3); padding: 12px; border-radius: 4px; display: flex; flex-direction: column; align-items: center; gap: 8px; background: rgba(3,3,8,0.4);">
+              <span style="color: var(--accent-cyan); font-size: 0.72rem; font-family: 'Fira Code', monospace; letter-spacing: 0.5px;">IMG&gt; UPLOAD AVATAR (.png, .jpg, .jpeg)</span>
+              <input type="file" id="avatarFile" accept="image/*" class="form-input" style="border: none; padding: 0; background: none; font-size: 0.8rem; width: 100%; cursor: pointer;">
+              <div id="avatarPreviewContainer" style="display: none; position: relative; margin-top: 5px;">
+                <img id="avatarPreview" src="" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-cyan); object-fit: cover;">
+                <button type="button" onclick="removeAvatarFile()" style="position: absolute; top: -5px; right: -5px; background: #ff3366; color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold;">×</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-btn">بدء الاتصال الآمن // CONNECT</button>
+      </form>
+
+      <!-- Google Auth Section -->
+      <div style="margin: 20px 0; text-align: center; position: relative;">
+        <hr style="border: 0; border-top: 1px solid rgba(0, 229, 255, 0.15); margin-bottom: 15px;">
+        <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #0a0a14; padding: 0 10px; color: var(--text-muted); font-size: 0.7rem; font-family: 'Fira Code', monospace; letter-spacing: 1px;">OR ACCREDITED IDENTITY</span>
+      </div>
+
+      <!-- Google Sign In Button Container -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px;">
+        <div id="googleBtnContainer" style="width: 100%; display: flex; justify-content: center;"></div>
+        
+        <button type="button" onclick="loginWithGoogleDemo()" class="submit-btn" style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); box-shadow: 0 0 10px rgba(0, 229, 255, 0.1); font-size: 0.85rem; margin-top: 0; padding: 10px;">
+          بوابة الدخول السريع (جوجل التجريبي) // DEMO GOOGLE BYPASS
+        </button>
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 2px; font-family: 'Cairo', sans-serif; line-height: 1.4; max-width: 390px;">
+          💡 لتجربة الدخول بجوجل مباشرة دون إعداد Google Cloud Console، استخدم زر **الممر التجريبي (DEMO BYPASS)** أعلاه.
+        </div>
+      </div>
+
+      <div class="terminal-output" id="terminalOutput">
+        <div class="terminal-line">[+] READY FOR HANDSHAKE.</div>
+      </div>
+
+      <div style="text-align: center;">
+        <a href="/" id="backBtn" class="back-btn">← العودة للرئيسية</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // Particle Grid Background Effect
+    // ─────────────────────────────────────────────────────────
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const count = 75;
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        radius: Math.random() * 1.5 + 0.5
+      });
+    }
+
+    function animate() {
+      ctx.fillStyle = 'rgba(3, 3, 8, 0.2)';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.04)';
+      ctx.fillStyle = 'rgba(0, 229, 255, 0.2)';
+
+      for (let i = 0; i < count; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < count; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // ─────────────────────────────────────────────────────────
+    // Auth Tab & Form Logic
+    // ─────────────────────────────────────────────────────────
+    let currentTab = 'login';
+    let uploadedAvatarBase64 = null;
+
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const max_size = 150; // Max dimension for avatar
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > max_size) {
+              height *= max_size / width;
+              width = max_size;
+            }
+          } else {
+            if (height > max_size) {
+              width *= max_size / height;
+              height = max_size;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Compress to JPEG with 70% quality (great ratio of quality to small file size)
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          callback(compressedDataUrl);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const avatarFileInput = document.getElementById('avatarFile');
+      if (avatarFileInput) {
+        avatarFileInput.addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            logTerminal('OPTIMIZING PROFILE PHOTO...');
+            compressImage(file, function(compressedBase64) {
+              uploadedAvatarBase64 = compressedBase64;
+              const preview = document.getElementById('avatarPreview');
+              const previewContainer = document.getElementById('avatarPreviewContainer');
+              if (preview && previewContainer) {
+                preview.src = uploadedAvatarBase64;
+                previewContainer.style.display = 'block';
+                logTerminal('PHOTO OPTIMIZED SUCCESSFULLY // READY');
+              }
+            });
+          }
+        });
+      }
+    });
+
+    function removeAvatarFile() {
+      uploadedAvatarBase64 = null;
+      const avatarFileInput = document.getElementById('avatarFile');
+      const preview = document.getElementById('avatarPreview');
+      const previewContainer = document.getElementById('avatarPreviewContainer');
+      if (avatarFileInput) avatarFileInput.value = '';
+      if (preview) preview.src = '';
+      if (previewContainer) previewContainer.style.display = 'none';
+    }
+    const HOME_URL = (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') ? 'index.html' : '/';
+    document.getElementById('backBtn').href = HOME_URL;
+    const IS_KALI_SERVER = !(window.location.hostname.includes('github.io') || window.location.protocol === 'file:');
+
+    function logTerminal(msg, type = 'info') {
+      const output = document.getElementById('terminalOutput');
+      const prefix = type === 'error' ? '[-] ' : type === 'success' ? '[+] ' : '[*] ';
+      const color = type === 'error' ? '#ff3366' : type === 'success' ? '#00ff66' : '#00e5ff';
+      
+      const line = document.createElement('div');
+      line.className = 'terminal-line';
+      line.style.color = color;
+      line.innerText = prefix + msg;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      const tabLogin = document.getElementById('tab-login');
+      const tabRegister = document.getElementById('tab-register');
+      const submitBtn = document.getElementById('submitBtn');
+      const errBanner = document.getElementById('errorBanner');
+      const registerFields = document.getElementById('registerFields');
+      const emailInput = document.getElementById('email');
+      const whatsappInput = document.getElementById('whatsapp');
+
+      errBanner.style.display = 'none';
+
+      if (tab === 'login') {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        submitBtn.innerText = 'بدء الاتصال الآمن // CONNECT';
+        if (registerFields) registerFields.style.display = 'none';
+        if (emailInput) emailInput.required = false;
+        if (whatsappInput) whatsappInput.required = false;
+        logTerminal('MODE SWITCHED: SECURE LOGIN INTERFACE');
+      } else {
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+        submitBtn.innerText = 'تسجيل كود جديد // REGISTER';
+        if (registerFields) registerFields.style.display = 'block';
+        if (emailInput) emailInput.required = true;
+        if (whatsappInput) whatsappInput.required = true;
+        logTerminal('MODE SWITCHED: CODENAME CREATION INTERFACE');
+      }
+    }
+
+    async function handleAuth(event) {
+      event.preventDefault();
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const submitBtn = document.getElementById('submitBtn');
+      const errBanner = document.getElementById('errorBanner');
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!username || !password) {
+        errBanner.innerText = 'خطأ: الرجاء إدخال اسم المستخدم وكلمة المرور.';
+        errBanner.style.display = 'block';
+        return;
+      }
+
+      if (currentTab === 'register') {
+        const email = document.getElementById('email').value.trim();
+        const whatsapp = document.getElementById('whatsapp').value.trim();
+        if (!email || !whatsapp) {
+          errBanner.innerText = 'خطأ: يرجى كتابة البريد الإلكتروني ورقم الواتساب للتسجيل.';
+          errBanner.style.display = 'block';
+          return;
+        }
+      }
+
+      errBanner.style.display = 'none';
+      submitBtn.disabled = true;
+      
+      logTerminal('INITIATING SECURITY HANDSHAKE...');
+      logTerminal('VERIFYING CODENAME SYMMETRICS...');
+
+      try {
+        if (IS_KALI_SERVER) {
+          // Django Real DB Authentication
+          const endpoint = currentTab === 'login' ? '/api/auth/login' : '/api/auth/register';
+          const payload = { username, password };
+          if (currentTab === 'register') {
+            payload.email = document.getElementById('email').value.trim();
+            payload.whatsapp = document.getElementById('whatsapp').value.trim();
+            payload.gender = document.querySelector('input[name="gender"]:checked').value;
+            payload.avatar = uploadedAvatarBase64;
+          }
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify(payload)
+          });
+          const result = await response.json();
+          if (result.success) {
+            logTerminal('AUTHENTICATION ACCEPTED!', 'success');
+            logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
+            
+            // Sync values to localStorage for compatibility
+            localStorage.setItem('current_user', JSON.stringify(result.user));
+            if (result.user.xp !== undefined) {
+              localStorage.setItem('arena_xp', result.user.xp);
+              const completed = result.user.completed_challenges || [];
+              completed.forEach(cId => localStorage.setItem(cId, 'true'));
+            }
+
+            setTimeout(() => {
+              window.location.href = HOME_URL + '?t=' + Date.now();
+            }, 1000);
+          } else {
+            submitBtn.disabled = false;
+            const errMsg = result.error || 'خطأ في عملية التحقق';
+            logTerminal('HANDSHAKE FAILED: ' + errMsg, 'error');
+            errBanner.innerText = 'خطأ: ' + errMsg;
+            errBanner.style.display = 'block';
+          }
+        } else {
+          // Simulated Client-Side Auth for Static Previews (GitHub Pages)
+          setTimeout(() => {
+            try {
+              let mockUsers = JSON.parse(localStorage.getItem('mock_users') || '{}');
+              if (currentTab === 'register') {
+                if (mockUsers[username.toLowerCase()]) {
+                  submitBtn.disabled = false;
+                  logTerminal('CODENAME CONFLICT DETECTED', 'error');
+                  errBanner.innerText = 'خطأ: اسم الكود هذا مستخدم بالفعل من قبل عميل آخر.';
+                  errBanner.style.display = 'block';
+                } else {
+                  // Create mock user
+                  const newUser = {
+                    username: username,
+                    password: password,
+                    email: document.getElementById('email').value.trim(),
+                    whatsapp: document.getElementById('whatsapp').value.trim(),
+                    gender: document.querySelector('input[name="gender"]:checked').value,
+                    avatar: uploadedAvatarBase64,
+                    xp: 0,
+                    completed_challenges: []
+                  };
+                  mockUsers[username.toLowerCase()] = newUser;
+                  localStorage.setItem('mock_users', JSON.stringify(mockUsers));
+                  localStorage.setItem('current_user', JSON.stringify(newUser));
+                  localStorage.setItem('arena_xp', 0);
+                  
+                  logTerminal('CODENAME REGISTERED SUCCESSFULLY!', 'success');
+                  logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
+                  setTimeout(() => {
+                    window.location.href = HOME_URL + '?t=' + Date.now();
+                  }, 1000);
+                }
+              } else {
+                // Login
+                const userObj = mockUsers[username.toLowerCase()];
+                if (userObj && userObj.password === password) {
+                  localStorage.setItem('current_user', JSON.stringify(userObj));
+                  if (userObj.xp !== undefined) {
+                    localStorage.setItem('arena_xp', userObj.xp);
+                    const completed = userObj.completed_challenges || [];
+                    completed.forEach(cId => localStorage.setItem(cId, 'true'));
+                  }
+                  
+                  logTerminal('AUTHENTICATION ACCEPTED!', 'success');
+                  logTerminal('TUNNEL ESTABLISHED. REDIRECTING...', 'success');
+                  setTimeout(() => {
+                    window.location.href = HOME_URL + '?t=' + Date.now();
+                  }, 1000);
+                } else {
+                  submitBtn.disabled = false;
+                  logTerminal('ACCESS DENIED: INVALID KEYS', 'error');
+                  errBanner.innerText = 'خطأ: اسم الكود أو الرمز السري غير صحيح.';
+                  errBanner.style.display = 'block';
+                }
+              }
+            } catch (storageErr) {
+              submitBtn.disabled = false;
+              logTerminal('LOCAL STORE FAILURE: ' + storageErr.message, 'error');
+              errBanner.innerText = 'خطأ في المتصفح: ' + storageErr.message;
+              errBanner.style.display = 'block';
+            }
+          }, 800);
+        }
+      } catch (e) {
+        submitBtn.disabled = false;
+        logTerminal('HANDSHAKE CRITICAL ERROR: ' + e.message, 'error');
+        errBanner.innerText = 'حدث خطأ استثنائي: ' + e.message;
+        errBanner.style.display = 'block';
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Google Sign-In Integration (GIS v2)
+    // ─────────────────────────────────────────────────────────
+    window.onload = function() {
+      if (typeof google !== 'undefined') {
+        const clientId = "1008091811651-placeholder.apps.googleusercontent.com";
+        if (clientId.includes('placeholder')) {
+          logTerminal('WARNING: Google OAuth Client ID is not configured.', 'info');
+          logTerminal('Please add GOOGLE_CLIENT_ID to your .env file to enable real OAuth.', 'info');
+          logTerminal('Use DEMO BYPASS below to sign in instantly.', 'success');
+        }
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleCredentialResponse
+        });
+        
+        google.accounts.id.renderButton(
+          document.getElementById("googleBtnContainer"),
+          { 
+            theme: "dark", 
+            size: "large", 
+            width: 390, 
+            text: "signin_with",
+            shape: "rectangular",
+            logo_alignment: "left"
+          }
+        );
+        google.accounts.id.prompt();
+      } else {
+        console.warn("Google Accounts GSI library not loaded.");
+      }
+    };
+
+    function handleCredentialResponse(response) {
+      logTerminal('INTERCEPTING GOOGLE AUTHENTICATION TOKEN...');
+      try {
+        const payload = decodeJwtResponse(response.credential);
+        const googleUser = {
+          username: payload.name || payload.email.split('@')[0],
+          email: payload.email,
+          picture: payload.picture,
+          xp: 0,
+          completed_challenges: []
+        };
+        
+        logTerminal('DECODING JWT SIGNATURE...', 'success');
+        logTerminal(`WELCOME AGENT: ${googleUser.username.toUpperCase()}`, 'success');
+        
+        localStorage.setItem('current_user', JSON.stringify(googleUser));
+        localStorage.setItem('arena_xp', 0);
+        
+        setTimeout(() => {
+          window.location.href = HOME_URL + '?t=' + Date.now();
+        }, 1000);
+      } catch (err) {
+        logTerminal('TOKEN DECODING FAILED: ' + err.message, 'error');
+      }
+    }
+
+    function decodeJwtResponse(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+
+    function loginWithGoogleDemo() {
+      logTerminal('INITIATING BYPASS PROTOCOL // GOOGLE_OAUTH_DEMO...');
+      setTimeout(() => {
+        const demoUser = {
+          username: "Google_Agent_Demo",
+          email: "agent.demo@gmail.com",
+          picture: "https://ui-avatars.com/api/?name=Google+Agent&background=00e5ff&color=030308",
+          xp: 250,
+          completed_challenges: ["jwt_challenge_1"]
+        };
+        
+        logTerminal('SIMULATING SECURE OAUTH VERIFICATION...', 'success');
+        logTerminal('ACCESS GRANTED: ' + demoUser.username.toUpperCase(), 'success');
+        
+        localStorage.setItem('current_user', JSON.stringify(demoUser));
+        localStorage.setItem('arena_xp', 250);
+        
+        setTimeout(() => {
+          window.location.href = HOME_URL + '?t=' + Date.now();
+        }, 1000);
+      }, 800);
+    }
+  </script>
+</body>
+</html>

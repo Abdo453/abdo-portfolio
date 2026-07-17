@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CCNA 200-301 Interactive Simulator</title>
+    <!-- Xterm.js for the Terminal Emulator -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="features.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <h1>Cisco CCNA Simulator</h1>
+            <span class="subtitle">شبكات 200-301</span>
+        </div>
+        <div class="nav-buttons">
+            <a href="academy.html" class="top-btn" style="margin-left: 5px;">📚 النظري</a>
+            <a href="syllabus.html" class="top-btn" style="margin-left: 5px;">📖 الخطة</a>
+            <a href="exam.html" class="top-btn" style="margin-left: 5px;">⏳ امتحن نفسك</a>
+            <a href="interview.html" class="top-btn" style="margin-left: 5px;">💼 المقابلات</a>
+            <a href="resources.html" class="top-btn">📦 الملحقات</a>
+        </div>
+        <div class="controls">
+            <select id="phaseSelector" onchange="loadPhase(this.value)">
+                <option value="" disabled selected>-- اختر المرحلة --</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Mobile Menu Toggle -->
+        <button class="menu-toggle" onclick="document.querySelector('.theory-panel').classList.toggle('active')">☰</button>
+
+        <!-- Sidebar for Theory and Objectives -->
+        <aside class="theory-panel">
+            <!-- Lab Modes Selection -->
+            <div class="lab-modes" style="margin-bottom: 20px; display: flex; gap: 5px; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 8px;">
+                <button id="modeGuided" class="quiz-level-btn active" style="flex:1; padding:5px; font-size:0.9rem;" onclick="setLabMode('guided')">Guided</button>
+                <button id="modeChallenge" class="quiz-level-btn" style="flex:1; padding:5px; font-size:0.9rem;" onclick="setLabMode('challenge')">Challenge</button>
+                <button id="modeTroubleshoot" class="quiz-level-btn" style="flex:1; padding:5px; font-size:0.9rem;" onclick="setLabMode('troubleshoot')">Troubleshoot</button>
+            </div>
+            
+            <div id="theoryContent">
+                <h2>مرحباً بك في محاكي CCNA</h2>
+                <p>اختر مرحلة من القائمة العلوية للبدء.</p>
+            </div>
+            
+            <!-- Tools for the Lab -->
+            <div style="display: flex; gap: 10px; margin-top: 20px; margin-bottom: 20px;">
+                <button class="top-btn" style="flex:1; text-align:center;" onclick="showDiagram()">📊 Topology</button>
+                <button class="top-btn" id="btnReport" style="flex:1; text-align:center; display:none;" onclick="showReport()">📄 Report</button>
+            </div>
+
+            <div class="status-box" id="statusBox">
+                <h3>حالة التحدي:</h3>
+                <p id="challengeStatus">في انتظار بدء التحدي...</p>
+            </div>
+        </aside>
+
+        <!-- Terminal Section -->
+        <main class="terminal-panel">
+            <div class="terminal-header">
+                <span>Cisco IOS (Software) - Router Simulator</span>
+            </div>
+            <div id="xterm-container"></div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+    
+    <!-- Load curriculum and simulator logic -->
+    <script src="data_loader.js"></script>
+    <script src="simulator.js?v=15"></script>
+    <script src="academy.js?v=15"></script>
+    <script src="progress.js?v=15"></script>
+    <script src="features.js?v=15"></script>
+
+
+    <!-- Network Diagram Modal -->
+    <div id="diagramModal" class="search-modal">
+        <div class="search-content" style="max-width: 800px;">
+            <h2 style="color: var(--accent); margin-bottom: 15px;">رسمة الشبكة (Topology)</h2>
+            <div id="diagramContent" style="background: #020617; padding: 20px; border-radius: 8px; font-family: monospace; white-space: pre; color: #fff; text-align: center; overflow-x: auto;">
+                لا توجد رسمة متاحة لهذا التحدي.
+            </div>
+            <button class="quiz-submit-btn" style="margin-top: 20px; width: 100%;" onclick="document.getElementById('diagramModal').classList.remove('active')">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- Lab Report Modal -->
+    <div id="reportModal" class="search-modal">
+        <div class="search-content" style="max-width: 800px;">
+            <h2 style="color: var(--success); margin-bottom: 15px;">تقرير التحدي (Lab Report)</h2>
+            <div id="reportContent" style="background: #020617; padding: 20px; border-radius: 8px; font-family: monospace; color: #c9d1d9; max-height: 400px; overflow-y: auto;">
+            </div>
+            <button class="quiz-submit-btn" style="margin-top: 20px; width: 100%;" onclick="document.getElementById('reportModal').classList.remove('active')">إغلاق</button>
+        </div>
+    </div>
+
+</body>
+</html>

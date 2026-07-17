@@ -1,0 +1,246 @@
+<div class="meth-content-view" id="meth-content-pt_mod2" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+
+    <div class="cyber-hero">
+        <h1>02. الاستطلاع النشط (Active Reconnaissance)</h1>
+        <p>اكتشاف البنية التحتية، فحص المنافذ، وتعداد خدمات DNS للهدف بشكل مباشر.</p>
+    </div>
+
+    <!-- 1. Theory -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-book"></i> النظري (Theory)</h2>
+        <p>
+            يُعد <strong>الاستطلاع النشط (Active Reconnaissance)</strong> المرحلة التي يبدأ فيها المهاجم أو مختبر الاختراق بالتفاعل المباشر مع البنية التحتية للهدف. على النقيض من الاستطلاع السلبي، يترك الاستطلاع النشط آثاراً وسجلات (Logs) في أنظمة الحماية الخاصة بالهدف مثل جدران الحماية (Firewalls) وأنظمة كشف التسلل (IDS/IPS).
+            تتضمن هذه المرحلة فحص المنافذ (Port Scanning)، تعداد الخدمات (Service Enumeration)، وتعداد نظام أسماء النطاقات (DNS Enumeration) بما في ذلك محاولات نقل النطاق (Zone Transfers - AXFR) لاكتشاف السجلات الداخلية وتخطيط الشبكة بالكامل. الهدف هو بناء خريطة دقيقة للأنظمة المتاحة والخدمات المفتوحة التي قد تحتوي على ثغرات.
+        </p>
+    </div>
+
+    
+    <!-- 1.5 Decision Tree -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-sitemap"></i> استراتيجية اختيار الأدوات (Decision Tree)</h2>
+        <p>استخدم هذا المخطط لاختيار الأداة المناسبة لجمع النطاقات الفرعية (Subdomains) بناءً على السيناريو:</p>
+        <div class="mermaid" style="text-align: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-top: 10px;">
+graph TD
+    A[حجم الهدف والوقت المتاح؟] --> B{هل السرعة أهم؟ < 5 دقائق}
+    A --> C{هل الشمولية أهم؟}
+    A --> D{هل تريد كل شيء؟ شامل الداخلي}
+    
+    B -->|نعم| E[استخدم: Subfinder -all]
+    E --> E1[النتيجة: ~500 نطاق]
+    
+    C -->|نعم| F[استخدم: Amass + Subfinder]
+    F --> F1[الوقت: 2-3 ساعات]
+    F1 --> F2[النتيجة: ~2000 نطاق]
+    
+    D -->|نعم| G[استخدم: AltDNS + ShuffleDNS]
+    G --> G1[الوقت: 4-6 ساعات]
+    G1 --> G2[النتيجة: ~5000+ نطاق مع False Positives]
+    
+    E1 --> H((الفلترة الأساسية))
+    F2 --> H
+    G2 --> H
+    
+    H --> I["cat all_subs.txt | httpx -mc 200,301,302,403 > live_only.txt"]
+    
+    style A fill:#ff5555,stroke:#333,stroke-width:2px,color:#fff
+    style B fill:#50fa7b,stroke:#333,color:#000
+    style C fill:#f1fa8c,stroke:#333,color:#000
+    style D fill:#bd93f9,stroke:#333,color:#fff
+    style I fill:#44475a,stroke:#6272a4,color:#8be9fd
+        </div>
+    </div>
+
+    <!-- 2. Attack Flow -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-project-diagram"></i> مسار الهجوم (Attack Flow)</h2>
+        <pre><code class="language-mermaid">
+graph TD
+    A[Target Domain] --> B{DNS Enumeration}
+    B -->|Query NS/MX| C[Identify Name Servers]
+    B -->|Subdomain Brute-force| D[Discover Subdomains]
+    C --> E{Zone Transfer AXFR}
+    E -->|Success| F[Full DNS Records Exposed]
+    E -->|Failed| D
+    D --> G[IP Resolution]
+    F --> G
+    G --> H[Port Scanning - Nmap]
+    H --> I[Service/Version Fingerprinting]
+    I --> J[Identify Attack Vectors]
+        </code></pre>
+    </div>
+
+    <!-- 3. Manual Testing -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-hand-paper"></i> الاختبار اليدوي (Manual Testing)</h2>
+        <p>
+            يعتمد الاختبار اليدوي هنا على الاستعلام المباشر لخوادم DNS لتحديد الخوادم المسؤولة (Name Servers) ومن ثم محاولة استخراج السجلات يدوياً وبدقة دون إحداث ضجيج كبير.
+        </p>
+        <ul>
+            <li>استخدام أدوات مثل <code>dig</code> أو <code>host</code> لمعرفة خوادم NS للهدف بشكل دقيق.</li>
+            <li>توجيه استعلام AXFR (Zone Transfer) المباشر إلى خوادم NS المكتشفة للتأكد من وجود سوء إعداد يسمح بتسريب كامل السجلات، مما يكشف عن بيئات التطوير الداخلية والنطاقات الفرعية المخفية.</li>
+            <li>إجراء فحص يدوي للمنافذ باستخدام أدوات بسيطة مثل <code>nc</code> (Netcat) أو <code>telnet</code> للتحقق من حالة منفذ معين والتقاط لافتات الخدمات (Banner Grabbing).</li>
+        </ul>
+    </div>
+
+    <!-- 4. Automation -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-robot"></i> الأتمتة (Automation)</h2>
+        <p>
+            لتقليل الوقت والجهد وتوسيع نطاق التغطية، يتم أتمتة هذه العمليات باستخدام أدوات متخصصة تقوم بتعداد النطاقات الفرعية (Subdomain Enumeration) باستخدام القوائم (Wordlists)، ومحاولة AXFR تلقائياً على كل الخوادم المكتشفة، بالإضافة إلى فحص النطاقات المكتشفة جماعياً.
+            أدوات مثل <code>dnsrecon</code> و <code>dnsenum</code> للتعامل مع سجلات DNS، و <code>nmap</code> الذي يُعتبر المعيار الذهبي لأتمتة فحص المنافذ واكتشاف الخدمات والأنظمة (OS Fingerprinting).
+        </p>
+    </div>
+
+    <!-- 5. Tools -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-terminal"></i> الأدوات (Tools)</h2>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">root@kali:~#</span>
+            <span class="cmd-text">dig +short NS target.com</span>
+            <div class="cmd-comment"># اكتشاف خوادم الأسماء (Name Servers) للنطاق المستهدف</div>
+        </div>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">root@kali:~#</span>
+            <span class="cmd-text">dig axfr @ns1.target.com target.com</span>
+            <div class="cmd-comment"># محاولة نقل النطاق (Zone Transfer) يدوياً من الخادم المكتشف</div>
+        </div>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">root@kali:~#</span>
+            <span class="cmd-text">dnsrecon -d target.com -t axfr</span>
+            <div class="cmd-comment"># أتمتة محاولة نقل النطاق وتعداد السجلات باستخدام أداة dnsrecon</div>
+        </div>
+        <div class="cmd-ui-box">
+            <span class="cmd-prompt">root@kali:~#</span>
+            <span class="cmd-text">nmap -p- -sV -sC -T4 target.com</span>
+            <div class="cmd-comment"># فحص شامل لجميع المنافذ (65535) مع اكتشاف إصدارات الخدمات واستخدام السكربتات الافتراضية</div>
+        </div>
+    </div>
+
+    
+    <!-- 5.5 Interactive Checklist -->
+    <div class="cyber-card" style="border-left: 4px solid #f1fa8c;">
+        <h2><i class="fas fa-check-square"></i> قائمة المهام التفاعلية (Interactive Checklist)</h2>
+        <p>احفظ تقدمك! سيتم حفظ العلامات التي تضعها هنا في متصفحك تلقائياً.</p>
+        
+        <div class="checklist-container" id="recon-checklist" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px;">
+            <div class="check-step" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #444; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <input type="checkbox" id="step1" class="recon-cb" style="transform: scale(1.3); margin-right: 10px;">
+                    <label for="step1" style="font-size: 1.1em; color: #f8f8f2; cursor: pointer;">1. Define scope boundaries & wildcard targets</label>
+                    <div style="font-size: 0.85em; color: #6272a4; margin-top: 5px; margin-left: 25px;">Est. time: 15 min | <a href="https://hackerone.com" target="_blank" style="color: #8be9fd;">📄 Scope Rules</a></div>
+                </div>
+            </div>
+
+            <div class="check-step" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #444; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <input type="checkbox" id="step2" class="recon-cb" style="transform: scale(1.3); margin-right: 10px;">
+                    <label for="step2" style="font-size: 1.1em; color: #f8f8f2; cursor: pointer;">2. Run Subdomain Enumeration (Passive + Active)</label>
+                    <div style="font-size: 0.85em; color: #6272a4; margin-top: 5px; margin-left: 25px;">Est. time: 5-30 min</div>
+                </div>
+                <button onclick="navigator.clipboard.writeText('subfinder -d target.com -all | httpx > live.txt'); this.innerText='📋 Copied!';" style="background: #44475a; color: #f8f8f2; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: var(--font-mono); font-size: 0.9em;">
+                    📋 Copy Command
+                </button>
+            </div>
+
+            <div class="check-step" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #444; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <input type="checkbox" id="step3" class="recon-cb" style="transform: scale(1.3); margin-right: 10px;">
+                    <label for="step3" style="font-size: 1.1em; color: #f8f8f2; cursor: pointer;">3. Perform Zone Transfers & DNS Records extraction</label>
+                    <div style="font-size: 0.85em; color: #6272a4; margin-top: 5px; margin-left: 25px;">Est. time: 5 min</div>
+                </div>
+                <button onclick="navigator.clipboard.writeText('dig axfr @ns.target.com target.com'); this.innerText='📋 Copied!';" style="background: #44475a; color: #f8f8f2; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: var(--font-mono); font-size: 0.9em;">
+                    📋 Copy Command
+                </button>
+            </div>
+
+            <div class="check-step" style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <input type="checkbox" id="step4" class="recon-cb" style="transform: scale(1.3); margin-right: 10px;">
+                    <label for="step4" style="font-size: 1.1em; color: #f8f8f2; cursor: pointer;">4. Extract IPs, ASNs, and identify Cloud WAFs</label>
+                    <div style="font-size: 0.85em; color: #6272a4; margin-top: 5px; margin-left: 25px;">Est. time: 10 min</div>
+                </div>
+                <button onclick="navigator.clipboard.writeText('cat live.txt | dnsx -a -resp'); this.innerText='📋 Copied!';" style="background: #44475a; color: #f8f8f2; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: var(--font-mono); font-size: 0.9em;">
+                    📋 Copy Command
+                </button>
+            </div>
+        </div>
+        
+        <script>
+            // Restore from localStorage
+            var checkboxes = document.querySelectorAll('.recon-cb');
+            checkboxes.forEach(function(cb) {
+                var saved = localStorage.getItem('recon_' + cb.id);
+                if(saved === 'true') cb.checked = true;
+                
+                cb.addEventListener('change', function() {
+                    localStorage.setItem('recon_' + this.id, this.checked);
+                });
+            });
+        </script>
+    </div>
+
+    <!-- 6. Lab -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-flask"></i> بيئة التدريب (Lab)</h2>
+        <p>مختبرات ومنصات عملية لتطبيق وتجربة تقنيات الاستطلاع النشط:</p>
+        <ul>
+            <li><strong>TryHackMe:</strong> غرفة Active Reconnaissance وغرفة Nmap التفاعلية.</li>
+            <li><strong>Hack The Box:</strong> مسارات بدء الاختراق وتحديات Enumeration التي تتطلب استخراج سجلات DNS المعقدة.</li>
+            <li><strong>PortSwigger Web Security Academy:</strong> لابات جمع المعلومات والاستطلاع المتعلقة بخوادم الويب.</li>
+        </ul>
+    </div>
+
+    <!-- 7. Quiz -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-question-circle"></i> اختبار قصير (Quiz)</h2>
+        <div class="quiz-container" data-correct="A">
+            <h4>Scenario: لقد اكتشفت خادم أسماء (Name Server) يحمل الاسم `ns1.example.com` وتريد محاولة سحب كافة سجلات DNS المرتبطة بالنطاق (Zone Transfer) لمعرفة البنية التحتية الداخلية. ما هو الأمر الأنسب لفعل ذلك يدوياً باستخدام `dig`؟</h4>
+            <button class="quiz-option" onclick="checkQuiz(this, 'A')">A) dig axfr @ns1.example.com example.com</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'B')">B) dig +short A @ns1.example.com example.com</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'C')">C) dig any example.com</button>
+            <button class="quiz-option" onclick="checkQuiz(this, 'D')">D) dig -x example.com</button>
+        </div>
+    </div>
+
+    <!-- 8. Cheat Sheet -->
+    <div class="cyber-card">
+        <h2><i class="fas fa-table"></i> المرجع السريع (Cheat Sheet)</h2>
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th>التقنية (Technique)</th>
+                    <th>الأداة/الأمر (Command)</th>
+                    <th>الوصف (Description)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>تعداد خوادم الأسماء</td>
+                    <td><code>host -t ns domain.com</code></td>
+                    <td>تحديد خوادم NS التابعة للهدف والتي قد تقبل طلبات النقل.</td>
+                </tr>
+                <tr>
+                    <td>نقل النطاق (Zone Transfer)</td>
+                    <td><code>dig axfr @ns1.domain.com domain.com</code></td>
+                    <td>استخراج كل سجلات DNS للهدف في حال وجود سوء إعداد في الخادم.</td>
+                </tr>
+                <tr>
+                    <td>تعداد DNS الشامل</td>
+                    <td><code>dnsenum --enum domain.com</code></td>
+                    <td>تخمين النطاقات الفرعية وتعداد السجلات باستخدام القواميس المدمجة.</td>
+                </tr>
+                <tr>
+                    <td>التخفي في فحص المنافذ</td>
+                    <td><code>nmap -sS -p- &lt;IP&gt;</code></td>
+                    <td>فحص منافذ التخفي (SYN Scan) لجميع المنافذ (TCP) لتقليل فرص الاكتشاف.</td>
+                </tr>
+                <tr>
+                    <td>التقاط اللافتات (Banner Grabbing)</td>
+                    <td><code>nc -nv &lt;IP&gt; 22</code></td>
+                    <td>الاتصال المباشر بمنفذ محدد (مثل 22) لاستخراج لافتة خدمة SSH وتحديد إصدارها.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

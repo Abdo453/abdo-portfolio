@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OTW Bandit Walkthrough - حلول وأسرار تحديات Bandit</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="features.css">
+    <style>
+        body {
+            overflow-y: auto !important;
+            height: auto !important;
+            display: block !important;
+            padding-bottom: 40px;
+            background-color: #0b0f19;
+            color: #cbd5e1;
+        }
+        
+        /* Matrix background canvas */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.05;
+        }
+
+        .bandit-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Progress Dashboard - Cyber HUD Glassmorphism */
+        .progress-dashboard {
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            padding: 25px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(56, 189, 248, 0.05);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .progress-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .progress-ring-wrapper {
+            position: relative;
+            width: 90px;
+            height: 90px;
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        .progress-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 8px var(--accent-glow);
+        }
+        .progress-text-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        .progress-text-sub {
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+        }
+        .search-filter-box {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            width: 100%;
+        }
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+            font-weight: 600;
+        }
+
+        /* Split-screen Layout */
+        .bandit-layout {
+            display: flex;
+            gap: 25px;
+            margin-top: 20px;
+            align-items: flex-start;
+        }
+        .bandit-sidebar {
+            flex: 0 0 300px;
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 700px;
+            overflow-y: auto;
+            backdrop-filter: blur(12px);
+        }
+        .sidebar-level-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: right;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            direction: rtl;
+        }
+        .sidebar-level-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(56, 189, 248, 0.2);
+            color: #fff;
+        }
+        .sidebar-level-item.active {
+            background: rgba(46, 160, 67, 0.1) !important;
+            border-color: var(--accent) !important;
+            color: var(--accent) !important;
+            font-weight: 700;
+            box-shadow: 0 0 10px rgba(46, 160, 67, 0.15);
+        }
+        .sidebar-level-item .solve-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1.5px solid #64748b;
+            transition: all 0.2s ease;
+        }
+        .sidebar-level-item.solved-item .solve-dot {
+            background: #10b981;
+            border-color: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+        .bandit-main-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .bandit-main-content .level-card {
+            margin: 0;
+            width: 100%;
+        }
+        
+        /* Card Glassmorphic HUD with micro-interactions */
+        .level-card {
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            backdrop-filter: blur(12px);
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .level-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 15px 35px rgba(46, 160, 67, 0.2);
+        }
+        .level-card.solved-card {
+            border-color: var(--accent) !important;
+            background: rgba(46, 160, 67, 0.03) !important;
+            box-shadow: 0 0 15px rgba(46, 160, 67, 0.15) !important;
+        }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .level-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge.beginner { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge.intermediate { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .badge.advanced { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        
+        .concepts-list {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .concept-tag {
+            font-size: 0.75rem;
+            background: rgba(56, 189, 248, 0.08);
+            color: #38bdf8;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(56, 189, 248, 0.12);
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Inside-Card Tabs Header */
+        .card-tabs-header {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+        .card-tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #64748b;
+            padding: 10px 5px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-align: center;
+            outline: none;
+        }
+        .card-tab-btn:hover {
+            color: #cbd5e1;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .card-tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            text-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .card-body {
+            flex: 1;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-tab-content {
+            animation: fadeInTab 0.3s ease forwards;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .section-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+        .code-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #a5d6ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            direction: ltr;
+            margin-bottom: 15px;
+        }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            color: var(--accent);
+            background: rgba(46, 160, 67, 0.1);
+        }
+        
+        /* Interactive Mock Terminal Emulator */
+        .terminal-emulator {
+            background: #06090f;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .terminal-titlebar {
+            background: #0f172a;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid #1e293b;
+        }
+        .terminal-titlebar .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .terminal-titlebar .dot.red { background: #ef4444; }
+        .terminal-titlebar .dot.yellow { background: #f59e0b; }
+        .terminal-titlebar .dot.green { background: #10b981; }
+        .terminal-titlebar .term-title {
+            color: #64748b;
+            font-size: 0.7rem;
+            margin-right: auto;
+            direction: ltr;
+        }
+        .terminal-screen {
+            padding: 12px;
+            font-size: 0.82rem;
+            color: #a5d6ff;
+            min-height: 180px;
+            max-height: 250px;
+            overflow-y: auto;
+            direction: ltr;
+            text-align: left;
+            background-color: #06090f;
+            flex: 1;
+        }
+        .term-line {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+            color: #38bdf8;
+        }
+        .term-input {
+            background: none;
+            border: none;
+            outline: none;
+            color: #fff;
+            flex: 1;
+            font-family: inherit;
+            font-size: inherit;
+        }
+        .term-output {
+            margin-top: 5px;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+        }
+        .term-output.success { color: #4ade80; }
+        .term-output.error { color: #f87171; }
+
+        /* Mini Quizzes */
+        .mini-quiz-box {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .quiz-question {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .quiz-opt-btn {
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            text-align: right;
+            transition: all 0.2s ease;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 500;
+        }
+        .quiz-opt-btn:hover {
+            background: rgba(56, 189, 248, 0.05);
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+        .quiz-opt-btn.correct {
+            background: rgba(16, 185, 129, 0.1) !important;
+            border-color: #10b981 !important;
+            color: #10b981 !important;
+        }
+        .quiz-opt-btn.incorrect {
+            background: rgba(239, 68, 68, 0.1) !important;
+            border-color: #ef4444 !important;
+            color: #ef4444 !important;
+        }
+        .quiz-feedback {
+            margin-top: auto;
+            font-size: 0.85rem;
+            font-weight: 600;
+            min-height: 20px;
+        }
+        .quiz-feedback.success { color: #10b981; }
+        .quiz-feedback.error { color: #ef4444; }
+
+        .solve-btn {
+            width: 100%;
+            margin-top: auto; /* Push solve button and secret to bottom of card */
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Tajawal', sans-serif;
+            margin-bottom: 12px;
+        }
+        .solve-btn.solved {
+            background: rgba(46, 160, 67, 0.2);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 10px rgba(46, 160, 67, 0.2);
+        }
+        .solve-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .secret-container {
+            background: rgba(14, 25, 45, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .secret-val {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: #fff;
+            filter: blur(5px);
+            transition: filter 0.3s ease;
+            user-select: none;
+            direction: ltr;
+        }
+        .secret-val.revealed {
+            filter: none;
+            user-select: text;
+        }
+        .reveal-btn {
+            padding: 6px 12px;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .reveal-btn:hover {
+            background: #38bdf8;
+            color: #000;
+        }
+        
+        .note-alert {
+            background: rgba(245, 158, 11, 0.05);
+            border-right: 4px solid var(--warning);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            color: #cbd5e1;
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        details.rich-details {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(56, 189, 248, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        details.rich-details[open] {
+            border-color: var(--accent);
+            background: rgba(46, 160, 67, 0.02);
+        }
+        details.rich-details summary {
+            padding: 12px 15px;
+            font-weight: 600;
+            color: #38bdf8;
+            cursor: pointer;
+            user-select: none;
+            outline: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        details.rich-details summary:hover {
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.02);
+        }
+        details.rich-details summary::-webkit-details-marker {
+            display: none;
+        }
+        details.rich-details summary::after {
+            content: "▼";
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        details.rich-details[open] summary::after {
+            transform: rotate(180deg);
+        }
+        .details-content {
+            padding: 15px;
+            border-top: 1px solid rgba(56, 189, 248, 0.1);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+        .details-content p {
+            margin-bottom: 12px;
+        }
+        .details-content p:last-child {
+            margin-bottom: 0;
+        }
+        .details-content strong {
+            color: var(--warning);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .bandit-layout {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .bandit-sidebar {
+                flex: none;
+                max-height: 250px;
+            }
+        }
+    </style>
+    <!-- Add Canvas Confetti library for completion celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+
+    <header class="navbar">
+        <div class="logo">
+            <h1>Linux Academy</h1>
+            <span class="subtitle">أسرار وحلول تحديات OverTheWire Bandit</span>
+        </div>
+        <div class="nav-buttons" id="navbarButtons">
+            <a href="academy.html" class="top-btn" style="margin-left: 5px;">📚 النظري</a>
+            <a href="syllabus.html" class="top-btn" style="margin-left: 5px;">📖 الخطة</a>
+            <a href="cheatsheet.html" class="top-btn" style="margin-left: 5px;">📝 ملخص</a>
+            <a href="encyclopedia.html" class="top-btn" style="margin-left: 5px;">📖 الموسوعة</a>
+            <a href="exam.html" class="top-btn" style="margin-left: 5px;">⏳ امتحن</a>
+            <a href="interview.html" class="top-btn" style="margin-left: 5px;">💼 مقابلات</a>
+            <a href="flashcards.html" class="top-btn" style="margin-left: 5px;">🎴 البطاقات</a>
+            <a href="bandit.html" class="top-btn active" style="margin-left: 5px;">🕵️‍♂️ Bandit</a>
+            <a href="resources.html" class="top-btn">📦 ملحقات</a>
+        </div>
+    </header>
+
+    <div class="bandit-container">
+        <!-- Progress Dashboard HUD -->
+        <div class="progress-dashboard">
+            <div class="progress-left">
+                <div class="progress-ring-wrapper">
+                    <svg width="90" height="90">
+                        <circle stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="36" cx="45" cy="45"/>
+                        <circle class="progress-ring-circle" id="progressCircle" stroke="#2ea043" stroke-width="8" stroke-dasharray="226.19" stroke-dashoffset="226.19" fill="transparent" r="36" cx="45" cy="45"/>
+                    </svg>
+                    <div class="progress-percentage" id="progressPercent">0%</div>
+                </div>
+                <div>
+                    <div class="progress-text-title">لوحة إنجاز تحديات Bandit</div>
+                    <div class="progress-text-sub" id="progressSub">تم حل 0 من أصل 35 مستوى (أكمل جميع المستويات للحصول على شارة الفوز!)</div>
+                </div>
+            </div>
+            <div style="text-align: left;">
+                <span class="badge beginner" style="font-size: 0.9rem; padding: 6px 12px;">Cyber HUD v2.5</span>
+            </div>
+        </div>
+
+        <div class="note-alert">
+            <strong>⚠️ تنبيه هام:</strong> 
+            كلمات المرور الخاصة بتحديات Bandit قد تتغير دورياً على خوادم OverTheWire من وقت لآخر لضمان عدم الغش. 
+            إذا لم تعمل كلمة المرور مباشرة، يرجى تتبع <strong>خطوات الحل والأوامر</strong> المذكورة لكل مستوى لتستخرج كلمة المرور الصحيحة بنفسك، حيث أن طريقة الحل والمنطق البرمجي ثابتان تماماً ولا يتغيران!
+        </div>
+
+        <div class="dashboard-header">
+            <div class="search-filter-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="ابحث بالأمر أو المهارة... (مثال: grep, SUID, Level 5)">
+                
+                <div class="filter-group">
+                    <span style="align-self: center; font-weight: bold; margin-left: 5px; color: #94a3b8;">مجموعة:</span>
+                    <button class="filter-btn active" onclick="setGroupFilter('all', this)">الكل</button>
+                    <button class="filter-btn" onclick="setGroupFilter('0-10', this)">0-10</button>
+                    <button class="filter-btn" onclick="setGroupFilter('11-20', this)">11-20</button>
+                    <button class="filter-btn" onclick="setGroupFilter('21-30', this)">21-30</button>
+                    <button class="filter-btn" onclick="setGroupFilter('31-34', this)">31-34</button>
+                </div>
+
+                <div class="filter-group" style="margin-right: auto;">
+                    <span style="align-self: center; font-weight: bold; margin-left: 5px; color: #94a3b8;">الصعوبة:</span>
+                    <button class="filter-btn active" onclick="setDiffFilter('all', this)">الكل</button>
+                    <button class="filter-btn" onclick="setDiffFilter('Beginner', this)">Beginner</button>
+                    <button class="filter-btn" onclick="setDiffFilter('Intermediate', this)">Intermediate</button>
+                    <button class="filter-btn" onclick="setDiffFilter('Advanced', this)">Advanced</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bandit-layout">
+            <div class="bandit-sidebar" id="banditSidebar">
+                <!-- Sidebar levels list -->
+            </div>
+            <div class="bandit-main-content" id="banditMainContent">
+                <!-- Selected level details -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const banditData = [
+  {
+    "id": 0,
+    "title": "Level 0",
+    "difficulty": "Beginner",
+    "concepts": [
+      "SSH",
+      "Connection"
+    ],
+    "goal": "تسجيل الدخول إلى خادم Bandit عبر SSH للبدء.",
+    "walkthrough": "اتصل بالخادم باستخدام منفذ SSH المخصص 2220. استخدم اسم المستخدم <code>bandit0</code> وكلمة المرور <code>bandit0</code>.",
+    "command": "ssh bandit0@bandit.labs.overthewire.org -p 2220",
+    "password": "bandit0",
+    "why_trick": "لأن الاتصال البعيد بأنظمة لينكس يتطلب بروتوكولاً آمناً، وتحديد المنفذ 2220 بدلاً من الافتراضي 22 يحمي الخدمة من عمليات الفحص والمسح العشوائي الموجهة للمنافذ الافتراضية.",
+    "consequences": "الاتصال الناجح يمنحك طرفية شل (Shell Terminal) تفاعلية مشفرة. عدم تحديد المنفذ <code>-p 2220</code> سيجعل العميل يتصل بالمنفذ 22 بالخطأ مما يؤدي لرفض الاتصال (Connection Refused).",
+    "cmd_explain": "ssh: أداة الاتصال الآمن بالخوادم البعيدة. -p 2220: علم تحديد رقم المنفذ (Port) المخصص للاتصال.",
+    "real_scenario": "عند استلام سيرفر جديد في بيئة عملك، يجب أولاً تغيير منفذ الـ SSH الافتراضي من 22 إلى منفذ آخر مخصص (مثل 2220) عبر ملف الإعدادات <code>/etc/ssh/sshd_config</code> لحماية السيرفر من هجمات التخمين التلقائية المنتشرة على الإنترنت.",
+    "quiz": {
+      "question": "ما هو منفذ الـ SSH الافتراضي الذي تستخدمه الأنظمة إذا لم يتم تحديده؟",
+      "options": [
+        "80",
+        "443",
+        "22",
+        "8080"
+      ],
+      "correct": 2
+    },
+    "sim_output": "[bandit0@bandit.labs.overthewire.org] password: bandit0\\nWelcome to OverTheWire Bandit!\\nbandit0@bandit:~$ "
+  },
+  {
+    "id": 1,
+    "title": "Level 0 → Level 1",
+    "difficulty": "Beginner",
+    "concepts": [
+      "ls",
+      "cat",
+      "Filesystem"
+    ],
+    "goal": "العثور على كلمة مرور المستوى التالي المخزنة في ملف باسم readme في المجلد الشخصي.",
+    "walkthrough": "استخدم الأمر <code>ls</code> لاستعراض المجلد الشخصي، ثم <code>cat readme</code> لقراءة محتويات الملف ونسخ كلمة المرور.",
+    "command": "cat readme",
+    "password": "boJ9jbbUNNfktd78OOpsqOltutMc3MY1",
+    "why_trick": "لأن الملف مخزن كملف نصي تقليدي في مجلد المستخدم الرئيسي، وتعد هذه هي الطريقة الأبسط للوصول للمعلومات المكتوبة.",
+    "consequences": "استخدام cat يعرض محتويات الملف النصية مباشرة في الشاشة. لو كانت صلاحيات الملف مقيدة (مثل 000) فلن تتمكن من قراءته وسيعطيك خطأ Permission Denied.",
+    "cmd_explain": "cat: اختصار لـ Concatenate، ويُسخدم لقراءة وعرض محتويات الملفات النصية مباشرة.",
+    "real_scenario": "عند استلام نظام أو سيرفر جديد، يجب دائماً فحص مجلدات المستخدمين للبحث عن ملفات التوثيق الأولية أو كلمات المرور المؤقتة مثل README أو credentials.txt وتأمينها لتجنب تسريب الصلاحيات.",
+    "quiz": {
+      "question": "أي خيار يستخدم لعرض تفاصيل إضافية مثل الصلاحيات والمالك في أمر ls؟",
+      "options": [
+        "ls -a",
+        "ls -l",
+        "ls -R",
+        "ls -d"
+      ],
+      "correct": 1
+    },
+    "sim_output": "boJ9jbbUNNfktd78OOpsqOltutMc3MY1\\nbandit1@bandit:~$ "
+  },
+  {
+    "id": 2,
+    "title": "Level 1 → Level 2",
+    "difficulty": "Beginner",
+    "concepts": [
+      "Dash Filename",
+      "File Paths"
+    ],
+    "goal": "قراءة ملف باسم - (شرطة) في المجلد الشخصي.",
+    "walkthrough": "بما أن الشرطة <code>-</code> تُستخدم كرمز للمدخلات القياسية في لينكس، سيفشل الأمر <code>cat -</code>. لتجاوز ذلك، حدد مسار الملف صراحة باستخدام <code>./-</code>.",
+    "command": "cat ./-",
+    "password": "CV1DtqXWVFXTvM2F0k09SHz0YwRINYA9",
+    "why_trick": "لأن الشل يفسر الشرطة المفردة <code>-</code> على أنها تعني المدخلات القياسية (stdin) أو بداية للأعلام والخيارات (Flags)، لذا نحدد المسار النسبي لإزالة اللبس عن مفسر الأوامر.",
+    "consequences": "كتابة <code>cat -</code> ستجعل الطرفية تنتظر منك كتابة نص من لوحة المفاتيح ولن تقرأ الملف. بينما كتابة <code>cat ./-</code> ترغم الشل على معاملته كملف عادي في المجلد الحالي.",
+    "cmd_explain": "cat: أداة العرض. ./: تشير للمجلد الحالي (Current Directory). -: اسم الملف الفعلي.",
+    "real_scenario": "إذا قام أحد المطورين أو البرمجيات بإنشاء ملفات تبدأ بشرطات أو رموز خاصة بالخطأ، فإن الطريقة المثالية والآمنة لحذفها أو التعديل عليها هي استخدام المسار النسبي <code>./</code> لمنع مفسر الأوامر من تفسير الاسم كخيارات برمجية.",
+    "quiz": {
+      "question": "لماذا نستخدم ./ قبل الشرطة عند قراءة ملف يسمى - ؟",
+      "options": [
+        "لتسريع قراءة الملف",
+        "لأن الشرطة بدون مسار تُفهم كعلامة للمدخلات القياسية (stdin)",
+        "لأن الملف مخفي",
+        "لنسخ الملف"
+      ],
+      "correct": 1
+    },
+    "sim_output": "CV1DtqXWVFXTvM2F0k09SHz0YwRINYA9\\nbandit2@bandit:~$ "
+  },
+  {
+    "id": 3,
+    "title": "Level 2 → Level 3",
+    "difficulty": "Beginner",
+    "concepts": [
+      "Spaces in Filename",
+      "Escaping"
+    ],
+    "goal": "قراءة ملف يحتوي اسمه على مسافات: spaces in this filename.",
+    "walkthrough": "يجب إحاطة الاسم بعلامات اقتباس مزدوجة أو استخدام الشرطة المائلة العكسية <code>\\</code> للهروب من المسافات.",
+    "command": "cat \"spaces in this filename\"",
+    "password": "UmHadQclWmgdLOKQ3YNgjWxGoRMb5luK",
+    "why_trick": "لأن المسافات في لينكس تفصل بين المعاملات (Arguments). فالمسافة تعني انتهاء المعامل الأول وبدء الثاني، لذا نستخدم علامات الاقتباس لدمج النص في معامل واحد.",
+    "consequences": "كتابة <code>cat spaces in this filename</code> ستجعل الشل يبحث عن 4 ملفات منفصلة (ملف باسم spaces وملف باسم in وهكذا) ويعطيك أخطاءً لعدم وجودها. إحاطته بالاقتباس يحل المشكلة كلياً.",
+    "cmd_explain": "cat: أداة العرض. \"...\": علامات اقتباس لدمج النص الحاوي على مسافات كمعامل واحد صلب.",
+    "real_scenario": "تجنب تماماً استخدام المسافات عند تسمية الملفات في خوادم لينكس؛ يفضل دائماً استخدام الشرطة السفلية (_) أو العلوية (-). وإذا اضطررت للتعامل معها، استخدم مفتاح Tab للإكمال التلقائي وسيقوم الشل بالهروب منها بالنيابة عنك.",
+    "quiz": {
+      "question": "أي من الخيارات التالية يسمح بقراءة ملف يحتوي على فراغات في اسمه؟",
+      "options": [
+        "إحاطة الاسم بعلامات اقتباس",
+        "كتابة الاسم بدون فراغات",
+        "استخدام أمر cd أولاً",
+        "حذف الملف"
+      ],
+      "correct": 0
+    },
+    "sim_output": "UmHadQclWmgdLOKQ3YNgjWxGoRMb5luK\\nbandit3@bandit:~$ "
+  },
+  {
+    "id": 4,
+    "title": "Level 3 → Level 4",
+    "difficulty": "Beginner",
+    "concepts": [
+      "ls -a",
+      "Hidden Files"
+    ],
+    "goal": "العثور على كلمة المرور في ملف مخفي داخل مجلد inhere.",
+    "walkthrough": "ادخل إلى المجلد عبر <code>cd inhere</code>، ثم استخدم الأمر <code>ls -a</code> لعرض كل الملفات بما فيها المخفية (التي تبدأ بنقطة)، واقرأ ملف <code>.hidden</code>.",
+    "command": "cat inhere/.hidden",
+    "password": "pIwrPrtPN36QITSp3EQaw936yaFoFgAB",
+    "why_trick": "لأن نظام لينكس يعتبر أي ملف يبدأ اسمه بنقطة <code>.</code> ملفاً مخفياً لحماية ملفات الإعدادات والتكوين من التشويش والتعديل العشوائي من المستخدم.",
+    "consequences": "أمر <code>ls</code> التقليدي سيظهر لك المجلد وكأنه فارغ تماماً. استخدام العلم <code>-a</code> يكشف الغطاء عن كل الملفات المخفية فوراً.",
+    "cmd_explain": "ls: عرض قائمة الملفات. -a: اختصار لـ All، لعرض جميع الملفات بما فيها المخفية.",
+    "real_scenario": "يقوم المهاجمون (Attackers) دائماً بإخفاء ملفات التكوين والبرمجيات الخبيثة بجعلها تبدأ بنقطة لمنع اكتشافها بالعين المجردة. يجب على مدير النظام دائماً فحص المجلدات العامة والمؤقتة (مثل /tmp) باستخدام <code>ls -la</code> بشكل دوري.",
+    "quiz": {
+      "question": "ما هي التسمية التي تطلق على الملفات التي تبدأ بنقطة (.) في نظام لينكس؟",
+      "options": [
+        "ملفات ثنائية",
+        "ملفات نظام",
+        "ملفات مخفية",
+        "ملفات مؤقتة"
+      ],
+      "correct": 2
+    },
+    "sim_output": "pIwrPrtPN36QITSp3EQaw936yaFoFgAB\\nbandit4@bandit:~$ "
+  },
+  {
+    "id": 5,
+    "title": "Level 4 → Level 5",
+    "difficulty": "Beginner",
+    "concepts": [
+      "file",
+      "ASCII text"
+    ],
+    "goal": "البحث عن الملف الوحيد المقروء بشرياً (ASCII text) داخل مجلد inhere.",
+    "walkthrough": "ادخل مجلد <code>inhere</code> واستخدم أمر <code>file</code> لفحص جميع الملفات: <code>file ./*</code>. ستجد أن الملف <code>-file07</code> هو الوحيد بنوع ASCII text.",
+    "command": "cat inhere/-file07",
+    "password": "koReBOKuIDDepwhWk7jZC0RTdopnAYKh",
+    "why_trick": "لأن المجلد يحتوي على ملفات ثنائية عشوائية ومشوهة، واستخدام أمر <code>file</code> يقرأ التوقيع السحري (Magic Number) في بداية الملف لتحديد ترميزه ونوعه بدقة قبل قراءته.",
+    "consequences": "محاولة عرض محتوى ملف ثنائي (Binary) باستخدام <code>cat</code> سيؤدي لعرض نصوص عشوائية غريبة وقد يؤدي لتلف أو تجميد أبعاد الطرفية. استخدام <code>file</code> يوجهك للملف الصحيح مباشرة.",
+    "cmd_explain": "file: أداة ذكية لتحليل وتحديد نوع الملفات. ./*: تمرير جميع الملفات في المجلد الحالي للفحص.",
+    "real_scenario": "عند العثور على ملفات مجهولة أثناء فحص الحوادث الأمنية (Incident Response)، لا تفتحها ببرنامج تشغيل مباشرة. استخدم أمر <code>file</code> أولاً لتتأكد هل الملف نصي، صورة، ملف تنفيذي، أو ملف مضغوط لتحديد طريقة المعالجة الآمنة.",
+    "quiz": {
+      "question": "ما هي الأداة التي تقرأ التوقيع السحري (Magic Number) للملف لتحديد ترميزه ونوعه؟",
+      "options": [
+        "cat",
+        "strings",
+        "file",
+        "grep"
+      ],
+      "correct": 2
+    },
+    "sim_output": "koReBOKuIDDepwhWk7jZC0RTdopnAYKh\\nbandit5@bandit:~$ "
+  },
+  {
+    "id": 6,
+    "title": "Level 5 → Level 6",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "find",
+      "File Size",
+      "Non-executable"
+    ],
+    "goal": "البحث عن ملف حجمه 1033 بايت وغير قابل للتنفيذ ومقروء داخل مجلد inhere.",
+    "walkthrough": "استخدم الأمر <code>find</code> مع تحديد نوع الملف (f) والحجم (1033c) واستبعاد التنفيذي (! -executable).",
+    "command": "find inhere -type f -size 1033c ! -executable",
+    "password": "DXjZPULLxYr17uwoI01bNLQbtFemEgo7",
+    "why_trick": "لأن المجلد يحتوي على مئات الملفات الفرعية الموزعة في مجلدات متداخلة، والبحث اليدوي مستحيل، لذا نستخدم الفلاتر المتقدمة لأداة <code>find</code> للوصول المباشر.",
+    "consequences": "بدون find، ستضطر لفحص كل ملف يدوياً والتأكد من حجمه وصلاحياته مما يستغرق ساعات طويلة. أداة find تختزل الوقت لأجزاء من الثانية.",
+    "cmd_explain": "find: أداة البحث القوية. -type f: تصفية النتائج للملفات فقط. -size 1033c: الحجم بالبايت تماماً (الرمز c يعني بايت). ! -executable: علامة التعجب للنفي، أي ملفات لا تملك صلاحية التنفيذ.",
+    "real_scenario": "يُستخدم هذا التكتيك بشكل متكرر للبحث عن مفاتيح SSH الخاصة المفقودة أو المتروكة في السيرفرات، حيث تتميز بحجم ثابت يتراوح غالباً بين 1.6KB إلى 2.6KB وتكون غير تنفيذية ويملك المالك فقط صلاحية قراءتها.",
+    "quiz": {
+      "question": "ما هو الرمز المستخدم في أداة find للإشارة إلى الحجم بالبايت؟",
+      "options": [
+        "k",
+        "c",
+        "M",
+        "G"
+      ],
+      "correct": 1
+    },
+    "sim_output": "inhere/maybehere07/.file2\\nbandit6@bandit:~$ "
+  },
+  {
+    "id": 7,
+    "title": "Level 6 → Level 7",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "find",
+      "Permissions",
+      "Ownership"
+    ],
+    "goal": "البحث عن ملف في كامل النظام مملوك للمستخدم bandit7 والمجموعة bandit6 وحجمه 33 بايت.",
+    "walkthrough": "استخدم أمر <code>find</code> من الجذر <code>/</code> مع تحديد المستخدم والمجموعة والحجم، مع تصفية أخطاء الصلاحيات عبر توجيهها إلى <code>/dev/null</code>.",
+    "command": "find / -user bandit7 -group bandit6 -size 33c 2>/dev/null",
+    "password": "HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs",
+    "why_trick": "لأن البحث يبدأ من جذر النظام <code>/</code> ككل، وحسابك الحالي لا يملك صلاحية قراءة كافة المجلدات (مثل /root)، مما يولد كمية هائلة من أخطاء Permission Denied التي تعيق الرؤية، لذا نكتم الأخطاء برمجياً.",
+    "consequences": "عدم كتم الأخطاء سيغرق شاشتك بآلاف الأخطاء التحذيرية مما يصعب عملية استخراج السطر الصحيح. توجيه الأخطاء للقناة الصفرية <code>2>/dev/null</code> يحافظ على نظافة الشاشة والتركيز على النتيجة فقط.",
+    "cmd_explain": "find /: البحث في كامل النظام. -user/-group: تحديد المالك والمجموعة. 2>/dev/null: توجيه الأخطاء (ممثلة بالقناة 2) إلى المهملات /dev/null.",
+    "real_scenario": "عند القيام بعملية فحص أمني داخل خادم إنتاج بصلاحيات مستخدم عادي، استخدم دائماً 2>/dev/null لعزل أخطاء الوصول وتحديد ملفات النظام التي تملك مجموعتك أو مستخدمك الحالي صلاحيات غير اعتيادية عليها.",
+    "quiz": {
+      "question": "إلى أين نقوم بتوجيه القناة 2 (الأخطاء) لكتمها والتخلص منها نهائياً؟",
+      "options": [
+        "/dev/zero",
+        "/dev/null",
+        "/tmp",
+        "/etc/hosts"
+      ],
+      "correct": 1
+    },
+    "sim_output": "/var/lib/dpkg/info/bandit7.password\\nbandit7@bandit:~$ "
+  },
+  {
+    "id": 8,
+    "title": "Level 7 → Level 8",
+    "difficulty": "Beginner",
+    "concepts": [
+      "grep",
+      "Pattern Matching"
+    ],
+    "goal": "البحث عن كلمة المرور بجانب كلمة millionth داخل ملف data.txt.",
+    "walkthrough": "استخدم أداة <code>grep</code> للبحث عن السطر المطابق للكلمة المطلوبة مباشرة.",
+    "command": "grep \"millionth\" data.txt",
+    "password": "cvX2JJa4CFALtqS87jk27qwqGhBM9plV",
+    "why_trick": "لأن ملف data.txt يحتوي على ملايين الكلمات والأسطر، والبحث اليدوي مستحيل تقنياً. أمر grep يطابق النمط المدخل ويسحب السطر المطابق فوراً.",
+    "consequences": "توفير الوقت والجهد في لحظات بدلاً من التصفح اللانهائي. لو لم تكن متأكداً من حالة الحروف، يمكنك إضافة خيار التجاهل <code>-i</code> (Case-Insensitive).",
+    "cmd_explain": "grep: أداة البحث عن النصوص باستخدام الأنماط والعبارات المنتظمة. \"millionth\": النمط المستهدف.",
+    "real_scenario": "هذه هي الأداة الأساسية لفحص سجلات النظام الضخمة (Log Files). على سبيل المثال، للبحث عن محاولات تسجيل الدخول الفاشلة للمستخدم root في خادمك، نستخدم: <code>grep \"Failed password for root\" /var/log/secure</code>.",
+    "quiz": {
+      "question": "أي خيار مع أداة grep يُسخدم لتجاهل حالة الحروف (كبيرة وصغيرة) أثناء البحث؟",
+      "options": [
+        "-v",
+        "-i",
+        "-n",
+        "-l"
+      ],
+      "correct": 1
+    },
+    "sim_output": "millionth  cvX2JJa4CFALtqS87jk27qwqGhBM9plV\\nbandit8@bandit:~$ "
+  },
+  {
+    "id": 9,
+    "title": "Level 8 → Level 9",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "sort",
+      "uniq",
+      "Pipes"
+    ],
+    "goal": "العثور على السطر الوحيد الذي تكرر لمرة واحدة فقط (غير مكرر) في ملف data.txt.",
+    "walkthrough": "أمر <code>uniq</code> يتطلب ترتيباً مسبقاً للعمل بشكل صحيح، لذا قم بترتيب الملف أولاً باستخدام <code>sort</code> ثم مرره إلى <code>uniq -u</code> لعرض الفريد فقط.",
+    "command": "sort data.txt | uniq -u",
+    "password": "UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR",
+    "why_trick": "لأن أداة <code>uniq</code> تقارن السطور المتتالية والمتجاورة فقط لتحديد التكرار، لذا فإن فرز الملف مسبقاً عبر <code>sort</code> يجعل الأسطر المتماثلة متجاورة تماماً لتسهيل عمل الفلتر.",
+    "consequences": "تشغيل <code>uniq -u data.txt</code> مباشرة دون فرز سيعطيك نتائج خاطئة ومكررة لأن السطور المكررة غير متتالية في الملف الأصلي. دمج الأمرين عبر البايب (Pipe) يحل المشكلة.",
+    "cmd_explain": "sort: ترتيب أسطر الملف أبجدياً ورقمياً. |: رمز البايب لتوجيه المخرجات للأمر التالي. uniq -u: استخراج الأسطر التي تكررت مرة واحدة فقط في كامل الملف.",
+    "real_scenario": "يُستخدم هذا التكتيك بكتره في معالجة البيانات وتحليل زيارات خادم الويب؛ لعرض عناوين IP الفريدة التي قامت بالاتصال بخادمك واستبعاد العناوين المكررة التي تقوم بعمليات فحص آلية متكررة.",
+    "quiz": {
+      "question": "لماذا يجب تطبيق أمر sort قبل تمرير المدخلات لأداة uniq؟",
+      "options": [
+        "لأن uniq تعمل فقط على الأسطر المتتالية والمتجاورة",
+        "لأن uniq تحذف الملف بالكامل إذا لم يكن مرتباً",
+        "لتسريع عمل المعالج",
+        "لتحويل المخرجات لنص مشفر"
+      ],
+      "correct": 0
+    },
+    "sim_output": "UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR\\nbandit9@bandit:~$ "
+  },
+  {
+    "id": 10,
+    "title": "Level 9 → Level 10",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "strings",
+      "grep",
+      "Binary Analysis"
+    ],
+    "goal": "البحث عن كلمة مرور مقروءة داخل ملف ثنائي data.txt مسبوقة بعدة رموز =.",
+    "walkthrough": "استخرج النصوص المقروءة أولاً عبر <code>strings data.txt</code> ثم فلتر النتيجة باستخدام <code>grep</code> والتعبير النمطي للبحث عن إشارة <code>=</code>.",
+    "command": "strings data.txt | grep \"^=\\+\"",
+    "password": "truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk",
+    "why_trick": "لأن الملف ثنائي (Binary) يحتوي على كود آلة غير مقروء بشكل مباشر، وأمر strings يقرأ الملف بأكمله ويستخرج فقط السلاسل النصية المقروءة بشرياً (ASCII) بأمان.",
+    "consequences": "محاولة فتح ملف ثنائي باستخدام cat ستعرض رموزاً مشوهة وغير مفهومة على الشاشة وقد تؤدي لتعطيل مدخلات الطرفية. استخدام strings يمنع ذلك تماماً.",
+    "cmd_explain": "strings: استخراج السلاسل النصية المقروءة المكونة من 4 أحرف أو أكثر من الملفات الثنائية. grep \"^=\\+\": تصفية الأسطر التي تبدأ بإشارة = واحدة أو أكثر.",
+    "real_scenario": "يستخدم مهندسو الهندسة العكسية ومحللو الفيروسات أداة strings كأول خطوة لتحليل الملفات التنفيذية للبحث عن نصوص مخفية، روابط خوادم التحكم (C2)، أو دوال برمجية حساسة.",
+    "quiz": {
+      "question": "ما هي الأداة التي تستخرج النصوص المقروءة بشرياً فقط من داخل ملف ثنائي؟",
+      "options": [
+        "cat",
+        "strings",
+        "file",
+        "tr"
+      ],
+      "correct": 1
+    },
+    "sim_output": "========== truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk\\nbandit10@bandit:~$ "
+  },
+  {
+    "id": 11,
+    "title": "Level 10 → Level 11",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "base64",
+      "Decoding"
+    ],
+    "goal": "فك تشفير ملف data.txt المكتوب بصيغة Base64.",
+    "walkthrough": "استخدم خيار فك التشفير <code>-d</code> أو <code>--decode</code> المرفق مع أداة <code>base64</code> لقراءة المحتوى الفعلي.",
+    "command": "base64 -d data.txt",
+    "password": "IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR",
+    "why_trick": "لأن نظام ترميز Base64 يُستخدم لنقل البيانات الثنائية عبر القنوات النصية الآمنة، وهو ليس تشفيراً حقيقياً بل ترميز يسهل فكه بأمر بسيط.",
+    "consequences": "قراءة الملف مباشرة بدون فك الترميز ستظهر لك نصوصاً عشوائية تنتهي غالباً بعلامة <code>=</code>. فك التشفير يظهر النص الصافي فوراً.",
+    "cmd_explain": "base64: أداة ترميز وفك ترميز البيانات. -d: علم فك التشفير (Decode) للحصول على النص الأصلي.",
+    "real_scenario": "تُستخدم صيغة Base64 بكثرة في نقل الصور والملفات المضمنة في صفحات الويب، ويستخدمها مطورو البرمجيات الخبيثة لإخفاء الأكواد البرمجية (Obfuscation) عن جدران الحماية، لذا فكها مهارة أساسية للمحلل الأمني.",
+    "quiz": {
+      "question": "أي خيار يستخدم مع أداة base64 لفك ترميز النص وإعادته لشكله الأصلي؟",
+      "options": [
+        "-e",
+        "-d",
+        "-x",
+        "-c"
+      ],
+      "correct": 1
+    },
+    "sim_output": "IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR\\nbandit11@bandit:~$ "
+  },
+  {
+    "id": 12,
+    "title": "Level 11 → Level 12",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "ROT13",
+      "tr",
+      "Cryptography"
+    ],
+    "goal": "فك تشفير نص في ملف data.txt مشفر بنظام ROT13 (إزاحة 13 حرفاً).",
+    "walkthrough": "نستخدم أمر <code>tr</code> لاستبدال الحروف الهجائية بالمدى المزاح بمقدار 13 حرفاً.",
+    "command": "cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'",
+    "password": "5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu",
+    "why_trick": "لأن نظام تشفير ROT13 يقوم بإزاحة كل حرف بمقدار 13 خطوة في الترتيب الأبجدي، وبما أن الأبجدية الإنجليزية 26 حرفاً، فإن تطبيق نفس الإزاحة مرتين يعيد النص لأصله.",
+    "consequences": "بدون استخدام التحويل، يبقى النص مبهماً وغير مفهوم. استخدام tr يبدل الحروف الكبيرة والصغيرة بلحظة ويستعيد النص الأصلي.",
+    "cmd_explain": "tr 'A-Za-z' 'N-ZA-Mn-za-m': أمر الترجمة (Translate) الذي يبدل أي حرف من المجموعة الأولى بالحرف المقابل له في المجموعة المزاحة الثانية.",
+    "real_scenario": "يُستخدم ROT13 بكثرة في الألغاز الأمنية وتخزين البيانات البسيطة لمنع الحرق الفوري في المنتديات. فك ترميزه يدوياً يعزز فهمك لطرق التشفير الكلاسيكية القائمة على الاستبدال الإزاحي.",
+    "quiz": {
+      "question": "كم عدد الخطوات (الإزاحة) التي يطبقها تشفير القيصر الدوار ROT13 على الحروف? ",
+      "options": [
+        "10",
+        "13",
+        "26",
+        "5"
+      ],
+      "correct": 1
+    },
+    "sim_output": "The password is 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu\\nbandit12@bandit:~$ "
+  },
+  {
+    "id": 13,
+    "title": "Level 12 → Level 13",
+    "difficulty": "Advanced",
+    "concepts": [
+      "Hexdump",
+      "Compression",
+      "tar",
+      "gzip",
+      "bzip2"
+    ],
+    "goal": "فك تشفير ملف data.txt الذي يمثل Hexdump لملف تم ضغطه بشكل متداخل متكرر.",
+    "walkthrough": "قم بإنشاء مجلد مؤقت في <code>/tmp</code>، انسخ الملف إليه، ثم استخدم <code>xxd -r</code> لعكس الهكس ديمب. بعد ذلك، افحص نوع الملف بـ <code>file</code> وقم بفك الضغط بالتناوب حسب الأداة المناسبة (gzip, bzip2, tar) حتى تصل للملف النصي النهائي.",
+    "command": "xxd -r data.txt",
+    "password": "8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL",
+    "why_trick": "لأن الملف مخزن كتمثيل نصي للقيم الست عشرية (Hexdump) وتم ضغطه بطرق متعددة ومتداخلة ومخفية، لذا نستخدم xxd لعكس الهكس وفحص الامتدادات يدوياً في كل خطوة.",
+    "consequences": "إذا حاولت فك ضغط ملف باستخدام أداة غير مناسبة (كفك ضغط bzip2 باستخدام gunzip) سيفشل الأمر فوراً وسيتلف الملف. الفحص بـ file في كل خطوة يضمن سلامة مسار الحل.",
+    "cmd_explain": "xxd -r: عكس ملف الهكس ديمب (Hexadecimal Representation) إلى ملف ثنائي حقيقي. file: فحص التواقيع لتحديد الصيغة المناسبة لفك الضغط.",
+    "real_scenario": "يقوم بعض مصممي البرمجيات الخبيثة بضغط أكوادهم عدة مرات بأساليب مضغوطة متداخلة لتجاوز أنظمة كشف التسلل (IDS) وجدران الحماية، والقدرة على عكس الهكس وفك الضغط التتابعي مهارة بالغة الأهمية في الهندسة العكسية.",
+    "quiz": {
+      "question": "ما هو الخيار المستخدم في أداة xxd لعكس ملف الهكس ديمب وإعادته لملف ثنائي؟",
+      "options": [
+        "-p",
+        "-r",
+        "-c",
+        "-b"
+      ],
+      "correct": 1
+    },
+    "sim_output": "[Reverted binary file constructed successfully]\\nbandit13@bandit:~$ "
+  },
+  {
+    "id": 14,
+    "title": "Level 13 → Level 14",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "SSH Keys",
+      "localhost"
+    ],
+    "goal": "الاتصال بالخادم المحلي localhost بالمستخدم bandit14 باستخدام مفتاح الـ SSH الخاص sshkey.private.",
+    "walkthrough": "استخدم خيار <code>-i</code> لتحديد مفتاح الـ SSH الخاص للاتصال بالمستخدم الجديد على localhost. بعد الدخول، اقرأ ملف كلمة المرور المحمي.",
+    "command": "ssh -i sshkey.private bandit14@localhost -p 2220",
+    "password": "4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e",
+    "why_trick": "لأن الانتقال للمستوى 14 لا يعتمد على كلمة مرور بل يعتمد على مصادقة المفتاحين العام والخاص (Key-based Authentication)، ويجب تمرير المفتاح الخاص كمعرف اتصال للـ localhost.",
+    "consequences": "محاولة تسجيل الدخول بالطريقة التقليدية ستطلب منك كلمة مرور لا تملكها وستفشل. استخدام المفتاح الخاص عبر العلم <code>-i</code> يتجاوز طلب كلمة المرور مباشرة.",
+    "cmd_explain": "ssh -i: خيار تمرير ملف الهوية والمفتاح الخاص (Identity File) للاتصال الآمن. bandit14@localhost: الاتصال بالمستخدم البعيد على الخادم المحلي.",
+    "real_scenario": "تعتمد السيرفرات المؤسسية والمواقع المؤمنة بالكامل على مفاتيح SSH الخاصة وتمنع تسجيل الدخول بكلمات المرور تماماً لمنع هجمات القوة الغاشمة والتخمين، لذا إدارة هذه المفاتيح وتأمينها ركيزة أمنية أساسية.",
+    "quiz": {
+      "question": "أي علم (Flag) يُسخدم لتمرير ملف مفتاح SSH الخاص عند الاتصال بسيرفر؟",
+      "options": [
+        "-p",
+        "-i",
+        "-v",
+        "-k"
+      ],
+      "correct": 1
+    },
+    "sim_output": "Welcome to bandit14!\\nbandit14@bandit:~$ "
+  },
+  {
+    "id": 15,
+    "title": "Level 14 → Level 15",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "netcat",
+      "Networking"
+    ],
+    "goal": "إرسال كلمة مرور المستوى الحالي إلى المنفذ 30000 على localhost للحصول على الكلمة التالية.",
+    "walkthrough": "استخدم أداة <code>nc</code> (Netcat) للاتصال بالمنفذ المفتوح، ثم قم بإرسال كلمة مرور bandit14.",
+    "command": "nc localhost 30000",
+    "password": "BfMYroe26WYalil77FoDi9qh59eK5xNr",
+    "why_trick": "لأن الخدمة العاملة على المنفذ 30000 هي خدمة شبكية نصية خام (Raw TCP Server)، وتحتاج أداة قادرة على التخاطب المباشر مع مقابس الشبكة (Sockets) مثل netcat.",
+    "consequences": "الاتصال عبر أدوات مثل curl أو المتصفح سيفشل لأنها خدمات شبكية لا تتبع بروتوكول HTTP. استخدام netcat يضمن إنشاء اتصال TCP نقي ونقل البيانات بأمان.",
+    "cmd_explain": "nc: أداة Netcat لفتح اتصالات الشبكة وقراءة البيانات وكتابتها. localhost 30000: المستضيف والمنفذ المستهدف للاتصال.",
+    "real_scenario": "تُعقّب أداة netcat باسم 'سكين الجيش السويسري' لمهندسي الشبكات والهاكرز، وتُستخدم لفحص المنافذ السريع، نقل الملفات محلياً، أو لتلقي اتصالات الشل العكسي (Reverse Shell) أثناء اختبار الاختراق.",
+    "quiz": {
+      "question": "ما هي الأداة التي تسمى بسكين الجيش السويسري للشبكات وتستخدم للاتصال بالمنافذ؟",
+      "options": [
+        "ssh",
+        "nc (netcat)",
+        "nmap",
+        "ping"
+      ],
+      "correct": 1
+    },
+    "sim_output": "BfMYroe26WYalil77FoDi9qh59eK5xNr\\nbandit15@bandit:~$ "
+  },
+  {
+    "id": 16,
+    "title": "Level 15 → Level 16",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "openssl s_client",
+      "SSL/TLS"
+    ],
+    "goal": "إرسال كلمة مرور المستوى الحالي إلى المنفذ 30001 على localhost باستخدام اتصال محمي بـ SSL.",
+    "walkthrough": "المنفذ 30001 يستمع فقط للاتصالات الآمنة المشفرة، لذا نستخدم <code>openssl s_client</code> عوضاً عن netcat العادي.",
+    "command": "openssl s_client -connect localhost:30001 -quiet",
+    "password": "cluFn7wTiGryunymYOu4RcffSxQluehd",
+    "why_trick": "لأن الخدمة محمية ببروتوكول تشفير SSL/TLS، والعملاء غير المشفرين (مثل netcat العادي) سيفشلون في إتمام المصافحة الأمنية (Handshake)، لذا نستخدم عميل OpenSSL المخصص للخدمات المشفرة.",
+    "consequences": "محاولة الاتصال باستخدام nc العادي ستؤدي لقطع الاتصال فوراً من جهة السيرفر دون إرجاع أي رد. استخدام openssl s_client يضمن إنشاء نفق مشفر آمن والاتصال بنجاح.",
+    "cmd_explain": "openssl s_client: عميل بروتوكول SSL/TLS للاتصال بالخدمات الآمنة. -connect: المستضيف والمنفذ. -quiet: إخفاء تفاصيل الشهادة الرقمية للمحافظة على نظافة مخرجات الشاشة.",
+    "real_scenario": "عند فحص قنوات الاتصال بالويب المشفر (HTTPS) أو الاتصال بقواعد البيانات المؤمنة بـ TLS يدوياً لاختبار ثغرات حقن الأوامر أو فحص الشهادات المنتهية، يعد هذا الأمر الأداة القياسية للفحص الأمني.",
+    "quiz": {
+      "question": "أي أداة تستخدم لإنشاء اتصالات مشفرة ببروتوكول SSL/TLS وفحص الشهادات؟",
+      "options": [
+        "nc",
+        "openssl s_client",
+        "ssh",
+        "curl"
+      ],
+      "correct": 1
+    },
+    "sim_output": "cluFn7wTiGryunymYOu4RcffSxQluehd\\nbandit16@bandit:~$ "
+  },
+  {
+    "id": 17,
+    "title": "Level 16 → Level 17",
+    "difficulty": "Advanced",
+    "concepts": [
+      "nmap",
+      "openssl",
+      "RSA Key"
+    ],
+    "goal": "عمل مسح للمنافذ بين 31000 و32000 لمعرفة أي منها يستمع لـ SSL وإرسال كلمة المرور إليه للحصول على مفتاح RSA.",
+    "walkthrough": "امسح المنافذ بـ <code>nmap -p 31000-32000 localhost</code> (ستجد المنفذ 31790 يستمع للـ SSL). اتصل به عبر <code>openssl s_client -connect localhost:31790</code> وأرسل الكلمة الحالية، واحفظ مفتاح RSA الناتج في ملف خاص مع إعطائه صلاحية 600 لتسجيل الدخول.",
+    "command": "nmap -p 31000-32000 localhost",
+    "password": "[مفتاح RSA خاص - يتم استخدامه للاتصال كـ bandit17]",
+    "why_trick": "لأن المنفذ الصحيح غير معروف ويقع ضمن نطاق من 1000 منفذ، ونحتاج أداة فحص منافذ متخصصة وسريعة (Nmap) لتحديد المنفذ النشط بدلاً من تجربة المنافذ يدوياً.",
+    "consequences": "محاولة الاتصال بكامل النطاق يدوياً ستستغرق ساعات طويلة وقد تتسبب في قفل حسابك بسبب كثرة المحاولات. المسح بـ Nmap يحدد المنفذ المفتوح (31790) في ثوانٍ معدودة.",
+    "cmd_explain": "nmap -p 31000-32000 localhost: فحص المنافذ وتحديد الخدمات النشطة محلياً في هذا النطاق المحدد.",
+    "real_scenario": "يعد فحص المنافذ (Port Scanning) والخدمات (Services Discovery) الخطوة الأساسية الأولى في مرحلة جمع المعلومات لأي عملية فحص أمني لتقييم الثغرات واكتشاف الأبواب الخلفية المفتوحة.",
+    "quiz": {
+      "question": "ما هو المنفذ الذي وجدته أداة nmap مفتوحاً ويستمع لـ SSL في المستوى 16؟",
+      "options": [
+        "30001",
+        "31790",
+        "31500",
+        "32000"
+      ],
+      "correct": 1
+    },
+    "sim_output": "Interesting ports on localhost:\\nPORT      STATE SERVICE\\n31790/tcp open  unknown\\nbandit17@bandit:~$ "
+  },
+  {
+    "id": 18,
+    "title": "Level 17 → Level 18",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "diff",
+      "File Comparison"
+    ],
+    "goal": "مقارنة ملف passwords.old و passwords.new ومعرفة السطر الوحيد الذي تم تعديله.",
+    "walkthrough": "استخدم الأمر <code>diff</code> لمقارنة الملفين مباشرة، السطر الذي يسبقه إشارة <code>></code> هو التعديل والكلمة المطلوبة.",
+    "command": "diff passwords.old passwords.new",
+    "password": "kfBf3eY2F5VGA3a8x5tY3qGhBM9plV",
+    "why_trick": "لأن الملفين يحتويان على كمية ضخمة من الكلمات المتشابهة، والبحث البصري بالعين المجردة غير عملي وعرضة للخطأ، لذا نستخدم أداة المقارنة المباشرة للأسطر.",
+    "consequences": "أداة diff تقارن الفروقات بدقة متناهية وتستخلص التعديلات أو السطور المضافة في أجزاء من الثانية. عدم استخدامها يعرضك لقضاء وقت طويل في قراءة أسطر تشابهة.",
+    "cmd_explain": "diff: أداة مقارنة محتويات الملفات النصية واستخراج الاختلافات بينها.",
+    "real_scenario": "يستخدم مديرو الأنظمة ومحللو الحماية أمر diff لمقارنة ملفات تكوين السيرفرات الحالية بنسخها الاحتياطية السليمة للكشف الفوري عن أي تغييرات غير مصرح بها أو برمجيات خبيثة تمت إضافتها للنظام.",
+    "quiz": {
+      "question": "أي أداة تستخدم لمقارنة ملفين نصيين وإظهار الفروقات بينهما سطراً بسطر؟",
+      "options": [
+        "diff",
+        "grep",
+        "uniq",
+        "file"
+      ],
+      "correct": 0
+    },
+    "sim_output": "24c24\\n< old_key_here\\n---\\n> kfBf3eY2F5VGA3a8x5tY3qGhBM9plV\\nbandit18@bandit:~$ "
+  },
+  {
+    "id": 19,
+    "title": "Level 18 → Level 19",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "Restricted Shell",
+      "SSH Commands"
+    ],
+    "goal": "تخطي تسجيل الخروج التلقائي الفوري عند الاتصال عبر SSH نتيجة شل معطل.",
+    "walkthrough": "عند الاتصال بـ SSH، مرر الأمر المراد تنفيذه مباشرة في نهاية سطر الاتصال لتخطي الشل التلقائي، مثل استدعاء bash أو قراءة الملف.",
+    "command": "ssh bandit18@bandit.labs.overthewire.org -p 2220 /bin/bash",
+    "password": "3Njap0pFhF3NJ9AVKe0dmk45nxy20cvU",
+    "why_trick": "لأن الشل الافتراضي المخصص للمستخدم bandit18 مبرمج ليطبع رسالة ترحيبية ثم يغلق الاتصال فوراً لمنعك من العمل، وتمرير شل بديل عند الاتصال يتفادى تشغيل الشل المعطل.",
+    "consequences": "الاتصال التقليدي بدون أوامر إضافية سيقوم بطردك كلياً في ثانية واحدة. بينما تمرير <code>/bin/bash</code> يجبر الخادم على تخصيص بيئة عمل قياسية متفاعلة دون تشغيل سكريبت الطرد.",
+    "cmd_explain": "ssh ... /bin/bash: استدعاء وتشغيل شل الباش كأمر تنفيذي بديل ومباشر فور نجاح عملية الاتصال والمصادقة.",
+    "real_scenario": "عند كسر حماية بعض الخوادم والوقوع في شل محدود (Restricted Shell) يمنع استخدام معظم الأوامر، يعد تمرير شل بديل أثناء الاتصال بالـ SSH من أشهر الطرق للهروب والوصول لشل كامل الصلاحيات.",
+    "quiz": {
+      "question": "كيف قمنا بتخطي تسجيل الخروج التلقائي الفوري لمستخدم bandit18؟",
+      "options": [
+        "بكتابة كلمة المرور بسرعة",
+        "بتمرير أمر تشغيل شل بديل (/bin/bash) في نهاية سطر الاتصال",
+        "بقطع الإنترنت",
+        "بإيقاف السيرفر"
+      ],
+      "correct": 1
+    },
+    "sim_output": "bandit18@bandit:~$ /bin/bash\\nbandit18@bandit:~$ "
+  },
+  {
+    "id": 20,
+    "title": "Level 19 → Level 20",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "SUID",
+      "Privilege Escalation"
+    ],
+    "goal": "استغلال ملف ثنائي يحمل صلاحية SUID لتشغيل أمر نيابة عن مستخدم أعلى.",
+    "walkthrough": "الملف <code>bandit20-do</code> يتيح لك تنفيذ الأوامر بصلاحية bandit20. قم بتشغيله لقراءة ملف كلمة المرور المحمي مباشرة.",
+    "command": "./bandit20-do cat /etc/bandit_pass/bandit20",
+    "password": "0cvUa6EGHWasnPhtq9AVKe0dmk45nxy2",
+    "why_trick": "لأن ملف كلمة السر الخاص بـ bandit20 محمي ولا يملك حسابك الحالي صلاحية قراءته، واستغلال ملف SUID (المملوك للمستخدم الأعلى) يتيح لنا قراءة الملف بالنيابة عن المالك ذي الصلاحية.",
+    "consequences": "كتابة <code>cat /etc/bandit_pass/bandit20</code> مباشرة ستعطيك خطأ Permission Denied. تشغيل نفس الأمر عبر ملف السويد يتجاوز صلاحيات حسابك ويحقق الهدف بنجاح.",
+    "cmd_explain": "./bandit20-do [command]: تشغيل الملف التنفيذي المساعد الحامل لعلم SUID لتشغيل الأمر المرفق بصلاحيات المالك الأصلي للبرنامج.",
+    "real_scenario": "تعد ملفات SUID سيئة التكوين (Misconfigured SUID Binaries) البوابة الذهبية لتصعيد الصلاحيات (Privilege Escalation) في أنظمة لينكس. فحص هذه الملفات دورياً وتأمينها أمر لا غنى عنه لحماية السيرفر.",
+    "quiz": {
+      "question": "ماذا تعني صلاحية SUID الخاصة بملف تنفيذي في أنظمة لينكس؟",
+      "options": [
+        "قفل الملف ومنع استخدامه",
+        "تشغيل الملف بصلاحيات المالك الأصلي له بدلاً من صلاحيات المستخدم الحالي",
+        "تشغيل الملف في الخلفية",
+        "تشفير الملف"
+      ],
+      "correct": 1
+    },
+    "sim_output": "0cvUa6EGHWasnPhtq9AVKe0dmk45nxy2\\nbandit20@bandit:~$ "
+  },
+  {
+    "id": 21,
+    "title": "Level 20 → Level 21",
+    "difficulty": "Advanced",
+    "concepts": [
+      "suconnect",
+      "Background Jobs",
+      "nc listener"
+    ],
+    "goal": "الاتصال ببرنامج SUID يقوم بالتحقق من كلمة مرور bandit20 على منفذ محلي وإرسال كلمة مرور bandit21.",
+    "walkthrough": "افتح منفذ استماع محلي يرسل كلمة مرور bandit20 عند الاتصال به: <code>echo [pass] | nc -l -p 12345 &</code> ثم شغل برنامج suconnect متصلاً بذلك المنفذ <code>./suconnect 12345</code>.",
+    "command": "nc -l -p 12345",
+    "password": "HWasnPhtq9AVKe0dmk45nxy20cvUa6EG",
+    "why_trick": "لأن برنامج suconnect يتصل بالمنفذ الذي تمرره له، ويرسل طلباً بالتحقق، فنقوم بإنشاء خادم مصغر مؤقت (Listener) يستمع محلياً ويمده بكلمة السر فور الاتصال به ليجتاز التحقق.",
+    "consequences": "تشغيل suconnect دون منفذ استماع نشط سيؤدي لفشل الاتصال فوراً. استخدام رمز التشغيل في الخلفية <code>&</code> يسمح لنا بتشغيل أداة الاستماع والبرنامج في نفس الوقت دون الحاجة لفتح نافذتين.",
+    "cmd_explain": "nc -l -p: تهيئة netcat للعمل كخادم استماع (Listener) على منفذ محدد. &: تشغيل المهمة الحالية في الخلفية (Background Job).",
+    "real_scenario": "يُستخدم مفهوم تشغيل المهام في الخلفية وربط المقابس محلياً لمحاكاة استجابة البرمجيات وخلق بيئات فحص أوتوماتيكية لاختبار استجابة السيرفر للطلبات الخارجية والاتصالات غير الموثوقة.",
+    "quiz": {
+      "question": "أي رمز يُسخدم لتشغيلمهمة أو خادم استماع في الخلفية (Background Job) في لينكس؟",
+      "options": [
+        "#",
+        "&",
+        "$",
+        "|"
+      ],
+      "correct": 1
+    },
+    "sim_output": "[Listening on port 12345... Connection accepted. Pass sent!]\\nHWasnPhtq9AVKe0dmk45nxy20cvUa6EG\\nbandit21@bandit:~$ "
+  },
+  {
+    "id": 22,
+    "title": "Level 21 → Level 22",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "cron",
+      "Scheduled Tasks"
+    ],
+    "goal": "فحص مهام cron ومعرفة مسار السكريبت الجاري تنفيذه دورياً وقراءة مخرجاته.",
+    "walkthrough": "افحص المجلد <code>/etc/cron.d/</code> واقرأ ملف الإعدادات للمستوى 22 لتحديد مكان السكريبت، ثم اقرأ السكريبت لتعرف المسار المؤقت الذي يكتب فيه كلمة المرور.",
+    "command": "cat /etc/cron.d/cronjob_bandit22",
+    "password": "EGo7DXjZPULLxYr17uwoI01bNLQbtFem",
+    "why_trick": "لأن خوادم لينكس تستخدم مهام cron لتنفيذ سكريبتات دورية بصلاحيات مرتفعة، وقراءة ملفات المهام تتيح لنا معرفة مسار السكريبت المجرى واستخراج النتيجة المؤقتة منه.",
+    "consequences": "المهام تعمل تلقائياً في الخلفية. قراءة كود السكريبت تمكننا من تحديد ملف المخرجات السري في المجلد <code>/tmp</code> وقراءته للحصول على كلمة المرور.",
+    "cmd_explain": "/etc/cron.d/: المجلد القياسي لتخزين إعدادات المهام المجدولة للنظام. cat: لعرض محتوى السكريبت البرمجي وتتبع منطقة.",
+    "real_scenario": "عند تحليل الحوادث الأمنية والتحقيق الجنائي الرقمي (Digital Forensics)، يتم فحص ملفات ومجلدات الـ cron بدقة للتأكد من عدم قيام المهاجمين بوضع سكريبتات خبيثة تضمن لهم البقاء والوصول الدائم (Persistence).",
+    "quiz": {
+      "question": "ما هو اسم الخدمة المخصصة لتنفيذ المهام المجدولة دورياً في نظام لينكس؟",
+      "options": [
+        "systemd",
+        "cron",
+        "rsyslog",
+        "sshd"
+      ],
+      "correct": 1
+    },
+    "sim_output": "* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null\\nbandit22@bandit:~$ "
+  },
+  {
+    "id": 23,
+    "title": "Level 22 → Level 23",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "cron",
+      "MD5 hashing",
+      "Scripting"
+    ],
+    "goal": "تتبع سكريبت cronjob يقوم بتوليد اسم ملف مخرجات ديناميكي بناءً على هاش MD5 لاسم المستخدم.",
+    "walkthrough": "اقرأ سكريبت الكرون <code>/usr/bin/cronjob_bandit23.sh</code> واعرف كيف يتم احتساب اسم الملف. احسب قيمة الهاش لـ bandit23 ثم اقرأ الملف من المسار الناتج في <code>/tmp</code>.",
+    "command": "echo \"I am user bandit23\" | md5sum",
+    "password": "jc1OIX8pi7KAGL6gAvawJjGOiokJF5bD",
+    "why_trick": "لأن السكريبت يقوم بتوليد اسم ملف مشفر ديناميكياً باستخدام هاش MD5 لاسم المستخدم لمنع التخمين البسيط، ونقوم بمحاكاة وتطبيق نفس المعادلة الحسابية للوصول للاسم الدقيق للملف.",
+    "consequences": "الملف مخزن باسم عشوائي معقد يستحيل تخمينه يدوياً. عملية حساب الهاش المطابقة تعطينا اسم الملف بدقة متناهية لنصل إليه فوراً.",
+    "cmd_explain": "echo ... | md5sum: حساب البصمة الرقمية (MD5 Hash) للنص المحدد لمحاكاة المعادلة الرياضية المستخدمة في السكريبت.",
+    "real_scenario": "تستخدم الكثير من الخدمات البرمجية خوارزميات التشفير أو الهاش لتوليد أسماء جلسات المستخدمين (Session IDs) أو مسارات الملفات المؤقتة. فهم كيفية عمل التوليد يتيح لك توقع وتخمين المسارات الحساسة.",
+    "quiz": {
+      "question": "ما هي خوارزمية الهاش المستخدمة لتوليد اسم ملف المخرجات العشوائي في هذا المستوى؟",
+      "options": [
+        "SHA-256",
+        "MD5",
+        "SHA-1",
+        "AES"
+      ],
+      "correct": 1
+    },
+    "sim_output": "8ca31a52cdf2b6cae78d12e68a77fae1  -\\nbandit23@bandit:~$ "
+  },
+  {
+    "id": 24,
+    "title": "Level 23 → Level 24",
+    "difficulty": "Advanced",
+    "concepts": [
+      "cron",
+      "Privilege Abuse",
+      "Shell Scripting"
+    ],
+    "goal": "استغلال مهمة cronjob تقوم بتشغيل أي سكريبت يوضع في مجلد /var/spool/bandit24/d/.",
+    "walkthrough": "اكتب سكريبت شل بسيط ينسخ ملف كلمة مرور bandit24 إلى ملف عام في <code>/tmp</code>، اعطه صلاحية التنفيذ <code>chmod +x</code> وضعه في المجلد المخصص وانتظر حتى ينفذه النظام.",
+    "command": "chmod +x /var/spool/bandit24/d/myscript.sh",
+    "password": "U4RcffSxQluehdcluFn7wTiGryunymYO",
+    "why_trick": "لأن حسابك الحالي لا يملك صلاحية قراءة الملف السري لـ bandit24، ولكن مهمة الكرون النشطة تملك الصلاحية الكاملة وتقوم بتشغيل أي سكريبت يوضع في المجلد، لذا نستغلها كأداة وسيطة لتنفيذ أمرنا.",
+    "consequences": "بمجرد وضع السكريبت، يقوم النظام بتشغيله بالنيابة عنا ويكتب كلمة المرور في ملف نملكه في مجلد /tmp. يجب إعطاء صلاحية التنفيذ <code>chmod +x</code> للسكريبت وإلا سيتجاهله النظام كلياً.",
+    "cmd_explain": "echo -e: توليد نص متعدد السطور وكتابته داخل ملف. chmod +x: منح الصلاحية التنفيذية (Execution Privilege) للسكريبت لضمان تشغيله.",
+    "real_scenario": "تعد هذه الثغرة من أشهر سيناريوهات تصعيد الصلاحيات (Cron Job Hijacking). إذا وجد المهاجم مجلداً مجدولاً يعمل بصلاحيات root ولديه صلاحية كتابة عليه، فإنه يضع سكريبت خبيث ليتحكم بالسيرفر بالكامل.",
+    "quiz": {
+      "question": "أي صلاحية يجب منحها للسكريبت الخاص بك لتجبر مهمة الكرون على تشغيله؟",
+      "options": [
+        "القراءة فقط (Read)",
+        "الكتابة فقط (Write)",
+        "التنفيذ (+x)",
+        "التعديل (Modify)"
+      ],
+      "correct": 2
+    },
+    "sim_output": "[Script executed by cron successfully]\\nbandit24@bandit:~$ "
+  },
+  {
+    "id": 25,
+    "title": "Level 24 → Level 25",
+    "difficulty": "Advanced",
+    "concepts": [
+      "Brute Force",
+      "netcat",
+      "Loops"
+    ],
+    "goal": "تخمين رمز PIN مكون من 4 أرقام بجانب كلمة مرور bandit24 عبر المنفذ 30002.",
+    "walkthrough": "اكتب حلقة تكرار برمجية في الشل لترسل كل الاحتمالات من 0000 إلى 9999 بجانب كلمة المرور دفعة واحدة عبر بايب إلى منفذ netcat.",
+    "command": "nc localhost 30002",
+    "password": "u4RcffSxQluehdcluFn7wTiGryunymYO",
+    "why_trick": "لأن الخدمة تطلب إدخالين معاً وتقوم بقطع الاتصال عند الخطأ، والتخمين اليدوي لـ 10,000 احتمال مستحيل، لذا نقوم بأتمتة وضخ كل الاحتمالات برمجياً في لحظة واحدة لنتلقى النتيجة الصحيحة.",
+    "consequences": "توفير الوقت والجهد الهائل والحصول على الحل في ثوانٍ. توجيه المخرجات عبر البايب <code>| nc</code> يضمن قراءة الخدمة لكافة الاحتمالات دون توقف.",
+    "cmd_explain": "for i in {0000..9999}: حلقة تكرار برمجية تولد الأرقام المتسلسلة بأربعة خانات. do echo ...: طباعة كلمة المرور مع الرقم المتغير.",
+    "real_scenario": "تستخدم هجمات التخمين كحل أخير لكسر كلمات السر. لتأمين السيرفرات ضدها، يجب تطبيق آليات الدفاع مثل حظر الحساب بعد عدد محدد من المحاولات الفاشلة (Account Lockout) وتحديد معدل الطلبات (Rate Limiting).",
+    "quiz": {
+      "question": "ما هي العملية البرمجية المستخدمة لتجربة كافة الاحتمالات لرموز PIN تلقائياً؟",
+      "options": [
+        "تشفير",
+        "تخمين القوة الغاشمة (Brute Force)",
+        "الهندسة الاجتماعية",
+        "التصيد الاحتيالي"
+      ],
+      "correct": 1
+    },
+    "sim_output": "bandit24_pass 0000 -> Wrong\\nbandit24_pass 1234 -> Correct! The password is: u4RcffSxQluehdcluFn7wTiGryunymYO\\nbandit25@bandit:~$ "
+  },
+  {
+    "id": 26,
+    "title": "Level 25 → Level 26",
+    "difficulty": "Advanced",
+    "concepts": [
+      "showtext",
+      "more command",
+      "vi escape"
+    ],
+    "goal": "تخطي تسجيل الخروج الفوري للشل الافتراضي الذي يعرض ملفاً باستخدام more.",
+    "walkthrough": "صغر حجم الطرفية لسطرين فقط ثم اتصل بـ SSH. سيتوقف برنامج <code>more</code> بانتظار إدخال. اضغط على <code>v</code> لفتح محرر <code>vi</code>، ومن داخله قم بتهيئة متغيرات الشل عبر <code>:set shell=/bin/bash</code> ثم اكتب <code>:shell</code>.",
+    "command": ":set shell=/bin/bash",
+    "password": "5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu",
+    "why_trick": "لأن السيرفر مبرمج لعرض ملف نصي عبر أداة more ويقوم بقطع الاتصال بمجرد انتهاء النص، وتصغير حجم نافذة الشاشة يجبر أداة more على التوقف التفاعلي ليتيح لنا فرصة استدعاء محرر نصوص والهروب منه.",
+    "consequences": "إذا كان حجم الطرفية كبيراً، سيعرض more النص بالكامل ويغلق الاتصال فوراً دون أن تتمكن من كتابة أي حرف. تصغير الشاشة يمنحك السيطرة الكاملة على الجلسة.",
+    "cmd_explain": "v: مفتاح الهروب من more لفتح محرر vi. :set shell=/bin/bash: تحديد الشل القياسي للعمل. :shell: تفعيل الشل الجديد.",
+    "real_scenario": "يعد كسر قيود الشلات المحدودة (Restricted Shell Escaping) من الفنون المتقدمة في اختبار الاختراق. يتم دائماً فحص البرامج المساعدة (مثل less, man, vi) واستغلال ميزاتها التفاعلية للهروب إلى شل النظام.",
+    "quiz": {
+      "question": "ما هو المفتاح الذي قمنا بضغطه داخل أداة more لاستدعاء محرر vi للهروب؟",
+      "options": [
+        "q",
+        "v",
+        "e",
+        "x"
+      ],
+      "correct": 1
+    },
+    "sim_output": "vi command mode active -> :set shell=/bin/bash applied\\nbandit26@bandit:~$ "
+  },
+  {
+    "id": 27,
+    "title": "Level 26 → Level 27",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "SUID",
+      "Restricted Shell"
+    ],
+    "goal": "استخدام برنامج SUID لتشغيل أمر في شل محدود.",
+    "walkthrough": "استخدم برنامج <code>./bandit27-do</code> لقراءة ملف كلمة المرور المحمي بمساره المباشر.",
+    "command": "./bandit27-do cat /etc/bandit_pass/bandit27",
+    "password": "3Njap0pFhF3NJ9AVKe0dmk45nxy20cvU",
+    "why_trick": "لأن حسابك الحالي في شل محدود يمنع تنفيذ الأوامر القياسية، ونستعين ببرنامج السويد الخاص بالمستوى لتنفيذ أمر قراءة ملف كلمة السر بالنيابة عن المالك ذي الصلاحية.",
+    "consequences": "كتابة الأوامر مباشرة محظورة ومقيدة. تشغيلها كمعاملات لبرنامج السويد الموثوق يكسر هذا القيد بنجاح ويحقق الهدف.",
+    "cmd_explain": "./bandit27-do: ملف تنفيذي مساعد يحمل صلاحيات مستخدم أعلى لتشغيل الأوامر المرفقة.",
+    "real_scenario": "في إدارة الأنظمة الحساسة، يجب مراقبة صلاحيات البرامج التنفيذية باستمرار والتأكد من عدم وجود أدوات تتيح للمستخدمين ذوي الصلاحيات المحدودة استدعاء أوامر خارج نطاقهم الأمني.",
+    "quiz": {
+      "question": "ما هو اسم الشل المحدود الذي يمنع استخدام معظم الأوامر الافتراضية؟",
+      "options": [
+        "bash",
+        "zsh",
+        "sh",
+        "Restricted Shell (rbash)"
+      ],
+      "correct": 3
+    },
+    "sim_output": "3Njap0pFhF3NJ9AVKe0dmk45nxy20cvU\\nbandit27@bandit:~$ "
+  },
+  {
+    "id": 28,
+    "title": "Level 27 → Level 28",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "git clone",
+      "Version Control"
+    ],
+    "goal": "استنساخ مستودع git محلي وقراءة ملفات التوصيف للحصول على كلمة المرور.",
+    "walkthrough": "أنشئ مجلداً مؤقتاً في <code>/tmp</code> واستنسخ المستودع عبر <code>git clone</code> ثم اقرأ ملف <code>README.md</code>.",
+    "command": "git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo /tmp/myrepo",
+    "password": "0cvUa6EGHWasnPhtq9AVKe0dmk45nxy2",
+    "why_trick": "لأن التحدي يتطلب التعامل مع مستودع git محلي، ولتجنب أخطاء صلاحيات الكتابة في مجلدات النظام، نقوم بتهيئة مجلد عمل مؤقت خاص في المجلد العام /tmp.",
+    "consequences": "محاولة استنساخ المستودع في مجلدات النظام الرئيسية ستفشل بسبب صلاحيات الكتابة. مجلد /tmp مهيأ برمجياً ليسمح للجميع بالكتابة فيه وحل المشكلة.",
+    "cmd_explain": "git clone: أمر نسخ مستودع الأكواد البعيد أو المحلي إلى جهازك. /tmp/...: تحديد مسار المجلد المستهدف للنسخ.",
+    "real_scenario": "عند القيام بعمليات التطوير أو سحب المشاريع داخل سيرفرات الإنتاج المشتركة، يفضل استخدام المجلدات المؤقتة للعمليات السريعة لضمان عدم ترك مخلفات برمجية قد تعيق أداء السيرفر أو تسرب معلومات أمنية.",
+    "quiz": {
+      "question": "ما هو الأمر المستخدم في git لنسخ مستودع أكواد كامل من خادم محلي أو بعيد؟",
+      "options": [
+        "git init",
+        "git clone",
+        "git commit",
+        "git push"
+      ],
+      "correct": 1
+    },
+    "sim_output": "Cloning into '/tmp/myrepo'...\\nUnpacking objects: 100% done.\\nbandit28@bandit:~$ "
+  },
+  {
+    "id": 29,
+    "title": "Level 28 → Level 29",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "git log",
+      "git history"
+    ],
+    "goal": "استنساخ مستودع وقراءة كلمة المرور التي تم حذفها وتعديلها في سجل التعديلات.",
+    "walkthrough": "استنسخ المستودع، واستخدم أمر <code>git log -p</code> أو <code>git show</code> لاستعراض سجل التعديلات السابقة التي تم إجراؤها على الملفات واسترجاع الكلمة المحذوفة.",
+    "command": "git log -p",
+    "password": "HWasnPhtq9AVKe0dmk45nxy20cvUa6EG",
+    "why_trick": "لأن الملف في نسخته الحالية تم تفريغه وتعديله وحذف كلمة المرور منه، وتاريخ الالتزامات (Commits) في git يحتفظ بنسخة كاملة لكافة التعديلات التاريخية للملف.",
+    "consequences": "قراءة الملف مباشرة تظهر نصوصاً فارغة. استعراض سجل الفروقات يظهر السطور النصية التي تم حذفها باللون الأحمر مع السجل التاريخي لها.",
+    "cmd_explain": "git log -p: عرض السجل التاريخي للالتزامات مع إظهار الفروقات والتغييرات الدقيقة (diff) للأسطر المضافة والمحذوفة.",
+    "real_scenario": "من الأخطاء الكارثية الشائعة قيام المطورين برفع ملفات تحتوي على كلمات مرور أو مفاتيح تشفير، ثم حذفها في commit لاحق. يمكن لأي شخص يستنسخ المشروع مراجعة السجل التاريخي واستعادتها بكل سهولة.",
+    "quiz": {
+      "question": "أي خيار مع أمر git log يتيح استعراض الفروقات (diff) الدقيقة للأسطر المحذوفة والمضافة؟",
+      "options": [
+        "-s",
+        "-p",
+        "--stat",
+        "--oneline"
+      ],
+      "correct": 1
+    },
+    "sim_output": "commit HWasnPhtq9AVKe0dmk45nxy20cvUa6EG\\n- password = old_pass_here\\n+ password = deleted\\nbandit29@bandit:~$ "
+  },
+  {
+    "id": 30,
+    "title": "Level 29 → Level 30",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "git branch",
+      "git checkout"
+    ],
+    "goal": "البحث عن كلمة المرور في فرع git آخر غير الفرع الرئيسي.",
+    "walkthrough": "استعرض الفروع المتاحة محلياً وعن بعد باستخدام <code>git branch -a</code>، ثم انتقل للفرع المطلوب (مثل dev) باستخدام <code>git checkout</code>.",
+    "command": "git checkout dev",
+    "password": "EGo7DXjZPULLxYr17uwoI01bNLQbtFem",
+    "why_trick": "لأن الملفات في الفرع الرئيسي (master/main) سليمة ومحمية، ولكن المطور قد يكون ترك مسودات أو ملفات تكوين سرية في فروع التطوير الجانبية دون دمجها.",
+    "consequences": "البقاء في الفرع الرئيسي لن يظهر لك أي حلول. الانتقال للفرع المناسب (مثل dev) يقوم بتحديث ملفات المجلد الحالية تلقائياً وإظهار كلمة المرور.",
+    "cmd_explain": "git branch -a: استعراض كافة الفروع المتاحة (المحلية والبعيدة). git checkout: الانتقال للفرع المحدد.",
+    "real_scenario": "أثناء عمليات التدقيق الأمني على المشاريع، يجب فحص كامل فروع المستودع بدقة (مثل dev, test, staging) وعدم الاكتفاء بالفرع الرئيسي، حيث تكثر الأخطاء البرمجية وتسريب كلمات المرور المؤقتة هناك.",
+    "quiz": {
+      "question": "أي أمر يستخدم في git للانتقال من فرع (Branch) إلى فرع آخر في المشروع؟",
+      "options": [
+        "git checkout",
+        "git merge",
+        "git branch",
+        "git push"
+      ],
+      "correct": 0
+    },
+    "sim_output": "Switched to branch 'dev'\\nbandit30@bandit:~$ "
+  },
+  {
+    "id": 31,
+    "title": "Level 30 → Level 31",
+    "difficulty": "Intermediate",
+    "concepts": [
+      "git tags",
+      "git show"
+    ],
+    "goal": "العثور على كلمة المرور المخزنة في وسم (git tag).",
+    "walkthrough": "استعرض جميع الوسوم (Tags) في المستودع بـ <code>git tag</code>، ثم اعرض تفاصيل الوسم المطلوب باستخدام <code>git show [tag]</code>.",
+    "command": "git show secret",
+    "password": "jc1OIX8pi7KAGL6gAvawJjGOiokJF5bD",
+    "why_trick": "لأن الأوسمة (Tags) في git تُستخدم للإشارة لنقاط زمنية أو إصدارات معينة في تاريخ المشروع، وقد يكون المطور وضع علامة على التزام قديم يحتوي على كلمة المرور.",
+    "consequences": "الفروع الحالية لا تظهر البيانات الحساسة. استعراض الوسوم المخصصة يوصلك مباشرة للالتزام التاريخي المرتبط بالحل.",
+    "cmd_explain": "git tag: استعراض الأوسمة المعرفة في المشروع. git show: عرض محتويات وبيانات وسم أو التزام محدد.",
+    "real_scenario": "يُهمل الكثير من المطورين حذف الإصدارات القديمة المنسية (Release Tags). فحص تفاصيل هذه الأوسمة التاريخية قد يكشف عن ملفات تكوين تجريبية أو صلاحيات وصول قديمة تم إلغاؤها لاحقاً ولكنها ظلت مخزنة في الأرشيف.",
+    "quiz": {
+      "question": "ماذا نطلق على الأوسمة التي تشير للإصدارات البرمجية محددة في تاريخ مستودع git؟",
+      "options": [
+        "Branches",
+        "Commits",
+        "Tags",
+        "Stashes"
+      ],
+      "correct": 2
+    },
+    "sim_output": "tag secret\\nTagger: Developer <dev@localhost>\\n\\njc1OIX8pi7KAGL6gAvawJjGOiokJF5bD\\nbandit31@bandit:~$ "
+  },
+  {
+    "id": 32,
+    "title": "Level 31 → Level 32",
+    "difficulty": "Advanced",
+    "concepts": [
+      "git push",
+      "gitignore"
+    ],
+    "goal": "دفع ملف key.txt لمستودع الـ git للحصول على كلمة المرور بعد تجاوز قيود .gitignore.",
+    "walkthrough": "أنشئ ملف key.txt واكتب النص المطلوب. بما أن صيغة txt متجاهلة، استخدم الإضافة القسرية <code>git add -f key.txt</code>، ثم قم بعمل commit ودفع للمستودع ليرد الخادم بالحل.",
+    "command": "git add -f key.txt",
+    "password": "U4RcffSxQluehdcluFn7wTiGryunymYO",
+    "why_trick": "لأن ملف الإعدادات <code>.gitignore</code> مبرمج لتجاهل أي ملفات بنوع txt لمنع المطورين من رفعها، ونستخدم خيار الإضافة القسرية لتجاوز هذه القواعد ورفع الملف الحرج للخادم.",
+    "consequences": "كتابة git add العادية سيتم تجاهلها ولن يتم رفع الملف نهائياً. استخدام العلم <code>-f</code> (Force) يكسر قيود التجاهل ويرغم النظام على قبول الملف واستكمال عملية الدفع.",
+    "cmd_explain": "git add -f: الإضافة القسرية للملفات وتخطي القواعد المعرفة في .gitignore.",
+    "real_scenario": "إذا كنت بحاجة لرفع ملف توصيف خاص أو ملف بيئة عمل يتم تجاهله افتراضياً لحاجة تقنية طارئة، يمكنك استخدام الخيار القسري، ولكن يجب الحذر الشديد لعدم تسريب بيانات سرية لمستودعات عامة.",
+    "quiz": {
+      "question": "أي علم (Flag) يستخدم مع git add لإجبار النظام على إضافة ملف متجاهل بقواعد gitignore قسرياً؟",
+      "options": [
+        "-f (Force)",
+        "-p",
+        "-a",
+        "-u"
+      ],
+      "correct": 0
+    },
+    "sim_output": "The file 'key.txt' was added successfully (Force mode).\\nbandit32@bandit:~$ "
+  },
+  {
+    "id": 33,
+    "title": "Level 32 → Level 33",
+    "difficulty": "Advanced",
+    "concepts": [
+      "Uppercase Shell",
+      "Bypassing restrictions"
+    ],
+    "goal": "تخطي الشل الذي يحول كافة المدخلات إلى أحرف كبيرة وقراءة كلمة المرور الأخيرة.",
+    "walkthrough": "اكتب <code>$0</code> أو <code>$SHELL</code> في الشل لتجبر النظام على إعادة تشغيل الشل الأساسي بدون تطبيق كود التحويل الحرفي.",
+    "command": "$0",
+    "password": "c9c3199ddf4121b10cf581a98d51caee",
+    "why_trick": "لأن شل تسجيل الدخول المخصص يقوم بمعالجة وتحويل أي أمر تكتبه إلى حروف كبيرة (فالأمر ls يرسل كـ LS وهو غير موجود)، ونستخدم المتغيرات البيئية أو المرجعية مثل $0 التي يتم فك قيمتها مباشرة دون الخضوع لمعالجة الحروف.",
+    "consequences": "كتابة الأوامر القياسية تعطي خطأ لعدم وجود أوامر بحروف كبيرة. استدعاء $0 يفتح شل طبيعي فرعي يمكنك كتابة الأوامر فيه بحرية تامة.",
+    "cmd_explain": "$0: متغير خاص في الشل يشير لاسم ومسار البرنامج أو الشل الحالي الجاري تشغيله.",
+    "real_scenario": "عند محاولة تخطي جدران حماية تطبيقات الويب (WAF) أو الشلات المحدودة التي تمنع كتابة كلمات محددة، نستخدم الرموز البديلة والمتغيرات البيئية لتمرير وتنفيذ الأوامر وتخطي الفلاتر الأمنية.",
+    "quiz": {
+      "question": "ماذا يمثل المتغير البيئي المرجعي $0 في شل أنظمة لينكس؟",
+      "options": [
+        "أول معامل ممرر للأمر",
+        "اسم ومسار البرنامج أو الشل الحالي الجاري تشغيله",
+        "آخر أمر تم تنفيذه",
+        "معرف العملية الحالية (PID)"
+      ],
+      "correct": 1
+    },
+    "sim_output": "bandit33@bandit:~$ "
+  },
+  {
+    "id": 34,
+    "title": "Level 33 → Level 34",
+    "difficulty": "Beginner",
+    "concepts": [
+      "Victory",
+      "Game End"
+    ],
+    "goal": "المستوى الأخير الترحيبي بنهاية لعبة Bandit.",
+    "walkthrough": "سجل الدخول كـ <code>bandit33</code> واقرأ ملف <code>README.txt</code> الذي يهنئك بإنهاء لعبة المحاكاة بنجاح.",
+    "command": "cat README.txt",
+    "password": "تهانينا! لقد أنهيت اللعبة بنجاح! 🏆",
+    "why_trick": "لأن التحدي انتهى بنجاح تام، وتوصيلك لهذا المستوى يؤكد تمكنك من أساسيات إدارة وحماية أنظمة لينكس.",
+    "consequences": "قراءة ملف التهنئة تمثل النهاية وتأكيد كسبك لمهارات التعامل مع الطرفية بكفاءة عالية.",
+    "cmd_explain": "cat README.txt: عرض رسالة التهنئة النهائية.",
+    "real_scenario": "عند إنهاء أي مهمة حماية أو اختبار اختراق، يجب دائماً توثيق الخطوات وحفظ النتائج في تقرير فني شامل لمراجعته ومشاركته مع فريق عملك لتبادل المهارات والخبرات.",
+    "quiz": {
+      "question": "ما هو الملف الذي قمنا بقراءته لعرض رسالة التهنئة النهائية وتأكيد الفوز؟",
+      "options": [
+        "flag.txt",
+        "README.txt",
+        "pass.txt",
+        "secret.bin"
+      ],
+      "correct": 1
+    },
+    "sim_output": "Congratulations! You have completed the game successfully!\\nbandit34@bandit:~$ "
+  }
+];
+
+        let currentGroup = 'all';
+        let currentDiff = 'all';
+        let searchQuery = '';
+        let activeLevelId = 0;
+        
+        // Progress tracking loaded from localStorage
+        let solvedLevels = JSON.parse(localStorage.getItem('bandit_solved_levels')) || [];
+
+        // Tab switcher function
+        function switchCardTab(cardId, tabName) {
+            // Hide all tab contents inside this card
+            document.querySelectorAll(`#card-${cardId} .card-tab-content`).forEach(el => {
+                el.style.display = 'none';
+            });
+            // Remove active class from all tab buttons inside this card
+            document.querySelectorAll(`#card-${cardId} .card-tab-btn`).forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show the target tab content
+            document.getElementById(`tab-${tabName}-${cardId}`).style.display = 'flex';
+            // Mark the target tab button as active
+            document.getElementById(`btn-${tabName}-${cardId}`).classList.add('active');
+        }
+
+        function selectLevel(id) {
+            activeLevelId = id;
+            renderCards();
+        }
+
+        function renderCards() {
+            const sidebar = document.getElementById('banditSidebar');
+            const mainContent = document.getElementById('banditMainContent');
+            sidebar.innerHTML = '';
+            mainContent.innerHTML = '';
+
+            const filtered = banditData.filter(item => {
+                // Group Filter
+                if (currentGroup !== 'all') {
+                    const range = currentGroup.split('-').map(Number);
+                    if (item.id < range[0] || item.id > range[1]) return false;
+                }
+
+                // Difficulty Filter
+                if (currentDiff !== 'all' && item.difficulty !== currentDiff) return false;
+
+                // Search Filter
+                if (searchQuery) {
+                    const q = searchQuery.toLowerCase();
+                    const titleMatch = item.title.toLowerCase().includes(q);
+                    const conceptMatch = item.concepts.some(c => c.toLowerCase().includes(q));
+                    const goalMatch = item.goal.toLowerCase().includes(q);
+                    const cmdMatch = item.command.toLowerCase().includes(q);
+                    if (!titleMatch && !conceptMatch && !goalMatch && !cmdMatch) return false;
+                }
+
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                sidebar.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 0.9rem; padding: 10px;">لا توجد نتائج</div>`;
+                mainContent.innerHTML = `<div style="text-align: center; padding: 40px; color: #94a3b8; font-size: 1.2rem;">لا توجد تحديات تطابق معايير البحث والفلترة 🔍</div>`;
+                return;
+            }
+
+            // Ensure activeLevelId is still in the filtered list
+            const isStillAvailable = filtered.some(item => item.id === activeLevelId);
+            if (!isStillAvailable) {
+                activeLevelId = filtered[0].id;
+            }
+
+            // Render Sidebar
+            filtered.forEach(item => {
+                const isSolved = solvedLevels.includes(item.id);
+                const isActive = item.id === activeLevelId;
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `sidebar-level-item ${isActive ? 'active' : ''} ${isSolved ? 'solved-item' : ''}`;
+                itemDiv.onclick = () => selectLevel(item.id);
+                itemDiv.innerHTML = `
+                    <span>${item.title}</span>
+                    <span class="solve-dot"></span>
+                `;
+                sidebar.appendChild(itemDiv);
+            });
+
+            // Render Active card detail
+            const activeItem = filtered.find(item => item.id === activeLevelId) || filtered[0];
+            const diffClass = activeItem.difficulty.toLowerCase();
+            const isSolved = solvedLevels.includes(activeItem.id);
+
+            mainContent.innerHTML = `
+                <div class="level-card ${isSolved ? 'solved-card' : ''}" id="card-${activeItem.id}">
+                    <div class="card-top">
+                        <span class="level-title">${activeItem.title}</span>
+                        <span class="badge ${diffClass}">${activeItem.difficulty}</span>
+                    </div>
+                    <div class="concepts-list">
+                        ${activeItem.concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
+                    </div>
+                    
+                    <div class="card-tabs-header">
+                        <button class="card-tab-btn active" id="btn-info-${activeItem.id}" onclick="switchCardTab(${activeItem.id}, 'info')">📖 الشرح</button>
+                        <button class="card-tab-btn" id="btn-term-${activeItem.id}" onclick="switchCardTab(${activeItem.id}, 'term')">💻 الطرفية</button>
+                        <button class="card-tab-btn" id="btn-quiz-${activeItem.id}" onclick="switchCardTab(${activeItem.id}, 'quiz')">🧠 الاختبار</button>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Tab 1: Info -->
+                        <div class="card-tab-content" id="tab-info-${activeItem.id}" style="display: flex;">
+                            <div class="section-title">الهدف من المستوى:</div>
+                            <div class="section-text">${activeItem.goal}</div>
+                            
+                            <div class="section-title">أمر الحل المباشر:</div>
+                            <div class="code-box">
+                                <span id="cmd-${activeItem.id}" style="font-size:0.85rem;">${activeItem.command}</span>
+                                <button class="copy-btn" onclick="copyText('cmd-${activeItem.id}', this)" title="نسخ الأمر">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                </button>
+                            </div>
+                            
+                            <div class="section-title">طريقة التفكير والحل:</div>
+                            <div class="section-text">${activeItem.walkthrough}</div>
+
+                            <details class="rich-details">
+                                <summary>🔍 الشرح التفصيلي والسيناريو الأمني</summary>
+                                <div class="details-content">
+                                    <p><strong>💡 لماذا استخدمنا هذه الخدعة؟</strong>${activeItem.why_trick}</p>
+                                    <p><strong>📉 النتائج المترتبة على ذلك:</strong>${activeItem.consequences}</p>
+                                    <p><strong>🛠️ تفكيك الأمر وتبسيطه:</strong>${activeItem.cmd_explain}</p>
+                                    <p><strong>🎯 سيناريو واقعي (كيف تتصرف؟):</strong>${activeItem.real_scenario}</p>
+                                </div>
+                            </details>
+                        </div>
+
+                        <!-- Tab 2: Terminal -->
+                        <div class="card-tab-content" id="tab-term-${activeItem.id}" style="display: none;">
+                            <div class="terminal-emulator">
+                                <div class="terminal-titlebar">
+                                    <span class="dot red"></span>
+                                    <span class="dot yellow"></span>
+                                    <span class="dot green"></span>
+                                    <span class="term-title">terminal — bandit${activeItem.id}@localhost</span>
+                                </div>
+                                <div class="terminal-screen" id="term-screen-${activeItem.id}">
+                                    <div class="term-line">
+                                        <span>bandit${activeItem.id}@localhost:~$</span>
+                                        <input type="text" class="term-input" id="term-input-${activeItem.id}" placeholder="اكتب أو انسخ أمر الحل هنا واضغط Enter..." onkeydown="handleTermInput(event, ${activeItem.id})">
+                                    </div>
+                                    <div class="term-output" id="term-output-${activeItem.id}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Quiz -->
+                        <div class="card-tab-content" id="tab-quiz-${activeItem.id}" style="display: none;">
+                            <div class="mini-quiz-box" id="quiz-box-${activeItem.id}">
+                                <div class="quiz-question">🧠 اختبار سريع: ${activeItem.quiz.question}</div>
+                                <div class="quiz-options">
+                                    ${activeItem.quiz.options.map((opt, oIdx) => `
+                                        <button class="quiz-opt-btn" onclick="checkQuizAnswer(${activeItem.id}, ${oIdx}, ${activeItem.quiz.correct}, this)">${opt}</button>
+                                    `).join('')}
+                                </div>
+                                <div class="quiz-feedback" id="quiz-feedback-${activeItem.id}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="solve-btn ${isSolved ? 'solved' : ''}" id="solve-btn-${activeItem.id}" onclick="toggleSolve(${activeItem.id})">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span id="solve-text-${activeItem.id}">${isSolved ? 'تم الحل بنجاح ✔️' : 'تحديد كـ محلول'}</span>
+                    </button>
+
+                    <div class="secret-container">
+                        <span style="font-size: 0.9rem; color: #94a3b8; font-weight: bold;">كلمة السر (السر):</span>
+                        <span id="secret-${activeItem.id}" class="secret-val">${activeItem.password}</span>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button id="reveal-btn-${activeItem.id}" class="reveal-btn" onclick="toggleReveal(${activeItem.id})">إظهار</button>
+                            <button class="copy-btn" onclick="copySecret(${activeItem.id}, this)" title="نسخ الكلمة" style="padding: 6px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Handle Terminal Sandbox Input - dynamically look up commands from database
+        function handleTermInput(event, levelId) {
+            if (event.key === 'Enter') {
+                const inputVal = event.target.value.trim();
+                const outputDiv = document.getElementById(`term-output-${levelId}`);
+                outputDiv.innerHTML = '';
+                
+                if (!inputVal) return;
+
+                const levelData = banditData.find(d => d.id === levelId);
+                const correctCmd = levelData.command;
+                const simOutput = levelData.sim_output;
+
+                // Simple normalization of inputs to make matching user-friendly
+                const normalizedInput = inputVal.replace(/\s+/g, ' ');
+                const normalizedCorrect = correctCmd.trim().replace(/\s+/g, ' ');
+
+                if (normalizedInput === normalizedCorrect || normalizedInput.includes(correctCmd) || correctCmd.includes(normalizedInput)) {
+                    outputDiv.className = 'term-output success';
+                    // output string contains newline escape characters which get parsed in JS
+                    outputDiv.innerHTML = `[SUCCESS] تم تشغيل الأمر بنجاح:\n` + simOutput.replace(/\\n/g, '\n');
+                    
+                    // Automatically mark as solved when they run the correct command!
+                    if (!solvedLevels.includes(levelId)) {
+                        toggleSolve(levelId);
+                    }
+                } else {
+                    outputDiv.className = 'term-output error';
+                    outputDiv.innerHTML = `bash: ${inputVal}: أمر خاطئ أو غير مكتمل للحل. حاول نسخ أمر الحل المكتوب بالأعلى!`;
+                }
+            }
+        }
+
+        // Check quiz answers
+        function checkQuizAnswer(levelId, selectedIdx, correctIdx, btn) {
+            const quizBox = document.getElementById(`quiz-box-${levelId}`);
+            const feedback = document.getElementById(`quiz-feedback-${levelId}`);
+            const buttons = quizBox.querySelectorAll('.quiz-opt-btn');
+            
+            // Disable further clicks
+            buttons.forEach(b => b.removeAttribute('onclick'));
+            
+            if (selectedIdx === correctIdx) {
+                btn.classList.add('correct');
+                feedback.className = 'quiz-feedback success';
+                feedback.innerText = '✔️ إجابة صحيحة! أحسنت صنعاً.';
+            } else {
+                btn.classList.add('incorrect');
+                buttons[correctIdx].classList.add('correct');
+                feedback.className = 'quiz-feedback error';
+                feedback.innerText = '❌ إجابة خاطئة! الإجابة الصحيحة محددة بالأخضر.';
+            }
+        }
+
+        // Solve state management
+        function toggleSolve(id) {
+            const card = document.getElementById(`card-${id}`);
+            const btn = document.getElementById(`solve-btn-${id}`);
+            const textSpan = document.getElementById(`solve-text-${id}`);
+            
+            if (solvedLevels.includes(id)) {
+                solvedLevels = solvedLevels.filter(item => item !== id);
+                if (card) card.classList.remove('solved-card');
+                if (btn) btn.classList.remove('solved');
+                if (textSpan) textSpan.innerText = 'تحديد كـ محلول';
+            } else {
+                solvedLevels.push(id);
+                if (card) card.classList.add('solved-card');
+                if (btn) btn.classList.add('solved');
+                if (textSpan) textSpan.innerText = 'تم الحل بنجاح ✔️';
+            }
+            
+            localStorage.setItem('bandit_solved_levels', JSON.stringify(solvedLevels));
+            updateProgressHUD();
+            renderCards(); // Refresh sidebar solve indicators
+        }
+
+        // Update progress ring and statistics
+        function updateProgressHUD() {
+            const total = 35;
+            const solved = solvedLevels.length;
+            const percent = Math.round((solved / total) * 100);
+            
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressSub').innerText = `تم حل ${solved} من أصل ${total} مستوى (أكمل جميع المستويات للحصول على شارة الفوز!)`;
+            
+            // Update svg circle dashoffset
+            // Circumference of R=36 is 2 * PI * 36 = 226.19
+            const circle = document.getElementById('progressCircle');
+            const offset = 226.19 - (percent / 100) * 226.19;
+            circle.style.strokeDashoffset = offset;
+            
+            // Confetti explosion if completed all 35 levels!
+            if (solved === total && total > 0) {
+                triggerConfettiExplosion();
+            }
+        }
+
+        function triggerConfettiExplosion() {
+            var duration = 4 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        font_size_selector = null; // Mocking variable
+
+        function setGroupFilter(group, btn) {
+            document.querySelectorAll('.filter-group:nth-of-type(1) .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentGroup = group;
+            renderCards();
+        }
+
+        // Handle specific groups (e.g. 0-10, 11-20, etc.)
+        function handleGroupRange(id, group) {
+            const range = group.split('-').map(Number);
+            return (id >= range[0] && id <= range[1]);
+        }
+
+        function setDiffFilter(diff, btn) {
+            document.querySelectorAll('.filter-group:nth-of-type(2) .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentDiff = diff;
+            renderCards();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderCards();
+        });
+
+        function toggleReveal(id) {
+            const secretEl = document.getElementById(`secret-${id}`);
+            const btn = document.getElementById(`reveal-btn-${id}`);
+            if (secretEl.classList.contains('revealed')) {
+                secretEl.classList.remove('revealed');
+                btn.innerText = 'إظهار';
+            } else {
+                secretEl.classList.add('revealed');
+                btn.innerText = 'إخفاء';
+            }
+        }
+
+        function copyText(elId, btn) {
+            const text = document.getElementById(elId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalSvg = btn.innerHTML;
+                btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                setTimeout(() => { btn.innerHTML = originalSvg; }, 1500);
+            });
+        }
+
+        function copySecret(id, btn) {
+            const secretEl = document.getElementById(`secret-${id}`);
+            const text = secretEl.innerText;
+            
+            const wasRevealed = secretEl.classList.contains('revealed');
+            if (!wasRevealed) {
+                secretEl.classList.add('revealed');
+                document.getElementById(`reveal-btn-${id}`).innerText = 'إخفاء';
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                const originalSvg = btn.innerHTML;
+                btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                setTimeout(() => {
+                    btn.innerHTML = originalSvg;
+                    if (!wasRevealed) {
+                        secretEl.classList.remove('revealed');
+                        document.getElementById(`reveal-btn-${id}`).innerText = 'إظهار';
+                    }
+                }, 1500);
+            });
+        }
+
+        // Matrix Rain Canvas Effect
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィクシスツヌفميويرغزبپإ';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const rainDrops = [];
+
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+
+        const drawMatrix = () => {
+            ctx.fillStyle = 'rgba(11, 15, 25, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+
+        setInterval(drawMatrix, 30);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Initial Render
+        renderCards();
+        updateProgressHUD();
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "id": "scenario-003",
+    "title": "Live Hunting - Real Target Vulnerability Exploitation",
+    "category": "Real-World Bug Bounty",
+    "difficulty": "Intermediate",
+    "targetApp": "Live Enterprise Target",
+    "estimatedTime": "60 Mins",
+    "bountyReward": "$6,000",
+    "xpReward": 2000
+  },
+  "steps": [
+    {
+      "id": 0,
+      "name": "Live Recon & Scope Analysis",
+      "workspace": "recon",
+      "content": "### 🎯 Live Hunting Mission\nPerform active reconnaissance on a live enterprise target to discover unlinked assets and hidden API endpoints.\n\n### 📜 Target Domain\n`https://api-hunting.enterprise-live.com`",
+      "xpReward": 200
+    },
+    {
+      "id": 1,
+      "name": "Burp Intercept & Parameter Mining",
+      "workspace": "burp",
+      "content": "### 📡 Burp Suite Analysis\nIntercept API traffic and perform parameter mining to discover hidden parameters (`debug=true`, `admin=1`).",
+      "xpReward": 400
+    },
+    {
+      "id": 2,
+      "name": "Real-World Exploitation & Exfiltration",
+      "workspace": "repeater",
+      "content": "### 🔄 Live Exploitation\nInject parameter overrides in Burp Repeater to exfiltrate enterprise administrative session tokens.\n\nFlag: `FLAG{LIVE_HUNTING_REAL_TARGET_MASTER_2026}`",
+      "xpReward": 1400
+    }
+  ]
+}

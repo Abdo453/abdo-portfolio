@@ -1,0 +1,294 @@
+<div class="meth-content-view" id="meth-content-pt_mod6" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    <div class="cyber-hero">
+        <h2 class="hero-title"><span class="hero-icon">☁️</span> 6. Cloud & Infrastructure Recon</h2>
+        <p class="hero-tagline">استكشاف البنية التحتية السحابية وجمع المعلومات عن الخوادم ونطاقات الشبكة والبحث عن التسريبات</p>
+    </div>
+
+    <!-- 6.1 ASN & IP Range Enumeration -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>6.1 ASN & IP Range Enumeration</h3>
+        </div>
+        <p>عملية استخراج واستكشاف الـ ASN (Autonomous System Number) والنطاقات الخاصة بعناوين الـ IP التابعة للهدف. الـ ASN هو رقم مميز يُعطى للشركات الكبيرة لتنظيم مسارات البيانات الخاصة بها على الإنترنت. بمعرفة هذا الرقم، يمكنك اكتشاف العديد من نطاقات الـ IP الخاصة بالهدف.</p>
+        
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">ASN Lookup باستخدام whois</span>
+            </div>
+            <pre><code>whois -h whois.radb.net -- '-i origin AS12345'</code></pre>
+        </div>
+        <p class="info-box tip">أداة whois هنا تستعلم من قاعدة بيانات RADb عن نطاقات الـ IP المُسجلة تحت الـ ASN المحدد (AS12345).</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">استخراج الـ ASN باستخدام Amass</span>
+            </div>
+            <pre><code>amass intel -asn 12345</code></pre>
+        </div>
+        <p class="info-box tip">تقوم أداة Amass القوية بجمع معلومات استخباراتية تفصيلية بناءً على الـ ASN وتساعد في اكتشاف المزيد من الأصول (Assets) المرتبطة بالهدف.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">اكتشاف الـ ASN عبر asnmap</span>
+            </div>
+            <pre><code>echo target.com | asnmap</code></pre>
+        </div>
+        <p class="info-box tip">أداة asnmap من ProjectDiscovery توفر طريقة سريعة جداً لمعرفة أرقام الـ ASN المرتبطة باسم النطاق (Domain) المعطى.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">فحص نطاقات الـ IP باستخدام Nmap</span>
+            </div>
+            <pre><code>nmap -sn 192.168.1.0/24</code></pre>
+        </div>
+        <p class="info-box tip">استخدام Nmap مع الخيار <code>-sn</code> (Ping Scan) لاكتشاف الأجهزة الحية ضمن نطاق الـ IP المستهدف دون إجراء فحص تفصيلي للمنافذ (Port Scan)، مما يسرع عملية المسح الأولية.</p>
+    </div>
+
+    <!-- 6.2 Cloud Storage Enumeration -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>6.2 Cloud Storage Enumeration</h3>
+        </div>
+        <p>عملية البحث عن وحدات التخزين السحابية (Cloud Storage) التابعة للهدف والتي قد تحتوي على بيانات حساسة، ملفات نسخ احتياطي، أو كود مصدري تم تعريضه للعامة بسبب إعدادات صلاحيات خاطئة (Misconfigurations).</p>
+        
+        <h4 style="color: var(--tool-color);">AWS S3</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">فحص S3 Buckets بأداة S3Scanner</span>
+            </div>
+            <pre><code>s3scanner -b buckets.txt</code></pre>
+        </div>
+        <p class="info-box tip">تقوم الأداة بفحص قائمة من أسماء الحاويات (Buckets) المخزنة في الملف buckets.txt لاكتشاف أي حاويات مفتوحة أو قابلة للوصول بدون تصريح.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">استكشاف S3 باستخدام Ffuf</span>
+            </div>
+            <pre><code>ffuf -u https://FUZZ.s3.amazonaws.com -w bucket_names.txt -mc 200,403</code></pre>
+        </div>
+        <p class="info-box tip">استخدام أداة ffuf للقيام بعملية تخمين (Fuzzing) على أسماء الحاويات. وتصفية النتائج لتظهر فقط الصفحات التي ترد بكود 200 (الحاوية موجودة ومفتوحة) أو 403 (الحاوية موجودة ولكن محمية بكلمة مرور/صلاحيات).</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">استعراض محتويات S3 عبر AWS CLI</span>
+            </div>
+            <pre><code>aws s3 ls s3://bucket-name
+aws s3 ls s3://bucket-name --recursive</code></pre>
+        </div>
+        <p class="info-box tip">في حال حصولك على صلاحيات (Credentials) مسربة، يمكنك استخدام أداة AWS CLI الرسمية لعرض محتويات الحاوية. الخيار <code>--recursive</code> يقوم بسرد كافة الملفات والمجلدات الداخلية بشكل متكرر وشامل.</p>
+        
+        <div class="info-box tip">
+            <strong>أنماط تسمية شائعة لحاويات S3:</strong><br>
+            <code>&lt;company&gt;-assets</code><br>
+            <code>&lt;company&gt;-backup</code><br>
+            <code>&lt;company&gt;-dev</code><br>
+            <code>&lt;company&gt;-staging</code><br>
+            <code>&lt;company&gt;-production</code>
+        </div>
+
+        <h4 style="color: var(--tool-color); margin-top:20px;">Azure Blob Storage</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">استكشاف Azure Blob باستخدام Ffuf</span>
+            </div>
+            <pre><code>ffuf -u https://&lt;company&gt;.blob.core.windows.net/FUZZ -w container_names.txt -mc 200,403</code></pre>
+        </div>
+        <p class="info-box tip">بحث مخصص لوحدات التخزين الخاصة بخدمات Microsoft Azure لاكتشاف الحاويات (Containers) المتاحة للعامة عن طريق التخمين.</p>
+
+        <h4 style="color: var(--tool-color); margin-top:20px;">Google Cloud Storage</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">استكشاف GCS باستخدام Ffuf</span>
+            </div>
+            <pre><code>ffuf -u https://storage.googleapis.com/FUZZ -w bucket_names.txt -mc 200,403</code></pre>
+        </div>
+        <p class="info-box tip">تطبيق نفس أسلوب التخمين للبحث عن حاويات التخزين المفتوحة على بيئة Google Cloud Storage الخاصة بالشركة المستهدفة.</p>
+    </div>
+
+    <!-- 6.3 GitHub/GitLab Recon -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>6.3 GitHub/GitLab Recon</h3>
+        </div>
+        <p>البحث في المستودعات (Repositories) الخاصة بالمنظمة على منصات إدارة الأكواد مثل GitHub و GitLab. الهدف هنا هو إيجاد أكواد برمجية، مفاتيح سرية (API Keys/Secrets)، أو كلمات مرور تم رفعها بالخطأ أو بسبب إهمال المطورين.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">البحث المتقدم باستخدام GitDorker</span>
+            </div>
+            <pre><code>python3 GitDorker.py -tf TOKENSFILE -q "target.com" -d dorks.txt -o output.txt</code></pre>
+        </div>
+        <p class="info-box tip">أداة GitDorker تقوم بأتمتة البحث باستخدام قائمة من عبارات البحث المخصصة (Dorks) لاستخراج المعلومات الحساسة من GitHub. استخدام ملف الـ Tokens يتيح لك تخطي حظر البحث السريع الذي تفرضه المنصة.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">فحص التسريبات السرية باستخدام TruffleHog</span>
+            </div>
+            <pre><code>trufflehog git https://github.com/org/repo.git
+trufflehog filesystem /path/to/code</code></pre>
+        </div>
+        <p class="info-box tip">أداة TruffleHog تفحص المستودعات بدقة للبحث عن الكلمات السرية ومفاتيح التشفير التي ربما تكون مخفية في تاريخ الالتزامات البرمجية (Commit History). يمكن تشغيلها على مستودع بعيد عبر رابط الـ git أو على مجلد محلي تم تحميله مسبقاً.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">اكتشاف المفاتيح المسربة عبر Gitleaks</span>
+            </div>
+            <pre><code>gitleaks detect -v --source /path/to/repo</code></pre>
+        </div>
+        <p class="info-box tip">أداة Gitleaks متخصصة وسريعة جداً في العثور على الأسرار الثابتة (Hardcoded secrets) كرموز الوصول (Access Tokens) والمفاتيح في الكود المصدري لمنع تسرب البيانات الحساسة.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">البحث اليدوي باستخدام GitHub Dorks</span>
+            </div>
+            <pre><code>org:targetcompany "password"
+org:targetcompany "api_key"
+org:targetcompany "secret"
+org:targetcompany "AWS_ACCESS_KEY_ID"
+org:targetcompany "private_key"
+filename:config.json org:targetcompany
+filename:.env org:targetcompany</code></pre>
+        </div>
+        <p class="info-box tip">استخدام محرك بحث GitHub يدوياً عبر عوامل التصفية (Filters) لاستهداف منظمة معينة (<code>org:</code>) والبحث عن كلمات دلالية تدل على وجود بيانات حساسة، أو استهداف ملفات معينة باستخدام <code>filename:</code> كملفات البيئة <code>.env</code> أو ملفات الإعدادات <code>config.json</code> التي غالباً ما تحتوي على كلمات مرور ومفاتيح قواعد البيانات.</p>
+    </div>
+
+    <!-- 6.4 Cloud Metadata Service Testing -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>6.4 Cloud Metadata Service Testing</h3>
+        </div>
+        <p>استغلال خدمات الـ Metadata السحابية. في بيئة السحابة، توجد عناوين IP داخلية مخصصة (مثل 169.254.169.254) تزود الخادم الافتراضي (Instance) بمعلومات عن نفسه. في حال اكتشاف ثغرة مثل SSRF (تزوير الطلبات من جهة الخادم) يمكنك استدعاء هذه العناوين لسحب معلومات حساسة ومفاتيح دخول.</p>
+
+        <h4 style="color: var(--tool-color);">AWS Metadata (IMDSv1 - vulnerable)</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">استرجاع Metadata من AWS</span>
+            </div>
+            <pre><code>curl http://169.254.169.254/latest/meta-data/
+curl http://169.254.169.254/latest/meta-data/iam/security-credentials/</code></pre>
+        </div>
+        <p class="info-box tip">النسخة الأولى من خدمة IMDS في AWS لا تتطلب توثيقاً صارماً، ويمكن استغلالها بسهولة لجلب بيانات وأسماء الأدوار (IAM roles) الخاصة بالخادم والتي تؤدي للحصول على مفاتيح وصول مؤقتة وصلاحيات أعلى.</p>
+
+        <h4 style="color: var(--tool-color); margin-top:20px;">AWS Metadata (IMDSv2 - requires token)</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">توليد Token واسترجاع Metadata</span>
+            </div>
+            <pre><code>TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/</code></pre>
+        </div>
+        <p class="info-box tip">النسخة الثانية IMDSv2 تعتبر أكثر أماناً لأنها تتطلب إرسال طلب <code>PUT</code> للحصول على رمز مؤقت (Token) أولاً بمدة صلاحية محددة، ثم استخدام هذا الرمز في رأسيات (Headers) الطلبات اللاحقة للوصول إلى الـ Metadata.</p>
+
+        <h4 style="color: var(--tool-color); margin-top:20px;">Azure Metadata</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">استرجاع Metadata من Azure</span>
+            </div>
+            <pre><code>curl "http://169.254.169.254/metadata/instance?api-version=2021-02-01" -H "Metadata: true"</code></pre>
+        </div>
+        <p class="info-box tip">في خوادم Azure، لابد من إرسال ترويسة محددة وهي <code>Metadata: true</code> لتجنب الحماية وضمان استجابة الخادم الداخلي وتزويدك بالمعلومات.</p>
+
+        <h4 style="color: var(--tool-color); margin-top:20px;">GCP Metadata</h4>
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">استرجاع Metadata من Google Cloud</span>
+            </div>
+            <pre><code>curl "http://metadata.google.internal/computeMetadata/v1/instance/" -H "Metadata-Flavor: Google"</code></pre>
+        </div>
+        <p class="info-box tip">بالمثل في Google Cloud، يتطلب الاستعلام إرسال الترويسة <code>Metadata-Flavor: Google</code> كإجراء أمني لمنع هجمات SSRF البسيطة التي لا تستطيع إضافة ترويسات مخصصة.</p>
+    </div>
+
+    <!-- 6.5 CDN & WAF Bypass -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>6.5 CDN & WAF Bypass</h3>
+        </div>
+        <p>تخطي شبكات توصيل المحتوى (CDN) وجدران الحماية للويب (WAF) للوصول المباشر لخادم الاستضافة الفعلي (Origin IP). معرفة الـ IP الحقيقي يمكنك من تجاوز الحمايات الموضوعة والوصول إلى خدمات غير مخصصة للعامة وتنفيذ هجمات مباشرة على الخادم.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">اكتشاف استخدام CDN</span>
+            </div>
+            <pre><code># Check if behind CDN
+whois target.com | grep -i "cloudflare\|akamai\|fastly\|cloudfront"
+
+# Find origin IP
+# 1. Check historical DNS records
+# 2. Search Shodan for SSL certificates matching target
+# 3. Check for DNS records not proxied through CDN</code></pre>
+        </div>
+        <p class="info-box tip">يمكن استخدام الاستعلام <code>whois</code> لمعرفة ما إذا كان الدومين يخفي عنوانه الحقيقي خلف مزودات CDN مشهورة مثل Cloudflare أو Akamai. وتوضح التعليقات طرقاً أخرى لاكتشاف الـ IP الحقيقي كالتحقق من سجلات DNS التاريخية.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">اكتشاف عنوان الـ IP الأصلي (Origin IP)</span>
+            </div>
+            <pre><code># Using Shodan
+shodan search ssl:"target.com"
+
+# Using Censys
+censys search "target.com"
+
+# Check mail server IPs (often not behind CDN)
+dig MX target.com</code></pre>
+        </div>
+        <p class="info-box tip">استخدام محركات البحث المتخصصة مثل Shodan أو Censys للبحث عن الشهادات الأمنية (SSL) المرتبطة بالنطاق قد يكشف عن الـ IP الأصلي المنسي بدون حماية. كذلك يمكن الاستعلام عن خوادم البريد الإلكتروني (MX) التي نادراً ما يتم حمايتها عبر CDN وغالباً ما تكشف عنوان الـ IP الفعلي.</p>
+    </div>
+
+    <!-- 6.6 Infrastructure Recon Pipeline -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <h3>6.6 Infrastructure Recon Pipeline</h3>
+        </div>
+        <p>مسار تسلسلي (Pipeline) يجمع الخطوات السابقة في آلية واحدة لاستكشاف البنية التحتية بالكامل وتحديد النقاط الضعيفة والأصول المتصلة بشبكة الهدف.</p>
+
+        <div class="cmd-ui-box">
+            <div class="cmd-header">
+                <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                <span class="cmd-title">التسلسل الزمني لعملية الاستكشاف</span>
+            </div>
+            <pre><code># Step 1: ASN enumeration
+echo target.com | asnmap > asn_info.txt
+
+# Step 2: IP range discovery
+amass intel -org "Target Company" -o ip_ranges.txt
+
+# Step 3: Cloud storage enumeration
+ffuf -u https://FUZZ.s3.amazonaws.com -w s3_buckets.txt -mc 200,403 -o s3_results.txt
+
+# Step 4: GitHub recon
+gitdorker -tf tokens -q "target.com" -d dorks.txt -o github_leaks.txt
+
+# Step 5: Metadata service testing (if SSRF found)
+# Test 169.254.169.254 endpoints through SSRF vectors</code></pre>
+        </div>
+        <p class="info-box tip">
+            يوضح هذا المسار الترتيب المنطقي للعمليات:<br>
+            <strong>الخطوة 1:</strong> استخراج الـ ASN الخاص بالهدف لمعرفة البنية العامة.<br>
+            <strong>الخطوة 2:</strong> اكتشاف نطاقات عناوين الـ IP التابعة للمنظمة بناءً على اسم الشركة.<br>
+            <strong>الخطوة 3:</strong> فحص وبحث مستودعات التخزين السحابية (S3) المفتوحة وتسجيل النتائج.<br>
+            <strong>الخطوة 4:</strong> البحث المكثف داخل GitHub لاكتشاف أي بيانات أو مفاتيح مسربة.<br>
+            <strong>الخطوة 5:</strong> اختبار خدمات الـ Metadata في حال اكتشاف ثغرة SSRF لمحاولة السيطرة على الخوادم الداخلية واستخراج بيانات حساسة.
+        </p>
+    </div>
+
+</div>

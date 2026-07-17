@@ -1,0 +1,396 @@
+<div class="meth-content-view" id="meth-content-pt_mod1" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+    <div class="cyber-hero">
+        <h2 class="hero-title"><span class="hero-icon">🔥</span> Active Reconnaissance & Subdomain Enumeration</h2>
+        <p class="hero-tagline">مرحلة الاستطلاع النشط واكتشاف النطاقات الفرعية المتقدمة لتوسيع سطح الهجوم</p>
+    </div>
+
+    <!-- 1.1 Overview -->
+    <div class="cyber-card">
+        <div class="card-header"><h3>1.1 Overview</h3></div>
+        <div class="card-content">
+            <p>
+                الاستطلاع النشط (Active Reconnaissance) واكتشاف النطاقات الفرعية (Subdomain Enumeration) يتضمن التفاعل المباشر مع البنية التحتية لنظام أسماء النطاقات (DNS) الخاص بالهدف. يهدف هذا التفاعل المباشر إلى اكتشاف النطاقات الفرعية غير المفهرسة علنًا (Publicly Indexed). هذه الخطوة حاسمة جداً لأنها تقوم بتوسيع سطح الهجوم (Attack Surface) ليتجاوز ما يتم اكتشافه خلال عملية الاستطلاع السلبي (Passive Reconnaissance)، مما يفتح أبواباً ونقاط دخول جديدة غير معروفة للعلن قد تحتوي على ثغرات أمنية خطيرة.
+            </p>
+        </div>
+    </div>
+
+    <!-- 1.2 DNS Brute Forcing -->
+    <div class="cyber-card">
+        <div class="card-header"><h3>1.2 DNS Brute Forcing</h3></div>
+        <div class="card-content">
+            <p>
+                تقنية الـ DNS Brute Forcing تعتمد على تخمين النطاقات الفرعية باستخدام قوائم كلمات (Wordlists) ضخمة تحتوي على أسماء شائعة، وتمريرها لأدوات تقوم بإرسال استعلامات للمخدمات لتأكيد وجود هذه النطاقات.
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Gobuster DNS Mode</span>
+                </div>
+                <pre><code>gobuster dns -d target.com -w wordlist.txt -t 50 --delay 100ms -o gobuster_results.txt</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> أداة Gobuster قوية وسريعة جداً. في هذا الأمر نستخدم وضع `dns` لتخمين النطاقات للهدف `target.com`، باستخدام قائمة كلمات مع تحديد `50` مسار متوازي (Threads)، مع وضع تأخير `100ms` لتفادي الحظر (Rate Limiting)، وتصدير النتائج إلى ملف.
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">FFuF for Subdomain Fuzzing</span>
+                </div>
+                <pre><code>ffuf -w subdomains.txt -u https://FUZZ.target.com -mc 200,301,302 -t 100 -rate 50 -o fuf_results.json</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> أداة FFuF تُستخدم هنا لعمل Fuzzing لمكان النطاق الفرعي عن طريق استبدال الكلمة `FUZZ` بكلمات من القائمة. تم تحديد الحالات المقبولة للرد (Status Codes) بـ 200، 301، 302 لفلترة النتائج، مع ضبط معدل الطلبات (Rate limit) بـ 50 طلب بالثانية لتجنب الجدار الناري (WAF).
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Puredns (MassDNS Wrapper)</span>
+                </div>
+                <pre><code>puredns -r resolvers.txt bruteforce wordlist.txt target.com</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> أداة Puredns تعتبر واجهة متقدمة لأداة MassDNS. وظيفتها تسريع عملية التخمين مع فلترة النطاقات التي تحتوي على Wildcard (أي التي تعيد إجابة إيجابية دائماً لتضليل الفاحص)، وتستخدم ملف `resolvers.txt` للبحث عبر عدة خوادم DNS في نفس الوقت.
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">MassDNS (High-speed resolver)</span>
+                </div>
+                <pre><code>massdns -r lists/resolvers.txt -t A domains.txt -o results.txt</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> MassDNS هي أداة سريعة للغاية تعمل كمحلل DNS عالي الكفاءة، تستطيع التعامل مع آلاف الاستعلامات بالثانية. الأمر أعلاه يطلب سجلات من نوع A (IPv4) للقائمة المقدمة.
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">ShuffleDNS (ProjectDiscovery)</span>
+                </div>
+                <pre><code># Subdomain resolving
+shuffledns -d example.com -list subdomains.txt -r resolvers.txt -mode resolve
+# Subdomain bruteforcing
+shuffledns -d hackerone.com -w wordlist.txt -r resolvers.txt -mode bruteforce</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> ShuffleDNS من تطوير ProjectDiscovery. توفر وضعين: إما للتحقق من قائمة نطاقات فرعية (Mode Resolve) لمعرفة أيهم يعمل فعلياً، أو وضع التخمين المباشر (Mode Bruteforce) للبحث عن أسماء جديدة.
+            </p>
+        </div>
+    </div>
+
+    <!-- 1.3 Permutation & Alteration Techniques -->
+    <div class="cyber-card">
+        <div class="card-header"><h3>1.3 Permutation & Alteration Techniques</h3></div>
+        <div class="card-content">
+            <p>
+                تقنيات التبديل والتغيير (Permutations & Alterations) هي طرق ذكية لاكتشاف نطاقات فرعية مخفية من خلال أخذ أسماء النطاقات المكتشفة سابقاً ودمجها مع كلمات أو أرقام إضافية (مثل dev, prod, staging).
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Altdns</span>
+                </div>
+                <pre><code>python altdns.py -i input_domains.txt -o ./output/path -w altdns/words.txt</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> أداة Altdns تقوم بدمج قائمة من الكلمات مع النطاقات المعطاة لتوليد تراكيب جديدة واختبارها (مثل إضافة كلمة test قبل أو بعد النطاق الفرعي).
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Gotator (Advanced permutation)</span>
+                </div>
+                <pre><code>gotator -sub domains.txt -perm permutations.txt -depth 1 -numbers 10 -mindup -adv -md</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> Gotator أداة متقدمة تقوم بتوليد تبديلات عميقة ومعقدة باستخدام الكلمات والأرقام (حتى 10 أرقام) لضمان تغطية كل الاحتمالات الممكنة لتسمية الخوادم ضمن البنية التحتية.
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">ShuffleDNS for permutations</span>
+                </div>
+                <pre><code>shuffledns -l all.txt -r resolvers.txt -o permuted.txt</code></pre>
+            </div>
+
+            <div class="info-box tip">
+                <strong>Permutation Examples:</strong><br>
+                إذا كان لدينا النطاق <code>api.target.com</code>، ستقوم هذه الأدوات بإنشاء وتحليل احتمالات مثل:<br>
+                - api1.target.com, api2.target.com<br>
+                - api-dev.target.com, dev-api.target.com<br>
+                - api-staging.target.com, api-prod.target.com
+            </div>
+        </div>
+    </div>
+
+    <!-- 1.4 DNS Zone Transfer (AXFR) -->
+    <div class="cyber-card">
+        <div class="card-header"><h3>1.4 DNS Zone Transfer (AXFR)</h3></div>
+        <div class="card-content">
+            <p>
+                نقل نطاق الـ DNS (AXFR) هو نوع من الاستعلامات يُستخدم لنسخ سجلات النطاق (Zone File) من خادم إلى آخر. إذا كان الخادم مسيئ الإعداد (Misconfigured) ويسمح بالنقل لأي شخص، يمكن للمهاجم سحب جميع أسماء النطاقات والسجلات المتعلقة بالهدف دفعة واحدة!
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">AXFR Testing Tools</span>
+                </div>
+                <pre><code># Attempt zone transfer
+dig axfr @ns1.target.com target.com
+
+# Using DNSRecon
+dnsrecon -d target.com -t axfr
+
+# Using fierce
+fierce --domain target.com</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong><br>
+                - <strong>dig:</strong> الأداة الكلاسيكية للطلب المباشر (AXFR) من خادم الأسماء (ns1).<br>
+                - <strong>DNSRecon / fierce:</strong> أدوات متخصصة في جمع معلومات الـ DNS تقوم تلقائياً باكتشاف خوادم الأسماء (Nameservers) ومحاولة استغلال ثغرة الـ Zone Transfer عليها.
+            </p>
+        </div>
+    </div>
+
+    <!-- 1.5 Advanced DNS Enumeration -->
+    <div class="cyber-card">
+        <div class="card-header"><h3>1.5 Advanced DNS Enumeration</h3></div>
+        <div class="card-content">
+            <p>
+                تقنيات الاستطلاع المتقدمة لا تقتصر على تخمين الأسماء فقط، بل تحليل ردود الخوادم بدقة للبحث عن أدلة لبيئات مخفية أو ثغرات الاستيلاء (Subdomain Takeover).
+            </p>
+
+            <div class="info-box tip">
+                <strong>Empty Non-Terminal (ENT) Detection:</strong><br>
+                ركز على استجابات الـ DNS Codes: التفرقة بين <code>NOERROR</code> (لا يوجد خطأ) و <code>NXDOMAIN</code> (النطاق غير موجود).<br>
+                إذا تلقيت <code>NODATA</code> (رد بدون بيانات لكن NOERROR)، فهذا يدل بشكل قاطع على وجود نطاق فرعي مخفي أو عقدة (Node) تفرع منها نطاقات أخرى!<br>
+                - الأدوات التي تدعم هذا التحليل: <strong>dnsx</strong> و <strong>massdns</strong>.
+            </div>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">CNAME Analysis</span>
+                </div>
+                <pre><code># Check CNAME records for takeover indicators
+dig CNAME suspicious-subdomain.target.com
+
+# Check for dangling CNAMEs
+host suspicious-subdomain.target.com</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> تحليل سجلات الـ CNAME يهدف إلى إيجاد النطاقات الفرعية التي تشير إلى خدمات سحابية (مثل AWS, GitHub Pages, Heroku) تم حذفها أو لم يعد العميل يمتلكها (Dangling CNAMEs)، مما يتيح للمهاجم حجز تلك الخدمة والسيطرة على النطاق الفرعي للهدف، وهو ما يعرف بـ Subdomain Takeover.
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">SPF/TXT Record Analysis</span>
+                </div>
+                <pre><code>dig TXT target.com
+dig MX target.com
+dig NS target.com</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> استخراج سجلات TXT و MX و NS مفيد للغاية، لأنها غالباً ما تحتوي على معلومات عن خدمات الطرف الثالث (Third-party services) التي تستخدمها الشركة، أو بيانات حساسة داخل سجلات نظام سياسة مرسل البريد (SPF).
+            </p>
+        </div>
+    </div>
+
+    <!-- 1.6 Certificate Transparency Logs -->
+    <div class="cyber-card">
+        <div class="card-header"><h3>1.6 Certificate Transparency Logs</h3></div>
+        <div class="card-content">
+            <p>
+                سجلات شفافية الشهادات (Certificate Transparency Logs) هي قواعد بيانات عامة يتم فيها تسجيل كل شهادات الأمان (SSL/TLS) المُصدرة لأي موقع. يمكننا البحث في هذه السجلات للعثور على النطاقات الفرعية الداخلية والخاصة التي أُصدرت لها شهادات!
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">crt.sh via command line</span>
+                </div>
+                <pre><code>curl -s "https://crt.sh/?q=%.target.com&output=json" | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u > certificate_subdomains.txt</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> هذا الأمر يقوم بالاتصال بموقع <code>crt.sh</code> عن طريق <code>curl</code> للحصول على كل النطاقات التابعة لـ <code>target.com</code> بتنسيق JSON. ثم يمرر النتائج لأداة <code>jq</code> لاستخراج الأسماء، وأداة <code>sed</code> لحذف علامة النجمة (Wildcard <code>*.</code>)، وأخيراً استخدام <code>sort -u</code> لترتيب النتائج وحذف التكرار، وحفظها في ملف نصي.
+            </p>
+        </div>
+    </div>
+
+    <!-- 1.7 Complete Workflow -->
+    <div class="cyber-card">
+        <div class="card-header"><h3>1.7 Complete Workflow</h3></div>
+        <div class="card-content">
+            <p>
+                مسار العمل المتكامل (Complete Workflow) يجمع بين تقنيات الاستطلاع السلبي، والتبديل (Permutation)، والتحليل النشط، ثم التحقق من الأنظمة الحية للحصول على سطح هجوم دقيق وشامل.
+            </p>
+
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Subdomain Enumeration Pipeline</span>
+                </div>
+                <pre><code># Step 1: Passive collection
+subfinder -d target.com -all -recursive -silent -o subs.txt
+amass enum -passive -d target.com -o amass.txt
+assetfinder --subs-only target.com > assetfinder.txt
+
+# Step 2: Combine and deduplicate
+cat subs.txt amass.txt assetfinder.txt | sort -u > all_passive.txt
+
+# Step 3: Generate permutations
+altdns -i all_passive.txt -w permutationWordlist.txt -o permuted.txt
+
+# Step 4: Resolve everything
+shuffledns -d target.com -list permuted.txt -r resolvers.txt -o resolved.txt
+
+# Step 5: Check live hosts
+httpx -l resolved.txt -status-code -title -tech-detect -o live_hosts.txt</code></pre>
+            </div>
+            <p>
+                <strong>شرح خطوات الـ Workflow:</strong><br>
+                1. <strong>الجمع السلبي (Passive collection):</strong> استخدام أدوات <code>subfinder</code>, <code>amass</code>, <code>assetfinder</code> للبحث بهدوء دون تنبيه الهدف وتجميع البيانات من مصادر مفتوحة.<br>
+                2. <strong>الدمج وإزالة التكرار (Deduplicate):</strong> وضع النتائج من جميع الأدوات في ملف واحد وتنظيفه عبر <code>sort -u</code>.<br>
+                3. <strong>التوليد والتبديل (Permutations):</strong> استخدام <code>altdns</code> لخلق احتمالات وأسماء نطاقات جديدة بناءً على الكلمات المكتشفة.<br>
+                4. <strong>التحقق والفحص (Resolve):</strong> استخدام <code>shuffledns</code> للتأكد من أن هذه النطاقات تشير إلى خوادم حقيقية ولديها IP فعّال.<br>
+                5. <strong>اكتشاف المضيفين الأحياء (Live hosts):</strong> تمرير القائمة النهائية لأداة <code>httpx</code> للاتصال بها واستخراج حالة الاستجابة (Status Code)، عنوان الصفحة (Title)، والتقنيات المستخدمة (Tech Detect).
+            </p>
+        </div>
+    </div>
+
+    <!-- 1.8 Best Practices & Anti-Detection -->
+    <div class="cyber-card">
+        <div class="card-header"><h3>1.8 Best Practices & Anti-Detection</h3></div>
+        <div class="card-content">
+            <p>
+                أفضل الممارسات وتقنيات مكافحة الكشف (Anti-Detection) تضمن استمرارية الفحص دون التعرض للحظر من الجدران النارية (Firewalls/WAFs) وللبقاء غير مرئي قدر الإمكان.
+            </p>
+            <ul style="list-style-type: square; padding-right: 20px;">
+                <li><strong>Rate limiting:</strong> أضف تأخيراً بين الطلبات (مثل <code>--delay 100ms</code>) لمنع أنظمة كشف التسلل (IDS) من حظر الـ IP الخاص بك.</li>
+                <li><strong>Rotate DNS resolvers:</strong> استخدم قوائم متعددة من خوادم الـ DNS (Resolvers) لكي لا تركز ضغط الاستعلامات على خادم واحد فيتم حظرك.</li>
+                <li><strong>Use VPS:</strong> قم بتشغيل عمليات الاستطلاع النشط من خلال خوادم سحابية افتراضية (VPS) لضمان سرعة الإنترنت وإخفاء هويتك الفعلية.</li>
+                <li><strong>Respect scope:</strong> راجع دائماً نطاق العمل (Scope) الخاص ببرامج صيد الثغرات (Bug Bounty) لتجنب فحص أو مهاجمة أنظمة خارج النطاق المصرح به قانونياً.</li>
+                <li><strong>Wildcard detection:</strong> استخدم أدوات مثل <code>puredns</code> أو <code>shuffledns</code> لتصفية (Filter) الردود الكاذبة من النطاقات التي تحتوي على Wildcard (إعداد يقوم بتوجيه أي اسم فرعي وهمي إلى صفحة معينة).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Proxy, Burp Suite, Zap and Nikto Section (Found at the end of the file) -->
+    <div class="cyber-card">
+        <div class="card-header"><h3>Proxies & Scanning Toolchains</h3></div>
+        <div class="card-content">
+            <p>
+                استكمالاً لمسار الاستطلاع والفحص، يُعتبر إعداد وكيل اعتراض الطلبات (Intercepting Proxy) واستخدام ماسحات الويب الآلية خطوة حاسمة لفهم التفاعل مع التطبيق واكتشاف الثغرات العميقة.
+            </p>
+
+            <div class="info-box tip">
+                <strong>Burp Suite Proxy Configuration:</strong><br>
+                1. قم بضبط الوكيل (Proxy) في المتصفح على <code>127.0.0.1:8080</code>.<br>
+                2. قم بتثبيت شهادة الـ CA (Certificate Authority) في المتصفح لتتمكن من اعتراض زيارات الـ HTTPS.<br>
+                3. فعل خيار الاعتراض (Enable Interception) للتحكم بالطلبات وتعديلها قبل وصولها للخادم.<br>
+                4. تصفح تطبيق الهدف واستكشف أقسامه لتسجيل الحركة والمنافذ.
+            </div>
+
+            <h4>Burp Suite Key Features Usage</h4>
+            <div class="interactive-table">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 20px;" dir="ltr">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--tool-color);">
+                            <th style="padding: 10px;">Feature</th>
+                            <th style="padding: 10px;">الوظيفة الأساسية والاستخدام</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 10px;"><strong>Proxy</strong></td>
+                            <td style="padding: 10px; text-align: right;" dir="rtl">لاعتراض وتعديل الطلبات والردود بين المتصفح والخادم بشكل حي.</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 10px;"><strong>Repeater</strong></td>
+                            <td style="padding: 10px; text-align: right;" dir="rtl">لإعادة إرسال طلبات محددة وتعديلها يدوياً لتجربة استغلال الثغرات بشكل دقيق.</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 10px;"><strong>Intruder</strong></td>
+                            <td style="padding: 10px; text-align: right;" dir="rtl">لأتمتة الهجمات، مثل الـ Fuzzing وتخمين كلمات المرور عبر إدخال قوائم كلمات في أماكن محددة بالطلب.</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 10px;"><strong>Scanner (Pro)</strong></td>
+                            <td style="padding: 10px; text-align: right;" dir="rtl">في النسخة المدفوعة، يقوم بالمسح الآلي لاكتشاف الثغرات الشائعة بشكل شامل.</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 10px;"><strong>Sequencer</strong></td>
+                            <td style="padding: 10px; text-align: right;" dir="rtl">لتحليل مدى عشوائية الـ Session Tokens (الرموز المميزة للجلسات) لاكتشاف الضعف فيها.</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 10px;"><strong>Decoder</strong></td>
+                            <td style="padding: 10px; text-align: right;" dir="rtl">أداة مدمجة لتشفير وفك تشفير البيانات بالصيغ المختلفة (مثل Base64, URL Encoding).</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><strong>Comparer</strong></td>
+                            <td style="padding: 10px; text-align: right;" dir="rtl">لمقارنة الاختلافات الدقيقة بين طلبين أو استجابتين (مفيد جداً في ثغرات الـ Blind SQLi).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Burp Suite Extensions to Install</h4>
+            <ul style="list-style-type: square; padding-right: 20px;">
+                <li><strong>Autorize:</strong> لاختبار ثغرات الصلاحيات (IDOR/Authorization Testing) بشكل آلي.</li>
+                <li><strong>Logger++:</strong> لتوفير واجهة متقدمة ومفصلة لتسجيل حركة المرور ومتابعتها.</li>
+                <li><strong>Turbo Intruder:</strong> أداة سريعة جداً مبنية على لغة Python لشن هجمات الـ HTTP المكثفة و Race Conditions.</li>
+                <li><strong>Param Miner:</strong> لاكتشاف المعاملات (Parameters) المخفية في الطلبات والتي قد تقود لاكتشاف ثغرات غير واضحة.</li>
+                <li><strong>Upload Scanner:</strong> للتدقيق واختبار أمان ملفات الرفع (File Uploads) وأنواعها ومحتواها.</li>
+            </ul>
+
+            <h4 style="margin-top: 30px;">4.7 OWASP ZAP Workflow</h4>
+            <p>
+                OWASP ZAP هو بديل قوي ومجاني ومفتوح المصدر للـ Burp Suite، ويأتي بأدوات ماسحة مدمجة قوية لتنفيذ عمليات البحث الآلي عن الثغرات والتفاعل مع الـ APIs.
+            </p>
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">ZAP Command Line</span>
+                </div>
+                <pre><code># Automated scan
+zap-cli quick-scan --self-contained --start-options "-config api.disablekey=true" --spider -r -s xss,sqli https://target.com
+
+# API scan
+zap-api-scan.py -t openapi.json -f openapi</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> <br>
+                - <strong>Automated scan:</strong> أداة <code>zap-cli</code> تُشغل المسح السريع مع عنكبوت (Spider) لاكتشاف الروابط وتوجيه البحث عن ثغرات XSS و SQLi، مع تعطيل مفتاح الـ API للتسهيل.<br>
+                - <strong>API scan:</strong> أداة متخصصة لفحص واجهات برمجة التطبيقات (API) من خلال قراءة ملف الـ <code>openapi.json</code> الموصف للخدمة واكتشاف ثغراته آلياً.
+            </p>
+
+            <h4 style="margin-top: 30px;">4.8 Nikto Web Scanner</h4>
+            <p>
+                Nikto هو ماسح خوادم ويب أسطوري ومشهور جداً، يعمل من خلال سطر الأوامر للكشف عن آلاف الملفات الخطيرة أو القديمة وإعدادات الخادم السيئة.
+            </p>
+            <div class="cmd-ui-box" dir="ltr">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Nikto Commands</span>
+                </div>
+                <pre><code>nikto -host target.com
+nikto -host target.com -ssl -port 443
+nikto -host target.com -Tuning 1,2,3,4,5,6,7,8,9,0</code></pre>
+            </div>
+            <p>
+                <strong>شرح:</strong> <br>
+                - الفحص الأساسي باستخدام <code>-host</code> يمرر على المنفذ الافتراضي.<br>
+                - استخدام <code>-ssl -port 443</code> لفرض الفحص من خلال بروتوكول HTTPS الآمن.<br>
+                - الخيار <code>-Tuning</code> يُستخدم لتخصيص نوع الهجمات والفحوصات بدقة لتوفير الوقت أو التركيز على تصنيف معين (مثلاً حقن SQL، رفع الملفات، قراءة الملفات المحلية).
+            </p>
+        </div>
+    </div>
+</div>

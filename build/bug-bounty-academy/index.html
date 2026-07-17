@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bug Bounty Scenarios Academy - Real World Bug Bounty Simulator. Learn bug hunting by playing real cybersecurity reports.">
+  <title>Interactive Bug Bounty Playground | Bug Bounty Academy</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css?v=15">
+</head>
+<body>
+
+  <!-- Background visuals -->
+  <div class="bg-glow">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+  </div>
+  <div class="scanlines"></div>
+
+  <!-- Dashboard wrapper -->
+  <div class="dashboard-wrapper">
+    <!-- Left Sidebar Component -->
+    <aside class="sidebar-nav">
+      <div class="sidebar-logo-container">
+        <a href="index.html" class="sidebar-logo">
+          <i class="bx bx-target-lock" style="font-size: 2rem; color: var(--accent-cyan); text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);"></i>
+          <div>
+            <div class="sidebar-logo-text">NEUROLYNX</div>
+            <div class="sidebar-logo-sub">Academy</div>
+          </div>
+        </a>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active">
+          <a href="index.html"><i class="bx bxs-dashboard"></i> Dashboard</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#scenarios"><i class="bx bx-shield-quarter"></i> Scenarios</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="pages/leaderboard.html"><i class="bx bx-trophy"></i> Leaderboard</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="pages/progress.html" target="_blank" style="color:#facc15; font-weight:bold;"><i class="bx bx-award"></i> Badges & Learning Progress</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="pages/payload-generator.html" target="_blank"><i class="bx bx-wrench"></i> Payload Generator</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="pages/burp-simulator.html" target="_blank" style="color:#f97316; font-weight:bold;"><i class="bx bx-shield-quarter"></i> Burp Suite Studio</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/burp-proxy.html" target="_blank" style="color:#58a6ff;"><i class="bx bx-transfer-alt"></i> 1. Proxy Docs & Lab</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/burp-repeater.html" target="_blank" style="color:#58a6ff;"><i class="bx bx-infinite"></i> 2. Repeater (10 Labs)</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/burp-target.html" target="_blank" style="color:#58a6ff;"><i class="bx bx-target-lock"></i> 3. Target & Scope</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/burp-intruder.html" target="_blank" style="color:#58a6ff;"><i class="bx bx-crosshair"></i> 4. Intruder Fuzzer</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/burp-decoder.html" target="_blank" style="color:#58a6ff;"><i class="bx bx-code-alt"></i> 5. Decoder Suite</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/burp-comparer.html" target="_blank" style="color:#58a6ff;"><i class="bx bx-columns"></i> 6. Comparer Diff</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/burp-logger.html" target="_blank" style="color:#58a6ff;"><i class="bx bx-list-check"></i> 7. Global Logger</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/burp-scanner.html" target="_blank" style="color:#58a6ff;"><i class="bx bx-radar"></i> 8. Vulnerability Scanner</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/burp-collaborator.html" target="_blank" style="color:#58a6ff;"><i class="bx bx-radio-circle-marked"></i> 9. Burp Collaborator</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/cheatsheet-sqli.html" target="_blank" style="color:#facc15; font-weight:bold;"><i class="bx bx-data"></i> SQLi Cheat Sheet</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/cheatsheet-hub.html" target="_blank" style="color:#facc15; font-weight:bold;"><i class="bx bx-book-bookmark"></i> Cheat Sheets Hub</a>
+        </li>
+        <li class="sidebar-item" style="padding-left:15px; font-size:0.8rem;">
+          <a href="pages/career-tracks.html" target="_blank" style="color:#38bdf8; font-weight:bold;"><i class="bx bx-compass"></i> Career Tracks & Guide</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="pages/js-analyzer.html" target="_blank"><i class="bx bx-code-curly"></i> JS Analyzer</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="pages/scenario-builder.html" target="_blank"><i class="bx bx-layer-plus"></i> Scenario Builder</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="pages/ai-generator.html" target="_blank"><i class="bx bx-bot"></i> AI Generator</a>
+        </li>
+      </ul>
+      
+      <ul class="sidebar-footer">
+        <li class="sidebar-item">
+          <a href="pages/profile.html"><i class="bx bx-user-circle"></i> Profile</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#" onclick="alert('Global Academy configurations coming soon!')"><i class="bx bx-cog"></i> Settings</a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#" onclick="alert('Need help? Join our community forum!')"><i class="bx bx-help-circle"></i> Help</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Container -->
+    <div class="main-dashboard-content">
+      <!-- Top header bar component -->
+      <header class="dashboard-top-header">
+        <div class="dashboard-title-area">
+          <h2>Cyber Security Dashboard</h2>
+          <p>Real-world interactive vulnerability playrooms and threat models</p>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <!-- Real Hunt Mode Toggle -->
+          <button class="control-btn" id="real-hunt-toggle" style="background: rgba(10,20,38,0.45); border: 1px solid rgba(6, 182, 212, 0.2); color: var(--text-main); font-family: inherit; font-size: 0.8rem; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 16px; transition: all 0.2s; height: 44px; margin-right: 10px;">
+            <i class="bx bx-target-lock" id="real-hunt-icon" style="transition: color 0.2s; font-size: 1.1rem;"></i>
+            <span id="real-hunt-text">Real Hunt: OFF</span>
+          </button>
+
+          <!-- User Profile widget -->
+          <div class="user-profile-widget">
+            <div class="user-avatar-hacker">
+              <i class="bx bx-terminal"></i>
+            </div>
+            <div class="user-info">
+              <span class="user-name" id="global-username">Alex Mercer</span>
+              <span class="user-stats" id="global-rank">🔎 Recon Rookie</span>
+            </div>
+            <div class="user-xp-progress">
+              <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-mono); gap: 10px;">
+                <span>Lv.<strong id="global-level-num" style="color:var(--accent-cyan);">1</strong> &nbsp;<span id="global-level-title" style="color:var(--text-main);">Recon Rookie</span></span>
+                <span id="xp-text-ratio">0 / 300 XP</span>
+              </div>
+              <div class="xp-progress-bar">
+                <div class="xp-progress-fill" id="xp-progress-bar-fill" style="width: 0%;"></div>
+              </div>
+              <div style="font-size:0.58rem; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px;" id="xp-next-level-label">300 XP to Level 2</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Live Search Bar -->
+      <section class="dashboard-search-container">
+        <i class="bx bx-search dashboard-search-icon"></i>
+        <input type="text" id="global-search-input" class="dashboard-search-input" placeholder="SEARCH SCENARIOS, LESSONS, TOOLS (JWT, SSRF, SQLi, etc.)...">
+        <button id="search-action-btn" class="neurolynx-btn" style="position: absolute; right: 8px; top: 8px; bottom: 8px; height: calc(100% - 16px); display: flex; align-items: center;">Search</button>
+      </section>
+
+      <!-- Filters & Scenarios Grid -->
+      <section class="filters-container" style="background: rgba(10, 20, 38, 0.45); border: 1px solid rgba(6, 182, 212, 0.15); margin-bottom: 30px;">
+        <div class="filter-group">
+          <label class="filter-label" style="min-width: 100px; color: var(--accent-cyan); font-family: var(--font-title); text-transform: uppercase;"><i class="bx bx-slider"></i> Level:</label>
+          <div class="filter-buttons" id="level-filters">
+            <button class="filter-btn active" data-level="all">All Levels</button>
+            <button class="filter-btn lvl-beginner" data-level="Beginner">🟢 Beginner</button>
+            <button class="filter-btn lvl-easy" data-level="Easy">🔵 Easy</button>
+            <button class="filter-btn lvl-medium" data-level="Medium">🟡 Medium</button>
+            <button class="filter-btn lvl-hard" data-level="Hard">🟠 Hard</button>
+            <button class="filter-btn lvl-expert" data-level="Expert">🔴 Expert</button>
+          </div>
+        </div>
+
+        <div class="filter-group" style="margin-top: 15px;">
+          <label class="filter-label" style="min-width: 100px; color: var(--accent-cyan); font-family: var(--font-title); text-transform: uppercase;"><i class="bx bx-category"></i> Topic:</label>
+          <div class="filter-buttons scrollable" id="category-filters">
+            <button class="filter-btn active" data-category="all">All Topics</button>
+            <button class="filter-btn" data-category="Recon Driven">Recon Driven</button>
+            <button class="filter-btn" data-category="Authentication">Authentication</button>
+            <button class="filter-btn" data-category="Authorization">Authorization</button>
+            <button class="filter-btn" data-category="API Security">API Security</button>
+            <button class="filter-btn" data-category="Business Logic">Business Logic</button>
+            <button class="filter-btn" data-category="Chaining">Chaining</button>
+            <button class="filter-btn" data-category="Mobile">Mobile</button>
+            <button class="filter-btn" data-category="Cloud">Cloud</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Security Scenarios Section -->
+      <section id="scenarios">
+        <h3 class="section-header-title">Security Scenario</h3>
+        <!-- Scenarios List Grid: Injected dynamically by engine/renderer.js -->
+        <div class="neurolynx-grid" id="scenarios-list"></div>
+      </section>
+
+      <!-- Bottom Progress Section -->
+      <section style="margin-top: 40px;">
+        <h3 class="section-header-title">My Progress</h3>
+        <div class="progress-panel-row">
+          <!-- Rank Badge Shield Card -->
+          <div class="progress-panel-card">
+            <span class="progress-panel-title">Rank Badge</span>
+            <div class="badge-widget">
+              <div class="badge-shield-container">
+                <i class="bx bx-shield-quarter"></i>
+              </div>
+              <div class="badge-info-details">
+                <span class="badge-title-header" id="badge-rank-title">RECON ROOKIE</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Dynamic security profile badge</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Level Progress Card -->
+          <div class="progress-panel-card">
+            <span class="progress-panel-title" id="progress-level-label">Level 1</span>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-family: var(--font-mono);">
+                <span style="color: var(--text-secondary);">XP PROGRESS</span>
+                <span class="text-green" id="progress-xp-ratio">0 / 1000</span>
+              </div>
+              <div class="level-progress-bar-container">
+                <div class="xp-progress-bar" style="height: 8px;">
+                  <div class="xp-progress-fill" id="progress-xp-fill" style="width: 0%; height: 100%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accomplishments Card -->
+          <div class="progress-panel-card">
+            <span class="progress-panel-title">Accomplishments</span>
+            <ul class="checklist-items">
+              <li class="checklist-item" id="accomplishment-solved">
+                <span>Threat Hunter</span>
+                <i class="bx bx-checkbox-square checklist-checkbox" id="accomplishment-solved-icon"></i>
+              </li>
+              <li class="checklist-item" id="accomplishment-rank">
+                <span>Cyber Veteran</span>
+                <i class="bx bx-checkbox checklist-checkbox" id="accomplishment-rank-icon"></i>
+              </li>
+              <li class="checklist-item">
+                <span style="display: flex; align-items: center; gap: 6px;">Total Reward: <strong class="text-green" id="progress-bounty-total">$0</strong></span>
+                <span>Streak: <strong class="text-orange" id="progress-streak">21 Days</strong></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Global scripts loader -->
+  <script src="assets/js/db.js?v=15"></script>
+  <script src="engine/state-manager.js?v=15"></script>
+  <script src="engine/renderer.js?v=15"></script>
+  <script>
+    // Search Routing Hook
+    document.getElementById('search-action-btn').addEventListener('click', () => {
+      const query = document.getElementById('global-search-input').value.trim();
+      if(query) {
+        window.location.href = `pages/search.html?q=${encodeURIComponent(query)}`;
+      }
+    });
+    document.getElementById('global-search-input').addEventListener('keypress', (e) => {
+      if(e.key === 'Enter') {
+        const query = e.target.value.trim();
+        if(query) {
+          window.location.href = `pages/search.html?q=${encodeURIComponent(query)}`;
+        }
+      }
+    });
+
+    // On Load dashboard stats mapping
+    window.addEventListener('DOMContentLoaded', () => {
+      const solved = JSON.parse(localStorage.getItem('bb_sim_solved')) || [];
+      const xp = parseInt(localStorage.getItem('bb_sim_xp')) || 0;
+      const bounty = parseInt(localStorage.getItem('bb_sim_bounty')) || 0;
+      
+      // Initialize Real Hunt Toggle UI
+      const isRealHunt = localStorage.getItem('bb_sim_real_hunt_mode') === 'true';
+      const rhText = document.getElementById('real-hunt-text');
+      const rhIcon = document.getElementById('real-hunt-icon');
+      const rhToggle = document.getElementById('real-hunt-toggle');
+      if (rhToggle) {
+        if (isRealHunt) {
+          rhText.innerText = "Real Hunt: ON";
+          rhIcon.style.color = "var(--accent-green)";
+          rhToggle.style.borderColor = "var(--accent-green)";
+          rhToggle.style.boxShadow = "0 0 8px rgba(34, 197, 94, 0.2)";
+        } else {
+          rhText.innerText = "Real Hunt: OFF";
+          rhIcon.style.color = "var(--text-muted)";
+        }
+        rhToggle.addEventListener('click', () => {
+          window.StateManager.toggleRealHuntMode();
+        });
+      }
+      
+      let rank = 'Recon Rookie';
+      if (xp >= 15000) rank = 'Elite Bug Hunter';
+      else if (xp >= 8000) rank = 'Master Hunter';
+      else if (xp >= 3000) rank = 'Security Researcher';
+      else if (xp >= 1000) rank = 'Triage Expert';
+      else if (xp >= 300) rank = 'Bug Hunter';
+      
+      // Update new profile badges
+      document.getElementById('global-rank').innerText = rank;
+      document.getElementById('xp-text-ratio').innerText = `${xp.toLocaleString()} XP`;
+      const globalXpPercent = Math.min(100, (xp / 20000) * 100);
+      document.getElementById('xp-progress-bar-fill').style.width = `${globalXpPercent}%`;
+
+      // Update progress panel (bottom)
+      const currentLevel = Math.floor(xp / 1000) + 1;
+      const currentLevelXp = xp % 1000;
+      const xpPercent = (currentLevelXp / 1000) * 100;
+      
+      document.getElementById('badge-rank-title').innerText = rank.toUpperCase();
+      document.getElementById('progress-level-label').innerText = `Level ${currentLevel}`;
+      document.getElementById('progress-xp-ratio').innerText = `${currentLevelXp.toLocaleString()} / 1,000 XP`;
+      document.getElementById('progress-xp-fill').style.width = `${xpPercent}%`;
+      document.getElementById('progress-bounty-total').innerText = `$${bounty.toLocaleString()}`;
+
+      // Checklist status mapping
+      if (solved.length > 0) {
+        const itemSolved = document.getElementById('accomplishment-solved');
+        itemSolved.classList.add('checked');
+        const icon = document.getElementById('accomplishment-solved-icon');
+        icon.className = 'bx bx-checkbox-square checklist-checkbox';
+      }
+      if (xp >= 8000) {
+        const itemRank = document.getElementById('accomplishment-rank');
+        itemRank.classList.add('checked');
+        const icon = document.getElementById('accomplishment-rank-icon');
+        icon.className = 'bx bx-checkbox-square checklist-checkbox';
+      }
+    });
+  </script>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+</body>
+</html>

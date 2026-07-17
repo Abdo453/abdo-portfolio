@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Burp Suite Educational Studio Simulator - Bug Bounty Academy</title>
+  <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-family: var(--font-body);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* Top Menu Bar */
+    .burp-menu-bar {
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      padding: 6px 15px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 0.8rem;
+    }
+    .burp-logo {
+      color: #f97316;
+      font-weight: bold;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+    }
+    .burp-menu-item {
+      color: #8b949e;
+      cursor: pointer;
+    }
+    .burp-menu-item:hover { color: #c9d1d9; }
+
+    /* Burp Suite Tab Bar */
+    .burp-tab-bar {
+      background: #161b22;
+      border-bottom: 2px solid #30363d;
+      display: flex;
+      overflow-x: auto;
+    }
+    .burp-tab {
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #8b949e;
+      cursor: pointer;
+      border-right: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+      transition: all 0.2s;
+    }
+    .burp-tab:hover { background: #21262d; color: #f0f6fc; }
+    .burp-tab.active {
+      background: #0d1117;
+      color: #f97316;
+      border-bottom: 2px solid #f97316;
+    }
+
+    /* Studio Content Panes */
+    .studio-viewport {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+    }
+    .tab-pane {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #0d1117;
+    }
+    .tab-pane.active { display: flex; }
+
+    /* Controls Header inside Tabs */
+    .sub-toolbar {
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      padding: 8px 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .burp-btn {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+    .burp-btn:hover { background: #30363d; color: #fff; }
+    .burp-btn.btn-orange { background: #f97316; color: #000; border: none; }
+    .burp-btn.btn-orange:hover { background: #ea580c; }
+    .burp-btn.btn-intercept-on { background: #22c55e; color: #000; border: none; }
+
+    /* Split Editors Layout */
+    .editor-split-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .editor-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #30363d;
+    }
+    .editor-panel-header {
+      background: #161b22;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: bold;
+      color: #8b949e;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      justify-content: space-between;
+    }
+    .editor-textarea {
+      flex: 1;
+      background: #0d1117;
+      border: none;
+      color: #58a6ff;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      padding: 12px;
+      outline: none;
+      resize: none;
+      direction: ltr;
+      text-align: left;
+      line-height: 1.4;
+    }
+
+    /* Tables Styles */
+    .burp-table-container {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .burp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+      direction: ltr;
+    }
+    .burp-table th {
+      background: #161b22;
+      color: #8b949e;
+      padding: 8px 12px;
+      border-bottom: 1px solid #30363d;
+      position: sticky;
+      top: 0;
+    }
+    .burp-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #21262d;
+      color: #c9d1d9;
+    }
+    .burp-table tr:hover { background: #161b22; cursor: pointer; }
+
+    /* Site Map Tree */
+    .sitemap-container {
+      display: flex;
+      flex: 1;
+    }
+    .tree-view {
+      width: 280px;
+      background: #161b22;
+      border-right: 1px solid #30363d;
+      padding: 15px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+    }
+    .tree-node {
+      margin-bottom: 8px;
+      cursor: pointer;
+      color: #58a6ff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Comparer Diff Highlight */
+    .diff-added { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+    .diff-removed { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+  </style>
+</head>
+<body>
+  <!-- Top Menu Bar -->
+  <div class="burp-menu-bar">
+    <div class="burp-logo"><i class="bx bx-shield-quarter"></i> Burp Suite Studio Simulator</div>
+    <span class="burp-menu-item">Target</span>
+    <span class="burp-menu-item">Proxy</span>
+    <span class="burp-menu-item">Intruder</span>
+    <span class="burp-menu-item">Repeater</span>
+    <span class="burp-menu-item">Options</span>
+    <div style="flex-grow:1;"></div>
+    <a href="../index.html" style="color:#58a6ff; text-decoration:none; font-weight:bold;"><i class="bx bx-home"></i> Back to Academy</a>
+  </div>
+
+  <!-- Burp Suite Tab Bar -->
+  <div class="burp-tab-bar">
+    <div class="burp-tab active" data-tab="proxy"><i class="bx bx-transfer-alt"></i> Proxy</div>
+    <div class="burp-tab" data-tab="target"><i class="bx bx-target-lock"></i> Target / Site Map</div>
+    <div class="burp-tab" data-tab="repeater"><i class="bx bx-infinite"></i> Repeater</div>
+    <div class="burp-tab" data-tab="intruder"><i class="bx bx-crosshair"></i> Intruder (Fuzzer)</div>
+    <div class="burp-tab" data-tab="decoder"><i class="bx bx-code-alt"></i> Decoder</div>
+    <div class="burp-tab" data-tab="comparer"><i class="bx bx-columns"></i> Comparer (Diff)</div>
+    <div class="burp-tab" data-tab="collaborator"><i class="bx bx-radio-circle-marked"></i> Collaborator</div>
+  </div>
+
+  <!-- Live Inter-Tool Activity Timeline Bar -->
+  <div style="background:#0d1117; border-bottom:1px solid #30363d; padding:4px 15px; display:flex; align-items:center; gap:10px; overflow-x:auto;" id="global-timeline-bar-wrapper">
+    <span style="font-size:0.75rem; font-weight:bold; color:#f97316; white-space:nowrap;"><i class="bx bx-time-five"></i> LIVE WORKFLOW TIMELINE:</span>
+    <div id="global-timeline-bar" style="display:flex; align-items:center; gap:6px; overflow-x:auto;"></div>
+  </div>
+
+  <!-- Studio Viewport -->
+  <div class="studio-viewport">
+
+    <!-- TAB 1: PROXY -->
+    <div class="tab-pane active" id="pane-proxy">
+      <div class="sub-toolbar">
+        <button class="burp-btn btn-intercept-on" id="btn-intercept-toggle"><i class="bx bx-pause-circle"></i> Intercept is ON</button>
+        <button class="burp-btn btn-orange" id="btn-proxy-forward"><i class="bx bx-right-arrow-alt"></i> Forward Request</button>
+        <button class="burp-btn" id="btn-send-to-repeater"><i class="bx bx-share"></i> Send to Repeater</button>
+        <button class="burp-btn" id="btn-send-to-intruder"><i class="bx bx-share"></i> Send to Intruder</button>
+      </div>
+      <div class="editor-split-container">
+        <div class="editor-panel">
+          <div class="editor-panel-header"><span>INTERCEPTED HTTP REQUEST</span><span>HTTP/1.1</span></div>
+          <textarea class="editor-textarea" id="proxy-request-editor">POST /api/v1/login HTTP/1.1
+Host: target-vulnerable.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) BurpSuiteSimulator/1.0
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+Cookie: session=xyz_token_881923
+
+username=admin' OR '1'='1&password=secret123</textarea>
+        </div>
+        <div class="editor-panel">
+          <div class="editor-panel-header"><span>HTTP HISTORY LOG</span><span>Live Intercepts</span></div>
+          <div class="burp-table-container">
+            <table class="burp-table">
+              <thead>
+                <tr><th>#</th><th>Host</th><th>Method</th><th>URL</th><th>Status</th><th>Length</th></tr>
+              </thead>
+              <tbody id="proxy-history-tbody">
+                <tr><td>1</td><td>target-vulnerable.com</td><td>GET</td><td>/index.php</td><td>200 OK</td><td>4,281</td></tr>
+                <tr><td>2</td><td>target-vulnerable.com</td><td>POST</td><td>/api/v1/login</td><td>200 OK</td><td>1,042</td></tr>
+                <tr><td>3</td><td>target-vulnerable.com</td><td>GET</td><td>/admin/users</td><td>403 Forbidden</td><td>312</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: TARGET / SITE MAP -->
+    <div class="tab-pane" id="pane-target">
+      <div class="sub-toolbar">
+        <span style="font-size:0.8rem; color:#8b949e;">Site Map Tree & Endpoint Scope Explorer</span>
+      </div>
+      <div class="sitemap-container">
+        <div class="tree-view">
+          <div style="font-weight:bold; color:#f97316; margin-bottom:10px;">target-vulnerable.com</div>
+          <div class="tree-node"><i class="bx bx-folder"></i> /admin</div>
+          <div class="tree-node" style="padding-left:15px;"><i class="bx bx-file"></i> users.php</div>
+          <div class="tree-node" style="padding-left:15px;"><i class="bx bx-file"></i> config.json</div>
+          <div class="tree-node"><i class="bx bx-folder"></i> /api/v1</div>
+          <div class="tree-node" style="padding-left:15px;"><i class="bx bx-file"></i> login</div>
+          <div class="tree-node" style="padding-left:15px;"><i class="bx bx-file"></i> search</div>
+          <div class="tree-node"><i class="bx bx-folder"></i> /static</div>
+        </div>
+        <div class="editor-panel">
+          <div class="editor-panel-header"><span>ENDPOINT ADVISORY DETAILS</span></div>
+          <div style="padding:20px; font-size:0.88rem; color:#c9d1d9;" id="target-details-view">
+            <h3 style="color:#58a6ff; margin-top:0;">Target Scope: target-vulnerable.com</h3>
+            <p>Select an endpoint on the left tree view to inspect discovered parameters, headers, and security advisories.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: REPEATER -->
+    <div class="tab-pane" id="pane-repeater">
+      <div class="sub-toolbar">
+        <button class="burp-btn btn-orange" id="btn-repeater-send"><i class="bx bx-paper-plane"></i> Send Request</button>
+        <button class="burp-btn" id="btn-repeater-to-comparer"><i class="bx bx-share"></i> Send Response to Comparer</button>
+      </div>
+      <div class="editor-split-container">
+        <div class="editor-panel">
+          <div class="editor-panel-header"><span>REQUEST EDITOR</span></div>
+          <textarea class="editor-textarea" id="repeater-request-editor">GET /search?q=%3Cscript%3Ealert(1)%3C/script%3E HTTP/1.1
+Host: target-vulnerable.com
+User-Agent: Mozilla/5.0 BurpSuiteSimulator/1.0
+Cookie: session=abc123xyz</textarea>
+        </div>
+        <div class="editor-panel">
+          <div class="editor-panel-header"><span>RESPONSE VIEW</span><span id="repeater-status-badge" style="color:#22c55e;">200 OK</span></div>
+          <textarea class="editor-textarea" id="repeater-response-editor" readonly style="color:#c9d1d9;">HTTP/1.1 200 OK
+Date: Sun, 28 Jun 2026 10:42:00 GMT
+Server: Apache/2.4.41 (Ubuntu)
+Content-Type: text/html; charset=UTF-8
+Content-Length: 342
+
+<html>
+  <body>
+    <h1>Search Results</h1>
+    <div>Results for: <script>alert(1)</script></div>
+  </body>
+</html></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: INTRUDER -->
+    <div class="tab-pane" id="pane-intruder">
+      <div class="sub-toolbar">
+        <button class="burp-btn btn-orange" id="btn-start-attack"><i class="bx bx-play"></i> Start Fuzzing Attack</button>
+        <span style="font-size:0.8rem; color:#8b949e; margin-left:10px;">Attack Type: <strong>Sniper Payload Positions</strong></span>
+      </div>
+      <div class="editor-split-container">
+        <div class="editor-panel" style="flex:1;">
+          <div class="editor-panel-header"><span>PAYLOAD POSITION MARKERS (§...§)</span></div>
+          <textarea class="editor-textarea" id="intruder-position-editor">GET /api/v1/user?id=§1§ HTTP/1.1
+Host: target-vulnerable.com
+User-Agent: BurpIntruderFuzzer/1.0
+Authorization: Bearer §token§</textarea>
+        </div>
+        <div class="editor-panel" style="flex:1.5;">
+          <div class="editor-panel-header"><span>FUZZING RESULTS TABLE</span><span id="intruder-progress-text" style="color:#f97316;">Ready</span></div>
+          <div class="burp-table-container">
+            <table class="burp-table">
+              <thead>
+                <tr><th>Payload #</th><th>Payload Value</th><th>Status Code</th><th>Length</th><th>Time (ms)</th></tr>
+              </thead>
+              <tbody id="intruder-results-tbody">
+                <tr><td colspan="5" style="text-align:center; color:#8b949e; padding:20px;">Click "Start Fuzzing Attack" to run payload brute-force loop...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: DECODER -->
+    <div class="tab-pane" id="pane-decoder">
+      <div class="sub-toolbar">
+        <button class="burp-btn" id="btn-dec-b64-enc">Encode Base64</button>
+        <button class="burp-btn" id="btn-dec-b64-dec">Decode Base64</button>
+        <button class="burp-btn" id="btn-dec-url-enc">Encode URL</button>
+        <button class="burp-btn" id="btn-dec-url-dec">Decode URL</button>
+      </div>
+      <div class="editor-split-container">
+        <div class="editor-panel">
+          <div class="editor-panel-header"><span>RAW INPUT STRING</span></div>
+          <textarea class="editor-textarea" id="decoder-input" placeholder="Type text here to encode or decode..."></textarea>
+        </div>
+        <div class="editor-panel">
+          <div class="editor-panel-header"><span>TRANSFORMED OUTPUT</span></div>
+          <textarea class="editor-textarea" id="decoder-output" readonly style="color:#4ade80;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: COMPARER -->
+    <div class="tab-pane" id="pane-comparer">
+      <div class="sub-toolbar">
+        <button class="burp-btn btn-orange" id="btn-run-diff"><i class="bx bx-git-compare"></i> Compare Text / Diff Responses</button>
+      </div>
+      <div class="editor-split-container">
+        <div class="editor-panel">
+          <div class="editor-panel-header"><span>ITEM A (Response 1)</span></div>
+          <textarea class="editor-textarea" id="comparer-item-a">HTTP/1.1 200 OK
+Content-Length: 120
+
+{"status": "success", "role": "user", "access": false}</textarea>
+        </div>
+        <div class="editor-panel">
+          <div class="editor-panel-header"><span>ITEM B (Response 2)</span></div>
+          <textarea class="editor-textarea" id="comparer-item-b">HTTP/1.1 200 OK
+Content-Length: 125
+
+{"status": "success", "role": "admin", "access": true}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: COLLABORATOR -->
+    <div class="tab-pane" id="pane-collaborator">
+      <div class="sub-toolbar">
+        <button class="burp-btn btn-orange" id="btn-collab-poll"><i class="bx bx-refresh"></i> Poll Interactions Now</button>
+        <span style="font-size:0.8rem; color:#8b949e;">Collaborator Server Domain: <code style="color:#38bdf8;">bx91823.burpcollaborator.net</code></span>
+      </div>
+      <div class="burp-table-container" style="padding:15px;">
+        <table class="burp-table">
+          <thead>
+            <tr><th>#</th><th>Interaction Type</th><th>Client IP</th><th>Timestamp</th><th>Details / Exfiltrated Data</th></tr>
+          </thead>
+          <tbody id="collaborator-tbody">
+            <tr><td>1</td><td>DNS Query</td><td>192.168.1.105</td><td>10:41:02 GMT</td><td>Query for root-data.bx91823.burpcollaborator.net</td></tr>
+            <tr><td>2</td><td>HTTP GET</td><td>192.168.1.105</td><td>10:41:03 GMT</td><td>GET /log?c=session_token_xyz99 200 OK</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../assets/js/request-engine.js?v=1.0"></script>
+  <script src="../assets/js/response-engine.js?v=1.0"></script>
+  <script src="../assets/js/workflow-engine.js?v=1.0"></script>
+  <script src="../assets/js/burp-simulator.js?v=1.0"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      WorkflowEngine.renderTimelineWidget();
+    });
+  </script>
+</body>
+</html>

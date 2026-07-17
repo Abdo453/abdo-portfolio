@@ -1,0 +1,295 @@
+import os
+
+html_path = 'd:/abdo_portfolio/build/ccna/interview.html'
+css_path = 'd:/abdo_portfolio/build/ccna/features.css'
+
+new_html = """<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CCNA Interview Flashcards - أسئلة المقابلات</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="features.css">
+    <style>
+        body { overflow: auto; padding: 20px; }
+        .interview-container { max-width: 900px; margin: 20px auto; }
+        
+        .cat-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .cat-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: #c9d1d9;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        
+        .cat-btn:hover { background: rgba(255,255,255,0.1); }
+        .cat-btn.active {
+            background: var(--accent);
+            color: #0d1117;
+            border-color: var(--accent);
+            font-weight: bold;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .card-front {
+            background: linear-gradient(145deg, #161b22, #0d1117);
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .card-front h3 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            line-height: 1.5;
+        }
+        
+        .card-front .flip-hint {
+            position: absolute;
+            bottom: 20px;
+            color: #8b949e;
+            font-size: 0.9rem;
+            animation: pulse 2s infinite;
+        }
+
+        .card-back {
+            background: #0d1117;
+            transform: rotateY(180deg);
+            justify-content: flex-start;
+        }
+        
+        .card-back h4 { color: #fff; margin-bottom: 10px; font-size: 1.2rem; }
+        
+        .ans-section {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+        
+        .ans-ideal { background: rgba(46, 160, 67, 0.1); border-right: 4px solid var(--success); color: #c9d1d9; }
+        .ans-trap { background: rgba(248, 81, 73, 0.1); border-right: 4px solid #f85149; color: #ff7b72; }
+        .ans-short { background: rgba(88, 166, 255, 0.1); border-right: 4px solid var(--accent); color: #79c0ff; font-weight: bold; }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .progress-text { color: #8b949e; font-size: 1.1rem; font-weight: bold; }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Cisco CCNA Academy</h1>
+            <span class="subtitle">أسئلة المقابلات - Flashcards</span>
+        </div>
+        <div class="nav-buttons">
+            <a href="academy.html" class="top-btn">🔙 العودة للدروس</a>
+        </div>
+    </header>
+
+    <div class="interview-container">
+        <div id="categorySelector" class="cat-selector">
+            <!-- Categories injected here -->
+        </div>
+
+        <div class="flashcard-container" onclick="toggleCard()">
+            <div id="flashcard" class="flashcard">
+                <!-- Front -->
+                <div class="card-face card-front">
+                    <h3 id="qText">جاري التحميل...</h3>
+                    <div class="flip-hint">👆 اضغط للقلب ورؤية الإجابة</div>
+                </div>
+                <!-- Back -->
+                <div class="card-face card-back">
+                    <h4 style="color:var(--accent); border-bottom:1px solid #30363d; padding-bottom:10px; margin-bottom:20px;">الإجابة والتحليل:</h4>
+                    
+                    <div class="ans-section ans-ideal">
+                        <strong style="color:var(--success);">✅ الإجابة النموذجية:</strong><br>
+                        <span id="ansIdeal"></span>
+                    </div>
+                    
+                    <div class="ans-section ans-trap">
+                        <strong>⚠️ فخ شائع (احذر منه):</strong><br>
+                        <span id="ansTrap"></span>
+                    </div>
+                    
+                    <div class="ans-section ans-short">
+                        <strong>💡 الخلاصة (تذكرها دائماً):</strong><br>
+                        <span id="ansShort"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="btnPrev" onclick="prevCard()">السابق ◀</button>
+            <span class="progress-text" id="progressText">0 / 0</span>
+            <button class="btn" id="btnNext" onclick="nextCard()">▶ التالي</button>
+        </div>
+    </div>
+
+    <script src="data_loader.js"></script>
+    <script>
+        let currentCatIndex = 0;
+        let currentQIndex = 0;
+
+        function toggleCard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function buildCategories() {
+            const selector = document.getElementById('categorySelector');
+            selector.innerHTML = '';
+            interviewsData.forEach((cat, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-btn' + (idx === 0 ? ' active' : '');
+                btn.innerText = cat.category;
+                btn.onclick = () => selectCategory(idx);
+                selector.appendChild(btn);
+            });
+        }
+
+        function selectCategory(idx) {
+            currentCatIndex = idx;
+            currentQIndex = 0;
+            
+            // Update UI
+            document.querySelectorAll('.cat-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === idx);
+            });
+            
+            loadCard();
+        }
+
+        function loadCard() {
+            // Unflip if flipped
+            document.getElementById('flashcard').classList.remove('flipped');
+            
+            // Small delay to let unflip animation start before changing text
+            setTimeout(() => {
+                const cat = interviewsData[currentCatIndex];
+                const q = cat.questions[currentQIndex];
+                
+                document.getElementById('qText').innerText = q.q;
+                document.getElementById('ansIdeal').innerText = q.ideal;
+                document.getElementById('ansTrap').innerText = q.trap;
+                document.getElementById('ansShort').innerText = q.short;
+                
+                document.getElementById('progressText').innerText = `${currentQIndex + 1} / ${cat.questions.length}`;
+                
+                document.getElementById('btnPrev').disabled = (currentQIndex === 0);
+                document.getElementById('btnPrev').style.opacity = (currentQIndex === 0) ? 0.5 : 1;
+                
+                document.getElementById('btnNext').disabled = (currentQIndex === cat.questions.length - 1);
+                document.getElementById('btnNext').style.opacity = (currentQIndex === cat.questions.length - 1) ? 0.5 : 1;
+            }, 150);
+        }
+
+        function nextCard() {
+            if (currentQIndex < interviewsData[currentCatIndex].questions.length - 1) {
+                currentQIndex++;
+                loadCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentQIndex > 0) {
+                currentQIndex--;
+                loadCard();
+            }
+        }
+
+        document.addEventListener('ccnaDataReady', () => {
+            if (typeof interviewsData !== 'undefined' && interviewsData.length > 0) {
+                buildCategories();
+                loadCard();
+            } else {
+                document.getElementById('qText').innerText = "لم يتم العثور على أسئلة.";
+            }
+        });
+        
+        // Fallback if data is already loaded (e.g. cached)
+        window.onload = () => {
+            if (!window.ccnaDataLoading && typeof interviewsData !== 'undefined') {
+                buildCategories();
+                loadCard();
+            }
+        };
+    </script>
+    <script src="features.js?v=16"></script>
+</body>
+</html>
+"""
+
+with open(html_path, 'w', encoding='utf-8') as f:
+    f.write(new_html)
+
+print("Updated interview.html with Flashcards UI")
+
+# Also delete interviews.js from disk as we don't need it (we load interviews.json)
+try:
+    os.remove('d:/abdo_portfolio/build/ccna/interviews.js')
+    print("Deleted old interviews.js")
+except FileNotFoundError:
+    pass

@@ -1,0 +1,265 @@
+<div class="meth-content-view" id="meth-content-pt_mod2" style="display: none; --tool-color: #00e5a0;">
+    <div class="cyber-hero" dir="rtl" style="text-align: right;">
+        <h2 class="hero-title"><span class="hero-icon">🔍</span> 2. Content Discovery</h2>
+        <p class="hero-tagline">استكشاف البنية التحتية للموقع، استخراج المسارات المخفية، وتحليل تاريخ الويب والملفات بشكل معمق (Content Discovery).</p>
+    </div>
+
+    <!-- 2.1 Directory & File Brute Forcing -->
+    <div class="cyber-card">
+        <div class="card-header" dir="rtl" style="text-align: right;">
+            <h3>2.1 Directory & File Brute Forcing</h3>
+        </div>
+        <div class="card-body">
+            <p dir="rtl" style="text-align: right; color: #ccc; margin-bottom: 15px; line-height: 1.6;">
+                هذا القسم يركز على استخدام هجمات القوة الغاشمة (Brute Forcing) لتخمين واستكشاف المسارات (Directories) والملفات (Files) المخفية داخل خوادم الويب. هذه العملية ضرورية جداً لكشف صفحات لوحة التحكم، النسخ الاحتياطية (Backups)، والملفات الحساسة التي لم يتم الإعلان عنها للمستخدمين العاديين، مما قد يؤدي لثغرات خطيرة مثل تسريب البيانات.
+            </p>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right;">
+                <strong>أداة Feroxbuster (Rust-based, fast):</strong>
+                <p>أداة سريعة جداً ومبنية بلغة Rust، تُستخدم للبحث المتكرر عن المسارات. نحدد الهدف باستخدام <code>-u</code> وقائمة الكلمات (Wordlist) باستخدام <code>-w</code>. الراية <code>-C 404</code> تخبر الأداة بتجاهل أي استجابة من الخادم تحمل كود 404 (Not Found) لتقليل التشويش والتركيز على الصفحات الموجودة فعلياً.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Feroxbuster</span>
+                </div>
+                <pre><code>feroxbuster -u https://target.com/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-words.txt -C 404</code></pre>
+            </div>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right; margin-top: 20px;">
+                <strong>أداة FFuF (Go-based, highly flexible):</strong>
+                <p>أداة <strong>Fuzz Faster U Fool</strong> من أقوى الأدوات المبرمجة بلغة Go في عمليات الـ Fuzzing. تعتمد على وضع كلمة <code>FUZZ</code> كمكان لتبديل الكلمات من القائمة. الأوامر التالية توضح كيفية فحص المسارات المباشرة (Directory Fuzzing) مع السماح بأكواد حالة معينة <code>-mc</code>، واكتشاف الملفات بصيغ معينة مثل <code>.php</code> (File extension fuzzing)، وحتى التلاعب بترويسة المضيف <code>Host Header</code> لاكتشاف النطاقات الفرعية الافتراضية المخفية (Virtual host fuzzing).</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">FFuF - Directory, Extension & VHost</span>
+                </div>
+                <pre><code># Directory fuzzing
+ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt -mc 200,301,302,403
+
+# File extension fuzzing
+ffuf -u https://target.com/FUZZ.php -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-words.txt -mc 200
+
+# Virtual host fuzzing
+ffuf -u http://target.com -H "Host: FUZZ.target.com" -w subdomains.txt -mc 200</code></pre>
+            </div>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right; margin-top: 20px;">
+                <strong>أداة Gobuster Directory Mode:</strong>
+                <p>من الكلاسيكيات المستقرة في عالم اكتشاف المحتوى. استخدام الوضع <code>dir</code> يبحث عن المسارات. الراية <code>-x php,html,js,txt</code> هامة جداً لإجبار الأداة على البحث عن الملفات بتلك الامتدادات المحددة جنباً إلى جنب مع المجلدات، بينما <code>-t 50</code> تحدد عدد العمليات المتزامنة (Threads) لرفع سرعة الفحص.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Gobuster</span>
+                </div>
+                <pre><code>gobuster dir -u https://target.com -w /path/to/wordlist.txt -x php,html,js,txt -t 50</code></pre>
+            </div>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right; margin-top: 20px;">
+                <strong>أداة Dirsearch:</strong>
+                <p>سكربت بايثون متخصص وسهل الاستخدام يوفر واجهة نتائج نظيفة وتلقائية. مثل Gobuster، يتم استخدام <code>-e</code> لإرفاق امتدادات الملفات المستهدفة أثناء عملية التخمين وتوسيع نطاق البحث.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Dirsearch</span>
+                </div>
+                <pre><code>dirsearch -u https://target.com -e php,html,js -w wordlist.txt</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2.2 Archive & Historical Analysis -->
+    <div class="cyber-card">
+        <div class="card-header" dir="rtl" style="text-align: right;">
+            <h3>2.2 Archive & Historical Analysis</h3>
+        </div>
+        <div class="card-body">
+            <p dir="rtl" style="text-align: right; color: #ccc; margin-bottom: 15px; line-height: 1.6;">
+                تحليل السجلات المؤرشفة وتاريخ الموقع (Historical Analysis) هي تقنية استخباراتية ذكية جداً. بدلاً من الاتصال بالسيرفر مباشرة للتخمين، نقوم بسحب جميع الروابط التي تم أرشفتها قديماً عبر محركات البحث أو الأرشيف. قد تكشف هذه الطريقة عن واجهات (APIs) قديمة منسية أو ملفات سرية غير محمية (Zombie APIs).
+            </p>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right;">
+                <strong>أداة Waybackurls:</strong>
+                <p>هذا الأمر يمرر اسم النطاق ليتصل بخدمة أرشيف الإنترنت (Wayback Machine) ويستخرج كل الروابط المحفوظة مسبقاً لهذا الموقع عبر الزمن، ويخزنها في ملف نصي للتحليل.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Waybackurls</span>
+                </div>
+                <pre><code>echo target.com | waybackurls > old_endpoints.txt</code></pre>
+            </div>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right; margin-top: 20px;">
+                <strong>أداة Gau (GetAllUrls):</strong>
+                <p>تُعد أداة Gau أشمل من سابقتها، حيث تجمع الروابط المؤرشفة من مصادر متعددة في نفس الوقت (مثل AlienVault OTX و Common Crawl بالإضافة إلى Wayback Machine) مما يمنحنا رؤية أعمق لتاريخ الموقع.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Gau</span>
+                </div>
+                <pre><code>echo target.com | gau > urls.txt</code></pre>
+            </div>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right; margin-top: 20px;">
+                <strong>أداة Katana (Modern crawler):</strong>
+                <p>زاحف ويب حديث ومتطور (Crawler) من تطوير ProjectDiscovery. لا يكتفي باستخراج الروابط السطحية بل يتفاعل مع بيئة الموقع. الرايات <code>-jc</code> و <code>-jsl</code> تجعله قادراً على سحب وتحليل الروابط المدفونة داخل ملفات الجافاسكريبت. بينما يقتصر البحث في وضع <code>-f qurl</code> على تنسيق المخرجات لعرض الروابط التي تحتوي على معطيات ومتغيرات (Queries/Parameters) مفيدة فقط.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Katana</span>
+                </div>
+                <pre><code>katana -u https://target.com -jc -jsl -f qurl -o endpoints.txt</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2.3 JavaScript Analysis -->
+    <div class="cyber-card">
+        <div class="card-header" dir="rtl" style="text-align: right;">
+            <h3>2.3 JavaScript Analysis</h3>
+        </div>
+        <div class="card-body">
+            <p dir="rtl" style="text-align: right; color: #ccc; margin-bottom: 15px; line-height: 1.6;">
+                تُعد ملفات الجافاسكريبت (JavaScript) كنزاً دفيناً لصائدي الثغرات. التحليل المعمق لهذه الملفات (JS Analysis) يكشف عن مسارات الـ API المخفية، وأسرار أو مفاتيح تشفير تُركت بالخطأ (Hardcoded Secrets).
+            </p>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right;">
+                <strong>التقنيات الأساسية (Key Techniques):</strong>
+                <ul style="margin-right: 20px; list-style-type: arabic-indic;">
+                    <li><strong>Extract endpoints from JS files:</strong> استخراج الروابط والمسارات المدفونة والمنسية داخل كود الـ JS.</li>
+                    <li><strong>Find API keys, secrets, and credentials:</strong> اصطياد مفاتيح الـ API، أسرار التشفير، وبيانات الدخول المتروكة سهواً في الأكواد.</li>
+                    <li><strong>Discover hidden parameters and routes:</strong> استكشاف المعاملات والمسارات الإدارية لتوسيع سطح الهجوم واكتشاف نقاط ضعف أعمق.</li>
+                </ul>
+                <p><strong>الأدوات المستخدمة:</strong> نستخدم <code>Katana</code> للزحف بصمت <code>-silent</code>، وسكربت <code>xnLinkFinder</code> للبحث الفعّال بالتعابير النمطية، وأداة <code>jsluice</code> للتحليل المعمق المبني على شجرة الأكواد (AST)، مع الاستعانة بأوامر <code>grep</code> اليدوية لاصطياد الأنماط السريعة مثل استدعاءات <code>fetch</code> و <code>axios</code> التي تدل على تخاطب الموقع مع قواعد البيانات الخلفية.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">JavaScript Analysis Tools</span>
+                </div>
+                <pre><code># Using Katana for JS endpoint extraction
+katana -u https://target.com -jc -jsl -f url -silent -o js_endpoints.txt
+
+# Using xnLinkFinder
+python3 xnLinkFinder.py -i target.com -o output.txt
+
+# Using jsluice
+jsluice https://target.com/app.js
+
+# Manual grep patterns
+grep -r "api\." *.js | grep -oP 'https?://[^"'\`]+'
+grep -r "fetch\|axios\|XMLHttpRequest" *.js</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2.4 Parameter Discovery -->
+    <div class="cyber-card">
+        <div class="card-header" dir="rtl" style="text-align: right;">
+            <h3>2.4 Parameter Discovery</h3>
+        </div>
+        <div class="card-body">
+            <p dir="rtl" style="text-align: right; color: #ccc; margin-bottom: 15px; line-height: 1.6;">
+                اكتشاف المعاملات (Parameters) المخفية في الروابط (مثل <code>?id=1</code>) يعتبر مرحلة حرجة. اكتشاف متغيرات غير موثقة (Hidden Parameters) يفتح الباب لثغرات حقن خطيرة مثل حقن قواعد البيانات (SQLi) وتنفيذ السكربتات (XSS) أو ثغرات التحكم المباشر (IDOR).
+            </p>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right;">
+                <strong>أداة Arjun:</strong>
+                <p>أداة ذكية للغاية في اكتشاف المعاملات. بدلاً من التجربة واحدة تلو الأخرى، تستخدم تقنيات متطورة لتجربة آلاف المعاملات في طلبات مجتمعة وتحليل الاستجابات لمعرفة بدقة أي متغير (Parameter) أحدث تأثيراً في نتيجة الصفحة.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Arjun</span>
+                </div>
+                <pre><code>python3 arjun.py -u https://target.com/page.php</code></pre>
+            </div>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right; margin-top: 20px;">
+                <strong>أداة ParamSpider:</strong>
+                <p>لا تقوم بالتخمين النشط، بل تعتمد على سجلات أرشيف الإنترنت للبحث السريع عن الروابط القديمة للموقع التي تحتوي فعلياً على Parameters حقيقية بدلاً من التخمين العشوائي، مما يوفر وقت وجهد كبير.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">ParamSpider</span>
+                </div>
+                <pre><code>paramspider --domain target.com</code></pre>
+            </div>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right; margin-top: 20px;">
+                <strong>أداة FFuF Parameter Fuzzing:</strong>
+                <p>تستخدم أداة FFuF بالأسلوب التقليدي (Parameter Fuzzing) عبر وضع كلمة <code>FUZZ</code> مكان المعامل المجهول وتمرير قائمة تحتوي على أسماء المتغيرات الشائعة لمعرفة ما يقبله السيرفر، مع إعطاء قيمة تجريبية <code>test</code> للمتغير.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">FFuF Parameter Fuzzing</span>
+                </div>
+                <pre><code>ffuf -u https://target.com/page.php?FUZZ=test -w /usr/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt -mc 200</code></pre>
+            </div>
+
+            <div class="info-box tip" dir="rtl" style="text-align: right; margin-top: 20px;">
+                <strong>أداة X8 (Hidden parameter discovery):</strong>
+                <p>أداة سريعة جداً مبنية بلغة Rust، تُعد من أقوى البدائل العصرية. تعتمد على خوارزميات متقدمة لإرسال كميات كبيرة من المتغيرات وتحليل ردود السيرفر لاكتشاف الـ Parameters المخفية التي تؤدي لتغيير في سلوك الصفحة بدقة فائقة.</p>
+            </div>
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">X8</span>
+                </div>
+                <pre><code>x8 -u https://target.com/page.php -w parameters.txt</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2.5 Content Discovery Pipeline -->
+    <div class="cyber-card">
+        <div class="card-header" dir="rtl" style="text-align: right;">
+            <h3>2.5 Content Discovery Pipeline</h3>
+        </div>
+        <div class="card-body">
+            <p dir="rtl" style="text-align: right; color: #ccc; margin-bottom: 15px; line-height: 1.6;">
+                هذا القسم يوضح "مسار العمل الكامل" أو الـ (Pipeline) لمرحلة اكتشاف المحتوى. في البيئة الاحترافية، لا نعتمد على أداة واحدة فحسب، بل نقوم بدمج المخرجات من أدوات الزحف والأرشفة لتكون مدخلات لأدوات البحث المتعمق والـ Fuzzing للحصول على صورة بانورامية شاملة للبنية التحتية للهدف.
+            </p>
+            
+            <div class="info-box tip" dir="rtl" style="text-align: right;">
+                <strong>التسلسل المنطقي للبحث (Pipeline Breakdown):</strong>
+                <ul style="margin-right: 20px; list-style-type: arabic-indic;">
+                    <li><strong>الخطوة 1:</strong> الزحف المباشر واستخراج الروابط المرئية والحية الحالية باستخدام <code>Katana</code> وحفظها في ملف.</li>
+                    <li><strong>الخطوة 2:</strong> توسيع دائرة البحث عبر إضافة الروابط المؤرشفة تاريخياً عبر <code>Gau</code> وإلحاقها <code>>></code> بنفس الملف.</li>
+                    <li><strong>الخطوة 3:</strong> فلترة قائمة الروابط الكلية لاقتناص ملفات <code>.js</code> وتمريرها تباعاً باستخدام <code>xargs</code> لأداة <code>Katana</code> مرة أخرى لاستخراج أي مسارات خفية بداخلها.</li>
+                    <li><strong>الخطوة 4:</strong> إجراء فحص التخمين <code>Brute Force</code> الشامل على مسارات الخادم باستخدام <code>FFuF</code>.</li>
+                    <li><strong>الخطوة 5:</strong> أخذ جميع الروابط، وفلترة تلك التي تحتوي على معاملات (علامة <code>?</code>)، وتمريرها لأداة <code>Arjun</code> لاكتشاف المتغيرات الإضافية والمخفية (Parameter Fuzzing) وحفظها كملف <code>JSON</code>.</li>
+                </ul>
+            </div>
+            
+            <div class="cmd-ui-box">
+                <div class="cmd-header">
+                    <span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span>
+                    <span class="cmd-title">Full Discovery Pipeline</span>
+                </div>
+                <pre><code># Step 1: Crawl and collect URLs
+katana -u https://target.com -jc -jsl -f url -silent -o all_urls.txt
+
+# Step 2: Add historical URLs
+echo target.com | gau >> all_urls.txt
+
+# Step 3: Extract JS endpoints
+cat all_urls.txt | grep "\.js$" | xargs -I {} katana -u {} -jc -jsl -f url >> js_endpoints.txt
+
+# Step 4: Directory brute force
+ffuf -u https://target.com/FUZZ -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-medium-directories.txt -mc 200,301,302,403 -o directories.txt
+
+# Step 5: Parameter discovery
+cat all_urls.txt | grep "?" | xargs -I {} arjun -u {} -oJ params.json</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
