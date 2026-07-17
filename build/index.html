@@ -416,6 +416,15 @@
       }
     }
   </style>
+
+  <style>
+    body.standalone-mode .sidebar { display: none !important; }
+    body.standalone-mode .content-workspace { margin-left: 0 !important; width: 100% !important; max-width: 100% !important; border-radius: 0 !important; }
+    body.standalone-mode .workspace-tabs { display: none !important; }
+    body.standalone-mode .bottom-nav { display: none !important; }
+    body.standalone-mode .top-nav { display: none !important; }
+    body.standalone-mode .mobile-header { display: none !important; }
+  </style>
 </head>
 <body>
 
@@ -608,7 +617,7 @@
         <button class="tab-link active" onclick="switchTab('dashboard')" data-tab="dashboard">
           <span class="tab-icon">🏠</span> Dashboard
         </button>
-        <a class="tab-link" href="index.html#academy" target="_blank" data-tab="academy">
+        <a class="tab-link" href="index.html?standalone=true#academy" target="_blank" data-tab="academy">
           <span class="tab-icon">🧰</span> Tools Explorer
         </a>
         
@@ -628,25 +637,25 @@
         <a class="tab-link" href="linux/academy.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; color: #2ea043; border: 1px solid rgba(46, 160, 67, 0.5);">
           <span class="tab-icon">🐧</span> Linux
         </a>
-        <a class="tab-link" href="index.html#labs" target="_blank" data-tab="labs">
+        <a class="tab-link" href="index.html?standalone=true#labs" target="_blank" data-tab="labs">
           <span class="tab-icon">🧪</span> Labs
         </a>
         <a class="tab-link" href="bug-bounty-academy/index.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.5);">
           <span class="tab-icon">🎮</span> Simulator
         </a>
-        <a class="tab-link" href="index.html#articles" target="_blank" data-tab="articles">
+        <a class="tab-link" href="index.html?standalone=true#articles" target="_blank" data-tab="articles">
           <span class="tab-icon">📚</span> Articles
         </a>
-        <a class="tab-link" href="index.html#research" target="_blank" data-tab="research">
+        <a class="tab-link" href="index.html?standalone=true#research" target="_blank" data-tab="research">
           <span class="tab-icon">🔬</span> Research Hub
         </a>
-        <a class="tab-link" href="index.html#books" target="_blank" data-tab="books">
+        <a class="tab-link" href="index.html?standalone=true#books" target="_blank" data-tab="books">
           <span class="tab-icon">📖</span> Books
         </a>
-        <a class="tab-link" href="index.html#arena" target="_blank" data-tab="arena">
+        <a class="tab-link" href="index.html?standalone=true#arena" target="_blank" data-tab="arena">
           <span class="tab-icon">🎯</span> Arena
         </a>
-        <a class="tab-link" href="index.html#terminal" target="_blank" data-tab="terminal">
+        <a class="tab-link" href="index.html?standalone=true#terminal" target="_blank" data-tab="terminal">
           <span class="tab-icon">🖥️</span> Terminal CLI
         </a>
       </div>
@@ -21493,11 +21502,11 @@ function exitSimulator() {
       <span class="bottom-nav-icon">🏠</span>
       <span class="bottom-nav-label">Dash</span>
     </button>
-    <a class="bottom-nav-item" href="index.html#labs" target="_blank" data-bottom-tab="labs" aria-label="Labs">
+    <a class="bottom-nav-item" href="index.html?standalone=true#labs" target="_blank" data-bottom-tab="labs" aria-label="Labs">
       <span class="bottom-nav-icon">🧪</span>
       <span class="bottom-nav-label">Labs</span>
     </a>
-    <a class="bottom-nav-item" href="index.html#academy" target="_blank" data-bottom-tab="academy" aria-label="Academy">
+    <a class="bottom-nav-item" href="index.html?standalone=true#academy" target="_blank" data-bottom-tab="academy" aria-label="Academy">
       <span class="bottom-nav-icon">🧠</span>
       <span class="bottom-nav-label">Academy</span>
     </a>
@@ -23343,6 +23352,14 @@ sudo nano
         }
       }
       triggerLeaderboardUpdate();
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.location.search.includes("standalone=true")) {
+            document.body.classList.add("standalone-mode");
+        }
     });
   </script>
 </body>
