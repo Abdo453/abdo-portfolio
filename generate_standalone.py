@@ -26,6 +26,9 @@ standalone_css = '''
         min-height: 100vh;
     }
     
+    /* Hide all panes by default, show only the target one */
+    .workspace-pane { display: none !important; }
+    #pane-{tab} { display: block !important; animation: none !important; }
     /* Override grid layout if present */
     .dashboard-layout { 
         display: block !important;
@@ -66,7 +69,7 @@ for tab in tabs:
     
     # 2. Inject CSS
     if 'standalone-back-btn' not in tab_content:
-        tab_content = tab_content.replace('</head>', standalone_css + '</head>')
+        tab_content = tab_content.replace('</head>', standalone_css.replace('{tab}', tab) + '</head>')
         
         # 3. Inject Back Button right after content-workspace starts
         tab_content = tab_content.replace('<main class="content-workspace">', f'<main class="content-workspace">\n{back_btn_html}')
