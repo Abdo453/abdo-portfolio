@@ -1997,12 +1997,16 @@ h1, h2, h3, h4, h5, h6 {
 /* ?? 8. EXPLORER (3-PANE) LAYOUT ??????????????????????????????? */
 .explorer-layout {
   display: flex;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 40px);
   min-height: 600px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--border-radius);
+  background: rgba(10, 10, 18, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 229, 255, 0.15);
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 229, 255, 0.05);
+  direction: ltr !important; /* Force LTR for IDE feel */
 }
 
 .explorer-title {
@@ -2018,9 +2022,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Pane 1: Sidebar (Folders) */
 .explorer-sidebar {
-  width: 250px;
-  background: var(--bg-dark);
-  border-right: 1px solid var(--border-glass);
+  width: 260px;
+  background: rgba(5, 5, 12, 0.4);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   padding: 20px 15px;
   display: flex;
   flex-direction: column;
@@ -2064,12 +2068,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Pane 2: Tools Panel */
 .explorer-tools-panel {
-  width: 280px;
-  background: rgba(255,255,255,0.01);
-  border-right: 1px solid var(--border-glass);
+  width: 300px;
+  background: rgba(15, 15, 25, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   padding: 20px 15px;
   display: flex;
   flex-direction: column;
+  box-shadow: inset -10px 0 20px rgba(0,0,0,0.2);
 }
 
 .tools-list {
@@ -2131,10 +2136,11 @@ h1, h2, h3, h4, h5, h6 {
 /* Pane 3: Dynamic Content Viewer */
 .explorer-content-panel {
   flex: 1;
-  background: var(--bg-dark);
+  background: rgba(0, 0, 0, 0.2);
   padding: 30px;
   overflow-y: auto;
   position: relative;
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
 }
 
 .empty-state {
@@ -5091,3 +5097,24 @@ input:checked + .slider:before {
 }
 
 
+
+
+.metric-bar {
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px currentColor;
+}
+.tool-header-card {
+  background: linear-gradient(135deg, rgba(10, 10, 15, 0.8), rgba(20, 20, 30, 0.9)) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+.tool-body-content img {
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  max-width: 100%;
+  height: auto;
+}
