@@ -1703,6 +1703,29 @@ function updateGlobalProgress() {
       }
     }
   });
+
+  // Dynamic Interactive Roadmap Updates
+  const roadmapNodes = ['p0', 'p1', 'p2', 'p6', 'p7', 'p_writeups'];
+  let roadmapCompleted = 0;
+  roadmapNodes.forEach(function(nodeId) {
+    const el = document.getElementById('roadmap-node-' + nodeId);
+    if (el) {
+      const isDone = completedModules.includes(nodeId) || localStorage.getItem('bb_phase_done_' + nodeId) === '1';
+      if (isDone) {
+        el.style.borderColor = 'var(--neon-green)';
+        el.style.background = 'rgba(16, 185, 129, 0.08)';
+        roadmapCompleted++;
+      } else {
+        el.style.borderColor = 'rgba(0, 229, 255, 0.2)';
+        el.style.background = 'rgba(10, 10, 24, 0.85)';
+      }
+    }
+  });
+  const roadmapPctText = document.getElementById('roadmap-pct-completed');
+  if (roadmapPctText) {
+    const pct = Math.round((roadmapCompleted / roadmapNodes.length) * 100);
+    roadmapPctText.textContent = 'Progress: ' + pct + '%';
+  }
 }
 
 function markModuleComplete(phaseId) {

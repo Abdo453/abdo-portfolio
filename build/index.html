@@ -648,6 +648,9 @@
         <button class="tab-link" onclick="switchTab('arena')" data-tab="arena">
           <span class="tab-icon">🎯</span> Arena
         </button>
+        <button class="tab-link" onclick="switchTab('terminal')" data-tab="terminal">
+          <span class="tab-icon">🖥️</span> Terminal CLI
+        </button>
         <button class="tab-link" onclick="switchTab('about')" data-tab="about">
           <span class="tab-icon">👤</span> About
         </button>
@@ -872,6 +875,33 @@
 
           </div>
 
+        </div>
+
+        <!-- Terminal CLI Workspace Pane -->
+        <div class="workspace-pane" id="pane-terminal">
+          <h2 class="pane-view-title">// Interactive System CLI</h2>
+          <div class="cyber-card" style="border: 1px solid rgba(0, 229, 255, 0.25); display: flex; flex-direction: column; padding: 0; background: rgba(5, 5, 10, 0.9); box-shadow: 0 0 25px rgba(0, 229, 255, 0.1); margin-bottom: 25px;">
+            <div style="background: rgba(10, 10, 20, 0.95); border-bottom: 1px solid rgba(0, 229, 255, 0.15); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: 'Fira Code', monospace; font-size: 0.8rem; color: var(--accent-cyan); font-weight: bold; letter-spacing: 1px;">visitor@hunteros:~$ interactive_shell</span>
+              <div style="display: flex; gap: 6px;">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2);"></span>
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2);"></span>
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2);"></span>
+              </div>
+            </div>
+            
+            <div id="standaloneConsoleBody" style="height: 480px; overflow-y: auto; padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; color: #cbd5e1; direction: ltr; text-align: left; background: #030308;">
+              <div style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 10px; font-size: 1rem; text-shadow: 0 0 8px rgba(0,229,255,0.3);">=== HUNTEROS SECURE INTERACTIVE CLI v2.0 ===</div>
+              <div style="color: #64748b; margin-bottom: 15px;">System initialized. Secured connection established.</div>
+              <div style="margin-bottom: 10px;">Type <span style="color: var(--accent-cyan); font-weight: bold; text-decoration: underline;">help</span> to retrieve the database command library.</div>
+              <div style="border-bottom: 1px dashed rgba(255,255,255,0.1); margin: 15px 0;"></div>
+            </div>
+
+            <div style="padding: 12px 20px; background: rgba(5, 5, 10, 0.95); border-top: 1px solid rgba(0, 229, 255, 0.15); display: flex; align-items: center;">
+              <span style="color: var(--accent-cyan); font-family: 'Fira Code', monospace; font-weight: bold; margin-right: 10px; font-size: 0.9rem; user-select: none;">visitor@hunteros:~$</span>
+              <input type="text" id="standaloneConsoleInput" autocomplete="off" spellcheck="false" placeholder="Type a command (e.g. help, whoami, projects)..." style="flex: 1; background: none; border: none; outline: none; color: #fff; font-family: 'Fira Code', monospace; font-size: 0.9rem;" />
+            </div>
+          </div>
         </div>
 
 <div class="workspace-pane" id="pane-research">
@@ -23110,6 +23140,197 @@ sudo nano
       }
     }
     window.calculateCvssScore = calculateCvssScore;
+
+    // --- Interactive Terminal CLI Logic ---
+    (function() {
+      const consoleInput = document.getElementById('standaloneConsoleInput');
+      const consoleBody = document.getElementById('standaloneConsoleBody');
+      if (!consoleInput || !consoleBody) return;
+
+      const history = [];
+      let historyIdx = -1;
+
+      const bannerText = `
+<span style="color: var(--accent-cyan); font-family: monospace; white-space: pre; display: block; line-height: 1.2; font-size: 0.75rem;">
+ _    _  _    _  _   _  _______  ______  _____   ____   _____ 
+| |  | || |  | || \\ | ||__   __||  ____||  __ \\ / __ \\ / ____|
+| |__| || |  | ||  \\| |   | |   | |__   | |__) | |  | | (___  
+|  __  || |  | || . \` |   | |   |  __|  |  _  /| |  | |\\___ \\ 
+| |  | || |__| || |\\  |   | |   | |____ | | \\ \\| |__| |____) |
+|_|  |_| \\____/ |_| \\_|   |_|   |______||_|  \\_\\\\____/|_____/ 
+</span>
+<div style="color: #64748b; font-size: 0.8rem; margin-top: 5px;">Type 'help' to display command library.</div>
+`;
+
+      function appendToConsole(html) {
+        const div = document.createElement('div');
+        div.style.marginBottom = '12px';
+        div.innerHTML = html;
+        consoleBody.appendChild(div);
+        consoleBody.scrollTop = consoleBody.scrollHeight;
+      }
+
+      consoleInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          const rawCmd = consoleInput.value;
+          const cmd = rawCmd.trim().toLowerCase();
+          consoleInput.value = '';
+
+          if (cmd) {
+            history.push(rawCmd);
+            historyIdx = history.length;
+          }
+
+          // Echo command
+          appendToConsole(`<span style="color: #64748b;">visitor@hunteros:~$</span> <span style="color: #fff;">${rawCmd}</span>`);
+
+          if (!cmd) return;
+
+          switch(cmd) {
+            case 'help':
+              appendToConsole(`
+<div style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;">Available Command Reference:</div>
+<table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: monospace;">
+  <tr><td style="width: 120px; color: var(--accent-cyan); padding: 2px 0;">help</td><td style="color: #94a3b8;">Display this assistant helper panel</td></tr>
+  <tr><td style="color: var(--accent-cyan); padding: 2px 0;">clear</td><td style="color: #94a3b8;">Reset console view buffer</td></tr>
+  <tr><td style="color: var(--accent-cyan); padding: 2px 0;">whoami</td><td style="color: #94a3b8;">Resolve active user security profile</td></tr>
+  <tr><td style="color: var(--accent-cyan); padding: 2px 0;">projects</td><td style="color: #94a3b8;">List defensive and offensive security tools</td></tr>
+  <tr><td style="color: var(--accent-cyan); padding: 2px 0;">labs</td><td style="color: #94a3b8;">Retrieve active system laboratory workspaces</td></tr>
+  <tr><td style="color: var(--accent-cyan); padding: 2px 0;">stats</td><td style="color: #94a3b8;">Render security progress metrics and badges</td></tr>
+  <tr><td style="color: var(--accent-cyan); padding: 2px 0;">roadmap</td><td style="color: #94a3b8;">View complete training and certificate path</td></tr>
+  <tr><td style="color: var(--accent-cyan); padding: 2px 0;">contact</td><td style="color: #94a3b8;">Query verified connection & help desk endpoints</td></tr>
+  <tr><td style="color: var(--accent-cyan); padding: 2px 0;">banner</td><td style="color: #94a3b8;">Output HunterOS startup ascii signature</td></tr>
+</table>
+              `);
+              break;
+
+            case 'clear':
+              consoleBody.innerHTML = '';
+              break;
+
+            case 'banner':
+              appendToConsole(bannerText);
+              break;
+
+            case 'whoami':
+              let userObj = null;
+              try {
+                userObj = JSON.parse(localStorage.getItem('current_user'));
+              } catch(err) {}
+
+              if (userObj) {
+                appendToConsole(`
+<div style="border-left: 2px solid var(--accent-cyan); padding-left: 10px;">
+  <div><span style="color: var(--accent-cyan); font-weight: bold;">[IDENTITY DETECTED]</span></div>
+  <div style="margin-top: 5px;">Username: <span style="color: #fff;">${userObj.username || 'Guest'}</span></div>
+  <div>Email: <span style="color: #fff;">${userObj.email || 'N/A'}</span></div>
+  <div>WhatsApp: <span style="color: #fff;">${userObj.whatsapp || 'N/A'}</span></div>
+  <div>Gender: <span style="color: #fff;">${userObj.gender || 'N/A'}</span></div>
+  <div>System Level: <span style="color: var(--accent-cyan);">Level 1 Junior Security Analyst</span></div>
+</div>
+                `);
+              } else {
+                appendToConsole(`
+<div style="border-left: 2px solid #ef4444; padding-left: 10px; color: #f87171;">
+  [GUEST_MODE] No registered active user session discovered. Please log in or register.
+</div>
+                `);
+              }
+              break;
+
+            case 'projects':
+              appendToConsole(`
+<div style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;">Active Projects:</div>
+<ul style="list-style-type: square; margin-left: 20px; padding: 0; color: #94a3b8; font-size: 0.85rem;">
+  <li><span style="color: #fff; font-weight: bold;">CVE-2025 Academy:</span> Detailed proof-of-concepts, lab walkthroughs and mitigation strategies.</li>
+  <li><span style="color: #fff; font-weight: bold;">Security Audit Framework:</span> Comprehensive shell utilities for testing configuration drift.</li>
+  <li><span style="color: #fff; font-weight: bold;">Local Port Audit:</span> Real-time network listener and socket banner grabber.</li>
+</ul>
+              `);
+              break;
+
+            case 'labs':
+              appendToConsole(`
+<div style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;">System Laboratories:</div>
+<ul style="list-style-type: circle; margin-left: 20px; padding: 0; color: #94a3b8; font-size: 0.85rem;">
+  <li><span style="color: #fff;">Bandit Wargame:</span> OverTheWire Bandit levels 0-34 solutions and concepts.</li>
+  <li><span style="color: #fff;">Security Flashcards:</span> Spaced repetition flashcard training for certificates.</li>
+  <li><span style="color: #fff;">CVSS Calculator:</span> Standard threat score formulation suite.</li>
+</ul>
+              `);
+              break;
+
+            case 'stats':
+              let userStats = null;
+              try {
+                userStats = JSON.parse(localStorage.getItem('current_user'));
+              } catch(err) {}
+              const displayXp = userStats ? (userStats.xp || 150) : 0;
+
+              appendToConsole(`
+<div style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;">Operational Metrics:</div>
+<div style="font-family: monospace; font-size: 0.85rem; color: #94a3b8;">
+  <div>Analyzed CVE Vulnerabilities: <span style="color: var(--accent-cyan); font-weight: bold;">42</span></div>
+  <div>Labs Resolved: <span style="color: var(--accent-cyan); font-weight: bold;">5 / 10</span></div>
+  <div>Total Academy XP: <span style="color: #10b981; font-weight: bold;">${displayXp} XP</span></div>
+  <div>Acquired Badge: <span style="color: #eab308; font-weight: bold;">[🛡️ Cyber Sentinel]</span></div>
+</div>
+              `);
+              break;
+
+            case 'roadmap':
+              appendToConsole(`
+<div style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;">Cybersecurity Academy Roadmap:</div>
+<div style="font-family: monospace; font-size: 0.8rem; line-height: 1.4; color: #94a3b8;">
+  <div>Phase 1: Recon & Intelligence      <span style="color: #10b981;">[████████████████████] 100%</span></div>
+  <div>Phase 2: Vulnerability Analysis    <span style="color: #10b981;">[████████████████████] 100%</span></div>
+  <div>Phase 3: Attack Exploitation      <span style="color: #eab308;">[████████████░░░░░░░░] 60%</span></div>
+  <div>Phase 4: Privilege Escalation     <span style="color: #ef4444;">[░░░░░░░░░░░░░░░░░░░░] 0%</span></div>
+  <div>Phase 5: Mitigation & Patching     <span style="color: #ef4444;">[░░░░░░░░░░░░░░░░░░░░] 0%</span></div>
+</div>
+              `);
+              break;
+
+            case 'contact':
+              let contactUser = null;
+              try {
+                contactUser = JSON.parse(localStorage.getItem('current_user'));
+              } catch(err) {}
+              const emailVal = contactUser && contactUser.email ? contactUser.email : 'abdo453@hunteros.org';
+              const phoneVal = contactUser && contactUser.whatsapp ? contactUser.whatsapp : '+201012345678';
+
+              appendToConsole(`
+<div style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;">Communication Channels:</div>
+<div style="font-family: monospace; font-size: 0.85rem; color: #94a3b8;">
+  <div>Support Email: <span style="color: #fff;">${emailVal}</span></div>
+  <div>WhatsApp Hotline: <span style="color: #fff;">${phoneVal}</span></div>
+  <div style="margin-top: 5px; color: var(--accent-cyan);">Drop a message anytime for direct advisory services.</div>
+</div>
+              `);
+              break;
+
+            default:
+              appendToConsole(`<span style="color: #f87171;">Command not found: '${cmd}'. Type 'help' for support list.</span>`);
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (history.length > 0 && historyIdx > 0) {
+            historyIdx--;
+            consoleInput.value = history[historyIdx];
+          }
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (historyIdx < history.length - 1) {
+            historyIdx++;
+            consoleInput.value = history[historyIdx];
+          } else {
+            historyIdx = history.length;
+            consoleInput.value = '';
+          }
+        }
+      });
+    })();
+    // --- End Interactive Terminal CLI Logic ---
 
     document.addEventListener('DOMContentLoaded', async () => {
       // Load default research item
