@@ -608,8 +608,14 @@
             localStorage.setItem('current_user', JSON.stringify(result.user));
             if (result.user.xp !== undefined) {
               localStorage.setItem('arena_xp', result.user.xp);
-              const completed = result.user.completed_challenges || [];
-              completed.forEach(cId => localStorage.setItem(cId, 'true'));
+              const completed = result.user.completed_challenges;
+              if (completed && !Array.isArray(completed)) {
+                  for (let k in completed) {
+                      localStorage.setItem(k, JSON.stringify(completed[k]));
+                  }
+              } else if (Array.isArray(completed)) {
+                  completed.forEach(cId => localStorage.setItem(cId, 'true'));
+              }
             }
 
             setTimeout(() => {
@@ -663,8 +669,14 @@
                   localStorage.setItem('current_user', JSON.stringify(userObj));
                   if (userObj.xp !== undefined) {
                     localStorage.setItem('arena_xp', userObj.xp);
-                    const completed = userObj.completed_challenges || [];
-                    completed.forEach(cId => localStorage.setItem(cId, 'true'));
+                    const completed = userObj.completed_challenges;
+                    if (completed && !Array.isArray(completed)) {
+                        for (let k in completed) {
+                            localStorage.setItem(k, JSON.stringify(completed[k]));
+                        }
+                    } else if (Array.isArray(completed)) {
+                        completed.forEach(cId => localStorage.setItem(cId, 'true'));
+                    }
                   }
                   
                   logTerminal('AUTHENTICATION ACCEPTED!', 'success');

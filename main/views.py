@@ -64,6 +64,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
 from .models import UserProfile
 
 @csrf_exempt
@@ -85,13 +86,14 @@ def api_register(request):
         if User.objects.filter(username__iexact=username).exists():
             return JsonResponse({'success': False, 'error': 'Username already exists'}, status=400)
         
-        user = User.objects.create_user(username=username, password=password)
-        profile = user.profile
-        profile.email = email
-        profile.whatsapp = whatsapp
-        profile.gender = gender
-        profile.avatar = avatar
-        profile.save()
+        with transaction.atomic():
+            user = User.objects.create_user(username=username, password=password)
+            profile = user.profile
+            profile.email = email
+            profile.whatsapp = whatsapp
+            profile.gender = gender
+            profile.avatar = avatar
+            profile.save()
         
         auth_login(request, user)
         return JsonResponse({

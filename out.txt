@@ -1,0 +1,360 @@
+<aside class="sidebar-dashboard">
+      
+      <!-- Profile Header -->
+      <div class="profile-card">
+        <div class="avatar-wrapper">
+          <img loading="lazy" src="images/profile.png" alt="Abdo Ramdan Profile Photo" class="profile-avatar" />
+          <div class="avatar-glow"></div>
+        </div>
+        <h1 class="profile-name">Abdo Ramdan</h1>
+        <p class="profile-role">&gt; <span id="sidebarTyping"></span><span class="typing-cursor"></span></p>
+        <p class="profile-bio">Security Researcher &amp; OSCP Candidate. Focused on Web Application Penetration Testing, Network Security Auditing, and Linux Systems Administration. Passionate about discovering vulnerabilities, writing scripts to automate security tasks, and sharing knowledge through detailed writeups.</p>
+      </div>
+
+      <!-- Lab Status Widget -->
+      <div class="dashboard-widget lab-widget">
+        <h3 class="widget-title">// Lab Console Status</h3>
+        <div class="lab-status-grid">
+          <div class="status-item">
+            <span class="status-label">Lab Level:</span>
+            <span class="status-val text-neon-cyan" id="hudLevel">1 / 4</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Score:</span>
+            <span class="status-val text-neon-green" id="hudScore">0 XP</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Flags:</span>
+            <span class="status-val text-neon-orange" id="hudFlags">0 / 4</span>
+          </div>
+        </div>
+        <div class="lab-progress-bar">
+          <div class="lab-progress-fill" id="hudProgressFill" style="width: 0%;"></div>
+        </div>
+        <div class="active-mission">
+          <span class="mission-bullet">[+]</span> Active Mission: <span id="hudMission">Unzip secret_backup.zip</span>
+        </div>
+      </div>
+
+      <!-- TryHackMe & HackTheBox Badges -->
+      <div class="dashboard-widget ranks-widget">
+        <h3 class="widget-title">// OffSec Ranks</h3>
+        <div class="ranks-grid">
+          <a href="https://tryhackme.com/p/Abdo453" target="_blank" rel="noopener" class="rank-badge-card thm-card">
+            <span class="badge-icon">🔴</span>
+            <div class="badge-info">
+              <span class="badge-platform">TryHackMe</span>
+              <span class="badge-rank text-neon-cyan">Top 1% Global</span>
+            </div>
+          </a>
+          <a href="https://app.hackthebox.com/profile/Abdo453" target="_blank" rel="noopener" class="rank-badge-card htb-card">
+            <span class="badge-icon">🟢</span>
+            <div class="badge-info">
+              <span class="badge-platform">HackTheBox</span>
+              <span class="badge-rank text-neon-green">Pro Hacker</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Active Certification & Current Focus -->
+      <div class="dashboard-widget focus-widget">
+        <h3 class="widget-title">// Certification Progress</h3>
+        
+          
+          <div class="sidebar-cert-progress">
+            <div class="cert-info-row">
+              <span class="cert-short">OSCP (Offensive Security Certified Professional)</span>
+              <span class="cert-percent">75%</span>
+            </div>
+            <div class="cert-bar-track">
+              <div class="cert-bar-fill" style="width: 75%; background-color: #ff0055"></div>
+            </div>
+            <div class="cert-meta-row">
+              <span class="cert-status-tag" style="color: #ff0055">In Progress</span>
+              <span class="cert-date-tag">Target: Q3 2026</span>
+            </div>
+          </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+
+      <!-- Contact Quick Info -->
+      <div class="dashboard-widget contact-widget">
+        <h3 class="widget-title">// Social Transmission</h3>
+        <div class="sidebar-email-card">
+          <span class="email-icon">✉️</span>
+          <div class="email-details">
+            <span class="email-lbl">DIRECT EMAIL</span>
+            <span class="email-val" id="sidebarEmail">abdo.ramdan.sec@gmail.com</span>
+          </div>
+          <button class="copy-email-btn" onclick="copyEmailToClipboard()" title="Copy email address">
+            <span id="copyText">Copy</span>
+          </button>
+        </div>
+        <div class="sidebar-social-links">
+          <a href="https://github.com/Abdo453" target="_blank" rel="noopener" class="sidebar-social-item" title="GitHub">🐙</a>
+          <a href="https://www.facebook.com/AvatarV7x" target="_blank" rel="noopener" class="sidebar-social-item" title="Facebook">📘</a>
+          <a href="https://linkedin.com/in/abdo-ramdan" target="_blank" rel="noopener" class="sidebar-social-item" title="LinkedIn">💼</a>
+          <a href="https://t.me/AvatarV7x" target="_blank" rel="noopener" class="sidebar-social-item" title="Telegram">✈️</a>
+        </div>
+      </div>
+
+      <!-- Playbook Progress Widget (Phase 2) -->
+      <div class="dashboard-widget playbook-progress-widget" id="sidebarProgressWidget" style="display: none;">
+        <h3 class="widget-title">// Playbook Progress</h3>
+        <div class="lab-progress-bar">
+          <div class="lab-progress-fill" id="sidebarPlaybookProgressFill" style="width: 0%;"></div>
+        </div>
+        <div class="active-mission" style="margin-top: 8px; font-size: 0.75rem; display: flex; justify-content: space-between;">
+          <span>Phases Read:</span>
+          <span id="sidebarPlaybookProgressText" class="text-neon-cyan">0 / 26</span>
+        </div>
+      </div>
+
+      <!-- Starred Chapters Widget (Phase 2) -->
+      <div class="dashboard-widget starred-chapters-widget" id="sidebarBookmarksWidget" style="display: none;">
+        <h3 class="widget-title">// Starred Chapters</h3>
+        <div id="sidebarBookmarksList" style="display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; font-size: 0.75rem;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         RIGHT WORKSPACE: INTERACTIVE PANES
+         ═══════════════════════════════════════════════════════════ -->
+    <main class="content-workspace">
+      
+      <!-- Workspace Navigation Tabs -->
+      <div class="workspace-tabs">
+        <button class="tab-link active" onclick="switchTab('dashboard')" data-tab="dashboard">
+          <span class="tab-icon">🏠</span> Dashboard
+        </button>
+        <button class="tab-link" onclick="switchTab('academy')" data-tab="academy">
+          <span class="tab-icon">🧰</span> Tools Explorer
+        </button>
+        
+        <a class="tab-link" href="quiz.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative;">
+          <span class="tab-icon">🏆</span> Quiz
+          <span style="position:absolute; top:-6px; right:-4px; background:var(--neon-green); color:#000; font-size:0.55rem; font-weight:800; padding:1px 5px; border-radius:8px; font-family:'Fira Code',monospace;">NEW</span>
+        </a>
+<a class="tab-link" href="methodology.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <span class="tab-icon">🗺️</span> Workflow
+        </a>
+<a class="tab-link" href="python-for-hackers.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--py-yellow); border: 1px solid var(--py-blue);">
+          <span class="tab-icon">🐍</span> PyHackers
+        </a>
+<a class="tab-link" href="ccna/academy.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; color: #58a6ff; border: 1px solid rgba(88, 166, 255, 0.5);">
+          <span class="tab-icon">🌐</span> CCNA
+        </a>
+<a class="tab-link" href="linux/academy.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; color: #2ea043; border: 1px solid rgba(46, 160, 67, 0.5);">
+          <span class="tab-icon">🐧</span> Linux
+        </a>
+<a class="tab-link" href="bug-bounty-academy/index.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.5);">
+          <span class="tab-icon">🎮</span> Simulator
+        </a>
+<button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileSidebar()" style="display:none;" aria-label="Toggle Navigation">
+        ☰ Menu
+      </button>
+      <div class="header-logo">
+        <span class="logo-bracket">&lt;</span>HunterOS<span class="logo-bracket">/&gt;</span>
+      </div>
+    </div>
+    <div class="header-status" style="display:flex; align-items:center; gap:12px;">
+      <button onclick="openCommandPalette()" style="background: rgba(0,229,255,0.05); color: var(--accent-cyan); border: 1px solid rgba(0,229,255,0.25); padding: 5px 10px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 6px;" aria-label="Search Palette">
+        🔍 <span class="status-text" style="opacity:0.6; font-size:0.7rem;">Ctrl+K</span>
+      </button>
+      
+      <!-- User Auth Section -->
+      <div id="userAuthSection" style="display: flex; align-items: center; gap: 8px;">
+        <button id="authBtn" onclick="window.location.href = (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') ? 'login.html' : '/login'" style="background: linear-gradient(135deg, var(--accent-cyan), #0088cc); color: #030308; border: none; font-weight: 600; padding: 6px 14px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 0 10px rgba(0,229,255,0.2);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          🔑 <span id="authBtnText">Sign In</span>
+        </button>
+        <span id="userProfileIndicator" style="display: none; align-items: center; gap: 6px; font-family: 'Fira Code', monospace; font-size: 0.75rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px;">
+          <span style="color: var(--accent-green); animation: pulse-green 2s infinite;">●</span> <span id="authUsername" style="color: var(--text-color);">Guest</span>
+          <button onclick="logoutUser()" style="background: none; border: none; color: #ff3366; cursor: pointer; font-size: 0.75rem; padding: 0 0 0 5px; font-weight: bold;" title="Logout">🚪</button>
+        </span>
+      </div>
+
+      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Theme">🌙</button>
+      <span class="status-indicator"></span>
+      <span class="status-text">SECURE TUNNEL ACTIVE // ETH0: 10.10.10.15</span>
+    </div>
+  </header>
+
+
+  <!-- Main Grid Layout -->
+  <div class="main-layout-container">
+    
+    <!-- ═══════════════════════════════════════════════════════════
+         LEFT SIDEBAR: VISUAL CONTROL DASHBOARD
+         ═══════════════════════════════════════════════════════════ -->
+    <aside class="sidebar-dashboard">
+      
+      <!-- Profile Header -->
+      <div class="profile-card">
+        <div class="avatar-wrapper">
+          <img loading="lazy" src="images/profile.png" alt="Abdo Ramdan Profile Photo" class="profile-avatar" />
+          <div class="avatar-glow"></div>
+        </div>
+        <h1 class="profile-name">Abdo Ramdan</h1>
+        <p class="profile-role">&gt; <span id="sidebarTyping"></span><span class="typing-cursor"></span></p>
+        <p class="profile-bio">Security Researcher &amp; OSCP Candidate. Focused on Web Application Penetration Testing, Network Security Auditing, and Linux Systems Administration. Passionate about discovering vulnerabilities, writing scripts to automate security tasks, and sharing knowledge through detailed writeups.</p>
+      </div>
+
+      <!-- Lab Status Widget -->
+      <div class="dashboard-widget lab-widget">
+        <h3 class="widget-title">// Lab Console Status</h3>
+        <div class="lab-status-grid">
+          <div class="status-item">
+            <span class="status-label">Lab Level:</span>
+            <span class="status-val text-neon-cyan" id="hudLevel">1 / 4</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Score:</span>
+            <span class="status-val text-neon-green" id="hudScore">0 XP</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Flags:</span>
+            <span class="status-val text-neon-orange" id="hudFlags">0 / 4</span>
+          </div>
+        </div>
+        <div class="lab-progress-bar">
+          <div class="lab-progress-fill" id="hudProgressFill" style="width: 0%;"></div>
+        </div>
+        <div class="active-mission">
+          <span class="mission-bullet">[+]</span> Active Mission: <span id="hudMission">Unzip secret_backup.zip</span>
+        </div>
+      </div>
+
+      <!-- TryHackMe & HackTheBox Badges -->
+      <div class="dashboard-widget ranks-widget">
+        <h3 class="widget-title">// OffSec Ranks</h3>
+        <div class="ranks-grid">
+          <a href="https://tryhackme.com/p/Abdo453" target="_blank" rel="noopener" class="rank-badge-card thm-card">
+            <span class="badge-icon">🔴</span>
+            <div class="badge-info">
+              <span class="badge-platform">TryHackMe</span>
+              <span class="badge-rank text-neon-cyan">Top 1% Global</span>
+            </div>
+          </a>
+          <a href="https://app.hackthebox.com/profile/Abdo453" target="_blank" rel="noopener" class="rank-badge-card htb-card">
+            <span class="badge-icon">🟢</span>
+            <div class="badge-info">
+              <span class="badge-platform">HackTheBox</span>
+              <span class="badge-rank text-neon-green">Pro Hacker</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Active Certification & Current Focus -->
+      <div class="dashboard-widget focus-widget">
+        <h3 class="widget-title">// Certification Progress</h3>
+        
+          
+          <div class="sidebar-cert-progress">
+            <div class="cert-info-row">
+              <span class="cert-short">OSCP (Offensive Security Certified Professional)</span>
+              <span class="cert-percent">75%</span>
+            </div>
+            <div class="cert-bar-track">
+              <div class="cert-bar-fill" style="width: 75%; background-color: #ff0055"></div>
+            </div>
+            <div class="cert-meta-row">
+              <span class="cert-status-tag" style="color: #ff0055">In Progress</span>
+              <span class="cert-date-tag">Target: Q3 2026</span>
+            </div>
+          </div>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+
+      <!-- Contact Quick Info -->
+      <div class="dashboard-widget contact-widget">
+        <h3 class="widget-title">// Social Transmission</h3>
+        <div class="sidebar-email-card">
+          <span class="email-icon">✉️</span>
+          <div class="email-details">
+            <span class="email-lbl">DIRECT EMAIL</span>
+            <span class="email-val" id="sidebarEmail">abdo.ramdan.sec@gmail.com</span>
+          </div>
+          <button class="copy-email-btn" onclick="copyEmailToClipboard()" title="Copy email address">
+            <span id="copyText">Copy</span>
+          </button>
+        </div>
+        <div class="sidebar-social-links">
+          <a href="https://github.com/Abdo453" target="_blank" rel="noopener" class="sidebar-social-item" title="GitHub">🐙</a>
+          <a href="https://www.facebook.com/AvatarV7x" target="_blank" rel="noopener" class="sidebar-social-item" title="Facebook">📘</a>
+          <a href="https://linkedin.com/in/abdo-ramdan" target="_blank" rel="noopener" class="sidebar-social-item" title="LinkedIn">💼</a>
+          <a href="https://t.me/AvatarV7x" target="_blank" rel="noopener" class="sidebar-social-item" title="Telegram">✈️</a>
+        </div>
+      </div>
+
+      <!-- Playbook Progress Widget (Phase 2) -->
+      <div class="dashboard-widget playbook-progress-widget" id="sidebarProgressWidget" style="display: none;">
+        <h3 class="widget-title">// Playbook Progress</h3>
+        <div class="lab-progress-bar">
+          <div class="lab-progress-fill" id="sidebarPlaybookProgressFill" style="width: 0%;"></div>
+        </div>
+        <div class="active-mission" style="margin-top: 8px; font-size: 0.75rem; display: flex; justify-content: space-between;">
+          <span>Phases Read:</span>
+          <span id="sidebarPlaybookProgressText" class="text-neon-cyan">0 / 26</span>
+        </div>
+      </div>
+
+      <!-- Starred Chapters Widget (Phase 2) -->
+      <div class="dashboard-widget starred-chapters-widget" id="sidebarBookmarksWidget" style="display: none;">
+        <h3 class="widget-title">// Starred Chapters</h3>
+        <div id="sidebarBookmarksList" style="display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; font-size: 0.75rem;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         RIGHT WORKSPACE: INTERACTIVE PANES
+         ═══════════════════════════════════════════════════════════ -->
+    <main class="content-workspace">
+      
+      <!-- Workspace Navigation Tabs -->
+      <div class="workspace-tabs">
+        <button class="tab-link active" onclick="switchTab('dashboard')" data-tab="dashboard">
+          <span class="tab-icon">🏠</span> Dashboard
+        </button>
+<button class="tab-link" onclick="switchTab('academy')" data-tab="academy">
+          <span class="tab-icon">🧰</span> Tools Explorer
+        </button>
+<button class="tab-link" onclick="switchTab('labs')" data-tab="labs">
+          <span class="tab-icon">🧪</span> Labs
+        </button>
+<button class="tab-link" onclick="switchTab('articles')" data-tab="articles">
+          <span class="tab-icon">📚</span> Articles
+        </button>
+<button class="tab-link" onclick="switchTab('research')" data-tab="research">
+          <span class="tab-icon">🔬</span> Research Hub
+        </button>
+<button class="tab-link" onclick="switchTab('books')" data-tab="books">
+          <span class="tab-icon">📖</span> Books
+        </button>
+<button class="tab-link" onclick="switchTab('arena')" data-tab="arena">
+          <span class="tab-icon">🎯</span> Arena
+        </button>
+<button class="tab-link" onclick="switchTab('terminal')" data-tab="terminal">
+          <span class="tab-icon">🖥️</span> Terminal CLI
+        </button>
