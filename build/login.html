@@ -274,7 +274,7 @@
       <div id="errorBanner" class="error-banner"></div>
 
       <form id="authForm" onsubmit="handleAuth(event)" novalidate>
-        <input type="hidden" name="csrfmiddlewaretoken" value="xS8sVnFhgAVtFVtrBieaPc6lYyPCDcVd2b7NpAxvJYQiIm5QFo0psAp9vbPlJ9Zl">
+        <input type="hidden" name="csrfmiddlewaretoken" value="qCS9FwUveSo3iXaqkxnZABuEVN9Hpj9oF8ztT8TNQkC4PlYRKFs6FF4QwR1Zfb19">
         <div class="form-group">
           <label class="form-label" for="username">اسم المستخدم (CODENAME)</label>
           <div class="input-wrapper">
@@ -502,10 +502,7 @@
     }
     const HOME_URL = (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') ? 'index.html' : '/';
     document.getElementById('backBtn').href = HOME_URL;
-    const IS_KALI_SERVER = window.location.hostname === '37.60.230.245' || 
-                           window.location.hostname === 'localhost' || 
-                           window.location.hostname.includes('192.168.') ||
-                           window.location.hostname === '127.0.0.1';
+    const IS_KALI_SERVER = !(window.location.hostname.includes('github.io') || window.location.protocol === 'file:');
 
     function logTerminal(msg, type = 'info') {
       const output = document.getElementById('terminalOutput');

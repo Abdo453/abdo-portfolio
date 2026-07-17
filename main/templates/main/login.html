@@ -502,10 +502,7 @@
     }
     const HOME_URL = (window.location.hostname.includes('github.io') || window.location.protocol === 'file:') ? 'index.html' : '/';
     document.getElementById('backBtn').href = HOME_URL;
-    const IS_KALI_SERVER = window.location.hostname === '37.60.230.245' || 
-                           window.location.hostname === 'localhost' || 
-                           window.location.hostname.includes('192.168.') ||
-                           window.location.hostname === '127.0.0.1';
+    const IS_KALI_SERVER = !(window.location.hostname.includes('github.io') || window.location.protocol === 'file:');
 
     function logTerminal(msg, type = 'info') {
       const output = document.getElementById('terminalOutput');

@@ -21591,10 +21591,7 @@ function exitSimulator() {
     // USER AUTHENTICATION & DATABASE SYNC LOGIC
     // ─────────────────────────────────────────────────────────
     let currentAuthTab = 'login';
-    const IS_KALI_SERVER = window.location.hostname === '37.60.230.245' || 
-                           window.location.hostname === 'localhost' || 
-                           window.location.hostname.includes('192.168.') ||
-                           window.location.hostname === '127.0.0.1';
+    const IS_KALI_SERVER = !(window.location.hostname.includes('github.io') || window.location.protocol === 'file:');
 
     function openAuthModal() {
       const modal = document.getElementById('authModal');
