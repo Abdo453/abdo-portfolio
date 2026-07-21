@@ -1,0 +1,34 @@
+5. API Recon & Testing
+5.1 API Documentation Discovery
+OpenAPI/Swagger:
+# Common paths to check/swagger.json/swagger.yaml/api/swagger.json/v1/swagger.json/openapi.json# Using ffuf to find swagger docsffuf -u https://target.com/FUZZ -w swagger_paths.txt -mc 200
+Postman Collections: - Look for .postman_collection.json files - Check developer portals and documentation - Search GitHub for leaked collections
+5.2 GraphQL Testing
+Introspection Query:
+query {  __schema {    types {      name      fields {        name        type {          name        }      }    }  }}
+Field Suggestion Abuse:
+# Send malformed query to trigger suggestionsquery{system}# Response: "Did you mean 'pastes', 'paste', 'systemDebug'?"
+Tools: - InQL: GraphQL introspection and query generation - GraphQL Voyager: Visualize schema - Clairvoyance: Generate schema when introspection is disabled
+5.3 API Authentication Testing
+OAuth 2.0 Testing: - Test for missing PKCE in mobile apps - Authorization code interception - Token scope manipulation - Refresh token security
+JWT Testing:
+# Decode JWTjwt_tool.py <token># Test for algorithm confusionjwt_tool.py -t <token> -X k# Test for weak signing keysjwt_tool.py -t <token> -C -d secrets.txt
+API Key Testing: - Key in URL parameters (should be in headers) - Missing key rotation - Keys committed to repositories
+5.4 Authorization Testing (BOLA/BFLA)
+Broken Object-Level Authorization (BOLA/IDOR):
+# Test by changing object IDscurl -H "Authorization: Bearer <token>" https://api.target.com/users/123/orderscurl -H "Authorization: Bearer <token>" https://api.target.com/users/124/orders  # Should fail
+Authorization Matrix Testing: - Create matrix of endpoints vs user roles - Test each endpoint with each role - Document expected vs actual responses
+5.5 Rate Limiting & Abuse Testing
+# Test rate limitingfor i in {1..100}; do  curl -H "Authorization: Bearer <token>" https://api.target.com/endpointdone# Test for race conditions# Send multiple simultaneous requests
+5.6 API Input Validation
+Injection Testing:
+# SQL Injection in API parameterscurl -X POST https://api.target.com/search -d '{"query":"test' OR '1'='1"}'# NoSQL Injectioncurl -X POST https://api.target.com/search -d '{"query":{"$gt":""}}'# Command Injectioncurl -X POST https://api.target.com/generate -d '{"template":"test;whoami"}'
+5.7 API Testing Tools
+Postman: - Import OpenAPI specs - Create test collections - Automated testing with Newman
+Insomnia: - Alternative to Postman - Better for GraphQL testing
+HTTPie:
+http GET api.target.com/users Authorization:"Bearer <token>"
+Curl:
+curl -X POST https://api.target.com/endpoint   -H "Content-Type: application/json"   -H "Authorization: Bearer <token>"   -d '{"key":"value"}'
+5.8 Complete API Testing Pipeline
+# Step 1: Discover API documentationffuf -u https://api.target.com/FUZZ -w api_doc_paths.txt -mc 200# Step 2: If GraphQL, test introspectioncurl -X POST https://api.target.com/graphql   -H "Content-Type: application/json"   -d '{"query":"{__schema{types{name}}}"}'# Step 3: Enumerate endpoints with valid tokenhttp GET api.target.com/endpoints Authorization:"Bearer <token>"# Step 4: Test authorization (BOLA)# Change IDs in requests and observe responses# Step 5: Test input validation# Send malformed JSON, special characters, injection payloads# Step 6: Test rate limiting# Send rapid sequential requests# Step 7: Document all findings with curl commands for reproduction

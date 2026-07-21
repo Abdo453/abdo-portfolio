@@ -1,0 +1,107 @@
+function openExplorerFolder(folderId) {
+      // 1. Highlight folder in sidebar
+      document.querySelectorAll('.explorer-folder').forEach(el => el.classList.remove('active'));
+      const activeFolder = document.getElementById('ef-' + folderId);
+      if (activeFolder) activeFolder.classList.add('active');
+
+      // 2. Hide Empty State in Tools Panel
+      document.getElementById('emptyToolsState').style.display = 'none';
+
+      // 3. Show correct tools list
+      document.querySelectorAll('.tools-list').forEach(el => el.style.display = 'none');
+      const activeTools = document.getElementById('tools-' + folderId);
+      if (activeTools) activeTools.style.display = 'flex';
+
+      // 4. Reset Content View
+      document.querySelectorAll('.tool-content-view').forEach(el => el.style.display = 'none');
+      document.getElementById('emptyContentState').style.display = 'flex';
+      document.querySelectorAll('.tool-list-item').forEach(el => el.classList.remove('active'));
+
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Explorer navigated to: /usr/share/${folderId}`, 'text-neon-cyan');
+      }
+    }
+
+    function openExplorerTool(toolId) {
+      // 1. Highlight tool in list
+      document.querySelectorAll('.tool-list-item').forEach(el => el.classList.remove('active'));
+      const activeTool = document.getElementById('ti-' + toolId);
+      if (activeTool) activeTool.classList.add('active');
+
+      // 2. Hide Empty Content State
+      document.getElementById('emptyContentState').style.display = 'none';
+
+      // 3. Show tool detailed content
+      document.querySelectorAll('.tool-content-view').forEach(el => el.style.display = 'none');
+      const activeContent = document.getElementById('content-' + toolId);
+      if (activeContent) activeContent.style.display = 'block';
+
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Displaying manual page for: ${toolId}`, 'text-neon-cyan');
+      }
+    }
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerText;
+        btn.innerText = 'Copied!';
+        btn.classList.add('copied');
+        if (terminalInitialized) printLineToTerminal(`\n[info] Command copied to clipboard.`, 'text-neon-green');
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+    function switchCyberTab(btn, tabId) {
+      // Find the closest parent tool view
+      const toolView = btn.closest('.tool-content-view');
+      
+      // Remove active class from all buttons and tabs within this view
+      toolView.querySelectorAll('.cyber-tab-btn').forEach(b => b.classList.remove('active'));
+      toolView.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      
+      // Add active to clicked
+      btn.classList.add('active');
+      const targetPane = toolView.querySelector('#' + tabId);
+      if (targetPane) targetPane.classList.add('active');
+    }
+
+    function simulateTerminal(cmd) {
+      if (terminalInitialized) {
+        printLineToTerminal(`\n[info] Executing demo...`, 'text-neon-cyan');
+        setTimeout(() => printLineToTerminal(`$ ${cmd}`, 'text-primary'), 300);
+        setTimeout(() => printLineToTerminal(`Initializing connection... OK`, 'text-secondary'), 800);
+        setTimeout(() => printLineToTerminal(`[+] Target acquired. Running payload.`, 'text-neon-cyan'), 1200);
+        setTimeout(() => printLineToTerminal(`[+] Execution complete. Review logs.`, 'text-neon-green'), 2000);
+      }
+      
+      // Scroll to top terminal
+      const termEl = document.getElementById('terminalOutput');
+      if (termEl) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function openTool(toolId) {
+      // This function needs to find which folder the tool belongs to and trigger the clicks
+      // But since we are displaying the tool directly, we can just call the open function
+      // Assuming all tools are rendered, let's look for the folder
+      const toolElement = document.getElementById('ti-' + toolId);
+      if (toolElement) {
+        // Find parent folder id, it's stored in a data attribute ideally, but here we can just 
+        // simulate the user clicking on the tool element.
+        // Wait, 'ti-' + toolId is the sidebar item.
+        const parentList = toolElement.closest('.tools-list');
+        if (parentList) {
+          const folderId = parentList.id.replace('tools-', '');
+          openExplorerFolder(folderId);
+          setTimeout(() => {
+            openExplorerTool(toolId);
+          }, 100);
+        }
+      } else {
+        if(terminalInitialized) printLineToTerminal(`\n[error] Tool ${toolId} not found in path.`, 'text-neon-red');
+      }
+    }
+  

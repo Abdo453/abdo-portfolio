@@ -1,0 +1,36 @@
+,
+                title: "2. التوجيه اليدوي والمسار الافتراضي (Static & Default Route)",
+                content: `
+                    <h1>التوجيه اليدوي (Static Routing)</h1>
+                    <p>التوجيه اليدوي يعني أنك كمهندس شبكات ستقوم بتعريف الراوتر بالمسار خطوة بخطوة. يتميز بأنه لا يستهلك موارد الراوتر (CPU/RAM) وأكثر أماناً، ولكنه متعب جداً في الشبكات الكبيرة ولا يتكيف مع الأعطال تلقائياً.</p>
+
+                    <div class="concept-box" style="border-color: var(--success); background: rgba(63, 185, 80, 0.05);">
+                        <h3 style="color: var(--success);">1. المسار الثابت العادي (Standard Static Route)</h3>
+                        <p>الأمر بسيط: <code>ip route [Network] [Subnet Mask] [Next-Hop IP أو Exit Interface]</code></p>
+                        <p><strong>مثال:</strong> لكي نصل للشبكة 192.168.2.0 من الراوتر R1 عبر الراوتر R2 الذي عنوانه 10.0.0.2:<br>
+                        <code>R1(config)# ip route 192.168.2.0 255.255.255.0 10.0.0.2</code></p>
+                    </div>
+
+                    <div class="concept-box" style="border-color: #d29922; background: rgba(210, 153, 34, 0.05);">
+                        <h3 style="color: #d29922;">2. المسار الافتراضي (Default Route)</h3>
+                        <p>يُستخدم عادةً لتوجيه حركة المرور نحو <strong>الإنترنت</strong>. وهو يمثل شبكة "أي مكان" أو "شبكة غير معروفة". يُرمز له بـ <code>0.0.0.0 0.0.0.0</code>.</p>
+                        <p><strong>مثال:</strong> توجيه أي بيانات غير معروفة نحو مزود الخدمة (ISP) الموجود على IP 200.1.1.2:<br>
+                        <code>R1(config)# ip route 0.0.0.0 0.0.0.0 200.1.1.2</code></p>
+                        <p><em>(يظهر في الـ Routing Table بحرف <strong>S*</strong>).</em></p>
+                    </div>
+
+                    <div class="concept-box" style="border-color: #ffb020; background: rgba(255, 176, 32, 0.05);">
+                        <h3 style="color: #ffb020;">3. المسار العائم (Floating Static Route)</h3>
+                        <p>هو مسار يدوي نستخدمه <strong>كمسار احتياطي (Backup)</strong> لمسار رئيسي (مثل OSPF). لكي نجعله احتياطياً ولا يظهر في الجدول إلا إذا تعطل الرئيسي، نقوم <strong>بزيادة الـ AD</strong> الخاصة به لتكون أعلى من الـ AD للبروتوكول الرئيسي.</p>
+                        <p><strong>مثال:</strong> جعله احتياطياً لـ OSPF (الذي يمتلك AD 110):<br>
+                        <code>R1(config)# ip route 192.168.2.0 255.255.255.0 10.0.0.3 115</code><br>
+                        <em>(بما أن 115 أكبر من 110، لن يستخدم الراوتر هذا المسار إلا إذا سقط الـ OSPF).</em></p>
+                    </div>
+
+                    <h2>مشكلة الـ Next-Hop مقابل הـ Exit Interface</h2>
+                    <ul>
+                        <li>إذا استخدمت <strong>Next-Hop IP</strong>: الراوتر سيقوم بعملية تسمى (Recursive Lookup) للبحث في جدوله عن كيفية الوصول للـ Next-Hop أولاً. (مفضلة في شبكات الـ Ethernet).</li>
+                        <li>إذا استخدمت <strong>Exit Interface</strong> (مثل s0/0/0): الراوتر سيعتبر الشبكة الهدف Connected، ولكنه سيرسل طلبات ARP لكل IP يذهب إليه (Proxy ARP)، وهو أمر سيء في شبكات الـ Ethernet (مفضلة في Point-to-Point).</li>
+                    </ul>
+                `
+            

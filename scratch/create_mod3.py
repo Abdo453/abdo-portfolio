@@ -1,0 +1,99 @@
+import os
+
+html_path_mod3 = r"d:\abdo_portfolio\main\templates\main\modules\mod3_scanning.html"
+
+content_mod3 = """
+<!-- =======================================================
+     CEH MODULE 3: SCANNING NETWORKS
+     ======================================================= -->
+<div class="meth-content-view" id="meth-content-mod3" style="display:none;" dir="rtl">
+  
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">📡</span> Scanning Networks</h2>
+    <p class="hero-tagline">مرحلة التفاعل المباشر: فحص المنافذ، اكتشاف الخدمات، وتقنيات التهرب المتقدمة.</p>
+    <div class="hero-meta">
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-green);"></span> Module 03</span>
+      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">🔭</span>
+      <h3>تقنيات المسح الأساسية والمتقدمة (Scanning Techniques)</h3>
+    </div>
+    
+    <div class="goal-cards-grid" dir="rtl">
+      <div class="goal-card">
+        <div class="goal-icon">🤝</div>
+        <h4>TCP Connect (-sT)</h4>
+        <div class="goal-subtitle">Full Open Scan</div>
+        <p>يُكمل المصافحة الثلاثية (SYN -> SYN/ACK -> ACK). دقيق ولا يحتاج لصلاحيات Root لكنه صاخب جداً ويُسجل في الـ Logs.</p>
+      </div>
+
+      <div class="goal-card" style="border-color: #00e5a0;">
+        <div class="goal-icon" style="color: #00e5a0;">🥷</div>
+        <h4 style="color: #00e5a0;">SYN Stealth (-sS)</h4>
+        <div class="goal-subtitle">Half-open Scan</div>
+        <p>يرسل SYN، وعند تلقي SYN/ACK يقطع الاتصال بـ RST. يتخفى عن السجلات التقليدية وهو الفحص الافتراضي للمخترقين.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">🎄</div>
+        <h4>XMAS Scan (-sX)</h4>
+        <div class="goal-subtitle">Advanced Evasion</div>
+        <p>يرسل حزم مضاف إليها أعلام غير منطقية (FIN, URG, PSH). يُستخدم لاكتشاف الجدران النارية التي تفلتر حزم SYN فقط.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">🛡️</div>
+        <h4>ACK Scan (-sA)</h4>
+        <div class="goal-subtitle">Firewall Ruleset</div>
+        <p>لاكتشاف هندسة الفايروول. إذا رُد عليه بـ RST فالمنفذ Unfiltered. وإذا لم يرد فمفهموم أنه Filtered.</p>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-icon">💨</div>
+        <h4>UDP Scan (-sU)</h4>
+        <div class="goal-subtitle">Connectionless</div>
+        <p>يرسل حزمة فارغة للبحث عن خدمات كـ DNS أو SNMP. بطيء جداً لكنه ضروري لاكتشاف ثغرات الـ UDP.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="section-header">
+      <span class="section-icon">⚔️</span>
+      <h3>Nmap Arsenal: التهرب من الجدران النارية</h3>
+    </div>
+
+    <div class="cyber-card" style="--tool-color: #ff4757;">
+      <div class="card-header"><h4>قوالب التوقيت وأعلام التهرب (Nmap Evasion Flags)</h4></div>
+      <p>تقنيات تُستخدم لتجاوز الـ IDS/IPS والـ Firewalls.</p>
+      <div class="cmd-block">
+        <div class="cmd-header"><span class="cmd-lang">Nmap Evasion Techniques</span></div>
+        <pre><code># تجزئة الحزم (Packet Fragmentation) لتصعيب تجميعها على الـ IDS
+nmap -f target.com
+
+# انتحال العناوين (Decoy) بإرسال فحص مدمج مع 10 عناوين وهمية لتشتيت الـ SOC
+nmap -D RND:10 target.com
+
+# تزييف منفذ المصدر للظهور كحركة مرور شرعية من منفذ DNS أو HTTP
+nmap -g 53 target.com
+
+# تزييف الـ MAC Address لتجاوز أنظمة الـ MAC Filtering
+nmap --spoof-mac 0 target.com
+
+# قوالب التوقيت: (T0, T1) أبطأ وللتخفي | (T4, T5) الأسرع والعنيف
+nmap -T1 -sS target.com</code></pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+"""
+
+with open(html_path_mod3, "w", encoding="utf-8") as f:
+    f.write(content_mod3)
+
+print(f"Created {html_path_mod3}")

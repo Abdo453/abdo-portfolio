@@ -1,0 +1,61 @@
+1. Active Reconnaissance & Subdomain Enumeration
+1.1 Overview
+Active subdomain enumeration involves direct interaction with the target’s DNS infrastructure to discover subdomains that may not be publicly indexed. This is critical for expanding the attack surface beyond what passive reconnaissance reveals.
+1.2 DNS Brute Forcing
+Tools & Commands
+Gobuster DNS Mode:
+gobuster dns -d target.com -w wordlist.txt -t 50 --delay 100ms -o gobuster_results.txt
+FFuF for Subdomain Fuzzing:
+ffuf -w subdomains.txt -u https://FUZZ.target.com -mc 200,301,302 -t 100 -rate 50 -o fuf_results.json
+Puredns (MassDNS Wrapper):
+puredns -r resolvers.txt bruteforce wordlist.txt target.com
+MassDNS (High-speed resolver):
+massdns -r lists/resolvers.txt -t A domains.txt -o results.txt
+ShuffleDNS (ProjectDiscovery):
+# Subdomain resolvingshuffledns -d example.com -list subdomains.txt -r resolvers.txt -mode resolve# Subdomain bruteforcingshuffledns -d hackerone.com -w wordlist.txt -r resolvers.txt -mode bruteforce
+1.3 Permutation & Alteration Techniques
+Altdns:
+python altdns.py -i input_domains.txt -o ./output/path -w altdns/words.txt
+Gotator (Advanced permutation):
+gotator -sub domains.txt -perm permutations.txt -depth 1 -numbers 10 -mindup -adv -md
+ShuffleDNS for permutations:
+shuffledns -l all.txt -r resolvers.txt -o permuted.txt
+Permutation Examples
+Given api.target.com, generate: - api1.target.com, api2.target.com - api-dev.target.com, dev-api.target.com - api-staging.target.com, api-prod.target.com
+1.4 DNS Zone Transfer (AXFR)
+# Attempt zone transferdig axfr @ns1.target.com target.com# Using DNSRecondnsrecon -d target.com -t axfr# Using fiercefierce --domain target.com
+1.5 Advanced DNS Enumeration
+Empty Non-Terminal (ENT) Detection: - Focus on DNS response codes: NOERROR vs NXDOMAIN - Tools supporting this: dnsx, massdns - NODATA responses (NOERROR with no records) indicate valid subdomains
+CNAME Analysis:
+# Check CNAME records for takeover indicatorsdig CNAME suspicious-subdomain.target.com# Check for dangling CNAMEshost suspicious-subdomain.target.com
+SPF/TXT Record Analysis:
+dig TXT target.comdig MX target.comdig NS target.com
+1.6 Certificate Transparency Logs
+# Using crt.sh via command linecurl -s "https://crt.sh/?q=%.target.com&output=json" | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u > certificate_subdomains.txt
+1.7 Complete Workflow
+# Step 1: Passive collectionsubfinder -d target.com -all -recursive -silent -o subs.txtamass enum -passive -d target.com -o amass.txtassetfinder --subs-only target.com > assetfinder.txt# Step 2: Combine and deduplicatecat subs.txt amass.txt assetfinder.txt | sort -u > all_passive.txt# Step 3: Generate permutationsaltdns -i all_passive.txt -w permutationWordlist.txt -o permuted.txt# Step 4: Resolve everythingshuffledns -d target.com -list permuted.txt -r resolvers.txt -o resolved.txt# Step 5: Check live hostshttpx -l resolved.txt -status-code -title -tech-detect -o live_hosts.txt
+1.8 Best Practices & Anti-Detection
+Rate limiting: Add delays between requests (--delay 100ms)
+Rotate DNS resolvers: Use multiple resolver lists
+Use VPS: Run active enumeration from cloud instances
+Respect scope: Always check bug bounty scope before brute forcing
+Wildcard detection: Filter wildcard responses using puredns or shuffledns
+1. Configure browser proxy: 127.0.0.1:80802. Install CA certificate3. Enable interception4. Browse target application
+Key Features Usage
+Proxy: Intercept and modify requests/responses
+Repeater: Modify and resend individual requests
+Intruder: Automated fuzzing and brute-forcing
+Scanner (Pro): Automated vulnerability detection
+Sequencer: Session token analysis
+Decoder: Encode/decode data
+Comparer: Compare requests/responses
+Extensions to Install
+Autorize (authorization testing)
+Logger++ (advanced logging)
+Turbo Intruder (fast HTTP attacks)
+Param Miner (parameter discovery)
+Upload Scanner (file upload testing)
+4.7 OWASP ZAP Workflow
+# Automated scanzap-cli quick-scan --self-contained --start-options "-config api.disablekey=true" --spider -r -s xss,sqli https://target.com# API scanzap-api-scan.py -t openapi.json -f openapi
+4.8 Nikto Web Scanner
+nikto -host target.comnikto -host target.com -ssl -port 443nikto -host target.com -Tuning 1,2,3,4,5,6,7,8,9,0

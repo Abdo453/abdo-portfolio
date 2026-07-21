@@ -12,7 +12,6 @@ tabs = ['academy', 'labs', 'articles', 'research', 'books', 'arena', 'terminal']
 
 standalone_css = '''
   <style>
-      {extra_css}
     /* Hide everything that makes it a dashboard */
     .sidebar, .workspace-tabs, .sidebar-dashboard, .mobile-header, .bottom-nav, .top-nav, .dashboard-widget { display: none !important; }
     
@@ -71,9 +70,13 @@ for tab in tabs:
     # 1. Set the correct pane to active
     tab_content = content
     # Remove active class from dashboard
-    tab_content = tab_content.replace('id="pane-dashboard" class="workspace-pane active"', 'id="pane-dashboard" class="workspace-pane"')
-    # Add active class to target pane. Note: original might be 'workspace-pane' or 'workspace-pane active'
-    tab_content = re.sub(f'id="pane-{tab}" class="workspace-pane( active)?"', f'id="pane-{tab}" class="workspace-pane active"', tab_content)
+    # Remove active class from dashboard
+    tab_content = re.sub(r'class="workspace-pane(\s+active)?"\s+id="pane-dashboard"', 'class="workspace-pane" id="pane-dashboard"', tab_content)
+    tab_content = re.sub(r'id="pane-dashboard"\s+class="workspace-pane(\s+active)?"', 'id="pane-dashboard" class="workspace-pane"', tab_content)
+    # Add active class to target pane.
+    tab_content = re.sub(rf'id="pane-{tab}"\s+class="workspace-pane( active)?"', f'id="pane-{tab}" class="workspace-pane active"', tab_content)
+    # Handle class first then id
+    tab_content = re.sub(rf'class="workspace-pane( active)?"\s+id="pane-{tab}"', f'class="workspace-pane active" id="pane-{tab}"', tab_content)
     
     # 2. Inject CSS
     if 'standalone-back-btn' not in tab_content:
