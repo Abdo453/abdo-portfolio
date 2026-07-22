@@ -955,10 +955,10 @@ kernel32.CreateRemoteThread(h_process, None, 0, addr, None, 0, ctypes.byref(thre
       const ip = document.getElementById('py-ip').value.trim() || '10.10.10.25';
       const port = document.getElementById('py-port').value.trim() || '9999';
       
-      document.getElementById('py-net-code').innerText = `import socket\n\ntarget_host = "${ip}"\ntarget_port = ${port}\n\nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nclient.connect((target_host, target_port))\nclient.send(b"GET / HTTP/1.1\\r\\nHost: ${ip}\\r\\n\\r\\n")\nresponse = client.recv(4096)\nprint(response.decode())`;
+      (document.getElementById('py-net-code') || {}).innerText = `import socket\n\ntarget_host = "${ip}"\ntarget_port = ${port}\n\nclient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\nclient.connect((target_host, target_port))\nclient.send(b"GET / HTTP/1.1\\r\\nHost: ${ip}\\r\\n\\r\\n")\nresponse = client.recv(4096)\nprint(response.decode())`;
 
       // Update simulator outputs
-      document.getElementById('sim-py-net').innerHTML = `[+] Connected to ${ip}:${port} successfully.\nHTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 125\nServer IP tested: ${ip}`;
+      (document.getElementById('sim-py-net') || {}).innerHTML = `[+] Connected to ${ip}:${port} successfully.\nHTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 125\nServer IP tested: ${ip}`;
     }
 
     function copyCode(btn) {

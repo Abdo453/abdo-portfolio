@@ -939,7 +939,7 @@ _start:
     function updateArtCalc() {
       const size = parseInt(document.getElementById('art-size').value) || 64;
       const offset = size + 12; // Typical offset including EBP
-      document.getElementById('art-exploit-out').innerText = `Payload: [A * ${offset}] + [EIP Address] + [NOP Sled (e.g. \\x90\\x90)] + [Shellcode]`;
+      (document.getElementById('art-exploit-out') || {}).innerText = `Payload: [A * ${offset}] + [EIP Address] + [NOP Sled (e.g. \\x90\\x90)] + [Shellcode]`;
     }
 
     function copyCode(btn) {

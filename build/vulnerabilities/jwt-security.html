@@ -58,6 +58,10 @@
     <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
     <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
     <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    <a class="sidebar-link" href="vulnerabilities/xss.html">🕷️ Cross-Site Scripting (XSS)</a>
+    <a class="sidebar-link" href="vulnerabilities/csrf.html">🎭 CSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/lfi-rfi.html">📂 LFI & RFI</a>
+    <a class="sidebar-link" href="vulnerabilities/xxe.html">📜 XXE</a>
     
     <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
     <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
@@ -81,93 +85,124 @@
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
     <a class="sidebar-link" href="linux-security/linux-analysis.html">🛡️ Linux Analysis</a>
 
+    
+    <div class="sidebar-title" style="margin-top:18px;">Writeups / التقارير</div>
+    <a class="sidebar-link" href="writeups/api-hacking.html">📝 API Hacking</a>
+    <a class="sidebar-link" href="writeups/graphql-attack.html">📝 GraphQL Leak</a>
+    <a class="sidebar-link" href="writeups/cloud-ssrf.html">📝 Cloud SSRF</a>
+    <a class="sidebar-link" href="writeups/linux-suid-root.html">📝 Linux SUID</a>
+    <a class="sidebar-link" href="writeups/recon-mastery.html">📝 Recon Mastery</a>
+    <a class="sidebar-link" href="writeups/ai-prompt-inj.html">📝 AI Prompt Inj</a>
+    <a class="sidebar-link" href="writeups/race-payments.html">📝 Race Conditions</a>
+    <a class="sidebar-link" href="writeups/ad-to-domain.html">📝 AD Domain</a>
+    <a class="sidebar-link" href="writeups/nuclei-to-p1.html">📝 Nuclei to P1</a>
+    <a class="sidebar-link" href="writeups/jwt-advanced.html">📝 JWT Advanced</a>
+
     <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
     <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
   </aside>
 
   <main class="academy-main">
-    
 <div class="page-hero">
-  <h1 class="page-title">أمن الـ JWT — هجمات وتزوير الرموز</h1>
-  <p class="page-title-en">JWT Security — Attacks & Forgery</p>
+  <h1 class="page-title">أمان توكنات JWT — الدليل الشامل</h1>
+  <p class="page-title-en">JSON Web Token (JWT) Security — The Ultimate Deep Dive</p>
   <span class="severity-pill pill-high">HIGH</span>
-  <span class="severity-pill pill-medium">OWASP A02</span>
+  <span class="severity-pill pill-medium">OWASP A01:2021 / A05:2021</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>JWT (JSON Web Token)</strong> هو معيار مستخدم لتمثيل الادعاءات بين طرفين بشكل آمن كـ JSON Objects. تكمن المشاكل الأمنية في كيفية إعداد الخادم للتحقق من التوقيع (Signature)، مما يسمح بتزوير الرموز عبر هجمات Algorithm Confusion، وتخمين المفاتيح الضعيفة، وحقن رؤوس jku/jwk.</p>
+    <p><strong>توكنات JWT (JSON Web Tokens)</strong> تُستخدم على نطاق واسع في واجهات برمجة التطبيقات الحديثة (APIs) لتخزين بيانات جلسة المستخدم وهويته دون الحاجة لحفظها في قاعدة بيانات (Stateless). تتكون من ثلاثة أجزاء مفصولة بنقاط (Header.Payload.Signature). تكمن الخطورة في كونها تُفك تشفيرها بسهولة (Base64 URL)، وإذا كان التوقيع (Signature) ضعيفاً أو أخطأ المطور في التحقق منه، يمكن للمهاجم تزوير التوكن والصعود بصلاحياته (Privilege Escalation).</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>JWT (JSON Web Token)</strong> is an open standard used to share claims securely between parties. Vulnerabilities arise from improper signature verification on the server side, allowing token forgery via algorithm confusion, weak key brute-forcing, and jku/jwk header injection.</p>
+    <p><strong>JSON Web Tokens (JWT)</strong> are a stateless standard used for authentication and authorization in modern web applications. Because the payload is only Base64URL encoded (not encrypted), it is readable by anyone. Security vulnerabilities arise when the cryptographic signature verification is flawed, allowing attackers to forge tokens and impersonate arbitrary users or admins.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أشهر ثغرات وهجمات JWT / Vulnerability Types</h2>
+  <h2>آلية العمل والسبب الجذري / Root Cause Analysis</h2>
+  <p>يتكون الـ JWT من:</p>
+  <ul>
+    <li><strong>Header:</strong> يحتوي على نوع التوكن وخوارزمية التوقيع المستخدمة (مثل <code>{"alg": "HS256"}</code>).</li>
+    <li><strong>Payload:</strong> يحتوي على بيانات المستخدم (الـ Claims) مثل <code>{"user_id": 1, "role": "user"}</code>.</li>
+    <li><strong>Signature:</strong> التوقيع المشفر الذي يضمن عدم تعديل الـ Payload. يعتمد على سر (Secret) لا يملكه إلا الخادم.</li>
+  </ul>
+  <p>إذا أراد المهاجم تغيير دوره من <code>user</code> إلى <code>admin</code>، يجب عليه إعادة حساب التوقيع باستخدام الـ Secret الأصلي، وإلا سيرفض الخادم التوكن. الثغرات تظهر عندما يفشل الخادم في التحقق بشكل صحيح.</p>
+</div>
+
+<div class="section-card">
+  <h2>أنواع ثغرات الـ JWT وهجماتها / Attack Vectors</h2>
+  
   <div class="type-grid">
     <div class="type-item">
-      <h4>Algorithm Confusion (none alg)</h4>
-      <p>تعديل خوارزمية التوقيع في الـ Header لـ <code>none</code> وحذف التوقيع بالكامل لخداع السيرفر لقبول التوكن المعدل.</p>
+      <h4>1. None Algorithm (alg: none)</h4>
+      <p class="lang-ar">بعض مكتبات JWT القديمة تدعم خوارزمية "none"، مما يعني أن التوكن لا يحتاج إلى توقيع! يقوم المهاجم بتغيير <code>alg</code> إلى <code>none</code> وإزالة قسم التوقيع بالكامل، ويقبله الخادم كتوكن صحيح.</p>
     </div>
+    
     <div class="type-item">
-      <h4>Weak Signing Key Brute Force</h4>
-      <p>تخمين المفتاح السري (Secret Key) المستخدم لتوقيع الرمز خارجياً عبر القواميس.</p>
+      <h4>2. Weak Secret Cracking (Brute-Force)</h4>
+      <p class="lang-ar">إذا كانت الخوارزمية هي <code>HS256</code> (Symmetric Key)، فهذا يعني أن السر هو مجرد نص. إذا كان السر ضعيفاً (مثل "secret" أو "12345")، يمكن للمهاجم كسره أوفلاين باستخدام أدوات مثل Hashcat أو John the Ripper.</p>
     </div>
+
     <div class="type-item">
-      <h4>jku Header Injection</h4>
-      <p>حقن رأس jku ليشير لنطاق يمتلكه المهاجم يحتوي على مفاتيح عمومية خبيثة يقبلها الخادم لتأكيد التوقيع.</p>
+      <h4>3. Key Confusion (RS256 to HS256)</h4>
+      <p class="lang-ar">تستخدم <code>RS256</code> مفتاحين (Public Key للتحقق و Private Key للتوقيع). إذا كان المهاجم يمتلك الـ Public Key (غالباً متاح علنًا)، يمكنه تغيير الخوارزمية في الـ Header إلى <code>HS256</code>. إذا كان الخادم مصاباً، سيستخدم الـ Public Key كسِر (Secret) في خوارزمية HS256 للتحقق من التوقيع! وبما أن المهاجم يملك الـ Public Key، يمكنه توقيع التوكن الخاص به.</p>
     </div>
+
     <div class="type-item">
-      <h4>kid (Key ID) Manipulation</h4>
-      <p>تعديل معرّف المفتاح jku ليوجه لمسار متوقع أو ملف فارغ على السيرفر لتخطي فحص التوقيع.</p>
+      <h4>4. JKU / JWK Header Injection</h4>
+      <p class="lang-ar">قد يعتمد الخادم على روابط أو مفاتيح مدمجة في الهيدر (مثل <code>jku</code> أو <code>jwk</code>) لجلب المفتاح العام. يستطيع المهاجم تمرير رابطه الخاص لخدمة استضافة (مثل خادمه الخاص) تحتوي على مفتاحه العام، وبالتالي توقيع التوكن بمفتاحه الخاص بنجاح.</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر واختبار الثغرة / JWT Commands</h2>
+  <h2>تقنيات البحث والاستغلال المتقدمة / Exploitation Workflow</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>طريقة العمل (Methodology) لاختبار JWT:</p>
+      <ul>
+        <li><strong>فك التشفير:</strong> قم بنسخ التوكن ولصقه في <code>jwt.io</code> لترى محتوى הـ Payload والـ Header.</li>
+        <li><strong>اختبار الثقة (Trust Test):</strong> غير قيمة داخل הـ Payload (مثل <code>role: admin</code>) دون تغيير التوقيع وأرسله. إذا تم قبوله، فالتطبيق لا يتحقق من التوقيع أصلاً!</li>
+        <li><strong>تخطي الخوارزمية (None):</strong> جرب تغيير الـ alg إلى <code>None</code>، <code>none</code>، <code>NONE</code> وأزل الجزء الأخير من التوكن مبقياً على النقطتين <code>..</code>.</li>
+        <li><strong>كسر التشفير (Cracking):</strong> استخدم <code>hashcat -a 0 -m 16500 jwt.txt wordlist.txt</code> لمحاولة كسر سر الـ HS256.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>أدوات الأتمتة (Automation Tools)</h2>
+  <div class="tools-row">
+    <span class="tool-chip">jwt_tool (Python)</span>
+    <span class="tool-chip">JSON Web Tokens (Burp Ext)</span>
+    <span class="tool-chip">Hashcat (mode 16500)</span>
+  </div>
+  <p style="margin-top: 15px;">أداة <code>jwt_tool</code> هي أداة رائعة يمكنها فحص كل أنواع الهجمات بشكل آلي (None, Cracking, Key Confusion):</p>
   <div class="cmd-block">
-    <pre># Brute forcing JWT weak secrets with Hashcat
-hashcat -m 16500 jwt_token.txt /usr/share/wordlists/rockyou.txt
-
-# Testing tokens using jwt_tool
-python3 jwt_tool.py "eyJhbGciOiJIUzI1Ni..." -T
-
-# Forging tokens using none algorithm
-python3 jwt_tool.py "eyJhbGciOiJIUzI1Ni..." -X a</pre>
+    <pre>python3 jwt_tool.py "YOUR.JWT.TOKEN" -M pb</pre>
     <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>الأدوات / Tools</h2>
-  <div class="tools-row">
-    <span class="tool-chip">jwt_tool</span>
-    <span class="tool-chip">jwt.io (Web Interface)</span>
-    <span class="tool-chip">Hashcat</span>
-    <span class="tool-chip">Burp JWT Editor Extension</span>
-  </div>
+  <h2>كيفية الحماية (Remediation)</h2>
+  <ul>
+    <li>لا تثق بقيمة <code>alg</code> الموجودة في الهيدر. قم بإجبار الخادم على استخدام خوارزمية واحدة محددة سلفاً (مثل <code>RS256</code> حصراً).</li>
+    <li>استخدم كلمات مرور قوية جداً (Secrets) لخوارزميات HS256 لضمان عدم تعرضها للكسر (Brute-Force).</li>
+    <li>تجنب الاعتماد على الهيدرات مثل <code>jku</code>, <code>jwk</code>, <code>kid</code> لجلب مفاتيح غير موثوقة أو تحقق بدقة شديدة من النطاقات المسموح بها (Whitelisting).</li>
+  </ul>
 </div>
 
 <div class="section-card">
-  <h2>Writeup & Lab</h2>
-  <div class="bilingual-block">
-    <div class="lang-section">
-      <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>JWT Attacks: Beyond the Basics</strong> — شرح تفصيلي لكيفية فك تشفير وتعديل صلاحيات حساب مستخدم عادي ليصبح مدير نظام عبر استغلال خوارزمية none.</p>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>JWT Attacks: Beyond the Basics</strong> — detailed walkthrough on escalalating user privileges to administrator by exploiting a none algorithm flaw.</p>
-    </div>
-  </div>
-  <a class="cta-lab" href="labs/jwt-lab.html">🧪 افتح JWT Forgery Lab — 3 Levels</a>
+  <h2>التطبيق العملي / Writeup & Lab</h2>
+  <a class="cta-lab" href="labs/jwt-lab.html">🧪 افتح مختبر JWT التفاعلي — 3 مستويات</a>
 </div>
 
-  </main>
+</main>
 </div>
 
 <!-- Dynamic Relative Path & Active Class Resolver -->

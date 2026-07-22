@@ -58,6 +58,10 @@
     <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
     <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
     <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    <a class="sidebar-link" href="vulnerabilities/xss.html">🕷️ Cross-Site Scripting (XSS)</a>
+    <a class="sidebar-link" href="vulnerabilities/csrf.html">🎭 CSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/lfi-rfi.html">📂 LFI & RFI</a>
+    <a class="sidebar-link" href="vulnerabilities/xxe.html">📜 XXE</a>
     
     <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
     <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
@@ -81,114 +85,135 @@
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
     <a class="sidebar-link" href="linux-security/linux-analysis.html">🛡️ Linux Analysis</a>
 
+    
+    <div class="sidebar-title" style="margin-top:18px;">Writeups / التقارير</div>
+    <a class="sidebar-link" href="writeups/api-hacking.html">📝 API Hacking</a>
+    <a class="sidebar-link" href="writeups/graphql-attack.html">📝 GraphQL Leak</a>
+    <a class="sidebar-link" href="writeups/cloud-ssrf.html">📝 Cloud SSRF</a>
+    <a class="sidebar-link" href="writeups/linux-suid-root.html">📝 Linux SUID</a>
+    <a class="sidebar-link" href="writeups/recon-mastery.html">📝 Recon Mastery</a>
+    <a class="sidebar-link" href="writeups/ai-prompt-inj.html">📝 AI Prompt Inj</a>
+    <a class="sidebar-link" href="writeups/race-payments.html">📝 Race Conditions</a>
+    <a class="sidebar-link" href="writeups/ad-to-domain.html">📝 AD Domain</a>
+    <a class="sidebar-link" href="writeups/nuclei-to-p1.html">📝 Nuclei to P1</a>
+    <a class="sidebar-link" href="writeups/jwt-advanced.html">📝 JWT Advanced</a>
+
     <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
     <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
   </aside>
 
   <main class="academy-main">
-    
 <div class="page-hero">
-  <h1 class="page-title">حقن SQL — من الصفر للاحتراف</h1>
-  <p class="page-title-en">SQL Injection — From Zero to Hero</p>
+  <h1 class="page-title">حقن قواعد البيانات (SQL Injection) — الدليل الشامل</h1>
+  <p class="page-title-en">SQL Injection (SQLi) — The Ultimate Deep Dive</p>
   <span class="severity-pill pill-critical">CRITICAL</span>
-  <span class="severity-pill pill-high">OWASP A03</span>
+  <span class="severity-pill pill-high">OWASP A03:2021</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>SQL Injection</strong> ثغرة تحدث عندما يُدمَج مدخل المستخدم مباشرة في استعلام SQL بدون تعقيم (sanitization). المهاجم يستطيع قراءة، تعديل، أو حذف بيانات قاعدة البيانات — وأحياناً الوصول لـ RCE عبر <code>xp_cmdshell</code> أو file write.</p>
+    <p><strong>ثغرة حقن قواعد البيانات (SQLi)</strong> هي من أخطر وأقدم ثغرات الويب. تحدث عندما يقوم التطبيق بأخذ مدخلات المستخدم (User Input) ويمررها مباشرة داخل استعلام SQL (SQL Query) في الخلفية دون إجراء عمليات تنظيف (Sanitization) أو استخدام (Parameterized Queries). هذا يسمح للمهاجم بالتلاعب بالاستعلام الأصلي ليقوم بقراءة بيانات حساسة، تعديلها، حذفها، أو حتى تنفيذ أوامر على مستوى نظام التشغيل (RCE).</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>SQL Injection</strong> occurs when user input is concatenated into SQL queries without proper sanitization. Attackers can read, modify, or delete database records — and sometimes achieve RCE via <code>xp_cmdshell</code> or file write primitives.</p>
+    <p><strong>SQL Injection (SQLi)</strong> is a critical vulnerability that occurs when an application improperly concatenates user-supplied data into a backend database query. This allows an attacker to manipulate the query logic, leading to unauthorized data access, modification, or even Remote Code Execution (RCE) via functions like <code>xp_cmdshell</code>.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أنواع SQLi / SQLi Types</h2>
+  <h2>آلية العمل والسبب الجذري / Root Cause Analysis</h2>
+  <p>تخيل أن التطبيق يستعلم عن المستخدم هكذا:</p>
+  <div class="cmd-block">
+    <pre>SELECT * FROM users WHERE username = '$user_input' AND password = '$password_input'</pre>
+  </div>
+  <p>إذا أدخل المهاجم في حقل الـ username القيمة <code>admin' -- </code>، سيصبح الاستعلام كالتالي:</p>
+  <div class="cmd-block">
+    <pre>SELECT * FROM users WHERE username = 'admin' -- ' AND password = '...'</pre>
+  </div>
+  <p>علامة <code>--</code> تعني (تعليق) في SQL، مما يلغي شرط الباسورد بالكامل، ويدخل المهاجم بحساب الأدمن بدون معرفة كلمة المرور.</p>
+</div>
+
+<div class="section-card">
+  <h2>أنواع ثغرات الـ SQL Injection (التصنيف العميق)</h2>
+  
   <div class="type-grid">
     <div class="type-item">
-      <h4>In-band (Classic)</h4>
-      <p class="lang-ar">النتيجة تظهر في نفس response — الأسهل للاستغلال.</p>
-      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">Results appear in the same HTTP response.</p>
+      <h4>1. In-band SQLi (Classic)</h4>
+      <p class="lang-ar">يتم إرسال الهجوم واستقبال النتيجة عبر نفس القناة (نفس صفحة الويب). وهو الأسهل في الاكتشاف والاستغلال.</p>
+      <ul>
+        <li><strong>Error-based:</strong> إجبار قاعدة البيانات على إظهار رسائل خطأ برمجية تحتوي على بيانات حساسة (مثال: استخدام دالة <code>extractvalue()</code> في MySQL).</li>
+        <li><strong>Union-based:</strong> استخدام معامل <code>UNION</code> لدمج نتائج استعلام المهاجم مع الاستعلام الأصلي، مما يظهر البيانات المسروقة مباشرة في الصفحة.</li>
+      </ul>
     </div>
+    
     <div class="type-item">
-      <h4>Union-based</h4>
-      <p class="lang-ar">استخدام <code>UNION SELECT</code> لسحب بيانات من جداول أخرى.</p>
-      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">Use <code>UNION SELECT</code> to extract data from other tables.</p>
+      <h4>2. Inferential (Blind) SQLi</h4>
+      <p class="lang-ar">البيانات لا تظهر في الصفحة. المهاجم يعتمد على مراقبة سلوك التطبيق لاستنتاج البيانات (حرفاً بحرف).</p>
+      <ul>
+        <li><strong>Boolean-based:</strong> إرسال شروط (True/False). إذا تغير محتوى الصفحة أو طولها، يستنتج المهاجم أن الشرط صحيح.</li>
+        <li><strong>Time-based:</strong> إذا كان التطبيق لا يغير المحتوى إطلاقاً، يستخدم المهاجم دوال مثل <code>SLEEP(10)</code> أو <code>pg_sleep(10)</code>. إذا تأخر الرد 10 ثوانٍ، فالشرط صحيح.</li>
+      </ul>
     </div>
+    
     <div class="type-item">
-      <h4>Boolean-based Blind</h4>
-      <p class="lang-ar">الفرق بين true/false في المحتوى — استخراج حرف حرف.</p>
-      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">Infer data from true/false response differences.</p>
-    </div>
-    <div class="type-item">
-      <h4>Time-based Blind</h4>
-      <p class="lang-ar"><code>SLEEP(5)</code> أو <code>WAITFOR DELAY</code> — لا فرق في المحتوى.</p>
-      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;"><code>SLEEP()</code> / <code>WAITFOR DELAY</code> — no visible content change.</p>
-    </div>
-    <div class="type-item">
-      <h4>Error-based</h4>
-      <p class="lang-ar">استغلال رسائل الخطأ لاستخراج البيانات.</p>
-      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">Extract data from verbose SQL error messages.</p>
-    </div>
-    <div class="type-item">
-      <h4>NoSQL Injection</h4>
-      <p class="lang-ar">MongoDB, Redis — operators مثل <code>$gt</code>, <code>$ne</code>.</p>
-      <p class="lang-en" style="margin-top:6px;direction:ltr;text-align:left;font-size:0.82rem;color:#64748b;">MongoDB/Redis — abuse operators like <code>$gt</code>, <code>$ne</code>.</p>
+      <h4>3. Out-of-Band (OOB) SQLi</h4>
+      <p class="lang-ar">عندما يكون التطبيق محمي بشكل كامل ولا يظهر أخطاء ولا يتأثر بالوقت. يقوم المهاجم بإجبار قاعدة البيانات على إرسال البيانات (DNS Request أو HTTP Request) إلى سيرفر يمتلكه المهاجم (Burp Collaborator). يعتمد على دوال مثل <code>load_file()</code> أو <code>master..xp_dirtree</code>.</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار / Testing Commands</h2>
-  <div class="cmd-block">
-    <pre>sqlmap -u "https://target.com/page.php?id=1" --dbs --batch
-sqlmap -u "https://target.com/page.php?id=1" -D database_name -T users --dump
-sqlmap -u "https://target.com/page.php?id=1" --os-shell</pre>
-    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
-  </div>
-  <div class="cmd-block">
-    <pre># Manual UNION probe
-' ORDER BY 3--
-' UNION SELECT NULL,username,password FROM users--
-
-# NoSQL (MongoDB)
-{"username": {"$gt": ""}, "password": {"$gt": ""}}
-
-python nosqlmap.py -t https://target.com/api/login</pre>
-    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>الأدوات / Tools</h2>
-  <div class="tools-row">
-    <span class="tool-chip">SQLMap</span>
-    <span class="tool-chip">NoSQLMap</span>
-    <span class="tool-chip">sqlmaptamper</span>
-    <span class="tool-chip">Burp Suite</span>
-    <span class="tool-chip">ffuf</span>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>Writeup & Lab</h2>
+  <h2>تقنيات البحث المتقدم (Bug Bounty Hunting Methodology)</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>اقرأ writeup: <strong>SQL Injection: From Zero to RCE</strong> — من اكتشاف parameter لـ database dump ثم RCE.</p>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>Recommended writeup: <strong>SQL Injection: From Zero to RCE</strong> — from parameter discovery to database dump and RCE.</p>
+      <p>في برامج الـ Bug Bounty، نادرًا ما تجد SQLi واضحة في متغيرات الـ URL (GET params). يجب البحث في:</p>
+      <ul>
+        <li><strong>HTTP Headers:</strong> مثل <code>User-Agent</code>, <code>X-Forwarded-For</code>, <code>Referer</code> والتي يتم تخزينها غالبًا في قواعد البيانات لأغراض الـ Logging.</li>
+        <li><strong>JSON/XML APIs:</strong> استبدال القيم بـ Payloads، وأحيانًا تغيير نوع البيانات (من Integer إلى Array أو String) لكشف أخطاء.</li>
+        <li><strong>Second-Order SQLi:</strong> إدخال Payload في حقل (مثل اسم المستخدم عند التسجيل) لا ينفذ فوراً، ولكن يتم تنفيذه لاحقاً عند عرض ملفك الشخصي أو في لوحة تحكم الإدارة (Admin Panel).</li>
+        <li><strong>WAF Bypass:</strong> تخطي حماية جدار الحماية باستخدام مسافات بديلة <code>/**/</code> أو ترميز (URL Encoding, Hex Encoding) أو تلاعب بالأحرف <code>sELecT</code>.</li>
+      </ul>
     </div>
   </div>
-  <a class="cta-lab" href="labs/sql-injection-lab.html">🧪 افتح SQL Injection Lab — 3 Levels</a>
 </div>
 
-  </main>
+<div class="section-card">
+  <h2>أوامر الـ SQLMap المتقدمة / Advanced SQLMap Commands</h2>
+  <div class="cmd-block">
+    <pre># استغلال طلب تم حفظه من Burp (شامل كل الـ Headers)
+sqlmap -r request.txt --batch --dbs
+
+# محاولة تخطي الـ WAF باستخدام نصوص مساعدة (Tampers)
+sqlmap -u "https://target.com/api/users?id=1" --tamper=space2comment,between,randomcase --level=5 --risk=3
+
+# استغلال ثغرة Time-based Blind بتحديد التقنية وتجاهل الباقي لتوفير الوقت
+sqlmap -u "https://target.com/page?id=1" --technique=T --time-sec=5
+
+# محاولة الحصول على OS Shell مباشرة (يعتمد على صلاحيات الـ DB)
+sqlmap -r request.txt --os-shell</pre>
+    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>كيفية الحماية (Remediation)</h2>
+  <p>الخطوة الأساسية والوحيدة الفعالة هي <strong>Prepared Statements (Parameterized Queries)</strong> حيث يتم فصل أوامر SQL عن البيانات المدخلة بشكل كامل، بحيث تُعامل البيانات كنص عادي ولا يمكن تنفيذها أبداً. استخدام ORMs الحديثة (مثل Entity Framework, Hibernate, Sequelize) يوفر هذه الحماية افتراضياً.</p>
+</div>
+
+<div class="section-card">
+  <h2>التطبيق العملي / Writeup & Lab</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>لقد صممنا مختبرًا متكاملًا يحاكي هذه الأنواع. ابدأ بالتحدي الأول (In-band) وانتقل للثاني (Blind).</p>
+    </div>
+  </div>
+  <a class="cta-lab" href="labs/sql-injection-lab.html">🧪 افتح مختبر SQL Injection التفاعلي — 3 مستويات</a>
+</div>
+
+</main>
 </div>
 
 <!-- Dynamic Relative Path & Active Class Resolver -->

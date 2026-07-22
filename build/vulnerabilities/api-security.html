@@ -58,6 +58,10 @@
     <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
     <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
     <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    <a class="sidebar-link" href="vulnerabilities/xss.html">🕷️ Cross-Site Scripting (XSS)</a>
+    <a class="sidebar-link" href="vulnerabilities/csrf.html">🎭 CSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/lfi-rfi.html">📂 LFI & RFI</a>
+    <a class="sidebar-link" href="vulnerabilities/xxe.html">📜 XXE</a>
     
     <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
     <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
@@ -81,94 +85,111 @@
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
     <a class="sidebar-link" href="linux-security/linux-analysis.html">🛡️ Linux Analysis</a>
 
+    
+    <div class="sidebar-title" style="margin-top:18px;">Writeups / التقارير</div>
+    <a class="sidebar-link" href="writeups/api-hacking.html">📝 API Hacking</a>
+    <a class="sidebar-link" href="writeups/graphql-attack.html">📝 GraphQL Leak</a>
+    <a class="sidebar-link" href="writeups/cloud-ssrf.html">📝 Cloud SSRF</a>
+    <a class="sidebar-link" href="writeups/linux-suid-root.html">📝 Linux SUID</a>
+    <a class="sidebar-link" href="writeups/recon-mastery.html">📝 Recon Mastery</a>
+    <a class="sidebar-link" href="writeups/ai-prompt-inj.html">📝 AI Prompt Inj</a>
+    <a class="sidebar-link" href="writeups/race-payments.html">📝 Race Conditions</a>
+    <a class="sidebar-link" href="writeups/ad-to-domain.html">📝 AD Domain</a>
+    <a class="sidebar-link" href="writeups/nuclei-to-p1.html">📝 Nuclei to P1</a>
+    <a class="sidebar-link" href="writeups/jwt-advanced.html">📝 JWT Advanced</a>
+
     <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
     <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
   </aside>
 
   <main class="academy-main">
-    
 <div class="page-hero">
-  <h1 class="page-title">أمن الـ APIs — معايير OWASP العشرة</h1>
-  <p class="page-title-en">API Security — OWASP API Top 10</p>
-  <span class="severity-pill pill-high">HIGH</span>
-  <span class="severity-pill pill-high">OWASP API10</span>
+  <h1 class="page-title">أمان واجهات برمجة التطبيقات (API Security) — الدليل الشامل</h1>
+  <p class="page-title-en">API Security & OWASP API Top 10 — The Ultimate Deep Dive</p>
+  <span class="severity-pill pill-critical">CRITICAL</span>
+  <span class="severity-pill pill-high">OWASP API Security Top 10</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>API Security</strong> تركز على حماية واجهات برمجة التطبيقات (REST, GraphQL, gRPC) من الاستخدام الخاطئ. تعد الـ APIs هي العمود الفقري للتطبيقات الحديثة وتطبيقات الجوال، وتصنف ثغراتها وفق OWASP API Top 10 التي تشمل تخطي الصلاحيات، وغياب Rate Limit، والتسريب المفرط للبيانات.</p>
+    <p><strong>واجهات برمجة التطبيقات (APIs)</strong> هي العصب الذي يربط تطبيقات الويب والموبايل بقواعد البيانات والخدمات الخلفية (Backend). نظراً لأن الـ APIs مصممة للتعامل المباشر مع البيانات (أحياناً بدون واجهة مستخدم رسومية)، فإن أي خطأ في التحكم في الوصول (Access Control) أو التحقق من المدخلات (Input Validation) يؤدي إلى تسريب ضخم للبيانات. يركز أمان הـ API على تأمين نقاط النهاية (Endpoints) من الهجمات المباشرة مثل BOLA/IDOR والتلاعب بالبيانات الجماعية (Mass Assignment).</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>API Security</strong> focuses on protecting backend APIs (REST, GraphQL, gRPC) from abuse. As APIs are the backbone of modern web and mobile apps, they are cataloged under the OWASP API Top 10, covering broken object authorization, rate limiting failures, and excessive data exposure.</p>
+    <p><strong>API Security</strong> focuses on protecting Application Programming Interfaces from misuse. Unlike traditional web apps, APIs often expose underlying data structures directly to the client. This architectural difference shifts the security focus towards deeply nested authorization flaws (like BOLA), excessive data exposure, and robust rate limiting to prevent automated attacks.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أشهر ثغرات الـ APIs / Top Vulnerabilities</h2>
+  <h2>أهم ثغرات الـ API (OWASP API Top 10)</h2>
+  
   <div class="type-grid">
     <div class="type-item">
-      <h4>BOLA (Broken Object Level Auth)</h4>
-      <p>الوصول لبيانات كائن آخر بتغيير المعرّف (مثل IDOR).</p>
+      <h4>1. API1:2023 - Broken Object Level Authorization (BOLA)</h4>
+      <p class="lang-ar">المعروفة سابقاً بـ IDOR. تحدث عندما يتمكن المستخدم من الوصول إلى كائنات (Objects) تخص مستخدمين آخرين بمجرد تغيير الـ ID في مسار הـ API (مثال: <code>GET /api/receipts/105</code> بدلاً من <code>104</code>).</p>
     </div>
+    
     <div class="type-item">
-      <h4>BFLA (Broken Function Level Auth)</h4>
-      <p>الوصول لوظائف إدارية (Admin APIs) بدون صلاحيات مناسبة.</p>
+      <h4>2. API2:2023 - Broken Authentication</h4>
+      <p class="lang-ar">ضعف أو غياب حماية تسجيل الدخول. مثل عدم وجود Rate Limiting على <code>/api/login</code> مما يسمح بهجمات Credential Stuffing، أو ضعف في التحقق من صحة الـ JWT، أو تعريض كلمات المرور في مسار الـ URL بدلاً من الـ Body.</p>
     </div>
+
     <div class="type-item">
-      <h4>Unrestricted Resource Consumption</h4>
-      <p>غياب الـ Rate Limiting مما يسمح بإغراق الـ API بملايين الطلبات وتعطيلها.</p>
+      <h4>3. API3:2023 - Broken Object Property Level Authorization</h4>
+      <p class="lang-ar">تجمع بين Excessive Data Exposure و Mass Assignment. الخادم يعيد بيانات سرية لا يحتاجها العميل (مثل الـ Password Hash)، أو يسمح للمهاجم بتعديل خصائص لم يكن مسموحاً له بتعديلها (مثل تمرير <code>{"is_admin": true}</code> في طلب تحديث الملف الشخصي).</p>
     </div>
+
     <div class="type-item">
-      <h4>Broken Object Property Level Auth</h4>
-      <p>تعديل خصائص داخل الـ JSON Body لم يكن مسموحاً بتغييرها (Mass Assignment).</p>
+      <h4>4. API4:2023 - Unrestricted Resource Consumption</h4>
+      <p class="lang-ar">عدم وجود قيود على معدل الطلبات (Rate Limiting) أو حجم البيانات. יכול المهاجم إرسال آلاف الطلبات لاستهلاك موارد السيرفر (CPU/Memory)، أو تحميل ملفات ضخمة، مما يؤدي إلى Denial of Service (DoS).</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار / API Testing Commands</h2>
-  <div class="cmd-block">
-    <pre># Fuzzing API endpoints with Kiterunner
-kiterunner scan https://api.target.com/v1 -w /opt/wordlists/routes.kb
-
-# Discovering hidden parameters with Arjun
-arjun -u https://api.target.com/v1/users -m GET
-
-# Intercepting and testing with curl
-curl -X DELETE -H "Authorization: Bearer USER_TOKEN" https://api.target.com/v1/posts/2001</pre>
-    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>الأدوات / Tools</h2>
-  <div class="tools-row">
-    <span class="tool-chip">Postman</span>
-    <span class="tool-chip">Kiterunner</span>
-    <span class="tool-chip">Arjun</span>
-    <span class="tool-chip">crAPI (Vulnerable App)</span>
-    <span class="tool-chip">Burp Suite</span>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>Writeup & Lab</h2>
+  <h2>تقنيات البحث والاستغلال المتقدمة / Methodology</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>API Hacking: Breaking Modern Applications</strong> — كيف تم فحص وتفكيك واجهات برمجة التطبيقات الخاصة بتطبيق توصيل شهير وسحب بيانات السائقين والرحلات بالكامل.</p>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>API Hacking: Breaking Modern Applications</strong> — a detailed report on dismantling delivery application APIs to dump user and trip details.</p>
+      <p>خطوات اختبار أي API:</p>
+      <ul>
+        <li><strong>Discovery & Recon:</strong> البحث عن الـ API Documentation (مثل Swagger/OpenAPI على <code>/api-docs</code> أو <code>/swagger.json</code>).</li>
+        <li><strong>Versioning Bypasses:</strong> إذا كان <code>/api/v2/users</code> محمياً، جرب <code>/api/v1/users</code> (غالبًا تكون النسخ القديمة مصابة بـ BOLA).</li>
+        <li><strong>Method Fuzzing:</strong> إذا كان <code>GET /api/users/1</code> ممنوعاً، جرب <code>POST</code>، <code>PUT</code>، أو حتى <code>DELETE</code>.</li>
+        <li><strong>Content-Type Manipulation:</strong> تغيير <code>application/json</code> إلى <code>application/xml</code> لاختبار ثغرات XXE في الـ API.</li>
+        <li><strong>Mass Assignment Check:</strong> في أي طلب <code>PUT</code>/<code>POST</code> لتحديث البيانات، قم بإضافة حقول إضافية مثل <code>"role":"admin"</code> أو <code>"credit":9999</code> وراقب الرد.</li>
+      </ul>
     </div>
   </div>
-  <a class="cta-lab" href="labs/api-security-lab.html">🧪 افتح API Security Lab — 3 Levels</a>
 </div>
 
-  </main>
+<div class="section-card">
+  <h2>أدوات فحص وتأمين الـ APIs</h2>
+  <div class="tools-row">
+    <span class="tool-chip">Postman / Insomnia</span>
+    <span class="tool-chip">Kiterunner</span>
+    <span class="tool-chip">ffuf (API Fuzzing)</span>
+    <span class="tool-chip">Autorize (Burp Ext)</span>
+  </div>
+  <p style="margin-top: 15px;">أداة <strong>Kiterunner</strong> ممتازة لاكتشاف مسارات الـ API المخفية (Endpoint Discovery). أداة <strong>Autorize</strong> في Burp Suite تعتبر ساحرة لاكتشاف BOLA؛ تقوم بتشغيل المتصفح كمستخدم "أدمن" أو "عادي"، والإضافة تعيد إرسال كل طلباتك تلقائياً باستخدام توكن (Token) مستخدم عادي لتكتشف ما إذا كانت الصلاحيات مخترقة أم لا.</p>
+</div>
+
+<div class="section-card">
+  <h2>كيفية الحماية (Remediation)</h2>
+  <ul>
+    <li><strong>Zero Trust:</strong> لا تثق أبداً بالمعرفات (IDs) التي يرسلها العميل. تحقق دائماً في قاعدة البيانات: "هل المستخدم صاحب هذا التوكن (Token) لديه صلاحية الوصول للـ ID المطلوب؟"</li>
+    <li><strong>Strict Schema Validation:</strong> حدد بوضوح وبصرامة الحقول التي يُسمح للمستخدم بإرسالها (لمنع Mass Assignment) والحقول التي يمكن إرجاعها (لمنع Data Exposure).</li>
+    <li><strong>Rate Limiting & Throttling:</strong> تطبيق قيود صارمة على عدد الطلبات بناءً على الـ IP وعلى الـ User Token لمنع الـ Brute-Force والـ DoS.</li>
+  </ul>
+</div>
+
+<div class="section-card">
+  <h2>التطبيق العملي / Writeup & Lab</h2>
+  <a class="cta-lab" href="labs/api-security-lab.html">🧪 افتح مختبر API Security التفاعلي — 3 مستويات</a>
+</div>
+
+</main>
 </div>
 
 <!-- Dynamic Relative Path & Active Class Resolver -->

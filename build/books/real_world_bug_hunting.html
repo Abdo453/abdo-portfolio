@@ -927,7 +927,7 @@ This vulnerability allows for Account Takeover.</pre>
       const param = document.getElementById('rw-param').value.trim() || '/api/v1/user/settings?id=';
       const impact = document.getElementById('rw-impact').value.trim() || 'Account Takeover';
       
-      document.getElementById('rw-report-output').innerText = `Title: ${type} in ${param}\n\nSummary:\nI have discovered a security vulnerability in ${param} due to lack of server-side authorization controls.\n\nSteps to Reproduce:\n1. Log in to the application as User A.\n2. Intercept the request to ${param}\n3. Modify the ID parameter value to User B's ID.\n4. Observe that we can access and manipulate sensitive settings data of User B.\n\nImpact:\nThis vulnerability allows for ${impact}.`;
+      (document.getElementById('rw-report-output') || {}).innerText = `Title: ${type} in ${param}\n\nSummary:\nI have discovered a security vulnerability in ${param} due to lack of server-side authorization controls.\n\nSteps to Reproduce:\n1. Log in to the application as User A.\n2. Intercept the request to ${param}\n3. Modify the ID parameter value to User B's ID.\n4. Observe that we can access and manipulate sensitive settings data of User B.\n\nImpact:\nThis vulnerability allows for ${impact}.`;
     }
 
     function copyCode(btn) {

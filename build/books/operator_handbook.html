@@ -896,14 +896,14 @@ aws ec2 describe-instances</pre>
       const port = document.getElementById('op-port').value.trim() || '80';
       
       // Update commands
-      document.getElementById('cmd-op-docker').innerHTML = `docker run -d --name ${container} -p ${port}:${port} nginx`;
-      document.getElementById('cmd-op-k8s').innerHTML = `kubectl get pods --all-namespaces | grep ${container}`;
+      (document.getElementById('cmd-op-docker') || {}).innerHTML = `docker run -d --name ${container} -p ${port}:${port} nginx`;
+      (document.getElementById('cmd-op-k8s') || {}).innerHTML = `kubectl get pods --all-namespaces | grep ${container}`;
       
       // Update table cells
-      document.getElementById('td-op-docker').innerHTML = `<code>docker run -d --name ${container} -p ${port}:${port} nginx</code>`;
+      (document.getElementById('td-op-docker') || {}).innerHTML = `<code>docker run -d --name ${container} -p ${port}:${port} nginx</code>`;
 
       // Update simulator outputs
-      document.getElementById('sim-op-docker').innerHTML = `CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                NAMES\nb1e2c3d4e5f6   nginx     "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   0.0.0.0:${port}->${port}/tcp   ${container}`;
+      (document.getElementById('sim-op-docker') || {}).innerHTML = `CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                NAMES\nb1e2c3d4e5f6   nginx     "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   0.0.0.0:${port}->${port}/tcp   ${container}`;
     }
 
     function copyCode(btn) {

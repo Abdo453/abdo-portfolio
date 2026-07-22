@@ -904,7 +904,7 @@ http://spoofed.burpcollaborator.net (DNS Rebinding)</pre>
                 <span class="toggle-icon" id="icon-qb-2">[ + ]</span>
               </button>
               <div class="quiz-answer-panel" id="ans-qb-2">
-                <strong>الإجابة النموذجية:</strong> يتم ذلك من خلال كتابة بايلود متداخل يعيد بناء نفسه بعد التطهير (Nested Tags)، مثل حقن البايلود `<scr<script>ipt>alert(1)</script>`، حيث تقوم الفلاتر بحذف كلمة `script` الوسطى، مما يؤدي لدمج الأحرف المتبقية تلقائياً لتصبح `<script>alert(1)` وتعمل بنجاح.
+                <strong>الإجابة النموذجية:</strong> يتم ذلك من خلال كتابة بايلود متداخل يعيد بناء نفسه بعد التطهير (Nested Tags)، مثل حقن البايلود `&lt;scr&lt;script&gt;ipt&gt;alert(1)&lt;/script&gt;`، حيث تقوم الفلاتر بحذف كلمة `script` الوسطى، مما يؤدي لدمج الأحرف المتبقية تلقائياً لتصبح `&lt;script&gt;alert(1)` وتعمل بنجاح.
               </div>
             </div>
 
@@ -1013,11 +1013,11 @@ http://spoofed.burpcollaborator.net (DNS Rebinding)</pre>
       const wordlist = document.getElementById('bc-wordlist').value.trim() || '/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt';
       
       // Update commands
-      document.getElementById('cmd-bc-subfinder').innerHTML = `subfinder -d ${domain} -all -recursive -o subs.txt`;
-      document.getElementById('cmd-bc-active-recon').innerHTML = `${tool} -u https://${domain}/FUZZ -w ${wordlist} -mc 200,301,302,403 -t 50`;
+      (document.getElementById('cmd-bc-subfinder') || {}).innerHTML = `subfinder -d ${domain} -all -recursive -o subs.txt`;
+      (document.getElementById('cmd-bc-active-recon') || {}).innerHTML = `${tool} -u https://${domain}/FUZZ -w ${wordlist} -mc 200,301,302,403 -t 50`;
 
       // Update simulator outputs
-      document.getElementById('sim-bc-active').innerHTML = `:: Progress: [1420/220500] :: Job ADDR: https://${domain}/FUZZ :: wordlist size: 220500\n[Status: 200, Size: 1420, Words: 240, Lines: 42, Duration: 45ms]\n  * FUZZ: robots.txt\n\n[Status: 301, Size: 242, Words: 20, Lines: 5, Duration: 52ms]\n  * FUZZ: admin -> redirecting to https://${domain}/admin/\n\n[Status: 403, Size: 280, Words: 15, Lines: 4, Duration: 40ms]\n  * FUZZ: .env (Forbidden file detected using ${wordlist})`;
+      (document.getElementById('sim-bc-active') || {}).innerHTML = `:: Progress: [1420/220500] :: Job ADDR: https://${domain}/FUZZ :: wordlist size: 220500\n[Status: 200, Size: 1420, Words: 240, Lines: 42, Duration: 45ms]\n  * FUZZ: robots.txt\n\n[Status: 301, Size: 242, Words: 20, Lines: 5, Duration: 52ms]\n  * FUZZ: admin -> redirecting to https://${domain}/admin/\n\n[Status: 403, Size: 280, Words: 15, Lines: 4, Duration: 40ms]\n  * FUZZ: .env (Forbidden file detected using ${wordlist})`;
     }
 
     function copyCode(btn) {

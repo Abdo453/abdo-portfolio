@@ -58,6 +58,10 @@
     <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
     <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
     <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    <a class="sidebar-link" href="vulnerabilities/xss.html">🕷️ Cross-Site Scripting (XSS)</a>
+    <a class="sidebar-link" href="vulnerabilities/csrf.html">🎭 CSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/lfi-rfi.html">📂 LFI & RFI</a>
+    <a class="sidebar-link" href="vulnerabilities/xxe.html">📜 XXE</a>
     
     <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
     <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
@@ -81,103 +85,145 @@
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
     <a class="sidebar-link" href="linux-security/linux-analysis.html">🛡️ Linux Analysis</a>
 
+    
+    <div class="sidebar-title" style="margin-top:18px;">Writeups / التقارير</div>
+    <a class="sidebar-link" href="writeups/api-hacking.html">📝 API Hacking</a>
+    <a class="sidebar-link" href="writeups/graphql-attack.html">📝 GraphQL Leak</a>
+    <a class="sidebar-link" href="writeups/cloud-ssrf.html">📝 Cloud SSRF</a>
+    <a class="sidebar-link" href="writeups/linux-suid-root.html">📝 Linux SUID</a>
+    <a class="sidebar-link" href="writeups/recon-mastery.html">📝 Recon Mastery</a>
+    <a class="sidebar-link" href="writeups/ai-prompt-inj.html">📝 AI Prompt Inj</a>
+    <a class="sidebar-link" href="writeups/race-payments.html">📝 Race Conditions</a>
+    <a class="sidebar-link" href="writeups/ad-to-domain.html">📝 AD Domain</a>
+    <a class="sidebar-link" href="writeups/nuclei-to-p1.html">📝 Nuclei to P1</a>
+    <a class="sidebar-link" href="writeups/jwt-advanced.html">📝 JWT Advanced</a>
+
     <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
     <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
   </aside>
 
   <main class="academy-main">
-    
 <div class="page-hero">
-  <h1 class="page-title">IDOR — الوصول المباشر غير الآمن للكائنات</h1>
-  <p class="page-title-en">IDOR — Insecure Direct Object Reference</p>
+  <h1 class="page-title">ثغرات IDOR / BAC — الدليل الشامل</h1>
+  <p class="page-title-en">Insecure Direct Object Reference (IDOR) & BOLA</p>
   <span class="severity-pill pill-high">HIGH</span>
-  <span class="severity-pill pill-high">OWASP A01</span>
+  <span class="severity-pill pill-high">OWASP A01:2021</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>IDOR</strong> يحدث عندما يستطيع المستخدم الوصول لبيانات أو موارد تخص مستخدمين آخرين بتغيير معرّف (ID, UUID, filename) في الطلب — بدون فحص صلاحيات كافٍ من السيرفر.</p>
+    <p><strong>ثغرة IDOR (Insecure Direct Object Reference)</strong> — وتُعرف حاليًا في سياق الواجهات البرمجية باسم <strong>BOLA (Broken Object Level Authorization)</strong> — هي ثغرة منطقية (Logical Vulnerability) تحدث عندما يكشف التطبيق عن معرفات (IDs) داخلية كأرقام الملفات أو معرفات المستخدمين، ولا يتحقق في النهاية الخلفية (Backend) مما إذا كان المستخدم الحالي يملك صلاحية الوصول إلى هذا المعرّف تحديدًا. هذا يسمح للمهاجم بالوصول لبيانات مستخدمين آخرين وتعديلها أو حذفها.</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>IDOR</strong> happens when a user accesses another user's data by modifying an object identifier (ID, UUID, filename) in the request — without adequate server-side authorization checks.</p>
+    <p><strong>IDOR</strong> (or <strong>BOLA</strong> in API contexts) is an access control vulnerability that arises when an application provides direct access to objects based on user-supplied input. As a result of this vulnerability, attackers can bypass authorization and access resources in the system directly, for example, database records, files, or user accounts.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أنواع IDOR / IDOR Types</h2>
+  <h2>آلية العمل والسبب الجذري / Root Cause Analysis</h2>
+  <p>تخيل طلب HTTP يعرض الفاتورة الخاصة بك:</p>
+  <div class="cmd-block">
+    <pre>GET /api/v1/invoices?id=5021 HTTP/1.1
+Host: target.com
+Authorization: Bearer Your_Token</pre>
+  </div>
+  <p>في الباك-إند، يتم تنفيذ استعلام جلب الفاتورة هكذا:</p>
+  <div class="cmd-block">
+    <pre>SELECT * FROM invoices WHERE id = 5021</pre>
+  </div>
+  <p>المشكلة هنا هي عدم ربط الفاتورة بالمستخدم (Missing Authorization Check). إذا قام المهاجم بتغيير <code>id=5022</code>، سيقوم السيرفر بإرجاع فاتورة الضحية، لأنه لم يتحقق مسبقًا: <strong>هل الفاتورة 5022 تخص الـ Token الحالي أم لا؟</strong></p>
+</div>
+
+<div class="section-card">
+  <h2>أنواع ثغرات الـ IDOR الشائعة / Common Contexts</h2>
+  
   <div class="type-grid">
     <div class="type-item">
-      <h4>URL Parameter IDOR</h4>
-      <p>تغيير <code>user_id=123</code> → <code>user_id=124</code></p>
+      <h4>1. URL Parameters</h4>
+      <p class="lang-ar">تغيير الأرقام المتسلسلة (Sequential IDs) في الرابط مثل: <code>/profile?user_id=123</code> إلى <code>124</code>.</p>
     </div>
+    
     <div class="type-item">
-      <h4>API / JSON Body</h4>
-      <p>تعديل <code>id</code> أو <code>accountId</code> في POST/PUT body</p>
+      <h4>2. Body & JSON Parameters</h4>
+      <p class="lang-ar">تغيير المعرفات في جسم الطلب خصوصاً في الـ REST APIs و الـ GraphQL.</p>
     </div>
+
     <div class="type-item">
-      <h4>UUID Manipulation</h4>
-      <p>تخمين أو leak UUIDs من responses أخرى</p>
+      <h4>3. HTTP Headers / Cookies</h4>
+      <p class="lang-ar">بعض التطبيقات تعتمد على الكوكيز غير المشفرة: <code>Cookie: uid=100;</code> لتحديد هوية المستخدم.</p>
     </div>
+
     <div class="type-item">
-      <h4>Mass Assignment</h4>
-      <p>إرسال fields زيادة: <code>role: admin</code>, <code>isPremium: true</code></p>
-    </div>
-    <div class="type-item">
-      <h4>Function-Level BAC</h4>
-      <p>الوصول لـ admin endpoints كـ regular user</p>
-    </div>
-    <div class="type-item">
-      <h4>Path Traversal</h4>
-      <p><code>../../etc/passwd</code> في file download paths</p>
+      <h4>4. Second Order IDOR</h4>
+      <p class="lang-ar">ثغرة IDOR لا تظهر فوراً. على سبيل المثال، حفظ معرف مشروع <code>project_id=77</code> لا تملكه في ملفك الشخصي، ثم عند طباعة التقارير، يقوم النظام بسحب المشروع 77.</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار / Testing Commands</h2>
-  <div class="cmd-block">
-    <pre># URL IDOR
-GET /api/users/1001/profile HTTP/1.1
-GET /api/users/1002/profile HTTP/1.1
-
-# JSON body swap
-POST /api/orders HTTP/1.1
-{"order_id": "ORD-9999", "user_id": "VICTIM_UUID"}
-
-# Path traversal
-GET /download?file=../../../etc/passwd HTTP/1.1</pre>
-    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>الأدوات / Tools</h2>
-  <div class="tools-row">
-    <span class="tool-chip">Autorize (Burp)</span>
-    <span class="tool-chip">AuthMatrix (Burp)</span>
-    <span class="tool-chip">Burp Comparer</span>
-    <span class="tool-chip">ffuf</span>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>Writeup & Lab</h2>
+  <h2>تقنيات البحث المتقدمة لتخطي الحماية (Bypasses & Tricks)</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>Finding IDOR: The Art of Access Control Bypass</strong></p>
+      <p>في الـ Bug Bounty، نادرًا ما تكون الثغرات بهذا الوضوح. إذا تم حظرك (403 Forbidden)، جرّب هذه التقنيات:</p>
+      <ul>
+        <li><strong>HTTP Parameter Pollution (HPP):</strong> تمرير المعامل مرتين: <code>?id=YOUR_ID&id=VICTIM_ID</code> (الخوادم مثل Node.js أو ASP.NET قد تتعامل مع المعامل الأخير أو تجمعهم).</li>
+        <li><strong>Array Injection:</strong> تغيير نوع المعامل من رقم إلى مصفوفة: <code>?id[]=YOUR_ID&id[]=VICTIM_ID</code> لتشتيت منطق الباك-إند.</li>
+        <li><strong>JSON Type Confusion:</strong> إذا كان الـ ID نصًا في JSON، جرب إرساله كرقم: <code>{"id": 123}</code> بدلًا من <code>{"id": "123"}</code>.</li>
+        <li><strong>Wildcards:</strong> استبدال الـ ID بـ <code>*</code> أو <code>%</code> (خاصة في الـ APIs التي تعتمد على ElasticSearch أو قواعد بيانات مماثلة).</li>
+        <li><strong>UUIDs vs Sequential IDs:</strong> إذا استخدموا UUID معقد (مثل `550e8400-e29b-41d4-a716-446655440000`)، فهذا مجرد "حماية بالغموض" (Security by Obscurity). إذا تمكنت من إيجاد UUID للضحية من أي endpoint آخر، يمكنك استغلال الـ IDOR!</li>
+      </ul>
     </div>
   </div>
-  <a class="cta-lab" href="labs/idor-lab.html">🧪 افتح IDOR Lab — 3 Scenarios</a>
 </div>
 
-  </main>
+<div class="section-card">
+  <h2>دمج الثغرات (Chaining IDOR)</h2>
+  <p>الثغرات لا تعيش وحدها، قوة הـ IDOR تكمن في دمجها:</p>
+  <ul>
+    <li><strong>IDOR + XSS:</strong> استخدام IDOR لتعديل ملف شخصي لمستخدم آخر ووضع Payload XSS فيه.</li>
+    <li><strong>IDOR + Account Takeover:</strong> تغيير عنوان البريد الإلكتروني لمستخدم آخر عبر IDOR، ثم طلب إعادة تعيين كلمة المرور له.</li>
+    <li><strong>IDOR + Privilege Escalation:</strong> الوصول إلى صفحة <code>/admin/users/1</code> التي لا تملك صلاحية الوصول لقائمتها، ولكنك اكتشفت الرابط والـ ID.</li>
+  </ul>
+</div>
+
+<div class="section-card">
+  <h2>أدوات مساعدة وأتمتة / Tools</h2>
+  <div class="tools-row">
+    <span class="tool-chip">Autorize (Burp Extension)</span>
+    <span class="tool-chip">AuthMatrix</span>
+    <span class="tool-chip">AutoRepeater</span>
+  </div>
+  <p style="margin-top: 15px;">يعتبر Autorize أهم إضافة في Burp Suite للمساعدة في اكتشاف BOLA/IDOR عبر تكرار طلباتك بـ Tokens ذات صلاحيات منخفضة ومقارنة الإجابات.</p>
+</div>
+
+<div class="section-card">
+  <h2>كيفية الحماية (Remediation)</h2>
+  <p>للحماية من هذه الثغرات، لا تكتفي باستخدام UUIDs، بل يجب أن يكون هناك تحقق فعلي على مستوى الكود:</p>
+  <div class="cmd-block">
+    <pre>// BAD Example (Node.js/Express)
+app.get('/api/users/:id', (req, res) => {
+  db.User.findById(req.params.id, (err, user) => res.json(user));
+});
+
+// GOOD Example
+app.get('/api/users/:id', (req, res) => {
+  if (req.user.id !== req.params.id && req.user.role !== 'admin') {
+    return res.status(403).json({ error: "Access Denied" });
+  }
+  db.User.findById(req.params.id, (err, user) => res.json(user));
+});</pre>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2>التطبيق العملي / Writeup & Lab</h2>
+  <a class="cta-lab" href="labs/idor-lab.html">🧪 افتح مختبر IDOR التفاعلي — 3 مستويات</a>
+</div>
+
+</main>
 </div>
 
 <!-- Dynamic Relative Path & Active Class Resolver -->

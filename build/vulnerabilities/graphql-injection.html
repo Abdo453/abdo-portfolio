@@ -58,6 +58,10 @@
     <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
     <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
     <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    <a class="sidebar-link" href="vulnerabilities/xss.html">🕷️ Cross-Site Scripting (XSS)</a>
+    <a class="sidebar-link" href="vulnerabilities/csrf.html">🎭 CSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/lfi-rfi.html">📂 LFI & RFI</a>
+    <a class="sidebar-link" href="vulnerabilities/xxe.html">📜 XXE</a>
     
     <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
     <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
@@ -81,96 +85,116 @@
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
     <a class="sidebar-link" href="linux-security/linux-analysis.html">🛡️ Linux Analysis</a>
 
+    
+    <div class="sidebar-title" style="margin-top:18px;">Writeups / التقارير</div>
+    <a class="sidebar-link" href="writeups/api-hacking.html">📝 API Hacking</a>
+    <a class="sidebar-link" href="writeups/graphql-attack.html">📝 GraphQL Leak</a>
+    <a class="sidebar-link" href="writeups/cloud-ssrf.html">📝 Cloud SSRF</a>
+    <a class="sidebar-link" href="writeups/linux-suid-root.html">📝 Linux SUID</a>
+    <a class="sidebar-link" href="writeups/recon-mastery.html">📝 Recon Mastery</a>
+    <a class="sidebar-link" href="writeups/ai-prompt-inj.html">📝 AI Prompt Inj</a>
+    <a class="sidebar-link" href="writeups/race-payments.html">📝 Race Conditions</a>
+    <a class="sidebar-link" href="writeups/ad-to-domain.html">📝 AD Domain</a>
+    <a class="sidebar-link" href="writeups/nuclei-to-p1.html">📝 Nuclei to P1</a>
+    <a class="sidebar-link" href="writeups/jwt-advanced.html">📝 JWT Advanced</a>
+
     <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
     <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
   </aside>
 
   <main class="academy-main">
-    
 <div class="page-hero">
-  <h1 class="page-title">أمن الـ GraphQL — ما بعد الاستعلام الذاتي</h1>
-  <p class="page-title-en">GraphQL Security — Beyond Introspection</p>
+  <h1 class="page-title">اختراق واجهات GraphQL — الدليل الشامل</h1>
+  <p class="page-title-en">GraphQL Security & Injection — The Ultimate Deep Dive</p>
   <span class="severity-pill pill-high">HIGH</span>
-  <span class="severity-pill pill-medium">OWASP API07</span>
+  <span class="severity-pill pill-medium">OWASP API Security Top 10</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>GraphQL</strong> هو محرك استعلام حديث للـ APIs. بالرغم من مرونته، إلا أنه يعاني من ثغرات خطيرة مثل الاستعلام الذاتي المفتوح (Introspection)، وهجمات تخمين الحزم (Batching)، وتجاوز قيود عمق الاستعلامات (Depth Limit) مما يسبب حجب الخدمة (DoS)، وحقن الاستعلامات.</p>
+    <p><strong>GraphQL</strong> هي لغة استعلام لواجهات برمجة التطبيقات (APIs) تتيح للعميل طلب البيانات التي يحتاجها بدقة (لا أكثر ولا أقل). على عكس REST API التي تعتمد على مسارات متعددة (Endpoints)، تستخدم GraphQL مسارًا واحدًا (غالباً <code>/graphql</code>). مرونة GraphQL وقدرتها على ربط البيانات المعقدة تجعلها هدفاً مفضلاً للمهاجمين للبحث عن ثغرات التحكم في الوصول (IDOR/BOLA)، الاستعلامات المتداخلة (Batching)، وتخطي الحماية عبر الحقول المخفية (Introspection).</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>GraphQL</strong> is a modern query engine for APIs. Despite its flexibility, it introduces unique vulnerabilities such as exposed Introspection, query batching attacks, depth limit bypasses leading to DoS, and query injection.</p>
+    <p><strong>GraphQL</strong> gives clients the power to ask for exactly what they need and nothing more. However, this flexibility introduces unique security challenges. Attackers often abuse features like Introspection to map the entire API schema, query batching for brute-forcing, and nested queries to cause Denial of Service (DoS) or bypass authorization controls.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أنواع ثغرات GraphQL / Vulnerability Types</h2>
+  <h2>مفاهيم GraphQL الأساسية للمخترقين</h2>
+  <ul>
+    <li><strong>Queries:</strong> تُستخدم لجلب البيانات (مثل GET في REST).</li>
+    <li><strong>Mutations:</strong> تُستخدم لتعديل أو إضافة بيانات (مثل POST/PUT/DELETE في REST).</li>
+    <li><strong>Introspection:</strong> نظام مدمج في GraphQL يسمح لك بسؤال الـ API عن جميع الاستعلامات (Queries) والتعديلات (Mutations) المتاحة، وأنواع البيانات. (بمثابة خريطة كنز للمهاجم!).</li>
+    <li><strong>Fragments:</strong> أجزاء قابلة لإعادة الاستخدام داخل الاستعلام.</li>
+  </ul>
+</div>
+
+<div class="section-card">
+  <h2>الثغرات الشائعة في GraphQL (Attack Vectors)</h2>
+  
   <div class="type-grid">
     <div class="type-item">
-      <h4>Introspection Disclosure</h4>
-      <p>استرجاع مخطط الـ API بالكامل (Schema) لمعرفة كل الاستعلامات المتوفرة.</p>
+      <h4>1. تفعيل Introspection (كشف الهيكل)</h4>
+      <p class="lang-ar">الخطوة الأولى في أي تقييم هي محاولة سحب "مخطط البيانات" (Schema). إذا كانت الاستبطان (Introspection) مفعلة، يمكنك إرسال استعلام <code>__schema</code> لمعرفة كل شيء:</p>
+      <div class="cmd-block" style="margin-top: 10px;">
+        <pre>{ __schema { types { name fields { name } } } }</pre>
+      </div>
+      <p class="lang-ar">حتى لو كانت مقفلة، يمكن تخطيها أحياناً بتبديل الحروف (مثلاً <code>__Schema</code>) أو الاعتماد على رسائل الخطأ (Suggestions) مثل "Did you mean ...?" لاستنتاج الحقول المتاحة.</p>
     </div>
+    
     <div class="type-item">
-      <h4>GraphQL Injection</h4>
-      <p>حقن نصوص برمجية (SQL, NoSQL, OS cmd) داخل معاملات الاستعلام.</p>
+      <h4>2. ثغرات IDOR / BOLA في GraphQL</h4>
+      <p class="lang-ar">نظراً لأن العميل يحدد ما يريده، قد ينسى المطور وضع صلاحيات على الحقول الفرعية. مثال:</p>
+      <div class="cmd-block" style="margin-top: 10px;">
+        <pre>query { user(id: 5) { username, passwordHash, ssn } }</pre>
+      </div>
+      <p class="lang-ar">بينما قد يكون مسموحاً لك بجلب الـ <code>username</code>، هل يُسمح لك بجلب الـ <code>ssn</code> للمستخدم 5؟ غالباً ما يكون التحكم في الوصول معيباً في الجذور العميقة.</p>
     </div>
+
     <div class="type-item">
-      <h4>Query Batching Attack</h4>
-      <p>إرسال مئات الاستعلامات في طلب HTTP واحد لتخطي قيود الـ Rate Limit.</p>
+      <h4>3. Query Batching & Brute-Force</h4>
+      <p class="lang-ar">تدعم GraphQL إرسال مصفوفة من الاستعلامات في طلب HTTP واحد. يمكن استغلال هذا لعمل Brute-Force لكلمات المرور أو الـ OTP (كود التحقق) دون إطلاق تنبيهات جدار الحماية (WAF Rate Limiting) لأنك ترسل طلب HTTP <strong>واحد</strong> يحتوي على 10,000 استعلام!</p>
     </div>
+
     <div class="type-item">
-      <h4>Depth Limit Bypass</h4>
-      <p>استعلامات دائرية لا نهائية (Circular Queries) تتسبب في انهيار خادم الويب.</p>
+      <h4>4. هجمات الحرمان من الخدمة (DoS & Nested Queries)</h4>
+      <p class="lang-ar">بفضل العلاقات المتداخلة، يمكنك طلب بيانات تشكل حلقة لا نهائية تؤدي لإسقاط الخادم (Server Crash):</p>
+      <div class="cmd-block" style="margin-top: 10px;">
+        <pre>{ author { posts { author { posts { author ... } } } } }</pre>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار / Testing Commands</h2>
-  <div class="cmd-block">
-    <pre># Introspection Query to dump Schema
-POST /graphql HTTP/1.1
-Content-Type: application/json
-
-{"query": "{__schema{types{name fields{name args{name type{name}}}}}}"}
-
-# GraphQL Injection (SQLi) inside query
-POST /graphql HTTP/1.1
-Content-Type: application/json
-
-{"query": "query { users(id: \"1' OR '1'='1\") { username email } }"}</pre>
-    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>الأدوات / Tools</h2>
+  <h2>أدوات الأتمتة واختبار GraphQL</h2>
   <div class="tools-row">
-    <span class="tool-chip">InQL (Burp Suite Extension)</span>
-    <span class="tool-chip">GraphQLmap</span>
+    <span class="tool-chip">InQL (Burp Ext)</span>
     <span class="tool-chip">Clairvoyance</span>
-    <span class="tool-chip">Altair GraphQL Client</span>
+    <span class="tool-chip">GraphQL Voyager</span>
   </div>
+  <p style="margin-top: 15px;">إضافة <strong>InQL</strong> في Burp Suite هي الخيار الأقوى لتحليل الـ Introspection واستخراج كافة الـ Queries لتجربتها. إذا كان الـ Introspection مغلقاً، استخدم أداة <strong>Clairvoyance</strong> التي تعتمد على التخمين ورسائل الخطأ لبناء الـ Schema.</p>
 </div>
 
 <div class="section-card">
-  <h2>Writeup & Lab</h2>
-  <div class="bilingual-block">
-    <div class="lang-section">
-      <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>GraphQL Security: Beyond Introspection</strong> — كيف تم التلاعب بطلبات الاستعلام لتجاوز الفلاتر الأمنية للشركة وسحب معلومات المدراء.</p>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>GraphQL Security: Beyond Introspection</strong> — how query manipulation bypassed filters to fetch admin credentials.</p>
-    </div>
-  </div>
-  <a class="cta-lab" href="labs/graphql-lab.html">🧪 افتح GraphQL Lab — 2 Levels</a>
+  <h2>كيفية الحماية (Remediation)</h2>
+  <ul>
+    <li>تعطيل <strong>Introspection</strong> في بيئة الإنتاج (Production).</li>
+    <li>إيقاف ميزة الاقتراحات (Field Suggestions) لمنع تخمين الحقول (Clairvoyance Attack).</li>
+    <li>تطبيق حدود للعمق (Query Depth Limit) والتعقيد (Query Complexity Limit) لمنع الـ DoS.</li>
+    <li>تعطيل أو تقييد الـ <strong>Query Batching</strong> لمنع الـ Brute-Force الخفي.</li>
+    <li>أهم نقطة: تطبيق التحقق من الصلاحيات (Authorization) على مستوى <strong>كل حقل (Field Level)</strong> وليس فقط على مستوى الاستعلام الأساسي (Query Level).</li>
+  </ul>
 </div>
 
-  </main>
+<div class="section-card">
+  <h2>التطبيق العملي / Writeup & Lab</h2>
+  <a class="cta-lab" href="labs/graphql-lab.html">🧪 افتح مختبر GraphQL التفاعلي — 3 مستويات</a>
+</div>
+
+</main>
 </div>
 
 <!-- Dynamic Relative Path & Active Class Resolver -->

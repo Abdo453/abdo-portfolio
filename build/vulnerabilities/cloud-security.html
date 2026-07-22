@@ -58,6 +58,10 @@
     <a class="sidebar-link" href="vulnerabilities/ai-llm-security.html">🤖 AI/LLM Security</a>
     <a class="sidebar-link" href="vulnerabilities/cloud-security.html">☁️ Cloud Security</a>
     <a class="sidebar-link" href="vulnerabilities/active-directory.html">🏰 Active Directory</a>
+    <a class="sidebar-link" href="vulnerabilities/xss.html">🕷️ Cross-Site Scripting (XSS)</a>
+    <a class="sidebar-link" href="vulnerabilities/csrf.html">🎭 CSRF</a>
+    <a class="sidebar-link" href="vulnerabilities/lfi-rfi.html">📂 LFI & RFI</a>
+    <a class="sidebar-link" href="vulnerabilities/xxe.html">📜 XXE</a>
     
     <div class="sidebar-title" style="margin-top:18px;">Labs / المختبرات</div>
     <a class="sidebar-link" href="index.html">🐚 Linux Terminal</a>
@@ -81,93 +85,112 @@
     <a class="sidebar-link" href="linux-security/linux-checklist.html">📋 Audit Checklist</a>
     <a class="sidebar-link" href="linux-security/linux-analysis.html">🛡️ Linux Analysis</a>
 
+    
+    <div class="sidebar-title" style="margin-top:18px;">Writeups / التقارير</div>
+    <a class="sidebar-link" href="writeups/api-hacking.html">📝 API Hacking</a>
+    <a class="sidebar-link" href="writeups/graphql-attack.html">📝 GraphQL Leak</a>
+    <a class="sidebar-link" href="writeups/cloud-ssrf.html">📝 Cloud SSRF</a>
+    <a class="sidebar-link" href="writeups/linux-suid-root.html">📝 Linux SUID</a>
+    <a class="sidebar-link" href="writeups/recon-mastery.html">📝 Recon Mastery</a>
+    <a class="sidebar-link" href="writeups/ai-prompt-inj.html">📝 AI Prompt Inj</a>
+    <a class="sidebar-link" href="writeups/race-payments.html">📝 Race Conditions</a>
+    <a class="sidebar-link" href="writeups/ad-to-domain.html">📝 AD Domain</a>
+    <a class="sidebar-link" href="writeups/nuclei-to-p1.html">📝 Nuclei to P1</a>
+    <a class="sidebar-link" href="writeups/jwt-advanced.html">📝 JWT Advanced</a>
+
     <div class="sidebar-title" style="margin-top:18px;">Profile / ملفي</div>
     <a class="sidebar-link" href="profile.html">👤 Profile / الملف الشخصي</a>
   </aside>
 
   <main class="academy-main">
-    
 <div class="page-hero">
-  <h1 class="page-title">أمن السحابيات — AWS, GCP, Azure</h1>
-  <p class="page-title-en">Cloud Security — AWS, GCP, Azure</p>
-  <span class="severity-pill pill-critical">CRITICAL</span>
-  <span class="severity-pill pill-high">OWASP Cloud Top 10</span>
+  <h1 class="page-title">أمان السحابة (Cloud Security) — الدليل الشامل</h1>
+  <p class="page-title-en">Cloud Security (AWS, Azure, GCP) — The Ultimate Deep Dive</p>
+  <span class="severity-pill pill-critical">CRITICAL / HIGH</span>
+  <span class="severity-pill pill-medium">Cloud Infrastructure</span>
 </div>
 
 <div class="bilingual-block">
   <div class="lang-section">
     <span class="lang-tag">AR</span>
-    <p><strong>Cloud Security</strong> تختص بدراسة الثغرات والأخطاء الإدارية والتنظيمية في بيئات السحاب (AWS, Azure, GCP). تشمل الثغرات شيوعاً فتح حاويات التخزين (Open S3 Buckets) للعامة، وإعدادات الهوية غير الآمنة (IAM Misconfigurations)، وتسريب رموز الوصول السحابية عبر ثغرات SSRF.</p>
+    <p><strong>أمان السحابة (Cloud Security)</strong> يختلف جذرياً عن أمان الشبكات التقليدية (On-Premises). في السحابة، البنية التحتية عبارة عن كود (IaC)، والهوية (Identity/IAM) هي المحيط الأمني الجديد (New Perimeter). أخطاء التكوين (Misconfigurations) وعدم تطبيق مبدأ "أقل الصلاحيات" (Least Privilege) يؤديان إلى اختراقات كارثية، حيث يمكن لمهاجم استغلال ثغرة بسيطة (مثل SSRF في تطبيق ويب) لسرقة بيانات اعتماد (Credentials) من السحابة والوصول إلى كافة الخوادم وقواعد البيانات.</p>
   </div>
   <div class="lang-section lang-en">
     <span class="lang-tag">EN</span>
-    <p><strong>Cloud Security</strong> explores vulnerabilities, misconfigurations, and privilege issues in cloud architectures (AWS, Azure, GCP). Common attacks include exposing data via open S3 buckets, overly permissive IAM roles, and leaking cloud access keys via SSRF.</p>
+    <p><strong>Cloud Security</strong> focuses on securing infrastructure hosted on platforms like AWS, Azure, and GCP. In the cloud, the traditional network perimeter is replaced by Identity and Access Management (IAM). Misconfigurations, such as publicly accessible storage buckets or overly permissive IAM roles, are the primary vectors for devastating data breaches and complete account takeovers.</p>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أشهر ثغرات بيئات السحاب / Vulnerabilities</h2>
+  <h2>أبرز ثغرات أمان السحابة (Cloud Vulnerabilities)</h2>
+  
   <div class="type-grid">
     <div class="type-item">
-      <h4>Open S3 Buckets / Storage</h4>
-      <p>ترك حاويات التخزين مفتوحة بدون صلاحيات تمنع القراءة أو الكتابة العامة.</p>
+      <h4>1. Public Storage Buckets (S3/Blob Misconfigurations)</h4>
+      <p class="lang-ar">أكثر الأخطاء شيوعاً. ترك حاويات التخزين (مثل AWS S3 Buckets أو Azure Blob Storage) مفتوحة للعامة (Public Read/Write) مما يؤدي إلى تسريب بيانات العملاء أو السماح للمهاجم برفع ملفات خبيثة.</p>
     </div>
+    
     <div class="type-item">
-      <h4>IAM Privilege Escalation</h4>
-      <p>ترقية صلاحيات حساب سحابي بسيط لمدير النظام (Administrator) بسبب صلاحيات IAM فضفاضة.</p>
+      <h4>2. استغلال Metadata Service عبر SSRF</h4>
+      <p class="lang-ar">إذا كان هناك تطبيق ويب يعاني من ثغرة SSRF ويعمل على AWS EC2، يمكن للمهاجم استدعاء مسار الـ Metadata (<code>169.254.169.254/latest/meta-data/iam/security-credentials/</code>) لسرقة الـ Access Keys الخاصة بالخادم (تجاوز الـ IMDSv1).</p>
     </div>
+
     <div class="type-item">
-      <h4>Cloud Metadata Leakage</h4>
-      <p>قراءة بيانات تعريف السيرفر (Metadata Service) لاستخراج مفاتيح الوصول المؤقتة للـ IAM Role.</p>
+      <h4>3. Overly Permissive IAM Roles</h4>
+      <p class="lang-ar">منح سيرفر الويب صلاحيات زائدة عن حاجته (مثلاً إعطاءه <code>s3:*</code> أو <code>iam:PassRole</code>). إذا تم اختراق هذا السيرفر، يستطيع المهاجم التوسع (Privilege Escalation) للوصول إلى خدمات أخرى لم تكن مستهدفة أساساً.</p>
     </div>
+
     <div class="type-item">
-      <h4>Container Escape</h4>
-      <p>الهروب من الحاويات (Docker/K8s) إلى نظام التشغيل الأساسي للمضيف (Host OS).</p>
+      <h4>4. تسريب الـ Secrets & Access Keys</h4>
+      <p class="lang-ar">رفع الـ Access Keys أو مفاتيح الـ API عن طريق الخطأ إلى GitHub أو تركها مكشوفة في ملفات <code>.env</code> أو داخل كود التطبيق (Hardcoded Secrets). المخترقون يستخدمون روبوتات (Bots) تفحص GitHub لاستغلال هذه المفاتيح في ثوانٍ لاستخراج العملات الرقمية (Cryptomining).</p>
     </div>
   </div>
 </div>
 
 <div class="section-card">
-  <h2>أوامر الاختبار / Cloud Testing Commands</h2>
-  <div class="cmd-block">
-    <pre># Check if S3 bucket allows public listing
-aws s3 ls s3://target-leaked-bucket --no-sign-request
-
-# Fetch AWS Metadata Credentials using curl (IMDSv1)
-curl http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role
-
-# Scan cloud resources for misconfigurations with cloud_enum
-python3 cloud_enum.py -k targetcompany</pre>
-    <div class="cmd-footer"><button class="copy-btn" onclick="copyCmd(this)">📋 Copy</button></div>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>الأدوات / Tools</h2>
-  <div class="tools-row">
-    <span class="tool-chip">ScoutSuite</span>
-    <span class="tool-chip">Prowler</span>
-    <span class="tool-chip">pacu (AWS Exploitation Framework)</span>
-    <span class="tool-chip">cloud_enum</span>
-  </div>
-</div>
-
-<div class="section-card">
-  <h2>Writeup & Lab</h2>
+  <h2>مراحل الهجوم في السحابة (Cloud Kill Chain)</h2>
   <div class="bilingual-block">
     <div class="lang-section">
       <span class="lang-tag">AR</span>
-      <p>Writeup: <strong>Cloud SSRF: Escaping the Container</strong> — شرح اختراق خادم ويب عبر SSRF للوصول لمفاتيح IAM السحابية للشركة، والسيطرة على لوحة تحكم AWS بالكامل.</p>
-    </div>
-    <div class="lang-section lang-en">
-      <span class="lang-tag">EN</span>
-      <p>Writeup: <strong>Cloud SSRF: Escaping the Container</strong> — showing how an SSRF was chained to steal AWS credentials and achieve full account takeover.</p>
+      <p>الهجوم السحابي يتبع مساراً مميزاً:</p>
+      <ul>
+        <li><strong>Initial Access (الوصول الأولي):</strong> عبر تسريب مفاتيح (Leaked Keys)، أو SSRF، أو تطبيق ويب مخترق، أو Phishing لمسؤول السحابة.</li>
+        <li><strong>Discovery (الاستكشاف):</strong> استخدام المفاتيح المسروقة لمعرفة الصلاحيات المتاحة (مثلاً أمر <code>aws sts get-caller-identity</code> لمعرفة من أنت، ثم <code>aws iam list-attached-user-policies</code>).</li>
+        <li><strong>Privilege Escalation (تصعيد الصلاحيات):</strong> استغلال أخطاء IAM، مثل قدرة المستخدم على إنشاء Policy جديدة وإرفاقها بنفسه ليصبح Admin.</li>
+        <li><strong>Data Exfiltration (تسريب البيانات):</strong> نسخ محتويات قواعد البيانات (RDS) أو الـ S3 Buckets وتحميلها لسيرفر المهاجم.</li>
+        <li><strong>Impact (التأثير):</strong> حذف قواعد البيانات وطلب فدية (Ransomware)، أو تشغيل آلاف الخوادم لتعدين العملات (Cryptojacking) مما يكلف الضحية ملايين الدولارات في الفاتورة.</li>
+      </ul>
     </div>
   </div>
-  <a class="cta-lab" href="labs/cloud-security-lab.html">🧪 افتح Cloud Security Lab — 2 Levels</a>
 </div>
 
-  </main>
+<div class="section-card">
+  <h2>أدوات الفحص السحابي (Cloud Security Tools)</h2>
+  <div class="tools-row">
+    <span class="tool-chip">ScoutSuite</span>
+    <span class="tool-chip">Pacu (AWS Exploitation Framework)</span>
+    <span class="tool-chip">CloudFox</span>
+    <span class="tool-chip">Trufflehog (Secrets)</span>
+  </div>
+  <p style="margin-top: 15px;">أداة <strong>Pacu</strong> هي بمثابة Metasploit لكن لبيئات AWS، تستخدم لاختبار الاختراق وتصعيد الصلاحيات. أما <strong>ScoutSuite</strong> فهي ممتازة لعمل Audit (مراجعة أمنية شاملة) لاستخراج تقرير بالـ Misconfigurations في AWS, Azure, و GCP.</p>
+</div>
+
+<div class="section-card">
+  <h2>كيفية الحماية (Remediation)</h2>
+  <ul>
+    <li><strong>تفعيل IMDSv2 (في AWS):</strong> يمنع معظم هجمات الـ SSRF التي تسرق المفاتيح عن طريق اشتراط إرسال طلب <code>PUT</code> مسبق للحصول على توكن.</li>
+    <li><strong>تطبيق مبدأ Least Privilege:</strong> لا تستخدم <code>*</code> في سياسات IAM أبداً. حدد بالضبط الموارد والإجراءات (Actions) التي يحتاجها التطبيق.</li>
+    <li><strong>إدارة الأسرار (Secrets Management):</strong> لا تضع كلمات المرور أو المفاتيح في الكود المصدري. استخدم خدمات مثل AWS Secrets Manager أو HashiCorp Vault.</li>
+    <li><strong>المراقبة (Monitoring & Logging):</strong> تفعيل AWS CloudTrail و GuardDuty لمراقبة أي نشاط غير طبيعي (مثل استخدام مفتاحك من دولة مختلفة أو محاولة قراءة بيانات حساسة بكثافة).</li>
+  </ul>
+</div>
+
+<div class="section-card">
+  <h2>التطبيق العملي / Writeup & Lab</h2>
+  <a class="cta-lab" href="labs/cloud-security-lab.html">🧪 افتح مختبر Cloud Security التفاعلي — 3 مستويات</a>
+</div>
+
+</main>
 </div>
 
 <!-- Dynamic Relative Path & Active Class Resolver -->

