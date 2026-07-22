@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>Web Security Academy & Methodology Hub | Bug Bounty Academy</title>
+  <title>XSS Mastery Academy & Methodology Hub | Bug Bounty Academy</title>
   <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@
       --accent-orange: #f97316;
       --accent-cyan: #38bdf8;
       --accent-gold: #facc15;
+      --bg-success: #22c55e;
     }
     body { background: radial-gradient(circle at top center, #111827 0%, #060913 100%); color: #e2e8f0; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; min-height: 100vh; }
     .doc-container { max-width: 1400px; margin: 0 auto; padding: 40px 25px; }
@@ -22,6 +23,12 @@
     .doc-title { font-size: 2.6rem; color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 15px; margin: 10px 0; }
     .doc-title i { color: var(--accent-orange); filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.5)); }
     .doc-subtitle { color: #94a3b8; font-size: 1.2rem; }
+
+    /* Hacker Status Dashboard */
+    .dashboard-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; background: rgba(13, 19, 34, 0.85); border: 1px solid var(--card-border); border-radius: 14px; padding: 25px; margin-bottom: 35px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+    .status-card { background: #070b16; border: 1px solid rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; text-align: center; }
+    .status-val { font-size: 1.8rem; font-weight: 800; color: var(--accent-cyan); font-family: 'Outfit', sans-serif; }
+    .status-lbl { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; }
 
     .search-section { background: rgba(13, 19, 34, 0.7); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; margin-bottom: 30px; display: flex; gap: 15px; }
     .search-input { flex: 1; background: #070b16; border: 1px solid var(--card-border); color: #fff; padding: 12px 20px; border-radius: 8px; font-family: 'Cairo', sans-serif; font-size: 1rem; outline: none; }
@@ -68,6 +75,16 @@
     .quiz-option:hover { border-color: var(--accent-cyan); }
     .quiz-feedback { margin-top: 10px; font-weight: 700; }
 
+    /* Interactive Lab Panel Styles */
+    .lab-box { background: #020617; border: 2px solid var(--accent-orange); border-radius: 10px; padding: 20px; margin-top: 20px; box-shadow: 0 0 20px rgba(249, 115, 22, 0.15); }
+    .lab-input { width: 100%; padding: 12px; background: #0d1322; border: 1px solid var(--card-border); border-radius: 6px; color: #fff; font-family: 'Fira Code', monospace; font-size: 0.95rem; box-sizing: border-box; }
+    .lab-output-frame { background: #070b16; border: 1px solid var(--card-border); padding: 15px; border-radius: 6px; min-height: 50px; margin-top: 15px; color: #fff; }
+
+    /* Hint Styles */
+    .hints-accordion { margin-top: 15px; }
+    .hint-trigger { background: rgba(255,255,255,0.05); color: var(--accent-gold); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; border: 1px dashed rgba(250, 204, 21, 0.4); margin-bottom: 8px; display: block; text-align: right; }
+    .hint-content { display: none; background: #070b16; padding: 10px 15px; border-radius: 6px; font-size: 0.85rem; color: #cbd5e1; border: 1px solid var(--card-border); margin-bottom: 10px; }
+
     /* Form Generator Form */
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--accent-cyan); }
@@ -84,6 +101,26 @@
       <p class="doc-subtitle">أكبر منصة تعليمية ومركز منهجيات عربي تفاعلي متكامل لاكتشاف وتحليل وربط الثغرات البرمجية (Attack Chains).</p>
     </header>
 
+    <!-- Hacker Dashboard -->
+    <section class="dashboard-panel">
+      <div class="status-card">
+        <div class="status-val" id="user-rank">Beginner 🟢</div>
+        <div class="status-lbl">Hacker Rank</div>
+      </div>
+      <div class="status-card">
+        <div class="status-val" id="user-xp">150 XP</div>
+        <div class="status-lbl">Total Experience Points</div>
+      </div>
+      <div class="status-card">
+        <div class="status-val">3 / 11</div>
+        <div class="status-lbl">Completed Labs</div>
+      </div>
+      <div class="status-card">
+        <div class="status-val" id="solved-count">0</div>
+        <div class="status-lbl">Interactive Solves Today</div>
+      </div>
+    </section>
+
     <!-- Global Search -->
     <section class="search-section">
       <input type="text" id="global-search" class="search-input" placeholder="البحث السريع عن شفرات أو أدوات أو تقنيات في المنهجيات..." onkeyup="performSearch()">
@@ -92,7 +129,7 @@
     <!-- Vulnerability Tabs -->
     <div class="tabs-bar">
       <button class="tab-btn active" onclick="switchTab('sqli', this)">1. SQL Injection</button>
-      <button class="tab-btn" onclick="switchTab('xss', this)">2. Cross-Site Scripting</button>
+      <button class="tab-btn" onclick="switchTab('xss', this)">2. XSS Mastery</button>
       <button class="tab-btn" onclick="switchTab('ssrf', this)">3. SSRF</button>
       <button class="tab-btn" onclick="switchTab('csrf', this)">4. CSRF</button>
       <button class="tab-btn" onclick="switchTab('jwt', this)">5. JWT Attacks</button>
@@ -179,47 +216,76 @@
         <div id="prog-xss" class="progress-fill" style="width: 50%"></div>
       </div>
 
+      <!-- Knowledge Map -->
+      <div class="section-card" style="margin-bottom: 25px;">
+        <h3 class="card-title">0. XSS Knowledge Map</h3>
+        <div class="flow-chart">
+                    XSS (Cross-Site Scripting)
+                               |
+        -----------------------------------------------
+        |                      |                      |
+    Reflected XSS          Stored XSS              DOM XSS
+    (GET/POST Param)       (Database Storage)     (Client-side JS)
+        |                      |                      |
+    Filter/WAF Bypass     Admin View Trigger       Source ➔ Sink</div>
+      </div>
+
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> تنفيذ الأكواد عبر المواقع يسمح بحقن سكريبتات خبيثة في متصفح الزوار.</p>
-          <p><strong>السبب الجذري:</strong> عرض مدخلات المستخدم مباشرة دون ترميز.</p>
+          <h3 class="card-title">1. Introduction & Contexts</h3>
+          <p><strong>HTML Context:</strong> يحدث عندما ينعكس مدخل المستخدم مباشرة بين وسوم الـ HTML مثل: <code>&lt;h1&gt;USER_INPUT&lt;/h1&gt;</code>.</p>
+          <p><strong>Attribute Context:</strong> يحدث عندما ينعكس داخل خاصية مثل: <code>&lt;input value="USER_INPUT"&gt;</code> (يتطلب الخروج من الخاصية باستخدام الكوتس <code>"</code>).</p>
         </div>
 
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
           <div class="checklist-item"><input type="checkbox" checked onclick="updateProgress('xss')"> <span>Test payload in HTML context</span></div>
           <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>Test inside input tags & attributes</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>Verify DOM sinks like innerHTML and eval()</span></div>
         </div>
 
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
-          <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Reflection) ➔ DOM Invader ➔ Trigger Alert()</div>
+          <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Reflection) ➔ DOM Invader ➔ Trigger alert/console.log</div>
         </div>
 
         <div class="section-card">
-          <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
-          <div class="flow-chart">Stored XSS ➔ Session Hijacking ➔ CSRF Execution ➔ Full Account Takeover</div>
+          <h3 class="card-title">4. Secure Coding Mode</h3>
+          <div style="margin-bottom: 15px;">
+            <button class="action-btn" onclick="toggleSecureCode('xss-code')" style="font-size: 0.85rem; padding: 6px 12px;"><i class="bx bx-shield-quarter"></i> التبديل بين كود مصاب وكود آمن</button>
+          </div>
+          <div id="xss-code-block" class="flow-chart" style="color: #f87171;">
+// [Vulnerable Code]
+let userQuery = getQueryParam("q");
+document.getElementById("output").innerHTML = userQuery; // Vulnerable to DOM XSS</div>
         </div>
 
+        <!-- Interactive Challenge Lab -->
         <div class="section-card">
-          <h3 class="card-title">5. Dynamic Payload Library</h3>
-          <select class="form-control" onchange="switchPayload('xss', this.value)" style="margin-bottom:15px;">
-            <option value="basic">Basic Payload</option>
-            <option value="waf">WAF Bypass Payload</option>
-          </select>
-          <div id="payload-xss-box" class="payload-item">
-            <span id="payload-xss-text">&lt;script&gt;console.log('XSS')&lt;/script&gt;</span>
-            <button class="btn-copy" onclick="copyText(document.getElementById('payload-xss-text').innerText)">Copy</button>
+          <h3 class="card-title">5. Interactive Challenge (Level 1: Search XSS)</h3>
+          <p style="font-size:0.9rem; color:#cbd5e1;">المهمة: ابحث عن ثغرة XSS في حقل البحث الوهمي بالأسفل لتشغيل payload كونسول مخصص!</p>
+          <div class="lab-box">
+            <label style="color:var(--accent-orange); font-weight:bold;">Search Target:</label>
+            <input type="text" id="xss-lab-input" class="lab-input" placeholder="اكتب مدخلاتك هنا..." onkeyup="simulateXSS()">
+            <div class="lab-output-frame">
+              <span>Result: </span><span id="xss-lab-output">Hello USER</span>
+            </div>
+            
+            <div class="hints-accordion">
+              <span class="hint-trigger" onclick="toggleHint('hint1')">Hint 1: هل جربت إدخال وسوم HTML؟</span>
+              <div id="hint1" class="hint-content">جرب كتابة وسوم خفيفة مثل &lt;b&gt;test&lt;/b&gt; ولاحظ التغيير.</div>
+              <span class="hint-trigger" onclick="toggleHint('hint2')">Hint 2: كيف تكسر السياق الحالي؟</span>
+              <div id="hint2" class="hint-content">جرب كتابة حمولة تشمل كود برمجياً كاملاً مثل &lt;script&gt;console.log('XSS')&lt;/script&gt;</div>
+            </div>
           </div>
         </div>
 
         <div class="section-card">
           <h3 class="card-title">6. Knowledge Check Quiz</h3>
           <div class="quiz-container">
-            <div class="quiz-question">أي من الأنواع التالية يتم تخزينه مباشرة في قاعدة البيانات؟</div>
-            <div class="quiz-option" onclick="checkAnswer('xss', true, this)">أ) Stored XSS</div>
-            <div class="quiz-option" onclick="checkAnswer('xss', false, this)">ب) Reflected XSS</div>
+            <div class="quiz-question">ما هي الدالة المفضلة في JS لمنع الـ DOM XSS عند كتابة النصوص؟</div>
+            <div class="quiz-option" onclick="checkAnswer('xss', true, this)">أ) textContent</div>
+            <div class="quiz-option" onclick="checkAnswer('xss', false, this)">ب) innerHTML</div>
             <div id="feedback-xss" class="quiz-feedback"></div>
           </div>
         </div>
@@ -437,7 +503,7 @@
         <div class="section-card">
           <h3 class="card-title">4. Real Bug Bounty Story</h3>
           <p><strong>الهدف:</strong> متجر تجارة إلكترونية شهير.</p>
-          <p><strong>القصة:</strong> تمكن باحث من إضافة كوبون خصم مراراً وتكراراً بسبب ضعف التحقق من صحة الجلسة، واشترى منتجات بقيمة $2,000 مجاناً، وحصل على مكافأة بقيمة $4,500.</p>
+          <p><strong>القصة:</strong> تمكن باحث من إضافة كوبون خصم مراراً وتكراراً بسبب ضعف التحقق من صحة الجلسة، واشترى منتجات بقيمة $2,000 مجاناً، واشترى منتجات بقيمة $2,000 مجاناً، وحصل على مكافأة بقيمة $4,500.</p>
         </div>
       </div>
       <div class="action-links">
@@ -542,6 +608,9 @@
   <div id="toast" class="copy-toast"><i class="bx bx-check-circle"></i> تم نسخ النص بنجاح!</div>
 
   <script>
+    let userXP = 150;
+    let solvedCount = 0;
+
     function switchTab(id, btn) {
       document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
@@ -582,12 +651,61 @@
       }
     }
 
+    function toggleSecureCode(id) {
+      const block = document.getElementById(id + "-block");
+      if (block.innerText.includes("[Vulnerable Code]")) {
+        block.innerText = `// [Secure Fix]\nlet userQuery = getQueryParam("q");\ndocument.getElementById("output").textContent = userQuery; // TextContent prevents XSS`;
+        block.style.color = "#4ade80";
+      } else {
+        block.innerText = `// [Vulnerable Code]\nlet userQuery = getQueryParam("q");\ndocument.getElementById("output").innerHTML = userQuery; // Vulnerable to DOM XSS`;
+        block.style.color = "#f87171";
+      }
+    }
+
+    function toggleHint(id) {
+      const hint = document.getElementById(id);
+      hint.style.display = hint.style.display === "block" ? "none" : "block";
+    }
+
+    function simulateXSS() {
+      const input = document.getElementById("xss-lab-input").value;
+      const output = document.getElementById("xss-lab-output");
+      output.innerHTML = input ? input : "Hello USER";
+
+      // If user inputs a valid console XSS payload, trigger simulated award!
+      if (input.includes("<script>console.log") || input.includes("onload=console.log")) {
+        if (!output.dataset.solved) {
+          output.dataset.solved = "true";
+          awardXP(100);
+          alert("🎉 تهانينا! لقد نجحت في تشغيل ثغرة XSS بنجاح! حصلت على +100 XP.");
+        }
+      }
+    }
+
+    function awardXP(amount) {
+      userXP += amount;
+      solvedCount++;
+      document.getElementById("user-xp").innerText = userXP + " XP";
+      document.getElementById("solved-count").innerText = solvedCount;
+
+      // Update Hacker Rank dynamically
+      let rank = "Beginner 🟢";
+      if (userXP >= 500) rank = "Expert 👑";
+      else if (userXP >= 300) rank = "Researcher 🧠";
+      else if (userXP >= 200) rank = "Hunter 🏹";
+      document.getElementById("user-rank").innerText = rank;
+    }
+
     function checkAnswer(vuln, isCorrect, element) {
       const feedback = document.getElementById("feedback-" + vuln);
       if (isCorrect) {
-        feedback.innerText = "🎉 إجابة صحيحة! أحسنت.";
+        feedback.innerText = "🎉 إجابة صحيحة! أحسنت. حصلت على +50 XP.";
         feedback.style.color = "#4ade80";
         element.style.borderColor = "#4ade80";
+        if (!element.dataset.solved) {
+          element.dataset.solved = "true";
+          awardXP(50);
+        }
       } else {
         feedback.innerText = "❌ إجابة خاطئة. حاول مرة أخرى!";
         feedback.style.color = "#f87171";
