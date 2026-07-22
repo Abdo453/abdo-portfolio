@@ -10527,95 +10527,34 @@ function generateTargetMindmap() {
 }
 </script>
 
-
-// ════ Nuclei Template Generator Logic ════
+<script>
 function generateNucleiYaml() {
   const id = document.getElementById('nuc-id').value || 'custom-cve-check';
   const sev = document.getElementById('nuc-sev').value;
   const path = document.getElementById('nuc-path').value || '/api/v1/debug';
   const match = document.getElementById('nuc-match').value || 'root:x:0:0';
-
-  const yaml = `id: ${id}
-
-info:
-  name: Custom Security Check for ${id}
-  author: abdo-cyber-academy
-  severity: ${sev}
-  tags: custom,exposure,vulnerability
-
-http:
-  - method: GET
-    path:
-      - "{{BaseURL}}${path}"
-
-    matchers-condition: and
-    matchers:
-      - type: word
-        words:
-          - "${match}"
-        part: body
-
-      - type: status
-        status:
-          - 200`;
-
-  document.getElementById('nuc-yaml-out').value = yaml;
+  const yaml = `id: ${id}\ninfo:\n  name: Custom Security Check for ${id}\n  author: abdo-cyber-academy\n  severity: ${sev}\n  tags: custom,exposure,vulnerability\nhttp:\n  - method: GET\n    path:\n      - "{{BaseURL}}${path}"\n    matchers-condition: and\n    matchers:\n      - type: word\n        words:\n          - "${match}"\n        part: body\n      - type: status\n        status:\n          - 200`;
+  const el = document.getElementById('nuc-yaml-out');
+  if (el) el.value = yaml;
 }
-document.addEventListener('DOMContentLoaded', () => { setTimeout(generateNucleiYaml, 600); });
-
 function copyNucleiYaml() {
   const txt = document.getElementById('nuc-yaml-out');
-  txt.select();
-  document.execCommand('copy');
-  alert('Nuclei YAML Copied!');
+  if (txt) { txt.select(); document.execCommand('copy'); alert('Nuclei YAML Copied!'); }
 }
-
-// ════ One-Liner Copy Helper ════
 function copyOneLiner(btn) {
   const cmd = btn.getAttribute('data-cmd');
   navigator.clipboard.writeText(cmd);
-  alert('One-Liner Copied to Clipboard!');
+  alert('Copied!');
 }
+function copyPmVal(btn) {
+  const val = btn.getAttribute('data-val');
+  navigator.clipboard.writeText(val);
+  alert('Copied!');
+}
+document.addEventListener('DOMContentLoaded', () => { setTimeout(generateNucleiYaml, 600); });
 </script>
 
 
-
-// Nuclei Generator Helper
-function generateNucleiYaml() {
-  const id = document.getElementById('nuc-id').value || 'custom-cve-check';
-  const sev = document.getElementById('nuc-sev').value;
-  const yaml = `id: ${id}
-
-info:
-  name: Custom Check for ${id}
-  author: abdo-cyber-academy
-  severity: ${sev}
-
-http:
-  - method: GET
-    path:
-      - "{{BaseURL}}/api/v1/debug"
-    matchers:
-      - type: status
-        status:
-          - 200`;
-  const out = document.getElementById('nuc-yaml-out');
-  if (out) out.value = yaml;
-}
-
-// One-Liner Copy Helper
-function copyOneLiner(btn) {
-  const cmd = btn.getAttribute('data-cmd');
-  navigator.clipboard.writeText(cmd);
-  alert('One-Liner Copied to Clipboard!');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    generateNucleiYaml();
-  }, 500);
-});
-</script>
 
 </body>
 </html>
