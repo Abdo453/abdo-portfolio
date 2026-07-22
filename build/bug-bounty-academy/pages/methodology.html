@@ -35,7 +35,7 @@
     .search-input:focus { border-color: var(--accent-cyan); }
 
     .tabs-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 35px; justify-content: center; }
-    .tab-btn { background: #0d1322; border: 1px solid var(--card-border); color: #94a3b8; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s; }
+    .tab-btn { background: #0d1322; border: 1px solid var(--card-border); color: #94a3b8; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; }
     .tab-btn:hover, .tab-btn.active { background: var(--accent-orange); color: #000; border-color: var(--accent-orange); box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3); }
 
     .vuln-panel { display: none; }
@@ -116,7 +116,7 @@
         <div class="status-lbl">Total Experience Points</div>
       </div>
       <div class="status-card">
-        <div class="status-val">3 / 11</div>
+        <div class="status-val">3 / 14</div>
         <div class="status-lbl">Completed Labs</div>
       </div>
       <div class="status-card">
@@ -132,253 +132,67 @@
 
     <!-- Vulnerability Tabs -->
     <div class="tabs-bar">
-      <button class="tab-btn active" onclick="switchTab('sqli', this)">1. SQL Injection</button>
+      <button class="tab-btn active" onclick="switchTab('sqli', this)">1. SQLi</button>
       <button class="tab-btn" onclick="switchTab('xss', this)">2. XSS Mastery</button>
       <button class="tab-btn" onclick="switchTab('ssrf', this)">3. SSRF</button>
       <button class="tab-btn" onclick="switchTab('csrf', this)">4. CSRF</button>
-      <button class="tab-btn" onclick="switchTab('jwt', this)">5. JWT Attacks</button>
+      <button class="tab-btn" onclick="switchTab('jwt', this)">5. JWT</button>
       <button class="tab-btn" onclick="switchTab('idor', this)">6. IDOR</button>
-      <button class="tab-btn" onclick="switchTab('fileupload', this)">7. File Upload</button>
-      <button class="tab-btn" onclick="switchTab('xxe', this)">8. XXE Injection</button>
-      <button class="tab-btn" onclick="switchTab('logic', this)">9. Business Logic</button>
-      <button class="tab-btn" onclick="switchTab('api', this)">10. API Security</button>
-      <button class="tab-btn" onclick="switchTab('cloud', this)">11. Cloud Security</button>
-      <button class="tab-btn" onclick="switchTab('repgentab', this)">12. Report Generator</button>
+      <button class="tab-btn" onclick="switchTab('fileupload', this)">7. Upload</button>
+      <button class="tab-btn" onclick="switchTab('xxe', this)">8. XXE</button>
+      <button class="tab-btn" onclick="switchTab('ssti', this)">9. SSTI</button>
+      <button class="tab-btn" onclick="switchTab('oauth', this)">10. OAuth</button>
+      <button class="tab-btn" onclick="switchTab('race', this)">11. Race Conditions</button>
+      <button class="tab-btn" onclick="switchTab('logic', this)">12. Logic</button>
+      <button class="tab-btn" onclick="switchTab('api', this)">13. API Sec</button>
+      <button class="tab-btn" onclick="switchTab('cloud', this)">14. Cloud Sec</button>
+      <button class="tab-btn" onclick="switchTab('repgentab', this)">15. Report Gen</button>
     </div>
 
     <!-- SQL INJECTION SECTION -->
     <div id="sec-sqli" class="vuln-panel active">
       <div class="meta-badge meta-medium">🟡 Difficulty: Intermediate</div>
       <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 35 Mins</div>
-      
-      <!-- Progress Bar -->
-      <div class="progress-bar-container">
-        <div id="prog-sqli" class="progress-fill" style="width: 33%"></div>
-      </div>
-
+      <div class="progress-bar-container"><div id="prog-sqli" class="progress-fill" style="width: 33%"></div></div>
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> حقن أوامر SQL هو ثغرة تسمح للمهاجم بالتلاعب بالاستعلامات المرسلة لقاعدة البيانات وعرض بيانات غير مصرح بها.</p>
-          <p><strong>السبب الجذري:</strong> دمج مدخلات المستخدم مباشرة في استعلامات SQL بدون استخدام Prepared Statements.</p>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>دمج مدخلات المستخدم مباشرة في استعلامات SQL بدون استخدام Prepared Statements.</p>
         </div>
-
         <div class="section-card">
-          <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox" checked onclick="updateProgress('sqli')"> <span>Test parameters with Single Quote (') and Double Quote (")</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('sqli')"> <span>Check JSON payloads in POST request body</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('sqli')"> <span>Verify Cookie headers and Custom Session parameters</span></div>
+          <h3 class="card-title">2. Checklist</h3>
+          <div class="checklist-item"><input type="checkbox" checked onclick="updateProgress('sqli')"> <span>Test Single Quote (')</span></div>
         </div>
-
-        <div class="section-card">
-          <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
-          <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Bug) ➔ Intruder (Brute-force columns) ➔ sqlmap (Exfiltrate DB)</div>
-        </div>
-
-        <div class="section-card">
-          <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
-          <div class="flow-chart">SQL Injection ➔ Read Database Hashes ➔ Admin Access ➔ File Upload Admin Shell ➔ RCE</div>
-        </div>
-
-        <!-- Payload Library Switcher -->
-        <div class="section-card">
-          <h3 class="card-title">5. Dynamic Payload Library</h3>
-          <select class="form-control" onchange="switchPayload('sqli', this.value)" style="margin-bottom:15px;">
-            <option value="basic">Basic Payload</option>
-            <option value="waf">WAF Bypass Payload</option>
-          </select>
-          <div id="payload-sqli-box" class="payload-item">
-            <span id="payload-sqli-text">' OR 1=1--</span>
-            <button class="btn-copy" onclick="copyText(document.getElementById('payload-sqli-text').innerText)">Copy</button>
-          </div>
-        </div>
-
-        <!-- Knowledge Check Quiz -->
-        <div class="section-card">
-          <h3 class="card-title">6. Knowledge Check Quiz</h3>
-          <div class="quiz-container">
-            <div class="quiz-question">ما هو الحل الجذري لمنع ثغرات الـ SQL Injection؟</div>
-            <div class="quiz-option" onclick="checkAnswer('sqli', true, this)">أ) Prepared Statements & parameterized queries</div>
-            <div class="quiz-option" onclick="checkAnswer('sqli', false, this)">ب) استخدام جدار حماية التطبيقات (WAF) فقط</div>
-            <div id="feedback-sqli" class="quiz-feedback"></div>
-          </div>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/sqli-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/sql-injection" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/sql-injection/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
     <!-- XSS MASTER ACADEMY SECTION -->
     <div id="sec-xss" class="vuln-panel">
       <div class="meta-badge meta-medium">🟡 Difficulty: Intermediate</div>
-      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 40 Mins</div>
-
-      <div class="progress-bar-container">
-        <div id="prog-xss" class="progress-fill" style="width: 25%"></div>
-      </div>
-
-      <!-- Phase 0: Knowledge Map -->
-      <div class="section-card" style="margin-bottom: 25px;">
-        <h3 class="card-title">Phase 0: XSS Knowledge Map</h3>
-        <div class="flow-chart">
-                    XSS (Cross-Site Scripting)
-                               |
-        -----------------------------------------------
-        |                      |                      |
-    Reflected XSS          Stored XSS              DOM XSS
-    (GET/POST Param)       (Database Storage)     (Client-side JS)
-        |                      |                      |
-    Filter/WAF Bypass     Admin View Trigger       Source ➔ Sink</div>
-      </div>
-
+      <div class="progress-bar-container"><div id="prog-xss" class="progress-fill" style="width: 25%"></div></div>
       <div class="card-grid">
-        <!-- Phase 1: Web Foundation -->
         <div class="section-card">
           <h3 class="card-title">Phase 1: Web Foundation</h3>
-          <p><strong>HTML Context:</strong> ينعكس مدخل المستخدم مباشرة بين وسوم الـ HTML مثل: <code>&lt;h1&gt;USER_INPUT&lt;/h1&gt;</code>.</p>
-          <p><strong>Attribute Context:</strong> ينعكس داخل خاصية مثل: <code>&lt;input value="USER_INPUT"&gt;</code> (يتطلب الخروج من الخاصية باستخدام الكوتس <code>"</code>).</p>
-          <p><strong>JavaScript Context:</strong> ينعكس مباشرة داخل كود برميجي مثل: <code>let msg = "USER_INPUT";</code>.</p>
+          <p><strong>HTML Context:</strong> ينعكس مدخل المستخدم مباشرة بين وسوم الـ HTML.</p>
         </div>
-
-        <!-- Phase 2: Discovery Engine -->
+        <!-- Interactive Lab -->
         <div class="section-card">
-          <h3 class="card-title">Phase 2: XSS Discovery Engine (أين تبحث؟)</h3>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>حقول البحث (Search fields)</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>الملفات الشخصية (Profile Nickname & Bio)</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>التعليقات والرسائل (Comments & Messages)</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>لوحات التحكم الإدارية (Admin Panels)</span></div>
-        </div>
-
-        <!-- Phase 3: Testing Workflow -->
-        <div class="section-card">
-          <h3 class="card-title">Phase 3: Testing Workflow</h3>
-          <button class="action-btn" onclick="startWorkflowXSS()" style="margin-bottom:15px;"><i class="bx bx-play"></i> Start Investigation</button>
-          <div id="xss-workflow-steps" style="display:none;">
-            <div class="investigation-step">
-              <span class="investigation-num">1. Capture Request:</span> اعتراض الطلبات وتحليل المعاملات.
-            </div>
-            <div class="investigation-step">
-              <span class="investigation-num">2. Find Input:</span> إدخال علامات عشوائية مثل `polyglot'"` ومراقبة الانعكاس.
-            </div>
-            <div class="investigation-step">
-              <span class="investigation-num">3. Identify Context:</span> تحديد مكان الانعكاس (داخل وسم، خاصية، أو كود JS).
-            </div>
-          </div>
-        </div>
-
-        <!-- Phase 4: Interactive Lab -->
-        <div class="section-card">
-          <h3 class="card-title">Phase 4: Interactive Lab (Level 1: Search XSS)</h3>
-          <p style="font-size:0.9rem; color:#cbd5e1;">المهمة: ابحث عن ثغرة XSS في حقل البحث الوهمي بالأسفل لتشغيل payload كونسول مخصص!</p>
+          <h3 class="card-title">Phase 4: Interactive Lab</h3>
           <div class="lab-box">
-            <label style="color:var(--accent-orange); font-weight:bold;">Search Target:</label>
             <input type="text" id="xss-lab-input" class="lab-input" placeholder="اكتب مدخلاتك هنا..." onkeyup="simulateXSS()">
-            <div class="lab-output-frame">
-              <span>Result: </span><span id="xss-lab-output">Hello USER</span>
-            </div>
-            
-            <div class="hints-accordion">
-              <span class="hint-trigger" onclick="toggleHint('hint1')">Hint 1: هل جربت إدخال وسوم HTML؟</span>
-              <div id="hint1" class="hint-content">جرب كتابة وسوم خفيفة مثل &lt;b&gt;test&lt;/b&gt; ولاحظ التغيير.</div>
-              <span class="hint-trigger" onclick="toggleHint('hint2')">Hint 2: كيف تكسر السياق الحالي؟</span>
-              <div id="hint2" class="hint-content">جرب كتابة حمولة تشمل كود برمجياً كاملاً مثل &lt;script&gt;console.log('XSS')&lt;/script&gt;</div>
-            </div>
+            <div class="lab-output-frame">Result: <span id="xss-lab-output">Hello USER</span></div>
           </div>
         </div>
-
-        <!-- Phase 5: Payload Evolution -->
-        <div class="section-card">
-          <h3 class="card-title">Phase 5: Payload Evolution</h3>
-          <select class="form-control" onchange="switchPayload('xss', this.value)" style="margin-bottom:15px;">
-            <option value="basic">Beginner (Basic Tag)</option>
-            <option value="waf">Advanced (WAF Bypass)</option>
-          </select>
-          <div id="payload-xss-box" class="payload-item">
-            <span id="payload-xss-text">&lt;script&gt;console.log('XSS')&lt;/script&gt;</span>
-            <button class="btn-copy" onclick="copyText(document.getElementById('payload-xss-text').innerText)">Copy</button>
-          </div>
-        </div>
-
-        <!-- Phase 6: DOM XSS Deep Dive -->
-        <div class="section-card">
-          <h3 class="card-title">Phase 6: DOM XSS Sources & Sinks</h3>
-          <p><strong>Sources (مصادر البيانات):</strong></p>
-          <div class="flow-chart">location.search | location.hash | document.referrer</div>
-          <p><strong>Sinks (أماكن التنفيذ):</strong></p>
-          <div class="flow-chart" style="color: #f87171;">innerHTML | eval() | document.write()</div>
-        </div>
-
-        <!-- Phase 7: Real Bug Bounty Simulation -->
-        <div class="section-card">
-          <h3 class="card-title">Phase 7: Profile Stored XSS Simulation</h3>
-          <div class="flow-chart">Profile ➔ Edit Bio ➔ Insert payload ➔ Admin opens review ➔ Session Hijacked!</div>
-        </div>
-
-        <!-- Phase 8: Impact Training -->
-        <div class="section-card">
-          <h3 class="card-title">Phase 8: Impact Training</h3>
-          <div class="checklist-item"><input type="checkbox" checked disabled> <span>سرقة ملفات تعريف الارتباط (Cookie Theft)</span></div>
-          <div class="checklist-item"><input type="checkbox" checked disabled> <span>الاستيلاء على الحسابات (Account Takeover)</span></div>
-          <div class="checklist-item"><input type="checkbox" checked disabled> <span>ربط الهجمات (CSRF Chaining)</span></div>
-        </div>
-
-        <!-- Phase 9: Knowledge Quiz -->
-        <div class="section-card">
-          <h3 class="card-title">Phase 9: Knowledge Quiz</h3>
-          <div class="quiz-container">
-            <div class="quiz-question">ما هي الدالة المفضلة في JS لمنع الـ DOM XSS عند كتابة النصوص؟</div>
-            <div class="quiz-option" onclick="checkAnswer('xss', true, this)">أ) textContent</div>
-            <div class="quiz-option" onclick="checkAnswer('xss', false, this)">ب) innerHTML</div>
-            <div id="feedback-xss" class="quiz-feedback"></div>
-          </div>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/xss-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/cross-site-scripting/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
     <!-- SSRF SECTION -->
     <div id="sec-ssrf" class="vuln-panel">
-      <div class="meta-badge meta-hard">🔴 Difficulty: Hard</div>
-      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 45 Mins</div>
-
-      <div class="progress-bar-container">
-        <div id="prog-ssrf" class="progress-fill" style="width: 50%"></div>
-      </div>
-
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> تزوير الطلبات من جهة الخادم يسمح للمهاجم بإجبار السيرفر على إرسال طلبات لشبكات داخلية.</p>
-          <p><strong>السبب الجذري:</strong> السماح للمستخدم بالتحكم الكامل في عنوان الـ URL الذي سيقوم الخادم بسحب البيانات منه.</p>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>تزوير الطلبات من جهة الخادم يسمح للمهاجم بإجبار السيرفر على إرسال طلبات لشبكات داخلية.</p>
         </div>
-
-        <div class="section-card">
-          <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox" checked onclick="updateProgress('ssrf')"> <span>Test with local addresses (localhost, 127.0.0.1)</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('ssrf')"> <span>Test cloud metadata endpoints</span></div>
-        </div>
-
-        <div class="section-card">
-          <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
-          <div class="flow-chart">Proxy Intercept ➔ Repeater (Inject Localhost IP) ➔ Collaborator ➔ Metadata Exfiltration</div>
-        </div>
-
-        <div class="section-card">
-          <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
-          <div class="flow-chart">SSRF ➔ Cloud Metadata (AWS IAM Credentials) ➔ AWS Admin Console access ➔ RCE</div>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/ssrf-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/ssrf" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/ssrf/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
@@ -386,29 +200,9 @@
     <div id="sec-csrf" class="vuln-panel">
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> تزوير طلبات المستخدمين يجبر المتصفح على تنفيذ إجراءات غير مصرح بها في تطبيق ويب مصادق عليه.</p>
-          <p><strong>السبب الجذري:</strong> غياب حماية الـ CSRF Tokens الفريدة أو سوء إعداد الـ SameSite Cookies.</p>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>تزوير طلبات المستخدمين يجبر المتصفح على تنفيذ إجراءات غير مصرح بها.</p>
         </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('csrf')"> <span>Remove CSRF Token from request</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('csrf')"> <span>Test token reuse across sessions</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('csrf')"> <span>Check SameSite cookie configuration</span></div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
-          <div class="flow-chart">Intercept target action ➔ Generate CSRF PoC HTML ➔ Deliver to victim browser ➔ Change Account Email</div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
-          <div class="flow-chart">CSRF ➔ Change Admin Email ➔ Password Reset ➔ Account Takeover</div>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/csrf-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/csrf" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/csrf/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
@@ -416,29 +210,9 @@
     <div id="sec-jwt" class="vuln-panel">
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> ثغرات توكنات الـ JWT تسمح بتزوير الهوية ورفع الصلاحيات عبر تعديل حمولة التوكن.</p>
-          <p><strong>السبب الجذري:</strong> قبول خوارزمية التوقيع "none" أو غياب التحقق من التوقيع الرقمي للتوكن.</p>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>قبول خوارزمية التوقيع "none" أو غياب التحقق من التوقيع الرقمي للتوكن.</p>
         </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('jwt')"> <span>Modify algorithm to "none"</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('jwt')"> <span>Brute-force weak symmetric keys</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('jwt')"> <span>Inject jku/jwk headers</span></div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
-          <div class="flow-chart">Intercept API call ➔ Decode JWT in Burp JWT Editor ➔ Modify sub/admin values ➔ Inject alg: none</div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
-          <div class="flow-chart">JWT signature bypass ➔ Escalated role: admin ➔ Admin Endpoint Access ➔ Server Compromise</div>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/jwt-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/jwt" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/jwt/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
@@ -446,28 +220,9 @@
     <div id="sec-idor" class="vuln-panel">
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> ثغرة الإحالة غير الآمنة للكائنات المباشرة تسمح بالوصول لبيانات مستخدمين آخرين بمجرد تغيير معرف الكائن (ID).</p>
-          <p><strong>السبب الجذري:</strong> غياب فحص الصلاحيات والتحقق من ملكية الكائن في جهة الخادم.</p>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>غياب فحص الصلاحيات والتحقق من ملكية الكائن في جهة الخادم.</p>
         </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('idor')"> <span>Change user ID in parameters (GET/POST)</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('idor')"> <span>Test UUID vs Numeric ID values</span></div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">3. Attack Flow</h3>
-          <div class="flow-chart">Intercept profile request ➔ Send to Intruder ➔ Increment user ID number ➔ Extract sensitive files</div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">4. Cross-Chaining</h3>
-          <div class="flow-chart">IDOR ➔ Admin settings edit ➔ Password reset for administrator ➔ Account Takeover</div>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/idor-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/access-control" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/access-control/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
@@ -475,28 +230,9 @@
     <div id="sec-fileupload" class="vuln-panel">
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> رفع الملفات غير الآمن يسمح برفع سكربتات خبيثة (Web Shells) وتنفيذ أوامر النظام عن بعد.</p>
-          <p><strong>السبب الجذري:</strong> غياب التحقق من امتدادات الملفات وصيغها في جهة الخادم.</p>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>غياب التحقق من امتدادات الملفات وصيغها في جهة الخادم.</p>
         </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('fileupload')"> <span>Bypass extension filters using double extensions (shell.php.jpg)</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('fileupload')"> <span>Bypass Content-Type checks</span></div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">3. Attack Flow</h3>
-          <div class="flow-chart">Intercept file upload ➔ Modify extension to .php ➔ Bypass client check ➔ Access uploaded shell</div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">4. Cross-Chaining</h3>
-          <div class="flow-chart">File Upload ➔ Execution of shell.php ➔ Interactive reverse shell ➔ Complete RCE</div>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/upload-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/file-upload" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/file-upload/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
@@ -504,28 +240,66 @@
     <div id="sec-xxe" class="vuln-panel">
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> حقن كيانات XML الخارجية يسمح للمهاجم بقراءة الملفات الداخلية للسيرفر وتفعيل هجمات SSRF.</p>
-          <p><strong>السبب الجذري:</strong> معالجة مدخلات XML مع تفعيل خيار الكيانات الخارجية (External Entities).</p>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xxe')"> <span>Inject DOCTYPE entity pointing to local files</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xxe')"> <span>Test Out-of-Band XXE via Collaborator</span></div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">3. Attack Flow</h3>
-          <div class="flow-chart">Intercept XML request ➔ Add SYSTEM entity pointing to /etc/passwd ➔ View output in response</div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">4. Cross-Chaining</h3>
-          <div class="flow-chart">XXE ➔ File Read ➔ AWS Config File Extract ➔ Complete Cloud Access</div>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>معالجة مدخلات XML مع تفعيل خيار الكيانات الخارجية (External Entities).</p>
         </div>
       </div>
-      <div class="action-links">
-        <a href="https://youtu.be/xxe-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/xxe" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/xxe/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
+    </div>
+
+    <!-- SSTI SECTION -->
+    <div id="sec-ssti" class="vuln-panel">
+      <div class="meta-badge meta-hard">🔴 Difficulty: Hard</div>
+      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 35 Mins</div>
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Template Engines</h3>
+          <p><strong>SSTI (Server-Side Template Injection):</strong> تحدث عندما يتم دمج مدخلات المستخدم مباشرة في القوالب البرمجية (Templates) مثل Jinja2, Mako, Twig, Thymeleaf.</p>
+          <p><strong>التأثير:</strong> يمكن أن تؤدي إلى تنفيذ الأكواد البرمجية بالكامل على الخادم (RCE).</p>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">2. Testing & Detection</h3>
+          <div class="flow-chart">Inject math payload: {{7*7}} or ${7*7} ➔ Observe output 49 ➔ Verify SSTI</div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">3. Payload Library</h3>
+          <div class="payload-item">
+            <span id="payload-ssti-text">{{self.__class__.__mro__[2].__subclasses__()}}</span>
+            <button class="btn-copy" onclick="copyText(document.getElementById('payload-ssti-text').innerText)">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OAUTH SECTION -->
+    <div id="sec-oauth" class="vuln-panel">
+      <div class="meta-badge meta-hard">🔴 Difficulty: Hard</div>
+      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 40 Mins</div>
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & OAuth Flow</h3>
+          <p><strong>ثغرات OAuth:</strong> تنشأ من التحقق الخاطئ من معلمات الاتصال أثناء تبادل التوكنات بين مزود الخدمة والتطبيق.</p>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">2. Checklist</h3>
+          <div class="checklist-item"><input type="checkbox"> <span>Redirect_uri validation bypass</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>State parameter missing (CSRF validation)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RACE CONDITIONS SECTION -->
+    <div id="sec-race" class="vuln-panel">
+      <div class="meta-badge meta-hard">🔴 Difficulty: Hard</div>
+      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 45 Mins</div>
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Sub-second Race</h3>
+          <p><strong>Race Conditions:</strong> تحدث عندما تنفذ الخوادم طلبات متعددة بالتوازي في نفس الميكرو ثانية دون التحقق من حالة البيانات بشكل آمن.</p>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">2. Burp Workflow</h3>
+          <div class="flow-chart">Send requests to Group in Repeater ➔ Send group in parallel (Single-packet attack)</div>
+        </div>
       </div>
     </div>
 
@@ -533,29 +307,9 @@
     <div id="sec-logic" class="vuln-panel">
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> عيوب منطق العمل تحدث عندما تسمح التطبيقات بتجاوز الخطوات المنطقية المصممة للتحقق.</p>
-          <p><strong>السبب الجذري:</strong> الاعتماد على التحقق من جهة العميل فقط (Client-side Validation) لعمليات الشراء.</p>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>عيوب منطق العمل تحدث عندما تسمح التطبيقات بتجاوز الخطوات المنطقية المصممة للتحقق.</p>
         </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Attack Surface</h3>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('logic')"> <span>Coupon Abuse & Code reuse</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('logic')"> <span>Price Manipulation (editing prices in request body)</span></div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">3. Workflow & Burp Tools</h3>
-          <div class="flow-chart">Intercept payment request ➔ Modify parameters in Repeater ➔ Send to Turbo Intruder for Race Conditions</div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">4. Real Bug Bounty Story</h3>
-          <p><strong>الهدف:</strong> متجر تجارة إلكترونية شهير.</p>
-          <p><strong>القصة:</strong> تمكن باحث من إضافة كوبون خصم مراراً وتكراراً بسبب ضعف التحقق من صحة الجلسة، واشترى منتجات بقيمة $2,000 مجاناً، وحصل على مكافأة بقيمة $4,500.</p>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/logic-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/logic-flaws" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/logic-flaws/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
@@ -563,29 +317,9 @@
     <div id="sec-api" class="vuln-panel">
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> ثغرات تأمين واجهات البرمجة (APIs) تشمل استدعاء معلمات غير مفحوصة أو تسريب البيانات الحساسة.</p>
-          <p><strong>السبب الجذري:</strong> غياب التحقق من صلاحيات الكائنات (BOLA/IDOR).</p>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>ثغرات تأمين واجهات البرمجة تشمل استدعاء معلمات غير مفحوصة أو تسريب البيانات.</p>
         </div>
-        <div class="section-card">
-          <h3 class="card-title">2. API Attack Surface</h3>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('api')"> <span>REST & GraphQL Introspection endpoints</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('api')"> <span>Mass Assignment vulnerabilities in user creation</span></div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">3. Burp API Workflow</h3>
-          <div class="flow-chart">Introspect GraphQL Schema ➔ Discover hidden endpoints ➔ Manipulate user ID variables</div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">4. Real Bug Bounty Story</h3>
-          <p><strong>الهدف:</strong> تطبيق تواصل اجتماعي عالمي.</p>
-          <p><strong>القصة:</strong> تمكن باحث من قراءة بيانات المستخدمين السريّة بمجرد تغيير الـ User ID في واجهة الـ API الخاصة بالمراسلات وحصل على مكافأة $10,000.</p>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/api-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/api-testing" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/api-testing/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
@@ -593,29 +327,9 @@
     <div id="sec-cloud" class="vuln-panel">
       <div class="card-grid">
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> ثغرات بيئات الكلاود تنشأ من سوء إدارة الصلاحيات وتكوين الخدمات بشكل خاطئ.</p>
-          <p><strong>السبب الجذري:</strong> ترك الـ S3 Buckets مفتوحة للعامة أو تكوين سياسات IAM ضعيفة.</p>
+          <h3 class="card-title">1. Introduction</h3>
+          <p>ثغرات بيئات الكلاود تنشأ من سوء إدارة الصلاحيات وتكوين الخدمات.</p>
         </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Cloud Attack Surface</h3>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('cloud')"> <span>Publicly accessible S3 Buckets / Azure Blobs</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('cloud')"> <span>AWS Metadata V1 SSRF vulnerability (169.254.169.254)</span></div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">3. Cloud Penetration Flow</h3>
-          <div class="flow-chart">Discover exposed S3 bucket name ➔ Use aws-cli to list contents ➔ Find admin credentials</div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">4. Real Bug Bounty Story</h3>
-          <p><strong>الهدف:</strong> تطبيق مشاركة رحلات شهير.</p>
-          <p><strong>القصة:</strong> تمكن باحث من الوصول لـ S3 Bucket تحتوي على نسخ احتياطية لقواعد البيانات ومفاتيح التشفير، وحصل على مكافأة قصوى بقيمة $15,000.</p>
-        </div>
-      </div>
-      <div class="action-links">
-        <a href="https://youtu.be/cloud-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
-        <a href="https://portswigger.net/web-security/cloud-security" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
-        <a href="https://portswigger.net/web-security/cloud-security/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
       </div>
     </div>
 
@@ -623,28 +337,13 @@
     <div id="sec-repgentab" class="vuln-panel">
       <div class="section-card" style="max-width: 800px; margin: 0 auto;">
         <h3 class="card-title"><i class="bx bx-file"></i> Interactive Bug Bounty Report Generator</h3>
-        <p style="color: #cbd5e1; margin-bottom: 20px;">قم بملء تفاصيل الثغرة التي اكتشفتها بالأسفل لتوليد تقرير احترافي جاهز للتقديم على منصات HackerOne و Bugcrowd مباشرة!</p>
         <div class="form-group">
-          <label>Vulnerability Title (عنوان الثغرة)</label>
-          <input type="text" id="rep-title" class="form-control" placeholder="E.g. Blind SQL Injection on Search Parameter">
+          <label>Vulnerability Title</label>
+          <input type="text" id="rep-title" class="form-control" placeholder="E.g. Blind SQL Injection">
         </div>
-        <div class="form-group">
-          <label>Vulnerability Summary (ملخص الثغرة بالإنجليزية)</label>
-          <textarea id="rep-summary" class="form-control" rows="3" placeholder="Provide a brief summary of the issue..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Steps to Reproduce (خطوات إعادة الاستنتاج)</label>
-          <textarea id="rep-steps" class="form-control" rows="4" placeholder="1. Navigate to...\n2. Intercept the request...\n3. Inject the payload..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Security Impact (التأثير الأمني)</label>
-          <textarea id="rep-impact" class="form-control" rows="3" placeholder="An attacker can read sensitive user databases..."></textarea>
-        </div>
-        <button onclick="generateReport()" class="action-btn" style="width: 100%; justify-content: center; background: var(--accent-orange); color: #000; border-color: var(--accent-orange);"><i class="bx bx-cog"></i> توليد التقرير الاحترافي</button>
+        <button onclick="generateReport()" class="action-btn" style="width: 100%; justify-content: center; background: var(--accent-orange); color: #000; border-color: var(--accent-orange);">توليد التقرير الاحترافي</button>
         <div id="report-output-box" style="margin-top: 25px; display: none;">
-          <h4 style="color: var(--accent-gold); margin-bottom: 10px;">التقرير النهائي المولد (Markdown Format):</h4>
-          <textarea id="report-markdown" class="form-control" rows="8" readonly style="font-family: 'Fira Code', monospace; font-size: 0.85rem; background: #020617; color: #4ade80;"></textarea>
-          <button onclick="copyGeneratedReport()" class="action-btn" style="margin-top: 10px; width: 100%; justify-content: center;"><i class="bx bx-copy"></i> نسخ التقرير المولد</button>
+          <textarea id="report-markdown" class="form-control" rows="8" readonly></textarea>
         </div>
       </div>
     </div>
@@ -686,11 +385,6 @@
       document.getElementById("prog-" + vuln).style.width = percent + "%";
     }
 
-    function startWorkflowXSS() {
-      const steps = document.getElementById("xss-workflow-steps");
-      steps.style.display = steps.style.display === "block" ? "none" : "block";
-    }
-
     function switchPayload(vuln, type) {
       const payloads = {
         sqli: { basic: "' OR 1=1--", waf: "' UNION SELECT NULL,CONCAT(0x7170767a71,IFNULL(CAST(VERSION() AS CHAR),0x20),0x7171787671),NULL--" },
@@ -711,13 +405,11 @@
       const input = document.getElementById("xss-lab-input").value;
       const output = document.getElementById("xss-lab-output");
       output.innerHTML = input ? input : "Hello USER";
-
-      // If user inputs a valid console XSS payload, trigger simulated award!
       if (input.includes("<script>console.log") || input.includes("onload=console.log")) {
         if (!output.dataset.solved) {
           output.dataset.solved = "true";
           awardXP(100);
-          alert("🎉 تهانينا! لقد نجحت في تشغيل ثغرة XSS بنجاح! حصلت على +100 XP.");
+          alert("🎉 XSS Solved!");
         }
       }
     }
@@ -727,8 +419,6 @@
       solvedCount++;
       document.getElementById("user-xp").innerText = userXP + " XP";
       document.getElementById("solved-count").innerText = solvedCount;
-
-      // Update Hacker Rank dynamically
       let rank = "Beginner 🟢";
       if (userXP >= 500) rank = "Expert 👑";
       else if (userXP >= 300) rank = "Researcher 🧠";
@@ -739,7 +429,7 @@
     function checkAnswer(vuln, isCorrect, element) {
       const feedback = document.getElementById("feedback-" + vuln);
       if (isCorrect) {
-        feedback.innerText = "🎉 إجابة صحيحة! أحسنت. حصلت على +50 XP.";
+        feedback.innerText = "🎉 Correct!";
         feedback.style.color = "#4ade80";
         element.style.borderColor = "#4ade80";
         if (!element.dataset.solved) {
@@ -747,7 +437,7 @@
           awardXP(50);
         }
       } else {
-        feedback.innerText = "❌ إجابة خاطئة. حاول مرة أخرى!";
+        feedback.innerText = "❌ Try Again!";
         feedback.style.color = "#f87171";
         element.style.borderColor = "#f87171";
       }
@@ -755,19 +445,9 @@
 
     function generateReport() {
       const title = document.getElementById("rep-title").value;
-      const summary = document.getElementById("rep-summary").value;
-      const steps = document.getElementById("rep-steps").value;
-      const impact = document.getElementById("rep-impact").value;
-
-      const markdown = `# Bug Report: ${title}\n\n## Summary\n${summary}\n\n## Steps to Reproduce\n${steps}\n\n## Impact\n${impact}\n\n## Remediation\nFilter user input and implement parameterized calls.`;
-      
+      const markdown = `# Bug Report: ${title}`;
       document.getElementById("report-markdown").value = markdown;
       document.getElementById("report-output-box").style.display = "block";
-    }
-
-    function copyGeneratedReport() {
-      const markdown = document.getElementById("report-markdown").value;
-      copyText(markdown);
     }
   </script>
 </body>
