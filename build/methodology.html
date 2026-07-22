@@ -10528,42 +10528,6 @@ function generateTargetMindmap() {
 </script>
 
 
-<script>
-// ════ Payload Mutator Logic ════
-  const raw = document.getElementById('pm-raw-input').value || '<script>alert(1)</script>';
-  const grid = document.getElementById('pm-out-grid');
-  
-  const encURL = encodeURIComponent(raw);
-  const encB64 = btoa(raw);
-  const encHex = Array.from(raw).map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-
-  const formats = [
-    { title: 'Standard URL Encoded', val: encURL },
-    { title: 'Base64 Encoded', val: encB64 },
-    { title: 'Hex Encoded', val: encHex },
-  ];
-
-  let html = '';
-  formats.forEach(f => {
-    html += `
-      <div style="background:#040914; padding:10px; border-radius:6px; border:1px solid rgba(0,229,255,0.15);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-          <span style="color:#00e5ff; font-weight:bold; font-size:0.8rem;">${f.title}</span>
-          <button onclick="copyPmVal(this)" data-val="${f.val.replace(/"/g, '&quot;')}" style="background:var(--accent-cyan); color:#000; border:none; padding:2px 6px; border-radius:3px; font-weight:bold; font-size:0.7rem; cursor:pointer;">Copy</button>
-        </div>
-        <textarea readonly style="width:100%; height:45px; background:#090d16; color:#e2e8f0; font-family:monospace; border:none; border-radius:3px; padding:4px; font-size:0.75rem; resize:none;">${f.val}</textarea>
-      </div>
-    `;
-  });
-  grid.innerHTML = html;
-}
-
-function copyPmVal(btn) {
-  const val = btn.getAttribute('data-val');
-  navigator.clipboard.writeText(val);
-  alert('Copied to Clipboard!');
-}
-
 // ════ Nuclei Template Generator Logic ════
 function generateNucleiYaml() {
   const id = document.getElementById('nuc-id').value || 'custom-cve-check';
@@ -10615,42 +10579,6 @@ function copyOneLiner(btn) {
 </script>
 
 
-<script>
-// Payload Mutator Helper
-  const raw = document.getElementById('pm-raw-input').value || '<script>alert(1)</script>';
-  const grid = document.getElementById('pm-out-grid');
-  if (!grid) return;
-
-  const encURL = encodeURIComponent(raw);
-  const encB64 = btoa(raw);
-  const encHex = Array.from(raw).map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-
-  const formats = [
-    { title: 'Standard URL Encoded', val: encURL },
-    { title: 'Base64 Encoded', val: encB64 },
-    { title: 'Hex Encoded', val: encHex },
-  ];
-
-  let html = '';
-  formats.forEach(f => {
-    html += `
-      <div style="background:#040914; padding:8px; border-radius:6px; border:1px solid rgba(0,229,255,0.15);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-          <span style="color:#00e5ff; font-weight:bold; font-size:0.75rem;">${f.title}</span>
-          <button onclick="copyPmVal(this)" data-val="${f.val.replace(/"/g, '&quot;')}" style="background:var(--accent-cyan); color:#000; border:none; padding:2px 6px; border-radius:3px; font-weight:bold; font-size:0.65rem; cursor:pointer;">Copy</button>
-        </div>
-        <textarea readonly style="width:100%; height:40px; background:#090d16; color:#e2e8f0; font-family:monospace; border:none; border-radius:3px; padding:4px; font-size:0.7rem; resize:none;">${f.val}</textarea>
-      </div>
-    `;
-  });
-  grid.innerHTML = html;
-}
-
-function copyPmVal(btn) {
-  const val = btn.getAttribute('data-val');
-  navigator.clipboard.writeText(val);
-  alert('Copied to Clipboard!');
-}
 
 // Nuclei Generator Helper
 function generateNucleiYaml() {
