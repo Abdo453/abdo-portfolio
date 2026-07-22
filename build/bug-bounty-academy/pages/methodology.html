@@ -2,366 +2,313 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>XSS Mastery Academy & Methodology Hub | Bug Bounty Academy</title>
+  <title>XSS Mastery Academy | Bug Bounty Academy</title>
   <link rel="stylesheet" href="../assets/css/style.css?v=1.0">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #060913;
-      --card-bg: #0d1322;
-      --card-border: rgba(48, 63, 96, 0.4);
+      --bg-dark: #030712;
+      --card-bg: #0b0f19;
+      --border-glow: #1e293b;
       --accent-orange: #f97316;
-      --accent-cyan: #38bdf8;
-      --accent-gold: #facc15;
-      --bg-success: #22c55e;
+      --accent-cyan: #06b6d4;
+      --accent-gold: #eab308;
+      --neon-blue: #3b82f6;
     }
-    body { background: radial-gradient(circle at top center, #111827 0%, #060913 100%); color: #e2e8f0; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; line-height: 1.8; min-height: 100vh; }
-    .doc-container { max-width: 1400px; margin: 0 auto; padding: 40px 25px; }
+    body { background-color: var(--bg-dark); color: #f3f4f6; font-family: 'Cairo', sans-serif; margin: 0; padding: 25px; min-height: 100vh; }
     
-    .doc-header { background: rgba(13, 19, 34, 0.8); border: 1px solid var(--card-border); backdrop-filter: blur(12px); border-radius: 16px; padding: 35px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); text-align: center; }
-    .doc-title { font-size: 2.6rem; color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 15px; margin: 10px 0; }
-    .doc-title i { color: var(--accent-orange); filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.5)); }
-    .doc-subtitle { color: #94a3b8; font-size: 1.2rem; }
+    .academy-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 30px; max-width: 1600px; margin: 0 auto; }
+    @media (max-width: 1200px) { .academy-grid { grid-template-columns: 1fr; } }
 
-    /* Hacker Status Dashboard */
-    .dashboard-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; background: rgba(13, 19, 34, 0.85); border: 1px solid var(--card-border); border-radius: 14px; padding: 25px; margin-bottom: 35px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-    .status-card { background: #070b16; border: 1px solid rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; text-align: center; }
-    .status-val { font-size: 1.8rem; font-weight: 800; color: var(--accent-cyan); font-family: 'Outfit', sans-serif; }
-    .status-lbl { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; }
-
-    .search-section { background: rgba(13, 19, 34, 0.7); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; margin-bottom: 30px; display: flex; gap: 15px; }
-    .search-input { flex: 1; background: #070b16; border: 1px solid var(--card-border); color: #fff; padding: 12px 20px; border-radius: 8px; font-family: 'Cairo', sans-serif; font-size: 1rem; outline: none; }
-    .search-input:focus { border-color: var(--accent-cyan); }
-
-    .tabs-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 35px; justify-content: center; }
-    .tab-btn { background: #0d1322; border: 1px solid var(--card-border); color: #94a3b8; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; }
-    .tab-btn:hover, .tab-btn.active { background: var(--accent-orange); color: #000; border-color: var(--accent-orange); box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3); }
-
-    .vuln-panel { display: none; }
-    .vuln-panel.active { display: block; }
-
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; margin-bottom: 25px; }
-    @media (max-width: 900px) { .card-grid { grid-template-columns: 1fr; } }
-
-    .section-card { background: rgba(13, 19, 34, 0.75); border: 1px solid var(--card-border); border-radius: 14px; padding: 25px; backdrop-filter: blur(8px); }
-    .card-title { font-size: 1.3rem; color: var(--accent-cyan); margin-top: 0; margin-bottom: 15px; font-weight: 800; border-right: 4px solid var(--accent-orange); padding-right: 12px; }
-
-    .checklist-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.95rem; }
-    .checklist-item input { accent-color: var(--accent-orange); width: 18px; height: 18px; cursor: pointer; }
-
-    .flow-chart { background: #070b16; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 15px; font-family: 'Fira Code', monospace; font-size: 0.9rem; color: var(--accent-gold); white-space: pre-wrap; direction: ltr; text-align: left; line-height: 1.6; }
+    /* Left Panel: Knowledge Map & Steps */
+    .left-panel { display: flex; flex-direction: column; gap: 25px; }
     
-    .payload-item { background: #070b16; border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 12px 15px; margin-bottom: 10px; font-family: 'Fira Code', monospace; font-size: 0.85rem; color: #38bdf8; display: flex; justify-content: space-between; align-items: center; }
-    .btn-copy { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 0.75rem; }
-    .btn-copy:hover { background: var(--accent-orange); color: #000; }
+    .academy-title-box { display: flex; align-items: center; gap: 15px; background: rgba(11, 15, 25, 0.8); border: 1px solid var(--border-glow); padding: 20px; border-radius: 12px; }
+    .academy-title-box img { width: 50px; height: 50px; }
+    .academy-title-text h1 { font-size: 1.8rem; margin: 0; color: #fff; font-weight: 800; }
+    .academy-title-text p { font-size: 1.1rem; margin: 5px 0 0 0; color: #9ca3af; }
 
-    .action-links { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 25px; }
-    .action-btn { background: rgba(13, 19, 34, 0.9); border: 1px solid var(--card-border); color: #fff; padding: 12px 22px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: bold; font-size: 0.95rem; transition: all 0.3s; }
-    .action-btn:hover { background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan); box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); }
-
-    /* Progress & Meta Styles */
-    .progress-bar-container { background: rgba(255,255,255,0.05); border-radius: 6px; height: 10px; margin-bottom: 15px; overflow: hidden; }
-    .progress-fill { background: var(--accent-cyan); height: 100%; width: 0%; transition: width 0.3s ease; }
-    .meta-badge { font-size: 0.85rem; padding: 4px 10px; border-radius: 4px; font-weight: 700; display: inline-block; margin-bottom: 10px; }
-    .meta-easy { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
-    .meta-medium { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.4); }
-    .meta-hard { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
-
-    /* Quiz Styles */
-    .quiz-container { background: rgba(255,255,255,0.03); border: 1px dashed var(--card-border); border-radius: 10px; padding: 20px; margin-top: 20px; }
-    .quiz-question { font-weight: 700; color: #fff; margin-bottom: 12px; }
-    .quiz-option { background: #070b16; border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 15px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
-    .quiz-option:hover { border-color: var(--accent-cyan); }
-    .quiz-feedback { margin-top: 10px; font-weight: 700; }
-
-    /* Interactive Lab Panel Styles */
-    .lab-box { background: #020617; border: 2px solid var(--accent-orange); border-radius: 10px; padding: 20px; margin-top: 20px; box-shadow: 0 0 20px rgba(249, 115, 22, 0.15); }
-    .lab-input { width: 100%; padding: 12px; background: #0d1322; border: 1px solid var(--card-border); border-radius: 6px; color: #fff; font-family: 'Fira Code', monospace; font-size: 0.95rem; box-sizing: border-box; }
-    .lab-output-frame { background: #070b16; border: 1px solid var(--card-border); padding: 15px; border-radius: 6px; min-height: 50px; margin-top: 15px; color: #fff; }
-
-    /* Hint Styles */
-    .hints-accordion { margin-top: 15px; }
-    .hint-trigger { background: rgba(255,255,255,0.05); color: var(--accent-gold); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; border: 1px dashed rgba(250, 204, 21, 0.4); margin-bottom: 8px; display: block; text-align: right; }
-    .hint-content { display: none; background: #070b16; padding: 10px 15px; border-radius: 6px; font-size: 0.85rem; color: #cbd5e1; border: 1px solid var(--card-border); margin-bottom: 10px; }
-
-    /* Investigation Steps */
-    .investigation-step { border-right: 4px solid var(--accent-cyan); padding-right: 15px; margin-bottom: 15px; }
-    .investigation-num { color: var(--accent-orange); font-weight: 800; font-size: 1.1rem; }
-
-    /* Form Generator Form */
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--accent-cyan); }
-    .form-control { width: 100%; padding: 10px; background: #070b16; border: 1px solid var(--card-border); border-radius: 6px; color: #fff; font-family: inherit; box-sizing: border-box; }
+    /* Knowledge Map Node Tree */
+    .map-card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; padding: 25px; }
+    .map-title { font-size: 1.2rem; color: #fff; font-weight: bold; margin-bottom: 20px; border-right: 4px solid var(--accent-orange); padding-right: 10px; }
     
+    .node-tree { display: flex; flex-direction: column; gap: 15px; position: relative; }
+    .tree-row { display: flex; align-items: center; gap: 15px; }
+    .node-btn { background: #111827; border: 1px solid #1f2937; color: #9ca3af; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; text-align: center; min-width: 100px; }
+    .node-btn.active { background: rgba(59, 130, 246, 0.1); border-color: var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+    .node-btn.orange { background: rgba(249, 115, 22, 0.1); border-color: var(--accent-orange); color: var(--accent-orange); }
+    
+    .connector-line { width: 20px; height: 2px; background: #1f2937; }
+
+    /* 9-Phase Grid */
+    .phases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    @media (max-width: 700px) { .phases-grid { grid-template-columns: 1fr; } }
+    
+    .phase-card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 10px; padding: 18px; position: relative; cursor: pointer; transition: all 0.3s; }
+    .phase-card:hover { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(6, 182, 212, 0.15); }
+    .phase-num { font-family: 'Outfit', sans-serif; font-size: 1.1rem; color: var(--accent-cyan); font-weight: 800; margin-bottom: 5px; }
+    .phase-name { font-size: 0.95rem; font-weight: bold; color: #fff; margin-bottom: 8px; }
+    .phase-desc { font-size: 0.8rem; color: #9ca3af; line-height: 1.5; }
+
+    /* Right Panel: Browser Mockup */
+    .browser-mockup { background: #070a13; border: 1px solid #1e293b; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+    
+    .browser-header { background: #0f172a; padding: 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1e293b; }
+    .browser-dots { display: flex; gap: 8px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.red { background: #ef4444; }
+    .dot.yellow { background: #eab308; }
+    .dot.green { background: #22c55e; }
+    .browser-title { color: #94a3b8; font-size: 0.85rem; font-family: 'Fira Code', monospace; }
+
+    .browser-body { display: grid; grid-template-columns: 200px 1fr; min-height: 550px; }
+    @media (max-width: 600px) { .browser-body { grid-template-columns: 1fr; } }
+    
+    .browser-sidebar { background: #0b0f19; border-left: 1px solid #1e293b; padding: 20px; }
+    .sidebar-title { font-size: 0.85rem; color: #64748b; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; }
+    .leaderboard-list { list-style: none; padding: 0; margin: 0; }
+    .leaderboard-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #070a13; border: 1px solid #1e293b; border-radius: 6px; margin-bottom: 8px; font-size: 0.85rem; }
+    .leaderboard-item.active { border-color: var(--accent-orange); color: var(--accent-orange); }
+
+    .browser-content { padding: 25px; display: flex; flex-direction: column; gap: 20px; }
+
+    /* Simulator Panel */
+    .simulator-card { background: #0b0f19; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; }
+    .sim-tabs { display: flex; gap: 10px; border-bottom: 1px solid #1e293b; padding-bottom: 10px; margin-bottom: 15px; }
+    .sim-tab-btn { background: none; border: none; color: #64748b; font-family: 'Fira Code', monospace; font-size: 0.85rem; cursor: pointer; padding: 5px 10px; }
+    .sim-tab-btn.active { color: var(--accent-cyan); border-bottom: 2px solid var(--accent-cyan); }
+
+    /* Widgets */
+    .widget-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    @media (max-width: 700px) { .widget-grid { grid-template-columns: 1fr; } }
+    
+    .widget-card { background: #0b0f19; border: 1px solid #1e293b; border-radius: 10px; padding: 15px; }
+    .widget-title { font-size: 0.85rem; color: #64748b; font-weight: bold; margin-bottom: 10px; }
+
+    /* Progress bar */
+    .progress-track { background: #0f172a; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 8px; }
+    .progress-fill { background: var(--accent-cyan); height: 100%; width: 30%; transition: width 0.3s; }
+
+    /* AI Mentor Bubble */
+    .mentor-bubble { background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 10px; padding: 15px; display: flex; gap: 12px; align-items: center; margin-top: 15px; }
+    .mentor-avatar { width: 40px; height: 40px; background: var(--accent-cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #000; }
+    .mentor-text { font-size: 0.85rem; color: #94a3b8; }
+
     .copy-toast { position: fixed; bottom: 30px; left: 30px; background: #22c55e; color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 800; display: none; z-index: 9999; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4); }
   </style>
 </head>
 <body>
+
   <div class="doc-container">
-    <header class="doc-header">
-      <a href="../index.html" style="color:var(--accent-cyan); text-decoration:none; font-weight:bold; display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;"><i class="bx bx-right-arrow-alt" style="font-size:1.3rem;"></i> العودة للرئيسية</a>
-      <h1 class="doc-title"><i class="bx bx-compass"></i> Web Security Academy & Methodology Hub</h1>
-      <p class="doc-subtitle">أكبر منصة تعليمية ومركز منهجيات عربي تفاعلي متكامل لاكتشاف وتحليل وربط الثغرات البرمجية (Attack Chains).</p>
-    </header>
-
-    <!-- Hacker Dashboard -->
-    <section class="dashboard-panel">
-      <div class="status-card">
-        <div class="status-val" id="user-rank">Beginner 🟢</div>
-        <div class="status-lbl">Hacker Rank</div>
-      </div>
-      <div class="status-card">
-        <div class="status-val" id="user-xp">150 XP</div>
-        <div class="status-lbl">Total Experience Points</div>
-      </div>
-      <div class="status-card">
-        <div class="status-val">3 / 14</div>
-        <div class="status-lbl">Completed Labs</div>
-      </div>
-      <div class="status-card">
-        <div class="status-val" id="solved-count">0</div>
-        <div class="status-lbl">Interactive Solves Today</div>
-      </div>
-    </section>
-
-    <!-- Global Search -->
-    <section class="search-section">
-      <input type="text" id="global-search" class="search-input" placeholder="البحث السريع عن شفرات أو أدوات أو تقنيات في المنهجيات..." onkeyup="performSearch()">
-    </section>
-
-    <!-- Vulnerability Tabs -->
-    <div class="tabs-bar">
-      <button class="tab-btn active" onclick="switchTab('sqli', this)">1. SQLi</button>
-      <button class="tab-btn" onclick="switchTab('xss', this)">2. XSS Mastery</button>
-      <button class="tab-btn" onclick="switchTab('ssrf', this)">3. SSRF</button>
-      <button class="tab-btn" onclick="switchTab('csrf', this)">4. CSRF</button>
-      <button class="tab-btn" onclick="switchTab('jwt', this)">5. JWT</button>
-      <button class="tab-btn" onclick="switchTab('idor', this)">6. IDOR</button>
-      <button class="tab-btn" onclick="switchTab('fileupload', this)">7. Upload</button>
-      <button class="tab-btn" onclick="switchTab('xxe', this)">8. XXE</button>
-      <button class="tab-btn" onclick="switchTab('ssti', this)">9. SSTI</button>
-      <button class="tab-btn" onclick="switchTab('oauth', this)">10. OAuth</button>
-      <button class="tab-btn" onclick="switchTab('race', this)">11. Race Conditions</button>
-      <button class="tab-btn" onclick="switchTab('logic', this)">12. Logic</button>
-      <button class="tab-btn" onclick="switchTab('api', this)">13. API Sec</button>
-      <button class="tab-btn" onclick="switchTab('cloud', this)">14. Cloud Sec</button>
-      <button class="tab-btn" onclick="switchTab('repgentab', this)">15. Report Gen</button>
-    </div>
-
-    <!-- SQL INJECTION SECTION -->
-    <div id="sec-sqli" class="vuln-panel active">
-      <div class="meta-badge meta-medium">🟡 Difficulty: Intermediate</div>
-      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 35 Mins</div>
-      <div class="progress-bar-container"><div id="prog-sqli" class="progress-fill" style="width: 33%"></div></div>
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>دمج مدخلات المستخدم مباشرة في استعلامات SQL بدون استخدام Prepared Statements.</p>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Checklist</h3>
-          <div class="checklist-item"><input type="checkbox" checked onclick="updateProgress('sqli')"> <span>Test Single Quote (')</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- XSS MASTER ACADEMY SECTION -->
-    <div id="sec-xss" class="vuln-panel">
-      <div class="meta-badge meta-medium">🟡 Difficulty: Intermediate</div>
-      <div class="progress-bar-container"><div id="prog-xss" class="progress-fill" style="width: 25%"></div></div>
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">Phase 1: Web Foundation</h3>
-          <p><strong>HTML Context:</strong> ينعكس مدخل المستخدم مباشرة بين وسوم الـ HTML.</p>
-        </div>
-        <!-- Interactive Lab -->
-        <div class="section-card">
-          <h3 class="card-title">Phase 4: Interactive Lab</h3>
-          <div class="lab-box">
-            <input type="text" id="xss-lab-input" class="lab-input" placeholder="اكتب مدخلاتك هنا..." onkeyup="simulateXSS()">
-            <div class="lab-output-frame">Result: <span id="xss-lab-output">Hello USER</span></div>
+    <div class="academy-grid">
+      
+      <!-- Left Panel -->
+      <div class="left-panel">
+        
+        <!-- Header -->
+        <div class="academy-title-box">
+          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2306b6d4'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>" alt="Hacker Logo">
+          <div class="academy-title-text">
+            <h1>أكاديمية إتقان XSS</h1>
+            <p>XSS Mastery Academy</p>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- SSRF SECTION -->
-    <div id="sec-ssrf" class="vuln-panel">
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>تزوير الطلبات من جهة الخادم يسمح للمهاجم بإجبار السيرفر على إرسال طلبات لشبكات داخلية.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- CSRF SECTION -->
-    <div id="sec-csrf" class="vuln-panel">
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>تزوير طلبات المستخدمين يجبر المتصفح على تنفيذ إجراءات غير مصرح بها.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- JWT SECTION -->
-    <div id="sec-jwt" class="vuln-panel">
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>قبول خوارزمية التوقيع "none" أو غياب التحقق من التوقيع الرقمي للتوكن.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- IDOR SECTION -->
-    <div id="sec-idor" class="vuln-panel">
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>غياب فحص الصلاحيات والتحقق من ملكية الكائن في جهة الخادم.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- FILE UPLOAD SECTION -->
-    <div id="sec-fileupload" class="vuln-panel">
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>غياب التحقق من امتدادات الملفات وصيغها في جهة الخادم.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- XXE SECTION -->
-    <div id="sec-xxe" class="vuln-panel">
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>معالجة مدخلات XML مع تفعيل خيار الكيانات الخارجية (External Entities).</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- SSTI SECTION -->
-    <div id="sec-ssti" class="vuln-panel">
-      <div class="meta-badge meta-hard">🔴 Difficulty: Hard</div>
-      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 35 Mins</div>
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction & Template Engines</h3>
-          <p><strong>SSTI (Server-Side Template Injection):</strong> تحدث عندما يتم دمج مدخلات المستخدم مباشرة في القوالب البرمجية (Templates) مثل Jinja2, Mako, Twig, Thymeleaf.</p>
-          <p><strong>التأثير:</strong> يمكن أن تؤدي إلى تنفيذ الأكواد البرمجية بالكامل على الخادم (RCE).</p>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Testing & Detection</h3>
-          <div class="flow-chart">Inject math payload: {{7*7}} or ${7*7} ➔ Observe output 49 ➔ Verify SSTI</div>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">3. Payload Library</h3>
-          <div class="payload-item">
-            <span id="payload-ssti-text">{{self.__class__.__mro__[2].__subclasses__()}}</span>
-            <button class="btn-copy" onclick="copyText(document.getElementById('payload-ssti-text').innerText)">Copy</button>
+        <!-- Knowledge Map -->
+        <div class="map-card">
+          <div class="map-title">XSS Knowledge Map</div>
+          <div class="node-tree">
+            <!-- Row 1: Root -->
+            <div class="tree-row">
+              <div class="node-btn orange">XSS</div>
+              <div class="connector-line"></div>
+              <div class="node-btn active">Reflected</div>
+              <div class="connector-line"></div>
+              <div class="node-btn">GET/POST</div>
+              <div class="connector-line"></div>
+              <div class="node-btn">Filter</div>
+              <div class="connector-line"></div>
+              <div class="node-btn">WAF Bypass</div>
+            </div>
+            <!-- Row 2: Stored -->
+            <div class="tree-row" style="margin-top: 10px;">
+              <div style="width: 122px;"></div>
+              <div class="node-btn">Stored</div>
+              <div class="connector-line"></div>
+              <div class="node-btn">Database</div>
+              <div class="connector-line"></div>
+              <div class="node-btn">Admin View</div>
+            </div>
+            <!-- Row 3: DOM -->
+            <div class="tree-row" style="margin-top: 10px;">
+              <div style="width: 122px;"></div>
+              <div class="node-btn active" style="border-color: #22c55e; color: #22c55e;">DOM</div>
+              <div class="connector-line"></div>
+              <div class="node-btn">JavaScript</div>
+              <div class="connector-line"></div>
+              <div class="node-btn">Source/Sink</div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- OAUTH SECTION -->
-    <div id="sec-oauth" class="vuln-panel">
-      <div class="meta-badge meta-hard">🔴 Difficulty: Hard</div>
-      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 40 Mins</div>
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction & OAuth Flow</h3>
-          <p><strong>ثغرات OAuth:</strong> تنشأ من التحقق الخاطئ من معلمات الاتصال أثناء تبادل التوكنات بين مزود الخدمة والتطبيق.</p>
+        <!-- 9-Phase Grid -->
+        <div class="phases-grid">
+          
+          <!-- Phase 1 -->
+          <div class="phase-card">
+            <div class="phase-num">1) Web Foundation</div>
+            <div class="phase-name">HTML/JS Context</div>
+            <div class="phase-desc">فهم سياقات النصوص والخصائص داخل المتصفح.</div>
+          </div>
+
+          <!-- Phase 2 -->
+          <div class="phase-card">
+            <div class="phase-num">2) XSS Discovery Engine</div>
+            <div class="phase-name">Discovery targets:</div>
+            <div class="phase-desc">البحث في حقول البحث، والتعليقات والملفات الشخصية.</div>
+          </div>
+
+          <!-- Phase 3 -->
+          <div class="phase-card">
+            <div class="phase-num">3) Testing Workflow</div>
+            <div class="phase-name">Start Investigation</div>
+            <div class="phase-desc">إرسال حمولات برمجية عشوائية وتتبع الانعكاس.</div>
+          </div>
+
+          <!-- Phase 4 -->
+          <div class="phase-card">
+            <div class="phase-num">4) Interactive Lab</div>
+            <div class="phase-name">Level 1: "Search XSS"</div>
+            <div class="phase-desc">اختبر مدخلاتك الحية بالمتصفح الوهمي.</div>
+          </div>
+
+          <!-- Phase 5 -->
+          <div class="phase-card">
+            <div class="phase-num">5) Payload Evolution</div>
+            <div class="phase-name">Beginner ➔ Expert</div>
+            <div class="phase-desc">تدرج الحمولات لتجاوز جدران الحماية.</div>
+          </div>
+
+          <!-- Phase 6 -->
+          <div class="phase-card">
+            <div class="phase-num">6) DOM XSS Deep Dive</div>
+            <div class="phase-name">Sources & Sinks</div>
+            <div class="phase-desc">تتبع المصادر مثل location والمصبات مثل innerHTML.</div>
+          </div>
+
+          <!-- Phase 7 -->
+          <div class="phase-card">
+            <div class="phase-num">7) Real Bug Bounty</div>
+            <div class="phase-name">Social Profile Attack</div>
+            <div class="phase-desc">سيناريو حقيقي لتخطي حسابات المديرين.</div>
+          </div>
+
+          <!-- Phase 8 -->
+          <div class="phase-card">
+            <div class="phase-num">8) Impact Training</div>
+            <div class="phase-name">Account Takeover</div>
+            <div class="phase-desc">الاستيلاء على الحساب وسرقة الكوكيز.</div>
+          </div>
+
+          <!-- Phase 9 -->
+          <div class="phase-card">
+            <div class="phase-num">9) Reporting Academy</div>
+            <div class="phase-name">Professional Report</div>
+            <div class="phase-desc">كتابة تقرير الثغرة لـ HackerOne.</div>
+          </div>
+
         </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Checklist</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Redirect_uri validation bypass</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>State parameter missing (CSRF validation)</span></div>
+
+      </div>
+
+      <!-- Right Panel: Browser Mockup -->
+      <div class="right-panel">
+        <div class="browser-mockup">
+          
+          <div class="browser-header">
+            <div class="browser-dots">
+              <div class="dot red"></div>
+              <div class="dot yellow"></div>
+              <div class="dot green"></div>
+            </div>
+            <div class="browser-title">abdo-cyber-academy.edu/xss-mastery</div>
+            <div></div>
+          </div>
+
+          <div class="browser-body">
+            
+            <!-- Sidebar -->
+            <div class="browser-sidebar">
+              <div class="sidebar-title">Top Hunters</div>
+              <ul class="leaderboard-list">
+                <li class="leaderboard-item active">1. Abdo (Active)</li>
+                <li class="leaderboard-item">2. Ahmed</li>
+                <li class="leaderboard-item">3. Mohamed</li>
+              </ul>
+            </div>
+
+            <!-- Content Area -->
+            <div class="browser-content">
+              
+              <!-- Attack Simulator -->
+              <div class="simulator-card">
+                <div class="sim-tabs">
+                  <span class="sim-tab-btn active">Request/Response</span>
+                  <span class="sim-tab-btn">DOM Tree</span>
+                  <span class="sim-tab-btn">JS Execution</span>
+                </div>
+                <div class="lab-box" style="margin-top: 0;">
+                  <label style="color:var(--accent-orange); font-weight:bold; font-size:0.85rem;">Attack Simulator Terminal:</label>
+                  <input type="text" id="sim-input" class="lab-input" placeholder="&lt;script&gt;console.log('XSS')&lt;/script&gt;" onkeyup="runSimXSS()">
+                  <div class="lab-output-frame" style="font-family: monospace; font-size: 0.85rem;">
+                    <span>Output Render: </span><span id="sim-output">Hello USER</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Widgets -->
+              <div class="widget-grid">
+                
+                <div class="widget-card">
+                  <div class="widget-title">Hacker Progress</div>
+                  <div style="font-size:0.9rem; font-weight:bold;">XSS Level: <span style="color: var(--accent-cyan);">Beginner</span></div>
+                  <div class="progress-track"><div class="progress-fill" id="sim-xp-fill" style="width: 30%;"></div></div>
+                  <div style="font-size:0.8rem; margin-top:5px; color:#94a3b8;">Total XP: <span id="sim-xp-val">15,000</span> XP</div>
+                </div>
+
+                <div class="widget-card">
+                  <div class="widget-title">Code Review Labs</div>
+                  <pre style="font-family:monospace; font-size:0.75rem; background:#070a13; padding:8px; border-radius:6px; color:#f87171; overflow-x:auto;">let name = req.query.name;
+document.innerHTML = name;</pre>
+                  <div style="font-size:0.8rem; font-weight:bold; margin-top:5px; color:var(--accent-gold);">Identify Vulnerability: DOM XSS</div>
+                </div>
+
+              </div>
+
+              <!-- AI Mentor Bubble -->
+              <div class="mentor-bubble">
+                <div class="mentor-avatar"><i class="bx bx-bot"></i></div>
+                <div class="mentor-text">
+                  <strong>AI Mentor:</strong>
+                  <div>علق في ليفل 1؟ جرب تفحص مصدر الصفحة وحقن وسم Script خفيف!</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
       </div>
-    </div>
 
-    <!-- RACE CONDITIONS SECTION -->
-    <div id="sec-race" class="vuln-panel">
-      <div class="meta-badge meta-hard">🔴 Difficulty: Hard</div>
-      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 45 Mins</div>
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction & Sub-second Race</h3>
-          <p><strong>Race Conditions:</strong> تحدث عندما تنفذ الخوادم طلبات متعددة بالتوازي في نفس الميكرو ثانية دون التحقق من حالة البيانات بشكل آمن.</p>
-        </div>
-        <div class="section-card">
-          <h3 class="card-title">2. Burp Workflow</h3>
-          <div class="flow-chart">Send requests to Group in Repeater ➔ Send group in parallel (Single-packet attack)</div>
-        </div>
-      </div>
     </div>
-
-    <!-- BUSINESS LOGIC SECTION -->
-    <div id="sec-logic" class="vuln-panel">
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>عيوب منطق العمل تحدث عندما تسمح التطبيقات بتجاوز الخطوات المنطقية المصممة للتحقق.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- API SECURITY SECTION -->
-    <div id="sec-api" class="vuln-panel">
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>ثغرات تأمين واجهات البرمجة تشمل استدعاء معلمات غير مفحوصة أو تسريب البيانات.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- CLOUD SECURITY SECTION -->
-    <div id="sec-cloud" class="vuln-panel">
-      <div class="card-grid">
-        <div class="section-card">
-          <h3 class="card-title">1. Introduction</h3>
-          <p>ثغرات بيئات الكلاود تنشأ من سوء إدارة الصلاحيات وتكوين الخدمات.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- REPORT GENERATOR TAB -->
-    <div id="sec-repgentab" class="vuln-panel">
-      <div class="section-card" style="max-width: 800px; margin: 0 auto;">
-        <h3 class="card-title"><i class="bx bx-file"></i> Interactive Bug Bounty Report Generator</h3>
-        <div class="form-group">
-          <label>Vulnerability Title</label>
-          <input type="text" id="rep-title" class="form-control" placeholder="E.g. Blind SQL Injection">
-        </div>
-        <button onclick="generateReport()" class="action-btn" style="width: 100%; justify-content: center; background: var(--accent-orange); color: #000; border-color: var(--accent-orange);">توليد التقرير الاحترافي</button>
-        <div id="report-output-box" style="margin-top: 25px; display: none;">
-          <textarea id="report-markdown" class="form-control" rows="8" readonly></textarea>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <div id="toast" class="copy-toast"><i class="bx bx-check-circle"></i> تم نسخ النص بنجاح!</div>
 
   <script>
-    let userXP = 150;
-    let solvedCount = 0;
-
-    function switchTab(id, btn) {
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      document.querySelectorAll(".vuln-panel").forEach(s => s.classList.remove("active"));
-      document.getElementById("sec-" + id).classList.add("active");
-    }
+    let currentXP = 15000;
 
     function copyText(text) {
       navigator.clipboard.writeText(text);
@@ -370,84 +317,20 @@
       setTimeout(() => toast.style.display = "none", 2500);
     }
 
-    function performSearch() {
-      const query = document.getElementById("global-search").value.toLowerCase();
-      document.querySelectorAll(".section-card").forEach(card => {
-        card.style.display = card.innerText.toLowerCase().includes(query) ? "" : "none";
-      });
-    }
-
-    function updateProgress(vuln) {
-      const checkboxes = document.querySelectorAll("#sec-" + vuln + " .checklist-item input[type='checkbox']");
-      let checkedCount = 0;
-      checkboxes.forEach(c => { if (c.checked) checkedCount++; });
-      const percent = Math.round((checkedCount / checkboxes.length) * 100);
-      document.getElementById("prog-" + vuln).style.width = percent + "%";
-    }
-
-    function switchPayload(vuln, type) {
-      const payloads = {
-        sqli: { basic: "' OR 1=1--", waf: "' UNION SELECT NULL,CONCAT(0x7170767a71,IFNULL(CAST(VERSION() AS CHAR),0x20),0x7171787671),NULL--" },
-        xss: { basic: "<script>console.log('XSS')<\/script>", waf: "<svg/onload=console.log('XSS')>" }
-      };
-      const textElement = document.getElementById("payload-" + vuln + "-text");
-      if (textElement) {
-        textElement.innerText = payloads[vuln][type];
-      }
-    }
-
-    function toggleHint(id) {
-      const hint = document.getElementById(id);
-      hint.style.display = hint.style.display === "block" ? "none" : "block";
-    }
-
-    function simulateXSS() {
-      const input = document.getElementById("xss-lab-input").value;
-      const output = document.getElementById("xss-lab-output");
+    function runSimXSS() {
+      const input = document.getElementById("sim-input").value;
+      const output = document.getElementById("sim-output");
       output.innerHTML = input ? input : "Hello USER";
+
       if (input.includes("<script>console.log") || input.includes("onload=console.log")) {
         if (!output.dataset.solved) {
           output.dataset.solved = "true";
-          awardXP(100);
-          alert("🎉 XSS Solved!");
+          currentXP += 500;
+          document.getElementById("sim-xp-val").innerText = currentXP.toLocaleString();
+          document.getElementById("sim-xp-fill").style.width = "75%";
+          alert("🎉 تهانينا! تم تشغيل ثغرة XSS بنجاح والحصول على +500 XP!");
         }
       }
-    }
-
-    function awardXP(amount) {
-      userXP += amount;
-      solvedCount++;
-      document.getElementById("user-xp").innerText = userXP + " XP";
-      document.getElementById("solved-count").innerText = solvedCount;
-      let rank = "Beginner 🟢";
-      if (userXP >= 500) rank = "Expert 👑";
-      else if (userXP >= 300) rank = "Researcher 🧠";
-      else if (userXP >= 200) rank = "Hunter 🏹";
-      document.getElementById("user-rank").innerText = rank;
-    }
-
-    function checkAnswer(vuln, isCorrect, element) {
-      const feedback = document.getElementById("feedback-" + vuln);
-      if (isCorrect) {
-        feedback.innerText = "🎉 Correct!";
-        feedback.style.color = "#4ade80";
-        element.style.borderColor = "#4ade80";
-        if (!element.dataset.solved) {
-          element.dataset.solved = "true";
-          awardXP(50);
-        }
-      } else {
-        feedback.innerText = "❌ Try Again!";
-        feedback.style.color = "#f87171";
-        element.style.borderColor = "#f87171";
-      }
-    }
-
-    function generateReport() {
-      const title = document.getElementById("rep-title").value;
-      const markdown = `# Bug Report: ${title}`;
-      document.getElementById("report-markdown").value = markdown;
-      document.getElementById("report-output-box").style.display = "block";
     }
   </script>
 </body>
