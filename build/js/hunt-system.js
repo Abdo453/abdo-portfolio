@@ -29,6 +29,39 @@ const HuntManager = {
     alert('Hunt Ended.');
   },
 
+  exportSession: function() {
+    if (!this.session) { alert('No active hunt session to export!'); return; }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.session, null, 2));
+    const dlAnchorElem = document.createElement('a');
+    dlAnchorElem.setAttribute("href", dataStr);
+    dlAnchorElem.setAttribute("download", `hunt_${this.session.target}_${Date.now()}.json`);
+    document.body.appendChild(dlAnchorElem);
+    dlAnchorElem.click();
+    dlAnchorElem.remove();
+  },
+
+  importSession: function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (imported && imported.target) {
+          this.session = imported;
+          localStorage.setItem('hunt_session', JSON.stringify(this.session));
+          this.renderHuntUI();
+          alert('Hunt Session Imported Successfully for ' + imported.target + '!');
+        } else {
+          alert('Invalid Hunt Session JSON file.');
+        }
+      } catch (err) {
+        alert('Error parsing JSON file.');
+      }
+    };
+    reader.readAsText(file);
+  },
+
   addEvidence: function(phase, url, request, response, notes, severity) {
     if (!this.session) {
       alert('Please start a Hunt Session first!');
@@ -62,15 +95,19 @@ const HuntManager = {
         <h4 style="margin:0 0 10px 0; color: var(--neon-cyan);">🎯 Active Hunt</h4>
         <div style="font-size: 0.9rem; color: #e2e8f0; margin-bottom: 5px;"><strong>Target:</strong> ${this.session.target}</div>
         <div style="font-size: 0.9rem; color: #e2e8f0; margin-bottom: 10px;"><strong>Scope:</strong> ${this.session.scope}</div>
-        <div style="display:flex; gap: 10px;">
-          <button onclick="HuntManager.showReport()" style="flex:1; background: var(--neon-cyan); color:#000; border:none; padding:8px; border-radius:4px; cursor:pointer; font-weight:bold;">Report</button>
-          <button onclick="HuntManager.endHunt()" style="flex:1; background: rgba(255,0,0,0.2); color:#ff4d4d; border:1px solid #ff4d4d; padding:8px; border-radius:4px; cursor:pointer;">End</button>
+        <div style="display:flex; gap: 5px; flex-wrap:wrap; margin-bottom:8px;">
+          <button onclick="HuntManager.showReport()" style="flex:1; background: var(--neon-cyan); color:#000; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.8rem;">Report</button>
+          <button onclick="HuntManager.exportSession()" style="flex:1; background: rgba(0,255,102,0.15); color:#00ff66; border:1px solid #00ff66; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.8rem;">Export JSON</button>
+          <button onclick="HuntManager.endHunt()" style="flex:1; background: rgba(255,0,0,0.2); color:#ff4d4d; border:1px solid #ff4d4d; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.8rem;">End</button>
         </div>
       `;
     } else {
       container.innerHTML = `
         <h4 style="margin:0 0 10px 0; color: #94a3b8;">No Active Hunt</h4>
-        <button onclick="HuntManager.showStartModal()" style="width:100%; background: rgba(0, 229, 255, 0.1); color:var(--neon-cyan); border:1px solid var(--neon-cyan); padding:10px; border-radius:4px; cursor:pointer; font-weight:bold;">Start New Hunt</button>
+        <button onclick="HuntManager.showStartModal()" style="width:100%; background: rgba(0, 229, 255, 0.1); color:var(--neon-cyan); border:1px solid var(--neon-cyan); padding:10px; border-radius:4px; cursor:pointer; font-weight:bold; margin-bottom:8px;">Start New Hunt</button>
+        <label style="display:block; text-align:center; background:rgba(255,255,255,0.05); color:#aaa; border:1px dashed #555; padding:6px; border-radius:4px; cursor:pointer; font-size:0.8rem;">
+          📂 Import Session JSON <input type="file" onchange="HuntManager.importSession(event)" style="display:none;" accept=".json">
+        </label>
       `;
     }
   },
@@ -250,5 +287,5 @@ const HuntManager = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => HuntManager.init(), 500); // Give time for DOM to render if needed
+  setTimeout(() => HuntManager.init(), 500);
 });
