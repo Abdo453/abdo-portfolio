@@ -209,7 +209,7 @@
             <option value="waf">WAF Bypass Payload</option>
           </select>
           <div id="payload-xss-box" class="payload-item">
-            <span id="payload-xss-text">&lt;script&gt;alert(1)&lt;/script&gt;</span>
+            <span id="payload-xss-text">&lt;script&gt;console.log('XSS')&lt;/script&gt;</span>
             <button class="btn-copy" onclick="copyText(document.getElementById('payload-xss-text').innerText)">Copy</button>
           </div>
         </div>
@@ -574,7 +574,7 @@
     function switchPayload(vuln, type) {
       const payloads = {
         sqli: { basic: "' OR 1=1--", waf: "' UNION SELECT NULL,CONCAT(0x7170767a71,IFNULL(CAST(VERSION() AS CHAR),0x20),0x7171787671),NULL--" },
-        xss: { basic: "<script>alert(1)</script>", waf: "<svg/onload=alert(1)>" }
+        xss: { basic: "<script>console.log('XSS')</script>", waf: "<svg/onload=console.log('XSS')>" }
       };
       const textElement = document.getElementById("payload-" + vuln + "-text");
       if (textElement) {
