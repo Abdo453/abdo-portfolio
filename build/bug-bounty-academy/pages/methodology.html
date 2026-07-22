@@ -80,10 +80,15 @@
       <button class="tab-btn active" onclick="switchTab('sqli', this)">1. SQL Injection</button>
       <button class="tab-btn" onclick="switchTab('xss', this)">2. Cross-Site Scripting</button>
       <button class="tab-btn" onclick="switchTab('ssrf', this)">3. SSRF</button>
-      <button class="tab-btn" onclick="switchTab('logic', this)">4. Business Logic</button>
-      <button class="tab-btn" onclick="switchTab('api', this)">5. API Security</button>
-      <button class="tab-btn" onclick="switchTab('cloud', this)">6. Cloud Security</button>
-      <button class="tab-btn" onclick="switchTab('repgentab', this)">7. Report Generator</button>
+      <button class="tab-btn" onclick="switchTab('csrf', this)">4. CSRF</button>
+      <button class="tab-btn" onclick="switchTab('jwt', this)">5. JWT Attacks</button>
+      <button class="tab-btn" onclick="switchTab('idor', this)">6. IDOR</button>
+      <button class="tab-btn" onclick="switchTab('fileupload', this)">7. File Upload</button>
+      <button class="tab-btn" onclick="switchTab('xxe', this)">8. XXE Injection</button>
+      <button class="tab-btn" onclick="switchTab('logic', this)">9. Business Logic</button>
+      <button class="tab-btn" onclick="switchTab('api', this)">10. API Security</button>
+      <button class="tab-btn" onclick="switchTab('cloud', this)">11. Cloud Security</button>
+      <button class="tab-btn" onclick="switchTab('repgentab', this)">12. Report Generator</button>
     </div>
 
     <!-- SQL INJECTION SECTION -->
@@ -94,22 +99,18 @@
           <p><strong>تعريف الثغرة:</strong> حقن أوامر SQL هو ثغرة تسمح للمهاجم بالتلاعب بالاستعلامات المرسلة لقاعدة البيانات وعرض بيانات غير مصرح بها.</p>
           <p><strong>السبب الجذري:</strong> دمج مدخلات المستخدم مباشرة في استعلامات SQL بدون استخدام Prepared Statements.</p>
         </div>
-
         <div class="section-card">
-          <h3 class="card-title">2. Testing Checklist (GET, POST, JSON, Cookies)</h3>
+          <h3 class="card-title">2. Testing Checklist</h3>
           <div class="checklist-item"><input type="checkbox"> <span>Test parameters with Single Quote (') and Double Quote (")</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>Check JSON payloads in POST request body</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Verify Cookie headers and Custom Session parameters</span></div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
           <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Bug) ➔ Intruder (Brute-force columns) ➔ sqlmap (Exfiltrate DB)</div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
-          <div class="flow-chart">SQL Injection ➔ Read Database Hashes ➔ Hash Cracking / Admin Access ➔ File Upload Admin Shell ➔ Remote Code Execution (RCE)</div>
+          <div class="flow-chart">SQL Injection ➔ Read Database Hashes ➔ Admin Access ➔ File Upload Admin Shell ➔ RCE</div>
         </div>
       </div>
       <div class="action-links">
@@ -124,21 +125,18 @@
       <div class="card-grid">
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> تنفيذ الأكواد عبر المواقع يسمح بحقن سكريبتات خبيثة في متصفح الزوار لسرقة البيانات أو السيطرة على الجلسات.</p>
-          <p><strong>السبب الجذري:</strong> عرض مدخلات المستخدم على المتصفح مباشرة دون عمل HTML Entity Encoding.</p>
+          <p><strong>تعريف الثغرة:</strong> تنفيذ الأكواد عبر المواقع يسمح بحقن سكريبتات خبيثة في متصفح الزوار.</p>
+          <p><strong>السبب الجذري:</strong> عرض مدخلات المستخدم مباشرة دون ترميز أو فلترة.</p>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
           <div class="checklist-item"><input type="checkbox"> <span>Test payload in HTML context</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>Test inside input tags & attributes</span></div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
           <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Reflection) ➔ DOM Invader ➔ Trigger Alert()</div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
           <div class="flow-chart">Stored XSS ➔ Session Hijacking ➔ CSRF Execution ➔ Full Account Takeover</div>
@@ -156,21 +154,18 @@
       <div class="card-grid">
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> تزوير الطلبات من جهة الخادم يسمح للمهاجم بإجبار السيرفر على إرسال طلبات لشبكات داخلية أو للـ Metadata الخاصة بالكلاود.</p>
-          <p><strong>السبب الجذري:</strong> السماح للمستخدم بالتحكم الكامل في عنوان الـ URL الذي سيقوم الخادم بسحب البيانات منه.</p>
+          <p><strong>تعريف الثغرة:</strong> تزوير الطلبات من جهة الخادم يسمح للمهاجم بإجبار السيرفر على إرسال طلبات لشبكات داخلية.</p>
+          <p><strong>السبب الجذري:</strong> غياب التحقق من صحة عناوين الـ URLs الممررة للخادم.</p>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
           <div class="checklist-item"><input type="checkbox"> <span>Test with local addresses (localhost, 127.0.0.1)</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>Test cloud metadata endpoints</span></div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
           <div class="flow-chart">Proxy Intercept ➔ Repeater (Inject Localhost IP) ➔ Collaborator ➔ Metadata Exfiltration</div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
           <div class="flow-chart">SSRF ➔ Cloud Metadata (AWS IAM Credentials) ➔ AWS Admin Console access ➔ RCE</div>
@@ -183,28 +178,170 @@
       </div>
     </div>
 
+    <!-- CSRF SECTION -->
+    <div id="sec-csrf" class="vuln-panel">
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Root Cause</h3>
+          <p><strong>تعريف الثغرة:</strong> تزوير طلبات المستخدمين يجبر المتصفح على تنفيذ إجراءات غير مصرح بها في تطبيق ويب مصادق عليه.</p>
+          <p><strong>السبب الجذري:</strong> غياب حماية الـ CSRF Tokens الفريدة أو سوء إعداد الـ SameSite Cookies.</p>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">2. Testing Checklist</h3>
+          <div class="checklist-item"><input type="checkbox"> <span>Remove CSRF Token from request</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Test token reuse across sessions</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Check SameSite cookie configuration</span></div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
+          <div class="flow-chart">Intercept target action ➔ Generate CSRF PoC HTML ➔ Deliver to victim browser ➔ Change Account Email</div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
+          <div class="flow-chart">CSRF ➔ Change Admin Email ➔ Password Reset ➔ Account Takeover</div>
+        </div>
+      </div>
+      <div class="action-links">
+        <a href="https://youtu.be/csrf-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
+        <a href="https://portswigger.net/web-security/csrf" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
+        <a href="https://portswigger.net/web-security/csrf/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
+      </div>
+    </div>
+
+    <!-- JWT SECTION -->
+    <div id="sec-jwt" class="vuln-panel">
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Root Cause</h3>
+          <p><strong>تعريف الثغرة:</strong> ثغرات توكنات الـ JWT تسمح بتزوير الهوية ورفع الصلاحيات عبر تعديل حمولة التوكن.</p>
+          <p><strong>السبب الجذري:</strong> قبول خوارزمية التوقيع "none" أو غياب التحقق من التوقيع الرقمي للتوكن.</p>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">2. Testing Checklist</h3>
+          <div class="checklist-item"><input type="checkbox"> <span>Modify algorithm to "none"</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Brute-force weak symmetric keys</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Inject jku/jwk headers</span></div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
+          <div class="flow-chart">Intercept API call ➔ Decode JWT in Burp JWT Editor ➔ Modify sub/admin values ➔ Inject alg: none</div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
+          <div class="flow-chart">JWT signature bypass ➔ Escalated role: admin ➔ Admin Endpoint Access ➔ Server Compromise</div>
+        </div>
+      </div>
+      <div class="action-links">
+        <a href="https://youtu.be/jwt-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
+        <a href="https://portswigger.net/web-security/jwt" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
+        <a href="https://portswigger.net/web-security/jwt/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
+      </div>
+    </div>
+
+    <!-- IDOR SECTION -->
+    <div id="sec-idor" class="vuln-panel">
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Root Cause</h3>
+          <p><strong>تعريف الثغرة:</strong> ثغرة الإحالة غير الآمنة للكائنات المباشرة تسمح بالوصول لبيانات مستخدمين آخرين بمجرد تغيير معرف الكائن (ID).</p>
+          <p><strong>السبب الجذري:</strong> غياب فحص الصلاحيات والتحقق من ملكية الكائن في جهة الخادم.</p>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">2. Testing Checklist</h3>
+          <div class="checklist-item"><input type="checkbox"> <span>Change user ID in parameters (GET/POST)</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Test UUID vs Numeric ID values</span></div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">3. Attack Flow</h3>
+          <div class="flow-chart">Intercept profile request ➔ Send to Intruder ➔ Increment user ID number ➔ Extract sensitive files</div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">4. Cross-Chaining</h3>
+          <div class="flow-chart">IDOR ➔ Admin settings edit ➔ Password reset for administrator ➔ Account Takeover</div>
+        </div>
+      </div>
+      <div class="action-links">
+        <a href="https://youtu.be/idor-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
+        <a href="https://portswigger.net/web-security/access-control" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
+        <a href="https://portswigger.net/web-security/access-control/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
+      </div>
+    </div>
+
+    <!-- FILE UPLOAD SECTION -->
+    <div id="sec-fileupload" class="vuln-panel">
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Root Cause</h3>
+          <p><strong>تعريف الثغرة:</strong> رفع الملفات غير الآمن يسمح برفع سكربتات خبيثة (Web Shells) وتنفيذ أوامر النظام عن بعد.</p>
+          <p><strong>السبب الجذري:</strong> غياب التحقق من امتدادات الملفات وصيغها في جهة الخادم.</p>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">2. Testing Checklist</h3>
+          <div class="checklist-item"><input type="checkbox"> <span>Bypass extension filters using double extensions (shell.php.jpg)</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Bypass Content-Type checks</span></div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">3. Attack Flow</h3>
+          <div class="flow-chart">Intercept file upload ➔ Modify extension to .php ➔ Bypass client check ➔ Access uploaded shell</div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">4. Cross-Chaining</h3>
+          <div class="flow-chart">File Upload ➔ Execution of shell.php ➔ Interactive reverse shell ➔ Complete RCE</div>
+        </div>
+      </div>
+      <div class="action-links">
+        <a href="https://youtu.be/upload-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
+        <a href="https://portswigger.net/web-security/file-upload" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
+        <a href="https://portswigger.net/web-security/file-upload/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
+      </div>
+    </div>
+
+    <!-- XXE SECTION -->
+    <div id="sec-xxe" class="vuln-panel">
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Root Cause</h3>
+          <p><strong>تعريف الثغرة:</strong> حقن كيانات XML الخارجية يسمح للمهاجم بقراءة الملفات الداخلية للسيرفر وتفعيل هجمات SSRF.</p>
+          <p><strong>السبب الجذري:</strong> معالجة مدخلات XML مع تفعيل خيار الكيانات الخارجية (External Entities) في مكتبة المعالجة.</p>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">2. Testing Checklist</h3>
+          <div class="checklist-item"><input type="checkbox"> <span>Inject DOCTYPE entity pointing to local files</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Test Out-of-Band XXE via Collaborator</span></div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">3. Attack Flow</h3>
+          <div class="flow-chart">Intercept XML request ➔ Add SYSTEM entity pointing to /etc/passwd ➔ View output in response</div>
+        </div>
+        <div class="section-card">
+          <h3 class="card-title">4. Cross-Chaining</h3>
+          <div class="flow-chart">XXE ➔ File Read ➔ AWS Config File Extract ➔ Complete Cloud Access</div>
+        </div>
+      </div>
+      <div class="action-links">
+        <a href="https://youtu.be/xxe-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
+        <a href="https://portswigger.net/web-security/xxe" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
+        <a href="https://portswigger.net/web-security/xxe/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
+      </div>
+    </div>
+
     <!-- BUSINESS LOGIC SECTION -->
     <div id="sec-logic" class="vuln-panel">
       <div class="card-grid">
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> عيوب منطق العمل تحدث عندما تسمح التطبيقات بتجاوز الخطوات المنطقية المصممة للتحقق (مثل تعديل الأسعار، تكرار الأكواد الترويجية).</p>
-          <p><strong>السبب الجذري:</strong> الاعتماد على التحقق من جهة العميل فقط (Client-side Validation) لعمليات الشراء أو المدفوعات.</p>
+          <p><strong>تعريف الثغرة:</strong> عيوب منطق العمل تحدث عندما تسمح التطبيقات بتجاوز الخطوات المنطقية المصممة للتحقق.</p>
+          <p><strong>السبب الجذري:</strong> الاعتماد على التحقق من جهة العميل فقط (Client-side Validation) لعمليات الشراء.</p>
         </div>
-
         <div class="section-card">
-          <h3 class="card-title">2. Attack Surface (Where to Look)</h3>
+          <h3 class="card-title">2. Attack Surface</h3>
           <div class="checklist-item"><input type="checkbox"> <span>Coupon Abuse & Code reuse</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>Price Manipulation (editing prices in request body)</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Negative Quantity in cart parameters</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Race Conditions in wallet refund endpoints</span></div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">3. Workflow & Burp Tools</h3>
           <div class="flow-chart">Intercept payment request ➔ Modify parameters in Repeater ➔ Send to Turbo Intruder for Race Conditions</div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">4. Real Bug Bounty Story</h3>
           <p><strong>الهدف:</strong> متجر تجارة إلكترونية شهير.</p>
@@ -223,22 +360,18 @@
       <div class="card-grid">
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> ثغرات تأمين واجهات البرمجة (APIs) تشمل استدعاء معلمات غير مفحوصة أو تسريب البيانات الحساسة عبر الاستجابات.</p>
-          <p><strong>السبب الجذري:</strong> غياب التحقق من صلاحيات الكائنات (BOLA/IDOR) أو غياب حظر تكرار المحاولات (Rate Limiting).</p>
+          <p><strong>تعريف الثغرة:</strong> ثغرات تأمين واجهات البرمجة (APIs) تشمل استدعاء معلمات غير مفحوصة أو تسريب البيانات الحساسة.</p>
+          <p><strong>السبب الجذري:</strong> غياب التحقق من صلاحيات الكائنات (BOLA/IDOR).</p>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">2. API Attack Surface</h3>
           <div class="checklist-item"><input type="checkbox"> <span>REST & GraphQL Introspection endpoints</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>Mass Assignment vulnerabilities in user creation</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>BOLA (Broken Object Level Authorization) via parameter change</span></div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">3. Burp API Workflow</h3>
-          <div class="flow-chart">Introspect GraphQL Schema ➔ Discover hidden endpoints ➔ Manipulate user ID variables in GraphQL Variables</div>
+          <div class="flow-chart">Introspect GraphQL Schema ➔ Discover hidden endpoints ➔ Manipulate user ID variables</div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">4. Real Bug Bounty Story</h3>
           <p><strong>الهدف:</strong> تطبيق تواصل اجتماعي عالمي.</p>
@@ -257,22 +390,18 @@
       <div class="card-grid">
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
-          <p><strong>تعريف الثغرة:</strong> ثغرات بيئات الكلاود (AWS, Azure, GCP) تنشأ من سوء إدارة الصلاحيات وتكوين الخدمات بشكل خاطئ.</p>
-          <p><strong>السبب الجذري:</strong> ترك الـ S3 Buckets مفتوحة للعامة أو تكوين سياسات IAM ضعيفة تسمح برفع الصلاحيات.</p>
+          <p><strong>تعريف الثغرة:</strong> ثغرات بيئات الكلاود تنشأ من سوء إدارة الصلاحيات وتكوين الخدمات بشكل خاطئ.</p>
+          <p><strong>السبب الجذري:</strong> ترك الـ S3 Buckets مفتوحة للعامة أو تكوين سياسات IAM ضعيفة.</p>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">2. Cloud Attack Surface</h3>
           <div class="checklist-item"><input type="checkbox"> <span>Publicly accessible S3 Buckets / Azure Blobs</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>AWS Metadata V1 SSRF vulnerability (169.254.169.254)</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Exposed Secrets inside GitHub Actions / CI/CD pipelines</span></div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">3. Cloud Penetration Flow</h3>
-          <div class="flow-chart">Discover exposed S3 bucket name ➔ Use aws-cli to list contents ➔ Find admin credentials ➔ Login to console</div>
+          <div class="flow-chart">Discover exposed S3 bucket name ➔ Use aws-cli to list contents ➔ Find admin credentials</div>
         </div>
-
         <div class="section-card">
           <h3 class="card-title">4. Real Bug Bounty Story</h3>
           <p><strong>الهدف:</strong> تطبيق مشاركة رحلات شهير.</p>
@@ -291,7 +420,6 @@
       <div class="section-card" style="max-width: 800px; margin: 0 auto;">
         <h3 class="card-title"><i class="bx bx-file"></i> Interactive Bug Bounty Report Generator</h3>
         <p style="color: #cbd5e1; margin-bottom: 20px;">قم بملء تفاصيل الثغرة التي اكتشفتها بالأسفل لتوليد تقرير احترافي جاهز للتقديم على منصات HackerOne و Bugcrowd مباشرة!</p>
-        
         <div class="form-group">
           <label>Vulnerability Title (عنوان الثغرة)</label>
           <input type="text" id="rep-title" class="form-control" placeholder="E.g. Blind SQL Injection on Search Parameter">
@@ -308,9 +436,7 @@
           <label>Security Impact (التأثير الأمني)</label>
           <textarea id="rep-impact" class="form-control" rows="3" placeholder="An attacker can read sensitive user databases..."></textarea>
         </div>
-
         <button onclick="generateReport()" class="action-btn" style="width: 100%; justify-content: center; background: var(--accent-orange); color: #000; border-color: var(--accent-orange);"><i class="bx bx-cog"></i> توليد التقرير الاحترافي</button>
-
         <div id="report-output-box" style="margin-top: 25px; display: none;">
           <h4 style="color: var(--accent-gold); margin-bottom: 10px;">التقرير النهائي المولد (Markdown Format):</h4>
           <textarea id="report-markdown" class="form-control" rows="8" readonly style="font-family: 'Fira Code', monospace; font-size: 0.85rem; background: #020617; color: #4ade80;"></textarea>
