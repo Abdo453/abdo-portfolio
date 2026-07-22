@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XSS Mastery Academy v4 | بيئة التعلم السيبراني المتكاملة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;500;600&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<style>
+:root {
+  --bg: #030712;
+  --bg-grid: rgba(255, 255, 255, 0.02);
+  --card: rgba(11, 17, 32, 0.65);
+  --border: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --glow: rgba(6, 182, 212, 0.15);
+  
+  /* Strictly limited premium colors */
+  --cyan: #06b6d4;
+  --orange: #f97316;
+  --green: #10b981;
+  --red: #ef4444;
+  
+  --text: #f3f4f6;
+  --muted: #6b7280;
+  --subtle: #9ca3af;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  background-image: 
+    linear-gradient(to right, var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--bg-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 99px; }
+pre, code { font-family: 'Fira Code', monospace !important; }
+
+/* ── TYPOGRAPHY HIERARCHY ── */
+h1 { font-size: 48px; font-weight: 900; }
+h2 { font-size: 32px; font-weight: 800; }
+h3 { font-size: 20px; font-weight: 700; }
+.body-text { font-size: 15px; line-height: 1.6; }
+.caption { font-size: 12px; color: var(--muted); }
+
+/* ── GLASSMORPHISM & BENTO SYSTEM ── */
+.glass {
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.glass:hover {
+  border-color: var(--border-hover);
+}
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* ── TOP HERO MISSION BAR ── */
+.mission-bar {
+  grid-column: span 12;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.m-info { display: flex; align-items: center; gap: 10px; }
+.m-title { font-size: 14px; font-weight: 800; color: var(--orange); }
+.xp-progress { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.xp-track { width: 120px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 99px; overflow:hidden; }
+.xp-fill { height: 100%; background: var(--cyan); width: 62%; transition: width 0.4s; }
+
+/* ── HERO LAYOUT (70% Simulator, 30% MindMap) ── */
+.mindmap-col {
+  grid-column: span 4;
+  height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+.simulator-col {
+  grid-column: span 8;
+  height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 1100px) {
+  .mindmap-col { grid-column: span 12; height: 400px; }
+  .simulator-col { grid-column: span 12; }
+}
+
+/* MIND MAP CANVAS */
+.canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+#map-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+.map-nodes-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.m-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #0d1527;
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+.m-node:hover, .m-node.act {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+.m-node.root {
+  background: var(--orange-d);
+  border-color: var(--orange);
+  color: var(--orange);
+  font-size: 13px;
+}
+.m-node.grn {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+/* ── CHROME BROWSER WINDOW ── */
+.chrome-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #080d1a;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.chrome-hdr {
+  background: #111827;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  direction: ltr;
+}
+.c-dots { display: flex; gap: 6px; }
+.c-dot { width: 10px; height: 10px; border-radius: 50%; }
+.c-dot.r { background: var(--red); }
+.c-dot.y { background: var(--orange); }
+.c-dot.g { background: var(--green); }
+.c-url {
+  flex: 1;
+  background: #030712;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 10px;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--subtle);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dev-tabs { display: flex; gap: 4px; background: #0f172a; border-bottom: 1px solid var(--border); direction: ltr; }
+.dev-tab {
+  padding: 6px 14px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Cairo', sans-serif;
+}
+.dev-tab.act {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan);
+  background: rgba(6,182,212,0.04);
+}
+
+/* Chrome DevTools Panels */
+.dev-panel { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+/* Burp Split Panel */
+.burp-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  overflow: hidden;
+}
+@media (max-width: 600px) { .burp-split { grid-template-columns: 1fr; } }
+.pane {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+}
+.pane:last-child { border-right: none; }
+.pane-hdr {
+  background: #111c30;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: ltr;
+}
+.pane-body {
+  flex: 1;
+  padding: 10px;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--subtle);
+  background: #050a14;
+  overflow-y: auto;
+  text-align: left;
+  direction: ltr;
+}
+
+/* Chrome DevTools DOM Panel */
+.dom-split {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  flex: 1;
+  overflow: hidden;
+  direction: ltr;
+}
+.dom-tree {
+  padding: 10px;
+  background: #040914;
+  overflow-y: auto;
+}
+.dom-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--subtle);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dom-line:hover { background: rgba(255,255,255,0.03); }
+.dom-line.act { background: rgba(6,182,212,0.1); border-left: 2px solid var(--cyan); }
+.dom-line.sink { color: var(--red); }
+.dom-line.source { color: var(--orange); }
+.dom-badge { background: #111c30; padding: 1px 6px; border-radius: 3px; font-size: 9px; }
+
+/* Chrome Console Panel */
+.console-panel {
+  background: #030712;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  direction: ltr;
+}
+.console-output {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+}
+.console-row {
+  display: flex;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+.console-row.err { color: var(--red); }
+.console-row.warn { color: var(--orange); }
+.console-row.info { color: var(--cyan); }
+.console-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-top: 1px solid var(--border);
+  background: #090e1a;
+}
+.console-prompt { color: var(--cyan); font-family: monospace; font-weight: bold; }
+.console-inp {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  outline: none;
+}
+
+/* Simulator Form Manipulator */
+.sim-form {
+  background: #0b1426;
+  border-top: 1px solid var(--border);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  direction: ltr;
+}
+.sim-fld { display: flex; align-items: center; gap: 6px; }
+.sim-fld label { font-size: 10px; font-weight: 700; color: var(--muted); }
+.sim-inp {
+  background: #030712;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: var(--text);
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  outline: none;
+  width: 120px;
+}
+.sim-inp:focus { border-color: var(--cyan); }
+.manip-btn {
+  margin-left: auto;
+  background: linear-gradient(135deg, var(--orange), #c2410c);
+  border: none;
+  border-radius: 4px;
+  padding: 5px 12px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+}
+
+/* ── BENTO COLUMN: LABS ── */
+.lab-bento {
+  grid-column: span 5;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+.code-bento {
+  grid-column: span 4;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+.timeline-bento {
+  grid-column: span 3;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 1000px) {
+  .lab-bento { grid-column: span 12; }
+  .code-bento { grid-column: span 6; }
+  .timeline-bento { grid-column: span 6; }
+}
+@media (max-width: 600px) {
+  .code-bento, .timeline-bento { grid-column: span 12; }
+}
+
+/* Bento Lab Layout */
+.lab-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  overflow: hidden;
+  direction: ltr;
+}
+.editor-pane {
+  background: #040914;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  line-height: 1.7;
+  overflow-y: auto;
+  text-align: left;
+}
+.editor-pane .hl { color: var(--red); font-weight: 700; }
+.editor-pane .tg { color: var(--cyan); }
+.editor-pane .at { color: var(--orange); }
+.profile-pane {
+  background: #050b16;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.prof-badge {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  margin: 0 auto;
+}
+.prof-out {
+  background: #02050b;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px;
+  font-family: monospace;
+  font-size: 10px;
+  min-height: 32px;
+  color: var(--subtle);
+  text-align: left;
+}
+
+/* Bento Timeline (CVE & Leaderboard) */
+.timeline-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+.tl-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+}
+.tl-year {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  color: var(--orange);
+  font-size: 13px;
+  min-width: 34px;
+}
+
+/* ── LEADERBOARD BENTO ── */
+.leader-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+.leader-row.me {
+  border-color: var(--orange);
+  background: rgba(249, 115, 22, 0.08);
+  color: var(--orange);
+}
+
+/* ── FLOATING CO-PILOT AI MENTOR ── */
+.ai-copilot {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 999;
+}
+.copilot-bubble {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4);
+  transition: transform 0.2s;
+}
+.copilot-bubble:hover { transform: scale(1.08); }
+.copilot-drawer {
+  position: absolute;
+  bottom: 64px; left: 0;
+  width: 320px;
+  background: #090f1d;
+  border: 1px solid var(--border-hover);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 0.25s;
+}
+.copilot-hdr {
+  background: #111a2e;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.copilot-body {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 12px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--subtle);
+  border-bottom: 1px solid var(--border);
+}
+.copilot-action {
+  padding: 8px;
+  display: flex;
+  gap: 4px;
+  background: #060a14;
+}
+.copilot-btn {
+  flex: 1;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px;
+  color: var(--subtle);
+  font-size: 10px;
+  cursor: pointer;
+}
+.copilot-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* Overlays */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--green); color: #000; font-weight: 900;
+  padding: 10px 22px; border-radius: 99px; font-size: 12px;
+  display: none; z-index: 10000; box-shadow: 0 8px 24px rgba(16,185,129,0.4);
+}
+.xp-flash {
+  position: fixed; top: 80px; right: 24px;
+  background: #0d1527; border: 1px solid var(--cyan);
+  padding: 8px 18px; color: var(--cyan); font-weight: 800; font-size: 12px;
+  border-radius: 99px; display: none; z-index: 10000;
+}
+</style>
+</head>
+<body>
+
+<!-- ════ TOPBAR HEADER ════ -->
+<nav class="site-hdr">
+  <div class="logo-wrap">
+    <div class="logo-icon">🛡️</div>
+    <div>
+      <div class="logo-ar" style="font-size: 1.1rem; font-weight: 900;">أكاديمية إتقان XSS v4</div>
+      <div class="logo-en" style="font-size: 0.72rem;">Integrated Web Security Sandbox</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="xp-pill"><div class="xp-dot"></div><span id="nav-xp">0 XP</span></div>
+    <div class="rank-pill" id="nav-rank">🟢 Beginner</div>
+  </div>
+</nav>
+
+<!-- ════ MAIN BENTO BENCH ════ -->
+<div class="bento-grid">
+
+  <!-- Mission Banner -->
+  <div class="glass mission-bar">
+    <div class="m-info">
+      <span class="tag o">🎯 Today's Mission</span>
+      <span style="font-size: 12px; font-weight: 800;">Find Stored XSS in Profile Bio parameter</span>
+      <span class="tag c">⭐⭐⭐⭐☆</span>
+      <span style="font-size: 11px; color: var(--muted);">Est. Time: 25 min</span>
+    </div>
+    <div class="xp-progress">
+      <span>Level 4</span>
+      <div class="xp-track"><div class="xp-fill"></div></div>
+      <span style="color: var(--cyan);">62%</span>
+    </div>
+  </div>
+
+  <!-- ── 1. MIND MAP BENTO (30% Width) ── -->
+  <div class="glass mindmap-col" style="padding: 12px;">
+    <div class="km-section-title"><i class='bx bx-sitemap' style="color:var(--cyan)"></i> XSS Mind Map</div>
+    <div class="canvas-container">
+      <canvas id="map-canvas"></canvas>
+      <div class="map-nodes-layer" id="nodes-layer">
+        <!-- Nodes populated by JS -->
+      </div>
+    </div>
+    <div id="km-detail" class="km-detail">اضغط على أي عقدة في الـ Mind Map للبدء...</div>
+  </div>
+
+  <!-- ── 2. HERO ATTACK SIMULATOR (70% Width) ── -->
+  <div class="simulator-col">
+    <div class="chrome-window">
+      <div class="browser-chrome">
+        <div class="c-dots"><div class="c-dot r"></div><div class="c-dot y"></div><div class="c-dot g"></div></div>
+        <div class="c-url"><i class='bx bx-lock-alt' style="color:var(--green)"></i> academy.local/xss/profile-stored</div>
+      </div>
+      <div class="dev-tabs">
+        <button class="dev-tab act" id="dtb-rr" onclick="devTab('rr',this)">Request / Response (Burp Split)</button>
+        <button class="dev-tab" id="dtb-dom" onclick="devTab('dom',this)">DOM Tree</button>
+        <button class="dev-tab" id="dtb-con" onclick="devTab('con',this)">DevTools Console</button>
+      </div>
+
+      <!-- DevPanel 1: Burp Split -->
+      <div class="dev-panel" id="dpan-rr">
+        <div class="burp-split">
+          <div class="pane">
+            <div class="pane-hdr">HTTP Request</div>
+            <div class="pane-body">
+              POST /api/profile/update HTTP/1.1<br>
+              Host: target.com<br>
+              Content-Type: application/x-www-form-urlencoded<br>
+              Cookie: session=abdo_session_7760<br><br>
+              name=<span id="brp-name" style="color:var(--red);">1555</span>&bio=<span id="brp-bio" style="color:var(--orange);">Bette-mentor</span>
+            </div>
+          </div>
+          <div class="pane">
+            <div class="pane-hdr">HTTP Response</div>
+            <div class="pane-body">
+              HTTP/1.1 200 OK<br>
+              Content-Type: text/html; charset=utf-8<br><br>
+              &lt;div class="profile-card"&gt;<br>
+              &nbsp;&nbsp;&lt;h1&gt;User Profile&lt;/h1&gt;<br>
+              &nbsp;&nbsp;&lt;div id="bio"&gt;<span id="brp-res-bio" style="color:var(--orange);">Bette-mentor</span>&lt;/div&gt;<br>
+              &lt;/div&gt;
+            </div>
+          </div>
+        </div>
+        <!-- Manipulator Form -->
+        <div class="sim-form">
+          <div class="sim-fld"><label>Name:</label><input class="sim-inp" id="ffn" value="1555" oninput="simUpdate()"></div>
+          <div class="sim-fld"><label>Bio Payload:</label><input class="sim-inp" id="ffb" value="Bette-mentor" style="width: 280px;" placeholder="payload..." oninput="simUpdate()"></div>
+          <button class="manip-btn" onclick="manipulate()">⚡ Manipulate & Send</button>
+        </div>
+      </div>
+
+      <!-- DevPanel 2: DOM Tree -->
+      <div class="dev-panel" id="dpan-dom" style="display:none;">
+        <div class="dom-split">
+          <div class="dom-tree">
+            <div class="dom-line" onclick="inspectNode('doc')"><span>📄 #document</span><span class="dom-badge">root</span></div>
+            <div class="dom-line" onclick="inspectNode('html')" style="padding-left: 12px;"><span>🌐 &lt;html&gt;</span></div>
+            <div class="dom-line" onclick="inspectNode('body')" style="padding-left: 20px;"><span>📦 &lt;body&gt;</span></div>
+            <div class="dom-line source" onclick="inspectNode('div')" style="padding-left: 28px;"><span>🎯 &lt;div id="bio"&gt;</span><span class="dom-badge">Source</span></div>
+            <div class="dom-line sink" onclick="inspectNode('inner')" style="padding-left: 36px;"><span>💉 element.innerHTML</span><span class="dom-badge" style="background:var(--red-d)">Sink</span></div>
+          </div>
+          <div style="background: #060a12; border-left: 1px solid var(--border); padding: 12px; font-size: 11px;">
+            <div style="font-weight: 800; color: var(--cyan); margin-bottom: 6px;">DOM Node Property:</div>
+            <div id="dom-property-desc" style="color: var(--subtle); line-height: 1.6;">اضغط على أي عقدة (Node) لمعاينتها...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DevPanel 3: Console -->
+      <div class="dev-panel" id="dpan-con" style="display:none;">
+        <div class="console-panel">
+          <div class="console-output" id="con-out">
+            <div class="console-row info">▶ Console initialized. JS engine ready.</div>
+          </div>
+          <div class="console-input-row">
+            <span class="console-prompt">&gt;</span>
+            <input class="console-inp" id="con-inp" placeholder="console.log(document.cookie)..." onkeydown="conEnter(event)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. BENTO LAB ZONE (5 Columns) ── -->
+  <div class="glass lab-bento" style="padding: 12px;">
+    <h3 style="font-size: 13px; margin-bottom: 8px;"><i class='bx bx-flask' style="color:var(--orange)"></i> Interactive Practice Lab</h3>
+    <div class="lab-content">
+      <div class="editor-pane">
+        <span class="tg">&lt;div <span class="at">id</span>=<span style="color:var(--green)">"bio"</span>&gt;</span><br>
+        &nbsp;&nbsp;<span class="hl">element.innerHTML = $_POST['bio'];</span><br>
+        <span class="tg">&lt;/div&gt;</span><br><br>
+        <span class="cm">// Client-side Sink:</span><br>
+        <span class="tg">document.write</span>(userInput);
+      </div>
+      <div class="profile-pane">
+        <div class="prof-badge">👤</div>
+        <div style="font-size: 10px; text-align: center; color: var(--subtle);">Profile Sandbox</div>
+        <div class="prof-out" id="prof-bio-out">Bio profile displays here...</div>
+        <input class="sim-inp" id="lab-bio-inp" style="width: 100%; margin-bottom: 4px;" placeholder="<img src=x onerror=alert(1)>" oninput="labUpdate()">
+        <button class="test-btn" onclick="labSubmit()">⚡ Test Sandbox</button>
+      </div>
+    </div>
+    <div class="lab-hints" style="background: none; border-top: 1px solid var(--border); padding-top: 6px; margin-top: 4px;">
+      <div class="lh-row" onclick="showHint(4)"><span class="lh-num">Payload Hint</span><span style="color: var(--muted); font-size: 10px;">انقر لرؤية تلميح الـ bypass</span></div>
+    </div>
+  </div>
+
+  <!-- ── 4. BENTO CODE REVIEW LABS (4 Columns) ── -->
+  <div class="glass code-bento" style="padding: 12px;">
+    <h3 style="font-size: 13px; margin-bottom: 8px;"><i class='bx bx-code-curly' style="color:var(--cyan)"></i> Code Review Quiz</h3>
+    <div class="cr-snippet">
+      <span class="kw">let</span> name = req.query.name;<br>
+      document.<span class="x">innerHTML</span> = name;
+    </div>
+    <div class="cr-opts">
+      <div class="cr-opt" onclick="crCheck(this,'wrong')"><div class="cr-radio"></div><span>SQL Injection</span></div>
+      <div class="cr-opt" onclick="crCheck(this,'correct')"><div class="cr-radio"></div><span>DOM-Based XSS (innerHTML Sink)</span></div>
+      <div class="cr-opt" onclick="crCheck(this,'wrong')"><div class="cr-radio"></div><span>Cross-Site Request Forgery</span></div>
+    </div>
+  </div>
+
+  <!-- ── 5. BENTO CVE TIMELINE & LEADERBOARD (3 Columns) ── -->
+  <div class="glass timeline-bento" style="padding: 12px; overflow: hidden;">
+    <h3 style="font-size: 13px; margin-bottom: 8px;"><i class='bx bx-history' style="color:var(--cyan)"></i> CVE Timeline & Leaderboard</h3>
+    <div style="display:flex; gap:6px; margin-bottom:8px;">
+      <button class="mini-btn a" id="tbtn-cve" onclick="toggleRightBento('cve')">CVE Timeline</button>
+      <button class="mini-btn" id="tbtn-ld" onclick="toggleRightBento('ld')">Leaderboard</button>
+    </div>
+    <!-- Timeline container -->
+    <div class="timeline-flow" id="bento-cve">
+      <div class="tl-node"><div class="tl-year">2023</div><div>Reflected XSS in search param</div></div>
+      <div class="tl-node"><div class="tl-year">2022</div><div>Stored Bio hijacking bypass</div></div>
+      <div class="tl-node"><div class="tl-year">2021</div><div>mXSS DOMPurify evasion</div></div>
+    </div>
+    <!-- Leaderboard container -->
+    <div class="timeline-flow" id="bento-ld" style="display:none;">
+      <div class="leader-row me"><span>🥇 Abdo</span><span>4,800 XP</span></div>
+      <div class="leader-row"><span>🥈 Ahmed</span><span>3,100 XP</span></div>
+      <div class="leader-row"><span>🥉 Mohamed</span><span>2,400 XP</span></div>
+    </div>
+  </div>
+
+</div><!-- /bento-grid -->
+
+<!-- ════ FLOATING CO-PILOT AI MENTOR ════ -->
+<div class="ai-copilot">
+  <div class="copilot-bubble" onclick="toggleCopilot()">🤖</div>
+  <div class="copilot-drawer" id="copilot-drawer">
+    <div class="copilot-hdr">
+      <span>AI Cyber Copilot</span>
+      <i class='bx bx-x' style="cursor:pointer; font-size: 16px;" onclick="toggleCopilot()"></i>
+    </div>
+    <div class="copilot-body" id="copilot-msg">
+      أهلاً بك يا بطل! أنا المعلم السيبراني الخاص بك. 
+      <br><br>
+      في هذه المهمة، تحتاج لحقن payload داخل معلمة الـ Bio. راجع الـ **DOM Tree** لتعرف الـ Sink المستهدف.
+    </div>
+    <div class="copilot-action">
+      <button class="copilot-btn" onclick="copilotAsk(1)">كيف أبدأ؟</button>
+      <button class="copilot-btn" onclick="copilotAsk(2)">ما هو الـ Sink؟</button>
+      <button class="copilot-btn" onclick="copilotAsk(3)">أعطني كود للحل</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOASTS & NOTIFS -->
+<div class="toast" id="toast-el">✅ Done!</div>
+<div class="xp-flash" id="xp-flash">+0 XP</div>
+
+<script>
+// ══════════════════════════════════
+// STATE
+// ══════════════════════════════════
+let XP = 0;
+const solved = { lab: false, quiz: false, manip: false };
+
+function addXP(n, msg) {
+  XP += n;
+  document.getElementById('nav-xp').textContent = XP + ' XP';
+  const f = document.getElementById('xp-flash');
+  f.textContent = `+${n} XP — ${msg}`;
+  f.style.display = 'block';
+  setTimeout(() => f.style.display = 'none', 2500);
+}
+
+function showToast(m) {
+  const t = document.getElementById('toast-el');
+  t.textContent = m;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
+
+// ══════════════════════════════════
+// MIND MAP & CANVAS LINES
+// ══════════════════════════════════
+const nodes = [
+  { id: 'root', label: 'XSS', x: 50, y: 20, class: 'root' },
+  { id: 'ref', label: 'Reflected', x: 20, y: 45 },
+  { id: 'st', label: 'Stored', x: 50, y: 45 },
+  { id: 'dom', label: 'DOM-Based', x: 80, y: 45, class: 'grn' },
+  { id: 'get', label: 'GET/POST', x: 15, y: 70 },
+  { id: 'comm', label: 'Comments', x: 50, y: 70 },
+  { id: 'js', label: 'JS Context', x: 80, y: 70 },
+  { id: 'byp', label: 'Bypass', x: 15, y: 90 }
+];
+
+const connections = [
+  ['root', 'ref'], ['root', 'st'], ['root', 'dom'],
+  ['ref', 'get'], ['st', 'comm'], ['dom', 'js'],
+  ['get', 'byp']
+];
+
+function drawMindmap() {
+  const canvas = document.getElementById('map-canvas');
+  const container = canvas.parentElement;
+  canvas.width = container.clientWidth;
+  canvas.height = container.clientHeight;
+  const ctx = canvas.getContext('2d');
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.lineWidth = 1.5;
+
+  connections.forEach(([fromId, toId]) => {
+    const from = nodes.find(n => n.id === fromId);
+    const to = nodes.find(n => n.id === toId);
+    if (from && to) {
+      const fx = (from.x / 100) * canvas.width;
+      const fy = (from.y / 100) * canvas.height;
+      const tx = (to.x / 100) * canvas.width;
+      const ty = (to.y / 100) * canvas.height;
+      ctx.beginPath();
+      ctx.moveTo(fx, fy);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+    }
+  });
+
+  const layer = document.getElementById('nodes-layer');
+  layer.innerHTML = '';
+  nodes.forEach(n => {
+    const el = document.createElement('div');
+    el.className = `m-node ${n.class || ''}`;
+    el.style.left = `${n.x}%`;
+    el.style.top = `${n.y}%`;
+    el.textContent = n.label;
+    el.onclick = () => nodeClick(n.id, el);
+    layer.appendChild(el);
+  });
+}
+
+const kmDetails = {
+  root: 'XSS (Cross-Site Scripting): ثغرة برمجية تسمح للمهاجم بحقن سكربتات ضارة في صفحات الويب التي يزورها الضحايا.',
+  ref: 'Reflected XSS: تنعكس البيانات المدخلة في طلب المستخدم مباشرة داخل استجابة السيرفر دون حفظها.',
+  st: 'Stored XSS: يتم تخزين الكود الخبيث في قواعد البيانات (مثل التعليقات أو النبذة الشخصية) ليتم تنفيذه لكل مستخدم يفتح الصفحة.',
+  dom: 'DOM-Based XSS: تحدث الثغرة تماماً داخل المتصفح (Client-Side) عندما يستقبل Sink (مثل innerHTML) بيانات من Source (مثل location.hash) دون فلترة.',
+  get: 'GET/POST: بارامترات الاتصال التي قد تكون نقطة الحقن المباشر في الـ Request.',
+  comm: 'Comments/Bio: المدخلات الشائعة التي تحفظ في السيرفر وتعتبر بيئة خصبة للـ Stored XSS.',
+  js: 'JS Context: عندما يتم حقن البيانات داخل أكواد JavaScript مكتوبة مسبقاً في الصفحة، مما يتطلب إغلاق علامات الاقتباس أولاً.',
+  byp: 'Bypass techniques: استخدام الرموز المشفرة أو الكبسولات (Polyglot) لتفادي فلاتر WAF.'
+};
+
+function nodeClick(id, btn) {
+  document.querySelectorAll('.m-node').forEach(n => n.classList.remove('act'));
+  btn.classList.add('act');
+  document.getElementById('km-detail').innerHTML = `<strong style="color:var(--cyan);">${btn.textContent}</strong><br>${kmDetails[id]}`;
+}
+
+window.addEventListener('resize', drawMindmap);
+setTimeout(drawMindmap, 200);
+
+// ══════════════════════════════════
+// DEVELOPER TOOLS TABS
+// ══════════════════════════════════
+function devTab(id, btn) {
+  ['rr', 'dom', 'con'].forEach(t => {
+    document.getElementById('dpan-'+t).style.display = 'none';
+    document.getElementById('dtb-'+t).classList.remove('act');
+  });
+  document.getElementById('dpan-'+id).style.display = 'flex';
+  btn.classList.add('act');
+}
+
+// ══════════════════════════════════
+// SIMULATOR MANIPULATE
+// ══════════════════════════════════
+function simUpdate() {
+  const name = document.getElementById('ffn').value;
+  const bio = document.getElementById('ffb').value;
+  document.getElementById('brp-name').textContent = name;
+  document.getElementById('brp-bio').textContent = bio;
+  document.getElementById('brp-res-bio').textContent = bio;
+}
+
+function manipulate() {
+  const bio = document.getElementById('ffb').value;
+  const consoleOut = document.getElementById('con-out');
+  
+  if (bio.match(/script|alert|onerror|onload/i)) {
+    consoleOut.innerHTML += `<div class="console-row err">❌ Security Error: XSS Execution Detected! cookie sent to attacker.com</div>`;
+    if (!solved.manip) {
+      solved.manip = true;
+      addXP(100, 'Manipulated Request successfully!');
+    }
+    showToast('⚡ XSS Triggered inside Simulator Response!');
+  } else {
+    consoleOut.innerHTML += `<div class="console-row info">▶ POST Request Sent. Bio updated.</div>`;
+  }
+}
+
+// ══════════════════════════════════
+// DOM TREE VIEWER
+// ══════════════════════════════════
+const domProperties = {
+  doc: 'document: جذر شجرة الـ DOM. يحتوي على كافة العقد والـ elements.',
+  html: 'html: عنصر المستند الأساسي. يحدد اللغة والتنسيقات العالمية.',
+  body: 'body: يحتوي على كافة العناصر المرئية للمستخدم.',
+  div: 'div#bio: العقدة التي تعرض النبذة التعريفية للمستخدم. (Source للبيانات الممررة)',
+  inner: 'element.innerHTML (SINK): يستقبل كود HTML وينفذه مباشرة! هنا تقع ثغرة الـ XSS.'
+};
+
+function inspectNode(key) {
+  document.querySelectorAll('.dom-line').forEach(l => l.classList.remove('act'));
+  document.getElementById('dom-property-desc').textContent = domProperties[key];
+}
+
+// ══════════════════════════════════
+// DEVTOOLS CONSOLE
+// ══════════════════════════════════
+function conEnter(e) {
+  if (e.key === 'Enter') {
+    const inp = document.getElementById('con-inp');
+    const val = inp.value.trim();
+    if (!val) return;
+    const out = document.getElementById('con-out');
+    out.innerHTML += `<div class="console-row info">&gt; ${val}</div>`;
+    
+    if (val.includes('alert') || val.includes('cookie')) {
+      out.innerHTML += `<div class="console-row info">undefined (executed sandbox session_id)</div>`;
+    } else {
+      out.innerHTML += `<div class="console-row err">ReferenceError: ${val} is not defined</div>`;
+    }
+    inp.value = '';
+  }
+}
+
+// ══════════════════════════════════
+// INTERACTIVE LAB
+// ══════════════════════════════════
+function labUpdate() {
+  document.getElementById('prof-bio-out').innerHTML = document.getElementById('lab-bio-inp').value || 'Bio profile displays here...';
+}
+
+function labSubmit() {
+  const v = document.getElementById('lab-bio-inp').value;
+  if (!solved.lab && v.match(/script|onerror|onload|alert/i)) {
+    solved.lab = true;
+    addXP(200, 'Solved Interactive Lab!');
+    showToast('🎉 ممتاز! قمت بحل الـ Lab بنجاح!');
+  }
+}
+
+// ══════════════════════════════════
+// CODE REVIEW QUIZ
+// ══════════════════════════════════
+function crCheck(el, type) {
+  document.querySelectorAll('.cr-opt').forEach(o => o.className = 'cr-opt');
+  el.classList.add(type === 'correct' ? 'ok' : 'ng');
+  if (type === 'correct' && !solved.quiz) {
+    solved.quiz = true;
+    addXP(100, 'Code Review Quiz Solved!');
+  }
+}
+
+// ══════════════════════════════════
+// TIMELINE / LEADERBOARD TOGGLE
+// ══════════════════════════════════
+function toggleRightBento(mode) {
+  document.getElementById('bento-cve').style.display = mode === 'cve' ? 'flex' : 'none';
+  document.getElementById('bento-ld').style.display = mode === 'ld' ? 'flex' : 'none';
+  
+  document.getElementById('tbtn-cve').className = mode === 'cve' ? 'mini-btn a' : 'mini-btn';
+  document.getElementById('tbtn-ld').className = mode === 'ld' ? 'mini-btn a' : 'mini-btn';
+}
+
+// ══════════════════════════════════
+// COPILOT AI MENTOR
+// ══════════════════════════════════
+function toggleCopilot() {
+  const d = document.getElementById('copilot-drawer');
+  d.style.display = d.style.display === 'flex' ? 'none' : 'flex';
+}
+
+const copilotAnswers = {
+  1: 'ابدأ بكتابة كود HTML بسيط في حقل **Bio Payload** مثل <code>&lt;b&gt;Test&lt;/b&gt;</code> ثم اضغط **Manipulate** وشاهد انعكاسه في الـ Response.',
+  2: 'الـ **Sink** هو المكان الذي ينفذ الكود. في حالتنا هو <code>innerHTML</code>. قم بزيارة علامة تبويب **DOM Tree** لمشاهدة موقعه.',
+  3: 'جرب استخدام هذا الـ payload: <br><code style="color:var(--orange);">&lt;img src=x onerror=alert(1)&gt;</code><br> وأرسله عبر الـ Simulator أو الـ Lab.'
+};
+
+function copilotAsk(idx) {
+  document.getElementById('copilot-msg').innerHTML = copilotAnswers[idx];
+}
+
+// HINTS
+function showHint(n) {
+  showToast('💡 تلميح: جرب استخدام وسم img مع سمة onerror لتنفيذ الـ JavaScript بدون حظر.');
+}
+</script>
+</body>
+</html>
