@@ -114,19 +114,19 @@ pre,code{font-family:'Fira Code',monospace!important}
 
 /* ─────────── CENTER: BROWSER MOCK ─────────── */
 .center-col{display:flex;flex-direction:column;gap:10px}
-.browser-window{background:#070c18;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-.browser-chrome{background:#111c2d;padding:9px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.br-dots{display:flex;gap:5px}
+.browser-window{background:#070c18;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6);direction:ltr!important;text-align:left!important}
+.browser-chrome{background:#111c2d;padding:9px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;direction:ltr!important}
+.br-dots{display:flex;gap:5px;flex-shrink:0}
 .br-dot{width:11px;height:11px;border-radius:50%}
 .br-dot.r{background:#ef4444}.br-dot.y{background:#eab308}.br-dot.g{background:#22c55e}
-.br-tabs{display:flex;gap:2px;margin-right:8px}
+.br-tabs{display:flex;gap:2px;margin-left:8px;flex-shrink:0}
 .br-tab{background:#1a2a3c;border:1px solid var(--border);border-radius:5px 5px 0 0;padding:4px 11px;font-size:.68rem;color:var(--subtle);display:flex;align-items:center;gap:5px}
 .br-tab.act{background:#0f1e30;color:var(--text);border-color:var(--glow)}
-.br-url{flex:1;background:#0a1525;border:1px solid var(--border);border-radius:4px;padding:3px 10px;font-family:'Fira Code',monospace;font-size:.65rem;color:var(--muted)}
+.br-url{flex:1;background:#0a1525;border:1px solid var(--border);border-radius:4px;padding:3px 10px;font-family:'Fira Code',monospace;font-size:.65rem;color:var(--muted);text-align:left!important}
 
 /* Browser inner layout */
-.browser-inner{display:grid;grid-template-columns:170px 1fr}
-.br-sidebar{background:#060e1c;border-left:1px solid var(--border);padding:10px}
+.browser-inner{display:grid;grid-template-columns:170px 1fr;direction:ltr!important;text-align:left!important}
+.br-sidebar{background:#060e1c;border-right:1px solid var(--border);border-left:none!important;padding:10px}
 .br-logo{display:flex;align-items:center;gap:6px;margin-bottom:10px}
 .br-logo-icon{width:24px;height:24px;background:linear-gradient(135deg,var(--cyan),var(--blue));border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
 .br-logo-text{font-size:.7rem;font-weight:800;line-height:1.2}
@@ -136,7 +136,7 @@ pre,code{font-family:'Fira Code',monospace!important}
 .br-lb-num{font-weight:900;font-size:.7rem;min-width:14px}
 
 /* Attack Simulator */
-.att-sim{background:#08111f;border:1px solid var(--border);border-radius:8px;margin:10px;overflow:hidden}
+.att-sim{background:#08111f;border:1px solid var(--border);border-radius:8px;margin:10px;overflow:hidden;direction:ltr!important;text-align:left!important}
 .att-sim-title{background:#0f1e30;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
 .att-sim-name{font-size:.78rem;font-weight:800;color:var(--text)}
 .att-sim-win{display:flex;gap:3px}
@@ -146,41 +146,41 @@ pre,code{font-family:'Fira Code',monospace!important}
 .stab.a{color:var(--cyan);border-bottom-color:var(--cyan)}
 
 /* RR Panels */
-.rr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+.rr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;direction:ltr!important}
 .rr-panel{background:#040a12;border:1px solid var(--border);border-radius:6px;overflow:hidden}
-.rr-hdr{background:#0c1827;padding:4px 9px;font-size:.63rem;font-weight:800;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:4px}
-.rr-body{padding:8px;font-family:'Fira Code',monospace;font-size:.62rem;line-height:1.8;color:var(--subtle);max-height:130px;overflow-y:auto}
+.rr-hdr{background:#0c1827;padding:4px 9px;font-size:.63rem;font-weight:800;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:4px;direction:ltr!important}
+.rr-body{padding:8px;font-family:'Fira Code',monospace;font-size:.62rem;line-height:1.8;color:var(--subtle);max-height:130px;overflow-y:auto;direction:ltr!important;text-align:left!important}
 .rr-body .k{color:var(--cyan)}.rr-body .v{color:var(--subtle)}.rr-body .p{color:var(--red);font-weight:600}.rr-body .ok{color:var(--green)}
 
 /* Form Manipulator */
-.form-manip{background:#060e1c;border-top:1px solid var(--border);padding:8px 10px}
-.fm-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.fm-label{font-size:.62rem;color:var(--muted);font-weight:700;min-width:40px;text-align:left;flex-shrink:0}
-.fm-input{flex:1;background:#030712;border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-family:'Fira Code',monospace;font-size:.65rem;color:var(--text);outline:none;transition:border-color .2s}
+.form-manip{background:#060e1c;border-top:1px solid var(--border);padding:8px 10px;direction:ltr!important}
+.fm-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;direction:ltr!important}
+.fm-label{font-size:.62rem;color:var(--muted);font-weight:700;width:50px;text-align:left;flex-shrink:0}
+.fm-input{flex:1;background:#030712;border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-family:'Fira Code',monospace;font-size:.65rem;color:var(--text);outline:none;transition:border-color .2s;text-align:left!important}
 .fm-input:focus{border-color:var(--cyan)}
 .manip-btn{background:linear-gradient(135deg,var(--orange),#c2410c);border:none;border-radius:4px;padding:3px 10px;color:#fff;font-weight:800;font-size:.62rem;cursor:pointer;white-space:nowrap;font-family:'Cairo',sans-serif}
 
 /* Hints row */
-.hints-bar{background:#050d1a;border-top:1px solid var(--border);padding:6px 10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hints-bar{background:#050d1a;border-top:1px solid var(--border);padding:6px 10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;direction:ltr!important}
 .hint-tag{background:#0c1827;border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:.6rem;color:var(--muted);cursor:pointer;transition:all .2s}
 .hint-tag:hover{border-color:var(--gold);color:var(--gold)}
 .hint-show{background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.2);border-radius:5px;padding:5px 8px;font-size:.65rem;color:var(--subtle);margin:0 10px 8px;display:none;animation:fadeIn .2s}
 
 /* DOM + JS grid */
-.dtj{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+.dtj{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;direction:ltr!important}
 .dom-viewer{background:#040a12;border:1px solid var(--border);border-radius:6px;overflow:hidden}
-.dv-hdr{background:#0c1827;padding:4px 9px;font-size:.63rem;font-weight:800;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:4px}
-.dv-body{padding:7px}
-.dn{display:flex;align-items:center;justify-content:space-between;padding:3px 6px;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Fira Code',monospace;font-size:.63rem;margin-bottom:1px;border:1px solid transparent}
+.dv-hdr{background:#0c1827;padding:4px 9px;font-size:.63rem;font-weight:800;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:4px;direction:ltr!important}
+.dv-body{padding:7px;direction:ltr!important}
+.dn{display:flex;align-items:center;justify-content:space-between;padding:3px 6px;border-radius:4px;cursor:pointer;transition:all .2s;font-family:'Fira Code',monospace;font-size:.63rem;margin-bottom:1px;border:1px solid transparent;direction:ltr!important}
 .dn:hover{background:var(--cyan-d);border-color:rgba(6,182,212,.2)}
 .dn.src{color:var(--orange)}.dn.snk{color:var(--red);animation:glow 2s infinite}
 .dn.nor{color:var(--subtle)}
 .dc{background:#0c1827;border-radius:3px;padding:1px 5px;font-size:.55rem;color:var(--muted)}
 .dc.hot{background:var(--red-d);color:var(--red)}
-.jsd{padding:7px;font-family:'Fira Code',monospace;font-size:.63rem;max-height:140px;overflow-y:auto}
-.jsl{display:flex;gap:7px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.jsd{padding:7px;font-family:'Fira Code',monospace;font-size:.63rem;max-height:140px;overflow-y:auto;direction:ltr!important;text-align:left!important}
+.jsl{display:flex;gap:7px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03);direction:ltr!important}
 .jsl-n{color:var(--muted);min-width:18px;text-align:right;flex-shrink:0;font-size:.58rem;line-height:1.5}
-.jsl-c{color:var(--subtle);line-height:1.5;flex:1}
+.jsl-c{color:var(--subtle);line-height:1.5;flex:1;text-align:left!important}
 .jsl-c .kw{color:var(--purple)}.jsl-c .fn{color:var(--cyan)}.jsl-c .str{color:var(--green)}.jsl-c .cm{color:var(--muted)}.jsl-c .x{color:var(--red);font-weight:700;animation:blink 1s infinite}
 
 /* ─────────── BOTTOM ROW ─────────── */
@@ -193,13 +193,13 @@ pre,code{font-family:'Fira Code',monospace!important}
 .lab-content{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:9px}
 .code-pane{background:#040a12;border:1px solid var(--border);border-radius:5px;overflow:hidden}
 .cp-hdr{background:#0c1827;padding:3px 8px;font-size:.58rem;color:var(--muted);border-bottom:1px solid var(--border)}
-.cp-body{padding:7px;font-family:'Fira Code',monospace;font-size:.6rem;line-height:1.7;color:var(--subtle);overflow-x:auto}
+.cp-body{padding:7px;font-family:'Fira Code',monospace;font-size:.6rem;line-height:1.7;color:var(--subtle);overflow-x:auto;direction:ltr!important;text-align:left!important}
 .cp-body .hl{color:var(--red)}.cp-body .tg{color:var(--cyan)}.cp-body .at{color:var(--gold)}.cp-body .cm{color:var(--green)}
 .profile-pane{background:#040a12;border:1px solid var(--border);border-radius:5px;padding:8px}
 .prof-av{width:30px;height:30px;background:linear-gradient(135deg,var(--cyan),var(--blue));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;margin:0 auto 4px}
 .prof-name{text-align:center;font-size:.65rem;font-weight:700;margin-bottom:2px;color:var(--subtle)}
-.prof-out{background:#030712;border:1px solid var(--border);border-radius:3px;padding:4px 6px;font-family:'Fira Code',monospace;font-size:.58rem;min-height:20px;color:var(--subtle);margin-bottom:5px}
-.prof-inp{width:100%;background:#030712;border:1px solid var(--border);border-radius:3px;padding:3px 6px;font-family:'Fira Code',monospace;font-size:.6rem;color:var(--text);outline:none;margin-bottom:4px;transition:border-color .2s}
+.prof-out{background:#030712;border:1px solid var(--border);border-radius:3px;padding:4px 6px;font-family:'Fira Code',monospace;font-size:.58rem;min-height:20px;color:var(--subtle);margin-bottom:5px;direction:ltr!important;text-align:left!important}
+.prof-inp{width:100%;background:#030712;border:1px solid var(--border);border-radius:3px;padding:3px 6px;font-family:'Fira Code',monospace;font-size:.6rem;color:var(--text);outline:none;margin-bottom:4px;transition:border-color .2s;direction:ltr!important;text-align:left!important}
 .prof-inp:focus{border-color:var(--orange)}
 .test-btn{width:100%;background:linear-gradient(135deg,var(--orange),#c2410c);border:none;border-radius:4px;padding:5px;color:#fff;font-weight:800;font-family:'Cairo',sans-serif;font-size:.65rem;cursor:pointer;transition:all .2s}
 .test-btn:hover{opacity:.85}
@@ -260,7 +260,7 @@ pre,code{font-family:'Fira Code',monospace!important}
 .badge-card.earned .bn{color:var(--gold)}
 
 /* Code Review */
-.cr-snippet{background:#040a12;border:1px solid var(--border);border-radius:5px;padding:8px;font-family:'Fira Code',monospace;font-size:.65rem;line-height:1.8;color:var(--subtle);margin-bottom:7px}
+.cr-snippet{background:#040a12;border:1px solid var(--border);border-radius:5px;padding:8px;font-family:'Fira Code',monospace;font-size:.65rem;line-height:1.8;color:var(--subtle);margin-bottom:7px;direction:ltr!important;text-align:left!important}
 .cr-snippet .x{color:var(--red)}.cr-snippet .kw{color:var(--purple)}.cr-snippet .fn{color:var(--cyan)}
 .cr-q{font-size:.68rem;font-weight:800;color:var(--text);margin-bottom:6px}
 .cr-opts{display:flex;flex-direction:column;gap:3px}
@@ -277,7 +277,7 @@ pre,code{font-family:'Fira Code',monospace!important}
 .ai-text strong{color:var(--purple)}
 
 /* Analytics bar */
-.analytics-bar{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.analytics-bar{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;direction:ltr!important}
 .ab-item{display:flex;align-items:center;gap:5px;font-size:.65rem;color:var(--muted)}
 .ab-item strong{color:var(--text)}
 .ab-dot{width:5px;height:5px;border-radius:50%;animation:pulse 2s infinite}
@@ -641,17 +641,16 @@ pre,code{font-family:'Fira Code',monospace!important}
 
     <!-- Hacker Progress -->
     <div class="panel">
-      <div class="pnl-hdr"><span><i class='bx bx-trending-up' style="color:var(--cyan)"></i> Hacker Progress</span><span style="font-size:.6rem;color:var(--muted);">:مستوى XSS</span></div>
+      <div class="pnl-hdr"><span><i class='bx bx-trending-up' style="color:var(--cyan)"></i> Hacker Progress</span><span style="font-size:.6rem;color:var(--muted);">تقدم الهنتر</span></div>
       <div class="pnl-body">
-        <div class="hp-lvl">
+        <div class="hp-lvl" style="direction: ltr;">
           <span style="font-size:.68rem;">XSS Level: <strong style="color:var(--cyan);" id="hp-lvl">Beginner</strong></span>
-          <span style="font-size:.68rem;color:var(--cyan);" id="hp-pct">30%</span>
+          <span style="font-size:.68rem;color:var(--subtle);">مستوى XSS</span>
         </div>
-        <div style="font-size:.55rem;color:var(--muted);text-align:left;margin-bottom:2px;">:مستوى XSS</div>
-        <div class="hp-bar"><div class="hp-fill" id="hp-bar" style="width:0%"></div></div>
-        <div class="hp-stats">
-          <span>Total XP: <strong id="hp-xp">0</strong> XP</span>
-          <span style="font-size:.58rem;text-align:left;">:مجموع XP</span>
+        <div class="hp-bar"><div class="hp-fill" id="hp-bar" style="width:30%"></div></div>
+        <div class="hp-stats" style="direction: ltr;">
+          <span style="font-size:.65rem;">Total XP: <strong id="hp-xp">0</strong> XP</span>
+          <span style="font-size:.65rem;color:var(--subtle);">مجموع الـ XP</span>
         </div>
         <div style="font-size:.6rem;color:var(--muted);margin-bottom:5px;font-weight:700;">Achievement Badges:</div>
         <div class="badges-row">
