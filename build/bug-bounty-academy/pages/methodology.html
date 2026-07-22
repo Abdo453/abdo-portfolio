@@ -85,6 +85,10 @@
     .hint-trigger { background: rgba(255,255,255,0.05); color: var(--accent-gold); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: bold; border: 1px dashed rgba(250, 204, 21, 0.4); margin-bottom: 8px; display: block; text-align: right; }
     .hint-content { display: none; background: #070b16; padding: 10px 15px; border-radius: 6px; font-size: 0.85rem; color: #cbd5e1; border: 1px solid var(--card-border); margin-bottom: 10px; }
 
+    /* Investigation Steps */
+    .investigation-step { border-right: 4px solid var(--accent-cyan); padding-right: 15px; margin-bottom: 15px; }
+    .investigation-num { color: var(--accent-orange); font-weight: 800; font-size: 1.1rem; }
+
     /* Form Generator Form */
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--accent-cyan); }
@@ -207,18 +211,18 @@
       </div>
     </div>
 
-    <!-- XSS SECTION -->
+    <!-- XSS MASTER ACADEMY SECTION -->
     <div id="sec-xss" class="vuln-panel">
       <div class="meta-badge meta-medium">🟡 Difficulty: Intermediate</div>
       <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 40 Mins</div>
 
       <div class="progress-bar-container">
-        <div id="prog-xss" class="progress-fill" style="width: 50%"></div>
+        <div id="prog-xss" class="progress-fill" style="width: 25%"></div>
       </div>
 
-      <!-- Knowledge Map -->
+      <!-- Phase 0: Knowledge Map -->
       <div class="section-card" style="margin-bottom: 25px;">
-        <h3 class="card-title">0. XSS Knowledge Map</h3>
+        <h3 class="card-title">Phase 0: XSS Knowledge Map</h3>
         <div class="flow-chart">
                     XSS (Cross-Site Scripting)
                                |
@@ -231,38 +235,43 @@
       </div>
 
       <div class="card-grid">
+        <!-- Phase 1: Web Foundation -->
         <div class="section-card">
-          <h3 class="card-title">1. Introduction & Contexts</h3>
-          <p><strong>HTML Context:</strong> يحدث عندما ينعكس مدخل المستخدم مباشرة بين وسوم الـ HTML مثل: <code>&lt;h1&gt;USER_INPUT&lt;/h1&gt;</code>.</p>
-          <p><strong>Attribute Context:</strong> يحدث عندما ينعكس داخل خاصية مثل: <code>&lt;input value="USER_INPUT"&gt;</code> (يتطلب الخروج من الخاصية باستخدام الكوتس <code>"</code>).</p>
+          <h3 class="card-title">Phase 1: Web Foundation</h3>
+          <p><strong>HTML Context:</strong> ينعكس مدخل المستخدم مباشرة بين وسوم الـ HTML مثل: <code>&lt;h1&gt;USER_INPUT&lt;/h1&gt;</code>.</p>
+          <p><strong>Attribute Context:</strong> ينعكس داخل خاصية مثل: <code>&lt;input value="USER_INPUT"&gt;</code> (يتطلب الخروج من الخاصية باستخدام الكوتس <code>"</code>).</p>
+          <p><strong>JavaScript Context:</strong> ينعكس مباشرة داخل كود برميجي مثل: <code>let msg = "USER_INPUT";</code>.</p>
         </div>
 
+        <!-- Phase 2: Discovery Engine -->
         <div class="section-card">
-          <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox" checked onclick="updateProgress('xss')"> <span>Test payload in HTML context</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>Test inside input tags & attributes</span></div>
-          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>Verify DOM sinks like innerHTML and eval()</span></div>
+          <h3 class="card-title">Phase 2: XSS Discovery Engine (أين تبحث؟)</h3>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>حقول البحث (Search fields)</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>الملفات الشخصية (Profile Nickname & Bio)</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>التعليقات والرسائل (Comments & Messages)</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>لوحات التحكم الإدارية (Admin Panels)</span></div>
         </div>
 
+        <!-- Phase 3: Testing Workflow -->
         <div class="section-card">
-          <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
-          <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Reflection) ➔ DOM Invader ➔ Trigger alert/console.log</div>
-        </div>
-
-        <div class="section-card">
-          <h3 class="card-title">4. Secure Coding Mode</h3>
-          <div style="margin-bottom: 15px;">
-            <button class="action-btn" onclick="toggleSecureCode('xss-code')" style="font-size: 0.85rem; padding: 6px 12px;"><i class="bx bx-shield-quarter"></i> التبديل بين كود مصاب وكود آمن</button>
+          <h3 class="card-title">Phase 3: Testing Workflow</h3>
+          <button class="action-btn" onclick="startWorkflowXSS()" style="margin-bottom:15px;"><i class="bx bx-play"></i> Start Investigation</button>
+          <div id="xss-workflow-steps" style="display:none;">
+            <div class="investigation-step">
+              <span class="investigation-num">1. Capture Request:</span> اعتراض الطلبات وتحليل المعاملات.
+            </div>
+            <div class="investigation-step">
+              <span class="investigation-num">2. Find Input:</span> إدخال علامات عشوائية مثل `polyglot'"` ومراقبة الانعكاس.
+            </div>
+            <div class="investigation-step">
+              <span class="investigation-num">3. Identify Context:</span> تحديد مكان الانعكاس (داخل وسم، خاصية، أو كود JS).
+            </div>
           </div>
-          <div id="xss-code-block" class="flow-chart" style="color: #f87171;">
-// [Vulnerable Code]
-let userQuery = getQueryParam("q");
-document.getElementById("output").innerHTML = userQuery; // Vulnerable to DOM XSS</div>
         </div>
 
-        <!-- Interactive Challenge Lab -->
+        <!-- Phase 4: Interactive Lab -->
         <div class="section-card">
-          <h3 class="card-title">5. Interactive Challenge (Level 1: Search XSS)</h3>
+          <h3 class="card-title">Phase 4: Interactive Lab (Level 1: Search XSS)</h3>
           <p style="font-size:0.9rem; color:#cbd5e1;">المهمة: ابحث عن ثغرة XSS في حقل البحث الوهمي بالأسفل لتشغيل payload كونسول مخصص!</p>
           <div class="lab-box">
             <label style="color:var(--accent-orange); font-weight:bold;">Search Target:</label>
@@ -280,8 +289,45 @@ document.getElementById("output").innerHTML = userQuery; // Vulnerable to DOM XS
           </div>
         </div>
 
+        <!-- Phase 5: Payload Evolution -->
         <div class="section-card">
-          <h3 class="card-title">6. Knowledge Check Quiz</h3>
+          <h3 class="card-title">Phase 5: Payload Evolution</h3>
+          <select class="form-control" onchange="switchPayload('xss', this.value)" style="margin-bottom:15px;">
+            <option value="basic">Beginner (Basic Tag)</option>
+            <option value="waf">Advanced (WAF Bypass)</option>
+          </select>
+          <div id="payload-xss-box" class="payload-item">
+            <span id="payload-xss-text">&lt;script&gt;console.log('XSS')&lt;/script&gt;</span>
+            <button class="btn-copy" onclick="copyText(document.getElementById('payload-xss-text').innerText)">Copy</button>
+          </div>
+        </div>
+
+        <!-- Phase 6: DOM XSS Deep Dive -->
+        <div class="section-card">
+          <h3 class="card-title">Phase 6: DOM XSS Sources & Sinks</h3>
+          <p><strong>Sources (مصادر البيانات):</strong></p>
+          <div class="flow-chart">location.search | location.hash | document.referrer</div>
+          <p><strong>Sinks (أماكن التنفيذ):</strong></p>
+          <div class="flow-chart" style="color: #f87171;">innerHTML | eval() | document.write()</div>
+        </div>
+
+        <!-- Phase 7: Real Bug Bounty Simulation -->
+        <div class="section-card">
+          <h3 class="card-title">Phase 7: Profile Stored XSS Simulation</h3>
+          <div class="flow-chart">Profile ➔ Edit Bio ➔ Insert payload ➔ Admin opens review ➔ Session Hijacked!</div>
+        </div>
+
+        <!-- Phase 8: Impact Training -->
+        <div class="section-card">
+          <h3 class="card-title">Phase 8: Impact Training</h3>
+          <div class="checklist-item"><input type="checkbox" checked disabled> <span>سرقة ملفات تعريف الارتباط (Cookie Theft)</span></div>
+          <div class="checklist-item"><input type="checkbox" checked disabled> <span>الاستيلاء على الحسابات (Account Takeover)</span></div>
+          <div class="checklist-item"><input type="checkbox" checked disabled> <span>ربط الهجمات (CSRF Chaining)</span></div>
+        </div>
+
+        <!-- Phase 9: Knowledge Quiz -->
+        <div class="section-card">
+          <h3 class="card-title">Phase 9: Knowledge Quiz</h3>
           <div class="quiz-container">
             <div class="quiz-question">ما هي الدالة المفضلة في JS لمنع الـ DOM XSS عند كتابة النصوص؟</div>
             <div class="quiz-option" onclick="checkAnswer('xss', true, this)">أ) textContent</div>
@@ -503,7 +549,7 @@ document.getElementById("output").innerHTML = userQuery; // Vulnerable to DOM XS
         <div class="section-card">
           <h3 class="card-title">4. Real Bug Bounty Story</h3>
           <p><strong>الهدف:</strong> متجر تجارة إلكترونية شهير.</p>
-          <p><strong>القصة:</strong> تمكن باحث من إضافة كوبون خصم مراراً وتكراراً بسبب ضعف التحقق من صحة الجلسة، واشترى منتجات بقيمة $2,000 مجاناً، واشترى منتجات بقيمة $2,000 مجاناً، وحصل على مكافأة بقيمة $4,500.</p>
+          <p><strong>القصة:</strong> تمكن باحث من إضافة كوبون خصم مراراً وتكراراً بسبب ضعف التحقق من صحة الجلسة، واشترى منتجات بقيمة $2,000 مجاناً، وحصل على مكافأة بقيمة $4,500.</p>
         </div>
       </div>
       <div class="action-links">
@@ -640,6 +686,11 @@ document.getElementById("output").innerHTML = userQuery; // Vulnerable to DOM XS
       document.getElementById("prog-" + vuln).style.width = percent + "%";
     }
 
+    function startWorkflowXSS() {
+      const steps = document.getElementById("xss-workflow-steps");
+      steps.style.display = steps.style.display === "block" ? "none" : "block";
+    }
+
     function switchPayload(vuln, type) {
       const payloads = {
         sqli: { basic: "' OR 1=1--", waf: "' UNION SELECT NULL,CONCAT(0x7170767a71,IFNULL(CAST(VERSION() AS CHAR),0x20),0x7171787671),NULL--" },
@@ -648,17 +699,6 @@ document.getElementById("output").innerHTML = userQuery; // Vulnerable to DOM XS
       const textElement = document.getElementById("payload-" + vuln + "-text");
       if (textElement) {
         textElement.innerText = payloads[vuln][type];
-      }
-    }
-
-    function toggleSecureCode(id) {
-      const block = document.getElementById(id + "-block");
-      if (block.innerText.includes("[Vulnerable Code]")) {
-        block.innerText = `// [Secure Fix]\nlet userQuery = getQueryParam("q");\ndocument.getElementById("output").textContent = userQuery; // TextContent prevents XSS`;
-        block.style.color = "#4ade80";
-      } else {
-        block.innerText = `// [Vulnerable Code]\nlet userQuery = getQueryParam("q");\ndocument.getElementById("output").innerHTML = userQuery; // Vulnerable to DOM XSS`;
-        block.style.color = "#f87171";
       }
     }
 
