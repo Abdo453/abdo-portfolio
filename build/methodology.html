@@ -713,9 +713,7 @@
           <div class="meth-item" id="meth-ef-target_mindmap" onclick="openMethPhase('target_mindmap')" data-search="target mindmap attack surface visualizer flow attack tree generator">
             <span>├── 🗺️</span> <span>Target Attack Mindmap</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'target_mindmap', '🗺️ Target Attack Mindmap')">★</button>
           </div>
-          <div class="meth-item" id="meth-ef-payload_mutator" onclick="openMethPhase('payload_mutator')" data-search="payload mutator encoder url double url unicode hex html string charcode waf bypass">
-            <span>├── 🔮</span> <span>Payload Mutator & Encoder</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'payload_mutator', '🔮 Payload Mutator & Encoder')">★</button>
-          </div>
+
           <div class="meth-item" id="meth-ef-nuclei_builder" onclick="openMethPhase('nuclei_builder')" data-search="nuclei custom template builder generator yaml template creator vuln Scanner">
             <span>├── ⚙️</span> <span>Nuclei Template Generator</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'nuclei_builder', '⚙️ Nuclei Template Generator')">★</button>
           </div>
@@ -9467,30 +9465,6 @@ SMUGGLLED
       <!-- ═══════════════════════════════════════════════════════════
            MODULE 13: Payload Mutator & Encoder (WAF Bypass Suite)
       ═══════════════════════════════════════════════════════════ -->
-      <div class="meth-content-view" id="meth-content-payload_mutator" style="display: none; --tool-color: #00e5ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔮</span> Payload Mutator & Encoder Suite</h2>
-          <p class="hero-tagline">تحويل وتشفير الـ Payloads لـ +8 صيغ مختلفة تلقائياً لتجاوز فلاتر الـ WAF وحواجز الحظر</p>
-          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-            <span class="badge badge-info">ℹ️ Utility Tool</span>
-            <span class="badge badge-tool">🔧 URL · Double URL · Base64 · Hex · HTML Entity · Unicode · JS CharCode</span>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>⚡ Instant Multi-Format Payload Generator</h3></div>
-          <div style="background:rgba(0,229,255,0.05); padding:15px; border-radius:8px; border:1px solid rgba(0,229,255,0.2);">
-            <label style="display:block; color:#00e5ff; font-weight:bold; margin-bottom:5px;">Input Raw Payload:</label>
-            <textarea id="pm-raw-input" oninput="mutatePayload()" style="width:100%; height:70px; padding:10px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px; font-family:monospace; margin-bottom:15px;" placeholder="<script>alert(1)</script>"></textarea>
-            
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px;" id="pm-out-grid">
-              <!-- Grid items created dynamically by JS -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-
       <!-- ═══════════════════════════════════════════════════════════
            MODULE 14: Nuclei Custom Template Generator
       ═══════════════════════════════════════════════════════════ -->
@@ -10238,24 +10212,6 @@ rg -i "AIzaSy[A-Za-z0-9_-]{33}" out_dir/</code></pre>
       <!-- ═══════════════════════════════════════════════════════════
            MODULE: Payload Mutator & Encoder
       ═══════════════════════════════════════════════════════════ -->
-      <div class="meth-content-view" id="meth-content-payload_mutator" style="display: none; --tool-color: #00e5ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔮</span> Payload Mutator & Encoder Suite</h2>
-          <p class="hero-tagline">تحويل وتشفير الـ Payloads لـ +8 صيغ مختلفة تلقائياً لتجاوز فلاتر الـ WAF</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>⚡ Multi-Format Generator</h3></div>
-          <div style="background:rgba(0,229,255,0.05); padding:15px; border-radius:8px; border:1px solid rgba(0,229,255,0.2);">
-            <label style="display:block; color:#00e5ff; font-weight:bold; margin-bottom:5px;">Input Raw Payload:</label>
-            <textarea id="pm-raw-input" oninput="mutatePayload()" style="width:100%; height:60px; padding:10px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px; font-family:monospace; margin-bottom:15px;" placeholder="<script>alert(1)</script>"></textarea>
-            
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px;" id="pm-out-grid"></div>
-          </div>
-        </div>
-      </div>
-
-
       <!-- ═══════════════════════════════════════════════════════════
            MODULE: Nuclei Custom Template Generator
       ═══════════════════════════════════════════════════════════ -->
@@ -10574,28 +10530,17 @@ function generateTargetMindmap() {
 
 <script>
 // ════ Payload Mutator Logic ════
-function mutatePayload() {
   const raw = document.getElementById('pm-raw-input').value || '<script>alert(1)</script>';
   const grid = document.getElementById('pm-out-grid');
   
   const encURL = encodeURIComponent(raw);
-  const encDoubleURL = encodeURIComponent(encodeURIComponent(raw));
   const encB64 = btoa(raw);
   const encHex = Array.from(raw).map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-  const encHtmlHex = Array.from(raw).map(c => '&#x' + c.charCodeAt(0).toString(16) + ';').join('');
-  const encUnicode = Array.from(raw).map(c => '\u' + c.charCodeAt(0).toString(16).padStart(4, '0')).join('');
-  const encCharCode = 'String.fromCharCode(' + Array.from(raw).map(c => c.charCodeAt(0)).join(',') + ')';
-  const encSVG = `<svg onload="${raw}">`;
 
   const formats = [
     { title: 'Standard URL Encoded', val: encURL },
-    { title: 'Double URL Encoded', val: encDoubleURL },
     { title: 'Base64 Encoded', val: encB64 },
     { title: 'Hex Encoded', val: encHex },
-    { title: 'HTML Entity Hex', val: encHtmlHex },
-    { title: 'Unicode Encoded', val: encUnicode },
-    { title: 'JS String.fromCharCode', val: encCharCode },
-    { title: 'SVG Onload Wrapper', val: encSVG }
   ];
 
   let html = '';
@@ -10612,7 +10557,6 @@ function mutatePayload() {
   });
   grid.innerHTML = html;
 }
-document.addEventListener('DOMContentLoaded', () => { setTimeout(mutatePayload, 600); });
 
 function copyPmVal(btn) {
   const val = btn.getAttribute('data-val');
@@ -10673,29 +10617,18 @@ function copyOneLiner(btn) {
 
 <script>
 // Payload Mutator Helper
-function mutatePayload() {
   const raw = document.getElementById('pm-raw-input').value || '<script>alert(1)</script>';
   const grid = document.getElementById('pm-out-grid');
   if (!grid) return;
 
   const encURL = encodeURIComponent(raw);
-  const encDoubleURL = encodeURIComponent(encodeURIComponent(raw));
   const encB64 = btoa(raw);
   const encHex = Array.from(raw).map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-  const encHtmlHex = Array.from(raw).map(c => '&#x' + c.charCodeAt(0).toString(16) + ';').join('');
-  const encUnicode = Array.from(raw).map(c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')).join('');
-  const encCharCode = 'String.fromCharCode(' + Array.from(raw).map(c => c.charCodeAt(0)).join(',') + ')';
-  const encSVG = `<svg onload="${raw}">`;
 
   const formats = [
     { title: 'Standard URL Encoded', val: encURL },
-    { title: 'Double URL Encoded', val: encDoubleURL },
     { title: 'Base64 Encoded', val: encB64 },
     { title: 'Hex Encoded', val: encHex },
-    { title: 'HTML Entity Hex', val: encHtmlHex },
-    { title: 'Unicode Encoded', val: encUnicode },
-    { title: 'JS String.fromCharCode', val: encCharCode },
-    { title: 'SVG Onload Wrapper', val: encSVG }
   ];
 
   let html = '';
@@ -10751,7 +10684,6 @@ function copyOneLiner(btn) {
 
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
-    mutatePayload();
     generateNucleiYaml();
   }, 500);
 });
