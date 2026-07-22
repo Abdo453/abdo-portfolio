@@ -53,12 +53,26 @@
     .action-btn { background: rgba(13, 19, 34, 0.9); border: 1px solid var(--card-border); color: #fff; padding: 12px 22px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: bold; font-size: 0.95rem; transition: all 0.3s; }
     .action-btn:hover { background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan); box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); }
 
-    /* Report Generator Form */
+    /* Progress & Meta Styles */
+    .progress-bar-container { background: rgba(255,255,255,0.05); border-radius: 6px; height: 10px; margin-bottom: 15px; overflow: hidden; }
+    .progress-fill { background: var(--accent-cyan); height: 100%; width: 0%; transition: width 0.3s ease; }
+    .meta-badge { font-size: 0.85rem; padding: 4px 10px; border-radius: 4px; font-weight: 700; display: inline-block; margin-bottom: 10px; }
+    .meta-easy { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+    .meta-medium { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.4); }
+    .meta-hard { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+    /* Quiz Styles */
+    .quiz-container { background: rgba(255,255,255,0.03); border: 1px dashed var(--card-border); border-radius: 10px; padding: 20px; margin-top: 20px; }
+    .quiz-question { font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .quiz-option { background: #070b16; border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 15px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+    .quiz-option:hover { border-color: var(--accent-cyan); }
+    .quiz-feedback { margin-top: 10px; font-weight: 700; }
+
+    /* Form Generator Form */
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--accent-cyan); }
     .form-control { width: 100%; padding: 10px; background: #070b16; border: 1px solid var(--card-border); border-radius: 6px; color: #fff; font-family: inherit; box-sizing: border-box; }
-    .form-control:focus { border-color: var(--accent-orange); }
-
+    
     .copy-toast { position: fixed; bottom: 30px; left: 30px; background: #22c55e; color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 800; display: none; z-index: 9999; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4); }
   </style>
 </head>
@@ -93,24 +107,60 @@
 
     <!-- SQL INJECTION SECTION -->
     <div id="sec-sqli" class="vuln-panel active">
+      <div class="meta-badge meta-medium">🟡 Difficulty: Intermediate</div>
+      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 35 Mins</div>
+      
+      <!-- Progress Bar -->
+      <div class="progress-bar-container">
+        <div id="prog-sqli" class="progress-fill" style="width: 33%"></div>
+      </div>
+
       <div class="card-grid">
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
           <p><strong>تعريف الثغرة:</strong> حقن أوامر SQL هو ثغرة تسمح للمهاجم بالتلاعب بالاستعلامات المرسلة لقاعدة البيانات وعرض بيانات غير مصرح بها.</p>
           <p><strong>السبب الجذري:</strong> دمج مدخلات المستخدم مباشرة في استعلامات SQL بدون استخدام Prepared Statements.</p>
         </div>
+
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Test parameters with Single Quote (') and Double Quote (")</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Check JSON payloads in POST request body</span></div>
+          <div class="checklist-item"><input type="checkbox" checked onclick="updateProgress('sqli')"> <span>Test parameters with Single Quote (') and Double Quote (")</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('sqli')"> <span>Check JSON payloads in POST request body</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('sqli')"> <span>Verify Cookie headers and Custom Session parameters</span></div>
         </div>
+
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
           <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Bug) ➔ Intruder (Brute-force columns) ➔ sqlmap (Exfiltrate DB)</div>
         </div>
+
         <div class="section-card">
           <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
           <div class="flow-chart">SQL Injection ➔ Read Database Hashes ➔ Admin Access ➔ File Upload Admin Shell ➔ RCE</div>
+        </div>
+
+        <!-- Payload Library Switcher -->
+        <div class="section-card">
+          <h3 class="card-title">5. Dynamic Payload Library</h3>
+          <select class="form-control" onchange="switchPayload('sqli', this.value)" style="margin-bottom:15px;">
+            <option value="basic">Basic Payload</option>
+            <option value="waf">WAF Bypass Payload</option>
+          </select>
+          <div id="payload-sqli-box" class="payload-item">
+            <span id="payload-sqli-text">' OR 1=1--</span>
+            <button class="btn-copy" onclick="copyText(document.getElementById('payload-sqli-text').innerText)">Copy</button>
+          </div>
+        </div>
+
+        <!-- Knowledge Check Quiz -->
+        <div class="section-card">
+          <h3 class="card-title">6. Knowledge Check Quiz</h3>
+          <div class="quiz-container">
+            <div class="quiz-question">ما هو الحل الجذري لمنع ثغرات الـ SQL Injection؟</div>
+            <div class="quiz-option" onclick="checkAnswer('sqli', true, this)">أ) Prepared Statements & parameterized queries</div>
+            <div class="quiz-option" onclick="checkAnswer('sqli', false, this)">ب) استخدام جدار حماية التطبيقات (WAF) فقط</div>
+            <div id="feedback-sqli" class="quiz-feedback"></div>
+          </div>
         </div>
       </div>
       <div class="action-links">
@@ -122,24 +172,56 @@
 
     <!-- XSS SECTION -->
     <div id="sec-xss" class="vuln-panel">
+      <div class="meta-badge meta-medium">🟡 Difficulty: Intermediate</div>
+      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 40 Mins</div>
+
+      <div class="progress-bar-container">
+        <div id="prog-xss" class="progress-fill" style="width: 50%"></div>
+      </div>
+
       <div class="card-grid">
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
           <p><strong>تعريف الثغرة:</strong> تنفيذ الأكواد عبر المواقع يسمح بحقن سكريبتات خبيثة في متصفح الزوار.</p>
-          <p><strong>السبب الجذري:</strong> عرض مدخلات المستخدم مباشرة دون ترميز أو فلترة.</p>
+          <p><strong>السبب الجذري:</strong> عرض مدخلات المستخدم مباشرة دون ترميز.</p>
         </div>
+
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Test payload in HTML context</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Test inside input tags & attributes</span></div>
+          <div class="checklist-item"><input type="checkbox" checked onclick="updateProgress('xss')"> <span>Test payload in HTML context</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xss')"> <span>Test inside input tags & attributes</span></div>
         </div>
+
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
           <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Reflection) ➔ DOM Invader ➔ Trigger Alert()</div>
         </div>
+
         <div class="section-card">
           <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
           <div class="flow-chart">Stored XSS ➔ Session Hijacking ➔ CSRF Execution ➔ Full Account Takeover</div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">5. Dynamic Payload Library</h3>
+          <select class="form-control" onchange="switchPayload('xss', this.value)" style="margin-bottom:15px;">
+            <option value="basic">Basic Payload</option>
+            <option value="waf">WAF Bypass Payload</option>
+          </select>
+          <div id="payload-xss-box" class="payload-item">
+            <span id="payload-xss-text">&lt;script&gt;alert(1)&lt;/script&gt;</span>
+            <button class="btn-copy" onclick="copyText(document.getElementById('payload-xss-text').innerText)">Copy</button>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">6. Knowledge Check Quiz</h3>
+          <div class="quiz-container">
+            <div class="quiz-question">أي من الأنواع التالية يتم تخزينه مباشرة في قاعدة البيانات؟</div>
+            <div class="quiz-option" onclick="checkAnswer('xss', true, this)">أ) Stored XSS</div>
+            <div class="quiz-option" onclick="checkAnswer('xss', false, this)">ب) Reflected XSS</div>
+            <div id="feedback-xss" class="quiz-feedback"></div>
+          </div>
         </div>
       </div>
       <div class="action-links">
@@ -151,21 +233,31 @@
 
     <!-- SSRF SECTION -->
     <div id="sec-ssrf" class="vuln-panel">
+      <div class="meta-badge meta-hard">🔴 Difficulty: Hard</div>
+      <div style="font-size:0.9rem; color:#94a3b8; margin-bottom:10px;">🎥 Watch Time: 45 Mins</div>
+
+      <div class="progress-bar-container">
+        <div id="prog-ssrf" class="progress-fill" style="width: 50%"></div>
+      </div>
+
       <div class="card-grid">
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
           <p><strong>تعريف الثغرة:</strong> تزوير الطلبات من جهة الخادم يسمح للمهاجم بإجبار السيرفر على إرسال طلبات لشبكات داخلية.</p>
-          <p><strong>السبب الجذري:</strong> غياب التحقق من صحة عناوين الـ URLs الممررة للخادم.</p>
+          <p><strong>السبب الجذري:</strong> السماح للمستخدم بالتحكم الكامل في عنوان الـ URL الذي سيقوم الخادم بسحب البيانات منه.</p>
         </div>
+
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Test with local addresses (localhost, 127.0.0.1)</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Test cloud metadata endpoints</span></div>
+          <div class="checklist-item"><input type="checkbox" checked onclick="updateProgress('ssrf')"> <span>Test with local addresses (localhost, 127.0.0.1)</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('ssrf')"> <span>Test cloud metadata endpoints</span></div>
         </div>
+
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
           <div class="flow-chart">Proxy Intercept ➔ Repeater (Inject Localhost IP) ➔ Collaborator ➔ Metadata Exfiltration</div>
         </div>
+
         <div class="section-card">
           <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
           <div class="flow-chart">SSRF ➔ Cloud Metadata (AWS IAM Credentials) ➔ AWS Admin Console access ➔ RCE</div>
@@ -302,7 +394,7 @@
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
           <p><strong>تعريف الثغرة:</strong> حقن كيانات XML الخارجية يسمح للمهاجم بقراءة الملفات الداخلية للسيرفر وتفعيل هجمات SSRF.</p>
-          <p><strong>السبب الجذري:</strong> معالجة مدخلات XML مع تفعيل خيار الكيانات الخارجية (External Entities) في مكتبة المعالجة.</p>
+          <p><strong>السبب الجذري:</strong> معالجة مدخلات XML مع تفعيل خيار الكيانات الخارجية (External Entities).</p>
         </div>
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
@@ -469,6 +561,38 @@
       document.querySelectorAll(".section-card").forEach(card => {
         card.style.display = card.innerText.toLowerCase().includes(query) ? "" : "none";
       });
+    }
+
+    function updateProgress(vuln) {
+      const checkboxes = document.querySelectorAll("#sec-" + vuln + " .checklist-item input[type='checkbox']");
+      let checkedCount = 0;
+      checkboxes.forEach(c => { if (c.checked) checkedCount++; });
+      const percent = Math.round((checkedCount / checkboxes.length) * 100);
+      document.getElementById("prog-" + vuln).style.width = percent + "%";
+    }
+
+    function switchPayload(vuln, type) {
+      const payloads = {
+        sqli: { basic: "' OR 1=1--", waf: "' UNION SELECT NULL,CONCAT(0x7170767a71,IFNULL(CAST(VERSION() AS CHAR),0x20),0x7171787671),NULL--" },
+        xss: { basic: "<script>alert(1)</script>", waf: "<svg/onload=alert(1)>" }
+      };
+      const textElement = document.getElementById("payload-" + vuln + "-text");
+      if (textElement) {
+        textElement.innerText = payloads[vuln][type];
+      }
+    }
+
+    function checkAnswer(vuln, isCorrect, element) {
+      const feedback = document.getElementById("feedback-" + vuln);
+      if (isCorrect) {
+        feedback.innerText = "🎉 إجابة صحيحة! أحسنت.";
+        feedback.style.color = "#4ade80";
+        element.style.borderColor = "#4ade80";
+      } else {
+        feedback.innerText = "❌ إجابة خاطئة. حاول مرة أخرى!";
+        feedback.style.color = "#f87171";
+        element.style.borderColor = "#f87171";
+      }
     }
 
     function generateReport() {
