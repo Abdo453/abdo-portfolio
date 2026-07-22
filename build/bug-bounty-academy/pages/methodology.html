@@ -280,9 +280,9 @@
         </div>
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Remove CSRF Token from request</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Test token reuse across sessions</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Check SameSite cookie configuration</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('csrf')"> <span>Remove CSRF Token from request</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('csrf')"> <span>Test token reuse across sessions</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('csrf')"> <span>Check SameSite cookie configuration</span></div>
         </div>
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
@@ -310,9 +310,9 @@
         </div>
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Modify algorithm to "none"</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Brute-force weak symmetric keys</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Inject jku/jwk headers</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('jwt')"> <span>Modify algorithm to "none"</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('jwt')"> <span>Brute-force weak symmetric keys</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('jwt')"> <span>Inject jku/jwk headers</span></div>
         </div>
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
@@ -340,8 +340,8 @@
         </div>
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Change user ID in parameters (GET/POST)</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Test UUID vs Numeric ID values</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('idor')"> <span>Change user ID in parameters (GET/POST)</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('idor')"> <span>Test UUID vs Numeric ID values</span></div>
         </div>
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow</h3>
@@ -369,8 +369,8 @@
         </div>
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Bypass extension filters using double extensions (shell.php.jpg)</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Bypass Content-Type checks</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('fileupload')"> <span>Bypass extension filters using double extensions (shell.php.jpg)</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('fileupload')"> <span>Bypass Content-Type checks</span></div>
         </div>
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow</h3>
@@ -398,8 +398,8 @@
         </div>
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Inject DOCTYPE entity pointing to local files</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Test Out-of-Band XXE via Collaborator</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xxe')"> <span>Inject DOCTYPE entity pointing to local files</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('xxe')"> <span>Test Out-of-Band XXE via Collaborator</span></div>
         </div>
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow</h3>
@@ -427,8 +427,8 @@
         </div>
         <div class="section-card">
           <h3 class="card-title">2. Attack Surface</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Coupon Abuse & Code reuse</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Price Manipulation (editing prices in request body)</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('logic')"> <span>Coupon Abuse & Code reuse</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('logic')"> <span>Price Manipulation (editing prices in request body)</span></div>
         </div>
         <div class="section-card">
           <h3 class="card-title">3. Workflow & Burp Tools</h3>
@@ -457,8 +457,8 @@
         </div>
         <div class="section-card">
           <h3 class="card-title">2. API Attack Surface</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>REST & GraphQL Introspection endpoints</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Mass Assignment vulnerabilities in user creation</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('api')"> <span>REST & GraphQL Introspection endpoints</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('api')"> <span>Mass Assignment vulnerabilities in user creation</span></div>
         </div>
         <div class="section-card">
           <h3 class="card-title">3. Burp API Workflow</h3>
@@ -487,8 +487,8 @@
         </div>
         <div class="section-card">
           <h3 class="card-title">2. Cloud Attack Surface</h3>
-          <div class="checklist-item"><input type="checkbox"> <span>Publicly accessible S3 Buckets / Azure Blobs</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>AWS Metadata V1 SSRF vulnerability (169.254.169.254)</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('cloud')"> <span>Publicly accessible S3 Buckets / Azure Blobs</span></div>
+          <div class="checklist-item"><input type="checkbox" onclick="updateProgress('cloud')"> <span>AWS Metadata V1 SSRF vulnerability (169.254.169.254)</span></div>
         </div>
         <div class="section-card">
           <h3 class="card-title">3. Cloud Penetration Flow</h3>
@@ -574,7 +574,7 @@
     function switchPayload(vuln, type) {
       const payloads = {
         sqli: { basic: "' OR 1=1--", waf: "' UNION SELECT NULL,CONCAT(0x7170767a71,IFNULL(CAST(VERSION() AS CHAR),0x20),0x7171787671),NULL--" },
-        xss: { basic: "<script>console.log('XSS')</script>", waf: "<svg/onload=console.log('XSS')>" }
+        xss: { basic: "<script>console.log('XSS')<\/script>", waf: "<svg/onload=console.log('XSS')>" }
       };
       const textElement = document.getElementById("payload-" + vuln + "-text");
       if (textElement) {
