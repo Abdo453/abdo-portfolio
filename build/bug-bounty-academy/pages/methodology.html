@@ -53,6 +53,12 @@
     .action-btn { background: rgba(13, 19, 34, 0.9); border: 1px solid var(--card-border); color: #fff; padding: 12px 22px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: bold; font-size: 0.95rem; transition: all 0.3s; }
     .action-btn:hover { background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan); box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); }
 
+    /* Report Generator Form */
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--accent-cyan); }
+    .form-control { width: 100%; padding: 10px; background: #070b16; border: 1px solid var(--card-border); border-radius: 6px; color: #fff; font-family: inherit; box-sizing: border-box; }
+    .form-control:focus { border-color: var(--accent-orange); }
+
     .copy-toast { position: fixed; bottom: 30px; left: 30px; background: #22c55e; color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 800; display: none; z-index: 9999; box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4); }
   </style>
 </head>
@@ -74,70 +80,38 @@
       <button class="tab-btn active" onclick="switchTab('sqli', this)">1. SQL Injection</button>
       <button class="tab-btn" onclick="switchTab('xss', this)">2. Cross-Site Scripting</button>
       <button class="tab-btn" onclick="switchTab('ssrf', this)">3. SSRF</button>
-      <button class="tab-btn" onclick="switchTab('csrf', this)">4. CSRF</button>
-      <button class="tab-btn" onclick="switchTab('jwt', this)">5. JWT Attacks</button>
+      <button class="tab-btn" onclick="switchTab('logic', this)">4. Business Logic</button>
+      <button class="tab-btn" onclick="switchTab('api', this)">5. API Security</button>
+      <button class="tab-btn" onclick="switchTab('cloud', this)">6. Cloud Security</button>
+      <button class="tab-btn" onclick="switchTab('repgentab', this)">7. Report Generator</button>
     </div>
 
     <!-- SQL INJECTION SECTION -->
     <div id="sec-sqli" class="vuln-panel active">
       <div class="card-grid">
-        <!-- 1. Introduction & Root Cause -->
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
           <p><strong>تعريف الثغرة:</strong> حقن أوامر SQL هو ثغرة تسمح للمهاجم بالتلاعب بالاستعلامات المرسلة لقاعدة البيانات وعرض بيانات غير مصرح بها.</p>
-          <p><strong>السبب الجذري:</strong> دمج مدخلات المستخدم مباشرة في استعلامات SQL بدون استخدام Prepared Statements أو Parameterized Queries.</p>
+          <p><strong>السبب الجذري:</strong> دمج مدخلات المستخدم مباشرة في استعلامات SQL بدون استخدام Prepared Statements.</p>
         </div>
 
-        <!-- 2. Testing Checklist -->
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist (GET, POST, JSON, Cookies)</h3>
           <div class="checklist-item"><input type="checkbox"> <span>Test parameters with Single Quote (') and Double Quote (")</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>Check JSON payloads in POST request body</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>Verify Cookie headers and Custom Session parameters</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Test for Time-based delays in hidden headers</span></div>
         </div>
 
-        <!-- 3. Attack Flow & Burp Workflow -->
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
-          <div class="flow-chart">Proxy Intercept
-      ↓
-Repeater (Confirm Bug)
-      ↓
-Intruder (Brute-force columns)
-      ↓
-sqlmap (Exfiltrate DB)</div>
+          <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Bug) ➔ Intruder (Brute-force columns) ➔ sqlmap (Exfiltrate DB)</div>
         </div>
 
-        <!-- 4. Cross-Chaining (Attack Chain) -->
         <div class="section-card">
           <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
-          <div class="flow-chart">SQL Injection
-      ↓
-Read Database Hashes
-      ↓
-Hash Cracking / Admin Access
-      ↓
-File Upload Admin Shell
-      ↓
-Remote Code Execution (RCE)</div>
-        </div>
-
-        <!-- 5. Top Payloads -->
-        <div class="section-card">
-          <h3 class="card-title">5. Top Exploitation Payloads</h3>
-          <div class="payload-item"><span>' OR 1=1--</span> <button class="btn-copy" onclick="copyText('\' OR 1=1--')">Copy</button></div>
-          <div class="payload-item"><span>' UNION SELECT NULL, username, password FROM users--</span> <button class="btn-copy" onclick="copyText('\' UNION SELECT NULL, username, password FROM users--')">Copy</button></div>
-        </div>
-
-        <!-- 6. Bug Bounty Story -->
-        <div class="section-card">
-          <h3 class="card-title">6. Real Bug Bounty Story</h3>
-          <p><strong>الهدف:</strong> شركة تقنية كبرى (برنامج HackerOne).</p>
-          <p><strong>القصة:</strong> اكتشف باحث بارامتر مخفي في خاصية الفلترة، وقام بحقن استعلام UNION لاستخراج جدول الـ Administrators بالكامل، وحصل على مكافأة قدرها $5,000.</p>
+          <div class="flow-chart">SQL Injection ➔ Read Database Hashes ➔ Hash Cracking / Admin Access ➔ File Upload Admin Shell ➔ Remote Code Execution (RCE)</div>
         </div>
       </div>
-
       <div class="action-links">
         <a href="https://youtu.be/sqli-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
         <a href="https://portswigger.net/web-security/sql-injection" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
@@ -158,44 +132,18 @@ Remote Code Execution (RCE)</div>
           <h3 class="card-title">2. Testing Checklist</h3>
           <div class="checklist-item"><input type="checkbox"> <span>Test payload in HTML context</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>Test inside input tags & attributes</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Check reflection in JavaScript variables</span></div>
         </div>
 
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
-          <div class="flow-chart">Proxy Intercept
-      ↓
-Repeater (Confirm Reflection)
-      ↓
-DOM Invader (Analyze source/sink)
-      ↓
-Trigger Alert()</div>
+          <div class="flow-chart">Proxy Intercept ➔ Repeater (Confirm Reflection) ➔ DOM Invader ➔ Trigger Alert()</div>
         </div>
 
         <div class="section-card">
           <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
-          <div class="flow-chart">Stored XSS
-      ↓
-Session Hijacking (Cookie steal)
-      ↓
-CSRF Execution (Change email)
-      ↓
-Full Account Takeover</div>
-        </div>
-
-        <div class="section-card">
-          <h3 class="card-title">5. Top Exploitation Payloads</h3>
-          <div class="payload-item"><span>&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;</span> <button class="btn-copy" onclick="copyText('<script>alert(1)</script>')">Copy</button></div>
-          <div class="payload-item"><span>&amp;lt;img src=x onerror=alert(1)&amp;gt;</span> <button class="btn-copy" onclick="copyText('<img src=x onerror=alert(1)>')">Copy</button></div>
-        </div>
-
-        <div class="section-card">
-          <h3 class="card-title">6. Real Bug Bounty Story</h3>
-          <p><strong>الهدف:</strong> موقع تسوق شهير (برنامج Bugcrowd).</p>
-          <p><strong>القصة:</strong> تمكن الباحث من حقن Payload خبيث داخل حقل عنوان الشحن، ليتم تنفيذه تلقائياً في لوحة تحكم الموظف بمجرد استعراض الطلب، وحصل على مكافأة بقيمة $3,000.</p>
+          <div class="flow-chart">Stored XSS ➔ Session Hijacking ➔ CSRF Execution ➔ Full Account Takeover</div>
         </div>
       </div>
-
       <div class="action-links">
         <a href="https://youtu.be/xss-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
         <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
@@ -209,51 +157,25 @@ Full Account Takeover</div>
         <div class="section-card">
           <h3 class="card-title">1. Introduction & Root Cause</h3>
           <p><strong>تعريف الثغرة:</strong> تزوير الطلبات من جهة الخادم يسمح للمهاجم بإجبار السيرفر على إرسال طلبات لشبكات داخلية أو للـ Metadata الخاصة بالكلاود.</p>
-          <p><strong>السبب الجذري:</strong> السماح للمستخدم بالتحكم الكامل في عنوان الـ URL الذي سيقوم الخادم بسحب البيانات منه دون التحقق من نطاقه.</p>
+          <p><strong>السبب الجذري:</strong> السماح للمستخدم بالتحكم الكامل في عنوان الـ URL الذي سيقوم الخادم بسحب البيانات منه.</p>
         </div>
 
         <div class="section-card">
           <h3 class="card-title">2. Testing Checklist</h3>
           <div class="checklist-item"><input type="checkbox"> <span>Test with local addresses (localhost, 127.0.0.1)</span></div>
           <div class="checklist-item"><input type="checkbox"> <span>Test cloud metadata endpoints</span></div>
-          <div class="checklist-item"><input type="checkbox"> <span>Use Collaborator to test Out-Of-Band SSRF</span></div>
         </div>
 
         <div class="section-card">
           <h3 class="card-title">3. Attack Flow & Burp Workflow</h3>
-          <div class="flow-chart">Proxy Intercept
-      ↓
-Repeater (Inject Localhost IP)
-      ↓
-Collaborator (Validate connection)
-      ↓
-Metadata Exfiltration</div>
+          <div class="flow-chart">Proxy Intercept ➔ Repeater (Inject Localhost IP) ➔ Collaborator ➔ Metadata Exfiltration</div>
         </div>
 
         <div class="section-card">
           <h3 class="card-title">4. Cross-Chaining & Escalation</h3>
-          <div class="flow-chart">SSRF
-      ↓
-Cloud Metadata (AWS IAM Credentials)
-      ↓
-AWS Admin Console access
-      ↓
-Remote Code Execution (RCE)</div>
-        </div>
-
-        <div class="section-card">
-          <h3 class="card-title">5. Top Exploitation Payloads</h3>
-          <div class="payload-item"><span>http://169.254.169.254/latest/meta-data/</span> <button class="btn-copy" onclick="copyText('http://169.254.169.254/latest/meta-data/')">Copy</button></div>
-          <div class="payload-item"><span>http://localhost:80/admin</span> <button class="btn-copy" onclick="copyText('http://localhost:80/admin')">Copy</button></div>
-        </div>
-
-        <div class="section-card">
-          <h3 class="card-title">6. Real Bug Bounty Story</h3>
-          <p><strong>الهدف:</strong> منصة دفع شهيرة.</p>
-          <p><strong>القصة:</strong> استغل الباحث ثغرة SSRF في خاصية تحميل الفواتير عبر رابط URL، ونجح في استخراج الـ Security Credentials الخاصة بسيرفرات AWS وحصل على مكافأة بلغت $8,500.</p>
+          <div class="flow-chart">SSRF ➔ Cloud Metadata (AWS IAM Credentials) ➔ AWS Admin Console access ➔ RCE</div>
         </div>
       </div>
-
       <div class="action-links">
         <a href="https://youtu.be/ssrf-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
         <a href="https://portswigger.net/web-security/ssrf" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
@@ -261,9 +183,145 @@ Remote Code Execution (RCE)</div>
       </div>
     </div>
 
+    <!-- BUSINESS LOGIC SECTION -->
+    <div id="sec-logic" class="vuln-panel">
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Root Cause</h3>
+          <p><strong>تعريف الثغرة:</strong> عيوب منطق العمل تحدث عندما تسمح التطبيقات بتجاوز الخطوات المنطقية المصممة للتحقق (مثل تعديل الأسعار، تكرار الأكواد الترويجية).</p>
+          <p><strong>السبب الجذري:</strong> الاعتماد على التحقق من جهة العميل فقط (Client-side Validation) لعمليات الشراء أو المدفوعات.</p>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">2. Attack Surface (Where to Look)</h3>
+          <div class="checklist-item"><input type="checkbox"> <span>Coupon Abuse & Code reuse</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Price Manipulation (editing prices in request body)</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Negative Quantity in cart parameters</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Race Conditions in wallet refund endpoints</span></div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">3. Workflow & Burp Tools</h3>
+          <div class="flow-chart">Intercept payment request ➔ Modify parameters in Repeater ➔ Send to Turbo Intruder for Race Conditions</div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">4. Real Bug Bounty Story</h3>
+          <p><strong>الهدف:</strong> متجر تجارة إلكترونية شهير.</p>
+          <p><strong>القصة:</strong> تمكن باحث من إضافة كوبون خصم مراراً وتكراراً بسبب ضعف التحقق من صحة الجلسة، واشترى منتجات بقيمة $2,000 مجاناً، وحصل على مكافأة بقيمة $4,500.</p>
+        </div>
+      </div>
+      <div class="action-links">
+        <a href="https://youtu.be/logic-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
+        <a href="https://portswigger.net/web-security/logic-flaws" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
+        <a href="https://portswigger.net/web-security/logic-flaws/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
+      </div>
+    </div>
+
+    <!-- API SECURITY SECTION -->
+    <div id="sec-api" class="vuln-panel">
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Root Cause</h3>
+          <p><strong>تعريف الثغرة:</strong> ثغرات تأمين واجهات البرمجة (APIs) تشمل استدعاء معلمات غير مفحوصة أو تسريب البيانات الحساسة عبر الاستجابات.</p>
+          <p><strong>السبب الجذري:</strong> غياب التحقق من صلاحيات الكائنات (BOLA/IDOR) أو غياب حظر تكرار المحاولات (Rate Limiting).</p>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">2. API Attack Surface</h3>
+          <div class="checklist-item"><input type="checkbox"> <span>REST & GraphQL Introspection endpoints</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Mass Assignment vulnerabilities in user creation</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>BOLA (Broken Object Level Authorization) via parameter change</span></div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">3. Burp API Workflow</h3>
+          <div class="flow-chart">Introspect GraphQL Schema ➔ Discover hidden endpoints ➔ Manipulate user ID variables in GraphQL Variables</div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">4. Real Bug Bounty Story</h3>
+          <p><strong>الهدف:</strong> تطبيق تواصل اجتماعي عالمي.</p>
+          <p><strong>القصة:</strong> تمكن باحث من قراءة بيانات المستخدمين السريّة بمجرد تغيير الـ User ID في واجهة الـ API الخاصة بالمراسلات وحصل على مكافأة $10,000.</p>
+        </div>
+      </div>
+      <div class="action-links">
+        <a href="https://youtu.be/api-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
+        <a href="https://portswigger.net/web-security/api-testing" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
+        <a href="https://portswigger.net/web-security/api-testing/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
+      </div>
+    </div>
+
+    <!-- CLOUD SECURITY SECTION -->
+    <div id="sec-cloud" class="vuln-panel">
+      <div class="card-grid">
+        <div class="section-card">
+          <h3 class="card-title">1. Introduction & Root Cause</h3>
+          <p><strong>تعريف الثغرة:</strong> ثغرات بيئات الكلاود (AWS, Azure, GCP) تنشأ من سوء إدارة الصلاحيات وتكوين الخدمات بشكل خاطئ.</p>
+          <p><strong>السبب الجذري:</strong> ترك الـ S3 Buckets مفتوحة للعامة أو تكوين سياسات IAM ضعيفة تسمح برفع الصلاحيات.</p>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">2. Cloud Attack Surface</h3>
+          <div class="checklist-item"><input type="checkbox"> <span>Publicly accessible S3 Buckets / Azure Blobs</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>AWS Metadata V1 SSRF vulnerability (169.254.169.254)</span></div>
+          <div class="checklist-item"><input type="checkbox"> <span>Exposed Secrets inside GitHub Actions / CI/CD pipelines</span></div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">3. Cloud Penetration Flow</h3>
+          <div class="flow-chart">Discover exposed S3 bucket name ➔ Use aws-cli to list contents ➔ Find admin credentials ➔ Login to console</div>
+        </div>
+
+        <div class="section-card">
+          <h3 class="card-title">4. Real Bug Bounty Story</h3>
+          <p><strong>الهدف:</strong> تطبيق مشاركة رحلات شهير.</p>
+          <p><strong>القصة:</strong> تمكن باحث من الوصول لـ S3 Bucket تحتوي على نسخ احتياطية لقواعد البيانات ومفاتيح التشفير، وحصل على مكافأة قصوى بقيمة $15,000.</p>
+        </div>
+      </div>
+      <div class="action-links">
+        <a href="https://youtu.be/cloud-video" target="_blank" class="action-btn"><i class="bx bx-play-circle"></i> ▶ شاهد الشرح</a>
+        <a href="https://portswigger.net/web-security/cloud-security" target="_blank" class="action-btn"><i class="bx bx-book-open"></i> 📄 اقرأ المرجع</a>
+        <a href="https://portswigger.net/web-security/cloud-security/labs" target="_blank" class="action-btn"><i class="bx bx-test-tube"></i> 🧪 جرّب اللاب</a>
+      </div>
+    </div>
+
+    <!-- REPORT GENERATOR TAB -->
+    <div id="sec-repgentab" class="vuln-panel">
+      <div class="section-card" style="max-width: 800px; margin: 0 auto;">
+        <h3 class="card-title"><i class="bx bx-file"></i> Interactive Bug Bounty Report Generator</h3>
+        <p style="color: #cbd5e1; margin-bottom: 20px;">قم بملء تفاصيل الثغرة التي اكتشفتها بالأسفل لتوليد تقرير احترافي جاهز للتقديم على منصات HackerOne و Bugcrowd مباشرة!</p>
+        
+        <div class="form-group">
+          <label>Vulnerability Title (عنوان الثغرة)</label>
+          <input type="text" id="rep-title" class="form-control" placeholder="E.g. Blind SQL Injection on Search Parameter">
+        </div>
+        <div class="form-group">
+          <label>Vulnerability Summary (ملخص الثغرة بالإنجليزية)</label>
+          <textarea id="rep-summary" class="form-control" rows="3" placeholder="Provide a brief summary of the issue..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Steps to Reproduce (خطوات إعادة الاستنتاج)</label>
+          <textarea id="rep-steps" class="form-control" rows="4" placeholder="1. Navigate to...\n2. Intercept the request...\n3. Inject the payload..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Security Impact (التأثير الأمني)</label>
+          <textarea id="rep-impact" class="form-control" rows="3" placeholder="An attacker can read sensitive user databases..."></textarea>
+        </div>
+
+        <button onclick="generateReport()" class="action-btn" style="width: 100%; justify-content: center; background: var(--accent-orange); color: #000; border-color: var(--accent-orange);"><i class="bx bx-cog"></i> توليد التقرير الاحترافي</button>
+
+        <div id="report-output-box" style="margin-top: 25px; display: none;">
+          <h4 style="color: var(--accent-gold); margin-bottom: 10px;">التقرير النهائي المولد (Markdown Format):</h4>
+          <textarea id="report-markdown" class="form-control" rows="8" readonly style="font-family: 'Fira Code', monospace; font-size: 0.85rem; background: #020617; color: #4ade80;"></textarea>
+          <button onclick="copyGeneratedReport()" class="action-btn" style="margin-top: 10px; width: 100%; justify-content: center;"><i class="bx bx-copy"></i> نسخ التقرير المولد</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <div id="toast" class="copy-toast"><i class="bx bx-check-circle"></i> تم نسخ الشفرة بنجاح!</div>
+  <div id="toast" class="copy-toast"><i class="bx bx-check-circle"></i> تم نسخ النص بنجاح!</div>
 
   <script>
     function switchTab(id, btn) {
@@ -285,6 +343,23 @@ Remote Code Execution (RCE)</div>
       document.querySelectorAll(".section-card").forEach(card => {
         card.style.display = card.innerText.toLowerCase().includes(query) ? "" : "none";
       });
+    }
+
+    function generateReport() {
+      const title = document.getElementById("rep-title").value;
+      const summary = document.getElementById("rep-summary").value;
+      const steps = document.getElementById("rep-steps").value;
+      const impact = document.getElementById("rep-impact").value;
+
+      const markdown = `# Bug Report: ${title}\n\n## Summary\n${summary}\n\n## Steps to Reproduce\n${steps}\n\n## Impact\n${impact}\n\n## Remediation\nFilter user input and implement parameterized calls.`;
+      
+      document.getElementById("report-markdown").value = markdown;
+      document.getElementById("report-output-box").style.display = "block";
+    }
+
+    function copyGeneratedReport() {
+      const markdown = document.getElementById("report-markdown").value;
+      copyText(markdown);
     }
   </script>
 </body>
