@@ -43,7 +43,7 @@
 
       // V2 Component Architecture Logic
       if (!activeContent && phaseId.startsWith('tool_')) {
-        var mainViewer = document.querySelector('.meth-container');
+        var mainViewer = document.querySelector('.meth-viewer');
         var loadingEl = document.getElementById('lazy-loading-div');
         if (!loadingEl) {
             loadingEl = document.createElement('div');
@@ -69,7 +69,7 @@
       // Lazy Loading logic
       if (!activeContent && (phaseId.startsWith('mod_v2') || phaseId.startsWith('pt_mod') || phaseId.startsWith('bb_') || phaseId.startsWith('assess') || phaseId === 'sys-hack' || phaseId === 'lab-metasploitable' || phaseId === 'capstone-mid')) {
         
-        var mainViewer = document.querySelector('.meth-container');
+        var mainViewer = document.querySelector('.meth-viewer');
         var loadingEl = document.getElementById('lazy-loading-div');
         if (!loadingEl) {
             loadingEl = document.createElement('div');
