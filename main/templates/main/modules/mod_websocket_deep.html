@@ -248,7 +248,7 @@ def on_close(ws, close_status_code, close_msg):
 def on_open(ws):
     print("Connection opened!")
     # Send a malicious payload
-    payload = {"type":"chat", "msg":"<script>alert(1)</script>"}
+    payload = {"type":"chat", "msg":"&lt;script&gt;alert(1)&lt;/script&gt;"}
     ws.send(json.dumps(payload))
 
 if __name__ == "__main__":
