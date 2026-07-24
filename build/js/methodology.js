@@ -108,6 +108,11 @@
         if (phaseId === 'bb_recon') filename = 'bb_recon.html';
         if (phaseId === 'bb_web') filename = 'bb_web.html';
         if (phaseId === 'bb_cmd') filename = 'bb_cmd.html';
+        if (phaseId === 'p11') filename = 'file_upload_bypass.html';
+        if (phaseId === 'p12') filename = 'race_conditions.html';
+        if (phaseId === 'p13') filename = 'oauth_attacks.html';
+        if (phaseId === 'p14') filename = 'jwt_attacks.html';
+        if (phaseId === 'deserialization') filename = 'deserialization.html';
 
         if (phaseId === 'capstone-mid') filename = 'capstone_mid.html';
         if (phaseId.startsWith('mod_v2')) filename = phaseId + '.html';

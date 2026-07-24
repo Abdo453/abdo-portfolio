@@ -1,0 +1,99 @@
+<div class="meth-content-view" id="meth-content-p13" style="display: none; --tool-color: #8b5cf6;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🔓</span> OAuth 2.0 &amp; Session Management — اختراق المصادقة</h2>
+    <p class="hero-tagline">منهجية السيطرة على الحسابات (Account Takeover) وعيوب بروتوكولات التفويض المفتوح وإدارة الجلسات</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Burp Suite · evilginx2 · CSRF PoC · Referer spoofing</span>
+      <span class="badge badge-info">📋 OWASP: Broken Authorization | OAuth 2.0 Security</span>
+      <span style="background: rgba(139,92,246,0.15); color: #8b5cf6; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High → Critical (Account Takeover)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — OAuth Flow and Roles ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — كيف يعمل بروتوكول OAuth 2.0 والعيوب الكامنة</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        بروتوكول <strong>OAuth 2.0</strong> هو معيار تفويض مفتوح يسمح للتطبيقات الخارجية بالوصول المحدود لموارد المستخدم دون مشاركة كلمة مرور حسابه.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🔄 تدفق مصادقة كود التفويض (Authorization Code Flow)</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>1. Request:</strong> يوجه التطبيق (Client) المستخدم إلى سيرفر الـ OAuth (Provider) عبر رابط يحتوي على <code>redirect_uri</code> و <code>scope</code>.</li>
+            <li><strong>2. Consent:</strong> يوافق المستخدم على إعطاء الصلاحيات للتطبيق.</li>
+            <li><strong>3. Redirect:</strong> يعود الخادم بتوجيه المستخدم للتطبيق ومعه <code>code</code> مؤقت.</li>
+            <li><strong>4. Token Exchange:</strong> يرسل التطبيق الـ <code>code</code> والـ <code>client_secret</code> للسيرفر للحصول على <code>Access Token</code> النهائي.</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">⚠️ المشكلة الأمنية الأساسية</h4>
+          <p>
+            تعتمد سلامة التدفق كلياً على **دقة التحقق من عنوان التوجيه (Redirect URI)**. إذا تم تزوير هذا العنوان أو استغلال ثغرة إعادة توجيه مفتوحة فيه، يمكن للمهاجم اختطاف الـ `code` أو الـ `Access Token` للضحية فوراً.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — ثغرات OAuth الشائعة خطوة بخطوة</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Redirect URI Bypass (اختطاف كود التفويض)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إذا كان السيرفر يقبل مطابقة جزئية للرابط، يمكن للمهاجم تمرير رابط خادمه للحصول على كود التفويض:</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Original Request:
+https://provider.com/oauth/authorize?client_id=123&redirect_uri=https://victim.com/oauth
+
+# Attacker Bypass Attempt (Open Redirect on target):
+https://provider.com/oauth/authorize?client_id=123&redirect_uri=https://victim.com/oauth?redirect=https://attacker.com</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">OAuth CSRF (غياب معامل State)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إذا لم يرسل التطبيق معامل <code>state</code> عشوائي للتحقق منه عند عودة الطلب، يمكن للمهاجم إرسال رابط التفويض الخاص به للضحية ليربط حسابه الاجتماعي بحساب المهاجم بشكل غير مكتشف.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تحصين تطبيق OAuth</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ إعدادات الخادم والـ API</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Exact Redirect URI Matching:</strong> فرض مطابقة حرفية وصارمة لعنوان التوجيه (Strict Exact Match) بدلاً من قبول النطاقات الفرعية أو المطابقة الجزئية.</li>
+          <li><strong>Mandatory State Parameter:</strong> فرض استخدام معامل <code>state</code> عشوائي وفريد لكل مستخدم وجلسة للوقاية من هجمات CSRF.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 إدارة رموز الجلسات</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Short Authorization Code Lifespan:</strong> جعل مدة صلاحية كود التفويض قصيرة جداً (أقل من دقيقة) واستخدامه لمرة واحدة فقط.</li>
+          <li><strong>PKCE (RFC 7636):</strong> استخدام إطار PKCE لحماية التطبيقات من اختطاف كود التفويض على الأجهزة الذكية والمتصفحات.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARK COMPLETE -->
+  <button class="mark-complete-btn" id="complete-btn-p13" onclick="markPhaseComplete('p13','p12')">
+    ✅ Mark Phase Complete — OAuth Done → Proceed to Race Conditions
+  </button>
+
+</div>

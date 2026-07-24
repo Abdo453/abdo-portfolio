@@ -1,0 +1,184 @@
+<div class="meth-content-view" id="meth-content-p14" style="display: none; --tool-color: #d946ef;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🎫</span> JWT Attacks &amp; Hacking — اختراق رموز JWT</h2>
+    <p class="hero-tagline">منهجية تزوير التوقيعات، كسر التشفير، واستغلال ترويسات JWK/JKU و Directory Traversal لتخطي التوثيق</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Burp JWT Editor · jwt_tool · Hashcat</span>
+      <span class="badge badge-info">📋 OWASP: Broken Authentication | API Security</span>
+      <span style="background: rgba(217,70,239,0.15); color: #d946ef; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High → Critical (Auth Bypass)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — JWT Structure & Signature ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — تشريح رمز JWT وعلاقة التوقيع بالأمان</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        الـ <strong>JSON Web Token (JWT)</strong> هو معيار مفتوح (RFC 7519) لنقل البيانات بين خادم وعميل بشكل مضغوط وآمن. يتكون الرمز من ثلاثة أجزاء مفصولة بنقاط (<code>.</code>) ومقروءة بصيغة <strong>Base64URL</strong>:
+      </p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px; font-family: monospace; font-size: 0.85rem;" dir="ltr">
+        <div style="background: rgba(217,70,239,0.05); border: 1px solid rgba(217,70,239,0.2); padding: 12px; border-radius: 6px;">
+          <strong style="color: #d946ef;">1. Header (الترويسة)</strong>
+          <p style="color: #aaa; margin-top: 5px; font-size: 0.8rem;">يحتوي على نوع الرمز وخوارزمية التوقيع.</p>
+          <pre style="color: #8be9fd; background: none; padding: 0; font-size: 0.75rem;">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</pre>
+        </div>
+        <div style="background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); padding: 12px; border-radius: 6px;">
+          <strong style="color: #50fa7b;">2. Payload (البيانات)</strong>
+          <p style="color: #aaa; margin-top: 5px; font-size: 0.8rem;">يحتوي على البيانات الفعلية (Claims) مثل معرف المستخدم وصلاحياته.</p>
+          <pre style="color: #f1fa8c; background: none; padding: 0; font-size: 0.75rem;">{
+  "user_id": 1337,
+  "role": "user"
+}</pre>
+        </div>
+        <div style="background: rgba(255,85,85,0.05); border: 1px solid rgba(255,85,85,0.2); padding: 12px; border-radius: 6px;">
+          <strong style="color: #ff5555;">3. Signature (التوقيع)</strong>
+          <p style="color: #aaa; margin-top: 5px; font-size: 0.8rem;">ينتج عن تشفير الجزئين السابقين باستخدام مفتاح سري للتأكد من عدم التلاعب.</p>
+          <pre style="color: #ff5555; background: none; padding: 0; font-size: 0.75rem;">HMACSHA256(
+  base64Url(header) + "." +
+  base64Url(payload),
+  secret_key
+)</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — مسار تجاوز المصادقة (Auth Bypass)</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Algorithm Confusion Attack (الخلط بين الخوارزميات)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إذا كان السيرفر يستخدم خوارزمية مفتاح غير متماثل (RS256 - مفتاح عام للتأكيد ومفتاح خاص للتوقيع)، يقوم المهاجم بتغيير خوارزمية التوكن إلى متماثل (HS256) واستخدام المفتاح العام (المتاح للجميع) كسرّ متماثل للتوقيع. السيرفر الضعيف سيستخدم المفتاح العام كسرّ للتحقق، مما يتيح تزوير التوكن بالكامل.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">None Algorithm Attack (تخطى التوقيع)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">تعديل ترويسة التوكن لتغيير الخوارزمية إلى <code>none</code> أو <code>None</code>، وحذف جزء التوقيع تماماً مع الاحتفاظ بالنقطة الأخيرة. إذا كان السيرفر يعتمد على الترويسة لتحديد نوع الفحص دون التحقق من بيئة التشغيل، فسيقبل التوكن دون التحقق من التوقيع.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">Header Parameter Injection (JWK/JKU/KID)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">حقن معاملات الترويسة للتحكم في المفتاح المستخدم للتحقق:</p>
+            <ul style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.8; margin-top: 5px;">
+              <li><strong>JWK (JSON Web Key):</strong> تضمين مفتاح المهاجم العام في الترويسة مباشرة.</li>
+              <li><strong>JKU (JSON Web Key Set URL):</strong> الإشارة لرابط خارجي خاص بالمهاجم يحتوي على المفتاح العام.</li>
+              <li><strong>KID (Key ID):</strong> استغلال اسم الملف للوصول لملف ثابت مثل <code>/dev/null</code> بحيث يتم التحقق دائماً ضد قيمة فارغة أو ثابتة.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: PAYLOAD ARSENAL ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>⚡ ترسانة الهجمات والـ Payloads</h3></div>
+    <div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+          <h4 style="color: var(--tool-color); margin-top: 0;">None Algorithm Signature Bypass</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">تغيير <code>alg</code> إلى <code>none</code> وحذف التوقيع:</p>
+          <div class="cmd-ui-box" style="font-size: 0.8rem;">
+# Original token:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMzM3LCJyb2xlIjoidXNlciJ9.signature
+
+# Modified token (None attack):
+eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJ1c2VyX2lkIjoxMzM3LCJyb2xlIjoiYWRtaW4ifQ.</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+          <h4 style="color: #ff6e27; margin-top: 0;">KID Directory Traversal</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">استغلال معامل <code>kid</code> للإشارة لملف ثابت:</p>
+          <div class="cmd-ui-box" style="font-size: 0.8rem;">
+# Target Header:
+{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "../../../../../dev/null"
+}
+# Sign the token against an empty string/null secret</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ مقارنة أدوات فحص رموز JWT</h3></div>
+    <div>
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>الاستخدام الرئيسي</th>
+            <th>نقاط القوة</th>
+            <th>أمر أساسي</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">Burp JWT Editor</strong></td>
+            <td>التعديل والتوقيع التفاعلي المباشر للطلبات</td>
+            <td>سهولة توليد مفاتيح RSA وتطبيق هجوم Confusion تلقائياً</td>
+            <td>Extensions store -> JWT Editor Keys</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">jwt_tool</strong></td>
+            <td>الفحص التلقائي و Brute Force لرموز JWT</td>
+            <td>أداة سطر أوامر شاملة وممتازة للأتمتة</td>
+            <td><code>python3 jwt_tool.py &lt;TOKEN&gt; -X a</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">Hashcat</strong></td>
+            <td>كسر السر المشترك (Secret Key) لـ HS256 أوفلاين</td>
+            <td>سرعة فائقة باستخدام طاقة كروت الشاشة</td>
+            <td><code>hashcat -m 16500 jwt.txt rockyou.txt</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 6: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين استخدام JWT</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ تأمين خوارزمية التحقق</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Enforce Algorithm:</strong> يجب فرض خوارزمية التحقق برمجياً في السيرفر بشكل ثابت (مثال: استخدام <code>jwt.verify(token, secret, { algorithms: ['HS256'] })</code>) بدلاً من الوثوق بالخوارزمية المحددة في الترويسة.</li>
+          <li><strong>Block "none" Algorithm:</strong> رفض أي توكن يستخدم خوارزمية <code>none</code> بشكل صريح ونهائي.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 تأمين المفاتيح والمقاييس</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Strong Secrets:</strong> استخدام كلمات مرور معقدة وطويلة جداً للمفاتيح المتماثلة لتجنب الكسر أوفلاين.</li>
+          <li><strong>Validate URLs:</strong> تصفية والتحقق من صحة معامل <code>jku</code> بحيث لا يقبل السيرفر جلب ملفات المفاتيح إلا من نطاق معتمد (Strict Whitelist).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARK COMPLETE -->
+  <button class="mark-complete-btn" id="complete-btn-p14" onclick="markPhaseComplete('p14','p13')">
+    ✅ Mark Phase Complete — JWT Hacking Done → Proceed to OAuth &amp; Sessions
+  </button>
+
+</div>

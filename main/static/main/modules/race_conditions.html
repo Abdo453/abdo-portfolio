@@ -1,0 +1,109 @@
+<div class="meth-content-view" id="meth-content-p12" style="display: none; --tool-color: #f43f5e;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">⚡</span> Race Conditions &amp; TOCTOU — ثغرات التزامن</h2>
+    <p class="hero-tagline">شرح آلية استغلال ثغرات سباق التزامن (Concurrency) والـ Time-of-Check to Time-of-Use لتنفيذ هجمات مالية أو تخطي القيود</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Burp Suite Turbo Intruder · Multi-threading scripts</span>
+      <span class="badge badge-info">📋 OWASP: Concurrency Flaws | API Vulnerability</span>
+      <span style="background: rgba(244,63,94,0.15); color: #f43f5e; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High (Financial &amp; PrivEsc)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — Concurrency and TOCTOU ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — مفهوم التعددية والتزامن وأخطاء التصميم</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تحدث ثغرات <strong>Race Conditions</strong> عندما يعالج خادم الويب طلبات متعددة بشكل متوازٍ (Multi-threaded execution) دون تطبيق قيود تمنع الوصول المتزامن لنفس المورد.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">⏳ فجوة الـ Check and Use (TOCTOU)</h4>
+          <p>
+            تعتمد الثغرة على وجود فجوة زمنية بسيطة جداً (أجزاء من الثانية) بين عمليتين:
+            <br>1. **Time-of-Check (وقت الفحص):** السيرفر يفحص إن كان المستخدم يملك رصيداً كافياً أو لم يسبق له استخدام الكوبون.
+            <br>2. **Time-of-Use (وقت الاستخدام):** السيرفر يقوم بخصم الرصيد أو تفعيل الكوبون.
+          </p>
+          <p>
+            إذا أرسل المهاجم 20 طلباً متزامناً في نفس اللحظة تماماً، فسيقوم السيرفر بعملية الفحص (Check) لجميع الطلبات في نفس الوقت قبل أن يكتمل أي طلب للتحديث (Use)، فيقبل السيرفر تنفيذ الطلبات العشرين كلها!
+          </p>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🛡️ أشهر بيئات وقوع ثغرات التزامن</h4>
+          <ul style="line-height: 1.8; font-size: 0.9rem;">
+            <li><strong>الأنظمة المالية:</strong> سحب الأموال أو تحويلها لأكثر من جهة في نفس الوقت.</li>
+            <li><strong>أنظمة الخصومات والكوبونات:</strong> تطبيق الكوبون مرة واحدة بينما ينجح استغلال التزامن في تفعيله عدة مرات.</li>
+            <li><strong>أنظمة التصويت والتقييمات:</strong> زيادة عدد الأصوات بشكل غير محدود.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم — استخدام Burp Turbo Intruder خطوة بخطوة</h3></div>
+    <div>
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="display: flex; gap: 15px; background: rgba(0,229,255,0.05); border-right: 3px solid var(--tool-color); padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">1️⃣</span>
+          <div>
+            <strong style="color: var(--tool-color);">Intercept Request and Send to Turbo Intruder</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">التقاط طلب إرسال الكوبون أو سحب الرصيد في Burp Suite، النقر باليمين واختيار <code>Extensions → Turbo Intruder → Send to Turbo Intruder</code>.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; background: rgba(255,110,39,0.05); border-right: 3px solid #ff6e27; padding: 15px; border-radius: 6px;">
+          <span style="font-size: 1.5rem; min-width: 40px;">2️⃣</span>
+          <div>
+            <strong style="color: #ff6e27;">Configure Python Script for Concurrent Requests</strong>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 5px; line-height: 1.7;">كتابة سكريبت بايثون داخل الأداة لإطلاق الطلبات متزامنة (Gate-based synchronization) لإرسال كل الحزم في شبكة الخادم في جزء من الميكروثانية.</p>
+            <pre style="background: #282a36; padding: 15px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code>def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=1,
+                           pipeline=False)
+                           
+    # Queue multiple identical requests
+    for i in range(30):
+        engine.queue(target.req, gate='race_gate')
+        
+    # Open the gate to release all requests concurrently
+    engine.openGate('race_gate')</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — معالجة ثغرات التزامن</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ حماية قاعدة البيانات (Locks)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Pessimistic Locking:</strong> قفل الصف المعني في قاعدة البيانات فور بدء قراءته لمنع أي عملية تعديل متوازية حتى يكتمل الطلب الأول: <code>SELECT ... FOR UPDATE</code>.</li>
+          <li><strong>Optimistic Locking:</strong> التحقق من عدم تغيير رقم النسخة (Version column) للبيانات قبل حفظ التحديث في قاعدة البيانات.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 قفل المزامنة البرمجية (Mutexes)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Mutex / Semaphore:</strong> استخدام أقفال برمجية على مستوى الكود لمنع المعالجة المتوازية لنفس المستخدم في خيوط الاتصال المتزامنة (Threads).</li>
+          <li><strong>Unique Constraint:</strong> وضع قيود فريدة في قاعدة البيانات (مثل تفعيل حقل فريد يربط المستخدم بالكوبون المستعمل).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARK COMPLETE -->
+  <button class="mark-complete-btn" id="complete-btn-p12" onclick="markPhaseComplete('p12','p15')">
+    ✅ Mark Phase Complete — Race Conditions Done → Proceed to Cloud Security
+  </button>
+
+</div>

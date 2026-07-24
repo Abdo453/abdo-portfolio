@@ -1,0 +1,126 @@
+<div class="meth-content-view" id="meth-content-deserialization" style="display: none; --tool-color: #ff5555;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">☣️</span> Insecure Deserialization — ثغرات فك التسلسل غير الآمن</h2>
+    <p class="hero-tagline">شرح آليات استغلال فك تسلسل كائنات البيانات (Java, PHP, Python) لبناء سلاسل استغلال (Gadget Chains) والحصول على RCE</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ ysoserial · phpggc · Object Serialization · Pickle</span>
+      <span class="badge badge-info">📋 OWASP Top 10: Software and Data Integrity Failures</span>
+      <span style="background: rgba(255,85,85,0.15); color: #ff5555; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: Critical (Remote Code Execution)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — Serialization Mechanics ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — ما هي Serialization و Deserialization؟</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        الـ <strong>Serialization (التسلسل):</strong> هي عملية تحويل كائن برمجي معقد في الذاكرة (Object) إلى تنسيق مسطح من البيانات (مثل بايتات ثنائية أو نص JSON/XML) ليتمكن التطبيق من حفظه في ملف أو إرساله عبر الشبكة.
+        <br>الـ <strong>Deserialization (فك التسلسل):</strong> هي العملية العكسية — إعادة بناء الكائن البرمجي الكامل في الذاكرة من خلال قراءة البيانات المسطحة الممررة.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🚨 ثغرة فك التسلسل غير الآمن (Insecure Deserialization)</h4>
+          <p>
+            تحدث الثغرة عندما يقوم التطبيق بفك تسلسل بيانات مرسلة من جهة غير موثوقة (المستخدم) دون التحقق من صحتها. يستغل المهاجم هذه الثغرة عبر حقن كائن من فئة معروفة (Class) يمتلك وظائف خاصة تُستدعى تلقائياً عند فك التسلسل (تُعرف بـ <strong>Magic Methods</strong>).
+          </p>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🔗 سلاسل الأدوات (Gadget Chains)</h4>
+          <p>
+            لا يملك الكائن المحقون أثراً ضاراً بمفرده في الغالب، ولكن عبر استغلال الـ Magic Methods، يتم تمرير التحكم برمجياً من كائن لآخر كأحجار الدومينو (Gadget Chain) حتى يصل التنفيذ في النهاية إلى دالة قادرة على تشغيل الأوامر (مثل <code>Runtime.getRuntime().exec()</code> في جافا).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح الهجوم والأساليب البرمجية</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: var(--tool-color);">🐘 فك التسلسل في PHP (Magic Methods)</h4>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+          تستخدم لغة PHP دوال سحرية تُنفذ تلقائياً عند مراحل معينة من عمر الكائن:
+          <br><code>__wakeup()</code> عند فك التسلسل.
+          <br><code>__destruct()</code> عند تدمير الكائن وحذفه من الذاكرة.
+          <br><code>__toString()</code> عند محاولة معاملة الكائن كنص.
+        </p>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">مثال لكود ضعيف بالـ PHP:</p>
+        <pre style="background: #282a36; padding: 10px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code>// ❌ BAD: Deserializing raw user input
+$user = unserialize($_COOKIE['user_session']);</code></pre>
+      </div>
+      <div>
+        <h4 style="color: #ff6e27;">🐍 فك التسلسل في بايثون (Pickle Module)</h4>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+          في بايثون، تُستخدم مكتبة <code>pickle</code> للتسلسل. استدعاء دالة <code>__reduce__()</code> داخل الكائن أثناء فك التسلسل يتيح تحديد كود كامل ليتم تنفيذه فوراً.
+        </p>
+        <pre style="background: #282a36; padding: 10px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code># Python exploit payload generating using pickle
+import pickle
+import os
+
+class Exploit(object):
+    def __reduce__(self):
+        return (os.system, ('whoami',))
+
+# Serialize payload
+print(pickle.dumps(Exploit()))</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: TOOLS MATRIX ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛠️ أدوات توليد سلاسل الاستغلال (Gadget Generatos)</h3></div>
+    <div>
+      <table class="cyber-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>الأداة</th>
+            <th>اللغة المستهدفة</th>
+            <th>الوصف وآلية العمل</th>
+            <th>أمر شائع</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: var(--tool-color);">ysoserial</strong></td>
+            <td>Java</td>
+            <td>أداة ضخمة لتوليد حمولات RCE لثغرات فك التسلسل في جافا عبر استغلال سلاسل Gadget معروفة في مكتبات شائعة (مثل CommonsCollections).</td>
+            <td><code>java -jar ysoserial.jar CommonsCollections1 "xterm"</code></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ff6e27;">PHPGGC</strong></td>
+            <td>PHP</td>
+            <td>مكتبة تحتوى على سلاسل استغلال جاهزة لمختلف إطارات العمل والمكتبات الخاصة بـ PHP (مثل Laravel, Symfony).</td>
+            <td><code>./phpggc Laravel/RCE1 system "id"</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين فك تسلسل البيانات</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ أساليب برمجية آمنة</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Avoid raw serialization:</strong> تجنب استخدام فك التسلسل الافتراضي للغات البرمجية على بيانات قادمة من المستخدمين كلياً.</li>
+          <li><strong>Use Safe Formats:</strong> استبدل التنسيقات الثنائية بتنسيقات بيانات مسطحة بسيطة وآمنة لا تملك منطقاً تنفيذياً بداخلها مثل <strong>JSON</strong> أو <strong>YAML</strong>.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 قيود فحص الأنواع (Look-Ahead Deserialization)</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Class Whitelisting:</strong> إذا اضطررت لاستخدام فك التسلسل، قم بتطبيق التحقق المسبق (Look-ahead) لقصر الفك على قائمة بيضاء صارمة من الفئات المسموحة فقط وتدمير أي كائن غريب قبل بنائه في الذاكرة.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
