@@ -1,0 +1,100 @@
+<div class="meth-content-view" id="meth-content-prototype_pollution" style="display: none; --tool-color: #38bdf8;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">☣️</span> Prototype Pollution — تلوث النماذج الأولية</h2>
+    <p class="hero-tagline">شرح آلية استغلال تلوث كائنات جافاسكريبت (Node.js) لتغيير سلوك التطبيق وتخطي الحمايات والوصول إلى RCE</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Burp Suite · AST injection · lodash/merge bypass · Node.js shell</span>
+      <span class="badge badge-info">📋 JavaScript Architecture &amp; Client/Server Vulnerabilities</span>
+      <span style="background: rgba(56,189,248,0.15); color: #38bdf8; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: High → Critical (RCE)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — Prototype Inheritance ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — مفهوم الـ Prototype Inheritance وتلويث الكائن الأب</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تعتمد لغة جافاسكريبت (JavaScript) على نمط الوراثة القائم على النماذج الأولية (Prototype-based Inheritance). ترتبط جميع كائنات جافاسكريبت بكائن أب مشترك يُدعى <code>Object.prototype</code>.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🧪 ثغرة تلوث النموذج الأولي (Prototype Pollution)</h4>
+          <p>
+            تحدث الثغرة عندما يقوم التطبيق بدمج كائنات البيانات (مثل دوال الـ Merge أو Clone أو Path assignment) بناءً على مُدخلات غير مصفاة من المستخدم، مما يتيح له استخدام الكلمة المفتاحية <code>__proto__</code> أو <code>constructor.prototype</code> للإشارة للكائن الرئيسي الأب وتثبيت قيم جديدة عليه.
+          </p>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">🔥 أثر التلوث على بقية الكائنات</h4>
+          <p>
+            بما أن جميع الكائنات ترث من الكائن الأب، فإن أي خاصية يتم تلويثها عليه (مثال: حقن الخاصية <code>"isAdmin": true</code>) ستظهر تلقائياً في جميع الكائنات البرمجية النشطة في التطبيق، مما يؤدي لتخطي القيود الأمنية أو تصعيد الصلاحيات.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح خطوات الهجوم والوصول لـ RCE في Node.js</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        لا يقتصر أثر التلوث على تصعيد الصلاحيات فحسب، بل يمكن أن يؤدي إلى **Remote Code Execution (RCE)** عند دمجها مع مكتبات خارجية (مثل محركات القوالب EJS أو Pug) أو عند تلويث المتغيرات البيئية لـ Node.js:
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+          <strong style="color: var(--tool-color);">1. Target Vulnerable Code (PHP/Node merge logic):</strong>
+          <pre style="background: #282a36; padding: 10px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code>// Vulnerable recursive merge function in Node.js
+function merge(target, source) {
+    for (let key in source) {
+        if (typeof target[key] === 'object' &amp;&amp; typeof source[key] === 'object') {
+            merge(target[key], source[key]);
+        } else {
+            target[key] = source[key];
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+          <strong style="color: #ff6e27;">2. JSON Payload sent to server:</strong>
+          <div class="cmd-ui-box" style="font-size: 0.85rem;">
+{
+  "__proto__": {
+    "isAdmin": true,
+    "shell": "node",
+    "NODE_OPTIONS": "--require /tmp/exploit.js"
+  }
+}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تحصين كائنات جافاسكريبت</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ استخدام كائنات بدون نموذج أولي (Null Prototypes)</h4>
+        <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.9rem;">
+          إنشاء الكائنات التي لا ترث من <code>Object.prototype</code> كلياً لتفادي التلوث:
+        </p>
+        <pre style="background: #282a36; padding: 15px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code>// Safe object creation with no prototype
+const obj = Object.create(null);
+obj.name = "test"; // Safe from __proto__ attacks</code></pre>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 تصفية المفاتيح وتجميد الكائنات</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Keys Whitelisting/Sanitization:</strong> فحص وتصفية المفاتيح لمنع معالجة الكلمات المفتاحية الخطرة كـ <code>__proto__</code> و <code>constructor</code>.</li>
+          <li><strong>Object.freeze:</strong> تجميد الكائن الرئيسي لمنع أي تعديل أو إضافة لخصائصه: <code>Object.freeze(Object.prototype)</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>

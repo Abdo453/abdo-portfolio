@@ -118,6 +118,10 @@
         if (phaseId === 'crypto_attacks') filename = 'crypto_attacks.html';
         if (phaseId === 'cloud_aws') filename = 'cloud_aws.html';
         if (phaseId === 'kubernetes_sec') filename = 'kubernetes_sec.html';
+        if (phaseId === 'forensics') filename = 'forensics.html';
+        if (phaseId === 'exploit_dev') filename = 'exploit_dev.html';
+        if (phaseId === 'prototype_pollution') filename = 'prototype_pollution.html';
+        if (phaseId === 'cors_attacks') filename = 'cors_attacks.html';
 
         if (phaseId === 'capstone-mid') filename = 'capstone_mid.html';
         if (phaseId.startsWith('mod_v2')) filename = phaseId + '.html';

