@@ -113,6 +113,11 @@
         if (phaseId === 'p13') filename = 'oauth_attacks.html';
         if (phaseId === 'p14') filename = 'jwt_attacks.html';
         if (phaseId === 'deserialization') filename = 'deserialization.html';
+        if (phaseId === 'reverse_engineering') filename = 'reverse_engineering.html';
+        if (phaseId === 'malware_analysis') filename = 'malware_analysis.html';
+        if (phaseId === 'crypto_attacks') filename = 'crypto_attacks.html';
+        if (phaseId === 'cloud_aws') filename = 'cloud_aws.html';
+        if (phaseId === 'kubernetes_sec') filename = 'kubernetes_sec.html';
 
         if (phaseId === 'capstone-mid') filename = 'capstone_mid.html';
         if (phaseId.startsWith('mod_v2')) filename = phaseId + '.html';

@@ -799,17 +799,24 @@
       <!-- Category 6: Advanced Specializations -->
       <div class="sidebar-category">
         <div class="category-title" onclick="toggleCategory('cat-advanced')">
-          <span>🚀 ADVANCED (COMING SOON)</span>
+          <span>🚀 ADVANCED TOPICS</span>
           <span>▼</span>
         </div>
         <div class="category-items" id="cat-advanced" style="display: none; max-height: 0px;">
-          <div class="meth-item" style="opacity:0.6; cursor:not-allowed;">
-            <span>├── 📱</span> <span>Android RE</span>
-            <span style="margin-left:auto; font-size:10px; background:#ffb86c; color:#000; padding:2px 6px; border-radius:4px; font-weight:bold;">SOON</span>
+          <div class="meth-item" id="meth-ef-reverse_engineering" onclick="openMethPhase('reverse_engineering')" data-search="reverse engineering binary analysis assembly ghidra ida gdb x64dbg">
+            <span>├── ⚙️</span> <span>Reverse Engineering</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'reverse_engineering', '⚙️ Reverse Engineering')">★</button>
           </div>
-          <div class="meth-item" style="opacity:0.6; cursor:not-allowed;">
-            <span>├── 🏰</span> <span>Active Directory</span>
-            <span style="margin-left:auto; font-size:10px; background:#ffb86c; color:#000; padding:2px 6px; border-radius:4px; font-weight:bold;">SOON</span>
+          <div class="meth-item" id="meth-ef-malware_analysis" onclick="openMethPhase('malware_analysis')" data-search="malware analysis threat hunting yara rule dynamic static sandboxing">
+            <span>├── ☣️</span> <span>Malware Analysis</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'malware_analysis', '☣️ Malware Analysis')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-crypto_attacks" onclick="openMethPhase('crypto_attacks')" data-search="cryptography attacks padding oracle length extension sha hashcat">
+            <span>├── 🔐</span> <span>Cryptography Attacks</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'crypto_attacks', '🔐 Cryptography Attacks')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-cloud_aws" onclick="openMethPhase('cloud_aws')" data-search="cloud aws security privilege escalation iam s3 metadata ssrf pacu">
+            <span>├── ☁️</span> <span>AWS Cloud Security</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'cloud_aws', '☁️ AWS Cloud Security')">★</button>
+          </div>
+          <div class="meth-item" id="meth-ef-kubernetes_sec" onclick="openMethPhase('kubernetes_sec')" data-search="kubernetes security container docker escape cluster rbac kubectl kube-hunter">
+            <span>├── 🐳</span> <span>Kubernetes Security</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'kubernetes_sec', '🐳 Kubernetes Security')">★</button>
           </div>
           <div class="meth-item" id="meth-ef-llm_security" onclick="openMethPhase('llm_security')" data-search="llm security artificial intelligence prompt injection jailbreak garak">
             <span>└── 🤖</span> <span>AI/LLM Red Teaming</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'llm_security', '🤖 AI/LLM Red Teaming')">★</button>
@@ -3390,6 +3397,11 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
 {% include 'main/modules/mod_websocket_deep.html' %}
 {% include 'main/modules/mod_llm_security_deep.html' %}
     {% include 'main/modules/deserialization.html' %}
+{% include 'main/modules/reverse_engineering.html' %}
+{% include 'main/modules/malware_analysis.html' %}
+{% include 'main/modules/crypto_attacks.html' %}
+{% include 'main/modules/cloud_aws.html' %}
+{% include 'main/modules/kubernetes_sec.html' %}
 </div> <!-- end meth-viewer -->
   </div> <!-- end methodology-app -->
 <!-- Popup Modal structure for alert testing -->
