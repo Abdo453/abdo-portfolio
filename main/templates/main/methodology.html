@@ -567,6 +567,9 @@
           <div class="meth-item" id="meth-ef-p12" onclick="openMethPhase('p12')" data-search="race condition concurrent request shopify coupon">
             <span>├── ⚡</span> <span>Race Conditions</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p12', '⚡ Race Conditions')">★</button>
           </div>
+          <div class="meth-item" id="meth-ef-websocket_sec" onclick="openMethPhase('websocket_sec')" data-search="websocket hacking cswsh xss sqli cross site web socket hijacking">
+            <span>├── 🔌</span> <span>WebSocket Hacking</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'websocket_sec', '🔌 WebSocket Hacking')">★</button>
+          </div>
           <div class="meth-item" id="meth-ef-p15" onclick="openMethPhase('p15')" data-search="cloud security aws s3 bucket iam privilege escalation">
             <span>└── ☁️</span> <span>Cloud Security</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'p15', '☁️ Cloud Security')">★</button>
           </div>
@@ -805,9 +808,8 @@
             <span>├── 🏰</span> <span>Active Directory</span>
             <span style="margin-left:auto; font-size:10px; background:#ffb86c; color:#000; padding:2px 6px; border-radius:4px; font-weight:bold;">SOON</span>
           </div>
-          <div class="meth-item" style="opacity:0.6; cursor:not-allowed;">
-            <span>└── 🤖</span> <span>AI/LLM Red Teaming</span>
-            <span style="margin-left:auto; font-size:10px; background:#ffb86c; color:#000; padding:2px 6px; border-radius:4px; font-weight:bold;">SOON</span>
+          <div class="meth-item" id="meth-ef-llm_security" onclick="openMethPhase('llm_security')" data-search="llm security artificial intelligence prompt injection jailbreak garak">
+            <span>└── 🤖</span> <span>AI/LLM Red Teaming</span><span class="visited-badge"></span><button class="bookmark-btn" onclick="toggleBookmark(event, 'llm_security', '🤖 AI/LLM Red Teaming')">★</button>
           </div>
         </div>
       </div>
@@ -3366,335 +3368,13 @@ export AWS_SESSION_TOKEN="..."</div>
       
 
       <!-- CEH Module 8: Sniffing -->
-      <div class="meth-content-view" id="meth-content-ceh_sniff" style="display: none; --tool-color: #0284c7;">
-        <div class="cyber-hero">
-  <h2 class="hero-title"><span class="hero-icon">🕵️</span> CEH Module 8: Sniffing & MITM</h2>
-  <p class="hero-tagline">الدليل الشامل لاعتراض وتحليل حركة مرور الشبكات السلكية واللاسلكية</p>
-  <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-              <span class="badge badge-medium">🔴 High Risk</span>
-              <span class="badge badge-time">⏱ Layer 2/3 Attacks</span>
-              <span class="badge badge-tool">🔧 Wireshark · Ettercap · Bettercap</span>
-            </div>
-</div>
-
-        <div class="info-duo">
-          <div class="info-box what">
-            <h5>📖 ما هو الـ Sniffing؟</h5>
-            <p>هو عملية اعتراض وقراءة حزم البيانات (Packets) التي تمر عبر الشبكة. يشبه الأمر التنصت على مكالمة هاتفية. إذا كانت البيانات غير مشفرة (مثل HTTP, FTP, Telnet)، يمكن للمهاجم سرقة كلمات المرور، رسائل البريد، والملفات بسهولة بالغة.</p>
-          </div>
-          <div class="info-box goal">
-            <h5>🎯 الهدف من الـ Sniffing</h5>
-            <p>الهدف الأساسي هو كشف المعلومات الحساسة التي تنتقل عبر الشبكة قبل وصولها للوجهة، أو التلاعب بها (Man-in-the-Middle) لإجبار المستخدمين على تحميل برمجيات خبيثة أو توجيههم لمواقع مزيفة.</p>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>الفرق بين Active و Passive Sniffing</h3></div>
-          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Passive Sniffing (التنصت السلبي):</strong> يحدث في الشبكات القديمة التي تستخدم <code>Hubs</code>. الـ Hub يقوم ببث (Broadcast) أي بيانات يستقبلها لجميع الأجهزة المتصلة به. المهاجم هنا لا يحتاج لفعل أي شيء سوى تشغيل أداة التقاط (مثل Wireshark) في وضع الـ <code>Promiscuous Mode</code> وجمع البيانات بصمت تام.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">└── 📜</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Active Sniffing (التنصت النشط):</strong> يحدث في الشبكات الحديثة التي تستخدم <code>Switches</code>. الـ Switch ذكي، يمتلك جدول (CAM Table) يربط كل عنوان MAC بمنفذ (Port) محدد، ويرسل البيانات للوجهة فقط. للتنصت هنا، يجب على المهاجم خداع الـ Switch أو الضحية (عبر هجمات مثل ARP Spoofing).</span>
-  </div>
-</div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>أبرز هجمات الشبكة (Network Attacks) بالتفصيل</h3></div>
-          
-          <h4>1. MAC Flooding</h4>
-          <p>يقوم المهاجم بإرسال آلاف عناوين الـ MAC المزيفة في ثوانٍ معدودة. الـ Switch يمتلك ذاكرة محدودة (CAM Table). عندما تمتلئ هذه الذاكرة، يصاب الـ Switch بالارتباك ويدخل في وضع <code>Fail-Open Mode</code>، ليتحول فعلياً إلى Hub غبي يبث البيانات لجميع المنافذ.</p>
-          <div class="cmd-block">
-            <div class="cmd-header"><span class="cmd-lang">استخدام أداة macof</span></div>
-            <pre><code>macof -i eth0 -n 100000</code></pre>
-          </div>
-
-          <h4>2. ARP Poisoning (Man-in-the-Middle)</h4>
-          <p>بروتوكول ARP مسؤول عن تحويل الـ IP إلى MAC Address. لا يمتلك ARP أي آلية للتحقق من الهوية. يقوم المهاجم بإرسال رسائل ARP مزيفة للضحية يخبره فيها: "أنا الـ Router"، ويرسل رسالة للـ Router يخبره: "أنا الضحية". فتمر كل البيانات عبر جهاز المهاجم أولاً.</p>
-          <div class="cmd-block">
-            <div class="cmd-header"><span class="cmd-lang">arpspoof (تسميم الضحية والراوتر)</span></div>
-            <pre><code># Enable IP Forwarding so internet doesn't drop for the victim
-echo 1 > /proc/sys/net/ipv4/ip_forward
-
-# Poison Victim (Tell victim: I am the gateway)
-arpspoof -i eth0 -t &lt;Victim_IP&gt; &lt;Gateway_IP&gt;
-
-# Poison Gateway (Tell gateway: I am the victim)
-arpspoof -i eth0 -t &lt;Gateway_IP&gt; &lt;Victim_IP&gt;</code></pre>
-          </div>
-
-          <h4>3. DHCP Starvation & Spoofing</h4>
-          <p><strong>Starvation:</strong> يقوم المهاجم بطلب عناوين IP كثيرة جداً بعناوين MAC مزيفة حتى يستنزف الـ DHCP Server، فلا يجد المستخدمون الشرعيون أي IP متاح للاتصال بالشبكة.<br>
-          <strong>Spoofing:</strong> بعد إسقاط الخادم الشرعي، يرفع المهاجم <code>Rogue DHCP Server</code> يقوم بتوزيع عناوين IP للضحايا مع تعيين جهازه كـ Default Gateway و DNS Server.</p>
-          <div class="cmd-block">
-            <div class="cmd-header"><span class="cmd-lang">استنزاف DHCP باستخدام Yersinia</span></div>
-            <pre><code>yersinia dhcp -attack 1 -interface eth0</code></pre>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>أدوات الـ Sniffing المتقدمة</h3></div>
-          <div class="table-wrapper"><table class="interactive-table">
-            <thead>
-              <tr><th>الأداة</th><th>شرح متعمق</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Wireshark</strong></td>
-                <td>المعيار الذهبي لتحليل الحزم (Packet Analysis). يمكنه التقاط وفك تشفير مئات البروتوكولات. ميزة الـ <code>Display Filters</code> فيه قوية جداً (مثال: <code>http.request.method == "POST"</code> لاصطياد كلمات المرور).</td>
-              </tr>
-              <tr>
-                <td><strong>Bettercap</strong></td>
-                <td>الإصدار العصري من Ettercap. أداة سطر أوامر قوية جداً لهجمات MITM، تدعم الـ SSL Stripping مدمجاً، يمكنها حقن جافاسكريبت في صفحات الويب، وسحب كلمات المرور تلقائياً من الشبكة.</td>
-              </tr>
-              <tr>
-                <td><strong>tcpdump</strong></td>
-                <td>النسخة الأخف من Wireshark وتعمل من الـ Terminal. ممتازة للسيرفرات التي لا تحتوي على واجهة رسومية (GUI). أمر شائع: <code>tcpdump -i eth0 -w capture.pcap</code> لحفظ الحزم وتحليلها لاحقاً.</td>
-              </tr>
-              <tr>
-                <td><strong>Cain & Abel</strong></td>
-                <td>أداة قديمة لكنها تدرس في المنهج كلاسيكياً، تعمل على نظام Windows وتتخصص في فك التشفير، التنصت، كسر الهاشات، وتسجيل محادثات الـ VoIP.</td>
-              </tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>تجاوز التشفير (SSL Stripping)</h3></div>
-          <p>لو كان الموقع يستخدم HTTPS، لن يستفيد المهاجم من التنصت العادي. لذلك يستخدم تقنية <strong>SSL Stripping</strong> التي تعمل كوكيل (Proxy). عندما تطلب الضحية موقعاً، يقوم المهاجم بفتح اتصال HTTPS آمن بينه وبين الخادم، ولكنه يعطي للضحية نسخة HTTP (غير مشفرة) من الموقع. الضحية يكتب الباسورد في الـ HTTP، يسرقه المهاجم، ثم يرسله مشفراً للخادم لتجنب إثارة الشبهات.</p>
-        </div>
-
-      </div>
+{% include 'main/modules/mod_sniffing_deep.html' %}
 
       <!-- CEH Module 9: Social Engineering -->
-      <div class="meth-content-view" id="meth-content-ceh_se" style="display: none; --tool-color: #ef4444;">
-        <div class="cyber-hero">
-  <h2 class="hero-title"><span class="hero-icon">🎭</span> CEH Module 9: Social Engineering</h2>
-  <p class="hero-tagline">الهندسة الاجتماعية: اختراق العقول بدلاً من الأنظمة</p>
-  <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-              <span class="badge badge-medium">🔴 Critical Risk</span>
-              <span class="badge badge-tool">🔧 SET · GoPhish · Evilginx2</span>
-            </div>
-</div>
-
-        <div class="info-duo">
-          <div class="info-box what">
-            <h5>📖 ما هي الهندسة الاجتماعية؟</h5>
-            <p>هي فن التلاعب بالأشخاص لجعلهم يقومون بأفعال معينة أو إفشاء معلومات سرية. مهما كان الـ Firewall أو الانتي فايروس قوياً، يمكن لمكالمة هاتفية واحدة أو إيميل مزيف أن يعطي المهاجم صلاحيات كاملة على النظام.</p>
-          </div>
-          <div class="info-box goal">
-            <h5>🎯 لماذا تُعتبر خطيرة؟</h5>
-            <p>لأنها تستهدف "العنصر البشري"، وهو الحلقة الأضعف في أي نظام أمني. المخترق لا يحتاج للبحث عن ثغرة Zero-Day معقدة، بل يبحث عن موظف ساذج أو خائف أو متعاون.</p>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>سيكولوجية الاستهداف (لماذا تنجح؟)</h3></div>
-          <p>تعتمد هجمات الهندسة الاجتماعية على استغلال المشاعر الإنسانية الأساسية:</p>
-          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>الخوف / الاستعجال (Urgency):</strong> "حسابك سيتم إغلاقه خلال 24 ساعة إذا لم تؤكد بياناتك".</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 📜</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>السلطة (Authority):</strong> انتحال شخصية المدير التنفيذي (CEO) أو جهة حكومية.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 🧬</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>الثقة (Trust):</strong> التظاهر كزميل عمل من قسم الـ IT يعرض المساعدة.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 🕸️</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>الفضول (Curiosity):</strong> إرسال ملف بعنوان "كشوفات رواتب الموظفين 2024".</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">└── 🎛️</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>الجشع (Greed):</strong> إيهام الضحية بربح جائزة مالية.</span>
-  </div>
-</div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>أنواع الهندسة الاجتماعية (تصنيف مفصل)</h3></div>
-          
-          <h4>1. Human-Based (الهجمات المعتمدة على التفاعل البشري المباشر)</h4>
-          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Impersonation (انتحال الشخصية):</strong> يتظاهر المهاجم بأنه فني صيانة إنترنت، عامل نظافة، أو موظف جديد ليدخل المبنى ويبدأ في زرع أجهزة أو سرقة أوراق.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 📜</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Tailgating / Piggybacking:</strong> الانتظار عند الباب المؤمن ببطاقة دخول، وعندما يفتح موظف الباب، يدخل المهاجم خلفه مباشرة بحجة أنه نسي بطاقته (أو يحمل صندوقاً ثقيلاً).</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 🧬</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Dumpster Diving:</strong> النزول حرفياً للبحث في سلة مهملات الشركة! الموظفون يتخلصون من جداول المواعيد، كلمات المرور المكتوبة على ورق (Sticky Notes)، ومخططات الشبكة بدون تمزيقها (Shredding).</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 🕸️</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Shoulder Surfing:</strong> استراق النظر لشاشة الضحية في الكافيهات أو المواصلات أثناء كتابة كلمة المرور.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">└── 🎛️</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Eavesdropping:</strong> التنصت على محادثات الموظفين السرية في الأماكن العامة.</span>
-  </div>
-</div>
-
-          <h4>2. Computer-Based (الهجمات المعتمدة على الأجهزة)</h4>
-          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Phishing (التصيد الاحتيالي):</strong> إرسال آلاف الإيميلات المزيفة عشوائياً تبدو كأنها من بنك أو فيسبوك.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 📜</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Spear Phishing (التصيد الموجه):</strong> تصيد دقيق جداً! المهاجم يجمع معلومات عن موظف محدد (اسمه، وظيفته، اسم مديره) ويرسل له إيميلاً مخصصاً بنسبة نجاح عالية جداً.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 🧬</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Whaling (صيد الحيتان):</strong> Spear Phishing موجه لشخصية ذات منصب عالي جداً (مثل CEO أو CFO). غالباً يكون الهجوم أكثر تعقيداً واحترافية.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 🕸️</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Baiting (الاصطياد):</strong> المهاجم يترك فلاشة USB مصابة بفيروس في جراج الشركة مكتوب عليها "رواتب 2024". الموظف سيأخذها الفضول لفتحها على جهازه في الشركة.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">└── 🎛️</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Watering Hole (حفرة الماء):</strong> بدلاً من مهاجمة الشركة مباشرة (حمايتها قوية)، يقوم المهاجم باختراق موقع ويب عادي (مثلاً موقع يطلب منه الموظفون وجبات الغداء) ويزرع فيه Malware ليصيب الموظفين عند زيارتهم له.</span>
-  </div>
-</div>
-
-          <h4>3. Mobile & Voice-Based</h4>
-          <div class="tree-container" style="font-family: 'Fira Code', monospace; margin-bottom: 20px; direction: ltr; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 2px solid #a8b2d1;">
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">├── 📂</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Vishing (Voice Phishing):</strong> مكالمة هاتفية، المهاجم يدعي أنه موظف البنك ويطلب الـ OTP.</span>
-  </div>
-  <div style="margin-bottom: 12px; display: flex; align-items: flex-start; color: #a8b2d1;">
-    <span style="white-space: pre; margin-right: 10px;">└── 📜</span>
-    <span dir="rtl" style="font-family: 'Inter', sans-serif; color: #e2e8f0; text-align: right; flex: 1;"><strong>Smishing (SMS Phishing):</strong> إرسال رسالة نصية قصيرة تحتوي على رابط خبيث (مثل: "طردك من البريد محتجز، ادفع الرسوم عبر الرابط").</span>
-  </div>
-</div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>التطبيق العملي: إطار عمل SET</h3></div>
-          <p>تُعتبر أداة <strong>Social-Engineer Toolkit (SET)</strong> الأداة الرسمية في منهج CEH لاختبار هذه الهجمات. تتيح استنساخ أي موقع ويب في ثوانٍ لاستقبال بيانات الضحايا.</p>
-          <div class="cmd-block">
-            <div class="cmd-header"><span class="cmd-lang">خطوات عمل Site Cloner و Credential Harvester</span></div>
-            <pre><code># 1. Start SET as root
-sudo setoolkit
-
-# 2. Select Social-Engineering Attacks
-> 1
-
-# 3. Select Website Attack Vectors
-> 2
-
-# 4. Select Credential Harvester Attack Method
-> 3
-
-# 5. Select Site Cloner
-> 2
-
-# 6. Enter the IP address for the reverse connection (Your IP)
-> 192.168.1.100
-
-# 7. Enter the URL to clone
-> https://login.microsoftonline.com
-
-# Tool will start an Apache server. When victim visits 192.168.1.100, 
-# they see the exact Microsoft login page. Passwords entered are logged in plaintext!</code></pre>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>هجمات متقدمة: تجاوز المصادقة الثنائية (MFA Bypass)</h3></div>
-          <p>الـ Phishing التقليدي يفشل إذا كانت الضحية تستخدم 2FA أو MFA. لذلك ظهرت أدوات مثل <strong>Evilginx2</strong>. هي تعمل كـ (Reverse Proxy) حقيقي بين الضحية والسيرفر الحقيقي. عندما تدخل الضحية كود الـ OTP، يقوم Evilginx2 بتمريره للسيرفر، ثم <strong>يسرق الـ Session Cookie</strong> الجاهز الذي يمنحه السيرفر للمستخدم. باستخدام هذا الكوكي، يمكن للمهاجم الدخول للحساب مباشرة بدون الحاجة للباسورد أو الـ OTP!</p>
-        </div>
-      </div>
+{% include 'main/modules/mod_social_eng_deep.html' %}
 
       <!-- CEH Module 10: Denial of Service -->
-      <div class="meth-content-view" id="meth-content-ceh_dos" style="display: none; --tool-color: #f59e0b;">
-        <div class="cyber-hero">
-  <h2 class="hero-title"><span class="hero-icon">💣</span> CEH Module 10: Denial of Service (DoS & DDoS)</h2>
-  <p class="hero-tagline">الدليل الشامل لإسقاط الخدمات، استنزاف الموارد، وشبكات البوت نت</p>
-  <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-              <span class="badge badge-medium">🟡 Medium Risk</span>
-              <span class="badge badge-tool">🔧 hping3 · Slowloris · LOIC</span>
-            </div>
-</div>
-
-        <div class="info-duo">
-          <div class="info-box what">
-            <h5>📖 ما هو الـ DoS / DDoS؟</h5>
-            <p><strong>DoS (Denial of Service):</strong> هجوم ينفذه جهاز واحد ضد خادم واحد بهدف استنزاف موارده (المعالج، الرامات، أو الباندويث) حتى يسقط ولا يستجيب للمستخدمين الشرعيين.<br>
-            <strong>DDoS (Distributed DoS):</strong> هجوم تنفذه آلاف الأجهزة (Botnet) في نفس الوقت ضد الهدف، مما يجعله مدمراً وأصعب بكثير في الصد والتتبع.</p>
-          </div>
-          <div class="info-box goal">
-            <h5>🎯 تأثير الهجوم</h5>
-            <p>خسائر مالية ضخمة للشركات، توقف الخدمات الحرجة، وقد يُستخدم الهجوم كتمويه (Smokescreen) لإشغال فريق الحماية (SOC) بينما يقوم المهاجم باختراق قاعدة البيانات من جهة أخرى.</p>
-          </div>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>تصنيفات هجمات حجب الخدمة (Attack Categories)</h3></div>
-          
-          <h4>1. Volumetric Attacks (هجمات الباندويث)</h4>
-          <p>الهدف هو خنق سعة الاتصال (Bandwidth) الخاصة بالخادم. الهجوم يُقاس بـ Bits per second (Bps).<br>
-          <strong>أمثلة:</strong> UDP Flood، ICMP Flood (Ping Flood). يقوم المهاجم بإرسال ملايين الحزم الضخمة، فيمتلئ الخط الخاص بالسيرفر ولا يوجد مساحة للطلبات الشرعية.</p>
-
-          <h4>2. Protocol Attacks (هجمات البروتوكول / الشبكة)</h4>
-          <p>تستهدف إنهاك أجهزة البنية التحتية مثل الـ Firewalls، الـ Load Balancers، أو موارد نظام التشغيل عن طريق استغلال نقاط ضعف في بروتوكولات الطبقة الثالثة والرابعة (Layer 3/4). يُقاس بـ Packets per second (Pps).<br>
-          <strong>أمثلة:</strong> <br>
-          - <strong>SYN Flood:</strong> استغلال المصافحة الثلاثية (3-Way Handshake) للـ TCP. المهاجم يرسل حزمة SYN، السيرفر يرد بـ SYN-ACK وينتظر الـ ACK ليفتح الجلسة في الرامات (Half-open connection). المهاجم لا يرسل الـ ACK أبداً، ويرسل ملايين الـ SYN الأخرى حتى تمتلئ رامات السيرفر ويسقط!<br>
-          - <strong>Smurf Attack:</strong> إرسال ICMP (Ping) مزور يحمل IP الضحية إلى عنوان Broadcast في شبكة كبيرة، فتقوم كل الأجهزة في تلك الشبكة بالرد على الضحية في نفس الوقت!</p>
-
-          <h4>3. Application Layer Attacks (هجمات طبقة التطبيقات)</h4>
-          <p>أخطر وأذكى أنواع الهجمات! تبدو كأنها حركة مرور شرعية تماماً، ولا تحتاج باندويث ضخم. تستهدف الطبقة السابعة (Layer 7) لاستنزاف معالج الخادم. تُقاس بـ Requests per second (Rps).<br>
-          <strong>أمثلة:</strong> <br>
-          - <strong>HTTP GET/POST Flood:</strong> إرسال طلبات للصفحات الثقيلة أو عمليات بحث ترهق قاعدة البيانات بشكل متكرر.<br>
-          - <strong>Slowloris Attack:</strong> المهاجم يفتح اتصالات HTTP كثيرة مع الخادم، ولكنه يرسل الطلب ببطء شديد جداً (حرفاً واحداً كل 10 ثوانٍ). الخادم يبقى منتظراً اكتمال الطلب، ويظل يفتح اتصالات جديدة حتى يستنفد الحد الأقصى للاتصالات (Max Connections) ويسقط، وكل هذا يحدث باستخدام كمية ضئيلة جداً من الإنترنت من جهاز المهاجم!</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>DDoS Amplification (هجمات التضخيم الانعكاسي)</h3></div>
-          <p>أشرس أنواع הـ DDoS وأكثرها قدرة تدميرية. تعتمد على فكرتين:</p>
-          <ol>
-            <li><strong>Reflection (الانعكاس):</strong> المهاجم يزور عنوان الـ IP الخاص به (IP Spoofing) ويجعله نفس IP الضحية، ثم يرسل الطلب لخادم عام على الإنترنت. الخادم العام سيرد على הـ IP המزور (الضحية) بدلاً من المهاجم.</li>
-            <li><strong>Amplification (التضخيم):</strong> المهاجم يبحث عن خدمات يكون الرد فيها أضعاف أضعاف حجم الطلب. يرسل المهاجم طلباً بحجم 10 بايت، فيقوم الخادم بالرد على الضحية بملف حجمه 500 بايت (تضخيم 50 ضعفاً!).</li>
-          </ol>
-          <p><strong>أشهر الخوادم المستخدمة:</strong>
-          - <strong>DNS Amplification:</strong> يطلب المهاجم سجل (ANY) واسع النطاق. نسبة التضخيم تصل لـ 54x.
-          - <strong>NTP Amplification:</strong> استخدام أمر `monlist` الذي يعيد قائمة بآخر 600 جهاز اتصل بالخادم. نسبة التضخيم تصل لـ 556x.
-          - <strong>Memcached Amplification:</strong> الأسوأ على الإطلاق! نسبة تضخيم وصلت في بعض الهجمات لـ 51,000x!</p>
-        </div>
-
-        <div class="cyber-card">
-          <div class="card-header"><h3>تطبيق عملي: أوامر ومحاكاة</h3></div>
-          
-          <div class="cmd-block">
-            <div class="cmd-header"><span class="cmd-lang">استخدام hping3 لعمل SYN Flood احترافي (عبر تزوير مصدر الـ IPs عشوائياً)</span></div>
-            <pre><code>hping3 -S --flood --rand-source -p 80 &lt;Target_IP&gt;</code></pre>
-            <p><strong>شرح الأمر:</strong><br>
-            <code>-S</code>: إرسال حزم SYN فقط.<br>
-            <code>--flood</code>: إرسال الحزم بأقصى سرعة ممكنة دون انتظار الرد.<br>
-            <code>--rand-source</code>: كل حزمة تخرج بـ IP مصدر عشوائي لتجاوز الفلترة.<br>
-            <code>-p 80</code>: استهداف منفذ الويب.</p>
-          </div>
-
-          <div class="cmd-block">
-            <div class="cmd-header"><span class="cmd-lang">استخدام Slowloris لإسقاط خادم Apache (Application Layer)</span></div>
-            <pre><code>slowloris &lt;Target_IP&gt; -s 500</code></pre>
-            <p>يقوم بفتح 500 اتصال والحفاظ عليها مفتوحة أطول فترة ممكنة عبر إرسال ترويسات جزئية.</p>
-          </div>
-        </div>
-      </div>
+{% include 'main/modules/mod_dos_deep.html' %}
 
       <!-- CEH Module 11: Session Hijacking -->
       <div class="meth-content-view" id="meth-content-ceh_hijack" style="display: none; --tool-color: #8b5cf6;">
@@ -3930,6 +3610,8 @@ nmap --mtu 24 &lt;Target_IP&gt; # Custom MTU size</code></pre>
           </table></div>
         </div>
       </div>
+{% include 'main/modules/mod_websocket_deep.html' %}
+{% include 'main/modules/mod_llm_security_deep.html' %}
     </div> <!-- end meth-viewer -->
   </div> <!-- end methodology-app -->
 <!-- Popup Modal structure for alert testing -->

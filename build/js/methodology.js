@@ -96,9 +96,9 @@
         if (phaseId === 'mod4') filename = 'mod4_enumeration.html';
         if (phaseId === 'mod5') filename = 'mod5_vuln_analysis.html';
         if (phaseId === 'mod7') filename = 'mod7_malware.html';
-        if (phaseId === 'mod8') filename = 'mod8_sniffing.html';
-        if (phaseId === 'mod9') filename = 'mod9_social_eng.html';
-        if (phaseId === 'mod10') filename = 'mod10_dos.html';
+        if (phaseId === 'mod8') filename = 'mod_sniffing_deep.html';
+        if (phaseId === 'mod9') filename = 'mod_social_eng_deep.html';
+        if (phaseId === 'mod10') filename = 'mod_dos_deep.html';
         if (phaseId === 'mod11') filename = 'mod11_session_hijacking.html';
         if (phaseId === 'mod12') filename = 'mod12_evasion.html';
         if (phaseId === 'mod13') filename = 'mod13_web_servers.html';

